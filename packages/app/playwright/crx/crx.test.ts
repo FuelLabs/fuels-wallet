@@ -1,6 +1,14 @@
 import type { Account as WalletAccount } from '@fuel-wallet/types';
 import { type Locator, expect } from '@playwright/test';
-import { type Asset, Provider, Signer, Wallet, bn, hashMessage } from 'fuels';
+import {
+  type Asset,
+  Provider,
+  type SelectNetworkArguments,
+  Signer,
+  Wallet,
+  bn,
+  hashMessage,
+} from 'fuels';
 
 import {
   delay,
@@ -582,7 +590,7 @@ test.describe('FuelWallet Extension', () => {
       }
 
       async function testAddNetwork() {
-        const addingNetwork = addNetwork(FUEL_NETWORK.url);
+        const addingNetwork = addNetwork(FUEL_NETWORK.testnet);
 
         const addNetworkPage = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),

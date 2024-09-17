@@ -5,8 +5,8 @@ import type { TxInputs } from '../Transaction/services';
 
 import type {
   AddAssetInputs,
-  AddNetworkInputs,
   ConnectRequestInputs,
+  SelectNetworkInputs,
   SignInputs,
 } from './machines';
 
@@ -36,8 +36,8 @@ export function requestEvents(store: Store) {
         input,
       });
     },
-    requestAddNetwork(input: AddNetworkInputs['start']) {
-      return store.send(Services.addNetworkRequest, {
+    requestSelectNetwork(input: SelectNetworkInputs['start']) {
+      return store.send(Services.selectNetworkRequest, {
         type: 'START',
         input,
       });

@@ -12,8 +12,8 @@ import type {
 import type { DbEvents, PromiseExtended, Table } from 'dexie';
 import Dexie from 'dexie';
 import 'dexie-observable';
-import { DEVNET_NETWORK_URL, TESTNET_NETWORK_URL } from 'fuels';
-import { DATABASE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
+import { CHAIN_IDS, DEVNET_NETWORK_URL, TESTNET_NETWORK_URL } from 'fuels';
+import { DATABASE_VERSION } from '~/config';
 import type { Transaction } from '~/systems/Transaction/types';
 
 type FailureEvents = Extract<keyof DbEvents, 'close' | 'blocked'>;
@@ -37,7 +37,7 @@ export class FuelDB extends Dexie {
       .stores({
         vaults: 'key',
         accounts: '&address, &name',
-        networks: '&id, &url, &name',
+        networks: '&id, chainId, &url, &name',
         connections: 'origin',
         transactions: '&id',
         assets: '&assetId, &name, &symbol',
@@ -46,16 +46,22 @@ export class FuelDB extends Dexie {
       })
       .upgrade(async (tx) => {
         const networks = tx.table('networks');
+
         // Clean networks
         await networks.clear();
-        // Insert testnet network
+
+        // Insert testnet  network
         await networks.add({
+          chainId: CHAIN_IDS.fuel.testnet,
           name: 'Fuel Sepolia Testnet',
           url: TESTNET_NETWORK_URL,
           isSelected: true,
           id: createUUID(),
         });
+
+        // Insert devnet network
         await networks.add({
+          chainId: CHAIN_IDS.fuel.devnet,
           name: 'Fuel Ignition Sepolia Devnet',
           url: DEVNET_NETWORK_URL,
           isSelected: false,

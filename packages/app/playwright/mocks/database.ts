@@ -6,7 +6,13 @@ import type {
 } from '@fuel-wallet/types';
 import type { Page } from '@playwright/test';
 import type { Asset, WalletManagerAccount } from 'fuels';
-import { Address, Mnemonic, WalletManager, encrypt } from 'fuels';
+import {
+  Address,
+  Mnemonic,
+  TESTNET_NETWORK_URL,
+  WalletManager,
+  encrypt,
+} from 'fuels';
 
 import { getByAriaLabel } from '../commons/locator';
 import { hasText } from '../commons/text';
@@ -21,12 +27,14 @@ export const PRIVATE_KEY =
 export const DEFAULT_NETWORKS: Array<NetworkData> = [
   {
     id: '1',
+    chainId: 0,
     isSelected: true,
     name: 'Local',
     url: VITE_FUEL_PROVIDER_URL,
   },
   {
     id: '2',
+    chainId: 0,
     isSelected: false,
     name: 'Another',
     url: 'https://another.network.fuel/graphql',
@@ -93,7 +101,7 @@ export const ALT_ASSET = {
 };
 
 export const FUEL_NETWORK = {
-  url: 'https://testnet.fuel.network/v1/graphql',
+  testnet: TESTNET_NETWORK_URL,
 };
 
 export async function getAccount(page: Page) {

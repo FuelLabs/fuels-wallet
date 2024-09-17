@@ -2,9 +2,11 @@ import { createProvider, createUUID } from '@fuel-wallet/connections';
 import type { NetworkData } from '@fuel-wallet/types';
 import { compare } from 'compare-versions';
 import {
+  CHAIN_IDS,
   DEVNET_NETWORK_URL,
   type NodeInfo,
   Provider,
+  type SelectNetworkArguments,
   TESTNET_NETWORK_URL,
 } from 'fuels';
 import { MIN_NODE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
@@ -13,11 +15,22 @@ import { db } from '~/systems/Core/utils/database';
 import { isNetworkDevnet, isNetworkTestnet, isValidNetworkUrl } from '../utils';
 
 export type NetworkInputs = {
-  getNetwork: {
+  getNetworkById: {
     id: string;
+  };
+  getNetworkByChainId: {
+    chainId: number;
+  };
+  getNetworkByUrl: {
+    url: string;
+  };
+  getNetworkByNameOrUrl: {
+    name: string;
+    url: string;
   };
   addNetwork: {
     data: {
+      chainId: number;
       name: string;
       url: string;
     };
@@ -41,6 +54,14 @@ export type NetworkInputs = {
   getChainInfo: {
     providerUrl: string;
   };
+  validateNetworkSelect: SelectNetworkArguments;
+  validateNetworkExists: {
+    name: string;
+    url: string;
+  };
+  validateNetworkVersion: {
+    url: string;
+  };
 };
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
@@ -51,19 +72,44 @@ export class NetworkService {
     });
   }
 
-  static getNetwork(input: NetworkInputs['getNetwork']) {
+  static getNetworkById(input: NetworkInputs['getNetworkById']) {
     return db.transaction('r', db.networks, async () => {
       return db.networks.get({ id: input.id });
+    });
+  }
+
+  static getNetworkByChainId(input: NetworkInputs['getNetworkByChainId']) {
+    return db.transaction('r', db.networks, async () => {
+      return db.networks.get({ chainId: input.chainId });
+    });
+  }
+
+  static getNetworkByUrl(input: NetworkInputs['getNetworkByUrl']) {
+    return db.transaction('r', db.networks, async () => {
+      return db.networks.get({ url: input.url });
+    });
+  }
+
+  static getNetworkByNameOrUrl(input: NetworkInputs['getNetworkByNameOrUrl']) {
+    return db.transaction('r', db.networks, async () => {
+      return db.networks
+        .where('url')
+        .equalsIgnoreCase(input.url)
+        .or('name')
+        .equalsIgnoreCase(input.name)
+        .first();
     });
   }
 
   static async addNetwork(input: NetworkInputs['addNetwork']) {
     return db.transaction('rw', db.networks, async () => {
       const count = await db.networks.count();
-      const inputToAdd = {
-        ...input.data,
-        ...(count === 0 && { isSelected: true }),
+      const inputToAdd: Required<NetworkData> = {
         id: createUUID(),
+        chainId: input.data.chainId,
+        name: input.data.name,
+        url: input.data.url,
+        isSelected: Boolean(count === 0),
       };
       const id = await db.networks.add(inputToAdd);
       return db.networks.get(id) as Promise<NetworkData>;
@@ -89,7 +135,7 @@ export class NetworkService {
       if (networks.length === 1) {
         throw new Error('You need to stay with at least one network');
       }
-      const network = await NetworkService.getNetwork(input);
+      const network = await NetworkService.getNetworkById(input);
       if (network?.isSelected) {
         const nextNetwork = networks.filter((i) => i.id !== input.id)[0];
         await NetworkService.selectNetwork({ id: nextNetwork.id as string });
@@ -131,6 +177,7 @@ export class NetworkService {
     }).catch(() => ({ name: 'Fuel Sepolia Testnet' }));
     const testnetNetwork = await NetworkService.addNetwork({
       data: {
+        chainId: CHAIN_IDS.fuel.testnet,
         name: testnetInfo.name,
         url: TESTNET_NETWORK_URL,
       },
@@ -142,6 +189,7 @@ export class NetworkService {
     }).catch(() => ({ name: 'Fuel Ignition Sepolia Devnet' }));
     const devnetNetwork = await NetworkService.addNetwork({
       data: {
+        chainId: CHAIN_IDS.fuel.devnet,
         name: devnetInfo.name,
         url: DEVNET_NETWORK_URL,
       },
@@ -161,6 +209,7 @@ export class NetworkService {
       }).catch(() => ({ name: 'Custom Network' }));
       const customNetwork = await NetworkService.addNetwork({
         data: {
+          chainId: 0,
           name: customInfo.name,
           url: envProviderUrl,
         },
@@ -185,8 +234,163 @@ export class NetworkService {
     return provider.fetchNode();
   }
 
-  static async validateAddNetwork(input: NetworkInputs['addNetwork']) {
-    const { name, url } = input.data;
+  static async validateNetworkSelect(
+    input: NetworkInputs['validateNetworkSelect']
+  ) {
+    const { chainId, url } = input;
+    const hasChainId = typeof chainId === 'number';
+    const hasUrl = typeof url === 'string';
+
+    const currentNetwork = await NetworkService.getSelectedNetwork();
+
+    // When chainId and provider are provided:
+    // 1. If chainId and provider does not exist in our database, validate if the chainId is valid.
+    // 2. If chainId and provider does not exist in our database, show popup to create if the chainId match the URL.
+    // 2. If chainId exists in our database and is selected, return true.
+    // 3. If chainId exists in our database but is not selected, show popup to select.
+    if (hasChainId && hasUrl) {
+      const networkByChainId = await NetworkService.getNetworkByChainId({
+        chainId,
+      });
+      const networkByUrl = await NetworkService.getNetworkByUrl({
+        url,
+      });
+
+      if (!networkByChainId || !networkByUrl) {
+        const provider = await Provider.create(url);
+        const providerName = provider.getChain().name;
+        const providerChainId = provider.getChainId();
+
+        if (providerChainId !== chainId) {
+          throw new Error(
+            `The URL you have entered returned a different chain ID (${providerChainId}). Please update the Chain ID to match the URL of the network you are trying to add.`
+          );
+        }
+
+        await NetworkService.validateNetworkVersion({
+          url,
+        });
+
+        return {
+          isSelected: false,
+          popup: 'add',
+          network: {
+            chainId: providerChainId,
+            name: providerName,
+            url,
+          },
+          currentNetwork,
+        } as const;
+      }
+
+      if (networkByUrl.isSelected) {
+        return {
+          isSelected: true,
+          popup: false,
+        } as const;
+      }
+
+      return {
+        isSelected: false,
+        popup: 'select',
+        network: networkByUrl,
+        currentNetwork,
+      } as const;
+    }
+
+    // When only chainId is provided:
+    // 2. If chainId does not exist and the network is unknown, throw an error.
+    // 3. If chainId exists in our database and is selected, return true.
+    // 4. If chainId exists in our database but is not selected, show popup to select.
+    if (hasChainId) {
+      const networkByChainId = await NetworkService.getNetworkByChainId({
+        chainId,
+      });
+
+      if (!networkByChainId) {
+        throw new Error('Unknown network, please create it manually');
+      }
+
+      if (networkByChainId.isSelected) {
+        return {
+          isSelected: true,
+          popup: false,
+        } as const;
+      }
+
+      return {
+        isSelected: false,
+        popup: 'select',
+        network: networkByChainId,
+        currentNetwork,
+      } as const;
+    }
+
+    // When only URL is provided:
+    // 1. If URL does not exist in our database, show popup to create the network.
+    // 2. If URL exists in our database and is selected, return true and don't open the popup.
+    // 3. If URL exists in our database but is not selected, show popup to select.
+    if (hasUrl) {
+      const networkByUrl = await NetworkService.getNetworkByUrl({
+        url,
+      });
+
+      if (!networkByUrl) {
+        const provider = await Provider.create(url);
+        const providerName = provider.getChain().name;
+        const providerChainId = await provider.getChainId();
+
+        await NetworkService.validateNetworkVersion({
+          url,
+        });
+
+        return {
+          isSelected: false,
+          popup: 'add',
+          network: {
+            chainId: providerChainId,
+            name: providerName,
+            url,
+          },
+          currentNetwork,
+        } as const;
+      }
+
+      if (networkByUrl.isSelected) {
+        return {
+          isSelected: true,
+          popup: false,
+        } as const;
+      }
+
+      return {
+        isSelected: false,
+        popup: 'select',
+        network: networkByUrl,
+        currentNetwork,
+      } as const;
+    }
+
+    throw new Error('Invalid network input, either chainId or url is required');
+  }
+
+  static async validateNetworkExists(
+    input: NetworkInputs['validateNetworkExists']
+  ) {
+    const { name, url } = input;
+    const network = await NetworkService.getNetworkByNameOrUrl({
+      name,
+      url,
+    });
+    if (network) {
+      throw new Error('Network with Name or URL already exists');
+    }
+  }
+
+  static async validateNetworkVersion(
+    input: NetworkInputs['validateNetworkVersion']
+  ) {
+    const { url } = input;
     if (!isValidNetworkUrl(url)) {
       throw new Error('Invalid network URL');
     }
@@ -203,17 +407,6 @@ export class NetworkService {
       throw new Error(
         `Network not compatible with Fuel Wallet. Required version is >=${MIN_NODE_VERSION}`
       );
-    }
-    const collection = await db.transaction('r', db.networks, async () => {
-      return db.networks
-        .where('url')
-        .equalsIgnoreCase(url)
-        .or('name')
-        .equalsIgnoreCase(name);
-    });
-    const isExistingNetwork = await collection.count();
-    if (isExistingNetwork) {
-      throw new Error('Network with Name or URL already exists');
     }
   }
 }

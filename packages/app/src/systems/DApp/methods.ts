@@ -2,7 +2,10 @@ import { ExtensionPageConnection } from '@fuel-wallet/connections';
 import { transactionRequestify } from 'fuels';
 import { IS_CRX } from '~/config';
 import { Services, store } from '~/store';
-import type { MessageInputs } from '~/systems/CRX/background/services/types';
+import type {
+  MessageInputs,
+  PopUpServiceInputs,
+} from '~/systems/CRX/background/services/types';
 import { listenToGlobalErrors } from '~/systems/Core/utils/listenToGlobalErrors';
 
 // On external methods we need to wait for the state to be updated
@@ -18,6 +21,7 @@ export class RequestMethods extends ExtensionPageConnection {
     this.signMessage,
     this.sendTransaction,
     this.addAssets,
+    this.selectNetwork,
     this.addNetwork,
   ];
   constructor() {
@@ -70,10 +74,17 @@ export class RequestMethods extends ExtensionPageConnection {
     return true;
   }
 
-  async addNetwork(input: MessageInputs['addNetwork']) {
+  async selectNetwork(input: PopUpServiceInputs['selectNetwork']) {
     await store
-      .requestAddNetwork(input)
-      .waitForState(Services.addNetworkRequest, WAIT_FOR_CONFIG);
+      .requestSelectNetwork(input)
+      .waitForState(Services.selectNetworkRequest, WAIT_FOR_CONFIG);
+    return true;
+  }
+
+  async addNetwork(input: PopUpServiceInputs['addNetwork']) {
+    await store
+      .requestSelectNetwork(input)
+      .waitForState(Services.selectNetworkRequest, WAIT_FOR_CONFIG);
     return true;
   }
 }

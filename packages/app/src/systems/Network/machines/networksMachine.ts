@@ -9,6 +9,7 @@ import { store } from '~/store';
 import type { FetchResponse, Maybe } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
 
+import { Provider } from 'fuels';
 import { type NetworkInputs, NetworkService } from '../services';
 
 type MachineContext = {
@@ -19,6 +20,13 @@ type MachineContext = {
   networkId?: string;
   network?: Maybe<NetworkData>;
   error?: unknown;
+};
+
+export type AddNetworkInput = {
+  data: {
+    name: string;
+    url: string;
+  };
 };
 
 type MachineServices = {
@@ -40,7 +48,7 @@ type MachineServices = {
 };
 
 type MachineEvents =
-  | { type: 'ADD_NETWORK'; input: NetworkInputs['addNetwork'] }
+  | { type: 'ADD_NETWORK'; input: AddNetworkInput }
   | { type: 'EDIT_NETWORK'; input: NetworkInputs['editNetwork'] }
   | { type: 'UPDATE_NETWORK'; input: NetworkInputs['updateNetwork'] }
   | { type: 'REMOVE_NETWORK'; input: NetworkInputs['removeNetwork'] }
@@ -204,22 +212,31 @@ export const networksMachine = createMachine(
           return networks;
         },
       }),
-      addNetwork: FetchMachine.create<NetworkInputs['addNetwork'], NetworkData>(
-        {
-          showError: true,
-          async fetch({ input }) {
-            if (!input?.data) {
-              throw new Error('Invalid network input');
-            }
-            await NetworkService.validateAddNetwork(input);
-            const createdNetwork = await NetworkService.addNetwork(input);
-            if (!createdNetwork) {
-              throw new Error('Failed to add network');
-            }
-            return NetworkService.selectNetwork({ id: createdNetwork.id! });
-          },
-        }
-      ),
+      addNetwork: FetchMachine.create<AddNetworkInput, NetworkData>({
+        showError: true,
+        async fetch({ input }) {
+          if (!input?.data) {
+            throw new Error('Invalid network input');
+          }
+          await NetworkService.validateNetworkExists(input.data);
+          await NetworkService.validateNetworkVersion(input.data);
+
+          const provider = await Provider.create(input.data.url);
+          const chainId = provider.getChainId();
+
+          const createdNetwork = await NetworkService.addNetwork({
+            data: {
+              chainId,
+              name: input.data.name,
+              url: input.data.url,
+            },
+          });
+          if (!createdNetwork) {
+            throw new Error('Failed to add network');
+          }
+          return NetworkService.selectNetwork({ id: createdNetwork.id! });
+        },
+      }),
       updateNetwork: FetchMachine.create<
         NetworkInputs['updateNetwork'],
         NetworkData

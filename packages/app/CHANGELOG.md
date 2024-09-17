@@ -1,5 +1,24 @@
 # fuels-wallet
 
+## 0.28.0
+
+### Minor Changes
+
+- [#1468](https://github.com/FuelLabs/fuels-wallet/pull/1468) [`ce5925c9`](https://github.com/FuelLabs/fuels-wallet/commit/ce5925c97acd82bb0ec11fd8d864f3efd83ab15f) Thanks [@helciofranco](https://github.com/helciofranco)! - Allow users to switch to or create a network through the `selectNetwork` flow, selecting it if it already exists or creating it if not.
+
+### Patch Changes
+
+- [#1469](https://github.com/FuelLabs/fuels-wallet/pull/1469) [`2a626b6b`](https://github.com/FuelLabs/fuels-wallet/commit/2a626b6b58086a18010dbca26e3be4ca781f5673) Thanks [@helciofranco](https://github.com/helciofranco)! - Fix long network URLs breaking layout by enabling word wrapping.
+
+- [#1475](https://github.com/FuelLabs/fuels-wallet/pull/1475) [`ff39a99b`](https://github.com/FuelLabs/fuels-wallet/commit/ff39a99b57637409931adfc7c4d89cb9fa233fc5) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: show feedback when try to unlock with invalid password
+
+- [#1476](https://github.com/FuelLabs/fuels-wallet/pull/1476) [`e555035a`](https://github.com/FuelLabs/fuels-wallet/commit/e555035ab0a4222fd27d9ee4ca34d31ede9d9edf) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: add success feedback when resetting the wallet
+
+- [#1442](https://github.com/FuelLabs/fuels-wallet/pull/1442) [`32abae8c`](https://github.com/FuelLabs/fuels-wallet/commit/32abae8cc4cdd7c5e91db37dd2475c18f2bc5df0) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Refactored Service Worker and Content Scripts to close running processes and listeners correctly. Fixes memory leaks.
+
+- Updated dependencies [[`32abae8c`](https://github.com/FuelLabs/fuels-wallet/commit/32abae8cc4cdd7c5e91db37dd2475c18f2bc5df0)]:
+  - @fuel-wallet/connections@0.28.0
+
 ## 0.27.4
 
 ### Patch Changes

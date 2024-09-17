@@ -1,7 +1,7 @@
 {
   "name": "@fuel-wallet/types",
   "private": true,
-  "version": "0.27.4",
+  "version": "0.28.0",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
@@ -26,11 +26,11 @@
   },
   "peerDependencies": {
     "@fuels/connectors": ">=0.25.0",
-    "fuels": ">=0.94.5"
+    "fuels": ">=0.94.6"
   },
   "devDependencies": {
     "@fuels/connectors": "0.25.0",
-    "fuels": "0.94.5",
+    "fuels": "0.94.6",
     "tsup": "^7.2.0"
   }
 }
