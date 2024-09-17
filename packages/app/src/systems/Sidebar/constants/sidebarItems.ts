@@ -21,7 +21,7 @@ export const sidebarItems = (hasErrors: boolean): Array<MenuItemObj> =>
       {
         key: 'networks',
         icon: 'BrandStackshare',
-        label: 'Networks Management',
+        label: 'Networks',
         onPress() {
           store.openNetworksList();
         },
@@ -29,7 +29,7 @@ export const sidebarItems = (hasErrors: boolean): Array<MenuItemObj> =>
       {
         key: 'accounts',
         icon: 'Users',
-        label: 'Account Management',
+        label: 'Accounts',
         onPress() {
           store.openAccountList();
         },

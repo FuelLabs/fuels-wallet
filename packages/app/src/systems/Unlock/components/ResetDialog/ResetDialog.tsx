@@ -30,15 +30,13 @@ export function ResetDialog() {
           <Text>
             If you lost your password, the only way to recover your wallet is to
             reset the Fuel Wallet extension, select &quot;I already have a
-            wallet&quot; and use your secret Seed Phrase.
-          </Text>
-          <Text>
-            Make sure you have backed up your Seed Phrase before proceeding.
+            wallet&quot; and restore with your seed phrase.
           </Text>
           <Alert status="warning">
             <Alert.Description>
-              By resetting your wallet you will remove all data stored on this
-              device, including Seed Phrase, accounts,
+              By resetting your wallet you will remove all the data stored on this
+              device. Make sure that you have access to your seed phrase before proceeding.
+              Store it safely.
             </Alert.Description>
           </Alert>
           <Form.Control css={{ flexDirection: 'row' }}>
