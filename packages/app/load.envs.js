@@ -40,7 +40,6 @@ function getPublicEnvs() {
 
 // Export the version to be used on database
 // and application level
-// Export the version to be used on application level
 const versions = getVersion();
 process.env.PORT = 3000;
 process.env.VITE_APP_VERSION = process.env.VITE_APP_VERSION || versions.version;
