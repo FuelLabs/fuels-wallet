@@ -5,9 +5,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { MotionFlex, MotionStack, animations } from '~/systems/Core';
 import { createAmount } from '~/systems/Core/components/InputAmount/InputAmount';
+import { isAmountAllowed } from '~/systems/Core/components/InputAmount/InputAmount.utils';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxFee } from '../TxFee';
-import { DECIMAL_UNITS, formatTip } from './TxFeeOptions.utils';
+import {
+  DECIMAL_UNITS,
+  formatTip,
+  isGasLimitAllowed,
+} from './TxFeeOptions.utils';
 
 type TxFeeOptionsProps = {
   initialAdvanced: boolean;
@@ -101,12 +106,11 @@ export const TxFeeOptions = ({
                         thousandSeparator={false}
                         placeholder="0"
                         css={{ width: '100%' }}
+                        name={gasLimit.name}
+                        decimalScale={0}
+                        isAllowed={isGasLimitAllowed}
                         onChange={(e) => {
-                          const ignore = /[.,\-+]/g;
-                          const val = (e.target.value || '').replaceAll(
-                            ignore,
-                            ''
-                          );
+                          const val = e.target.value;
 
                           gasLimit.onChange({
                             amount: bn(val),
@@ -125,12 +129,13 @@ export const TxFeeOptions = ({
                         value={tip.value.text}
                         inputMode="decimal"
                         autoComplete="off"
-                        allowedDecimalSeparators={['.', ',']}
+                        allowedDecimalSeparators={['.']}
                         allowNegative={false}
                         thousandSeparator={false}
                         decimalScale={DECIMAL_UNITS}
                         placeholder="0.00"
                         css={{ width: '100%' }}
+                        isAllowed={isAmountAllowed}
                         onChange={(e) => {
                           const text = e.target.value;
                           const { text: newText, amount } = createAmount(
