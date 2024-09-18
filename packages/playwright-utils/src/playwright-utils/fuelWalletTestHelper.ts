@@ -42,7 +42,7 @@ export class FuelWalletTestHelper {
 
     const importSeedPhraseButton = signupPage
       .locator('h3')
-      .getByText('Import seed phrase');
+      .getByText('Import wallet');
     await importSeedPhraseButton.click();
 
     await signupPage.getByRole('checkbox').click();

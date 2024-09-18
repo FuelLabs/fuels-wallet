@@ -242,7 +242,7 @@ test.describe('SendTransaction', () => {
     });
     await visit(page, '/send');
     await page.waitForSelector('[aria-disabled="true"]');
-    await getButtonByText(page, 'Select one asset').click();
+    await getButtonByText(page, 'Select an asset').click();
     await page.getByText('Ethereum').click();
     await getInputByName(page, 'address').fill(receiverWallet.address.toB256());
 
