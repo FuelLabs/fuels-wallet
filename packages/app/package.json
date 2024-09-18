@@ -1,7 +1,7 @@
 {
   "name": "fuels-wallet",
   "private": true,
-  "version": "0.28.0",
+  "version": "0.29.0",
   "scripts": {
     "build:all": "run-s build:web build:crx build:storybook",
     "build:web": "./scripts/build.sh --app=vite",
@@ -101,7 +101,7 @@
     "ts-jest-mock-import-meta": "1.1.0",
     "tsconfig-paths-webpack-plugin": "4.1.0",
     "typescript": "5.2.2",
-    "vite": "4.5.3",
+    "vite": "4.5.5",
     "vite-plugin-clean": "1.0.0",
     "vite-plugin-static-copy": "0.17.0",
     "vite-tsconfig-paths": "4.2.1",

@@ -1,3 +1,5 @@
+import { ErrorCode, type FuelError } from 'fuels';
+
 export type VMApiError = {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   request: any;
@@ -11,76 +13,39 @@ export type VMApiError = {
   };
 };
 
-export type VmErrorType = 'InsufficientInputAmount' | string;
-
 export type InsufficientInputAmountError = {
   asset: string;
   expected: string;
   provided: string;
 };
 
-export type GroupedErrors = {
-  InsufficientInputAmount: InsufficientInputAmountError;
-  NotEnoughCoins: string;
-  // biome-ignore lint/suspicious/noExplicitAny: allow any
-  [key: VmErrorType]: Record<string, any> | string | unknown;
+export type GroupedErrors = string | undefined;
+
+const camelCaseToHuman = (message: string): string => {
+  return message.replace(/([a-z])([A-Z])/g, '$1 $2');
 };
 
-export const getGroupedErrors = (rawErrors?: { message: string }[]) => {
-  if (!rawErrors) return undefined;
+export const getErrorMessage = (
+  error: FuelError | undefined
+): GroupedErrors => {
+  if (!error) return undefined;
 
-  const groupedErrors = rawErrors.reduce<GroupedErrors>(
-    (prevGroupedError, rawError) => {
-      const { message } = rawError;
-      // in some case I had to add the Validity() to the regex. why?
-      // const regex = /Validity\((\w+)\s+(\{.*\})\)/;
-      const regex = /(\w+)\s+(\{.*\})/;
+  // FuelCore error with Validity()
+  // Example: Validity(TransactionMaxGasExceeded)
+  if (error.message.startsWith('Validity(')) {
+    const validity = error.message.match(/\((\w+)\)/);
+    if (validity) {
+      return camelCaseToHuman(validity[1]);
+    }
+  }
 
-      const match = message.match(regex);
-      if (match) {
-        const errorType = match[1];
-        const errorMessage = match[2];
+  // FuelCore error with object
+  // Example: InsufficientMaxFee { max_fee_from_policies: 0, max_fee_from_gas_price: 571 }
+  const withObject = /^([a-zA-Z]+)(?:\s*\{(.+)\})?$/;
+  const match = error.message.match(withObject);
+  if (match) {
+    return `${camelCaseToHuman(match[1])} { ${match[2]} }`;
+  }
 
-        // biome-ignore lint/suspicious/noImplicitAnyLet: allow any
-        let errorValue;
-        try {
-          const keyValuesMessage = errorMessage
-            .replace('{ ', '')
-            .replace(' }', '')
-            .split(', ');
-          const errorParsed = keyValuesMessage.reduce((prevError, keyValue) => {
-            const [key, value] = keyValue.split(': ');
-
-            return {
-              // biome-ignore lint/performance/noAccumulatingSpread:
-              ...prevError,
-              [key]: key === 'asset' ? `0x${value}` : value,
-            };
-          }, {});
-          errorValue = errorParsed;
-        } catch (_) {
-          errorValue = errorMessage;
-        }
-
-        return {
-          // biome-ignore lint/performance/noAccumulatingSpread:
-          ...prevGroupedError,
-          [errorType]: errorValue,
-        };
-      }
-      if (message.includes('not enough coins to fit the target')) {
-        return {
-          // biome-ignore lint/performance/noAccumulatingSpread:
-          ...prevGroupedError,
-          NotEnoughCoins: message,
-        };
-      }
-
-      return prevGroupedError;
-    },
-    // biome-ignore lint/suspicious/noExplicitAny: allow any
-    {} as any
-  );
-
-  return groupedErrors;
+  return error.message;
 };

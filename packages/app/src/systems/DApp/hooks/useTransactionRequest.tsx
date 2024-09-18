@@ -29,9 +29,7 @@ const selectors = {
   errors(state: TransactionRequestState) {
     if (!state.context.errors) return {};
     const simulateTxErrors = state.context.errors?.simulateTxErrors;
-    const hasSimulateTxErrors = Boolean(
-      Object.keys(simulateTxErrors || {}).length
-    );
+    const hasSimulateTxErrors = Boolean(simulateTxErrors);
     const txApproveError = state.context.errors?.txApproveError;
     return { txApproveError, simulateTxErrors, hasSimulateTxErrors };
   },
