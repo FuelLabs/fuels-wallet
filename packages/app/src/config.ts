@@ -6,6 +6,7 @@ export const {
   VITE_FUEL_FAUCET_URL,
   VITE_ADDR_OWNER,
   VITE_APP_VERSION,
+  VITE_DATABASE_VERSION,
   VITE_CRX_NAME,
   VITE_CRX,
   VITE_CRX_VERSION_API,
@@ -18,6 +19,7 @@ export const {
 export const EXPLORER_URL = VITE_EXPLORER_URL;
 export const WALLET_NAME = VITE_CRX_NAME;
 export const APP_VERSION = VITE_APP_VERSION;
+export const DATABASE_VERSION = Number(VITE_DATABASE_VERSION);
 export const FORMAT_LANGUAGE = 'en-US';
 export const MIN_FRACTION_DIGITS = 1;
 export const MAX_FRACTION_DIGITS = 3;
