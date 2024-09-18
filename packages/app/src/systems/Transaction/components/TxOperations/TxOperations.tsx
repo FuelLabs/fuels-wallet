@@ -1,4 +1,4 @@
-import { Box } from '@fuel-ui/react';
+import { Alert, Box } from '@fuel-ui/react';
 import type { AssetData } from '@fuel-wallet/types';
 import type { Operation, TransactionStatus } from 'fuels';
 import type { Maybe } from '~/systems/Core';
@@ -18,6 +18,16 @@ export function TxOperations({
   assets,
   isLoading,
 }: TxOperationsProps) {
+  if (operations?.length === 0) {
+    return (
+      <Alert status="error">
+        <Alert.Description>
+          No operations found in this transaction
+        </Alert.Description>
+      </Alert>
+    );
+  }
+
   return (
     <Box.Stack gap="$4">
       {operations?.map((operation, index) => (

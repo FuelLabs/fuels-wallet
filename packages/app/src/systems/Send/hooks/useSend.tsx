@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BNInput } from 'fuels';
-import { DEFAULT_DECIMAL_UNITS, bn, isB256, isBech32 } from 'fuels';
+import { bn, isB256, isBech32 } from 'fuels';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +13,7 @@ import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
 
+import { formatGasLimit } from '~/systems/Transaction';
 import { sendMachine } from '../machines/sendMachine';
 import type { SendMachineState } from '../machines/sendMachine';
 
@@ -171,7 +172,9 @@ const schema = yup
 
                 return ctx.createError({
                   path: 'fees.gasLimit',
-                  message: `Gas limit must be greater than or equal to '${minGasLimit.toString()}'.`,
+                  message: `Gas limit must be greater than or equal to ${formatGasLimit(
+                    minGasLimit
+                  )}.`,
                 });
               },
             })
@@ -187,7 +190,9 @@ const schema = yup
 
                 return ctx.createError({
                   path: 'fees.gasLimit',
-                  message: `Gas limit must be lower than or equal to '${maxGasLimit.toString()}'.`,
+                  message: `Gas limit must be lower than or equal to ${formatGasLimit(
+                    maxGasLimit
+                  )}.`,
                 });
               },
             })

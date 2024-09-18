@@ -75,7 +75,7 @@ describe('TxApprove', () => {
       shouldShowTxSimulated: true,
       shouldShowTxExecuted: false,
       shouldShowActions: true,
-      simulateTxErrors: mockTxResult,
+      simulateTxErrors: 'Unknown error',
       txSummarySimulated: mockTxResult,
       approveStatus: jest.fn().mockReturnValue(TransactionStatus.success),
       handlers: {
@@ -168,15 +168,13 @@ describe('TxApprove', () => {
     setup(
       {
         errors: {
-          simulateTxErrors: {
-            InsufficientInputAmount: true,
-          },
+          simulateTxErrors: 'Insufficient Input Amount',
         },
       },
       {},
       { status: TxRequestStatus.failed, result: true }
     );
-    expect(screen.getByText('Not enough funds')).toBeDefined();
+    expect(screen.getByText('Insufficient Input Amount')).toBeDefined();
   });
 
   it('does not show the approve button show actions is false', () => {

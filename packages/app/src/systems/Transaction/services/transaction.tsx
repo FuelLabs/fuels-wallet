@@ -4,6 +4,8 @@ import type { TransactionRequest, WalletLocked } from 'fuels';
 import {
   Address,
   type BN,
+  ErrorCode,
+  FuelError,
   TransactionResponse,
   TransactionStatus,
   assembleTransactionSummary,
@@ -19,7 +21,7 @@ import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
 import { NetworkService } from '~/systems/Network/services/network';
 import type { Transaction } from '../types';
-import { getAbiMap, getGroupedErrors } from '../utils';
+import { type GroupedErrors, getAbiMap, getErrorMessage } from '../utils';
 import { getCurrentTips } from '../utils/fee';
 
 export type TxInputs = {
@@ -206,16 +208,11 @@ export class TxService {
         minGasLimit: customFee?.gasUsed,
         txSummary: {
           ...txSummary,
-          // if customFee was chosen, we override the txSummary fee with the customFee
           fee: feeAdaptedToSdkDiff,
           gasUsed: txSummary.gasUsed,
-          // fee: customFee?.txCost?.maxFee || feeAdaptedToSdkDiff,
-          // gasUsed: customFee?.txCost?.gasUsed || txSummary.gasUsed,
         },
       };
-
-      // biome-ignore lint/suspicious/noExplicitAny: allow any
-    } catch (e: any) {
+    } catch (e) {
       const { gasPerByte, gasPriceFactor, gasCosts, maxGasPerTx } =
         provider.getGasConfig();
       const consensusParameters = provider.getChain().consensusParameters;
@@ -228,9 +225,8 @@ export class TxService {
         inputs: transaction.inputs,
       });
 
-      const errorsToParse =
-        e.name === 'FuelError' ? [{ message: e.message }] : e.response?.errors;
-      const simulateTxErrors = getGroupedErrors(errorsToParse);
+      const simulateTxErrors: GroupedErrors =
+        e instanceof FuelError ? getErrorMessage(e) : 'Unknown error';
 
       const gasPrice = await provider.getLatestGasPrice();
       const baseAssetId = provider.getBaseAssetId();
@@ -251,9 +247,14 @@ export class TxService {
       txSummary.isStatusFailure = true;
       txSummary.status = TransactionStatus.failure;
 
+      // Fallback to the values from the transactionRequest
+      if ('gasLimit' in transactionRequest) {
+        txSummary.gasUsed = transactionRequest.gasLimit;
+      }
+
       return {
-        baseFee: undefined,
-        minGasLimit: undefined,
+        baseFee: txSummary.fee.add(1),
+        minGasLimit: txSummary.gasUsed,
         txSummary,
         simulateTxErrors,
       };
@@ -361,16 +362,10 @@ export class TxService {
       } catch (e) {
         attempts += 1;
 
-        // @TODO: Waiting to match with FuelError type and ErrorCode enum from "fuels"
-        // These types are not exported from "fuels" package, but they exists in the "@fuels-ts/errors"
-        if (
-          e instanceof Error &&
-          'toObject' in e &&
-          typeof e.toObject === 'function'
-        ) {
-          const error: { code: string } = e.toObject();
+        if (e instanceof FuelError) {
+          const error = e.toObject();
 
-          if (error.code === 'gas-limit-too-low') {
+          if (error.code === ErrorCode.GAS_LIMIT_TOO_LOW) {
             throw e;
           }
         }
@@ -386,7 +381,7 @@ export class TxService {
     };
   }
 
-  static async computeCustomFee({
+  private static async computeCustomFee({
     wallet,
     transactionRequest,
   }: TxInputs['computeCustomFee']) {
@@ -399,7 +394,10 @@ export class TxService {
 
     // funding the transaction with the required quantities (the maxFee might have changed)
     await wallet.fund(transactionRequest, {
-      ...txCost,
+      estimatedPredicates: txCost.estimatedPredicates,
+      addedSignatures: txCost.addedSignatures,
+      gasPrice: txCost.gasPrice,
+      updateMaxFee: txCost.updateMaxFee,
       requiredQuantities: [],
     });
 
