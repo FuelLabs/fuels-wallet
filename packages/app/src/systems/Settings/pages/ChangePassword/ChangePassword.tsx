@@ -108,8 +108,9 @@ export function ChangePassword() {
           <Box.Flex css={styles.wrapper}>
             <Alert status="warning">
               <Alert.Description>
-                This password is used to access the wallet extension. Store both your seed phrase and your password safely.
-                If you have access to your seed phrase, you can always reset your wallet. 
+                This password is used to access the wallet extension. Store both
+                your seed phrase and password safely. If you have access to your
+                seed phrase, you can always reset your wallet.
               </Alert.Description>
             </Alert>
             <Focus.Scope contain autoFocus>

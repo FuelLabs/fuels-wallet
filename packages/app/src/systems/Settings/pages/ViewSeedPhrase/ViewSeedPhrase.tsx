@@ -37,7 +37,7 @@ export function ViewSeedPhrase() {
             <Alert.Description as="div">
               <Box css={styles.alertFirstLine}>
                 DO NOT SHARE your seed phrase with anyone. {'\n'}
-                It provides access to all your accounts.
+                It provides access to all your accounts and funds.
               </Box>
             </Alert.Description>
           </Alert>

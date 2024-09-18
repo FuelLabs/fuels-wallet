@@ -34,9 +34,9 @@ export function ResetDialog() {
           </Text>
           <Alert status="warning">
             <Alert.Description>
-              By resetting your wallet you will remove all the data stored on this
-              device. Make sure that you have access to your seed phrase before proceeding.
-              Store it safely.
+              By resetting your wallet you will remove all the wallet data
+              stored on this device. Make sure that you have access to your seed
+              phrase before proceeding. Store it safely.
             </Alert.Description>
           </Alert>
           <Form.Control css={{ flexDirection: 'row' }}>
