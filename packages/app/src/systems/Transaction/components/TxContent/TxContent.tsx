@@ -23,45 +23,15 @@ import {
 import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
 
 const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
-  const errorMessages = useMemo(() => {
-    const messages = [];
-    if (errors) {
-      if (errors.InsufficientInputAmount || errors.NotEnoughCoins) {
-        messages.push('Not enough funds');
-      }
-
-      // biome-ignore lint: will not be a large array
-      Object.keys(errors).forEach((key: string) => {
-        if (key === 'InsufficientInputAmount' || key === 'NotEnoughCoins') {
-          return;
-        }
-
-        let errorMessage = `${key}: `;
-        try {
-          errorMessage += JSON.stringify(errors[key]);
-        } catch (_) {
-          errorMessage += errors[key];
-        }
-        messages.push(errorMessage);
-      });
-    }
-
-    return messages;
-  }, [errors]);
-
   return (
     <Alert status="error" css={styles.alert} aria-label="Transaction Error">
-      <Alert.Description as="div">
-        {errorMessages.map((message) => (
-          <Box
-            key={message}
-            css={{
-              wordBreak: 'break-word',
-            }}
-          >
-            {message}
-          </Box>
-        ))}
+      <Alert.Description
+        as="div"
+        css={{
+          wordBreak: 'break-word',
+        }}
+      >
+        {errors}
       </Alert.Description>
     </Alert>
   );

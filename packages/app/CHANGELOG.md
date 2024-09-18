@@ -1,5 +1,28 @@
 # fuels-wallet
 
+## 0.29.0
+
+### Minor Changes
+
+- [#1479](https://github.com/FuelLabs/fuels-wallet/pull/1479) [`14e63852`](https://github.com/FuelLabs/fuels-wallet/commit/14e63852efc57f2ee02106b784ec9b500f5b9f65) Thanks [@helciofranco](https://github.com/helciofranco)! - Improve how error messages are displayed/parsed during fee estimation.
+
+- [#1479](https://github.com/FuelLabs/fuels-wallet/pull/1479) [`14e63852`](https://github.com/FuelLabs/fuels-wallet/commit/14e63852efc57f2ee02106b784ec9b500f5b9f65) Thanks [@helciofranco](https://github.com/helciofranco)! - Display fees options even when there are tx simulation errors.
+
+### Patch Changes
+
+- [#1481](https://github.com/FuelLabs/fuels-wallet/pull/1481) [`926a64f4`](https://github.com/FuelLabs/fuels-wallet/commit/926a64f4fda92454bf3d772f18ade021f20e58ab) Thanks [@helciofranco](https://github.com/helciofranco)! - Blocks leading zeros in the amount field.
+
+- [#1481](https://github.com/FuelLabs/fuels-wallet/pull/1481) [`926a64f4`](https://github.com/FuelLabs/fuels-wallet/commit/926a64f4fda92454bf3d772f18ade021f20e58ab) Thanks [@helciofranco](https://github.com/helciofranco)! - Blocks leading zeros in the Gas Limit input during the fee customization.
+
+- [#1480](https://github.com/FuelLabs/fuels-wallet/pull/1480) [`65a987b1`](https://github.com/FuelLabs/fuels-wallet/commit/65a987b1f417d9eb0279b4ede26931716db1ec09) Thanks [@helciofranco](https://github.com/helciofranco)! - Improve gas error message by adding number formatting for better readability.
+
+- [#1481](https://github.com/FuelLabs/fuels-wallet/pull/1481) [`926a64f4`](https://github.com/FuelLabs/fuels-wallet/commit/926a64f4fda92454bf3d772f18ade021f20e58ab) Thanks [@helciofranco](https://github.com/helciofranco)! - Blocks leading zeros in the Tip input during the fee customization.
+
+- [#1479](https://github.com/FuelLabs/fuels-wallet/pull/1479) [`14e63852`](https://github.com/FuelLabs/fuels-wallet/commit/14e63852efc57f2ee02106b784ec9b500f5b9f65) Thanks [@helciofranco](https://github.com/helciofranco)! - Allow dApps to pass account owner with `0x` address.
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.29.0
+
 ## 0.28.0
 
 ### Minor Changes
