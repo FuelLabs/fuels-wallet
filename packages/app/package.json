@@ -2,7 +2,6 @@
   "name": "fuels-wallet",
   "private": true,
   "version": "0.28.0",
-  "database": "19",
   "scripts": {
     "build:all": "run-s build:web build:crx build:storybook",
     "build:web": "./scripts/build.sh --app=vite",
