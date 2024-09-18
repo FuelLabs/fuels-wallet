@@ -3,6 +3,7 @@ import type { BN } from 'fuels';
 import type { ReactNode } from 'react';
 import { FormProvider as Provider, useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { formatGasLimit } from '~/systems/Transaction';
 
 export type TransactionRequestFormData = {
   fees: {
@@ -58,7 +59,9 @@ const schema = yup
 
                 return ctx.createError({
                   path: 'fees.gasLimit',
-                  message: `Gas limit must be greater than or equal to '${minGasLimit.toString()}'.`,
+                  message: `Gas limit must be greater than or equal to ${formatGasLimit(
+                    minGasLimit
+                  )}.`,
                 });
               },
             })
@@ -74,7 +77,9 @@ const schema = yup
 
                 return ctx.createError({
                   path: 'fees.gasLimit',
-                  message: `Gas limit must be lower than or equal to '${maxGasLimit.toString()}'.`,
+                  message: `Gas limit must be lower than or equal to ${formatGasLimit(
+                    maxGasLimit
+                  )}.`,
                 });
               },
             })
