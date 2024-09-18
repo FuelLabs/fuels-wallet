@@ -12,9 +12,8 @@ import type {
 import type { DbEvents, PromiseExtended, Table } from 'dexie';
 import Dexie from 'dexie';
 import 'dexie-observable';
-import { CHAIN_IDS, DEVNET_NETWORK_URL, TESTNET_NETWORK_URL } from 'fuels';
-import { DATABASE_VERSION } from '~/config';
 import type { Transaction } from '~/systems/Transaction/types';
+import { applyDbVersioning } from './databaseVersioning';
 
 type FailureEvents = Extract<keyof DbEvents, 'close' | 'blocked'>;
 
@@ -33,41 +32,7 @@ export class FuelDB extends Dexie {
 
   constructor() {
     super('FuelDB');
-    this.version(DATABASE_VERSION)
-      .stores({
-        vaults: 'key',
-        accounts: '&address, &name',
-        networks: '&id, chainId, &url, &name',
-        connections: 'origin',
-        transactions: '&id',
-        assets: '&assetId, &name, &symbol',
-        abis: '&contractId',
-        errors: '&id',
-      })
-      .upgrade(async (tx) => {
-        const networks = tx.table('networks');
-
-        // Clean networks
-        await networks.clear();
-
-        // Insert testnet  network
-        await networks.add({
-          chainId: CHAIN_IDS.fuel.testnet,
-          name: 'Fuel Sepolia Testnet',
-          url: TESTNET_NETWORK_URL,
-          isSelected: true,
-          id: createUUID(),
-        });
-
-        // Insert devnet network
-        await networks.add({
-          chainId: CHAIN_IDS.fuel.devnet,
-          name: 'Fuel Ignition Sepolia Devnet',
-          url: DEVNET_NETWORK_URL,
-          isSelected: false,
-          id: createUUID(),
-        });
-      });
+    applyDbVersioning(this);
     this.setupListeners();
   }
 
