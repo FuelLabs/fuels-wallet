@@ -11,9 +11,12 @@ import {
 } from '@fuels/react';
 
 import { DEVNET_NETWORK_URL, TESTNET_NETWORK_URL, bn } from 'fuels';
+import { useState } from 'react';
 import './App.css';
 
 export function Connected() {
+  const [loading, setLoading] = useState(false);
+
   const { fuel } = useFuel();
   const { disconnect } = useDisconnect();
   const { wallet } = useWallet();
@@ -60,6 +63,7 @@ export function Connected() {
         <button
           type="button"
           onClick={async () => {
+            setLoading(true);
             const txn = await wallet?.createTransfer(
               '0xed73857a06ba2a706700e4e69e59f63a012ae6663a54309043e8fdc690bed926',
               bn(100),
@@ -74,10 +78,12 @@ export function Connected() {
               console.log(result);
             } catch (e) {
               console.error(e);
+            } finally {
+              setLoading(false);
             }
           }}
         >
-          Send transaction with default fees
+          {loading ? 'Loading...' : 'Send transaction with default fees'}
         </button>
       </div>
 
