@@ -157,6 +157,7 @@ export class AssetService {
           chainId: currentNetwork.chainId,
         } as NetworkFuel,
       ],
+      isCustom: true,
     };
 
     return db.transaction('rw', db.assets, async () => {

@@ -49,7 +49,7 @@ export function UpsertAsset() {
         data: { ...data, isCustom: true },
       });
     } else {
-      handlers.addAsset({ data: { ...data, isCustom: true } });
+      handlers.addAsset({ data });
     }
   }
 
