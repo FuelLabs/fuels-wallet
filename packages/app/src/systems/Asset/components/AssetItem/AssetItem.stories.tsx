@@ -16,8 +16,8 @@ export const Usage = (args: AssetItemProps) => (
       {...args}
       asset={{
         ...MOCK_FUEL_ASSETS[0],
-        amount: bn(14563943834),
       }}
+      amount={bn(14563943834)}
     />
   </Box>
 );

@@ -31,7 +31,7 @@ export function TransactionRequest() {
     providerUrl,
     executedStatus,
   } = txRequest;
-  const { assets, isLoading: isLoadingAssets } = useAssets();
+  const { isLoading: isLoadingAssets } = useAssets();
 
   const defaultValues = useMemo<TransactionRequestFormData | undefined>(() => {
     if (!txSummarySimulated) return undefined;
@@ -91,7 +91,6 @@ export function TransactionRequest() {
               isLoading={isLoadingInfo}
               errors={errors.simulateTxErrors}
               isConfirm
-              assets={assets}
               fees={fees}
             />
           )}
@@ -100,7 +99,6 @@ export function TransactionRequest() {
               showDetails
               tx={txSummaryExecuted}
               txStatus={executedStatus()}
-              assets={assets}
               providerUrl={providerUrl}
               footer={
                 status('failed') && (

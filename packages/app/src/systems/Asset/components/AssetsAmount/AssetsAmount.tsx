@@ -1,9 +1,9 @@
 import { cx } from '@fuel-ui/css';
 import { Avatar, Box, Copyable, Grid, Text } from '@fuel-ui/react';
-import type { AssetAmount } from '@fuel-wallet/types';
-import { bn } from 'fuels';
+import type { AssetFuelAmount } from '@fuel-wallet/types';
+import { AssetFuel, BNInput, bn } from 'fuels';
 import type { FC } from 'react';
-import { shortAddress } from '~/systems/Core';
+import { formatAmount, shortAddress } from '~/systems/Core';
 import type { InsufficientInputAmountError } from '~/systems/Transaction';
 
 import { AssetsAmountLoader } from './AssetsAmountLoader';
@@ -16,7 +16,7 @@ type GroupedError = {
 };
 
 export type AssetsAmountProps = {
-  amounts: AssetAmount[];
+  amounts: AssetFuelAmount[];
   title?: string;
   balanceErrors?: GroupedError[];
 };
@@ -66,7 +66,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
                   bn(assetAmount.amount).gt(0) && (
                     <AssetsAmountItem
                       assetAmount={assetAmount}
-                      key={assetAmount.assetId}
+                      key={assetAmount.name}
                     />
                   )
               )}
@@ -79,7 +79,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
 };
 
 type AssetsAmountItemProps = {
-  assetAmount: AssetAmount;
+  assetAmount: AssetFuelAmount;
 };
 
 const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
@@ -87,17 +87,17 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
   const {
     name = '',
     symbol,
-    imageUrl,
+    icon,
     assetId,
-    amount,
     decimals,
+    amount,
   } = assetAmount || {};
 
   return (
     <Grid key={assetId} css={styles.root} className={assetAmountClass}>
       <Box.Flex css={styles.asset}>
-        {imageUrl ? (
-          <Avatar name={name} src={imageUrl} />
+        {icon ? (
+          <Avatar name={name} src={icon} />
         ) : (
           <Avatar.Generated hash={assetId} size="xsm" />
         )}
@@ -111,10 +111,7 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
         </Text>
       </Copyable>
       <Box.Flex css={styles.amount}>
-        {bn(amount).format({
-          units: decimals,
-        })}{' '}
-        {symbol}
+        {formatAmount({ amount, options: { units: decimals || 0 } })} {symbol}
       </Box.Flex>
     </Grid>
   );

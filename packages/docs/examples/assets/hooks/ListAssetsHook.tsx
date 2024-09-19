@@ -19,7 +19,7 @@ export function ListAssetsHook() {
               const asset = getAssetByChain(a, 0);
               return (
                 <Tag size="xs" variant="ghost" key={JSON.stringify(asset)}>
-                  {asset.name} ({asset.symbol}): {asset.assetId}
+                  {asset.name} ({asset.symbol}){/* : {asset.assetId} */}
                 </Tag>
               );
             })}

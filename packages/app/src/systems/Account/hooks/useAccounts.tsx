@@ -32,13 +32,6 @@ const selectors = {
   account(state: AccountsMachineState) {
     return state.context.account;
   },
-  balanceAssets(assets: AssetData[]) {
-    return (state: AccountsMachineState) =>
-      state.context.account?.balances?.map((balance) => ({
-        ...balance,
-        ...(assets?.find(({ assetId }) => assetId === balance.assetId) || {}),
-      }));
-  },
   shownAccounts(state: AccountsMachineState) {
     return state.context.accounts?.filter((acc) => !acc.isHidden);
   },
@@ -61,17 +54,12 @@ const listenerAccountFetcher = () => {
 
 export function useAccounts() {
   const shouldListen = useRef(true);
-  const { assets } = useAssets();
   const hasBalance = store.useSelector(Services.accounts, selectors.hasBalance);
   const accountStatus = store.useSelector(Services.accounts, selectors.status);
   const ctx = store.useSelector(Services.accounts, selectors.context);
   const accounts = store.useSelector(Services.accounts, selectors.accounts);
   const account = store.useSelector(Services.accounts, selectors.account);
   const overlay = useOverlay();
-  const balanceAssets = store.useSelector(
-    Services.accounts,
-    selectors.balanceAssets(assets)
-  );
   const shownAccounts = store.useSelector(
     Services.accounts,
     selectors.shownAccounts
@@ -122,7 +110,6 @@ export function useAccounts() {
     account,
     status,
     hasBalance,
-    balanceAssets,
     shownAccounts,
     hiddenAccounts,
     canHideAccounts,

@@ -3,19 +3,18 @@ import type { AssetData } from '@fuel-wallet/types';
 import type { Operation, TransactionStatus } from 'fuels';
 import type { Maybe } from '~/systems/Core';
 
+import { useNetworks } from '~/systems/Network';
 import { TxOperation } from '../TxOperation/TxOperation';
 
 export type TxOperationsProps = {
   operations?: Operation[];
   status?: Maybe<TransactionStatus>;
-  assets?: Maybe<AssetData[]>;
   isLoading?: boolean;
 };
 
 export function TxOperations({
   operations,
   status,
-  assets,
   isLoading,
 }: TxOperationsProps) {
   if (operations?.length === 0) {
@@ -36,7 +35,6 @@ export function TxOperations({
           key={index}
           operation={operation}
           status={status}
-          assets={assets}
           isLoading={isLoading}
         />
       ))}

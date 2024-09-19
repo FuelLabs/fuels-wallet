@@ -1,10 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
 import { Card } from '@fuel-ui/react';
 import type { AssetData } from '@fuel-wallet/types';
-import type { Operation, TransactionStatus } from 'fuels';
+import { type Operation, type TransactionStatus, getAssetFuel } from 'fuels';
 import { AssetsAmount } from '~/systems/Asset';
 import type { Maybe } from '~/systems/Core';
 
+import { useAssetsAmount } from '../../hooks/useAssetsAmount';
 import { FunctionCalls } from '../FunctionCalls';
 import { TxFromTo } from '../TxFromTo/TxFromTo';
 
@@ -18,16 +19,11 @@ export type TxOperationProps = {
 export function TxOperation({
   operation,
   status,
-  assets,
   isLoading,
 }: TxOperationProps) {
   const { from, to, assetsSent, calls } = operation ?? {};
-  const amounts = assetsSent?.map((assetSent) => {
-    const asset = assets?.find((a) => a.assetId === assetSent.assetId);
-    return {
-      ...assetSent,
-      ...asset,
-    };
+  const amounts = useAssetsAmount({
+    operationsCoin: assetsSent,
   });
   return (
     <Card css={styles.root} className="TxOperation">
