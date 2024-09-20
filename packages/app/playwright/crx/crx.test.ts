@@ -75,6 +75,23 @@ test.describe('FuelWallet Extension', () => {
 
     await test.step('Should return current version of Wallet', async () => {
       const version = await blankPage.evaluate(async () => {
+        async function waitForConnection(depth = 0) {
+          if (depth > 20) {
+            throw new Error('Account never connected');
+          }
+          await new Promise((resolve) => {
+            setTimeout(async () => {
+              const currentConnectors = await window.fuel.connectors();
+              if (currentConnectors[0].installed) {
+                resolve(true);
+              } else {
+                await waitForConnection(depth + 1);
+              }
+              resolve(true);
+            }, 500);
+          });
+        }
+        await waitForConnection();
         return window.fuel.version();
       });
       expect(version).toEqual(process.env.VITE_APP_VERSION);
@@ -87,7 +104,6 @@ test.describe('FuelWallet Extension', () => {
         waitUntil: 'domcontentloaded',
       });
       await swPage.getByRole('button', { name: 'Stop' }).click();
-      await swPage.pause();
       // Wait service worker to reconnect
       const pingRet = await blankPage.waitForFunction(async () => {
         async function testConnection() {
