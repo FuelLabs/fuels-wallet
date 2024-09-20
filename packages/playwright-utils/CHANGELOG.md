@@ -1,5 +1,15 @@
 # @fuels/playwright-utils
 
+## 0.29.0
+
+### Minor Changes
+
+- [#1487](https://github.com/FuelLabs/fuels-wallet/pull/1487) [`48d4df4c`](https://github.com/FuelLabs/fuels-wallet/commit/48d4df4cdb1201e37ebaf3663879fc6ad42725d6) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - pump
+
+### Patch Changes
+
+- [#1489](https://github.com/FuelLabs/fuels-wallet/pull/1489) [`9f4334cd`](https://github.com/FuelLabs/fuels-wallet/commit/9f4334cd2c8d7f56bc2f101ddd3c052e0d1a4303) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: add db versioning
+
 ## 0.28.1
 
 ### Patch Changes
