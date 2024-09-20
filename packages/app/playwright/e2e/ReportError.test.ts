@@ -25,7 +25,7 @@ test.describe('ReportError', () => {
     });
   }
 
-  test('should show Error page when there is a unhandled js error in React', async () => {
+  test.only('should show Error page when there is a unhandled js error in React', async () => {
     await visit(page, '/');
     await page.evaluate(() => {
       window.testCrash();
@@ -37,11 +37,12 @@ test.describe('ReportError', () => {
     const errors = await getPageErrors(page);
     expect(errors.length).toBeGreaterThan(0);
 
+    await page.waitForTimeout(2000);
     // report error
     await getByAriaLabel(page, 'Send error reports').click();
     await expect(page.getByText(/Unexpected error/)).toHaveCount(0);
 
-    page.waitForTimeout(2000);
+    await page.waitForTimeout(2000);
     const errorsAfterReporting = await getPageErrors(page);
     expect(errorsAfterReporting.length).toBe(0);
   });
