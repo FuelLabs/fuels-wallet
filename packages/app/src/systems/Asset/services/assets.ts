@@ -158,7 +158,7 @@ export class AssetService {
         } as NetworkFuel,
       ],
       isCustom: true,
-    };
+    } as AssetData;
 
     return db.transaction('rw', db.assets, async () => {
       await db.assets.add(assetToCreate);
