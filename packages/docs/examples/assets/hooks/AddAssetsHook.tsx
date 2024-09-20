@@ -50,7 +50,7 @@ export function AddAssetsHook() {
           return (
             <Box.Stack
               // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              key={assetData.name + index}
+              key={(assetData?.name || '') + index}
               css={styles.item(isLast)}
             >
               <Box.Flex css={styles.itemHeader}>
@@ -68,7 +68,7 @@ export function AddAssetsHook() {
               </Box.Flex>
               <Input isDisabled={!fuel} css={styles.input}>
                 <Input.Field
-                  defaultValue={assetData.assetId}
+                  defaultValue={assetData?.assetId}
                   onBlur={(e) =>
                     onChangeAsset(index, {
                       ...asset,
@@ -105,7 +105,7 @@ export function AddAssetsHook() {
                 <Input isDisabled={!fuel} css={styles.input}>
                   <Input.Field
                     type="number"
-                    defaultValue={assetData.decimals}
+                    defaultValue={assetData?.decimals}
                     onBlur={(e) => {
                       onChangeAsset(index, {
                         ...asset,
