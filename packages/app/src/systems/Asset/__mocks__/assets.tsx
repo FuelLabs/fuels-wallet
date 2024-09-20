@@ -20,8 +20,6 @@ export const MOCK_FUEL_ASSETS = assets
 
     const data: AssetData = {
       ...asset,
-      name: 'Mocked ASset',
-      symbol: 'MOCK',
       networks: [fuelNetworkAsset],
     };
     return data;
@@ -31,8 +29,7 @@ export const MOCK_FUEL_ASSETS = assets
 export const MOCK_ASSETS = MOCK_FUEL_ASSETS.map((item) => ({
   ...item,
   amount: bn(14563943834),
-  assetId: uniqueId(),
-})) as Array<AssetData & { assetId: string; amount?: BNInput }>;
+})) as Array<AssetData & { amount?: BNInput }>;
 
 // BaseAssetId replacement
 export const MOCK_BASE_ASSET_ID =
