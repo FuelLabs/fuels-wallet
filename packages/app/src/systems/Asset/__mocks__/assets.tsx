@@ -1,5 +1,5 @@
-import type { NetworkData } from '@fuel-wallet/types';
-import { type AssetFuel, type BigNumberish, assets, bn } from 'fuels';
+import type { AssetData, NetworkData } from '@fuel-wallet/types';
+import { type BNInput, type BigNumberish, assets, bn } from 'fuels';
 import { graphql } from 'msw';
 import { uniqueId } from 'xstate/lib/utils';
 
@@ -14,24 +14,25 @@ export const MOCK_FUEL_ASSETS = assets
   .map((asset) => {
     const fuelNetworkAsset = asset.networks.find(
       (n) => n.type === 'fuel' && n.chainId === MOCK_NETWORK.chainId
-    ) as AssetFuel;
+    );
 
     if (!fuelNetworkAsset) return undefined;
 
-    return {
+    const data: AssetData = {
       ...asset,
-      assetId: fuelNetworkAsset.assetId,
-      decimals: fuelNetworkAsset.decimals,
-      type: fuelNetworkAsset.type,
-      chainId: fuelNetworkAsset.chainId,
+      name: 'Mocked ASset',
+      symbol: 'MOCK',
+      networks: [fuelNetworkAsset],
     };
+    return data;
   })
   .filter((v) => !!v);
 
 export const MOCK_ASSETS = MOCK_FUEL_ASSETS.map((item) => ({
   ...item,
   amount: bn(14563943834),
-}));
+  assetId: uniqueId(),
+})) as Array<AssetData & { assetId: string; amount?: BNInput }>;
 
 // BaseAssetId replacement
 export const MOCK_BASE_ASSET_ID =
