@@ -70,7 +70,7 @@ export const CUSTOM_ASSET_INPUT_2: Asset = {
   ],
 };
 
-export const CUSTOM_ASSET = {
+export const CUSTOM_ASSET_SCREEN = {
   assetId: '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d90',
   name: 'New',
   symbol: 'NEW',
