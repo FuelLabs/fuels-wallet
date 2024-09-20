@@ -25,7 +25,7 @@ test.describe('ReportError', () => {
     });
   }
 
-  test.only('should show Error page when there is a unhandled js error in React', async () => {
+  test('should show Error page when there is a unhandled js error in React', async () => {
     await visit(page, '/');
     await page.evaluate(() => {
       window.testCrash();
