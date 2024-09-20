@@ -105,7 +105,7 @@ export function SendSelect({
                     {...field}
                     id="search-address"
                     aria-label="Address Input"
-                    placeholder="Enter a fuel address"
+                    placeholder="Enter a Fuel address"
                   />
                 </Input>
               )}

@@ -82,7 +82,7 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
             )}
             {!assetAmount && (
               <Text as="span" css={styles.placeholder}>
-                Select one asset
+                Select an asset
               </Text>
             )}
           </Box.Flex>

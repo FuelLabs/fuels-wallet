@@ -22,7 +22,7 @@ Usage.args = {
   title: 'Confirm Transaction',
   children: (
     <Text>
-      Carefully check if all the details in your transaction are correct
+      Carefully check if all the details in your transaction are correct.
     </Text>
   ),
 };

@@ -14,7 +14,7 @@ export function WelcomeScreen() {
           <FuelLogo size={50} />
         </Box>
         <Header
-          title="Let's set up your Fuel Wallet"
+          title="Set up your Fuel Wallet"
           subtitle="Pick an option below to get started"
         />
         <Box css={styles.footer}>
@@ -25,7 +25,7 @@ export function WelcomeScreen() {
             <Box.Stack className="text">
               <Heading as="h3">Create new wallet</Heading>
               <Heading as="h4">
-                Create a fresh wallet and generate a new seed phrase.
+                Generate a new seed phrase.
               </Heading>
             </Box.Stack>
             <Box.Centered className="icon">
@@ -37,9 +37,9 @@ export function WelcomeScreen() {
               <Icon icon="SquareKey" stroke={1} size={40} />
             </Box.Centered>
             <Box.Stack className="text">
-              <Heading as="h3">Import seed phrase</Heading>
+              <Heading as="h3">Import wallet</Heading>
               <Heading as="h4">
-                Restore an existing wallet using your seed-phrase.
+                Restore with your seed phrase.
               </Heading>
             </Box.Stack>
             <Box.Centered className="icon">

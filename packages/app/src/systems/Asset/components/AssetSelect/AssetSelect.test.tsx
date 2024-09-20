@@ -33,7 +33,7 @@ describe('AssetSelect', () => {
   it('should select an asset when click', async () => {
     const { container } = render(<Content />, { wrapper: TestWrapper });
 
-    const input = screen.getByText('Select one asset');
+    const input = screen.getByText('Select an asset');
     expect(input).toBeInTheDocument();
     await act(() => fireEvent.click(input));
 
@@ -42,7 +42,7 @@ describe('AssetSelect', () => {
     await act(() => fireEvent.click(etherItem));
 
     const trigger = container.querySelector('.fuel_Dropdown-trigger');
-    expect(() => screen.getByText('Select one asset')).toThrow();
+    expect(() => screen.getByText('Select an asset')).toThrow();
     // debug();
     expect(trigger?.getAttribute('data-value')).toBe('Ethereum');
     expect(onSelect).toHaveBeenCalledWith(MOCK_ASSETS_AMOUNTS[0].assetId);
@@ -53,7 +53,7 @@ describe('AssetSelect', () => {
       <Content initialSelected={MOCK_ASSETS_AMOUNTS[0].assetId} />,
       { wrapper: TestWrapper }
     );
-    // expect(() => screen.getByText('Select one asset')).toThrow();
+    // expect(() => screen.getByText('Select an asset')).toThrow();
     const trigger = container.querySelector('.fuel_Dropdown-trigger');
     // console.log(`trigger?.textContent`, trigger?.textContent);
     expect(trigger?.textContent?.includes('Ethereum')).toBe(true);
@@ -62,7 +62,7 @@ describe('AssetSelect', () => {
   it('should clear on click on clear button', async () => {
     const { container } = render(<Content />, { wrapper: TestWrapper });
 
-    const input = screen.getByText('Select one asset');
+    const input = screen.getByText('Select an asset');
     await act(() => fireEvent.click(input));
     const etherItem = await screen.findByText('Ethereum');
     await act(() => fireEvent.click(etherItem));
@@ -73,7 +73,7 @@ describe('AssetSelect', () => {
 
     const clearBtn = await screen.findByLabelText('Clear');
     await act(() => fireEvent.click(clearBtn));
-    expect(await screen.findByText('Select one asset')).toBeInTheDocument();
+    expect(await screen.findByText('Select an asset')).toBeInTheDocument();
     expect(onSelect).toBeCalledWith(null);
   });
 });

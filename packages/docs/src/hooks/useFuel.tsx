@@ -17,11 +17,11 @@ export function useFuel() {
     fuelSDK
       .hasConnector()
       .then((hasWallet) => {
-        setError(hasWallet ? '' : 'fuel not detected on the window!');
+        setError(hasWallet ? '' : 'Fuel not detected on the window!');
         setLoading(false);
       })
       .catch(() => {
-        setError('fuel not detected on the window!');
+        setError('Fuel not detected on the window!');
         setLoading(false);
       });
 

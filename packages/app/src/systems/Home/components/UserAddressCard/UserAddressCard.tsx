@@ -33,7 +33,7 @@ export function UserAddressCard({ address }: Props) {
           onPress={copyAccount}
           size="sm"
         >
-          Copy User Address
+          Copy Address
         </Button>
       </Card.Body>
     </Card>

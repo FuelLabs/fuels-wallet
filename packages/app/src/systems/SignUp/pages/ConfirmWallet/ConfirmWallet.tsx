@@ -14,7 +14,7 @@ export function ConfirmWallet() {
     <Layout title="Create Wallet" isPublic>
       <MnemonicWrite
         title="Confirm phrase"
-        subtitle="Write your phrase again to ensure you wrote it down correctly."
+        subtitle="Enter your seed phrase again to ensure you wrote it down correctly."
         step={3}
         error={error || context.error}
         canProceed={!hasError}

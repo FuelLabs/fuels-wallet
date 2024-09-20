@@ -7,7 +7,7 @@ category: For Developers
 
 ## `useAccount`
 
-Retrieves the current fuel account and returns the account address `<string | null>`.
+Retrieves the current Fuel account and returns the account address `<string | null>`.
 
 ```tsx
 const { account } = useAccount();
@@ -19,7 +19,7 @@ console.log(account);
 
 ## `useAccounts`
 
-Retrieves the fuel accounts and returns the addresses of the accounts `<string[]>`
+Retrieves the Fuel accounts and returns the addresses of the accounts `<string[]>`
 
 ```tsx
 const { accounts } = useAccounts();
@@ -267,7 +267,7 @@ const { receipts } = useTransactionResult({
 
 ## `useWallet`
 
-Retrieves wallet instance `<Account | null>` and ensures the presence of a valid address and fuel instance.
+Retrieves wallet instance `<Account | null>` and ensures the presence of a valid address and Fuel instance.
 
 ```tsx
 const { wallet } = useWallet({ address: 'fuel1r20zhd...' });

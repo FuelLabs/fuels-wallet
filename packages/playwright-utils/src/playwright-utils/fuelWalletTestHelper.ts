@@ -42,7 +42,7 @@ export class FuelWalletTestHelper {
 
     const importSeedPhraseButton = signupPage
       .locator('h3')
-      .getByText('Import seed phrase');
+      .getByText('Import wallet');
     await importSeedPhraseButton.click();
 
     await signupPage.getByRole('checkbox').click();
@@ -61,7 +61,7 @@ export class FuelWalletTestHelper {
     await enterPassword.fill(password);
     const confirmPassword = getByAriaLabel(signupPage, 'Confirm Password');
     await confirmPassword.fill(password);
-    const toFinish = getButtonByText(signupPage, 'Next: Finish set-up');
+    const toFinish = getButtonByText(signupPage, 'Next: Finish set up');
     await toFinish.click();
 
     await signupPage
@@ -160,13 +160,13 @@ export class FuelWalletTestHelper {
     const assetIdInput = getByAriaLabel(walletPage, 'Asset ID');
     await assetIdInput.fill(assetId);
 
-    const assetNameInput = walletPage.getByLabel('Asset name');
+    const assetNameInput = walletPage.getByLabel('Asset Name');
     await assetNameInput.fill(name);
-    const assetSymbolInput = walletPage.getByLabel('Asset symbol');
+    const assetSymbolInput = walletPage.getByLabel('Asset Symbol');
     await assetSymbolInput.fill(symbol);
-    const assetDecimalsInput = walletPage.getByLabel('Asset decimals');
+    const assetDecimalsInput = walletPage.getByLabel('Asset Decimals');
     await assetDecimalsInput.fill(decimals.toString());
-    const assetImageUrlInput = walletPage.getByLabel('Asset image Url');
+    const assetImageUrlInput = walletPage.getByLabel('Asset Image URL');
     await assetImageUrlInput.fill(imageUrl || '');
 
     const saveButton = getButtonByText(walletPage, 'Save');
@@ -195,13 +195,13 @@ export class FuelWalletTestHelper {
       .getByText('(Add)')
       .click();
 
-    const assetNameInput = walletPage.getByLabel('Asset name');
+    const assetNameInput = walletPage.getByLabel('Asset Name');
     await assetNameInput.fill(name);
-    const assetSymbolInput = walletPage.getByLabel('Asset symbol');
+    const assetSymbolInput = walletPage.getByLabel('Asset Symbol');
     await assetSymbolInput.fill(symbol);
-    const assetDecimalsInput = walletPage.getByLabel('Asset decimals');
+    const assetDecimalsInput = walletPage.getByLabel('Asset Decimals');
     await assetDecimalsInput.fill(decimals.toString());
-    const assetImageUrlInput = walletPage.getByLabel('Asset image Url');
+    const assetImageUrlInput = walletPage.getByLabel('Asset Image URL');
     await assetImageUrlInput.fill(imageUrl || '');
 
     const saveButton = getButtonByText(walletPage, 'Save');
@@ -211,7 +211,7 @@ export class FuelWalletTestHelper {
   async addAccount() {
     const accountsButton = getByAriaLabel(this.walletPage, 'Accounts');
     await accountsButton.click();
-    const addAccountButton = getByAriaLabel(this.walletPage, 'Add account');
+    const addAccountButton = getByAriaLabel(this.walletPage, 'Add Account');
     await addAccountButton.click();
   }
 
@@ -227,10 +227,10 @@ export class FuelWalletTestHelper {
     await networksButton.click();
 
     if ((await this.walletPage.getByText(chainName).count()) === 0) {
-      const addNetworkButton = getByAriaLabel(this.walletPage, 'Add network');
+      const addNetworkButton = getByAriaLabel(this.walletPage, 'Add Network');
       await addNetworkButton.click();
 
-      const urlInput = getByAriaLabel(this.walletPage, 'Network url');
+      const urlInput = getByAriaLabel(this.walletPage, 'Network URL');
       await urlInput.fill(providerUrl);
 
       await getByAriaLabel(this.walletPage, 'Test connection').click();

@@ -30,7 +30,7 @@ test.describe('RecoverWallet', () => {
 
   test('should be able to recover a wallet', async () => {
     await visit(page, '/wallet');
-    await getElementByText(page, /Import seed phrase/i).click();
+    await getElementByText(page, /Import wallet/i).click();
 
     /** Accept terms */
     await hasText(page, /Terms of use Agreement/i);
@@ -45,7 +45,7 @@ test.describe('RecoverWallet', () => {
     await getButtonByText(page, /Paste/i).click();
 
     /** Confirm Mnemonic */
-    await hasText(page, /Recover wallet/i);
+    await hasText(page, /Restore wallet/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
 
@@ -69,7 +69,7 @@ test.describe('RecoverWallet', () => {
     test('should be able to auto-select a 24-word mnemonic', async () => {
       await visit(page, '/wallet');
       await logout(page);
-      await getElementByText(page, /Import seed phrase/i).click();
+      await getElementByText(page, /Import walle/i).click();
 
       /** Accept terms and conditions */
       await hasText(page, /Terms of use Agreement/i);
@@ -79,7 +79,7 @@ test.describe('RecoverWallet', () => {
 
       /** Select the wrong mnemonic size */
       const format = await getByAriaLabel(page, 'Select format');
-      await format.selectOption('I have a 12 words Seed Phrase');
+      await format.selectOption('I have a 12 words seed phrase');
 
       /** Copy words to clipboard area */
       await page.evaluate(`navigator.clipboard.writeText('${WORDS_24}')`);
@@ -98,7 +98,7 @@ test.describe('RecoverWallet', () => {
       });
 
       /** Confirm Mnemonic */
-      await hasText(page, /Recover wallet/i);
+      await hasText(page, /Restore wallet/i);
       await getButtonByText(page, /Paste/i).click();
       await getButtonByText(page, /Next/i).click();
 
@@ -121,7 +121,7 @@ test.describe('RecoverWallet', () => {
     test('should be able to auto-select a 15-word mnemonic if pasting only 13-words', async () => {
       await visit(page, '/wallet');
       await logout(page);
-      await getElementByText(page, /Import seed phrase/i).click();
+      await getElementByText(page, /Import wallet/i).click();
 
       /** Accept terms and conditions */
       await hasText(page, /Terms of use Agreement/i);
@@ -131,7 +131,7 @@ test.describe('RecoverWallet', () => {
 
       /** Select the wrong mnemonic size */
       const format = await getByAriaLabel(page, 'Select format');
-      await format.selectOption('I have a 12 words Seed Phrase');
+      await format.selectOption('I have a 12 words seed phrase');
 
       /** Copy words to clipboard area */
       await page.evaluate(`navigator.clipboard.writeText('${WORDS_13}')`);
@@ -153,7 +153,7 @@ test.describe('RecoverWallet', () => {
 
   test('should be able to recover a wallet from 24-word mnemonic', async () => {
     await visit(page, '/wallet');
-    await getElementByText(page, /Import seed phrase/i).click();
+    await getElementByText(page, /Import wallet/i).click();
 
     /** Accept terms */
     await hasText(page, /Terms of use Agreement/i);
@@ -163,7 +163,7 @@ test.describe('RecoverWallet', () => {
 
     /** Select the mnemonic size */
     const format = await getByAriaLabel(page, 'Select format');
-    await format.selectOption('I have a 24 words Seed Phrase');
+    await format.selectOption('I have a 24 words seed phrase');
 
     /** Copy words to clipboard area */
     await page.evaluate(`navigator.clipboard.writeText('${WORDS_24}')`);
@@ -172,7 +172,7 @@ test.describe('RecoverWallet', () => {
     await getButtonByText(page, /Paste/i).click();
 
     /** Confirm Mnemonic */
-    await hasText(page, /Recover wallet/i);
+    await hasText(page, /Restore wallet/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
 

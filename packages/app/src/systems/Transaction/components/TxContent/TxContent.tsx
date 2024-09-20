@@ -40,7 +40,7 @@ const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
 const ConfirmHeader = () => (
   <Alert status="warning" css={styles.alert} aria-label="Confirm Transaction">
     <Alert.Description>
-      Carefully check if all the details in your transaction are correct
+      Carefully check if all the details in your transaction are correct.
     </Alert.Description>
   </Alert>
 );

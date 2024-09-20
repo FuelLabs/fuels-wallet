@@ -170,15 +170,15 @@ export function Connected() {
       <div className="Accounts">
         <h3>Current Network</h3>
         <div>
-          <b>Chain Id:</b> {network?.chainId?.toString()}
+          <b>Chain ID:</b> {network?.chainId?.toString()}
         </div>
         <div>
-          <b>Url:</b> {network?.url}
+          <b>URL:</b> {network?.url}
         </div>
       </div>
 
       <div className="Accounts">
-        <h3>Connected accounts</h3>
+        <h3>Connected Accounts</h3>
         {accounts?.map((account) => (
           <div key={account}>
             <b>Account:</b> {account}
