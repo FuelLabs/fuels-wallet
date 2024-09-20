@@ -1,5 +1,11 @@
 # @fuel-wallet/types
 
+## 0.29.1
+
+### Patch Changes
+
+- [#1489](https://github.com/FuelLabs/fuels-wallet/pull/1489) [`9f4334cd`](https://github.com/FuelLabs/fuels-wallet/commit/9f4334cd2c8d7f56bc2f101ddd3c052e0d1a4303) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: add db versioning
+
 ## 0.29.0
 
 ## 0.28.0
