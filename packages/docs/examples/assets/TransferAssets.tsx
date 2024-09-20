@@ -17,13 +17,13 @@ export function TransferAssets() {
   const [providerUrl, setProviderUrl] = useState<string>('');
   const [amount, setAmount] = useState<BN | null>(bn.parseUnits('0.00001'));
   const [receiverAddress, setAddr] = useState<string>(
-    'fuel1a6msn9zmjpvv84g08y3t6x6flykw622s48k2lqg257pf9924pnfq50tdmw'
+    '0xeeb709945b9058c3d50f3922bd1b49f92ced2950a9ecaf810aa7829295550cd2'
   );
   const [assetId, setAssetId] = useState<string>();
   const decimals = useMemo(() => {
     const asset = assets
       .map((asset) => getAssetByChain(asset, 0))
-      .find((asset) => asset.assetId === assetId);
+      .find((asset) => asset?.assetId === assetId);
     return asset?.decimals || 0;
   }, [assetId, assets]);
 
@@ -63,6 +63,7 @@ export function TransferAssets() {
     <ExampleBox error={errorSendingTransaction}>
       <Box.Stack css={{ gap: '$4' }}>
         <Box.Flex gap="$4" direction={'column'}>
+          <Text css={styles.label}>Asset ID:</Text>
           <Input css={{ width: '100%' }}>
             <Input.Field
               value={assetId}
@@ -73,6 +74,7 @@ export function TransferAssets() {
               }}
             />
           </Input>
+          <Text css={styles.label}>Address to transfer:</Text>
           <Input css={{ width: '100%' }}>
             <Input.Field
               value={receiverAddress}
@@ -80,6 +82,7 @@ export function TransferAssets() {
               onChange={(e) => setAddr(e.target.value)}
             />
           </Input>
+          <Text css={styles.label}>Amount:</Text>
           {decimals ? (
             <InputAmount
               // Force component to re-render when decimals change
@@ -147,5 +150,9 @@ const styles = {
     backgroundColor: '$intentsBase4',
     maxWidth: 300,
     wordWrap: 'break-word',
+  }),
+  label: cssObj({
+    fontSize: '$sm',
+    mb: '-8px',
   }),
 };

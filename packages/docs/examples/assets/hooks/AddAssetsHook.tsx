@@ -50,7 +50,7 @@ export function AddAssetsHook() {
           return (
             <Box.Stack
               // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              key={assetData.assetId + index}
+              key={assetData.name + index}
               css={styles.item(isLast)}
             >
               <Box.Flex css={styles.itemHeader}>
