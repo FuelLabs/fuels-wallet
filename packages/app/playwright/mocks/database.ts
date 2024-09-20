@@ -5,7 +5,7 @@ import type {
   Account as WalletAccount,
 } from '@fuel-wallet/types';
 import type { Page } from '@playwright/test';
-import type { Asset, WalletManagerAccount } from 'fuels';
+import type { Asset, AssetFuel, WalletManagerAccount } from 'fuels';
 import {
   Address,
   Mnemonic,
@@ -74,30 +74,25 @@ export const CUSTOM_ASSET = {
   assetId: '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d90',
   name: 'New',
   symbol: 'NEW',
-  imageUrl:
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
-  isCustom: true,
-  decimals: 2,
-};
-
-export const CUSTOM_ASSET_2 = {
-  assetId: '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d91',
-  name: 'New1',
-  symbol: 'NEW1',
-  imageUrl:
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
+  icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
   isCustom: true,
   decimals: 2,
 };
 
 export const ALT_ASSET = {
-  assetId: '0x0000000000000000000000000000000000000000000000000000000000000001',
   name: 'Alt Token',
   symbol: 'ALT',
-  imageUrl:
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
+  icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
   isCustom: true,
-  decimals: 2,
+  networks: [
+    {
+      type: 'fuel',
+      assetId:
+        '0x0000000000000000000000000000000000000000000000000000000000000001',
+      decimals: 2,
+      chainId: 0,
+    } as AssetFuel,
+  ],
 };
 
 export const FUEL_NETWORK = {

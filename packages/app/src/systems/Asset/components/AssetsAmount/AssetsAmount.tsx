@@ -111,7 +111,11 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
         </Text>
       </Copyable>
       <Box.Flex css={styles.amount}>
-        {formatAmount({ amount, options: { units: decimals || 0 } })} {symbol}
+        {formatAmount({
+          amount,
+          options: { units: decimals || 0, precision: decimals || 0 },
+        })}{' '}
+        {symbol}
       </Box.Flex>
     </Grid>
   );

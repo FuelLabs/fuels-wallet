@@ -25,7 +25,7 @@ export async function seedWallet(address: string, amount: BN) {
   const transfAsset = await genesisWallet.transfer(
     Address.fromString(address),
     amount,
-    ALT_ASSET.assetId
+    ALT_ASSET.networks[0].assetId
   );
   await transfAsset.wait();
 }
