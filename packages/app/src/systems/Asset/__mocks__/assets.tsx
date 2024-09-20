@@ -10,18 +10,23 @@ export const MOCK_NETWORK: NetworkData = {
   url: 'https://testnet.fuel.network/v1/graphql',
 };
 
-export const MOCK_FUEL_ASSETS = assets.map((asset) => {
-  const fuelNetworkAsset = asset.networks.find(
-    (n) => n.type === 'fuel' && n.chainId === MOCK_NETWORK.chainId
-  ) as AssetFuel;
-  return {
-    ...asset,
-    assetId: fuelNetworkAsset.assetId,
-    decimals: fuelNetworkAsset.decimals,
-    type: fuelNetworkAsset.type,
-    chainId: fuelNetworkAsset.chainId,
-  };
-});
+export const MOCK_FUEL_ASSETS = assets
+  .map((asset) => {
+    const fuelNetworkAsset = asset.networks.find(
+      (n) => n.type === 'fuel' && n.chainId === MOCK_NETWORK.chainId
+    ) as AssetFuel;
+
+    if (!fuelNetworkAsset) return undefined;
+
+    return {
+      ...asset,
+      assetId: fuelNetworkAsset.assetId,
+      decimals: fuelNetworkAsset.decimals,
+      type: fuelNetworkAsset.type,
+      chainId: fuelNetworkAsset.chainId,
+    };
+  })
+  .filter((v) => !!v);
 
 export const MOCK_ASSETS = MOCK_FUEL_ASSETS.map((item) => ({
   ...item,
