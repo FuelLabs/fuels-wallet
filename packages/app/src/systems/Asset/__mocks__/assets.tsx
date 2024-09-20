@@ -12,12 +12,14 @@ export const MOCK_NETWORK: NetworkData = {
 
 export const MOCK_FUEL_ASSETS = assets.map((asset) => {
   const fuelNetworkAsset = asset.networks.find(
-    (n) => n.type === 'fuel'
+    (n) => n.type === 'fuel' && n.chainId === MOCK_NETWORK.chainId
   ) as AssetFuel;
   return {
     ...asset,
     assetId: fuelNetworkAsset.assetId,
     decimals: fuelNetworkAsset.decimals,
+    type: fuelNetworkAsset.type,
+    chainId: fuelNetworkAsset.chainId,
   };
 });
 
