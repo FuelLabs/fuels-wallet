@@ -80,30 +80,30 @@ test.describe('FuelWallet Extension', () => {
       expect(version).toEqual(process.env.VITE_APP_VERSION);
     });
 
-    // await test.step('Should reconnect if service worker stops', async () => {
-    //   // Stop service worker
-    //   const swPage = await context.newPage();
-    //   await swPage.goto('chrome://serviceworker-internals', {
-    //     waitUntil: 'domcontentloaded',
-    //   });
-    //   await swPage.getByRole('button', { name: 'Stop' }).click();
-    //   await swPage.pause();
-    //   // Wait service worker to reconnect
-    //   const pingRet = await blankPage.waitForFunction(async () => {
-    //     async function testConnection() {
-    //       try {
-    //         await window.fuel.ping();
-    //         return true;
-    //       } catch (_err) {
-    //         return testConnection();
-    //       }
-    //     }
-    //     return testConnection();
-    //   });
-    //   const connectionStatus = await pingRet.jsonValue();
-    //   expect(connectionStatus).toBeTruthy();
-    //   await swPage.close();
-    // });
+    await test.step('Should reconnect if service worker stops', async () => {
+      // Stop service worker
+      const swPage = await context.newPage();
+      await swPage.goto('chrome://serviceworker-internals', {
+        waitUntil: 'domcontentloaded',
+      });
+      await swPage.getByRole('button', { name: 'Stop' }).click();
+      await swPage.pause();
+      // Wait service worker to reconnect
+      const pingRet = await blankPage.waitForFunction(async () => {
+        async function testConnection() {
+          try {
+            await window.fuel.ping();
+            return true;
+          } catch (_err) {
+            return testConnection();
+          }
+        }
+        return testConnection();
+      });
+      const connectionStatus = await pingRet.jsonValue();
+      expect(connectionStatus).toBeTruthy();
+      await swPage.close();
+    });
 
     await test.step('Create wallet', async () => {
       const pages = context.pages();
