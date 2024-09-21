@@ -230,7 +230,7 @@ export const networksMachine = createMachine(
           const createdNetwork = await NetworkService.addNetwork({
             data: {
               chainId,
-              name: nameCheck == true ? input.data.name + ' ' + DateNow : input.data.name,
+              name: nameCheck == true ? (input.data.name + ' ' + DateNow) : input.data.name,
               url: input.data.url,
             },
           });
