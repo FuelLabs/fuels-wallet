@@ -1,16 +1,21 @@
-import type { BNInput } from 'fuels';
+import type { Asset, AssetFuel, BNInput } from 'fuels';
 
-export type AssetData = {
-  name?: string;
-  assetId: string;
-  imageUrl?: string;
-  symbol?: string;
-  decimals?: number;
+export type AssetData = Asset & {
+  // override icon to don't be required
+  icon?: string;
   isCustom?: boolean;
-  chainId?: number;
-  network?: string;
 };
 
 export type AssetAmount = AssetData & {
+  amount?: BNInput;
+};
+
+export type AssetFuelData = AssetFuel & {
+  // override icon to don't be required
+  icon?: string;
+  isCustom?: boolean;
+};
+
+export type AssetFuelAmount = AssetFuelData & {
   amount?: BNInput;
 };

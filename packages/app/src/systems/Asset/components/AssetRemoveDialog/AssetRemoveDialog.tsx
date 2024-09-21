@@ -6,12 +6,12 @@ import { useState } from 'react';
 
 type AssetRemoveDialogProps = {
   children: ReactNode;
-  asset: AssetData;
+  assetName: string;
   onConfirm: () => void;
 };
 
 export function AssetRemoveDialog({
-  asset,
+  assetName,
   onConfirm,
   children,
 }: AssetRemoveDialogProps) {
@@ -32,7 +32,7 @@ export function AssetRemoveDialog({
       <AlertDialog.Content css={styles.popupContent}>
         <AlertDialog.Heading>Are you sure?</AlertDialog.Heading>
         <AlertDialog.Description>
-          {asset.name} will be deleted. This action cannot be undone.
+          {assetName} will be deleted. This action cannot be undone.
         </AlertDialog.Description>
         <AlertDialog.Footer>
           <AlertDialog.Cancel>

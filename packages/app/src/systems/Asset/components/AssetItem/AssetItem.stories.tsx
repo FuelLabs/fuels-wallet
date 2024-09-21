@@ -12,13 +12,7 @@ export default {
 
 export const Usage = (args: AssetItemProps) => (
   <Box css={{ width: 300 }}>
-    <AssetItem
-      {...args}
-      asset={{
-        ...MOCK_FUEL_ASSETS[0],
-        amount: bn(14563943834),
-      }}
-    />
+    <AssetItem {...args} asset={MOCK_FUEL_ASSETS[0]} amount={bn(14563943834)} />
   </Box>
 );
 

@@ -9,7 +9,7 @@ export type AssetFormValues = {
   name: string;
   assetId: string;
   decimals: number;
-  imageUrl?: string;
+  icon?: string;
   symbol: string;
 };
 
@@ -43,7 +43,7 @@ const schema = yup
       .min(0)
       .max(19)
       .required('Decimals is required'),
-    imageUrl: yup.string().test('is-url-valid', 'URL is not valid', isValidUrl),
+    icon: yup.string().test('is-url-valid', 'URL is not valid', isValidUrl),
   })
   .required();
 
@@ -51,7 +51,7 @@ const DEFAULT_VALUES = {
   assetId: '',
   contractId: '',
   name: '',
-  imageUrl: '',
+  icon: '',
   decimals: 0,
   symbol: '',
 };

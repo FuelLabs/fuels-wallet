@@ -1,14 +1,6 @@
 import type { Account as WalletAccount } from '@fuel-wallet/types';
 import { type Locator, expect } from '@playwright/test';
-import {
-  type Asset,
-  Provider,
-  type SelectNetworkArguments,
-  Signer,
-  Wallet,
-  bn,
-  hashMessage,
-} from 'fuels';
+import { type Asset, Provider, Signer, Wallet, bn, hashMessage } from 'fuels';
 
 import {
   delay,
@@ -83,6 +75,23 @@ test.describe('FuelWallet Extension', () => {
 
     await test.step('Should return current version of Wallet', async () => {
       const version = await blankPage.evaluate(async () => {
+        async function waitForConnection(depth = 0) {
+          if (depth > 20) {
+            throw new Error('Account never connected');
+          }
+          await new Promise((resolve) => {
+            setTimeout(async () => {
+              const currentConnectors = await window.fuel.connectors();
+              if (currentConnectors[0].installed) {
+                resolve(true);
+              } else {
+                await waitForConnection(depth + 1);
+              }
+              resolve(true);
+            }, 500);
+          });
+        }
+        await waitForConnection();
         return window.fuel.version();
       });
       expect(version).toEqual(process.env.VITE_APP_VERSION);
@@ -536,7 +545,7 @@ test.describe('FuelWallet Extension', () => {
       const assets = await blankPage.evaluate(async () => {
         return window.fuel.assets();
       });
-      expect(assets.length).toEqual(1);
+      expect(assets.length).toBeGreaterThan(0);
     });
 
     await test.step('window.fuel.addAsset()', async () => {

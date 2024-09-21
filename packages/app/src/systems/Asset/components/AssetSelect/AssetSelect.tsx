@@ -8,12 +8,12 @@ import {
   IconButton,
   Text,
 } from '@fuel-ui/react';
-import type { AssetAmount } from '@fuel-wallet/types';
+import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { memo, useState } from 'react';
 import type { Maybe } from '~/systems/Core';
 import { shortAddress } from '~/systems/Core';
 
-export type AssetSelectInput = AssetAmount;
+export type AssetSelectInput = Partial<AssetFuelAmount>;
 
 export type AssetSelectProps = {
   items?: Maybe<AssetSelectInput[]>;
@@ -60,7 +60,7 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
                   <>
                     <Avatar
                       name={assetAmount?.name}
-                      src={assetAmount?.imageUrl}
+                      src={assetAmount?.icon}
                       css={{ height: 18, width: 18 }}
                     />
                     <Text as="span" className="asset-name">
@@ -70,8 +70,9 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
                 ) : (
                   <>
                     <Avatar.Generated
-                      hash={assetAmount.assetId}
-                      css={{ height: 18, width: 18 }}
+                      hash={assetAmount.assetId || ''}
+                      css={{ height: 14, width: 14 }}
+                      size="xsm"
                     />
                     <Text as="span" className="asset-name">
                       {shortAddress(assetAmount?.assetId)}
@@ -104,19 +105,19 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
         onAction={(assetId: any) => onSelect(assetId.toString())}
       >
         {(items || []).map((item) => {
-          const assetId = item.assetId.toString();
+          const assetId = item.assetId?.toString();
           const itemAsset = items?.find((a) => a.assetId === assetId);
-          const { name, symbol, imageUrl } = itemAsset || {};
+          const { name, symbol, icon } = itemAsset || {};
 
           return (
             <Dropdown.MenuItem
-              key={item.assetId.toString()}
-              textValue={item.assetId.toString()}
+              key={item.assetId?.toString()}
+              textValue={item.assetId?.toString()}
             >
-              {imageUrl ? (
-                <Avatar size="xsm" name={name || ''} src={imageUrl} />
+              {icon ? (
+                <Avatar size="xsm" name={name || ''} src={icon} />
               ) : (
-                <Avatar.Generated size="xsm" hash={assetId} />
+                <Avatar.Generated size="sm" hash={assetId || ''} />
               )}
               <Box className="asset-info">
                 <Text as="span" className="asset-name">
@@ -220,8 +221,8 @@ const styles = {
       fontSize: '$sm',
       lineHeight: '$tight',
     },
-    '.asset-symbol': {
-      textTransform: 'uppercase',
+    '.asset-name': {
+      mb: '2px',
     },
   }),
 };

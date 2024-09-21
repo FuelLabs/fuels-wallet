@@ -3,6 +3,7 @@ import { Services, store } from '~/store';
 import { Pages } from '~/systems/Core';
 
 import type { AssetsMachineState } from '../machines';
+import { AssetFormValues } from './useAssetForm';
 
 const selectors = {
   assets(state: AssetsMachineState) {
@@ -49,11 +50,11 @@ export function useAssets() {
   }
 
   function goToEdit(
-    assetId: string,
+    name: string,
     options: { eraseLastNavigation: boolean } = { eraseLastNavigation: false }
   ) {
     navigate(
-      Pages.assetsEdit({ id: assetId }),
+      Pages.assetsEdit({ name }),
       options?.eraseLastNavigation
         ? {
             replace: true,

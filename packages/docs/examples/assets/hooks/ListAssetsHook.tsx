@@ -17,9 +17,11 @@ export function ListAssetsHook() {
           <Box.Stack gap="$1" css={{ mt: '$2' }}>
             {assets.map((a) => {
               const asset = getAssetByChain(a, 0);
+              if (!asset) return null;
+
               return (
                 <Tag size="xs" variant="ghost" key={JSON.stringify(asset)}>
-                  {asset.name} ({asset.symbol}): {asset.assetId}
+                  {asset?.name} ({asset?.symbol}){/* : {asset.assetId} */}
                 </Tag>
               );
             })}

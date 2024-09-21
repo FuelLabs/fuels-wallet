@@ -56,7 +56,8 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
     const depositHalfInput = page.getByLabel('Forward amount external mint');
     await depositHalfInput.fill(depositAmount);
 
-    const mintAmount = '1.2345';
+    const mintAmount = '12345';
+    const formattedMintAmount = '12,345';
     const mintInput = page.getByLabel('Mint amount external mint');
     await mintInput.fill(mintAmount);
 
@@ -106,7 +107,7 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
     );
     await hasText(walletNotificationPage, shortAddress(assetId));
     // test mint amount is correct
-    await hasText(walletNotificationPage, mintAmount);
+    await hasText(walletNotificationPage, formattedMintAmount);
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
@@ -148,9 +149,10 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
       )
     ).toBe(Number.parseFloat(halfDepositAmount));
     expect(
-      Number.parseFloat(
-        postDepositBalanceTkn.sub(preDepositBalanceTkn).format({ precision: 6 })
-      )
-    ).toBe(Number.parseFloat(mintAmount));
+      postDepositBalanceTkn
+        .sub(preDepositBalanceTkn)
+        .mul(10)
+        .format({ units: 1, precision: 0 })
+    ).toBe(formattedMintAmount);
   });
 });

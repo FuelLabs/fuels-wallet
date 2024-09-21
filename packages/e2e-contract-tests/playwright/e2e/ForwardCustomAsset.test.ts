@@ -64,7 +64,8 @@ test.describe('Forward Custom Asset', () => {
 
     await waitForResult();
 
-    const forwardCustomAssetAmount = '1.2345';
+    const forwardCustomAssetAmount = '12345';
+    const formattedForwardCustomAssetAmount = '12,345';
     const forwardCustomAssetInput = page
       .getByLabel('Forward custom asset card')
       .locator('input');
@@ -96,7 +97,7 @@ test.describe('Forward Custom Asset', () => {
     await hasText(walletNotificationPage, shortAddress(assetId));
 
     // test forward custom asset amount is correct
-    await hasText(walletNotificationPage, forwardCustomAssetAmount);
+    await hasText(walletNotificationPage, formattedForwardCustomAssetAmount);
 
     // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');
@@ -119,9 +120,10 @@ test.describe('Forward Custom Asset', () => {
     await waitSuccessTransaction(page);
     const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
-      Number.parseFloat(
-        preDepositBalanceTkn.sub(postDepositBalanceTkn).format({ precision: 4 })
-      )
-    ).toBe(Number.parseFloat(forwardCustomAssetAmount));
+      preDepositBalanceTkn
+        .sub(postDepositBalanceTkn)
+        .mul(10)
+        .format({ units: 1, precision: 0 })
+    ).toBe(formattedForwardCustomAssetAmount);
   });
 });

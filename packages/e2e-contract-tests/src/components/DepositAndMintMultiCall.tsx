@@ -44,7 +44,7 @@ export const DepositAndMintMultiCalls = () => {
               await depositAndMintMultiCall({
                 wallet: wallet.wallet,
                 forwardAmount: bn.parseUnits(forwardAmount),
-                mintAmount: bn.parseUnits(mintAmount),
+                mintAmount: bn.parseUnits(mintAmount, 1).div(10),
                 assetId: baseAssetId,
                 baseAssetId,
               });
