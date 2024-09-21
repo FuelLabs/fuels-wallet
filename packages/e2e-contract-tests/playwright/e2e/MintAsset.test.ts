@@ -48,7 +48,8 @@ test.describe('Mint Assets', () => {
   test('e2e mint unknown assets', async ({ page }) => {
     await connect(page, fuelWalletTestHelper);
 
-    const mintAmount = '1.2345';
+    const mintAmount = '12345';
+    const formattedMintAmount = '12,345';
     const mintInput = page.getByLabel('Mint asset card').locator('input');
     await mintInput.fill(mintAmount);
 
@@ -64,7 +65,7 @@ test.describe('Mint Assets', () => {
     await hasText(walletNotificationPage, shortAddress(assetId), 0, 10000);
 
     // test mint amount is correct
-    await hasText(walletNotificationPage, mintAmount);
+    await hasText(walletNotificationPage, formattedMintAmount);
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
@@ -91,10 +92,11 @@ test.describe('Mint Assets', () => {
     await waitSuccessTransaction(page);
     const postMintBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
-      Number.parseFloat(
-        postMintBalanceTkn.sub(preMintBalanceTkn).format({ precision: 6 })
-      )
-    ).toBe(Number.parseFloat(mintAmount));
+      postMintBalanceTkn
+        .sub(preMintBalanceTkn)
+        .mul(10)
+        .format({ units: 1, precision: 0 })
+    ).toBe(formattedMintAmount);
   });
 
   test('e2e mint known asset', async ({ page }) => {

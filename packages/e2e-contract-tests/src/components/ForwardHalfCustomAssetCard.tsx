@@ -35,7 +35,7 @@ export const ForwardHalfCustomAssetCard = () => {
             if (assetId && wallet.wallet && amount) {
               await depositHalf({
                 wallet: wallet.wallet,
-                amount: bn.parseUnits(amount),
+                amount: bn.parseUnits(amount, 1).div(10),
                 assetId,
               });
             }
