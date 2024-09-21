@@ -40,7 +40,7 @@ export const ForwardHalfAndMintCard = () => {
               await depositHalfAndMint({
                 wallet: wallet.wallet,
                 forwardAmount: bn.parseUnits(forwardAmount),
-                mintAmount: bn.parseUnits(mintAmount),
+                mintAmount: bn.parseUnits(mintAmount, 1).mul(10),
                 assetId: baseAssetId,
                 baseAssetId,
               });
