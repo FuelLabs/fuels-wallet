@@ -34,7 +34,7 @@ export const ForwardCustomAssetCard = () => {
             if (assetId && wallet.wallet && amount) {
               await deposit({
                 wallet: wallet.wallet,
-                amount: bn.parseUnits(amount),
+                amount: bn.parseUnits(amount, 1).div(10),
                 assetId,
               });
             }

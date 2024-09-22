@@ -29,15 +29,16 @@ test.describe('Forward Half Custom Asset', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;
   let masterWallet: WalletUnlocked;
 
-  const forwardCustomAssetAmount = '0.010';
-  const halfForwardCustomAssetAmount = '0.005';
+  const forwardCustomAssetAmount = '10000';
+  const formattedForwardCustomAssetAmount = '10,000';
+  const formattedHalfForwardCustomAssetAmount = '5,000';
 
   test.beforeEach(async ({ context, extensionId, page }) => {
     ({ fuelWallet, fuelWalletTestHelper, masterWallet } = await testSetup({
       context,
       page,
       extensionId,
-      amountToFund: bn.parseUnits(forwardCustomAssetAmount).mul(2),
+      amountToFund: bn.parseUnits(forwardCustomAssetAmount, 1).mul(2),
     }));
   });
 
@@ -58,6 +59,8 @@ test.describe('Forward Half Custom Asset', () => {
         bits: fuelWallet.address.toB256(),
       },
     };
+
+    const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
     const { waitForResult } = await contract.functions
       .mint(recipient, await getBaseAssetId(), bn(100_000_000_000))
       .txParams({ gasLimit: 1_000_000 })
@@ -91,17 +94,19 @@ test.describe('Forward Half Custom Asset', () => {
     // test the forward asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
     // test forward asset id is correct
-    const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
     await hasText(walletNotificationPage, shortAddress(assetId));
     // test forward custom asset amount is correct
-    await hasText(walletNotificationPage, forwardCustomAssetAmount);
+    await hasText(walletNotificationPage, formattedForwardCustomAssetAmount);
 
     // test return asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 1, 5000, true);
     // test return asset id is shown
     await hasText(walletNotificationPage, shortAddress(assetId), 1);
     // test return asset amount is correct
-    await hasText(walletNotificationPage, halfForwardCustomAssetAmount);
+    await hasText(
+      walletNotificationPage,
+      formattedHalfForwardCustomAssetAmount
+    );
 
     // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');
@@ -130,11 +135,10 @@ test.describe('Forward Half Custom Asset', () => {
     await waitSuccessTransaction(page);
     const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
-      Number.parseFloat(
-        preDepositBalanceTkn
-          .sub(postDepositBalanceTkn)
-          .format({ precision: 6, units: 9 })
-      )
-    ).toBe(Number.parseFloat(halfForwardCustomAssetAmount));
+      preDepositBalanceTkn
+        .sub(postDepositBalanceTkn)
+        .mul(10)
+        .format({ units: 1, precision: 0 })
+    ).toBe(formattedHalfForwardCustomAssetAmount);
   });
 });

@@ -11,7 +11,7 @@ import { TxContent } from '~/systems/Transaction';
 export const TxApprove = () => {
   const ctx = useTransactionRequest();
   const navigate = useNavigate();
-  const { assets, isLoading: isLoadingAssets } = useAssets();
+  const { isLoading: isLoadingAssets } = useAssets();
   const isSuccess = ctx.status('success');
   const isLoading =
     ctx.status('loading') || ctx.status('sending') || isLoadingAssets;
@@ -37,7 +37,6 @@ export const TxApprove = () => {
             isLoading={isLoading}
             errors={ctx.errors.simulateTxErrors}
             isConfirm
-            assets={assets}
           />
         )}
         {ctx.shouldShowTxExecuted && (
@@ -45,7 +44,6 @@ export const TxApprove = () => {
             showDetails
             tx={ctx.txSummaryExecuted}
             txStatus={ctx.executedStatus()}
-            assets={assets}
             providerUrl={ctx.providerUrl}
             footer={
               ctx.status('failed') && (

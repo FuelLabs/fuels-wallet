@@ -71,7 +71,6 @@ type TxContentInfoProps = {
   tx?: Maybe<TransactionSummary>;
   txStatus?: Maybe<TransactionStatus>;
   showDetails?: boolean;
-  assets?: Maybe<AssetData[]>;
   isLoading?: boolean;
   isConfirm?: boolean;
   errors?: GroupedErrors;
@@ -89,7 +88,6 @@ function TxContentInfo({
   txStatus,
   footer,
   showDetails,
-  assets,
   isLoading,
   isConfirm,
   errors,
@@ -133,7 +131,6 @@ function TxContentInfo({
       <TxOperations
         operations={tx?.operations}
         status={status}
-        assets={assets}
         isLoading={isLoading}
       />
       {isLoading && !showDetails && <TxFee.Loader />}

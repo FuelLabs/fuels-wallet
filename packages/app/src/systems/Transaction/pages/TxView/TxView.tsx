@@ -1,6 +1,5 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { useNetworks } from '~/systems/Network';
 import type { SendFormValues } from '~/systems/Send/hooks';
@@ -18,8 +17,6 @@ export function TxView() {
     txId: txIdQueryParam,
     waitProviderUrl: true,
   });
-  const { assets } = useAssets();
-
   const form = useForm<SendFormValues>();
 
   return (
@@ -39,7 +36,6 @@ export function TxView() {
               tx={txResult}
               isLoading={ctx.isFetching}
               showDetails={ctx.shouldShowTxFee}
-              assets={assets}
               providerUrl={providerUrl}
             />
           </FormProvider>

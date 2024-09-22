@@ -11,19 +11,22 @@ import {
   Text,
   Tooltip,
 } from '@fuel-ui/react';
-import type { AssetAmount } from '@fuel-wallet/types';
-import { bn } from 'fuels';
-import type { FC } from 'react';
+import { type FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AmountVisibility, Pages, shortAddress } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 import { AssetRemoveDialog } from '../AssetRemoveDialog';
 
+import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
+import { type BNInput, bn } from 'fuels';
+import useFuelAsset from '../../hooks/useFuelAsset';
 import { AssetItemLoader } from './AssetItemLoader';
 
 export type AssetItemProps = {
-  asset: AssetAmount;
+  asset?: AssetData;
+  fuelAsset?: AssetFuelData;
+  amount?: BNInput;
   showActions?: boolean;
   onRemove?: (assetId: string) => void;
   onEdit?: (assetId: string) => void;
@@ -34,7 +37,9 @@ type AssetItemComponent = FC<AssetItemProps> & {
 };
 
 export const AssetItem: AssetItemComponent = ({
-  asset,
+  asset: inputAsset,
+  fuelAsset: inputFuelAsset,
+  amount,
   showActions,
   onRemove,
   onEdit,
@@ -42,32 +47,41 @@ export const AssetItem: AssetItemComponent = ({
   const navigate = useNavigate();
   const { visibility } = useBalanceVisibility();
 
-  const {
-    symbol,
-    name = '',
-    imageUrl,
-    amount,
-    assetId,
-    decimals,
-    isCustom,
-  } = asset || {};
+  const fuelAssetFromInputAsset = useFuelAsset({ asset: inputAsset });
+  const asset = useMemo(() => {
+    if (!inputFuelAsset && !inputAsset && !fuelAssetFromInputAsset)
+      return undefined;
+
+    return (
+      inputFuelAsset ||
+      fuelAssetFromInputAsset || {
+        ...inputAsset,
+        assetId: undefined,
+        decimals: undefined,
+      }
+    );
+  }, [inputFuelAsset, inputAsset, fuelAssetFromInputAsset]);
+
+  if (!asset) return null;
+
+  const { assetId, name, symbol, icon, decimals, isCustom } = asset;
 
   function getRightEl() {
     if (showActions) {
       return (
         <Box.Flex css={styles.actionsWrapper}>
-          {isCustom && name && (
+          {onRemove && isCustom && name && (
             <>
               <IconButton
                 variant="link"
                 icon={<Icon icon={Icon.is('Edit')} />}
                 aria-label="Edit Asset"
-                onPress={() => onEdit?.(assetId)}
+                onPress={() => onEdit?.(name)}
               />
               {onRemove && (
                 <AssetRemoveDialog
-                  asset={asset}
-                  onConfirm={() => onRemove(asset.assetId)}
+                  assetName={name}
+                  onConfirm={() => onRemove(name)}
                 >
                   <IconButton
                     variant="link"
@@ -105,19 +119,22 @@ export const AssetItem: AssetItemComponent = ({
   }
 
   function goToAsset() {
-    navigate(Pages.assetsEdit({ id: asset.assetId }));
+    navigate(Pages.assetsAdd({ assetId }));
   }
 
   return (
     <CardList.Item rightEl={getRightEl()} css={{ alignItems: 'center' }}>
-      {imageUrl ? (
+      {icon ? (
         <Avatar
-          name={name}
-          src={imageUrl}
+          name={name || ''}
+          src={icon}
           css={{ height: 36, width: 36, borderRadius: '$full' }}
         />
       ) : (
-        <Avatar.Generated hash={assetId} css={{ height: 36, width: 36 }} />
+        <Avatar.Generated
+          hash={assetId || ''}
+          css={{ height: 36, width: 36 }}
+        />
       )}
       <Box.Flex direction="column">
         <Heading as="h6" css={styles.assetName}>
@@ -139,7 +156,7 @@ export const AssetItem: AssetItemComponent = ({
         {symbol ? (
           <Text css={styles.assetSymbol}>{symbol}</Text>
         ) : (
-          <Copyable value={assetId} css={styles.unknownAssetId}>
+          <Copyable value={assetId || ''} css={styles.unknownAssetId}>
             {shortAddress(assetId)}
           </Copyable>
         )}

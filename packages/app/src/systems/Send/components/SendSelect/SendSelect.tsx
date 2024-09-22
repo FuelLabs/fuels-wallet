@@ -23,7 +23,7 @@ type SendSelectProps = UseSendReturn;
 
 export function SendSelect({
   form,
-  balanceAssets,
+  balances,
   balanceAssetSelected,
   baseFee = bn(0),
   minGasLimit = bn(0),
@@ -48,9 +48,9 @@ export function SendSelect({
   });
 
   const decimals = useMemo(() => {
-    const selectedAsset = balanceAssets?.find((a) => a.assetId === assetId);
-    return selectedAsset?.decimals || DECIMAL_FUEL;
-  }, [assetId, balanceAssets]);
+    const selectedAsset = balances?.find((a) => a.asset?.assetId === assetId);
+    return selectedAsset?.asset?.decimals;
+  }, [assetId, balances]);
 
   useEffect(() => {
     if (
@@ -68,6 +68,11 @@ export function SendSelect({
     }
   }, [watchMax, balanceAssetSelected, baseFee, tip, form.setValue]);
 
+  const assetSelectItems = balances?.map((b) => ({
+    assetId: b.assetId,
+    ...b.asset,
+  }));
+
   return (
     <MotionContent {...animations.slideInTop()}>
       <Box.Stack gap="$3">
@@ -82,7 +87,7 @@ export function SendSelect({
             css={styles.asset}
             render={({ field }) => (
               <AssetSelect
-                items={balanceAssets}
+                items={assetSelectItems}
                 selected={field.value}
                 onSelect={field.onChange}
               />

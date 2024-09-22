@@ -24,6 +24,7 @@ import {
   Text,
   Tooltip,
 } from '@fuel-ui/react';
+import { formatAmount } from '../../utils';
 import { isAmountAllowed } from './InputAmount.utils';
 
 export const DECIMAL_UNITS = DEFAULT_DECIMAL_UNITS;
@@ -43,11 +44,18 @@ export function formatAmountLeadingZeros(text: string): string {
   return text;
 }
 
-export function createAmount(text: string, units: number = DECIMAL_UNITS) {
+export function createAmount(text: string, units = 0) {
   const textAmountFixed = formatAmountLeadingZeros(text);
+
+  const isZeroUnits = !units;
+  // covers a bug in the sdk that format don't work when unit is zero. we'll use 1 instead, then multiply by 10 later
+  const amount = isZeroUnits
+    ? bn.parseUnits(text.replaceAll(',', ''), 1).div(10)
+    : bn.parseUnits(text.replaceAll(',', ''), units);
+
   return {
     text: textAmountFixed,
-    amount: bn.parseUnits(text.replaceAll(',', ''), units),
+    amount,
   };
 }
 
@@ -57,7 +65,7 @@ export type InputAmountProps = Omit<InputProps, 'size'> & {
   balance?: BN;
   units?: number;
   balancePrecision?: number;
-  asset?: { name?: string; imageUrl?: string; address?: string };
+  asset?: { name?: string; icon?: string; address?: string };
   assetTooltip?: string;
   hiddenMaxButton?: boolean;
   hiddenBalance?: boolean;
@@ -80,7 +88,7 @@ export const InputAmount: InputAmountComponent = ({
   balance: initialBalance,
   balancePrecision = 3,
   value,
-  units = DECIMAL_UNITS,
+  units,
   hiddenBalance,
   hiddenMaxButton,
   onChange,
@@ -93,18 +101,25 @@ export const InputAmount: InputAmountComponent = ({
 }) => {
   const formatOpts = { units, precision: units };
   const [assetAmount, setAssetAmount] = useState<string>(
-    !value || value.eq(0) ? '' : value.format(formatOpts)
+    !value || value.eq(0)
+      ? ''
+      : formatAmount({ amount: value, options: formatOpts })
   );
 
   const balance = initialBalance ?? bn(initialBalance);
-  const formattedBalance = balance.format({
-    ...formatOpts,
-    precision: balance.eq(0) ? 1 : balancePrecision,
+  const formattedBalance = formatAmount({
+    amount: balance,
+    options: {
+      ...formatOpts,
+      precision: balancePrecision,
+    },
   });
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: allow any
   useEffect(() => {
-    handleAmountChange(value ? value.format(formatOpts) : '');
+    handleAmountChange(
+      value ? formatAmount({ amount: value, options: formatOpts }) : ''
+    );
   }, [value?.toString()]);
 
   const handleAmountChange = (text: string) => {
@@ -113,6 +128,7 @@ export const InputAmount: InputAmountComponent = ({
       assetAmount,
       formatOpts.units
     );
+
     if (!currentAmount.eq(amount)) {
       onChange?.(amount);
       setAssetAmount(newText);
@@ -120,11 +136,11 @@ export const InputAmount: InputAmountComponent = ({
   };
 
   const getAssetImage = () => {
-    if (asset?.imageUrl) {
+    if (asset?.icon) {
       return (
         <Image
           css={styles.image}
-          src={asset.imageUrl}
+          src={asset.icon}
           alt={`${asset.name} image`}
         />
       );
@@ -202,7 +218,10 @@ export const InputAmount: InputAmountComponent = ({
       </Flex>
       <Box.Flex gap={'$2'}>
         {!hiddenBalance && (
-          <Tooltip content={format(balance, formatOpts)} sideOffset={-5}>
+          <Tooltip
+            content={formatAmount({ amount: balance, options: formatOpts })}
+            sideOffset={-5}
+          >
             <Text
               fontSize="sm"
               aria-label={`Balance: ${formattedBalance}`}

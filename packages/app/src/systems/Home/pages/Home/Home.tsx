@@ -9,11 +9,12 @@ import { Layout, Pages, scrollable } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 import { useNetworks } from '~/systems/Network';
 
+import { BalanceAssets } from '~/systems/Account/components/BalanceAssets/BalanceAssets';
 import { AssetsTitle, HomeActions } from '../../components';
 
 export function Home() {
   const { visibility, setVisibility } = useBalanceVisibility();
-  const { isLoading, account, balanceAssets } = useAccounts();
+  const { isLoading, account } = useAccounts();
   const { selectedNetwork } = useNetworks();
   const navigate = useNavigate();
 
@@ -50,8 +51,8 @@ export function Home() {
               <AssetsTitle />
             </Box>
             <Box.Stack css={styles.assetsList}>
-              <MemoAssetList
-                assets={balanceAssets}
+              <BalanceAssets
+                balances={account?.balances || []}
                 isLoading={isLoading}
                 emptyProps={emptyProps}
               />

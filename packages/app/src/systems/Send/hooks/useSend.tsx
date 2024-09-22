@@ -71,7 +71,7 @@ type BalanceAsset = {
 };
 
 type SchemaOptions = {
-  accountBalanceAssets: BalanceAsset[];
+  balances: BalanceAsset[];
   baseFee: BN | undefined;
   minGasLimit: BN | undefined;
   maxGasLimit: BN | undefined;
@@ -87,10 +87,9 @@ const schema = yup
       })
       .test('balance', 'Insufficient funds', (value, ctx) => {
         const { asset, fees } = ctx.parent as SendFormValues;
-        const { accountBalanceAssets, baseFee } = ctx.options
-          .context as SchemaOptions;
+        const { balances, baseFee } = ctx.options.context as SchemaOptions;
 
-        const balanceAssetSelected = accountBalanceAssets?.find(
+        const balanceAssetSelected = balances?.find(
           ({ assetId }) => assetId === asset
         );
         if (!balanceAssetSelected?.amount || !value) {
@@ -132,10 +131,10 @@ const schema = yup
               name: 'max',
               test: (value, ctx) => {
                 const { asset, amount } = ctx.from?.[2].value as SendFormValues; // Two levels up
-                const { accountBalanceAssets, baseFee } = ctx.options
+                const { balances, baseFee } = ctx.options
                   .context as SchemaOptions;
 
-                const balanceAssetSelected = accountBalanceAssets?.find(
+                const balanceAssetSelected = balances?.find(
                   ({ assetId }) => assetId === asset
                 );
 
@@ -239,8 +238,7 @@ const DEFAULT_VALUES: SendFormValues = {
 export function useSend() {
   const navigate = useNavigate();
   const txRequest = useTransactionRequest();
-  const { account, balanceAssets: accountBalanceAssets } = useAccounts();
-  const { assets } = useAssets();
+  const { account } = useAccounts();
 
   const service = useInterpret(() =>
     sendMachine.withConfig({
@@ -291,7 +289,7 @@ export function useSend() {
     mode: 'onSubmit',
     defaultValues: DEFAULT_VALUES,
     context: {
-      accountBalanceAssets,
+      balances: account?.balances,
       baseFee,
       minGasLimit,
       maxGasLimit,
@@ -314,20 +312,14 @@ export function useSend() {
   const sendStatus = useSelector(service, sendStatusSelector);
   const readyToSend = useSelector(service, selectors.readyToSend);
 
-  const balanceAssets = useMemo(() => {
-    return accountBalanceAssets?.filter(({ assetId }) =>
-      assets.find((asset) => asset.assetId === assetId)
-    );
-  }, [assets, accountBalanceAssets]);
-
   const balanceAssetSelected = useMemo<BN>(() => {
-    const asset = balanceAssets?.find(
+    const asset = account?.balances?.find(
       ({ assetId }) => assetId === assetIdSelected
     );
     if (!asset) return bn(0);
 
     return bn(asset.amount);
-  }, [balanceAssets, assetIdSelected]);
+  }, [account?.balances, assetIdSelected]);
 
   function status(status: keyof typeof SendStatus) {
     return sendStatus === status;
@@ -390,10 +382,10 @@ export function useSend() {
     fastTip,
     status,
     readyToSend,
-    balanceAssets,
     account,
     txRequest,
     assetIdSelected,
+    balances: account?.balances,
     balanceAssetSelected,
     errorMessage,
     handlers: {

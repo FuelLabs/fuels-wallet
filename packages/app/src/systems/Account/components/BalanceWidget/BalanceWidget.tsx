@@ -8,6 +8,7 @@ import { AmountVisibility, VisibilityButton } from '~/systems/Core';
 
 import { useAccounts } from '../../hooks';
 
+import { DECIMAL_FUEL } from 'fuels';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 type BalanceWidgetWrapperProps = {
@@ -87,6 +88,7 @@ export function BalanceWidget({
               <AmountVisibility
                 value={account.balance}
                 visibility={visibility}
+                units={DECIMAL_FUEL}
               />
             </Text>
             <VisibilityButton

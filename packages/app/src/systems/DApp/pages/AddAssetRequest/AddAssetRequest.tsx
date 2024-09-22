@@ -4,11 +4,14 @@ import { useAccounts } from '~/systems/Account';
 import { AssetItem } from '~/systems/Asset';
 import { ConnectInfo, Layout, shortAddress } from '~/systems/Core';
 
+import { getAssetFuel } from 'fuels';
+import { useNetworks } from '~/systems/Network/hooks';
 import { useAddAssetRequest } from '../../hooks';
 
 export function AddAssetRequest() {
   const { handlers, assets, title, favIconUrl, origin } = useAddAssetRequest();
   const { account } = useAccounts();
+  const { network } = useNetworks();
 
   if (!origin || !assets?.length || !account) return null;
 
@@ -26,15 +29,20 @@ export function AddAssetRequest() {
             Review the Assets to be added:
           </Card.Header>
           <Card.Body css={styles.cardContentSection}>
-            {assets.map((asset) => (
-              <AssetItem
-                key={asset.assetId}
-                asset={{
-                  ...asset,
-                  symbol: `${asset.symbol} - ${shortAddress(asset.assetId)}`,
-                }}
-              />
-            ))}
+            {assets.map((asset) => {
+              const fuelAsset = getAssetFuel(asset, network?.chainId);
+              return (
+                <AssetItem
+                  key={asset.name}
+                  asset={{
+                    ...asset,
+                    symbol: `${asset.symbol} - ${shortAddress(
+                      fuelAsset?.assetId
+                    )}`,
+                  }}
+                />
+              );
+            })}
           </Card.Body>
         </Card>
       </Layout.Content>

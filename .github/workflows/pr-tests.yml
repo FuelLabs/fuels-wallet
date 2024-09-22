@@ -42,7 +42,7 @@ jobs:
       - name: Run Jest Tests
         run: |
           pnpm test:ci
-        timeout-minutes: 20
+        timeout-minutes: 10
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
 
@@ -51,6 +51,7 @@ jobs:
 
   tests-e2e:
     name: E2E Tests
+    timeout-minutes: 15
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
@@ -82,6 +83,7 @@ jobs:
 
       - name: Run E2E Tests
         run: xvfb-run --auto-servernum -- pnpm test:e2e
+        timeout-minutes: 10
         env:
           NODE_ENV: test
 
@@ -98,6 +100,7 @@ jobs:
   tests-e2e-crx-lock:
     name: E2E Tests - Lock CRX
     runs-on: buildjet-4vcpu-ubuntu-2204
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
@@ -128,6 +131,7 @@ jobs:
 
       - name: Run E2E Tests
         run: xvfb-run --auto-servernum -- pnpm test:e2e:crx-lock
+        timeout-minutes: 3
         env:
           NODE_ENV: test
 

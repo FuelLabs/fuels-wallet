@@ -31,7 +31,7 @@ export const MintAssetCard = () => {
             if (baseAssetId && wallet && amount) {
               await mint({
                 wallet,
-                amount: bn.parseUnits(amount),
+                amount: bn.parseUnits(amount, 1).div(10),
                 subId: baseAssetId,
               });
             }

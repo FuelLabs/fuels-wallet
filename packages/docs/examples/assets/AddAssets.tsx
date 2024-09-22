@@ -47,7 +47,7 @@ export function AddAssets() {
           return (
             <Box.Stack
               // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              key={assetData.assetId + index}
+              key={(assetData?.name || '') + index}
               css={styles.item(isLast)}
             >
               <Box.Flex css={styles.itemHeader}>
@@ -65,7 +65,7 @@ export function AddAssets() {
               </Box.Flex>
               <Input isDisabled={!fuel} css={styles.input}>
                 <Input.Field
-                  defaultValue={assetData.assetId}
+                  defaultValue={assetData?.assetId}
                   onBlur={(e) =>
                     onChangeAsset(index, {
                       ...asset,
@@ -102,7 +102,7 @@ export function AddAssets() {
                 <Input isDisabled={!fuel} css={styles.input}>
                   <Input.Field
                     type="number"
-                    defaultValue={assetData.decimals}
+                    defaultValue={assetData?.decimals}
                     onBlur={(e) => {
                       onChangeAsset(index, {
                         ...asset,
