@@ -12,7 +12,6 @@ import type { JSONRPCID } from 'json-rpc-2.0';
 export class ContentProxyConnection {
   connection: chrome.runtime.Port | undefined = undefined;
   readonly connectorName: string;
-
   constructor(connectorName: string) {
     this.connectorName = connectorName;
     this.onMessageFromWindow = this.onMessageFromWindow.bind(this);
@@ -54,12 +53,14 @@ export class ContentProxyConnection {
     this.onStartEvent();
   }
 
-  destroy() {
+  destroy(keepWindowListener = true) {
     this.connection?.onMessage.removeListener(this.onMessageFromExtension);
     this.connection?.onDisconnect.removeListener(this.onDisconnect);
     this.connection?.disconnect();
     this.connection = undefined;
-    window.removeEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
+    if (!keepWindowListener) {
+      window.removeEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
+    }
   }
 
   onDisconnect = () => {
@@ -96,6 +97,9 @@ export class ContentProxyConnection {
   onMessageFromWindow = (message: MessageEvent<CommunicationMessage>) => {
     const { data: event, origin } = Object.freeze(message);
     if (this.shouldAcceptMessage(event, origin)) {
+      if (!this.connection) {
+        this.connectAndAttachListeners();
+      }
       if (
         event.type === MessageTypes.request &&
         event.request.method === 'connectorName'
