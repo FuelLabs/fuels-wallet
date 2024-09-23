@@ -17,7 +17,9 @@ export async function executeContentScript() {
         })
         // Ignore errors on tabs when executing script
         .catch((err) => {
-          console.warn(err);
+          if (process.env?.NODE_ENV === 'development') {
+            console.warn(err);
+          }
         });
     }
   });
