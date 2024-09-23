@@ -66,15 +66,21 @@ const styles = {
   root: (color: string) => {
     const cssColor = color ? `$${color}` : undefined;
     return cssObj({
+      marginBottom: '$4',
       '.fuel_Alert-icon': {
-        alignSelf: 'flex-start',
+        alignItems: 'center',
         mt: '2px',
         color: cssColor,
+        marginBottom: '$0',
 
         '& .fuel_Icon': {
           mt: '1px',
           color: cssColor,
         },
+      },
+      '& .fuel_Alert-content': {
+        alignItems: 'center',
+        marginBottom: '$0',
       },
       '& .fuel_Heading, & .fuel_Icon': {
         color: cssColor,
