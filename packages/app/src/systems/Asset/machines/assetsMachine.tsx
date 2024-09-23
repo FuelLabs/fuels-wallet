@@ -4,6 +4,7 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { FetchMachine } from '~/systems/Core';
 
+import { store } from '~/store';
 import type { AssetInputs } from '../services';
 import { AssetService } from '../services';
 
@@ -113,7 +114,11 @@ export const assetsMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['updateSuccess', 'navigateBack'],
+              actions: [
+                'notifyUpdateAccounts',
+                'updateSuccess',
+                'navigateBack',
+              ],
               target: 'fetchingAssets',
             },
           ],
@@ -132,7 +137,7 @@ export const assetsMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['addSuccess', 'navigateBack'],
+              actions: ['notifyUpdateAccounts', 'addSuccess', 'navigateBack'],
               target: 'fetchingAssets',
             },
           ],
@@ -151,7 +156,7 @@ export const assetsMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['removeSuccess'],
+              actions: ['notifyUpdateAccounts', 'removeSuccess'],
               target: 'fetchingAssets',
             },
           ],
@@ -172,6 +177,9 @@ export const assetsMachine = createMachine(
       },
       addSuccess: () => {
         toast.success('Asset added successfully');
+      },
+      notifyUpdateAccounts: () => {
+        store.updateAccounts();
       },
     },
     services: {
@@ -210,14 +218,8 @@ export const assetsMachine = createMachine(
       >({
         showError: true,
         async fetch({ input }) {
-          if (!input?.data || !input?.id) {
+          if (!input?.data || !input?.name) {
             throw new Error('Missing data');
-          }
-
-          // just for security, should not happen
-          const currentAsset = await AssetService.getAsset(input.data.assetId);
-          if (currentAsset && !currentAsset.isCustom) {
-            throw new Error(`It's not allowed to change Listed Assets`);
           }
 
           await AssetService.updateAsset(input);
@@ -230,7 +232,7 @@ export const assetsMachine = createMachine(
       >({
         showError: true,
         async fetch({ input }) {
-          if (!input?.assetId) {
+          if (!input?.name) {
             throw new Error('Missing data');
           }
 

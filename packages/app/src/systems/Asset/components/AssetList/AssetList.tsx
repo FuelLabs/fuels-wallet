@@ -49,8 +49,9 @@ export const AssetList: AssetListComponent = ({
     <CardList>
       {assetsToShow.map((asset) => (
         <AssetItem
-          key={asset.assetId}
+          key={asset.name}
           asset={asset}
+          amount={asset.amount}
           showActions={showActions}
           onRemove={onRemove}
           onEdit={onEdit}

@@ -3,17 +3,17 @@ import { Services, store } from '~/store';
 import type { AssetsMachineState } from '../machines';
 
 const selectors = {
-  asset(assetId: string) {
+  asset(name: string) {
     return (state: AssetsMachineState) => {
       return state.context.assets?.find(
-        ({ assetId: contextAssetId }) => contextAssetId === assetId
+        ({ name: contextName }) => contextName === name
       );
     };
   },
 };
 
-export function useAsset(assetId = '') {
-  const asset = store.useSelector(Services.assets, selectors.asset(assetId));
+export function useAsset(name = '') {
+  const asset = store.useSelector(Services.assets, selectors.asset(name));
 
   return asset;
 }

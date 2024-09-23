@@ -1,6 +1,8 @@
 import { createProvider } from '@fuel-wallet/connections';
-import type { Account } from '@fuel-wallet/types';
+import type { Account, CoinAsset } from '@fuel-wallet/types';
 import { Address, type Provider, bn } from 'fuels';
+import { AssetService } from '~/systems/Asset/services';
+import { getFuelAssetByAssetId } from '~/systems/Asset/utils';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
 import { getUniqueString } from '~/systems/Core/utils/string';
@@ -95,23 +97,57 @@ export class AccountService {
     try {
       const provider = await createProvider(providerUrl!);
       const balances = await getBalances(provider, account.publicKey);
-      const baseAssetId = provider.getBaseAssetId();
 
+      const assets = await AssetService.getAssets();
+      // includes "asset" prop in balance, centralizing the complexity here instead of in rest of UI
+      const nextBalancesWithAssets = await balances.reduce(
+        async (acc, balance) => {
+          const prev = await acc;
+          const asset = await getFuelAssetByAssetId({
+            assets,
+            assetId: balance.assetId,
+          });
+          return [
+            ...prev,
+            {
+              ...balance,
+              amount: balance.amount.toString(),
+              asset,
+            },
+          ];
+        },
+        Promise.resolve([] as CoinAsset[])
+      );
+      nextBalancesWithAssets.sort((a, b) => {
+        // if asset.symbol is "ETH" then it will be should be first
+        if (a.asset?.symbol === 'ETH') return -1;
+
+        const aName = a.asset?.name?.toLowerCase() ?? '';
+        const bName = b.asset?.name?.toLowerCase() ?? '';
+        // sort ascendant by asset.name
+        if (aName > bName) return -1;
+        if (bName > aName) return 1;
+
+        return 0;
+      });
+
+      // includes eth balance info, centralizing the complexity here instead of in rest of UI
+      const baseAssetId = provider.getBaseAssetId();
       const ethAsset = balances.find(
         (balance) => balance.assetId === baseAssetId.toString()
       );
       const ethBalance = ethAsset?.amount;
+      const nextAccountWithAssets = {
+        address: account.address || '',
+        balance: bn(ethBalance || 0).toString(),
+        balanceSymbol: 'ETH',
+        balances: nextBalancesWithAssets,
+      };
+
       const nextAccount = await AccountService.setBalance({
-        data: {
-          address: account.address || '',
-          balance: bn(ethBalance || 0).toString(),
-          balanceSymbol: 'ETH',
-          balances: balances.map((item) => ({
-            ...item,
-            amount: item.amount.toString(),
-          })),
-        },
+        data: nextAccountWithAssets,
       });
+
       return nextAccount ?? account;
     } catch (_error) {
       const nextAccount = await AccountService.setBalance({

@@ -19,7 +19,9 @@ COPY ./genesis_coins.json .
 
 RUN git clone \
     https://github.com/FuelLabs/chain-configuration.git \
-    /chain-configuration
+    /chain-configuration && \
+    cd /chain-configuration && \
+    git checkout 6cea45da59bb105a02fb0b115c7ef03f3a690ba1
 
 # Copy the base local configuration
 RUN cp -R /chain-configuration/local/* ./

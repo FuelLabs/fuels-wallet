@@ -236,8 +236,11 @@ export const accountsMachine = createMachine(
           const accountToFetch = await AccountService.getCurrentAccount();
           if (!accountToFetch) return undefined;
           const selectedNetwork = await NetworkService.getSelectedNetwork();
-          const providerUrl =
-            selectedNetwork?.url || import.meta.env.VITE_FUEL_PROVIDER_URL;
+          if (!selectedNetwork) {
+            throw new Error('No selected network');
+          }
+
+          const providerUrl = selectedNetwork.url;
           const accountWithBalance = await AccountService.fetchBalance({
             account: accountToFetch,
             providerUrl,

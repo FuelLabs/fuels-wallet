@@ -9,25 +9,27 @@ import { AssetForm } from '../../components/AssetForm';
 import { useAsset, useAssets } from '../../hooks';
 import type { AssetFormValues } from '../../hooks/useAssetForm';
 import { useAssetForm } from '../../hooks/useAssetForm';
+import useFuelAsset from '../../hooks/useFuelAsset';
 
 export function UpsertAsset() {
   const navigate = useNavigate();
-  const params = useParams<{ id: string }>();
-  const id = params.id;
+  const params = useParams<{ name: string; assetId: string }>();
+  const name = params.name;
 
-  const asset = useAsset(id);
+  const asset = useAsset(name);
+  const isEditing = !!asset;
+  const fuelAsset = useFuelAsset({ asset });
   const { handlers, isLoading } = useAssets();
   const form = useAssetForm({
     defaultValues: {
       name: '',
       symbol: '',
-      imageUrl: '',
-      decimals: 0,
+      icon: '',
       ...asset,
-      assetId: id || '',
+      decimals: fuelAsset?.decimals || 0,
+      assetId: fuelAsset?.assetId || params.assetId || '',
     },
   });
-  const isEditing = !!asset;
   const formAssetId = form.watch('assetId');
   const dupeAsset = useAsset(formAssetId);
 
@@ -43,11 +45,11 @@ export function UpsertAsset() {
   function onSubmit(data: AssetFormValues) {
     if (isEditing) {
       handlers.updateAsset({
-        id: data.assetId,
+        name: data.name,
         data: { ...data, isCustom: true },
       });
     } else {
-      handlers.addAsset({ data: { ...data, isCustom: true } });
+      handlers.addAsset({ data });
     }
   }
 
@@ -57,11 +59,7 @@ export function UpsertAsset() {
         <Layout.TopBar />
         <Focus.Scope autoFocus>
           <Layout.Content>
-            <AssetForm
-              form={form}
-              isEditing={isEditing}
-              showOnlyId={!!(!isEditing && (!isB256(formAssetId) || dupeAsset))}
-            />
+            <AssetForm form={form} isEditing={isEditing} />
             {!isEditing && dupeAsset && (
               <Box css={styles.duplicateAsset}>
                 <Text color="intentsError9">Asset already exists</Text>

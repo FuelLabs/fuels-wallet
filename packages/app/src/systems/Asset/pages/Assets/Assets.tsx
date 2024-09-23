@@ -29,10 +29,8 @@ export function Assets() {
               <MemoAssetList
                 assets={state.assetsCustom}
                 showActions
-                onRemove={(assetId: string) =>
-                  handlers.removeAsset({ assetId })
-                }
-                onEdit={(assetId: string) => handlers.goToEdit(assetId)}
+                onRemove={(name: string) => handlers.removeAsset({ name })}
+                onEdit={(name: string) => handlers.goToEdit(name)}
                 emptyProps={{
                   text: 'No custom assets',
                   supportText: 'Start by adding a new custom asset',

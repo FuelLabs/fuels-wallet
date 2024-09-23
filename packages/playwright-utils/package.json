@@ -1,6 +1,6 @@
 {
   "name": "@fuels/playwright-utils",
-  "version": "0.28.1",
+  "version": "0.29.0",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
@@ -25,7 +25,7 @@
     "adm-zip": "^0.5.10"
   },
   "devDependencies": {
-    "fuels": "0.94.6",
+    "fuels": "pr-3167",
     "@fuels/ts-config": "^0.23.0",
     "@fuels/tsup-config": "^0.23.0",
     "@playwright/test": "^1.39.0",

@@ -53,7 +53,8 @@ test.describe('Forward and Mint Multicall', () => {
     const depositHalfInput = page.getByLabel('Forward amount multicall');
     await depositHalfInput.fill(depositAmount);
 
-    const mintAmount = '1.2345';
+    const mintAmount = '12345';
+    const formattedMintAMount = '12,345';
     const mintInput = page.getByLabel('Mint amount multicall');
     await mintInput.fill(mintAmount);
 
@@ -89,7 +90,7 @@ test.describe('Forward and Mint Multicall', () => {
     const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
     await hasText(walletNotificationPage, shortAddress(assetId));
     // test mint amount is correct
-    await hasText(walletNotificationPage, mintAmount);
+    await hasText(walletNotificationPage, formattedMintAMount);
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
@@ -124,9 +125,10 @@ test.describe('Forward and Mint Multicall', () => {
       )
     ).toBe(Number.parseFloat(depositAmount));
     expect(
-      Number.parseFloat(
-        postDepositBalanceTkn.sub(preDepositBalanceTkn).format({ precision: 4 })
-      )
-    ).toBe(Number.parseFloat(mintAmount));
+      postDepositBalanceTkn
+        .sub(preDepositBalanceTkn)
+        .mul(10)
+        .format({ units: 1, precision: 0 })
+    ).toBe(formattedMintAMount);
   });
 });
