@@ -1,5 +1,15 @@
 # @fuels/playwright-utils
 
+## 0.30.0
+
+### Minor Changes
+
+- [#1492](https://github.com/FuelLabs/fuels-wallet/pull/1492) [`76c88c40`](https://github.com/FuelLabs/fuels-wallet/commit/76c88c40a852f7cae599e41b88709078d8fe4d00) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - pump
+
+### Patch Changes
+
+- [#1494](https://github.com/FuelLabs/fuels-wallet/pull/1494) [`9c7f3b1a`](https://github.com/FuelLabs/fuels-wallet/commit/9c7f3b1aad99a7981d329ab7f8a9b0131455e2f2) Thanks [@LeoCourbassier](https://github.com/LeoCourbassier)! - - Added pnpm build to the publish action, ensuring "dist" folder will be published
+
 ## 0.29.0
 
 ### Minor Changes
