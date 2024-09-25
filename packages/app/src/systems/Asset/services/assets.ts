@@ -221,6 +221,34 @@ export class AssetService {
     });
   }
 
+  private static async mapAssetsByAddressAndAssetId(assets?: AssetData[]) {
+    // Fetch existing assets once
+    const existingAssets = assets || (await AssetService.getAssets());
+    const existingAssetMap = new Map<string, AssetData>();
+    // Fuel only
+    const assetIdChainMap = new Map<string, number>();
+    // Ethereum only
+    const networkAddressChainMap = new Map<string, number>();
+    for (const asset of existingAssets) {
+      existingAssetMap.set(asset.name, asset);
+      for (const network of asset.networks) {
+        if (network.type === 'fuel') {
+          if (assetIdChainMap.get(network.assetId))
+            throw new Error('Asset ID already exists');
+          assetIdChainMap.set(network.assetId, network.chainId);
+        } else if (network.address) {
+          networkAddressChainMap.set(network.address, network.chainId);
+        }
+      }
+    }
+
+    return {
+      existingAssetMap,
+      assetIdChainMap,
+      networkAddressChainMap,
+    };
+  }
+
   static async validateAddAssets(assets: AssetData[]) {
     if (!assets.length) {
       throw new Error('No assets to add');
@@ -254,25 +282,8 @@ export class AssetService {
       symbolSet.add(asset.symbol);
     }
 
-    // Fetch existing assets once
-    const existingAssets = await AssetService.getAssets();
-    const existingAssetMap = new Map<string, AssetData>();
-    // Fuel only
-    const assetIdChainMap = new Map<string, number>();
-    // Ethereum only
-    const networkAddressChainMap = new Map<string, number>();
-    for (const asset of existingAssets) {
-      existingAssetMap.set(asset.name, asset);
-      for (const network of asset.networks) {
-        if (network.type === 'fuel') {
-          if (assetIdChainMap.get(network.assetId))
-            throw new Error('Asset ID already exists');
-          assetIdChainMap.set(network.assetId, network.chainId);
-        } else if (network.address) {
-          networkAddressChainMap.set(network.address, network.chainId);
-        }
-      }
-    }
+    const { existingAssetMap, assetIdChainMap, networkAddressChainMap } =
+      await AssetService.mapAssetsByAddressAndAssetId();
 
     const newAssetsToAdd: AssetData[] = [];
     // Assets that exist but in different chains
