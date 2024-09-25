@@ -261,7 +261,10 @@ export class AssetService {
       existingAssetMap.set(asset.name, asset);
     }
 
-    const assetsToAdd: AssetData[] = [];
+    const newAssetsToAdd: AssetData[] = [];
+    // Assets that exist but in different chains
+    const customAssetsToAdd: AssetData[] = [];
+
     for (const asset of trimmedAssets) {
       const existingAsset = existingAssetMap.get(asset.name);
       if (existingAsset && !existingAsset.isCustom) {
@@ -297,16 +300,17 @@ export class AssetService {
           );
         }
 
-        assetsToAdd.push({
+        customAssetsToAdd.push({
           ...asset,
           networks: nonDuplicateNetworks,
+          isCustom: true,
         });
       } else {
-        assetsToAdd.push(asset);
+        newAssetsToAdd.push(asset);
       }
     }
 
-    return { assetsToAdd };
+    return newAssetsToAdd.concat(customAssetsToAdd);
   }
 
   static async avoidRepeatedFields(assets: AssetData[]) {
