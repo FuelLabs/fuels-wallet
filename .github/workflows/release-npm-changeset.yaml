@@ -45,6 +45,9 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
+      - name: Build packages
+        run: pnpm build:libs
+
       - name: Create Release Pull Request or Publish to NPM
         id: changesets
         uses: FuelLabs/changesets-action@main
