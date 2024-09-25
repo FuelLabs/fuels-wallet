@@ -1,6 +1,11 @@
 import { createProvider } from '@fuel-wallet/connections';
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
-import { type NetworkFuel, assets, getAssetFuel } from 'fuels';
+import {
+  type NetworkEthereum,
+  type NetworkFuel,
+  assets,
+  getAssetFuel,
+} from 'fuels';
 import { type Provider, isB256 } from 'fuels';
 import { db } from '~/systems/Core/utils/database';
 import { getUniqueString } from '~/systems/Core/utils/string';
@@ -217,7 +222,6 @@ export class AssetService {
   }
 
   static async validateAddAssets(assets: AssetData[]) {
-    // first validate has basic input
     if (!assets.length) {
       throw new Error('No assets to add');
     }
@@ -230,42 +234,77 @@ export class AssetService {
       icon: a.icon?.trim(),
     }));
 
-    // validate that all of the names are defined and not empty and not just consisting of spaces
-    const someNameUndefined = trimmedAssets.some((asset) => {
-      return !asset.name;
-    });
-    if (someNameUndefined) {
+    // Check for invalid names
+    if (trimmedAssets.some((asset) => !asset.name)) {
       throw new Error('Asset.name is invalid');
     }
 
-    const uniqueAssetsByName = trimmedAssets.filter(
-      (a, index) =>
-        index === trimmedAssets.findIndex((obj) => obj.name === a.name)
-    );
-    if (trimmedAssets.length !== uniqueAssetsByName.length) {
-      throw new Error('Asset with same name being added multiple times');
-    }
-    const uniqueAssetsBySymbol = trimmedAssets.filter(
-      (a, index) =>
-        index === trimmedAssets.findIndex((obj) => obj.symbol === a.symbol)
-    );
-    if (trimmedAssets.length !== uniqueAssetsBySymbol.length) {
-      throw new Error('Asset with same symbol being added multiple times');
+    // Check for duplicate names and symbols within the input
+    const nameSet = new Set<string>();
+    const symbolSet = new Set<string>();
+    for (const asset of trimmedAssets) {
+      if (nameSet.has(asset.name)) {
+        throw new Error('Asset with same name being added multiple times');
+      }
+      nameSet.add(asset.name);
+
+      if (symbolSet.has(asset.symbol)) {
+        throw new Error('Asset with same symbol being added multiple times');
+      }
+      symbolSet.add(asset.symbol);
     }
 
-    // validate if all assets from input are already added
-    const uniqueAssetsNames = uniqueAssetsByName.map((a) => a.name);
-    const repeatedAssets = await AssetService.getAssetsByFilter(
-      (a) => uniqueAssetsNames.indexOf(a.name) !== -1
-    );
-    if (repeatedAssets.length === uniqueAssetsByName.length) {
-      throw new Error('Assets already exist in wallet settings');
+    // Fetch existing assets once
+    const existingAssets = await AssetService.getAssets();
+    const existingAssetMap = new Map<string, AssetData>();
+    for (const asset of existingAssets) {
+      existingAssetMap.set(asset.name, asset);
     }
 
-    // get only not repeated assets
-    const assetsToAdd = trimmedAssets.filter(
-      (a) => repeatedAssets.findIndex((obj) => obj.name === a.name) === -1
-    );
+    const assetsToAdd: AssetData[] = [];
+    for (const asset of trimmedAssets) {
+      const existingAsset = existingAssetMap.get(asset.name);
+      if (existingAsset && !existingAsset.isCustom) {
+        const nonDuplicateNetworks: Array<NetworkEthereum | NetworkFuel> = [];
+
+        for (const newNetwork of asset.networks) {
+          const isDuplicate = existingAsset.networks.some((existingNetwork) => {
+            if (newNetwork.type !== existingNetwork.type) return false;
+            if (newNetwork.chainId !== existingNetwork.chainId) return false;
+            if (newNetwork.type === 'fuel' && existingNetwork.type === 'fuel') {
+              return (
+                newNetwork.assetId === existingNetwork.assetId &&
+                newNetwork.contractId === existingNetwork.contractId
+              );
+            }
+            if (
+              newNetwork.type === 'ethereum' &&
+              existingNetwork.type === 'ethereum'
+            ) {
+              return newNetwork.address === existingNetwork.address;
+            }
+            return false;
+          });
+
+          if (!isDuplicate) {
+            nonDuplicateNetworks.push(newNetwork);
+          }
+        }
+
+        if (nonDuplicateNetworks.length === 0) {
+          throw new Error(
+            `Asset "${asset.name}" already exists in wallet settings`
+          );
+        }
+
+        assetsToAdd.push({
+          ...asset,
+          networks: nonDuplicateNetworks,
+        });
+      } else {
+        assetsToAdd.push(asset);
+      }
+    }
 
     return { assetsToAdd };
   }
