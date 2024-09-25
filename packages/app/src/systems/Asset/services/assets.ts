@@ -224,13 +224,20 @@ export class AssetService {
   private static async mapAssetsByAddressAndAssetId(assets?: AssetData[]) {
     // Fetch existing assets once
     const existingAssets = assets || (await AssetService.getAssets());
-    const existingAssetMap = new Map<string, AssetData>();
+    const existingAssetNameMap = new Map<string, AssetData>();
+    const existingAssetSymbolMap = new Map<string, AssetData>();
     // Fuel only
     const assetIdChainMap = new Map<string, number>();
     // Ethereum only
     const networkAddressChainMap = new Map<string, number>();
     for (const asset of existingAssets) {
-      existingAssetMap.set(asset.name, asset);
+      // @TODO: Remove this when we have a better way to handle this
+      // biome-ignore lint/suspicious/noExplicitAny: Sometimes a assetId comes at the root of the asset
+      const looseAssetId = (asset as any)?.assetId as string | undefined;
+      looseAssetId && assetIdChainMap.set(looseAssetId, 0);
+
+      existingAssetNameMap.set(asset.name, asset);
+      existingAssetSymbolMap.set(asset.symbol, asset);
       for (const network of asset.networks) {
         if (network.type === 'fuel') {
           if (assetIdChainMap.get(network.assetId))
@@ -243,7 +250,8 @@ export class AssetService {
     }
 
     return {
-      existingAssetMap,
+      existingAssetNameMap,
+      existingAssetSymbolMap,
       assetIdChainMap,
       networkAddressChainMap,
     };
@@ -282,15 +290,21 @@ export class AssetService {
       symbolSet.add(asset.symbol);
     }
 
-    const { existingAssetMap, assetIdChainMap, networkAddressChainMap } =
-      await AssetService.mapAssetsByAddressAndAssetId();
+    const {
+      existingAssetNameMap,
+      existingAssetSymbolMap,
+      assetIdChainMap,
+      networkAddressChainMap,
+    } = await AssetService.mapAssetsByAddressAndAssetId();
 
     const newAssetsToAdd: AssetData[] = [];
     // Assets that exist but in different chains
     const customAssetsToAdd: AssetData[] = [];
 
     for (const asset of trimmedAssets) {
-      const existingAsset = existingAssetMap.get(asset.name);
+      const existingAsset =
+        existingAssetNameMap.get(asset.name) ||
+        existingAssetSymbolMap.get(asset.symbol);
       if (existingAsset && !existingAsset.isCustom) {
         const nonDuplicateNetworks: Array<NetworkEthereum | NetworkFuel> = [];
 
