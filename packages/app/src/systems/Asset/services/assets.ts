@@ -240,8 +240,6 @@ export class AssetService {
       existingAssetSymbolMap.set(asset.symbol, asset);
       for (const network of asset.networks) {
         if (network.type === 'fuel') {
-          if (assetIdChainMap.get(network.assetId))
-            throw new Error('Asset ID already exists');
           assetIdChainMap.set(network.assetId, network.chainId);
         } else if (network.address) {
           networkAddressChainMap.set(network.address, network.chainId);
