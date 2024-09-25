@@ -1,5 +1,11 @@
 # @fuel-wallet/connections
 
+## 0.30.0
+
+### Patch Changes
+
+- [#1498](https://github.com/FuelLabs/fuels-wallet/pull/1498) [`698c272c`](https://github.com/FuelLabs/fuels-wallet/commit/698c272c05ffa99a3554af84db72550dfb97879d) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed extension not being detected as installed after inactivity period.
+
 ## 0.29.1
 
 ### Patch Changes

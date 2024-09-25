@@ -1,5 +1,30 @@
 # fuels-wallet
 
+## 0.30.0
+
+### Minor Changes
+
+- [#1492](https://github.com/FuelLabs/fuels-wallet/pull/1492) [`76c88c40`](https://github.com/FuelLabs/fuels-wallet/commit/76c88c40a852f7cae599e41b88709078d8fe4d00) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - refactor assets related code of application
+
+### Patch Changes
+
+- [#1493](https://github.com/FuelLabs/fuels-wallet/pull/1493) [`4bd3f8f7`](https://github.com/FuelLabs/fuels-wallet/commit/4bd3f8f7e1dc0ba120cf23a9fa5de907b2e0186b) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Improve design of alerts in submitted transactions
+
+- [#1492](https://github.com/FuelLabs/fuels-wallet/pull/1492) [`76c88c40`](https://github.com/FuelLabs/fuels-wallet/commit/76c88c40a852f7cae599e41b88709078d8fe4d00) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix bugs when formatting / creating values with zero units (unknown tokens)
+
+- [#1492](https://github.com/FuelLabs/fuels-wallet/pull/1492) [`76c88c40`](https://github.com/FuelLabs/fuels-wallet/commit/76c88c40a852f7cae599e41b88709078d8fe4d00) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - make all unknown tokens / assets use default as zero units
+
+- [#1498](https://github.com/FuelLabs/fuels-wallet/pull/1498) [`698c272c`](https://github.com/FuelLabs/fuels-wallet/commit/698c272c05ffa99a3554af84db72550dfb97879d) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Avoid duplicating instances of injected Content Script
+
+- [#1492](https://github.com/FuelLabs/fuels-wallet/pull/1492) [`76c88c40`](https://github.com/FuelLabs/fuels-wallet/commit/76c88c40a852f7cae599e41b88709078d8fe4d00) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - include hooks and helpers to deal with assets, like `useFuelAsset`, `getAssetFuelCurrentChain`, `getFuelAssetByAssetId`
+
+- [#1492](https://github.com/FuelLabs/fuels-wallet/pull/1492) [`76c88c40`](https://github.com/FuelLabs/fuels-wallet/commit/76c88c40a852f7cae599e41b88709078d8fe4d00) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Send screen: enable sending unknown tokens as well
+
+- [#1492](https://github.com/FuelLabs/fuels-wallet/pull/1492) [`76c88c40`](https://github.com/FuelLabs/fuels-wallet/commit/76c88c40a852f7cae599e41b88709078d8fe4d00) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - upgrade database to remove assetId from primaryKey of assets table
+
+- Updated dependencies [[`698c272c`](https://github.com/FuelLabs/fuels-wallet/commit/698c272c05ffa99a3554af84db72550dfb97879d)]:
+  - @fuel-wallet/connections@0.30.0
+
 ## 0.29.1
 
 ### Patch Changes
