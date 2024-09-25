@@ -7,9 +7,8 @@ import fileName from './contentScript?script';
  */
 export async function executeContentScript() {
   chrome.tabs.query({ url: '<all_urls>' }, (tabs) => {
-    // biome-ignore lint/complexity/noForEach: <explanation>
-    tabs.forEach((tab) => {
-      if (!tab.id) return;
+    for (const tab of tabs) {
+      if (!tab.id || tab.url?.startsWith('chrome://')) continue;
       chrome.scripting
         .executeScript({
           target: { tabId: tab.id, allFrames: true },
@@ -17,7 +16,11 @@ export async function executeContentScript() {
           injectImmediately: true,
         })
         // Ignore errors on tabs when executing script
-        .catch(() => {});
-    });
+        .catch((err) => {
+          if (process.env?.NODE_ENV === 'development') {
+            console.warn(err);
+          }
+        });
+    }
   });
 }

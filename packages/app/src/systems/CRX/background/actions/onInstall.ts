@@ -17,6 +17,4 @@ chrome.runtime.onInstalled.addListener(async (object) => {
   ) {
     chrome.tabs.create({ url: welcomeLink() });
   }
-
-  executeContentScript();
 });
