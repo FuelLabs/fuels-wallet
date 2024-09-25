@@ -588,6 +588,21 @@ test.describe('FuelWallet Extension', () => {
       await expect(addingAsset).resolves.toBeDefined();
     });
 
+    await test.step(' should not be able to add Assets with duplicate asset ids()', async () => {
+      function addAssets(assets: Asset[]) {
+        return blankPage.evaluate(
+          async ([asset]) => {
+            return window.fuel.addAssets(asset);
+          },
+          [assets]
+        );
+      }
+
+      await expect(async () =>
+        addAssets([CUSTOM_ASSET_INPUT, CUSTOM_ASSET_INPUT_2])
+      ).rejects.toThrow();
+    });
+
     await test.step('window.fuel.addNetwork()', async () => {
       function addNetwork(network: string) {
         return blankPage.evaluate(
