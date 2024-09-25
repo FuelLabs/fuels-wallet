@@ -257,8 +257,21 @@ export class AssetService {
     // Fetch existing assets once
     const existingAssets = await AssetService.getAssets();
     const existingAssetMap = new Map<string, AssetData>();
+    // Fuel only
+    const assetIdChainMap = new Map<string, number>();
+    // Ethereum only
+    const networkAddressChainMap = new Map<string, number>();
     for (const asset of existingAssets) {
       existingAssetMap.set(asset.name, asset);
+      for (const network of asset.networks) {
+        if (network.type === 'fuel') {
+          if (assetIdChainMap.get(network.assetId))
+            throw new Error('Asset ID already exists');
+          assetIdChainMap.set(network.assetId, network.chainId);
+        } else if (network.address) {
+          networkAddressChainMap.set(network.address, network.chainId);
+        }
+      }
     }
 
     const newAssetsToAdd: AssetData[] = [];
@@ -273,18 +286,35 @@ export class AssetService {
         for (const newNetwork of asset.networks) {
           const isDuplicate = existingAsset.networks.some((existingNetwork) => {
             if (newNetwork.type !== existingNetwork.type) return false;
-            if (newNetwork.chainId !== existingNetwork.chainId) return false;
             if (newNetwork.type === 'fuel' && existingNetwork.type === 'fuel') {
+              const isAssetIdDuplicate =
+                assetIdChainMap.get(newNetwork.assetId) === newNetwork.chainId;
+              if (newNetwork.chainId !== existingNetwork.chainId) {
+                return isAssetIdDuplicate;
+              }
               return (
-                newNetwork.assetId === existingNetwork.assetId &&
-                newNetwork.contractId === existingNetwork.contractId
+                isAssetIdDuplicate ||
+                (newNetwork.assetId === existingNetwork.assetId &&
+                  newNetwork.contractId === existingNetwork.contractId)
               );
             }
             if (
               newNetwork.type === 'ethereum' &&
               existingNetwork.type === 'ethereum'
             ) {
-              return newNetwork.address === existingNetwork.address;
+              const isAddressDuplicate =
+                newNetwork.address &&
+                networkAddressChainMap.get(newNetwork.address) ===
+                  newNetwork.chainId;
+
+              if (newNetwork.chainId !== existingNetwork.chainId) {
+                return isAddressDuplicate;
+              }
+              return (
+                isAddressDuplicate ||
+                (newNetwork.address === existingNetwork.address &&
+                  newNetwork.chainId === existingNetwork.chainId)
+              );
             }
             return false;
           });
