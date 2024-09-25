@@ -120,6 +120,21 @@ export class AssetService {
       throw new Error('Network not selected');
     }
 
+    const { existingAssetNameMap, existingAssetSymbolMap, assetIdChainMap } =
+      await AssetService.mapAssetsByAddressAndAssetId(assets);
+
+    if (assetIdChainMap.get(input.data.assetId) !== undefined) {
+      throw new Error('Asset ID already exists');
+    }
+
+    if (existingAssetNameMap.get(input.data.name)) {
+      throw new Error('Asset name already exists');
+    }
+
+    if (existingAssetSymbolMap.get(input.data.symbol)) {
+      throw new Error('Asset symbol already exists');
+    }
+
     const currentFuelAsset = await getFuelAssetByAssetId({
       assets,
       assetId: input.data.assetId,
@@ -129,26 +144,11 @@ export class AssetService {
       throw new Error('Asset ID already exists');
     }
 
-    // try to find if already exists by symbol or name
-    const assetFromName = await AssetService.getAsset(input.data.name);
-    const assetFromSymbol = await AssetService.getAssetBySymbol(
-      input.data.symbol
-    );
-
-    // if already exists, check if it is a fuel asset
-    const asset = assetFromName || assetFromSymbol;
-    if (asset && !asset.isCustom) {
-      throw new Error(`Default assets can't be changed`);
-    }
-
-    const existingFuelAsset = asset
-      ? getAssetFuel(asset, currentNetwork?.chainId)
-      : undefined;
-    if (existingFuelAsset) {
-      throw new Error('Asset name/symbol already exists');
-    }
-
     const { decimals, assetId, ...inputRest } = input.data;
+
+    const asset =
+      existingAssetNameMap.get(input.data.name) ||
+      existingAssetSymbolMap.get(input.data.symbol);
 
     const assetToCreate = {
       ...inputRest,
