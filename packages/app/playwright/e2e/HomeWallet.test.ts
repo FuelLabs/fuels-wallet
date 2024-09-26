@@ -25,8 +25,8 @@ test.describe('HomeWallet', () => {
 
   test('should change balance when select a new network', async () => {
     await visit(page, '/wallet');
-    const faucetTabPromise = page.waitForEvent('popup');
     const faucetButton = getButtonByText(page, 'Faucet');
+    const faucetTabPromise = page.waitForEvent('popup');
     await faucetButton.click();
     const faucetTab = await faucetTabPromise;
     await faucetTab.waitForLoadState();
