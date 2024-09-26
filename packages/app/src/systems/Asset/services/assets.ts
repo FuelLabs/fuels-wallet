@@ -131,6 +131,14 @@ export class AssetService {
       throw new Error('Asset name already exists');
     }
 
+    if (existingAssetSymbolMap.get(input.data.name)) {
+      throw new Error('Asset name used as a symbol by listed asset');
+    }
+
+    if (existingAssetNameMap.get(input.data.symbol)) {
+      throw new Error('Asset symbol already used as a name by listed asset');
+    }
+
     if (existingAssetSymbolMap.get(input.data.symbol)) {
       throw new Error('Asset symbol already exists');
     }

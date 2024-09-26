@@ -97,6 +97,17 @@ test.describe('Asset', () => {
     await hasText(page, 'Asset name used as a symbol by listed asset');
   });
 
+  test('should not be able to add asset with symbol used as a name by other asset', async () => {
+    await goToAssetPage(page);
+    await getByAriaLabel(page, 'Asset ID').fill(
+      '0x599012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5100'
+    );
+    await getByAriaLabel(page, 'Asset name').fill('RAND');
+    await getByAriaLabel(page, 'Asset symbol').fill(CUSTOM_ASSET_SCREEN.name);
+    await getByAriaLabel(page, 'Save Asset').click();
+    await hasText(page, 'Asset symbol already used as a name by listed asset');
+  });
+
   test('should not be able to add asset with duplicate symbol', async () => {
     await goToAssetPage(page);
     await getByAriaLabel(page, 'Asset ID').fill(
