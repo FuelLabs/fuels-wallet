@@ -4,4 +4,5 @@ export type NetworkData = {
   name: string;
   url: string;
   isSelected?: boolean;
+  explorerUrl?: string;
 };

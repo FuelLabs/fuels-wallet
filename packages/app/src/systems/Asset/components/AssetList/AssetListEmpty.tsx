@@ -1,36 +1,35 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Card, Heading, Icon, Text } from '@fuel-ui/react';
-import { useOpenFaucet } from '~/systems/Faucet';
+import { useFundWallet } from '~/systems/FundWallet';
 
 export type AssetListEmptyProps = {
-  showFaucet?: boolean;
   text?: string;
   supportText?: string;
 };
 
 export function AssetListEmpty({
-  showFaucet,
   text = `You don't have any assets`,
   supportText = 'Start depositing some assets',
 }: AssetListEmptyProps) {
-  const openFaucet = useOpenFaucet();
+  const { open, hasFaucet, hasBridge } = useFundWallet();
+  const showFund = hasFaucet || hasBridge;
 
   return (
     <Card css={styles.empty}>
       <Card.Body>
         {!!text && <Heading as="h5">{text}</Heading>}
         {!!supportText && <Text fontSize="sm">{supportText}</Text>}
-        {showFaucet && (
+        {showFund && (
           /**
            * TODO: need to add right faucet icon on @fuel-ui
            */
           <Button
             size="sm"
             intent="primary"
-            leftIcon={Icon.is('Wand')}
-            onPress={openFaucet}
+            leftIcon={hasFaucet ? Icon.is('Wand') : Icon.is('Coins')}
+            onPress={open}
           >
-            Faucet
+            {hasFaucet ? 'Faucet' : 'Bridge to Fuel'}
           </Button>
         )}
       </Card.Body>
