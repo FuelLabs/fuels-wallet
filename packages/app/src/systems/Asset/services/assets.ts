@@ -342,6 +342,11 @@ export class AssetService {
             symbol: asset.symbol,
           }
         );
+        customAssetsToAdd.push({
+          ...asset,
+          networks: [],
+          isCustom: true,
+        });
       }
 
       if (existingAsset && !existingAsset.isCustom) {
