@@ -1,6 +1,14 @@
 import type { Account as WalletAccount } from '@fuel-wallet/types';
 import { type Locator, type Page, expect } from '@playwright/test';
-import { type Asset, Provider, Signer, Wallet, bn, hashMessage } from 'fuels';
+import {
+  type Asset,
+  DECIMAL_FUEL,
+  Provider,
+  Signer,
+  Wallet,
+  bn,
+  hashMessage,
+} from 'fuels';
 
 import {
   delay,
@@ -475,8 +483,6 @@ test.describe('FuelWallet Extension', () => {
         });
         // Add some coins to the account
         await seedWallet(senderAccount.address, bn(100_000_000));
-        await hasText(popupPage, /0\.100/i);
-
         // Create transfer
         const transferStatus = transfer(
           senderAccount.address,
@@ -503,6 +509,13 @@ test.describe('FuelWallet Extension', () => {
         const balance = await receiverWallet.getBalance();
         expect(balance.toNumber()).toBe(AMOUNT_TRANSFER);
       }
+
+      await test.step('Seed initial funds using authorized Account', async () => {
+        const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+
+        await seedWallet(authorizedAccount.address, bn(100_000_000));
+        await hasText(popupPage, /0\.100/i);
+      });
 
       await test.step('Send transfer using authorized Account', async () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
