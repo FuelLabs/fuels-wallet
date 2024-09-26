@@ -335,7 +335,23 @@ export class AssetService {
       const existingAsset =
         existingAssetNameMap.get(asset.name) ||
         existingAssetSymbolMap.get(asset.symbol);
-      if (existingAsset && !existingAsset.isCustom) {
+      if (existingAsset?.isCustom) {
+        AssetService.validateCustomAsset(
+          {
+            assetIdChainMap,
+            existingAssetNameMap,
+            existingAssetSymbolMap,
+          },
+          {
+            // biome-ignore lint/suspicious/noExplicitAny:  assetId: (asset as any)?.assetId as string,oming custom asset ids have assetId at the root
+            assetId: (asset as any)?.assetId as string,
+            name: asset.name,
+            symbol: asset.symbol,
+          }
+        );
+      }
+
+      if (existingAsset) {
         const nonDuplicateNetworks: Array<NetworkEthereum | NetworkFuel> = [];
 
         for (const newNetwork of asset.networks) {
