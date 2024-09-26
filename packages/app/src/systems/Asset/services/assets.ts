@@ -328,6 +328,7 @@ export class AssetService {
       const existingAsset =
         existingAssetNameMap.get(asset.name) ||
         existingAssetSymbolMap.get(asset.symbol);
+
       if (existingAsset?.isCustom) {
         AssetService.validateCustomAsset(
           {
