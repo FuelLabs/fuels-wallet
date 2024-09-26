@@ -43,7 +43,7 @@ if (
   !DEFAULT_NETWORKS.find((n) => n.url === VITE_FUEL_PROVIDER_URL)
 ) {
   DEFAULT_NETWORKS.push({
-    name: 'Local',
+    name: 'Local network',
     url: VITE_FUEL_PROVIDER_URL,
     chainId: CHAIN_IDS.fuel.testnet,
     explorerUrl: VITE_EXPLORER_URL,
