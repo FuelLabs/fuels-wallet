@@ -90,4 +90,17 @@ export const applyDbVersioning = (db: Dexie) => {
       // Insert assets
       await assets.bulkAdd(await assetsTemp.toArray());
     });
+
+  // DB VERSION 22
+  db.version(22).stores({
+    vaults: 'key',
+    accounts: '&address, &name',
+    networks: '&id, &url, &name, chainId',
+    connections: 'origin',
+    transactions: '&id',
+    assets: '&name, &symbol',
+    assetsTemp: null,
+    abis: '&contractId',
+    errors: '&id',
+  });
 };
