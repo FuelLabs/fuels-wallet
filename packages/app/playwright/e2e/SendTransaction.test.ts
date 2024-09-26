@@ -367,7 +367,9 @@ test.describe('SendTransaction', () => {
       .trim();
     const feeAmount = bn.parseUnits(feeAmountText);
 
-    // Max amount after calculating fee
+    // Fee values change
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
     const maxAmountAfterFee = await getInputByName(page, 'amount').inputValue();
     const totalAmount = feeAmount.add(bn.parseUnits(maxAmountAfterFee));
     await expect(bn.parseUnits(maxAmount).toString()).toBe(
