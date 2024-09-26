@@ -371,11 +371,15 @@ export class BackgroundService {
     input: MessageInputs['addAssets'],
     serverParams: EventOrigin
   ) {
-    const { assetsToAdd } = await AssetService.validateAddAssets(input.assets);
+    const assetsToAdd = await AssetService.validateAddAssets(input.assets);
 
     const origin = serverParams.origin;
     const title = serverParams.title;
     const favIconUrl = serverParams.favIconUrl;
+
+    if (!assetsToAdd?.length) {
+      throw new Error('No assets to add');
+    }
 
     const popupService = await PopUpService.open(
       origin,
