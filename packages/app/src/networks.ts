@@ -5,6 +5,7 @@ import {
   IS_RELEASE,
   IS_TEST,
   VITE_EXPLORER_URL,
+  VITE_FUEL_FAUCET_URL,
   VITE_FUEL_PROVIDER_URL,
 } from './config';
 
@@ -46,6 +47,7 @@ if (
     url: VITE_FUEL_PROVIDER_URL,
     chainId: CHAIN_IDS.fuel.testnet,
     explorerUrl: VITE_EXPLORER_URL,
+    faucetUrl: VITE_FUEL_FAUCET_URL,
     isSelected: false,
   });
 }
