@@ -47,12 +47,6 @@ const WALLET_PASSWORD = 'Qwe123456$';
 test.setTimeout(240_000);
 
 test.describe('FuelWallet Extension', () => {
-  async function switchNetwork(page: Page, networkName: string) {
-    const networksButton = getByAriaLabel(page, 'Selected Network');
-    await networksButton.click();
-    const networkButton = getElementByText(page, networkName);
-    await networkButton.click();
-  }
   test('If user opens popup it should force open a sign-up page', async ({
     context,
     extensionId,
@@ -437,10 +431,6 @@ test.describe('FuelWallet Extension', () => {
           'address is not authorized for this connection.'
         );
       });
-    });
-
-    await test.step('Switch to local network', async () => {
-      await switchNetwork(popupPage, 'Local');
     });
 
     await test.step('window.fuel.sendTransaction()', async () => {
