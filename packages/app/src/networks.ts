@@ -44,7 +44,7 @@ if (
   DEFAULT_NETWORKS.push({
     name: 'Local',
     url: VITE_FUEL_PROVIDER_URL,
-    chainId: 9999,
+    chainId: CHAIN_IDS.fuel.testnet,
     explorerUrl: VITE_EXPLORER_URL,
     isSelected: false,
   });
