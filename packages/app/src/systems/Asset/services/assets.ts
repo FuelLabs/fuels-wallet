@@ -348,6 +348,7 @@ export class AssetService {
           networks: [],
           isCustom: true,
         });
+        continue;
       }
 
       if (existingAsset && !existingAsset.isCustom) {
