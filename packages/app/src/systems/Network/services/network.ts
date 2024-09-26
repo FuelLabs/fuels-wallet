@@ -2,7 +2,7 @@ import { createProvider, createUUID } from '@fuel-wallet/connections';
 import type { NetworkData } from '@fuel-wallet/types';
 import { compare } from 'compare-versions';
 import { type NodeInfo, Provider, type SelectNetworkArguments } from 'fuels';
-import { MIN_NODE_VERSION } from '~/config';
+import { MIN_NODE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
 import { DEFAULT_NETWORKS } from '~/networks';
 import { db } from '~/systems/Core/utils/database';
 
@@ -180,6 +180,18 @@ export class NetworkService {
       if (network.isSelected) {
         await NetworkService.selectNetwork({ id: networkAdded.id || '' });
       }
+    }
+
+    try {
+      const envNetwork = await NetworkService.getNetworkByNameOrUrl({
+        url: VITE_FUEL_PROVIDER_URL,
+        name: '',
+      });
+      if (envNetwork) {
+        await NetworkService.selectNetwork({ id: envNetwork.id || '' });
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
