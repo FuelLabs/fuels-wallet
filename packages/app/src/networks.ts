@@ -3,6 +3,7 @@ import { CHAIN_IDS } from 'fuels';
 import {
   IS_DEVELOPMENT,
   IS_RELEASE,
+  IS_TEST,
   VITE_EXPLORER_URL,
   VITE_FUEL_PROVIDER_URL,
 } from './config';
@@ -37,7 +38,7 @@ export const DEFAULT_NETWORKS: Array<
 ];
 
 if (
-  IS_DEVELOPMENT &&
+  (IS_DEVELOPMENT || IS_TEST) &&
   !DEFAULT_NETWORKS.find((n) => n.url === VITE_FUEL_PROVIDER_URL)
 ) {
   DEFAULT_NETWORKS.push({
