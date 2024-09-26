@@ -12,7 +12,6 @@ import { TxHeaderLoader } from './TxHeaderLoader';
 export type TxHeaderProps = {
   status?: TransactionStatus;
   id?: string;
-  providerUrl?: string;
   type?: TransactionTypeName;
 };
 
@@ -20,13 +19,8 @@ type TxHeaderComponent = FC<TxHeaderProps> & {
   Loader: typeof TxHeaderLoader;
 };
 
-export const TxHeader: TxHeaderComponent = ({
-  status,
-  id,
-  type,
-  providerUrl = '',
-}) => {
-  const { href, openExplorer } = useExplorerLink(providerUrl, id);
+export const TxHeader: TxHeaderComponent = ({ status, id, type }) => {
+  const { href, openExplorer } = useExplorerLink(id);
 
   return (
     <Card css={styles.root}>
@@ -53,22 +47,26 @@ export const TxHeader: TxHeaderComponent = ({
             }}
             tooltipMessage="Copy Transaction ID"
           />
-          <Copyable
-            value={href}
-            tooltipMessage="Copy Transaction Link"
-            iconProps={{
-              icon: Icon.is('Link'),
-              'aria-label': 'Copy Transaction Link',
-            }}
-          />
-          <Tooltip content="Open explorer">
-            <Icon
-              css={styles.icon}
-              icon={Icon.is('ExternalLink')}
-              onClick={openExplorer}
-              aria-label="Open explorer"
-            />
-          </Tooltip>
+          {href && (
+            <>
+              <Copyable
+                value={href}
+                tooltipMessage="Copy Transaction Link"
+                iconProps={{
+                  icon: Icon.is('Link'),
+                  'aria-label': 'Copy Transaction Link',
+                }}
+              />
+              <Tooltip content="Open explorer">
+                <Icon
+                  css={styles.icon}
+                  icon={Icon.is('ExternalLink')}
+                  onClick={openExplorer}
+                  aria-label="Open explorer"
+                />
+              </Tooltip>
+            </>
+          )}
         </Box.Flex>
       </Box.Flex>
       <Box.Flex css={{ ...styles.row, ...styles.type }}>

@@ -44,7 +44,6 @@ export const TxApprove = () => {
             showDetails
             tx={ctx.txSummaryExecuted}
             txStatus={ctx.executedStatus()}
-            providerUrl={ctx.providerUrl}
             footer={
               ctx.status('failed') && (
                 <Button

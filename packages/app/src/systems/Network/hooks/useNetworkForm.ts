@@ -9,6 +9,7 @@ import { isValidNetworkUrl } from '../utils';
 export type NetworkFormValues = {
   name: string;
   url: string;
+  explorerUrl?: string;
 };
 
 const schema = yup
@@ -18,12 +19,20 @@ const schema = yup
       .string()
       .test('is-url-valid', 'URL is not valid', isValidNetworkUrl)
       .required('URL is required'),
+    explorerUrl: yup
+      .string()
+      .test('is-url-valid', 'Explorer URL is not valid', (url) => {
+        if (!url) return true;
+        return isValidNetworkUrl(url);
+      })
+      .optional(),
   })
   .required();
 
 const DEFAULT_VALUES = {
   name: '',
   url: '',
+  explorerUrl: '',
 };
 
 export type UseNetworkFormReturn = ReturnType<typeof useNetworkForm>;

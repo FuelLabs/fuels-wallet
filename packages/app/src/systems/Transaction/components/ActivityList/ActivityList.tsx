@@ -10,13 +10,11 @@ export interface ActivityListProps {
   txs: TransactionSummary[];
   providerUrl?: string;
   isLoading?: boolean;
-  isTestnet?: boolean;
   ownerAddress: string;
 }
 
 export const ActivityList = ({
   txs,
-  isTestnet = false,
   isLoading,
   ownerAddress,
 }: ActivityListProps) => {
@@ -24,7 +22,7 @@ export const ActivityList = ({
 
   const isEmpty = !txs?.length;
 
-  if (isEmpty) return <ActivityList.Empty isTestnet={isTestnet} />;
+  if (isEmpty) return <ActivityList.Empty />;
 
   return (
     <Box.Stack gap="$2">

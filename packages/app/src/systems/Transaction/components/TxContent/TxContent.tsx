@@ -85,7 +85,6 @@ export type TxContentInfoProps = {
   isLoading?: boolean;
   isConfirm?: boolean;
   errors?: GroupedErrors;
-  providerUrl?: string;
   fees?: {
     baseFee?: BN;
     minGasLimit?: BN;
@@ -102,7 +101,6 @@ function TxContentInfo({
   isLoading,
   isConfirm,
   errors,
-  providerUrl,
   fees,
 }: TxContentInfoProps) {
   const { getValues } = useFormContext<SendFormValues>();
@@ -125,12 +123,7 @@ function TxContentInfo({
     if (isConfirm) return <ConfirmHeader />;
     if (isExecuted)
       return (
-        <TxHeader
-          id={tx?.id}
-          type={tx?.type}
-          status={status || undefined}
-          providerUrl={providerUrl}
-        />
+        <TxHeader id={tx?.id} type={tx?.type} status={status || undefined} />
       );
 
     return <ConfirmHeader />;

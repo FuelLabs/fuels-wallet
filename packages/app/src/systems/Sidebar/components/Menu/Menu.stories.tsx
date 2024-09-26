@@ -1,7 +1,7 @@
 import { Box } from '@fuel-ui/react';
 
-import type { MenuItemObj, MenuProps } from './types';
 import { Menu } from './Menu';
+import type { MenuItemObj, MenuProps } from './types';
 
 export default {
   component: Menu,
