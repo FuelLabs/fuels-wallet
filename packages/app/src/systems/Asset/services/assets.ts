@@ -344,7 +344,7 @@ export class AssetService {
         );
       }
 
-      if (existingAsset) {
+      if (existingAsset && !existingAsset.isCustom) {
         const nonDuplicateNetworks: Array<NetworkEthereum | NetworkFuel> = [];
 
         for (const newNetwork of asset.networks) {
