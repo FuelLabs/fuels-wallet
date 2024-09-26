@@ -123,25 +123,14 @@ export class AssetService {
     const { existingAssetNameMap, existingAssetSymbolMap, assetIdChainMap } =
       await AssetService.mapAssetsByAddressAndAssetId(assets);
 
-    if (assetIdChainMap.get(input.data.assetId) !== undefined) {
-      throw new Error('Asset ID already exists');
-    }
-
-    if (existingAssetNameMap.get(input.data.name)) {
-      throw new Error('Asset name already exists');
-    }
-
-    if (existingAssetSymbolMap.get(input.data.name)) {
-      throw new Error('Asset name used as a symbol by listed asset');
-    }
-
-    if (existingAssetNameMap.get(input.data.symbol)) {
-      throw new Error('Asset symbol already used as a name by listed asset');
-    }
-
-    if (existingAssetSymbolMap.get(input.data.symbol)) {
-      throw new Error('Asset symbol already exists');
-    }
+    AssetService.validateCustomAsset(
+      {
+        assetIdChainMap,
+        existingAssetNameMap,
+        existingAssetSymbolMap,
+      },
+      input.data
+    );
 
     const currentFuelAsset = await getFuelAssetByAssetId({
       assets,
@@ -179,6 +168,41 @@ export class AssetService {
     });
   }
 
+  static validateCustomAsset(
+    {
+      assetIdChainMap,
+      existingAssetNameMap,
+      existingAssetSymbolMap,
+    }: Omit<
+      Awaited<ReturnType<typeof AssetService.mapAssetsByAddressAndAssetId>>,
+      'networkAddressChainMap'
+    >,
+    assetData: {
+      assetId: string;
+      name: string;
+      symbol: string;
+    }
+  ) {
+    if (assetIdChainMap.get(assetData.assetId) !== undefined) {
+      throw new Error('Asset ID already exists');
+    }
+
+    if (existingAssetNameMap.get(assetData.name)) {
+      throw new Error('Asset name already exists');
+    }
+
+    if (existingAssetSymbolMap.get(assetData.name)) {
+      throw new Error('Asset name used as a symbol by listed asset');
+    }
+
+    if (existingAssetNameMap.get(assetData.symbol)) {
+      throw new Error('Asset symbol already used as a name by listed asset');
+    }
+
+    if (existingAssetSymbolMap.get(assetData.symbol)) {
+      throw new Error('Asset symbol already exists');
+    }
+  }
   static async addAssets(input: AssetInputs['addAssets']) {
     return db.transaction('rw', db.assets, async () => {
       await db.assets.bulkAdd(input.data);
