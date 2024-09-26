@@ -86,6 +86,21 @@ export const CUSTOM_ASSET_INPUT_3: Asset = {
   ],
 };
 
+export const CUSTOM_ASSET_INPUT_4: Asset = {
+  name: 'New3',
+  symbol: 'NEW3',
+  icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
+  networks: [
+    {
+      type: 'fuel',
+      assetId:
+        '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d20',
+      decimals: 2,
+      chainId: 0,
+    },
+  ],
+};
+
 export const CUSTOM_ASSET_SCREEN = {
   assetId: '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d92',
   name: 'New',

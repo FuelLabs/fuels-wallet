@@ -1,6 +1,14 @@
 import type { Account as WalletAccount } from '@fuel-wallet/types';
 import { type Locator, expect } from '@playwright/test';
-import { type Asset, Provider, Signer, Wallet, bn, hashMessage } from 'fuels';
+import {
+  type Asset,
+  type NetworkFuel,
+  Provider,
+  Signer,
+  Wallet,
+  bn,
+  hashMessage,
+} from 'fuels';
 
 import {
   delay,
@@ -16,6 +24,8 @@ import {
 import {
   CUSTOM_ASSET_INPUT,
   CUSTOM_ASSET_INPUT_2,
+  CUSTOM_ASSET_INPUT_3,
+  CUSTOM_ASSET_INPUT_4,
   FUEL_NETWORK,
   PRIVATE_KEY,
 } from '../mocks';
@@ -578,7 +588,10 @@ test.describe('FuelWallet Extension', () => {
         );
       }
 
-      const addingAsset = addAssets([CUSTOM_ASSET_INPUT, CUSTOM_ASSET_INPUT_2]);
+      const addingAsset = addAssets([
+        CUSTOM_ASSET_INPUT_3,
+        CUSTOM_ASSET_INPUT_2,
+      ]);
 
       const addAssetPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
@@ -586,6 +599,58 @@ test.describe('FuelWallet Extension', () => {
       await hasText(addAssetPage, 'Review the Assets to be added:');
       await getButtonByText(addAssetPage, /add assets/i).click();
       await expect(addingAsset).resolves.toBeDefined();
+    });
+
+    await test.step('show throw error when adding an existing asset', async () => {
+      function addAssets(assets: Asset[]) {
+        return blankPage.evaluate(
+          async ([asset]) => {
+            return window.fuel.addAssets(asset);
+          },
+          [assets]
+        );
+      }
+
+      expect(() => addAssets([CUSTOM_ASSET_INPUT])).rejects.toThrow();
+    });
+
+    await test.step('show throw error when first asset is new but second is duplicate ', async () => {
+      function addAssets(assets: Asset[]) {
+        return blankPage.evaluate(
+          async ([asset]) => {
+            return window.fuel.addAssets(asset);
+          },
+          [assets]
+        );
+      }
+
+      expect(() =>
+        addAssets([CUSTOM_ASSET_INPUT_4, CUSTOM_ASSET_INPUT_4])
+      ).rejects.toThrow();
+    });
+
+    await test.step('show validate custom assetIds using root assetId', async () => {
+      function addAssets(assets: Asset[]) {
+        return blankPage.evaluate(
+          async ([asset]) => {
+            return window.fuel.addAssets(asset);
+          },
+          [assets]
+        );
+      }
+
+      expect(() =>
+        addAssets([
+          {
+            name: `${CUSTOM_ASSET_INPUT.name}x`,
+            symbol: `${CUSTOM_ASSET_INPUT.symbol}x`,
+            icon: CUSTOM_ASSET_INPUT.icon,
+            assetId: (CUSTOM_ASSET_INPUT.networks[0] as NetworkFuel).assetId,
+            networks: [],
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          } as any,
+        ])
+      ).rejects.toThrow();
     });
 
     await test.step('window.fuel.addNetwork()', async () => {
