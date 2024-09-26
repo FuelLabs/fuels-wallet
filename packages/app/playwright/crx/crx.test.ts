@@ -1,5 +1,5 @@
 import type { Account as WalletAccount } from '@fuel-wallet/types';
-import { type Locator, expect } from '@playwright/test';
+import { type Locator, type Page, expect } from '@playwright/test';
 import { type Asset, Provider, Signer, Wallet, bn, hashMessage } from 'fuels';
 
 import {
@@ -16,6 +16,7 @@ import {
 import {
   CUSTOM_ASSET_INPUT,
   CUSTOM_ASSET_INPUT_2,
+  DEFAULT_NETWORKS,
   FUEL_NETWORK,
   PRIVATE_KEY,
 } from '../mocks';
@@ -41,6 +42,12 @@ const isLocalNetwork = process.env.VITE_FUEL_PROVIDER_URL.includes('localhost');
 test.setTimeout(240_000);
 
 test.describe('FuelWallet Extension', () => {
+  async function switchNetwork(page: Page, networkName: string) {
+    const networksButton = getByAriaLabel(page, 'Selected Network');
+    await networksButton.click();
+    const networkButton = getElementByText(page, networkName);
+    await networkButton.click();
+  }
   test('If user opens popup it should force open a sign-up page', async ({
     context,
     extensionId,
@@ -54,6 +61,7 @@ test.describe('FuelWallet Extension', () => {
   });
 
   test('SDK operations', async ({ context, baseURL, extensionId }) => {
+    const provider = await Provider.create(process.env.VITE_FUEL_PROVIDER_URL);
     // Use a single instance of the page to avoid
     // multiple waiting times, and window.fuel checking.
     const blankPage = await context.newPage();
@@ -426,6 +434,14 @@ test.describe('FuelWallet Extension', () => {
       });
     });
 
+    await test.step('Switch to local network', async () => {
+      // Ensure we are on the correct network
+      const providerData = DEFAULT_NETWORKS.find(
+        (n) => n.url === process.env.VITE_FUEL_PROVIDER_URL
+      );
+      await switchNetwork(popupPage, providerData.name);
+    });
+
     await test.step('window.fuel.sendTransaction()', async () => {
       // Create transfer function
       async function transfer(
@@ -453,16 +469,13 @@ test.describe('FuelWallet Extension', () => {
       }
 
       async function approveTxCheck(senderAccount: WalletAccount) {
-        const provider = await Provider.create(
-          process.env.VITE_FUEL_PROVIDER_URL
-        );
+        const AMOUNT_TRANSFER = 100;
         const receiverWallet = Wallet.generate({
           provider,
         });
-        const AMOUNT_TRANSFER = 100;
-
         // Add some coins to the account
         await seedWallet(senderAccount.address, bn(100_000_000));
+        await hasText(popupPage, /0\.100/i);
 
         // Create transfer
         const transferStatus = transfer(
@@ -493,6 +506,7 @@ test.describe('FuelWallet Extension', () => {
 
       await test.step('Send transfer using authorized Account', async () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+        // Add some coins to the account
         await approveTxCheck(authorizedAccount);
       });
 
@@ -516,9 +530,6 @@ test.describe('FuelWallet Extension', () => {
         const nonAuthorizedAccount = await getAccountByName(
           popupPage,
           'Account 2'
-        );
-        const provider = await Provider.create(
-          process.env.VITE_FUEL_PROVIDER_URL
         );
         const receiverWallet = Wallet.generate({
           provider,
