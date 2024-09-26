@@ -1,12 +1,5 @@
-import { createProvider } from '@fuel-wallet/connections';
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
-import {
-  type NetworkEthereum,
-  type NetworkFuel,
-  assets,
-  getAssetFuel,
-} from 'fuels';
-import { type Provider, isB256 } from 'fuels';
+import { type NetworkEthereum, type NetworkFuel, assets } from 'fuels';
 import { db } from '~/systems/Core/utils/database';
 import { getUniqueString } from '~/systems/Core/utils/string';
 import { NetworkService } from '~/systems/Network/services/network';
@@ -264,7 +257,7 @@ export class AssetService {
     const networkAddressChainMap = new Map<string, number>();
     for (const asset of existingAssets) {
       // @TODO: Remove this when we have a better way to handle this
-      // biome-ignore lint/suspicious/noExplicitAny: Sometimes a assetId comes at the root of the asset
+      // biome-ignore lint/suspicious/noExplicitAny: Incoming custom asset ids have the assetId at the root
       const looseAssetId = (asset as any)?.assetId as string | undefined;
       looseAssetId && assetIdChainMap.set(looseAssetId, 0);
 
@@ -343,7 +336,7 @@ export class AssetService {
             existingAssetSymbolMap,
           },
           {
-            // biome-ignore lint/suspicious/noExplicitAny:  assetId: (asset as any)?.assetId as string,oming custom asset ids have assetId at the root
+            // biome-ignore lint/suspicious/noExplicitAny: Incoming custom asset ids have assetId at the root
             assetId: (asset as any)?.assetId as string,
             name: asset.name,
             symbol: asset.symbol,
