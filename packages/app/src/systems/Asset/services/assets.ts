@@ -392,6 +392,14 @@ export class AssetService {
 
           if (!isDuplicate) {
             nonDuplicateNetworks.push(newNetwork);
+            // Include new data in maps to check for duplication
+            if (newNetwork.type === 'fuel')
+              assetIdChainMap.set(newNetwork.assetId, newNetwork.chainId);
+            if (newNetwork.type === 'ethereum' && newNetwork.address)
+              networkAddressChainMap.set(
+                newNetwork.address,
+                newNetwork.chainId
+              );
           }
         }
 
