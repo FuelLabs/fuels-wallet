@@ -4,10 +4,11 @@ import {
   Box,
   CardList,
   ContentLoader,
+  Copyable,
+  Icon,
   Text,
   VStack,
 } from '@fuel-ui/react';
-import type { AssetData } from '@fuel-wallet/types';
 import type { BN, TransactionStatus, TransactionSummary } from 'fuels';
 import { type ReactNode, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -25,14 +26,24 @@ import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
 const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
   return (
     <Alert status="error" css={styles.alert} aria-label="Transaction Error">
-      <Alert.Description
-        as="div"
-        css={{
-          wordBreak: 'break-word',
+      <Copyable
+        value={errors ?? ''}
+        aria-label={errors}
+        iconProps={{
+          icon: Icon.is('Copy'),
+          'aria-label': 'Copy Error',
         }}
+        tooltipMessage="Copy Error"
       >
-        {errors}
-      </Alert.Description>
+        <Alert.Description
+          as="div"
+          css={{
+            wordBreak: 'break-word',
+          }}
+        >
+          {errors}
+        </Alert.Description>
+      </Copyable>
     </Alert>
   );
 };
@@ -66,7 +77,7 @@ function TxContentLoader() {
   );
 }
 
-type TxContentInfoProps = {
+export type TxContentInfoProps = {
   footer?: ReactNode;
   tx?: Maybe<TransactionSummary>;
   txStatus?: Maybe<TransactionStatus>;
