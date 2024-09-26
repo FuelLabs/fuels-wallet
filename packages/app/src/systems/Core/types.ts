@@ -42,7 +42,7 @@ export const Pages = {
   logout: route('/accounts/logout'),
   assets: route('/assets'),
   assetsEdit: route<'name'>('/assets/edit/:name'),
-  assetsAdd: route<'assetId'>('/assets/add/:assetId'),
+  assetsAdd: route<'assetId'>('/assets/add/:assetId?'),
   errors: route('/errors'),
 };
 

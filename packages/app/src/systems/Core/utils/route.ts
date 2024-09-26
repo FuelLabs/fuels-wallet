@@ -21,6 +21,11 @@
  * ```
  */
 export function route<P extends string>(path: string) {
+  let routeBuilding = true;
+  function removeParamSymbols(str: string) {
+    return str.replace(/[:?]/g, '');
+  }
+
   return function parse(
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     params?: Record<P, any>,
@@ -29,9 +34,21 @@ export function route<P extends string>(path: string) {
   ): string {
     const split = path.match(/[^/]+/g);
     const parsed = split
-      ?.map((str) => params?.[str.replace(':', '')] || str)
+      ?.map((str) => {
+        if (str?.[0] === ':' && !routeBuilding) {
+          const paramData = params?.[removeParamSymbols(str)];
+          if (!paramData && str?.[str.length - 1] !== '?') {
+            throw new Error(
+              `Param ${removeParamSymbols(str)} is required but not provided.`
+            );
+          }
+          return paramData || '';
+        }
+        return str;
+      })
       .join('/');
 
+    routeBuilding = false;
     return `/${parsed ?? ''}${searchStringify(query)}`;
   };
 }
