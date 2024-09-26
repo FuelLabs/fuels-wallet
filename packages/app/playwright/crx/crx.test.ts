@@ -24,7 +24,6 @@ import {
 import {
   CUSTOM_ASSET_INPUT,
   CUSTOM_ASSET_INPUT_2,
-  DEFAULT_NETWORKS,
   FUEL_NETWORK,
   PRIVATE_KEY,
 } from '../mocks';
@@ -40,8 +39,6 @@ import {
 } from './utils';
 
 const WALLET_PASSWORD = 'Qwe123456$';
-
-const isLocalNetwork = process.env.VITE_FUEL_PROVIDER_URL.includes('localhost');
 
 // Increase timeout for this test
 // The timeout is set for 3 minutes
@@ -443,11 +440,7 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('Switch to local network', async () => {
-      // Ensure we are on the correct network
-      const providerData = DEFAULT_NETWORKS.find(
-        (n) => n.url === process.env.VITE_FUEL_PROVIDER_URL
-      );
-      await switchNetwork(popupPage, providerData.name);
+      await switchNetwork(popupPage, 'Local');
     });
 
     await test.step('window.fuel.sendTransaction()', async () => {
@@ -481,6 +474,7 @@ test.describe('FuelWallet Extension', () => {
         const receiverWallet = Wallet.generate({
           provider,
         });
+        bn(100_000_000);
         // Add some coins to the account
         await seedWallet(senderAccount.address, bn(100_000_000));
         // Create transfer
@@ -635,7 +629,7 @@ test.describe('FuelWallet Extension', () => {
         await popupPage.reload();
       }
 
-      const initialNetworkAmount = isLocalNetwork ? 3 : 2;
+      const initialNetworkAmount = 4;
       let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
       await networkSelector.click();
 
