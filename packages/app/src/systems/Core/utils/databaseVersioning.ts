@@ -93,7 +93,7 @@ export const applyDbVersioning = (db: Dexie) => {
     });
 
   // DB VERSION 22
-  db.version(33)
+  db.version(22)
     .stores({
       vaults: 'key',
       accounts: '&address, &name',
