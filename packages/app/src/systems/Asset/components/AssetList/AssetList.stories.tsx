@@ -30,6 +30,6 @@ export const Empty = () => (
 
 export const EmptyFaucet = () => (
   <Box css={{ width: 300, height: 300 }}>
-    <AssetList.Empty showFund />
+    <AssetList.Empty />
   </Box>
 );
