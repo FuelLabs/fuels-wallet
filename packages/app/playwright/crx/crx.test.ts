@@ -1,6 +1,5 @@
 import type { Account as WalletAccount } from '@fuel-wallet/types';
-import { type Locator, expect } from '@playwright/test';
-import { type Asset, Provider, Signer, Wallet, bn, hashMessage } from 'fuels';
+import { type Locator, type Page, expect } from '@playwright/test';
 
 import {
   delay,
@@ -16,10 +15,21 @@ import {
 import {
   CUSTOM_ASSET_INPUT,
   CUSTOM_ASSET_INPUT_2,
+  CUSTOM_ASSET_INPUT_3,
+  CUSTOM_ASSET_INPUT_4,
   FUEL_NETWORK,
   PRIVATE_KEY,
 } from '../mocks';
 
+import {
+  type Asset,
+  type NetworkFuel,
+  Provider,
+  Signer,
+  Wallet,
+  bn,
+  hashMessage,
+} from 'fuels';
 import {
   getAccountByName,
   getWalletAccounts,
@@ -31,8 +41,6 @@ import {
 } from './utils';
 
 const WALLET_PASSWORD = 'Qwe123456$';
-
-const isLocalNetwork = process.env.VITE_FUEL_PROVIDER_URL.includes('localhost');
 
 // Increase timeout for this test
 // The timeout is set for 3 minutes
@@ -54,6 +62,7 @@ test.describe('FuelWallet Extension', () => {
   });
 
   test('SDK operations', async ({ context, baseURL, extensionId }) => {
+    const provider = await Provider.create(process.env.VITE_FUEL_PROVIDER_URL);
     // Use a single instance of the page to avoid
     // multiple waiting times, and window.fuel checking.
     const blankPage = await context.newPage();
@@ -453,17 +462,13 @@ test.describe('FuelWallet Extension', () => {
       }
 
       async function approveTxCheck(senderAccount: WalletAccount) {
-        const provider = await Provider.create(
-          process.env.VITE_FUEL_PROVIDER_URL
-        );
+        const AMOUNT_TRANSFER = 100;
         const receiverWallet = Wallet.generate({
           provider,
         });
-        const AMOUNT_TRANSFER = 100;
-
+        bn(100_000_000);
         // Add some coins to the account
         await seedWallet(senderAccount.address, bn(100_000_000));
-
         // Create transfer
         const transferStatus = transfer(
           senderAccount.address,
@@ -491,8 +496,16 @@ test.describe('FuelWallet Extension', () => {
         expect(balance.toNumber()).toBe(AMOUNT_TRANSFER);
       }
 
+      await test.step('Seed initial funds using authorized Account', async () => {
+        const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+
+        await seedWallet(authorizedAccount.address, bn(100_000_000));
+        await hasText(popupPage, /0\.100/i);
+      });
+
       await test.step('Send transfer using authorized Account', async () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+        // Add some coins to the account
         await approveTxCheck(authorizedAccount);
       });
 
@@ -516,9 +529,6 @@ test.describe('FuelWallet Extension', () => {
         const nonAuthorizedAccount = await getAccountByName(
           popupPage,
           'Account 2'
-        );
-        const provider = await Provider.create(
-          process.env.VITE_FUEL_PROVIDER_URL
         );
         const receiverWallet = Wallet.generate({
           provider,
@@ -578,7 +588,10 @@ test.describe('FuelWallet Extension', () => {
         );
       }
 
-      const addingAsset = addAssets([CUSTOM_ASSET_INPUT, CUSTOM_ASSET_INPUT_2]);
+      const addingAsset = addAssets([
+        CUSTOM_ASSET_INPUT_3,
+        CUSTOM_ASSET_INPUT_2,
+      ]);
 
       const addAssetPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
@@ -586,6 +599,58 @@ test.describe('FuelWallet Extension', () => {
       await hasText(addAssetPage, 'Review the Assets to be added:');
       await getButtonByText(addAssetPage, /add assets/i).click();
       await expect(addingAsset).resolves.toBeDefined();
+    });
+
+    await test.step('show throw error when adding an existing asset', async () => {
+      function addAssets(assets: Asset[]) {
+        return blankPage.evaluate(
+          async ([asset]) => {
+            return window.fuel.addAssets(asset);
+          },
+          [assets]
+        );
+      }
+
+      expect(() => addAssets([CUSTOM_ASSET_INPUT])).rejects.toThrow();
+    });
+
+    await test.step('show throw error when first asset is new but second is duplicate ', async () => {
+      function addAssets(assets: Asset[]) {
+        return blankPage.evaluate(
+          async ([asset]) => {
+            return window.fuel.addAssets(asset);
+          },
+          [assets]
+        );
+      }
+
+      expect(() =>
+        addAssets([CUSTOM_ASSET_INPUT_4, CUSTOM_ASSET_INPUT_4])
+      ).rejects.toThrow();
+    });
+
+    await test.step('show validate custom assetIds using root assetId', async () => {
+      function addAssets(assets: Asset[]) {
+        return blankPage.evaluate(
+          async ([asset]) => {
+            return window.fuel.addAssets(asset);
+          },
+          [assets]
+        );
+      }
+
+      expect(() =>
+        addAssets([
+          {
+            name: `${CUSTOM_ASSET_INPUT.name}x`,
+            symbol: `${CUSTOM_ASSET_INPUT.symbol}x`,
+            icon: CUSTOM_ASSET_INPUT.icon,
+            assetId: (CUSTOM_ASSET_INPUT.networks[0] as NetworkFuel).assetId,
+            networks: [],
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          } as any,
+        ])
+      ).rejects.toThrow();
     });
 
     await test.step('window.fuel.addNetwork()', async () => {
@@ -611,7 +676,7 @@ test.describe('FuelWallet Extension', () => {
         await popupPage.reload();
       }
 
-      const initialNetworkAmount = isLocalNetwork ? 3 : 2;
+      const initialNetworkAmount = 3;
       let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
       await networkSelector.click();
 

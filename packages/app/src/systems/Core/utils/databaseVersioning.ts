@@ -1,6 +1,7 @@
 import { createUUID } from '@fuel-wallet/connections';
 import type Dexie from 'dexie';
 import { CHAIN_IDS, DEVNET_NETWORK_URL, TESTNET_NETWORK_URL } from 'fuels';
+import { DEFAULT_NETWORKS } from '~/networks';
 
 export const applyDbVersioning = (db: Dexie) => {
   // DB VERSION 19
@@ -92,15 +93,33 @@ export const applyDbVersioning = (db: Dexie) => {
     });
 
   // DB VERSION 22
-  db.version(22).stores({
-    vaults: 'key',
-    accounts: '&address, &name',
-    networks: '&id, &url, &name, chainId',
-    connections: 'origin',
-    transactions: '&id',
-    assets: '&name, &symbol',
-    assetsTemp: null,
-    abis: '&contractId',
-    errors: '&id',
-  });
+  db.version(22)
+    .stores({
+      vaults: 'key',
+      accounts: '&address, &name',
+      networks: '&id, &url, &name, chainId',
+      connections: 'origin',
+      transactions: '&id',
+      assets: '&name, &symbol',
+      assetsTemp: null,
+      abis: '&contractId',
+      errors: '&id',
+    })
+    .upgrade(async (tx) => {
+      const networks = tx.table('networks');
+      // *
+      // Drop all networks
+      // *
+      await networks.clear();
+      // *
+      // Add default networks
+      // *
+      for (const [index, network] of DEFAULT_NETWORKS.entries()) {
+        await networks.add({
+          // Ensure we add to database in the same order as the DEFAULT_NETWORKS
+          id: index.toString(),
+          ...network,
+        });
+      }
+    });
 };

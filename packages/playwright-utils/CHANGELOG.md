@@ -1,5 +1,17 @@
 # @fuels/playwright-utils
 
+## 0.30.2
+
+### Patch Changes
+
+- [#1514](https://github.com/FuelLabs/fuels-wallet/pull/1514) [`5f456f12`](https://github.com/FuelLabs/fuels-wallet/commit/5f456f12a3d42b2923382436beacfff79f19b3a1) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Fix provider overriding url
+
+## 0.30.1
+
+### Patch Changes
+
+- [#1512](https://github.com/FuelLabs/fuels-wallet/pull/1512) [`e2ded81d`](https://github.com/FuelLabs/fuels-wallet/commit/e2ded81dc13f7d957740f268b1c53a90f8382772) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - pump playwright version
+
 ## 0.30.0
 
 ### Minor Changes

@@ -1,5 +1,19 @@
 # @fuel-wallet/types
 
+## 0.31.2
+
+## 0.31.1
+
+### Patch Changes
+
+- [#1512](https://github.com/FuelLabs/fuels-wallet/pull/1512) [`e2ded81d`](https://github.com/FuelLabs/fuels-wallet/commit/e2ded81dc13f7d957740f268b1c53a90f8382772) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - pump playwright version
+
+## 0.31.0
+
+### Minor Changes
+
+- [#1508](https://github.com/FuelLabs/fuels-wallet/pull/1508) [`a5b8007f`](https://github.com/FuelLabs/fuels-wallet/commit/a5b8007fe80a9d1b8402e3b30d84e4268abd52d1) Thanks [@luizstacio](https://github.com/luizstacio)! - Add explorer, bridge and faucet url configuration to networks.
+
 ## 0.30.0
 
 ## 0.29.1

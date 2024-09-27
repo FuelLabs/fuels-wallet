@@ -28,7 +28,6 @@ export function TransactionRequest() {
     shouldShowActions,
     shouldDisableApproveBtn,
     errors,
-    providerUrl,
     executedStatus,
   } = txRequest;
   const { isLoading: isLoadingAssets } = useAssets();
@@ -99,7 +98,6 @@ export function TransactionRequest() {
               showDetails
               tx={txSummaryExecuted}
               txStatus={executedStatus()}
-              providerUrl={providerUrl}
               footer={
                 status('failed') && (
                   <Button

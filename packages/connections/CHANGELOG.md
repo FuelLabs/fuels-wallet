@@ -1,5 +1,17 @@
 # @fuel-wallet/connections
 
+## 0.31.2
+
+### Patch Changes
+
+- [#1514](https://github.com/FuelLabs/fuels-wallet/pull/1514) [`5f456f12`](https://github.com/FuelLabs/fuels-wallet/commit/5f456f12a3d42b2923382436beacfff79f19b3a1) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Fix provider overriding url
+
+- [#1515](https://github.com/FuelLabs/fuels-wallet/pull/1515) [`92940a4e`](https://github.com/FuelLabs/fuels-wallet/commit/92940a4e709dd867819721110550fc58985cd31f) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - remove ignition
+
+## 0.31.1
+
+## 0.31.0
+
 ## 0.30.0
 
 ### Patch Changes

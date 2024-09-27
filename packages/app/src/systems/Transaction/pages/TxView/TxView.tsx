@@ -36,7 +36,6 @@ export function TxView() {
               tx={txResult}
               isLoading={ctx.isFetching}
               showDetails={ctx.shouldShowTxFee}
-              providerUrl={providerUrl}
             />
           </FormProvider>
         )}

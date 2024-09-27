@@ -1,24 +1,24 @@
 import { cssObj } from '@fuel-ui/css';
 import { Alert, Link } from '@fuel-ui/react';
-import { TransactionStatus, buildBlockExplorerUrl } from 'fuels';
+import { TransactionStatus } from 'fuels';
 import type { FC } from 'react';
 import { useMemo } from 'react';
 
+import { useExplorerLink } from '../../hooks/useExplorerLink';
 import { getTxStatusColor } from '../../utils';
 
 export type TxStatusAlertProps = {
   txStatus?: TransactionStatus;
   error?: string;
   txId?: string;
-  providerUrl?: string;
 };
 
 export const TxStatusAlert: FC<TxStatusAlertProps> = ({
   txStatus,
   error,
   txId,
-  providerUrl,
 }) => {
+  const { href } = useExplorerLink(txId);
   const alertStatus = useMemo(() => {
     if (txStatus === TransactionStatus.submitted) return 'warning';
     if (txStatus === TransactionStatus.success) return 'success';
@@ -44,15 +44,12 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
         {txStatus === TransactionStatus.failure &&
           'Sorry, something wrong happened with your transaction.'}
         {error}
-        {txId && (
+        {txId && href && (
           <Link
             aria-label="View Transaction on Block Explorer"
             isExternal
             css={{ ...styles.link, color: `$${txColor}` }}
-            href={buildBlockExplorerUrl({
-              txId,
-              providerUrl,
-            })}
+            href={href}
           >
             Show on Fuel Explorer
           </Link>

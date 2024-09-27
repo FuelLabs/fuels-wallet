@@ -1,18 +1,12 @@
 import { createProvider, createUUID } from '@fuel-wallet/connections';
 import type { NetworkData } from '@fuel-wallet/types';
 import { compare } from 'compare-versions';
-import {
-  CHAIN_IDS,
-  DEVNET_NETWORK_URL,
-  type NodeInfo,
-  Provider,
-  type SelectNetworkArguments,
-  TESTNET_NETWORK_URL,
-} from 'fuels';
+import { type NodeInfo, Provider, type SelectNetworkArguments } from 'fuels';
 import { MIN_NODE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
+import { DEFAULT_NETWORKS } from '~/networks';
 import { db } from '~/systems/Core/utils/database';
 
-import { isNetworkDevnet, isNetworkTestnet, isValidNetworkUrl } from '../utils';
+import { isValidNetworkUrl } from '../utils';
 
 export type NetworkInputs = {
   getNetworkById: {
@@ -33,9 +27,11 @@ export type NetworkInputs = {
   };
   addNetwork: {
     data: {
+      id?: string;
       chainId: number;
       name: string;
       url: string;
+      explorerUrl?: string;
     };
   };
   editNetwork: {
@@ -126,12 +122,15 @@ export class NetworkService {
   static async addNetwork(input: NetworkInputs['addNetwork']) {
     return db.transaction('rw', db.networks, async () => {
       const count = await db.networks.count();
-      const inputToAdd: Required<NetworkData> = {
-        id: createUUID(),
+      const inputToAdd: Required<Omit<NetworkData, 'explorerUrl'>> & {
+        explorerUrl?: string;
+      } = {
+        id: input.data.id || createUUID(),
         chainId: input.data.chainId,
         name: input.data.name,
         url: input.data.url,
         isSelected: Boolean(count === 0),
+        explorerUrl: input.data.explorerUrl,
       };
       const id = await db.networks.add(inputToAdd);
       return db.networks.get(id) as Promise<NetworkData>;
@@ -193,50 +192,28 @@ export class NetworkService {
   }
 
   static async addDefaultNetworks() {
-    // Add testnet network by default
-    const testnetInfo = await NetworkService.getChainInfo({
-      providerUrl: TESTNET_NETWORK_URL,
-    }).catch(() => ({ name: 'Fuel Sepolia Testnet' }));
-    const testnetNetwork = await NetworkService.addNetwork({
-      data: {
-        chainId: CHAIN_IDS.fuel.testnet,
-        name: testnetInfo.name,
-        url: TESTNET_NETWORK_URL,
-      },
-    });
-
-    // Add testnet network by default
-    const devnetInfo = await NetworkService.getChainInfo({
-      providerUrl: DEVNET_NETWORK_URL,
-    }).catch(() => ({ name: 'Fuel Ignition Sepolia Devnet' }));
-    const devnetNetwork = await NetworkService.addNetwork({
-      data: {
-        chainId: CHAIN_IDS.fuel.devnet,
-        name: devnetInfo.name,
-        url: DEVNET_NETWORK_URL,
-      },
-    });
-
-    const envProviderUrl = VITE_FUEL_PROVIDER_URL;
-    if (isNetworkDevnet(envProviderUrl)) {
-      // if it's devnet start with devnet selected
-      await NetworkService.selectNetwork({ id: devnetNetwork.id || '' });
-    } else if (isNetworkTestnet(envProviderUrl)) {
-      // if it's testnet start with testnet selected
-      await NetworkService.selectNetwork({ id: testnetNetwork.id || '' });
-    } else if (envProviderUrl) {
-      // if it's custom network, add and select it
-      const customInfo = await NetworkService.getChainInfo({
-        providerUrl: envProviderUrl,
-      }).catch(() => ({ name: 'Custom Network' }));
-      const customNetwork = await NetworkService.addNetwork({
+    for (const [index, network] of DEFAULT_NETWORKS.entries()) {
+      const networkAdded = await NetworkService.addNetwork({
         data: {
-          chainId: 0,
-          name: customInfo.name,
-          url: envProviderUrl,
+          id: index.toString(),
+          ...network,
         },
       });
-      await NetworkService.selectNetwork({ id: customNetwork.id || '' });
+      if (network.isSelected) {
+        await NetworkService.selectNetwork({ id: networkAdded.id || '' });
+      }
+    }
+
+    try {
+      const envNetwork = await NetworkService.getNetworkByNameOrUrl({
+        url: VITE_FUEL_PROVIDER_URL,
+        name: '',
+      });
+      if (envNetwork) {
+        await NetworkService.selectNetwork({ id: envNetwork.id || '' });
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 

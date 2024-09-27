@@ -100,23 +100,42 @@ export function NetworkForm({
         </>
       )}
       {isEditing && (
-        <ControlledField
-          control={control}
-          name="name"
-          label="Name"
-          isRequired
-          isInvalid={Boolean(formState.errors?.name)}
-          render={({ field }) => (
-            <Input>
-              <Input.Field
-                {...field}
-                id="search-network-name"
-                aria-label="Network name"
-                placeholder="Name of your network..."
-              />
-            </Input>
-          )}
-        />
+        <>
+          <ControlledField
+            control={control}
+            name="name"
+            label="Name"
+            isRequired
+            isInvalid={Boolean(formState.errors?.name)}
+            render={({ field }) => (
+              <Input>
+                <Input.Field
+                  {...field}
+                  id="search-network-name"
+                  aria-label="Network name"
+                  placeholder="Name of your network..."
+                />
+              </Input>
+            )}
+          />
+          <ControlledField
+            control={control}
+            name="explorerUrl"
+            label="Explorer URL"
+            isDisabled={isLoading}
+            isInvalid={Boolean(formState.errors?.explorerUrl)}
+            render={({ field }) => (
+              <MotionInput {...animations.slideInTop()}>
+                <Input.Field
+                  {...field}
+                  id="search-network-url"
+                  aria-label="Explorer URL"
+                  placeholder="https://explorer.fuel.network/graphql"
+                />
+              </MotionInput>
+            )}
+          />
+        </>
       )}
     </Box.Stack>
   );

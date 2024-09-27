@@ -1,15 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Heading, Icon, Text, useFuelTheme } from '@fuel-ui/react';
 import { ImageLoader, relativeUrl } from '~/systems/Core';
-import { useOpenFaucet } from '~/systems/Faucet';
+import { useFundWallet } from '~/systems/FundWallet';
 
-type ActivityEmptyProps = {
-  isTestnet?: boolean;
-  bridgeUrl?: string;
-};
-
-export function ActivityListEmpty({ isTestnet }: ActivityEmptyProps) {
-  const openFaucet = useOpenFaucet();
+export function ActivityListEmpty() {
+  const { open, showFund, hasFaucet } = useFundWallet();
   const { current: theme } = useFuelTheme();
   return (
     <Box.Centered css={styles.empty}>
@@ -24,12 +19,16 @@ export function ActivityListEmpty({ isTestnet }: ActivityEmptyProps) {
       <Text fontSize="sm">
         When you make a transaction you&apos;ll see it here
       </Text>
-      {isTestnet && (
+      {showFund && (
         /**
          * TODO: need to add right faucet icon on @fuel-ui
          */
-        <Button size="sm" leftIcon={Icon.is('Wand')} onPress={openFaucet}>
-          Faucet
+        <Button
+          size="sm"
+          leftIcon={hasFaucet ? Icon.is('Wand') : Icon.is('Bridge')}
+          onPress={open}
+        >
+          {hasFaucet ? 'Faucet' : 'Bridge to Fuel'}
         </Button>
       )}
     </Box.Centered>
