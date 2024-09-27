@@ -676,7 +676,7 @@ test.describe('FuelWallet Extension', () => {
         await popupPage.reload();
       }
 
-      const initialNetworkAmount = 4;
+      const initialNetworkAmount = 3;
       let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
       await networkSelector.click();
 
