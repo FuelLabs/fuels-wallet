@@ -1,5 +1,5 @@
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
-import { type NetworkEthereum, type NetworkFuel, assets } from 'fuels';
+import type { NetworkEthereum, NetworkFuel } from 'fuels';
 import { db } from '~/systems/Core/utils/database';
 import { getUniqueString } from '~/systems/Core/utils/string';
 import { NetworkService } from '~/systems/Network/services/network';
@@ -47,7 +47,10 @@ export class AssetService {
   }
 
   static async setListedAssets() {
-    const assetsPromises = assets.map((asset) => {
+    const verifiedAssets = (await (
+      await fetch('https://verified-assets.fuel.network/assets.json')
+    ).json()) as Array<AssetData>;
+    const assetsPromises = verifiedAssets.map((asset) => {
       return AssetService.upsertAsset({
         data: {
           ...asset,
