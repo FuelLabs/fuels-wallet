@@ -1,5 +1,11 @@
 # @fuel-wallet/types
 
+## 0.31.0
+
+### Minor Changes
+
+- [#1508](https://github.com/FuelLabs/fuels-wallet/pull/1508) [`a5b8007f`](https://github.com/FuelLabs/fuels-wallet/commit/a5b8007fe80a9d1b8402e3b30d84e4268abd52d1) Thanks [@luizstacio](https://github.com/luizstacio)! - Add explorer, bridge and faucet url configuration to networks.
+
 ## 0.30.0
 
 ## 0.29.1

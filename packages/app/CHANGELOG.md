@@ -1,5 +1,26 @@
 # fuels-wallet
 
+## 0.31.0
+
+### Minor Changes
+
+- [#1508](https://github.com/FuelLabs/fuels-wallet/pull/1508) [`a5b8007f`](https://github.com/FuelLabs/fuels-wallet/commit/a5b8007fe80a9d1b8402e3b30d84e4268abd52d1) Thanks [@luizstacio](https://github.com/luizstacio)! - Add explorer, bridge and faucet url configuration to networks.
+
+- [#1510](https://github.com/FuelLabs/fuels-wallet/pull/1510) [`75db1883`](https://github.com/FuelLabs/fuels-wallet/commit/75db1883b9b8d2f7151e2240d59d0a5e2b0d8a16) Thanks [@LeoCourbassier](https://github.com/LeoCourbassier)! - Added a Copy Button to ErrorHeader on TxContent, and a few stories
+
+### Patch Changes
+
+- [#1509](https://github.com/FuelLabs/fuels-wallet/pull/1509) [`773c5b9d`](https://github.com/FuelLabs/fuels-wallet/commit/773c5b9d6afc97bd21277e718f39a0e9bc104a17) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed e2e flakiness due to the use of wrong connector/VITE_CRX_NAME pair
+
+- [#1506](https://github.com/FuelLabs/fuels-wallet/pull/1506) [`0d135e6e`](https://github.com/FuelLabs/fuels-wallet/commit/0d135e6e116e5708270620759c52655203f7631f) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix selectNetwork issues related to chainId not been indexed on database.
+
+- [#1504](https://github.com/FuelLabs/fuels-wallet/pull/1504) [`67a14d8e`](https://github.com/FuelLabs/fuels-wallet/commit/67a14d8e67efba8ebf2191649970e3546192b05f) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed not being able to add a known token on a different network
+
+- [#1504](https://github.com/FuelLabs/fuels-wallet/pull/1504) [`67a14d8e`](https://github.com/FuelLabs/fuels-wallet/commit/67a14d8e67efba8ebf2191649970e3546192b05f) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed being able to manually create custom assets with duplicate asset ids
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.31.0
+
 ## 0.30.0
 
 ### Minor Changes
