@@ -28,6 +28,7 @@ export class VaultCRXConnector {
     this.clientVault.connection = chrome.runtime.connect(chrome.runtime.id, {
       name: VAULT_SCRIPT_NAME,
     });
+    this.clientVault.connection.onDisconnect.addListener(this.destroy);
     this.clientVault.connection.onMessage.addListener(
       this.onCommunicationMessage
     );
@@ -74,5 +75,7 @@ export class VaultCRXConnector {
     this.clientVault.connection?.onMessage.removeListener(
       this.onCommunicationMessage
     );
+    this.clientVault.connection?.onDisconnect.removeListener(this.destroy);
+    this.clientVault.connection = undefined;
   }
 }
