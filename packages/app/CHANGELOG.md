@@ -1,5 +1,12 @@
 # fuels-wallet
 
+## 0.31.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.31.1
+
 ## 0.31.0
 
 ### Minor Changes
