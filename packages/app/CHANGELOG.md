@@ -1,5 +1,14 @@
 # fuels-wallet
 
+## 0.31.2
+
+### Patch Changes
+
+- [#1515](https://github.com/FuelLabs/fuels-wallet/pull/1515) [`92940a4e`](https://github.com/FuelLabs/fuels-wallet/commit/92940a4e709dd867819721110550fc58985cd31f) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - remove ignition
+
+- Updated dependencies [[`5f456f12`](https://github.com/FuelLabs/fuels-wallet/commit/5f456f12a3d42b2923382436beacfff79f19b3a1), [`92940a4e`](https://github.com/FuelLabs/fuels-wallet/commit/92940a4e709dd867819721110550fc58985cd31f)]:
+  - @fuel-wallet/connections@0.31.2
+
 ## 0.31.1
 
 ### Patch Changes
