@@ -1,9 +1,11 @@
+import { createProvider } from '@fuel-wallet/connections';
 import type { Account } from '@fuel-wallet/types';
 import {
   type BN,
   type TransactionRequest,
   type TransactionSummary,
   bn,
+  getTransactionSummary,
 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
@@ -441,7 +443,7 @@ export const transactionRequestMachine = createMachine(
           // Enforce a minimum delay to show the loading state
           // this creates a better experience for the user as the
           // screen doesn't flash between states
-          await delay(600);
+          await delay(3000);
 
           const txSummary = await TxService.simulateTransaction(input);
           return txSummary;
@@ -455,7 +457,11 @@ export const transactionRequestMachine = createMachine(
         maxAttempts: 1,
         async fetch(params) {
           const { input } = params;
-          if (!input?.address || !input?.transactionRequest) {
+          if (
+            !input?.address ||
+            !input?.transactionRequest ||
+            !input?.providerUrl
+          ) {
             throw new Error('Invalid approveTx input');
           }
           const txResponse = await TxService.send(input);

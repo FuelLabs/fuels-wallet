@@ -1,5 +1,10 @@
 import type { Account } from '@fuel-wallet/types';
-import type { TransactionRequest, WalletLocked } from 'fuels';
+import type {
+  TransactionRequest,
+  TransactionSummary,
+  WalletLocked,
+} from 'fuels';
+import { clone } from 'ramda';
 
 import {
   Address,
@@ -182,10 +187,11 @@ export class TxService {
     const wallet = new WalletLockedCustom(account.address, provider);
 
     try {
+      const txRequestCustomFee = clone(transactionRequest);
       const customFee = !skipCustomFee
         ? await TxService.computeCustomFee({
             wallet,
-            transactionRequest,
+            transactionRequest: txRequestCustomFee,
           })
         : undefined;
 
@@ -194,11 +200,22 @@ export class TxService {
         inputs: transaction.inputs,
       });
 
-      const txSummary = await getTransactionSummaryFromRequest({
-        provider,
-        transactionRequest,
-        abiMap,
-      });
+      let txSummary: TransactionSummary<void>;
+
+      try {
+        txSummary = await getTransactionSummaryFromRequest({
+          provider,
+          transactionRequest: txRequestCustomFee,
+          abiMap,
+        });
+        transactionRequest = txRequestCustomFee;
+      } catch (_) {
+        txSummary = await getTransactionSummaryFromRequest({
+          provider,
+          transactionRequest,
+          abiMap,
+        });
+      }
 
       // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
       const feeAdaptedToSdkDiff = txSummary.fee.add(1);
@@ -385,27 +402,29 @@ export class TxService {
     wallet,
     transactionRequest,
   }: TxInputs['computeCustomFee']) {
-    const txCost = await wallet.getTransactionCost(transactionRequest, {
-      estimateTxDependencies: true,
-    });
+    try {
+      const txCost = await wallet.getTransactionCost(transactionRequest, {
+        estimateTxDependencies: true,
+      });
 
-    // add 10% to have some buffer as gasPrice may vary
-    transactionRequest.maxFee = txCost.maxFee.add(txCost.maxFee.div(10));
+      // add 10% to have some buffer as gasPrice may vary
+      transactionRequest.maxFee = txCost.maxFee.add(txCost.maxFee.div(10));
 
-    // funding the transaction with the required quantities (the maxFee might have changed)
-    await wallet.fund(transactionRequest, {
-      estimatedPredicates: txCost.estimatedPredicates,
-      addedSignatures: txCost.addedSignatures,
-      gasPrice: txCost.gasPrice,
-      updateMaxFee: txCost.updateMaxFee,
-      requiredQuantities: [],
-    });
+      // funding the transaction with the required quantities (the maxFee might have changed)
+      await wallet.fund(transactionRequest, {
+        estimatedPredicates: txCost.estimatedPredicates,
+        addedSignatures: txCost.addedSignatures,
+        gasPrice: txCost.gasPrice,
+        updateMaxFee: txCost.updateMaxFee,
+        requiredQuantities: [],
+      });
 
-    const baseFee = transactionRequest.maxFee.sub(
-      transactionRequest.tip ?? bn(0)
-    );
+      const baseFee = transactionRequest.maxFee.sub(
+        transactionRequest.tip ?? bn(0)
+      );
 
-    return { baseFee, gasUsed: txCost.gasUsed };
+      return { baseFee, gasUsed: txCost.gasUsed };
+    } catch (_) {}
   }
 }
 
