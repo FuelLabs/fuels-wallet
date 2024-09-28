@@ -1,5 +1,22 @@
 # fuels-wallet
 
+## 0.32.0
+
+### Minor Changes
+
+- [#1520](https://github.com/FuelLabs/fuels-wallet/pull/1520) [`b549997e`](https://github.com/FuelLabs/fuels-wallet/commit/b549997ee1a17da6a829a4fd95ee2bb6415dbd6a) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Now listed assets are fetched from a verified network
+
+### Patch Changes
+
+- [#1523](https://github.com/FuelLabs/fuels-wallet/pull/1523) [`76dd46dc`](https://github.com/FuelLabs/fuels-wallet/commit/76dd46dc88cd8def52241ce4ae4e057dd62ce63f) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: on Approve screen, use the initial transaction as a backup of estimated one
+
+- [#1518](https://github.com/FuelLabs/fuels-wallet/pull/1518) [`9526e9a4`](https://github.com/FuelLabs/fuels-wallet/commit/9526e9a4b9e8cdb8ec7903ad3c2a27e0062ab2c9) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Added missing parameter to destroy window listener on ContentScript when the page/tab is closed
+
+- [#1518](https://github.com/FuelLabs/fuels-wallet/pull/1518) [`9526e9a4`](https://github.com/FuelLabs/fuels-wallet/commit/9526e9a4b9e8cdb8ec7903ad3c2a27e0062ab2c9) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Added port disconnection detection and restart to `VaultCRXConnector`. Fixes wallet setup not finalizing
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.32.0
+
 ## 0.31.2
 
 ### Patch Changes
