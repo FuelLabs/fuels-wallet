@@ -14,20 +14,20 @@ Fuel Wallet is a crypto wallet used to interact with the Fuel Network. This proj
 
 For latest updates, download the [Fuel Wallet Development](https://next-wallet.fuel.network/docs/install/). This version is made for developers, so note that it can be unstable or buggy.
 
-Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/dev/getting-started/)
+Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/dev/getting-started/).
 
 ## 📗 Table of contents
 
 - [📗 Documentation](https://wallet.fuel.network/)
 - [📦 Install Wallet](https://wallet.fuel.network/docs/install/)
-- [🧰 Fuel Wallet SDK](https://wallet.fuel.network/docs/dev/getting-started/)
+- [🧰 Fuel Wallet SDK](https://wallet.fuel.network/docs/dev/getting-started/):
   - [👨‍💻 - Quickstart](https://wallet.fuel.network/docs/dev/getting-started/)
   - [🔗 - Request connection](https://wallet.fuel.network/docs/dev/connecting/)
   - [📒 - List user accounts](https://wallet.fuel.network/docs/dev/accounts/)
   - [✍️ - Signing a message](https://wallet.fuel.network/docs/dev/signing/)
   - [✍️ - Transfering assets](https://wallet.fuel.network/docs/dev/assets/)
   - [📗 SDK API](https://wallet.fuel.network/docs/dev/reference/)
-- [Contributing](https://wallet.fuel.network/docs/contributing/guide/)
+- [Contributing](https://wallet.fuel.network/docs/contributing/guide/):
   - [Contribution Guide](https://wallet.fuel.network/docs/contributing/guide/)
   - [Running Locally](https://wallet.fuel.network/docs/contributing/running-locally)
 
@@ -35,7 +35,7 @@ Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/
 
 - [x] Create a new mnemonic phrase account
 - [x] Recover an account using mnemonic phrase
-- [x] DApps integration
+- [x] DApps integration:
   - [x] Request connection
   - [x] List accounts
   - [x] Sign messages
@@ -44,19 +44,19 @@ Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/
 - [x] Check your asset's balance
 - [x] Manage networks
 - [x] Faucet for testnet
-- [x] Account
+- [x] Account:
   - [x] List all account
   - [x] Add new account
   - [x] Update account name
   - [x] Create account from PrivateKey
-- [x] Applications
+- [x] Applications:
   - [x] List connections
   - [x] Remove connections
-- [x] Settings
+- [x] Settings:
   - [x] Reveal your passphrase
   - [x] Change password
   - [x] Export account privateKey
-- [x] Transactions
+- [x] Transactions:
   - [x] Receive Assets via address or QR Code
   - [x] Send Assets to another wallet
   - [x] Transaction History
