@@ -19,7 +19,7 @@ export function TxOperations({
 }: TxOperationsProps) {
   if (operations?.length === 0) {
     return (
-      <Alert status="error">
+      <Alert status="info">
         <Alert.Description>
           No operations found in this transaction
         </Alert.Description>
