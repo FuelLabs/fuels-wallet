@@ -408,7 +408,11 @@ export class TxService {
       });
 
       // add 10% to have some buffer as gasPrice may vary
-      transactionRequest.maxFee = txCost.maxFee.add(txCost.maxFee.div(10));
+      const newTxCost = txCost.maxFee.add(txCost.maxFee.div(10));
+      // only apply if it's bigger than the current maxFee
+      if (newTxCost.gt(txCost.maxFee)) {
+        transactionRequest.maxFee = newTxCost;
+      }
 
       // funding the transaction with the required quantities (the maxFee might have changed)
       await wallet.fund(transactionRequest, {
