@@ -10,7 +10,7 @@ import { VaultServer } from './VaultServer';
 
 export class VaultClient extends EventEmitter {
   readonly client: JSONRPCClient;
-
+  connection: chrome.runtime.Port | undefined;
   constructor() {
     super();
     // Setup client JSONRPC
