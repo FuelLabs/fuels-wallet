@@ -443,7 +443,7 @@ export const transactionRequestMachine = createMachine(
           // Enforce a minimum delay to show the loading state
           // this creates a better experience for the user as the
           // screen doesn't flash between states
-          await delay(3000);
+          await delay(600);
 
           const txSummary = await TxService.simulateTransaction(input);
           return txSummary;
