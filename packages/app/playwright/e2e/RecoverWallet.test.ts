@@ -69,7 +69,7 @@ test.describe('RecoverWallet', () => {
     test('should be able to auto-select a 24-word mnemonic', async () => {
       await visit(page, '/wallet');
       await logout(page);
-      await getElementByText(page, /Import walle/i).click();
+      await getElementByText(page, /Import wallet/i).click();
 
       /** Accept terms and conditions */
       await hasText(page, /Terms of use Agreement/i);
