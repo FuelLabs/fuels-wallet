@@ -5,10 +5,13 @@ import { communicationProtocol, errorBoundary } from '../utils';
 import { db } from '~/systems/Core/utils/database';
 import { BackgroundService } from './services/BackgroundService';
 import { DatabaseEvents } from './services/DatabaseEvents';
+import { NetworkChangeService } from './services/NetworkChangeService';
 import { VaultService } from './services/VaultService';
+
 let backgroundService: BackgroundService | null = null;
 let vaultService: VaultService | null = null;
 let databaseEvents: DatabaseEvents | null = null;
+let networkChange: NetworkChangeService | null = null;
 
 function onConnectHandler(port: chrome.runtime.Port) {
   // Only allow connections from the extension
@@ -31,13 +34,16 @@ function onSuspendHandler() {
   backgroundService?.stop();
   vaultService?.stop();
   databaseEvents?.stop();
+  networkChange?.stop();
   backgroundService = null;
   vaultService = null;
   databaseEvents = null;
+  networkChange = null;
   db.close();
 }
 function onStartupHandler() {
   // Handle initialization when the background script starts up
+  networkChange = NetworkChangeService.start(communicationProtocol);
   backgroundService = BackgroundService.start(communicationProtocol);
   vaultService = VaultService.start(communicationProtocol);
   databaseEvents = DatabaseEvents.start(communicationProtocol);

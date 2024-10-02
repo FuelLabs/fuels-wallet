@@ -1,19 +1,8 @@
 import { createProvider, createUUID } from '@fuel-wallet/connections';
 import type { NetworkData } from '@fuel-wallet/types';
 import { compare } from 'compare-versions';
-import {
-  CHAIN_IDS,
-  type NodeInfo,
-  Provider,
-  type SelectNetworkArguments,
-} from 'fuels';
-import {
-  EXPLORER_URL,
-  MIN_NODE_VERSION,
-  VITE_CRX_VERSION_API,
-  VITE_FUEL_FAUCET_URL,
-  VITE_FUEL_PROVIDER_URL,
-} from '~/config';
+import { type NodeInfo, Provider, type SelectNetworkArguments } from 'fuels';
+import { MIN_NODE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
 import { DEFAULT_NETWORKS } from '~/networks';
 import { db } from '~/systems/Core/utils/database';
 
@@ -177,46 +166,6 @@ export class NetworkService {
         data: { isSelected: true },
       });
       return db.networks.get(input.id) as Promise<NetworkData>;
-    });
-  }
-
-  static async checkForRemoteIngnitionNetwork() {
-    console.log('Checking for remote ignition network');
-    const releaseJson = await fetch(VITE_CRX_VERSION_API)
-      .then((res) => res.json())
-      .catch(() => ({}));
-    const mainnetUrl = releaseJson?.networks?.mainnet;
-    if (!mainnetUrl || typeof mainnetUrl !== 'string') {
-      console.log('No mainnet url found');
-      return;
-    }
-    await db.transaction('rw', db.networks, async () => {
-      const ignitionNetwork = await db.networks
-        .where('name')
-        .equalsIgnoreCase('Ignition')
-        .first();
-
-      if (ignitionNetwork?.id) {
-        await db.networks.update(ignitionNetwork.id, {
-          url: mainnetUrl,
-          isSelected: true,
-        });
-        return;
-      }
-      await db.networks.add({
-        id: createUUID(),
-        chainId: CHAIN_IDS.fuel.mainnet,
-        name: 'Ignition',
-        url: mainnetUrl,
-        explorerUrl: EXPLORER_URL,
-        isSelected: true,
-      });
-
-      //Make sure all other networks have `isSelected` set to false
-      await db.networks
-        .where('name')
-        .notEqual('Ignition')
-        .modify({ isSelected: false });
     });
   }
 
