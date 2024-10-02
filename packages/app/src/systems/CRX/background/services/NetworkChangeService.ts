@@ -56,7 +56,6 @@ export class NetworkChangeService {
   }
 
   async checkForRemoteIngnitionNetwork() {
-    console.log('fsk checking for remote');
     const releaseJson = await fetch(VITE_CRX_VERSION_API)
       .then((res) => res.json())
       .catch(() => ({}));
