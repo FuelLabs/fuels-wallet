@@ -1,5 +1,14 @@
 # fuels-wallet
 
+## 0.32.2
+
+### Patch Changes
+
+- [`87f9984c`](https://github.com/FuelLabs/fuels-wallet/commit/87f9984c56a80bcb3325c17074bc74c9b729bfc3) Thanks [@arthurgeron](https://github.com/arthurgeron)! - test change
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.32.2
+
 ## 0.32.1
 
 ### Patch Changes
