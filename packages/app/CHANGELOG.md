@@ -1,5 +1,16 @@
 # fuels-wallet
 
+## 0.33.0
+
+### Minor Changes
+
+- [#1538](https://github.com/FuelLabs/fuels-wallet/pull/1538) [`7825d266`](https://github.com/FuelLabs/fuels-wallet/commit/7825d266e72a96d59164335f66665ce7b3158bc0) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: add blockExplorerUrl
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.33.0
+
 ## 0.32.1
 
 ### Patch Changes
