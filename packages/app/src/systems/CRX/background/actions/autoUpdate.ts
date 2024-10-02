@@ -98,6 +98,7 @@ async function createNetwork() {
       chainId: CHAIN_IDS.fuel.mainnet,
       name: 'Ignition',
       url: featureFlags.networkUrl,
+      explorerUrl: featureFlags.blockExplorerUrl,
     },
   });
   if (!newNetworkAdded?.id) return;
