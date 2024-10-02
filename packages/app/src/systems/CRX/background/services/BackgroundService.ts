@@ -66,6 +66,7 @@ export class BackgroundService {
     this.server.applyMiddleware(this.connectionMiddleware);
     this.setupListeners();
     this.addExternalMethods();
+    NetworkService.checkForRemoteIngnitionNetwork();
   }
 
   static start(communicationProtocol: CommunicationProtocol) {
