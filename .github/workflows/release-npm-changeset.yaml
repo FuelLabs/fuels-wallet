@@ -50,7 +50,7 @@ jobs:
 
       - name: Create Release Pull Request or Publish to NPM
         id: changesets
-        uses: FuelLabs/changesets-action@main
+        uses: FuelLabs/changesets-action@v2.0.0
         with:
           publish: pnpm changeset publish --tag next
           commit: "ci(changesets): versioning packages"
