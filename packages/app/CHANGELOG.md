@@ -1,5 +1,16 @@
 # fuels-wallet
 
+## 0.32.1
+
+### Patch Changes
+
+- [#1526](https://github.com/FuelLabs/fuels-wallet/pull/1526) [`7e20135d`](https://github.com/FuelLabs/fuels-wallet/commit/7e20135dda34250f7e876d9846a81687bed160fe) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Change wallet auto lock time to 60 minutes
+
+- [#1531](https://github.com/FuelLabs/fuels-wallet/pull/1531) [`048597a5`](https://github.com/FuelLabs/fuels-wallet/commit/048597a512866a036f7ca0f5312ee540622c3cd2) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: watch networkUrl feature flag and add it to wallet
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.32.1
+
 ## 0.32.0
 
 ### Minor Changes
