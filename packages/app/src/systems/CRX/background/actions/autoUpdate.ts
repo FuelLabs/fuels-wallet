@@ -14,8 +14,11 @@ async function isOpen() {
   return isOpen;
 }
 
+function getCacheParam() {
+  return `?v=${Date.now()}`;
+}
 async function fetchFeatureFlags() {
-  const featureFlags = await fetch(VITE_CRX_VERSION_API)
+  const featureFlags = await fetch(VITE_CRX_VERSION_API + getCacheParam())
     .then((res) => res.json())
     // If fails to fetch the version return a empty object
     .catch(() => ({}));
@@ -50,7 +53,7 @@ async function reloadWallet() {
   if (await isOpen()) {
     console.debug('[FUEL WALLET] Wallet is open, waiting 5 minutes...');
     // If the wallet is open, wait 5 minutes and try again
-    chrome.alarms.create('reloadWallet', { delayInMinutes: 5 });
+    chrome.alarms.create('reloadWallet', { delayInMinutes: 1 });
     return;
   }
   // Check if reload already happened
@@ -74,7 +77,6 @@ async function createNetwork() {
 
   console.log('[FUEL WALLET] Checking feature flag');
   const featureFlags = await fetchFeatureFlags();
-
   if (!featureFlags.networkUrl) return;
 
   console.log('[FUEL WALLET] Checking has network');
@@ -126,5 +128,5 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 });
 
 // Register alarms to check for updates and reload the wallet
-chrome.alarms.create('autoUpdate', { periodInMinutes: 10 });
-chrome.alarms.create('createNetwork', { periodInMinutes: 0.1 });
+chrome.alarms.create('autoUpdate', { periodInMinutes: 1 });
+chrome.alarms.create('createNetwork', { periodInMinutes: 1 });
