@@ -11,7 +11,7 @@ import {
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { memo, useState } from 'react';
 import type { Maybe } from '~/systems/Core';
-import { shortAddress } from '~/systems/Core';
+import { coreStyles, shortAddress } from '~/systems/Core';
 
 export type AssetSelectInput = Partial<AssetFuelAmount>;
 
@@ -200,6 +200,8 @@ const styles = {
   menu: cssObj({
     py: '$1',
     width: 250,
+    maxHeight: 410,
+    ...coreStyles.scrollable('$intentsBase8', '$intentsBase10'),
     '.fuel_Avatar': {
       width: 30,
       height: 30,
