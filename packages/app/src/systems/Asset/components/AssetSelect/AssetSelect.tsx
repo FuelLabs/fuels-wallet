@@ -200,6 +200,8 @@ const styles = {
   menu: cssObj({
     py: '$1',
     width: 250,
+    maxHeight: 410,
+    overflowY: 'auto',
     '.fuel_Avatar': {
       width: 30,
       height: 30,
