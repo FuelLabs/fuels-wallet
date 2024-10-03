@@ -1,7 +1,4 @@
 {
     "Fuel Wallet Development": "0.32.0",
-    "Fuel Wallet": "0.32.0",
-    "networkUrl": "https://mainnet.fuel.network/v1/graphql",
-    "blockExplorerUrl": "https://app.fuel.network",
-    "bridgeUrl": "https://app.fuel.network/bridge"
+    "Fuel Wallet": "0.32.0"
 }
