@@ -6,15 +6,26 @@
   },
   "changelog": [
     "@changesets/changelog-github",
-    { "repo": "FuelLabs/fuels-wallet" }
+    {
+      "repo": "FuelLabs/fuels-wallet"
+    }
   ],
   "commit": false,
-  "fixed": [["@fuel-wallet/*", "fuels-wallet"]],
+  "fixed": [
+    [
+      "@fuel-wallet/*",
+      "fuels-wallet",
+      "@fuels/playwright-utils"
+    ]
+  ],
   "linked": [],
   "access": "public",
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
-  "ignore": ["docs", "@fuel-wallet/e2e-contract-tests"],
+  "ignore": [
+    "docs",
+    "@fuel-wallet/e2e-contract-tests"
+  ],
   "snapshot": {
     "useCalculatedVersion": true,
     "prereleaseTemplate": "{tag}-{commit}"

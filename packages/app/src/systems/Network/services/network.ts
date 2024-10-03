@@ -193,6 +193,8 @@ export class NetworkService {
 
   static async addDefaultNetworks() {
     for (const [index, network] of DEFAULT_NETWORKS.entries()) {
+      if (network.hidden) continue;
+
       const networkAdded = await NetworkService.addNetwork({
         data: {
           id: index.toString(),

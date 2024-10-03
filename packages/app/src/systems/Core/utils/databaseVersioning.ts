@@ -115,6 +115,8 @@ export const applyDbVersioning = (db: Dexie) => {
       // Add default networks
       // *
       for (const [index, network] of DEFAULT_NETWORKS.entries()) {
+        if (network.hidden) continue;
+
         await networks.add({
           // Ensure we add to database in the same order as the DEFAULT_NETWORKS
           id: index.toString(),
