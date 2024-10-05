@@ -1,5 +1,7 @@
 # @fuels/playwright-utils
 
+## 0.34.0
+
 ## 0.33.1
 
 ### Patch Changes

@@ -1,5 +1,22 @@
 # fuels-wallet
 
+## 0.34.0
+
+### Minor Changes
+
+- [#1549](https://github.com/FuelLabs/fuels-wallet/pull/1549) [`c163db48`](https://github.com/FuelLabs/fuels-wallet/commit/c163db487df1c5befe4090a19ccc3eb2e9d18abb) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Increase gasLimit by 20% to avoid OutOfGas error
+
+- [#1549](https://github.com/FuelLabs/fuels-wallet/pull/1549) [`c163db48`](https://github.com/FuelLabs/fuels-wallet/commit/c163db487df1c5befe4090a19ccc3eb2e9d18abb) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Refactor transaction estimation / customization of fees flow
+
+### Patch Changes
+
+- [#1548](https://github.com/FuelLabs/fuels-wallet/pull/1548) [`6dd69ceb`](https://github.com/FuelLabs/fuels-wallet/commit/6dd69ceb614cc5ce1653f5442afc6ed7b7acbb83) Thanks [@helciofranco](https://github.com/helciofranco)! - Fix asset list scrollable container when there are many assets available.
+
+- [#1543](https://github.com/FuelLabs/fuels-wallet/pull/1543) [`a64d31f5`](https://github.com/FuelLabs/fuels-wallet/commit/a64d31f54beed711d88c118794a3b151eba4791e) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: test version publish of multiple packages
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.34.0
+
 ## 0.33.1
 
 ### Patch Changes
