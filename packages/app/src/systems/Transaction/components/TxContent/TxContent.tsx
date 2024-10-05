@@ -9,7 +9,12 @@ import {
   Text,
   VStack,
 } from '@fuel-ui/react';
-import type { BN, TransactionStatus, TransactionSummary } from 'fuels';
+import type {
+  BN,
+  TransactionRequest,
+  TransactionStatus,
+  TransactionSummary,
+} from 'fuels';
 import { type ReactNode, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import type { Maybe } from '~/systems/Core';
@@ -91,6 +96,7 @@ export type TxContentInfoProps = {
     regularTip?: BN;
     fastTip?: BN;
   };
+  txRequest?: TransactionRequest;
 };
 
 function TxContentInfo({
@@ -102,21 +108,34 @@ function TxContentInfo({
   isConfirm,
   errors,
   fees,
+  txRequest,
 }: TxContentInfoProps) {
   const { getValues } = useFormContext<SendFormValues>();
 
   const status = txStatus || tx?.status || txStatus;
   const hasErrors = Boolean(Object.keys(errors || {}).length);
   const isExecuted = !!tx?.id;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  const txRequestGasLimit = (txRequest as any)?.gasLimit;
 
   const initialAdvanced = useMemo(() => {
-    if (!fees?.regularTip || !fees?.minGasLimit) return false;
+    if (!fees?.regularTip || !fees?.fastTip) return false;
+
+    // it will start as advanced if the transaction tip is not equal to the regular tip and fast tip
+    const isFeeAmountTheRegularTip = getValues('fees.tip.amount').eq(
+      fees.regularTip
+    );
+    const isFeeAmountTheFastTip = getValues('fees.tip.amount').eq(fees.fastTip);
+    // it will start as advanced if the gasLimit if different from the tx gasLimit
+    const isGasLimitTheTxRequestGasLimit = getValues('fees.gasLimit.amount').eq(
+      txRequestGasLimit
+    );
 
     return (
-      !getValues('fees.tip.amount').eq(fees.regularTip) ||
-      !getValues('fees.gasLimit.amount').eq(fees.minGasLimit)
+      (!isFeeAmountTheRegularTip && !isFeeAmountTheFastTip) ||
+      !isGasLimitTheTxRequestGasLimit
     );
-  }, [getValues, fees]);
+  }, [getValues, fees, txRequestGasLimit]);
 
   function getHeader() {
     if (hasErrors) return <ErrorHeader errors={errors} />;
@@ -141,7 +160,7 @@ function TxContentInfo({
       {showDetails && !fees && <TxFee fee={tx?.fee} />}
       {showDetails &&
         fees?.baseFee &&
-        fees?.minGasLimit &&
+        txRequestGasLimit &&
         fees?.regularTip &&
         fees?.fastTip && (
           <VStack gap="$3">
@@ -149,7 +168,7 @@ function TxContentInfo({
             <TxFeeOptions
               initialAdvanced={initialAdvanced}
               baseFee={fees.baseFee}
-              minGasLimit={fees.minGasLimit}
+              gasLimit={txRequestGasLimit}
               regularTip={fees.regularTip}
               fastTip={fees.fastTip}
             />

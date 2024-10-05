@@ -20,7 +20,6 @@ export type TransactionRequestFormData = {
 
 type SchemaOptions = {
   baseFee: BN | undefined;
-  minGasLimit: BN | undefined;
   maxGasLimit: BN | undefined;
 };
 
@@ -48,23 +47,6 @@ const schema = yup
         gasLimit: yup.object({
           amount: yup
             .mixed<BN>()
-            .test({
-              name: 'min',
-              test: (value, ctx) => {
-                const { minGasLimit } = ctx.options.context as SchemaOptions;
-
-                if (!minGasLimit || value?.gte(minGasLimit)) {
-                  return true;
-                }
-
-                return ctx.createError({
-                  path: 'fees.gasLimit',
-                  message: `Gas limit must be greater than or equal to ${formatGasLimit(
-                    minGasLimit
-                  )}.`,
-                });
-              },
-            })
             .test({
               name: 'max',
               test: (value, ctx) => {

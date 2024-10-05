@@ -171,7 +171,7 @@ export function SendSelect({
               <TxFeeOptions
                 initialAdvanced={false}
                 baseFee={baseFee}
-                minGasLimit={minGasLimit}
+                gasLimit={minGasLimit}
                 regularTip={regularTip}
                 fastTip={fastTip}
               />

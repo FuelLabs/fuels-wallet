@@ -23,6 +23,9 @@ const selectors = {
   txSummaryExecuted(state: TransactionRequestState) {
     return state.context.response?.txSummaryExecuted;
   },
+  proposedTxRequest(state: TransactionRequestState) {
+    return state.context.response?.proposedTxRequest;
+  },
   isLoadingAccounts(state: TransactionRequestState) {
     return state.matches('fetchingAccount');
   },
@@ -102,6 +105,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const title = useSelector(service, selectors.title);
   const txSummarySimulated = useSelector(service, selectors.txSummarySimulated);
   const txSummaryExecuted = useSelector(service, selectors.txSummaryExecuted);
+  const proposedTxRequest = useSelector(service, selectors.proposedTxRequest);
   const origin = useSelector(service, selectors.origin);
   const originTitle = useSelector(service, selectors.originTitle);
   const favIconUrl = useSelector(service, selectors.favIconUrl);
@@ -174,6 +178,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     shouldDisableApproveBtn,
     shouldShowTxSimulated,
     shouldShowTxExecuted,
+    proposedTxRequest,
     handlers: {
       request,
       reset,
