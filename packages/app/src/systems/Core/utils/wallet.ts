@@ -42,9 +42,14 @@ export class WalletLockedCustom extends WalletLocked {
     transactionRequestLike: TransactionRequestLike
   ): Promise<TransactionResponse> {
     const transactionRequest = transactionRequestify(transactionRequestLike);
-    await this.provider.estimateTxDependencies(transactionRequest);
     const txRequestToSend =
       await this.populateTransactionWitnessesSignature(transactionRequest);
-    return this.provider.sendTransaction(txRequestToSend);
+
+    await this.simulateTransaction(txRequestToSend, {
+      estimateTxDependencies: false,
+    });
+    return this.provider.sendTransaction(txRequestToSend, {
+      estimateTxDependencies: false,
+    });
   }
 }

@@ -17,7 +17,7 @@ import {
 type TxFeeOptionsProps = {
   initialAdvanced: boolean;
   baseFee: BN;
-  minGasLimit: BN;
+  gasLimit: BN;
   regularTip: BN;
   fastTip: BN;
 };
@@ -25,13 +25,13 @@ type TxFeeOptionsProps = {
 export const TxFeeOptions = ({
   initialAdvanced,
   baseFee,
-  minGasLimit,
+  gasLimit: gasLimitInput,
   regularTip,
   fastTip,
 }: TxFeeOptionsProps) => {
   const { control, setValue, getValues } = useFormContext<SendFormValues>();
   const [isAdvanced, setIsAdvanced] = useState(initialAdvanced);
-  const previousMinGasLimit = useRef<BN>(minGasLimit);
+  const previousGasLimit = useRef<BN>(gasLimitInput);
   const previousDefaultTip = useRef<BN>(regularTip);
 
   const { field: tip, fieldState: tipState } = useController({
@@ -65,10 +65,10 @@ export const TxFeeOptions = ({
         'fees.gasLimit.amount',
       ]);
 
-      if (!currentGasLimit.eq(previousMinGasLimit.current)) {
+      if (!currentGasLimit.eq(previousGasLimit.current)) {
         setValue('fees.gasLimit', {
-          amount: previousMinGasLimit.current,
-          text: previousMinGasLimit.current.toString(),
+          amount: previousGasLimit.current,
+          text: previousGasLimit.current.toString(),
         });
       }
 
