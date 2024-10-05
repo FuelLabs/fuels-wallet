@@ -1,10 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
+import { bn } from 'fuels';
 import { useMemo } from 'react';
 import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
-import { TxContent } from '~/systems/Transaction';
+import { TxContent, getGasLimitFromTxRequest } from '~/systems/Transaction';
 import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 import { AutoSubmit } from './TransactionRequest.AutoSubmit';
@@ -29,14 +30,15 @@ export function TransactionRequest() {
     shouldDisableApproveBtn,
     errors,
     executedStatus,
+    proposedTxRequest,
   } = txRequest;
   const { isLoading: isLoadingAssets } = useAssets();
 
   const defaultValues = useMemo<TransactionRequestFormData | undefined>(() => {
-    if (!txSummarySimulated) return undefined;
+    if (!txSummarySimulated || !proposedTxRequest) return undefined;
 
-    const tip = txSummarySimulated.tip;
-    const gasLimit = txSummarySimulated.gasUsed;
+    const tip = bn(proposedTxRequest.tip);
+    const gasLimit = getGasLimitFromTxRequest(proposedTxRequest);
 
     return {
       fees: {
@@ -50,7 +52,7 @@ export function TransactionRequest() {
         },
       },
     };
-  }, [txSummarySimulated]);
+  }, [txSummarySimulated, proposedTxRequest]);
 
   const isLoadingInfo = useMemo<boolean>(() => {
     return status('loading') || status('sending') || isLoadingAssets;
@@ -74,7 +76,6 @@ export function TransactionRequest() {
       testId={txRequest.txStatus}
       context={{
         baseFee: fees.baseFee,
-        minGasLimit: fees.minGasLimit,
         maxGasLimit: fees.maxGasLimit,
       }}
     >
@@ -87,6 +88,7 @@ export function TransactionRequest() {
             <TxContent.Info
               showDetails
               tx={txSummarySimulated}
+              txRequest={proposedTxRequest}
               isLoading={isLoadingInfo}
               errors={errors.simulateTxErrors}
               isConfirm

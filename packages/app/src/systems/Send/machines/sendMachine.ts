@@ -22,7 +22,7 @@ export type MachineContext = {
   baseFee?: BN;
   regularTip?: BN;
   fastTip?: BN;
-  minGasLimit?: BN;
+  gasLimit?: BN;
   maxGasLimit?: BN;
   input?: TxInputs['createTransfer'];
   error?: string;
@@ -39,7 +39,7 @@ type EstimateGasLimitReturn = {
 
 type CreateTransactionReturn = {
   baseFee?: BN;
-  minGasLimit?: BN;
+  gasLimit?: BN;
   transactionRequest?: TransactionRequest;
   providerUrl: string;
   address: string;
@@ -182,7 +182,7 @@ export const sendMachine = createMachine(
         providerUrl: ev.data.providerUrl,
         address: ev.data.address,
         baseFee: ev.data.baseFee ?? ctx.baseFee,
-        minGasLimit: ev.data.minGasLimit ?? ctx.minGasLimit,
+        gasLimit: ev.data.gasLimit ?? ctx.gasLimit,
         error: undefined,
       })),
     },
