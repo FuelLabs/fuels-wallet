@@ -51,7 +51,6 @@ export type TxInputs = {
       baseFee?: BN;
       regularTip?: BN;
       fastTip?: BN;
-      minGasLimit?: BN;
       maxGasLimit?: BN;
     };
   };
@@ -388,16 +387,14 @@ export class TxService {
           }
         );
 
-        // Getting updated maxFee and costs
-        const txCost = await wallet.getTransactionCost(transactionRequest);
-
         const baseFee = transactionRequest.maxFee.sub(
           transactionRequest.tip ?? bn(0)
         );
 
         return {
           baseFee,
-          minGasLimit: txCost.gasUsed,
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          gasLimit: (transactionRequest as any).gasLimit,
           transactionRequest,
           address: account.address,
           providerUrl: network.url,
@@ -417,7 +414,7 @@ export class TxService {
 
     return {
       baseFee: undefined,
-      minGasLimit: undefined,
+      gasLimit: undefined,
       transactionRequest: undefined,
       address: account.address,
       providerUrl: network.url,

@@ -92,7 +92,6 @@ export type TxContentInfoProps = {
   errors?: GroupedErrors;
   fees?: {
     baseFee?: BN;
-    minGasLimit?: BN;
     regularTip?: BN;
     fastTip?: BN;
   };

@@ -24,8 +24,8 @@ export enum SendStatus {
 }
 
 const selectors = {
-  minGasLimit(state: SendMachineState) {
-    return state.context.minGasLimit;
+  gasLimit(state: SendMachineState) {
+    return state.context.gasLimit;
   },
   maxGasLimit(state: SendMachineState) {
     return state.context.maxGasLimit;
@@ -73,7 +73,7 @@ type BalanceAsset = {
 type SchemaOptions = {
   balances: BalanceAsset[];
   baseFee: BN | undefined;
-  minGasLimit: BN | undefined;
+  gasLimit: BN | undefined;
   maxGasLimit: BN | undefined;
 };
 
@@ -161,23 +161,6 @@ const schema = yup
           amount: yup
             .mixed<BN>()
             .test({
-              name: 'min',
-              test: (value, ctx) => {
-                const { minGasLimit } = ctx.options.context as SchemaOptions;
-
-                if (!minGasLimit || value?.gte(minGasLimit)) {
-                  return true;
-                }
-
-                return ctx.createError({
-                  path: 'fees.gasLimit',
-                  message: `Gas limit must be greater than or equal to ${formatGasLimit(
-                    minGasLimit
-                  )}.`,
-                });
-              },
-            })
-            .test({
               name: 'max',
               test: (value, ctx) => {
                 const { maxGasLimit } = ctx.options.context as SchemaOptions;
@@ -254,7 +237,6 @@ export function useSend() {
             baseFee,
             regularTip,
             fastTip,
-            minGasLimit,
             maxGasLimit,
           } = ctx;
           if (!providerUrl || !transactionRequest || !address) {
@@ -269,7 +251,6 @@ export function useSend() {
               baseFee,
               regularTip,
               fastTip,
-              minGasLimit,
               maxGasLimit,
             },
             skipCustomFee: true,
@@ -280,7 +261,7 @@ export function useSend() {
   );
 
   const baseFee = useSelector(service, selectors.baseFee);
-  const minGasLimit = useSelector(service, selectors.minGasLimit);
+  const gasLimit = useSelector(service, selectors.gasLimit);
   const maxGasLimit = useSelector(service, selectors.maxGasLimit);
   const errorMessage = useSelector(service, selectors.error);
 
@@ -291,7 +272,7 @@ export function useSend() {
     context: {
       balances: account?.balances,
       baseFee,
-      minGasLimit,
+      gasLimit,
       maxGasLimit,
     },
   });
@@ -376,7 +357,7 @@ export function useSend() {
   return {
     form,
     baseFee,
-    minGasLimit,
+    gasLimit,
     tip,
     regularTip,
     fastTip,

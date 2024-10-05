@@ -26,7 +26,6 @@ const defaultArgs = {
   txStatus: TransactionStatus.success,
   fees: {
     baseFee: bn(0.01),
-    minGasLimit: bn(0.01),
     regularTip: bn(0.01),
     fastTip: bn(0.01),
   },
