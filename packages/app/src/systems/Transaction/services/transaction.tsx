@@ -249,9 +249,15 @@ export class TxService {
         proposedTxRequest.tip ?? bn(0)
       );
 
+      // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
+      const feeAdaptedToSdkDiff = txSummary.fee.add(1);
+
       return {
         baseFee,
-        txSummary,
+        txSummary: {
+          ...txSummary,
+          fee: feeAdaptedToSdkDiff,
+        },
         proposedTxRequest,
       };
     } catch (e) {
