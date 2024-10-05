@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
-import { TxContent } from '~/systems/Transaction';
+import { TxContent, getGasLimitFromTxRequest } from '~/systems/Transaction';
 import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 import { AutoSubmit } from './TransactionRequest.AutoSubmit';
@@ -38,8 +38,7 @@ export function TransactionRequest() {
     if (!txSummarySimulated || !proposedTxRequest) return undefined;
 
     const tip = bn(proposedTxRequest.tip);
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    const gasLimit = (proposedTxRequest as any)?.gasLimit;
+    const gasLimit = getGasLimitFromTxRequest(proposedTxRequest);
 
     return {
       fees: {

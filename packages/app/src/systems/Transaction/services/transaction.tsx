@@ -28,7 +28,13 @@ import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
 import { NetworkService } from '~/systems/Network/services/network';
 import type { Transaction } from '../types';
-import { type GroupedErrors, getAbiMap, getErrorMessage } from '../utils';
+import {
+  type GroupedErrors,
+  getAbiMap,
+  getErrorMessage,
+  getGasLimitFromTxRequest,
+  setGasLimitToTxRequest,
+} from '../utils';
 import { getCurrentTips } from '../utils/fee';
 
 export type TxInputs = {
@@ -191,8 +197,7 @@ export class TxService {
 
     const wallet = new WalletLockedCustom(account.address, provider);
     const initialMaxFee = inputTransactionRequest.maxFee;
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    const initialGasLimit = (inputTransactionRequest as any).gasLimit;
+    const initialGasLimit = getGasLimitFromTxRequest(inputTransactionRequest);
 
     try {
       /*
@@ -207,12 +212,13 @@ export class TxService {
         }
         // if the user has inputted a custom gas Limit, we set it to the proposedTxRequest
         if (inputCustomGasLimit) {
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          (proposedTxRequest as any).gasLimit = inputCustomGasLimit;
+          setGasLimitToTxRequest(proposedTxRequest, inputCustomGasLimit);
         } else {
           // if the user has not inputted a custom gas Limit, we increase the original one in 20% to avoid OutOfGas errors
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          (proposedTxRequest as any).gasLimit = initialGasLimit.mul(12).div(10);
+          setGasLimitToTxRequest(
+            proposedTxRequest,
+            initialGasLimit.mul(12).div(10)
+          );
         }
         const { maxFee } = await provider.estimateTxGasAndFee({
           transactionRequest: proposedTxRequest,
@@ -399,8 +405,7 @@ export class TxService {
 
         return {
           baseFee,
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          gasLimit: (transactionRequest as any).gasLimit,
+          gasLimit: getGasLimitFromTxRequest(transactionRequest),
           transactionRequest,
           address: account.address,
           providerUrl: network.url,

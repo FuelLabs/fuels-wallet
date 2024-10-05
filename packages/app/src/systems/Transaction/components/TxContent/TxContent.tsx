@@ -25,6 +25,7 @@ import {
   TxFee,
   TxHeader,
   TxOperations,
+  getGasLimitFromTxRequest,
 } from '~/systems/Transaction';
 import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
 
@@ -114,8 +115,7 @@ function TxContentInfo({
   const status = txStatus || tx?.status || txStatus;
   const hasErrors = Boolean(Object.keys(errors || {}).length);
   const isExecuted = !!tx?.id;
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  const txRequestGasLimit = (txRequest as any)?.gasLimit;
+  const txRequestGasLimit = getGasLimitFromTxRequest(txRequest);
 
   const initialAdvanced = useMemo(() => {
     if (!fees?.regularTip || !fees?.fastTip) return false;
