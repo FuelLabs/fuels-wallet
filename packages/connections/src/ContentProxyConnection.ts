@@ -1,4 +1,7 @@
-import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
+import {
+  BACKGROUND_SCRIPT_NAME,
+  ContentScriptMessageTypes,
+} from '@fuel-wallet/types';
 import {
   CONNECTOR_SCRIPT,
   CONTENT_SCRIPT_NAME,
@@ -47,6 +50,7 @@ export class ContentProxyConnection {
       name: BACKGROUND_SCRIPT_NAME,
     });
     connection.onMessage.addListener(this.onMessageFromExtension);
+    chrome.runtime.onMessage.addListener(this.handlePing);
     connection.onDisconnect.addListener(this.onDisconnect);
     this.connection = connection;
     window.addEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
@@ -55,6 +59,7 @@ export class ContentProxyConnection {
 
   destroy(keepWindowListener = true) {
     this.connection?.onMessage.removeListener(this.onMessageFromExtension);
+    chrome.runtime.onMessage.removeListener(this.handlePing);
     this.connection?.onDisconnect.removeListener(this.onDisconnect);
     this.connection?.disconnect();
     this.connection = undefined;
@@ -119,6 +124,18 @@ export class ContentProxyConnection {
       }
     }
   };
+
+  handlePing(
+    event: { type: string } | undefined,
+    _: chrome.runtime.MessageSender,
+    sendResponse: (response: unknown) => void
+  ) {
+    if (event?.type === ContentScriptMessageTypes.PING) {
+      sendResponse({
+        type: ContentScriptMessageTypes.PONG,
+      });
+    }
+  }
 
   postMessage(message: CommunicationMessage) {
     const postMessage = {
