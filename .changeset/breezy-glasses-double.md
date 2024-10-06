@@ -4,4 +4,4 @@
 "fuels-wallet": patch
 ---
 
-Fixed duplicate instances of ContentScript after extension sleep/wakeup. Closes #326
+Fixed duplicate instances of ContentScript after extension sleep/wakeup. Closes [#326](https://github.com/FuelLabs/fuel-connectors/issues/326)
