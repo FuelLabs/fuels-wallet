@@ -22,7 +22,7 @@ import type { MessageInputs, PopUpServiceInputs } from './types';
 const popups = new Map<string, PopUpService>();
 
 export class PopUpService {
-  openingPromise: DeferPromise<PopUpService>;
+  openingPromise: DeferPromise<PopUpService> | undefined;
   session: string | null = null;
   tabId: number | null = null;
   windowId: number | null = null;
@@ -37,18 +37,37 @@ export class PopUpService {
     // Bind methods to ensure correct `this` context
     this.onUIEvent = this.onUIEvent.bind(this);
     this.onResponse = this.onResponse.bind(this);
+    this.rejectOpeningPromise = this.rejectOpeningPromise.bind(this);
+    this.resolveOpeningPromise = this.resolveOpeningPromise.bind(this);
 
     this.origin = origin;
     this.communicationProtocol = communicationProtocol;
     this.openingPromise = deferPromise<PopUpService>();
+    this.setTimeout();
     this.client = new JSONRPCClient(this.sendRequest);
     this.setupUIListeners();
-    this.setTimeout();
+  }
+
+  rejectOpeningPromise(message = 'PopUp not opened!') {
+    if (this.openingPromise) {
+      this.clearTimeout();
+      this.openingPromise?.reject(new Error(message));
+      this.openingPromise = undefined;
+      closePopUp(this.tabId!);
+    }
+  }
+
+  resolveOpeningPromise<T extends PopUpService>(resolver: T) {
+    if (this.openingPromise) {
+      this.clearTimeout();
+      this.openingPromise?.resolve(resolver);
+      this.openingPromise = undefined;
+    }
   }
 
   setTimeout(delay = 5000) {
     this.timeoutId = setTimeout(() => {
-      this.openingPromise.reject(new Error('PopUp not opened!'));
+      this.rejectOpeningPromise('PopUp timed out waiting for event');
     }, delay);
   }
 
@@ -113,7 +132,7 @@ export class PopUpService {
       this.tab = tab!;
       this.tabId = tab?.id!;
       this.eventId = message.id;
-      this.openingPromise.resolve(this);
+      this.resolveOpeningPromise(this);
     }
   };
 
@@ -166,6 +185,10 @@ export class PopUpService {
         pathname,
         communicationProtocol
       );
+    }
+
+    if (!popupService.openingPromise?.promise) {
+      throw new Error('PopUp has no opening promise');
     }
 
     return popupService.openingPromise.promise;
