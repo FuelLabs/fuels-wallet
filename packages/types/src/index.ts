@@ -8,3 +8,4 @@ export * from './constants';
 export * from './abi';
 export * from './error';
 export * from './database';
+export * from './contentScript';

@@ -1,3 +1,4 @@
+import { ContentScriptMessageTypes } from '@fuel-wallet/types';
 import fileName from './contentScript?script';
 
 /*
@@ -5,22 +6,43 @@ import fileName from './contentScript?script';
  * on all tabs. This is necessary because the content script is not automatically
  * registered on tabs that are already open when the extension is installed.
  */
+
+// Ping to check if the content script is already injected
 export async function executeContentScript() {
   chrome.tabs.query({ url: '<all_urls>' }, (tabs) => {
     for (const tab of tabs) {
       if (!tab.id || tab.url?.startsWith('chrome://')) continue;
-      chrome.scripting
-        .executeScript({
-          target: { tabId: tab.id, allFrames: true },
-          files: [fileName],
-          injectImmediately: true,
-        })
-        // Ignore errors on tabs when executing script
-        .catch((err) => {
-          if (process.env?.NODE_ENV === 'development') {
-            console.warn(err);
+
+      // Send a ping message to check if content script is already injected
+      chrome.tabs.sendMessage(
+        tab.id,
+        {
+          type: ContentScriptMessageTypes.PING,
+        },
+        (response) => {
+          if (
+            response?.type !== ContentScriptMessageTypes.PONG ||
+            chrome.runtime.lastError
+          ) {
+            // No response, content script is not injected
+            injectContentScript(tab.id!);
           }
-        });
+        }
+      );
     }
   });
+}
+
+function injectContentScript(tabId: number) {
+  chrome.scripting
+    .executeScript({
+      target: { tabId: tabId, allFrames: true },
+      files: [fileName],
+      injectImmediately: true,
+    })
+    .catch((err) => {
+      if (process.env?.NODE_ENV === 'development') {
+        console.warn(err);
+      }
+    });
 }
