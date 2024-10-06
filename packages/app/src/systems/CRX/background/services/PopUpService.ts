@@ -234,6 +234,7 @@ export class PopUpService {
     this.removeUIListeners();
     this.client.rejectAllPendingRequests('Service is being cleaned up');
     popups.delete(this.origin);
+    closePopUp(this.tabId!);
   }
 
   static destroyAll() {
