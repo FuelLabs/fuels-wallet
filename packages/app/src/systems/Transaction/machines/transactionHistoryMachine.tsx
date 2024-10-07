@@ -6,6 +6,7 @@ import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
 import { type TxInputs, TxService } from '../services';
+import type { TransactionCursor } from '../types';
 
 const TRANSACTION_HISTORY_ERRORS = {
   INVALID_ADDRESS: 'Invalid address',
@@ -16,18 +17,24 @@ type MachineContext = {
   walletAddress: string;
   error?: string;
   transactionHistory?: TransactionResult[];
-  pageInfo?: {
-    hasPreviousPage: boolean;
-    hasNextPage: boolean;
-    endCursor?: string | null;
-  };
+  currentCursor?: TransactionCursor;
+  cursors: TransactionCursor[];
 };
 
 type MachineServices = {
   getTransactionHistory: {
     data: {
       transactionHistory: TransactionResult[];
-      pageInfo: MachineContext['pageInfo'];
+    };
+  };
+  getAllCursors: {
+    data: {
+      cursors: TransactionCursor[];
+    };
+  };
+  getCachedCursors: {
+    data: {
+      cursors: TransactionCursor[];
     };
   };
 };
@@ -64,7 +71,7 @@ export const transactionHistoryMachine = createMachine(
             },
             {
               actions: 'assignWalletAddress',
-              target: 'fetching',
+              target: 'getCachedCursors',
             },
           ],
           FETCH_NEXT_PAGE: {
@@ -73,10 +80,10 @@ export const transactionHistoryMachine = createMachine(
           },
         },
       },
-      fetching: {
+      getCachedCursors: {
         entry: 'clearError',
         invoke: {
-          src: 'getTransactionHistory',
+          src: 'getCachedCursors',
           data: (_, event: MachineEvents) => ({
             input: event.input,
           }),
@@ -87,7 +94,60 @@ export const transactionHistoryMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['assignTransactionHistory', 'assignPageInfo'],
+              actions: ['assignCursors', 'assignCurrentCursor'],
+              target: 'getAllCursors',
+            },
+          ],
+        },
+      },
+      getAllCursors: {
+        entry: 'clearError',
+        invoke: {
+          src: 'getAllCursors',
+          data: (ctx) => {
+            return {
+              input: {
+                address: ctx.walletAddress,
+                initialEndCursor: ctx.currentCursor?.endCursor,
+              },
+            };
+          },
+          onDone: [
+            {
+              actions: ['assignGetTransactionHistoryError'],
+              target: 'idle',
+              cond: FetchMachine.hasError,
+            },
+            {
+              actions: ['assignCursors', 'assignCurrentCursor'],
+              target: 'fetching',
+            },
+          ],
+        },
+      },
+      fetching: {
+        entry: 'clearError',
+        invoke: {
+          src: 'getTransactionHistory',
+          data: (ctx) => {
+            const latestCursor = ctx.cursors[ctx.cursors.length - 1];
+            return {
+              input: {
+                address: ctx.walletAddress,
+                pagination: {
+                  after: latestCursor?.endCursor,
+                },
+              },
+            };
+          },
+          onDone: [
+            {
+              actions: ['assignGetTransactionHistoryError'],
+              target: 'idle',
+              cond: FetchMachine.hasError,
+            },
+            {
+              actions: ['assignTransactionHistory'],
               target: 'idle',
             },
           ],
@@ -97,14 +157,21 @@ export const transactionHistoryMachine = createMachine(
         entry: 'clearError',
         invoke: {
           src: 'getTransactionHistory',
-          data: (ctx) => ({
-            input: {
-              address: ctx.walletAddress,
-              pagination: {
-                after: ctx.pageInfo?.endCursor,
+          data: (ctx) => {
+            const currentCursor = ctx.cursors.findIndex(
+              (c) => c.endCursor === ctx.currentCursor?.endCursor
+            );
+            const nextCursor = ctx.cursors[currentCursor - 1];
+
+            return {
+              input: {
+                address: ctx.walletAddress,
+                pagination: {
+                  after: nextCursor?.endCursor || null,
+                },
               },
-            },
-          }),
+            };
+          },
           onDone: [
             {
               actions: ['assignGetTransactionHistoryError'],
@@ -112,7 +179,7 @@ export const transactionHistoryMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['appendTransactionHistory', 'assignPageInfo'],
+              actions: ['appendTransactionHistory', 'moveCurrentCursorForward'],
               target: 'idle',
             },
           ],
@@ -126,7 +193,7 @@ export const transactionHistoryMachine = createMachine(
         return !isB256(ev.input?.address) && !isBech32(ev.input?.address);
       },
       hasNextPage: (ctx, _ev) => {
-        return ctx.pageInfo?.hasNextPage ?? false;
+        return Boolean(ctx.currentCursor?.endCursor);
       },
     },
     actions: {
@@ -139,16 +206,37 @@ export const transactionHistoryMachine = createMachine(
       assignWalletAddress: assign({
         walletAddress: (_, ev) => ev.input.address,
       }),
-      assignTransactionHistory: assign({
-        transactionHistory: (_, ev) => ev.data.transactionHistory,
+      assignCursors: assign({
+        cursors: (_, ev) => ev.data.cursors,
       }),
-      assignPageInfo: assign({
-        pageInfo: (_, ev) => ev.data.pageInfo,
+      assignCurrentCursor: assign({
+        currentCursor: (_, ev) => {
+          return ev.data.cursors[ev.data.cursors.length - 1];
+        },
+      }),
+      assignTransactionHistory: assign({
+        transactionHistory: (_, ev) => ev.data.transactionHistory.reverse(),
       }),
       appendTransactionHistory: assign({
         transactionHistory: (ctx, ev) => {
           const history = ctx.transactionHistory || [];
-          return [...history, ...ev.data.transactionHistory];
+          return [...history, ...ev.data.transactionHistory.reverse()];
+        },
+      }),
+      moveCurrentCursorForward: assign({
+        currentCursor: (ctx, _ev) => {
+          const currentCursor = ctx.currentCursor;
+          const cursors = ctx.cursors;
+
+          if (!currentCursor) return;
+
+          const currentCursorIndex = cursors.findIndex(
+            (c) => c.endCursor === currentCursor.endCursor
+          );
+
+          const nextCursor = cursors[currentCursorIndex - 1];
+
+          return nextCursor;
         },
       }),
       clearError: assign({
@@ -162,14 +250,81 @@ export const transactionHistoryMachine = createMachine(
       >({
         showError: true,
         async fetch({ input }) {
-          const address = input?.address;
+          if (!input) {
+            throw new Error('Missing input');
+          }
+
+          const { address, pagination } = input;
+
           const selectedNetwork = await NetworkService.getSelectedNetwork();
-          const result = await TxService.getTransactionHistory({
-            address: address?.toString() || '',
+          const { transactionHistory } = await TxService.getTransactionHistory({
+            address,
             providerUrl: selectedNetwork?.url,
-            pagination: input?.pagination,
+            pagination,
           });
-          return result;
+          return { transactionHistory };
+        },
+      }),
+      getCachedCursors: FetchMachine.create<
+        TxInputs['getTxCursors'],
+        MachineServices['getCachedCursors']['data']
+      >({
+        showError: true,
+        async fetch({ input }) {
+          if (!input) {
+            throw new Error('Missing input');
+          }
+
+          const selectedNetwork = await NetworkService.getSelectedNetwork();
+          const cursors = await TxService.getTxCursors({
+            address: input.address,
+            providerUrl: selectedNetwork?.url || '',
+          });
+
+          return {
+            cursors,
+          };
+        },
+      }),
+      getAllCursors: FetchMachine.create<
+        TxInputs['getAllCursors'],
+        MachineServices['getAllCursors']['data']
+      >({
+        showError: true,
+        async fetch({ input }) {
+          if (!input) {
+            throw new Error('Missing input');
+          }
+
+          const selectedNetwork = await NetworkService.getSelectedNetwork();
+
+          const address = input.address;
+          const providerUrl = selectedNetwork?.url || '';
+          const initialEndCursor = input.initialEndCursor;
+
+          const result = await TxService.getAllCursors({
+            address,
+            providerUrl,
+            initialEndCursor,
+          });
+
+          // Adding missing cursors
+          if (result.cursors.length > 0) {
+            await TxService.addTxCursors({
+              address,
+              providerUrl,
+              cursors: result.cursors,
+            });
+          }
+
+          const cursors = await TxService.getTxCursors({
+            address,
+            providerUrl,
+          });
+
+          return {
+            cursors,
+          };
         },
       }),
     },

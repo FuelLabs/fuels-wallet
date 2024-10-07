@@ -15,7 +15,7 @@ import {
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
 } from 'fuels';
-import { WalletLockedCustom, db, uniqueId } from '~/systems/Core';
+import { WalletLockedCustom, db } from '~/systems/Core';
 
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
@@ -35,7 +35,11 @@ export type TxInputs = {
     address: string;
     providerUrl: string;
   };
-  addTxCursor: Omit<TransactionCursor, 'id'>;
+  addTxCursors: {
+    address: string;
+    providerUrl: string;
+    cursors: string[];
+  };
   request: {
     providerUrl: string;
     transactionRequest: TransactionRequest;
@@ -108,7 +112,7 @@ export type TxInputs = {
 };
 
 const AMOUNT_SUB_PER_TX_RETRY = 200_000;
-const TXS_PER_PAGE = 20;
+const TXS_PER_PAGE = 10; // @TODO: Increase to 20
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class TxService {
@@ -120,21 +124,24 @@ export class TxService {
         .and((cursor) => {
           return cursor.address.toLowerCase() === input.address.toLowerCase();
         })
-        .toArray();
+        .sortBy('id');
     });
   }
 
-  static addTxCursor(input: TxInputs['addTxCursor']) {
-    const { address, providerUrl, endCursor } = input;
+  static addTxCursors(input: TxInputs['addTxCursors']) {
+    const { address, providerUrl, cursors } = input;
 
-    return db.transaction('rw', db.transactionsCursors, async () => {
-      const id = await db.transactionsCursors.add({
-        id: uniqueId(),
+    const transactionsCursors: TransactionCursor[] = cursors.map(
+      (endCursor) => ({
         address,
         providerUrl,
         endCursor,
-      });
-      return db.transactionsCursors.get(id);
+      })
+    );
+
+    return db.transaction('rw', db.transactionsCursors, async () => {
+      await db.transactionsCursors.bulkAdd(transactionsCursors);
+      return true;
     });
   }
 
@@ -315,7 +322,7 @@ export class TxService {
       provider,
       filters: {
         owner: address,
-        first: 1, // @TODO: revert back to 50
+        first: TXS_PER_PAGE,
         after: pagination?.after,
       },
     });
@@ -334,7 +341,7 @@ export class TxService {
     const provider = await createProvider(providerUrl);
 
     let hasNextPage = true;
-    const endCursors: string[] = [];
+    const cursors: string[] = [];
     let endCursor: string | null | undefined = initialEndCursor;
 
     while (hasNextPage) {
@@ -351,12 +358,12 @@ export class TxService {
       endCursor = pageInfo.endCursor;
 
       if (hasNextPage && endCursor) {
-        endCursors.push(endCursor);
+        cursors.push(endCursor);
       }
     }
 
     return {
-      endCursors,
+      cursors,
     };
   }
 

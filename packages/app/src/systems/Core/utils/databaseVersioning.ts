@@ -144,7 +144,7 @@ export const applyDbVersioning = (db: Dexie) => {
     accounts: '&address, &name',
     networks: '&id, &url, &name, chainId',
     connections: 'origin',
-    transactionsCursors: '&id, address, providerUrl, endCursor',
+    transactionsCursors: '++id, address, providerUrl, endCursor',
     assets: '&name, &symbol',
     abis: '&contractId',
     errors: '&id',

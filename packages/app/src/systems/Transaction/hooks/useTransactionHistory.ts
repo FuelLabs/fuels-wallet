@@ -8,7 +8,11 @@ import type { TxInputs } from '../services';
 
 const selectors = {
   isFetching: (state: TransactionHistoryMachineState) => {
-    return state.matches('fetching');
+    return (
+      state.matches('getCachedCursors') ||
+      state.matches('getAllCursors') ||
+      state.matches('fetching')
+    );
   },
   isFetchingNextPage: (state: TransactionHistoryMachineState) => {
     return state.matches('fetchingNextPage');
@@ -17,7 +21,9 @@ const selectors = {
     return state.context.transactionHistory;
   },
   hasNextPage: (state: TransactionHistoryMachineState) => {
-    return state.context.pageInfo?.hasNextPage ?? false;
+    const hasCurrentCursor = Boolean(state.context.currentCursor);
+    const hasLoadedTxs = Boolean(state.context.transactionHistory?.length);
+    return hasCurrentCursor && hasLoadedTxs;
   },
 };
 
@@ -43,12 +49,7 @@ export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
 
   useEffect(() => {
     if (address) {
-      getTransactionHistory({
-        address: address.toString(),
-        pagination: {
-          after: null,
-        },
-      });
+      getTransactionHistory({ address: address.toString() });
     }
   }, [address]);
 

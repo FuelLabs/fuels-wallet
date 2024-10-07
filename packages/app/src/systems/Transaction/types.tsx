@@ -37,7 +37,6 @@ export type TxOutputContract = OutputContract;
 export type TxOutputContractCreated = OutputContractCreated;
 
 export type TransactionCursor = {
-  id: string;
   address: string;
   providerUrl: string;
   endCursor: string;
