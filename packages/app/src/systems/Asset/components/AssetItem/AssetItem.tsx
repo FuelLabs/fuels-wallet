@@ -66,20 +66,26 @@ export const AssetItem: AssetItemComponent = ({
 
   const { assetId, name, symbol, icon, decimals, isCustom } = asset;
 
+  function getLeftEl() {
+    if (assetId) {
+      return (
+        <Copyable
+          value={assetId}
+          tooltipMessage="Copy asset address"
+          css={styles.assetIdCopy}
+          iconProps={{
+            icon: Icon.is('Copy'),
+            'aria-label': 'Copy asset address',
+          }}
+        />
+      );
+    }
+  }
+
   function getRightEl() {
     if (showActions) {
       return (
         <Box.Flex css={styles.actionsWrapper}>
-          {!!assetId && (
-            <Copyable
-              value={assetId}
-              tooltipMessage="Copy asset address"
-              iconProps={{
-                icon: Icon.is('Copy'),
-                'aria-label': 'Copy asset address',
-              }}
-            />
-          )}
           {onRemove && isCustom && name && (
             <>
               <IconButton
@@ -163,13 +169,18 @@ export const AssetItem: AssetItemComponent = ({
             </Box.Flex>
           )}
         </Heading>
-        {symbol ? (
-          <Text css={styles.assetSymbol}>{symbol}</Text>
-        ) : (
-          <Copyable value={assetId || ''} css={styles.unknownAssetId}>
-            {shortAddress(assetId)}
-          </Copyable>
-        )}
+        <Box.Flex direction="row">
+          {symbol ? (
+            <>
+              <Text css={styles.assetSymbol}>{symbol}</Text>
+              {getLeftEl()}
+            </>
+          ) : (
+            <Copyable value={assetId || ''} css={styles.unknownAssetId}>
+              {shortAddress(assetId)}
+            </Copyable>
+          )}
+        </Box.Flex>
       </Box.Flex>
     </CardList.Item>
   );
@@ -181,6 +192,9 @@ const styles = {
   assetName: cssObj({
     margin: 0,
     textSize: 'base',
+  }),
+  assetIdCopy: cssObj({
+    marginLeft: 2,
   }),
   assetSymbol: cssObj({
     textSize: 'sm',
