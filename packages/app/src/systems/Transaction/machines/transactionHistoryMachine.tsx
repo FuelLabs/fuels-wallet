@@ -139,7 +139,7 @@ export const transactionHistoryMachine = createMachine(
         walletAddress: (_, ev) => ev.input.address,
       }),
       assignTransactionHistory: assign({
-        transactionHistory: (_, ev) => ev.data.transactionHistory.reverse(),
+        transactionHistory: (_, ev) => ev.data.transactionHistory,
       }),
       assignPageInfo: assign({
         pageInfo: (_, ev) => ev.data.pageInfo,
@@ -147,7 +147,7 @@ export const transactionHistoryMachine = createMachine(
       appendTransactionHistory: assign({
         transactionHistory: (ctx, ev) => {
           const history = ctx.transactionHistory || [];
-          return [...history, ...ev.data.transactionHistory.reverse()];
+          return [...history, ...ev.data.transactionHistory];
         },
       }),
       clearError: assign({
