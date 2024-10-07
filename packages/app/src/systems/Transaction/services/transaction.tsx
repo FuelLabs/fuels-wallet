@@ -305,7 +305,7 @@ export class TxService {
       provider,
       filters: {
         owner: address,
-        first: 1, // @TODO
+        first: 1, // @TODO: revert back to 50
         after: pagination?.after,
       },
     });

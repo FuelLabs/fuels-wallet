@@ -1,5 +1,18 @@
 # fuels-wallet
 
+## 0.34.1
+
+### Patch Changes
+
+- [#1550](https://github.com/FuelLabs/fuels-wallet/pull/1550) [`c38db1ab`](https://github.com/FuelLabs/fuels-wallet/commit/c38db1ab536b587226db90b6b872fd8c1b01c405) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed duplicate instances of ContentScript after extension sleep/wakeup. Closes [#326](https://github.com/FuelLabs/fuel-connectors/issues/326)
+
+- [#1550](https://github.com/FuelLabs/fuels-wallet/pull/1550) [`c38db1ab`](https://github.com/FuelLabs/fuels-wallet/commit/c38db1ab536b587226db90b6b872fd8c1b01c405) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Ensure popup is closed on resolve timeout
+
+- [#1555](https://github.com/FuelLabs/fuels-wallet/pull/1555) [`3defdf83`](https://github.com/FuelLabs/fuels-wallet/commit/3defdf83c97b1a1bed1edf7a932557f69263b64c) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: fix size of query complex
+
+- Updated dependencies [[`c38db1ab`](https://github.com/FuelLabs/fuels-wallet/commit/c38db1ab536b587226db90b6b872fd8c1b01c405)]:
+  - @fuel-wallet/connections@0.34.1
+
 ## 0.34.0
 
 ### Minor Changes
