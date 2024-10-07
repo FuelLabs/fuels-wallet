@@ -328,14 +328,8 @@ export class TxService {
       },
     });
 
-    const sortedTransactions = txSummaries.transactions?.sort((a, b) => {
-      const aTime = bn(a.time, 10);
-      const bTime = bn(b.time, 10);
-      return aTime.gt(bTime) ? 1 : -1;
-    });
-
     return {
-      transactionHistory: sortedTransactions,
+      transactionHistory: txSummaries.transactions,
       pageInfo: txSummaries.pageInfo,
     };
   }
