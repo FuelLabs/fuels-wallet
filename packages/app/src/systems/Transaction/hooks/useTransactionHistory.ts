@@ -10,14 +10,14 @@ const selectors = {
   isFetching: (state: TransactionHistoryMachineState) => {
     return state.matches('fetching');
   },
-  isFetchingPreviousPage: (state: TransactionHistoryMachineState) => {
-    return state.matches('fetchingPreviousPage');
+  isFetchingNextPage: (state: TransactionHistoryMachineState) => {
+    return state.matches('fetchingNextPage');
   },
   transactionHistory: (state: TransactionHistoryMachineState) => {
     return state.context.transactionHistory;
   },
-  hasPreviousPage: (state: TransactionHistoryMachineState) => {
-    return state.context.pageInfo?.hasPreviousPage ?? false;
+  hasNextPage: (state: TransactionHistoryMachineState) => {
+    return state.context.pageInfo?.hasNextPage ?? false;
   },
 };
 
@@ -29,19 +29,16 @@ export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
   const service = useInterpret(() => transactionHistoryMachine);
   const { send } = service;
   const isFetching = useSelector(service, selectors.isFetching);
-  const isFetchingPreviousPage = useSelector(
-    service,
-    selectors.isFetchingPreviousPage
-  );
+  const isFetchingNextPage = useSelector(service, selectors.isFetchingNextPage);
   const transactionHistory = useSelector(service, selectors.transactionHistory);
-  const hasPreviousPage = useSelector(service, selectors.hasPreviousPage);
+  const hasNextPage = useSelector(service, selectors.hasNextPage);
 
   function getTransactionHistory(input: TxInputs['getTransactionHistory']) {
     send('GET_TRANSACTION_HISTORY', { input });
   }
 
-  function fetchPreviousPage() {
-    send('FETCH_PREVIOUS_PAGE');
+  function fetchNextPage() {
+    send('FETCH_NEXT_PAGE');
   }
 
   useEffect(() => {
@@ -49,17 +46,17 @@ export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
       getTransactionHistory({
         address: address.toString(),
         pagination: {
-          before: null,
+          after: null,
         },
       });
     }
   }, [address]);
 
   return {
-    fetchPreviousPage,
+    fetchNextPage,
     isFetching,
-    isFetchingPreviousPage,
+    isFetchingNextPage,
     transactionHistory,
-    hasPreviousPage,
+    hasNextPage,
   };
 }

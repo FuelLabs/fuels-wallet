@@ -17,7 +17,7 @@ type MachineContext = {
   error?: string;
   transactionHistory?: TransactionResult[];
   pageInfo?: {
-    hasPreviousPage: boolean;
+    hasNextPage: boolean;
     endCursor?: string | null;
   };
 };
@@ -37,7 +37,7 @@ type MachineEvents =
       input: TxInputs['getTransactionHistory'];
     }
   | {
-      type: 'FETCH_PREVIOUS_PAGE';
+      type: 'FETCH_NEXT_PAGE';
       input?: never;
     };
 
@@ -66,9 +66,9 @@ export const transactionHistoryMachine = createMachine(
               target: 'fetching',
             },
           ],
-          FETCH_PREVIOUS_PAGE: {
-            cond: 'hasPreviousPage',
-            target: 'fetchingPreviousPage',
+          FETCH_NEXT_PAGE: {
+            cond: 'hasNextPage',
+            target: 'fetchingNextPage',
           },
         },
       },
@@ -92,7 +92,7 @@ export const transactionHistoryMachine = createMachine(
           ],
         },
       },
-      fetchingPreviousPage: {
+      fetchingNextPage: {
         entry: 'clearError',
         invoke: {
           src: 'getTransactionHistory',
@@ -100,7 +100,7 @@ export const transactionHistoryMachine = createMachine(
             input: {
               address: ctx.walletAddress,
               pagination: {
-                before: ctx.pageInfo?.endCursor,
+                after: ctx.pageInfo?.endCursor,
               },
             },
           }),
@@ -124,8 +124,8 @@ export const transactionHistoryMachine = createMachine(
       isInvalidAddress: (_, ev) => {
         return !isB256(ev.input?.address) && !isBech32(ev.input?.address);
       },
-      hasPreviousPage: (ctx, _ev) => {
-        return ctx.pageInfo?.hasPreviousPage ?? false;
+      hasNextPage: (ctx, _ev) => {
+        return ctx.pageInfo?.hasNextPage ?? false;
       },
     },
     actions: {

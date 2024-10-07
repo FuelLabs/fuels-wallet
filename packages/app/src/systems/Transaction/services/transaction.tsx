@@ -1,9 +1,5 @@
 import type { Account } from '@fuel-wallet/types';
-import type {
-  TransactionRequest,
-  TransactionSummary,
-  WalletLocked,
-} from 'fuels';
+import type { TransactionRequest, WalletLocked } from 'fuels';
 import { clone } from 'ramda';
 
 import {
@@ -96,7 +92,7 @@ export type TxInputs = {
     address: string;
     providerUrl?: string;
     pagination?: {
-      before: string | null;
+      after: string | null;
     };
   };
   fundTransaction: {
@@ -327,15 +323,15 @@ export class TxService {
       provider,
       filters: {
         owner: address,
-        last: 10,
-        before: pagination?.before,
+        first: 1, // @TODO
+        after: pagination?.after,
       },
     });
 
     const sortedTransactions = txSummaries.transactions?.sort((a, b) => {
       const aTime = bn(a.time, 10);
       const bTime = bn(b.time, 10);
-      return aTime.gt(bTime) ? -1 : 1;
+      return aTime.gt(bTime) ? 1 : -1;
     });
 
     return {
