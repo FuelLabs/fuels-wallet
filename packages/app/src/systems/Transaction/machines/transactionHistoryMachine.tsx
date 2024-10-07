@@ -16,19 +16,24 @@ type MachineContext = {
   walletAddress: string;
   error?: string;
   transactionHistory?: TransactionResult[];
+  pageInfo?: {
+    hasNextPage: boolean;
+    endCursor?: string | null;
+  };
 };
 
 type MachineServices = {
   getTransactionHistory: {
     data: {
       transactionHistory: TransactionResult[];
+      pageInfo: MachineContext['pageInfo'];
     };
   };
 };
 
 type MachineEvents = {
   type: 'GET_TRANSACTION_HISTORY';
-  input: { address: string };
+  input: TxInputs['getTransactionHistory'];
 };
 
 export const transactionHistoryMachine = createMachine(
@@ -71,7 +76,7 @@ export const transactionHistoryMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['assignTransactionHistory'],
+              actions: ['assignTransactionHistory', 'assignPageInfo'],
               target: 'idle',
             },
           ],
@@ -95,6 +100,9 @@ export const transactionHistoryMachine = createMachine(
       assignTransactionHistory: assign({
         transactionHistory: (_, ev) => ev.data.transactionHistory,
       }),
+      assignPageInfo: assign({
+        pageInfo: (_, ev) => ev.data.pageInfo,
+      }),
       clearError: assign({
         error: (_) => undefined,
       }),
@@ -108,11 +116,11 @@ export const transactionHistoryMachine = createMachine(
         async fetch({ input }) {
           const address = input?.address;
           const selectedNetwork = await NetworkService.getSelectedNetwork();
-          const { transactionHistory } = await TxService.getTransactionHistory({
+          const result = await TxService.getTransactionHistory({
             address: address?.toString() || '',
             providerUrl: selectedNetwork?.url,
           });
-          return { transactionHistory };
+          return result;
         },
       }),
     },
