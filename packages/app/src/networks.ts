@@ -19,7 +19,6 @@ export const DEFAULT_NETWORKS: Array<
     explorerUrl: 'https://app.fuel.network',
     bridgeUrl: 'https://app.fuel.network/bridge',
     isSelected: IS_RELEASE,
-    hidden: true,
   },
   {
     name: 'Fuel Sepolia Testnet',
