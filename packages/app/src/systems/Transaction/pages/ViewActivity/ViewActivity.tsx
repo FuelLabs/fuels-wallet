@@ -1,9 +1,9 @@
 import { Box, Button, Icon } from '@fuel-ui/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Address } from 'fuels';
 import { useNavigate } from 'react-router-dom';
 import { useAccounts } from '~/systems/Account';
-import { Layout, Pages } from '~/systems/Core';
-
+import { Layout, Pages, animations } from '~/systems/Core';
 import { ActivityList } from '../../components/ActivityList/ActivityList';
 import { useTransactionHistory } from '../../hooks';
 
@@ -35,20 +35,36 @@ export function ViewActivity() {
             ownerAddress={address}
           />
 
-          {hasNextPage && (
-            <Button
-              size="xs"
-              variant="link"
-              color="blue"
-              rightIcon={
-                isFetchingNextPage ? undefined : Icon.is('ChevronDown')
-              }
-              onPress={fetchNextPage}
-              disabled={isFetchingNextPage || !hasNextPage}
-            >
-              {isFetchingNextPage ? 'Loading...' : 'Load more'}
-            </Button>
-          )}
+          <AnimatePresence initial={false} mode="popLayout">
+            {hasNextPage || isFetchingNextPage ? (
+              <motion.div key="more" {...animations.fadeIn()}>
+                <Button
+                  css={{
+                    display: 'flex',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    height: 26,
+                  }}
+                  size="xs"
+                  variant="link"
+                  color="blue"
+                  rightIcon={
+                    isFetchingNextPage ? undefined : Icon.is('ChevronDown')
+                  }
+                  onPress={fetchNextPage}
+                  disabled={isFetchingNextPage || !hasNextPage}
+                >
+                  {isFetchingNextPage ? 'Loading...' : 'Load more'}
+                </Button>
+              </motion.div>
+            ) : (
+              <Box
+                key="spacer"
+                {...animations.fadeIn()}
+                css={{ height: 26, width: '100%' }}
+              />
+            )}
+          </AnimatePresence>
         </Box.Stack>
       </Layout.Content>
     </Layout>
