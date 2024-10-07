@@ -72,6 +72,16 @@ export const AssetItem: AssetItemComponent = ({
         <Box.Flex css={styles.actionsWrapper}>
           {onRemove && isCustom && name && (
             <>
+              {!!assetId && (
+                <Copyable
+                  value={assetId}
+                  tooltipMessage="Copy asset address"
+                  iconProps={{
+                    icon: Icon.is('Copy'),
+                    'aria-label': 'Copy asset address',
+                  }}
+                />
+              )}
               <IconButton
                 variant="link"
                 icon={<Icon icon={Icon.is('Edit')} />}
