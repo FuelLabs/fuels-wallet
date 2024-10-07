@@ -95,6 +95,7 @@ export type TxInputs = {
   getAllCursors: {
     address: string;
     providerUrl?: string;
+    initialEndCursor: string | null;
   };
   fundTransaction: {
     wallet: WalletLocked;
@@ -328,12 +329,13 @@ export class TxService {
   static async getAllCursors({
     address,
     providerUrl = '',
+    initialEndCursor,
   }: TxInputs['getAllCursors']) {
     const provider = await createProvider(providerUrl);
 
     let hasNextPage = true;
-    const endCursors: (string | null)[] = [null];
-    let endCursor: string | null | undefined = undefined;
+    const endCursors: string[] = [];
+    let endCursor: string | null | undefined = initialEndCursor;
 
     while (hasNextPage) {
       const { pageInfo } = await getTransactionsSummaries({
