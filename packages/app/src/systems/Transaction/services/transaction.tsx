@@ -112,7 +112,7 @@ export type TxInputs = {
 };
 
 const AMOUNT_SUB_PER_TX_RETRY = 200_000;
-const TXS_PER_PAGE = 10; // @TODO: Increase to 20
+const TXS_PER_PAGE = 20;
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class TxService {
