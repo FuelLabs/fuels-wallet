@@ -16,10 +16,10 @@ export function ViewActivity() {
     : '';
   const {
     isFetching,
-    isFetchingNextPage,
+    isFetchingPreviousPage,
     transactionHistory,
-    hasNextPage,
-    fetchNextPage,
+    hasPreviousPage,
+    fetchPreviousPage,
   } = useTransactionHistory({
     address,
   });
@@ -34,18 +34,18 @@ export function ViewActivity() {
             isLoading={isFetching || isLoadingAccounts || !account}
             ownerAddress={address}
           />
-          {hasNextPage && (
+          {hasPreviousPage && (
             <Button
               size="xs"
               variant="link"
               color="blue"
               rightIcon={
-                isFetchingNextPage ? undefined : Icon.is('ChevronDown')
+                isFetchingPreviousPage ? undefined : Icon.is('ChevronDown')
               }
-              onPress={fetchNextPage}
-              disabled={isFetchingNextPage}
+              onPress={fetchPreviousPage}
+              disabled={isFetchingPreviousPage}
             >
-              {isFetchingNextPage ? 'Loading...' : 'Load more'}
+              {isFetchingPreviousPage ? 'Loading...' : 'Load more'}
             </Button>
           )}
         </Box.Stack>

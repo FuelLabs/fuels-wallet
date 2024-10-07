@@ -12,16 +12,12 @@ const TRANSACTION_HISTORY_ERRORS = {
   NOT_FOUND: 'Address Transaction history not found',
 };
 
-export const TX_PER_PAGE = 20;
-
 type MachineContext = {
   walletAddress: string;
   error?: string;
   transactionHistory?: TransactionResult[];
   pageInfo?: {
     hasPreviousPage: boolean;
-    hasNextPage: boolean;
-    startCursor?: string | null;
     endCursor?: string | null;
   };
 };
@@ -41,16 +37,10 @@ type MachineEvents =
       input: TxInputs['getTransactionHistory'];
     }
   | {
-      type: 'FETCH_NEXT_PAGE';
+      type: 'FETCH_PREVIOUS_PAGE';
       input?: never;
     };
 
-/**
- * @TODO: Once we get the pagination backwards working,
- * we need to replace `first` with `last` and `after` with `before`
- * and `hasNextPage` with `hasPreviousPage`
- * and maybe remove the reverse() calls
- */
 export const transactionHistoryMachine = createMachine(
   {
     tsTypes: {} as import('./transactionHistoryMachine.typegen').Typegen0,
@@ -76,9 +66,9 @@ export const transactionHistoryMachine = createMachine(
               target: 'fetching',
             },
           ],
-          FETCH_NEXT_PAGE: {
-            cond: 'hasNextPage',
-            target: 'fetchingNextPage',
+          FETCH_PREVIOUS_PAGE: {
+            cond: 'hasPreviousPage',
+            target: 'fetchingPreviousPage',
           },
         },
       },
@@ -102,7 +92,7 @@ export const transactionHistoryMachine = createMachine(
           ],
         },
       },
-      fetchingNextPage: {
+      fetchingPreviousPage: {
         entry: 'clearError',
         invoke: {
           src: 'getTransactionHistory',
@@ -110,8 +100,7 @@ export const transactionHistoryMachine = createMachine(
             input: {
               address: ctx.walletAddress,
               pagination: {
-                first: TX_PER_PAGE,
-                after: ctx.pageInfo?.endCursor,
+                before: ctx.pageInfo?.endCursor,
               },
             },
           }),
@@ -135,8 +124,8 @@ export const transactionHistoryMachine = createMachine(
       isInvalidAddress: (_, ev) => {
         return !isB256(ev.input?.address) && !isBech32(ev.input?.address);
       },
-      hasNextPage: (ctx, _ev) => {
-        return ctx.pageInfo?.hasNextPage ?? false;
+      hasPreviousPage: (ctx, _ev) => {
+        return ctx.pageInfo?.hasPreviousPage ?? false;
       },
     },
     actions: {

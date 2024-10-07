@@ -13,14 +13,12 @@ import {
   FuelError,
   TransactionResponse,
   TransactionStatus,
-  TransactionType,
   assembleTransactionSummary,
   bn,
   getTransactionSummary,
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
   normalizeJSON,
-  transactionRequestify,
 } from 'fuels';
 import { WalletLockedCustom, db, uniqueId } from '~/systems/Core';
 
@@ -98,10 +96,7 @@ export type TxInputs = {
     address: string;
     providerUrl?: string;
     pagination?: {
-      first?: number;
-      last?: number;
-      after?: string;
-      before?: string;
+      before: string | null;
     };
   };
   fundTransaction: {
@@ -332,9 +327,7 @@ export class TxService {
       provider,
       filters: {
         owner: address,
-        first: pagination?.first,
-        last: pagination?.last,
-        after: pagination?.after,
+        last: 10,
         before: pagination?.before,
       },
     });
