@@ -98,7 +98,7 @@ export type TxInputs = {
     address: string;
     providerUrl?: string;
     pagination?: {
-      after?: string;
+      before?: string;
     };
   };
   fundTransaction: {
@@ -329,8 +329,8 @@ export class TxService {
       provider,
       filters: {
         owner: address,
-        first: 20,
-        after: pagination?.after,
+        last: 20,
+        before: pagination?.before,
       },
     });
 

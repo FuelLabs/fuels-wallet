@@ -17,8 +17,8 @@ type MachineContext = {
   error?: string;
   transactionHistory?: TransactionResult[];
   pageInfo?: {
-    hasNextPage: boolean;
-    endCursor?: string | null;
+    hasPreviousPage: boolean;
+    startCursor?: string | null;
   };
 };
 
@@ -100,7 +100,7 @@ export const transactionHistoryMachine = createMachine(
             input: {
               address: ctx.walletAddress,
               pagination: {
-                after: ctx.pageInfo?.endCursor,
+                before: ctx.pageInfo?.startCursor,
               },
             },
           }),
@@ -125,7 +125,7 @@ export const transactionHistoryMachine = createMachine(
         return !isB256(ev.input?.address) && !isBech32(ev.input?.address);
       },
       hasNextPage: (ctx, _ev) => {
-        return ctx.pageInfo?.hasNextPage ?? false;
+        return ctx.pageInfo?.hasPreviousPage ?? false;
       },
     },
     actions: {
@@ -166,7 +166,7 @@ export const transactionHistoryMachine = createMachine(
           const result = await TxService.getTransactionHistory({
             address: address?.toString() || '',
             providerUrl: selectedNetwork?.url,
-            pagination: { after: input?.pagination?.after },
+            pagination: { before: input?.pagination?.before },
           });
           return result;
         },

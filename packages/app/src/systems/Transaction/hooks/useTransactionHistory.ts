@@ -17,7 +17,7 @@ const selectors = {
     return state.context.transactionHistory;
   },
   hasNextPage: (state: TransactionHistoryMachineState) => {
-    return state.context.pageInfo?.hasNextPage ?? false;
+    return state.context.pageInfo?.hasPreviousPage ?? false;
   },
 };
 
