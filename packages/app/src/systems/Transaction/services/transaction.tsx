@@ -329,7 +329,7 @@ export class TxService {
       provider,
       filters: {
         owner: address,
-        first: 1,
+        first: 20,
         after: pagination?.after,
       },
     });
