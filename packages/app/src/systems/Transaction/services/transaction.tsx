@@ -14,7 +14,6 @@ import {
   getTransactionSummary,
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
-  normalizeJSON,
 } from 'fuels';
 import { WalletLockedCustom, db, uniqueId } from '~/systems/Core';
 
@@ -32,6 +31,10 @@ import {
 import { getCurrentTips } from '../utils/fee';
 
 export type TxInputs = {
+  getTxCursors: {
+    address: string;
+    providerUrl: string;
+  };
   addTxCursor: Omit<TransactionCursor, 'id'>;
   request: {
     providerUrl: string;
@@ -108,9 +111,15 @@ const TXS_PER_PAGE = 20;
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class TxService {
-  static getTxCursors() {
+  static getTxCursors(input: TxInputs['getTxCursors']) {
     return db.transaction('r', db.transactionsCursors, async () => {
-      return db.transactionsCursors.toArray();
+      return db.transactionsCursors
+        .where('providerUrl')
+        .equalsIgnoreCase(input.providerUrl)
+        .and((cursor) => {
+          return cursor.address.toLowerCase() === input.address.toLowerCase();
+        })
+        .toArray();
     });
   }
 
