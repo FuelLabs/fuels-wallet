@@ -3,7 +3,7 @@ import type { Address } from 'fuels';
 import { useEffect } from 'react';
 
 import type { TransactionHistoryMachineState } from '../machines';
-import { transactionHistoryMachine } from '../machines';
+import { TX_PER_PAGE, transactionHistoryMachine } from '../machines';
 import type { TxInputs } from '../services';
 
 const selectors = {
@@ -17,6 +17,9 @@ const selectors = {
     return state.context.transactionHistory;
   },
   hasNextPage: (state: TransactionHistoryMachineState) => {
+    return state.context.pageInfo?.hasNextPage ?? false;
+  },
+  hasPreviousPage: (state: TransactionHistoryMachineState) => {
     return state.context.pageInfo?.hasPreviousPage ?? false;
   },
 };
@@ -32,6 +35,7 @@ export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
   const isFetchingNextPage = useSelector(service, selectors.isFetchingNextPage);
   const transactionHistory = useSelector(service, selectors.transactionHistory);
   const hasNextPage = useSelector(service, selectors.hasNextPage);
+  const hasPreviousPage = useSelector(service, selectors.hasPreviousPage);
 
   function getTransactionHistory(input: TxInputs['getTransactionHistory']) {
     send('GET_TRANSACTION_HISTORY', { input });
@@ -43,7 +47,12 @@ export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
 
   useEffect(() => {
     if (address) {
-      getTransactionHistory({ address: address.toString() });
+      getTransactionHistory({
+        address: address.toString(),
+        pagination: {
+          first: TX_PER_PAGE,
+        },
+      });
     }
   }, [address]);
 
@@ -53,5 +62,6 @@ export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
     isFetchingNextPage,
     transactionHistory,
     hasNextPage,
+    hasPreviousPage,
   };
 }

@@ -12,13 +12,17 @@ const TRANSACTION_HISTORY_ERRORS = {
   NOT_FOUND: 'Address Transaction history not found',
 };
 
+export const TX_PER_PAGE = 20;
+
 type MachineContext = {
   walletAddress: string;
   error?: string;
   transactionHistory?: TransactionResult[];
   pageInfo?: {
     hasPreviousPage: boolean;
+    hasNextPage: boolean;
     startCursor?: string | null;
+    endCursor?: string | null;
   };
 };
 
@@ -41,6 +45,12 @@ type MachineEvents =
       input?: never;
     };
 
+/**
+ * @TODO: Once we get the pagination backwards working,
+ * we need to replace `first` with `last` and `after` with `before`
+ * and `hasNextPage` with `hasPreviousPage`
+ * and maybe remove the reverse() calls
+ */
 export const transactionHistoryMachine = createMachine(
   {
     tsTypes: {} as import('./transactionHistoryMachine.typegen').Typegen0,
@@ -100,7 +110,8 @@ export const transactionHistoryMachine = createMachine(
             input: {
               address: ctx.walletAddress,
               pagination: {
-                before: ctx.pageInfo?.startCursor,
+                first: TX_PER_PAGE,
+                after: ctx.pageInfo?.endCursor,
               },
             },
           }),
@@ -125,7 +136,7 @@ export const transactionHistoryMachine = createMachine(
         return !isB256(ev.input?.address) && !isBech32(ev.input?.address);
       },
       hasNextPage: (ctx, _ev) => {
-        return ctx.pageInfo?.hasPreviousPage ?? false;
+        return ctx.pageInfo?.hasNextPage ?? false;
       },
     },
     actions: {
@@ -139,7 +150,7 @@ export const transactionHistoryMachine = createMachine(
         walletAddress: (_, ev) => ev.input.address,
       }),
       assignTransactionHistory: assign({
-        transactionHistory: (_, ev) => ev.data.transactionHistory,
+        transactionHistory: (_, ev) => ev.data.transactionHistory.reverse(),
       }),
       assignPageInfo: assign({
         pageInfo: (_, ev) => ev.data.pageInfo,
@@ -147,7 +158,7 @@ export const transactionHistoryMachine = createMachine(
       appendTransactionHistory: assign({
         transactionHistory: (ctx, ev) => {
           const history = ctx.transactionHistory || [];
-          return [...history, ...ev.data.transactionHistory];
+          return [...history, ...ev.data.transactionHistory.reverse()];
         },
       }),
       clearError: assign({
@@ -166,7 +177,7 @@ export const transactionHistoryMachine = createMachine(
           const result = await TxService.getTransactionHistory({
             address: address?.toString() || '',
             providerUrl: selectedNetwork?.url,
-            pagination: { before: input?.pagination?.before },
+            pagination: input?.pagination,
           });
           return result;
         },

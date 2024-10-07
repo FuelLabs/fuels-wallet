@@ -98,6 +98,9 @@ export type TxInputs = {
     address: string;
     providerUrl?: string;
     pagination?: {
+      first?: number;
+      last?: number;
+      after?: string;
       before?: string;
     };
   };
@@ -329,7 +332,9 @@ export class TxService {
       provider,
       filters: {
         owner: address,
-        last: 20,
+        first: pagination?.first,
+        last: pagination?.last,
+        after: pagination?.after,
         before: pagination?.before,
       },
     });
