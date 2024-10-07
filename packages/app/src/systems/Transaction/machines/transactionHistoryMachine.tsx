@@ -162,12 +162,40 @@ export const transactionHistoryMachine = createMachine(
           {
             cond: 'shouldFetchMoreAutomatically',
             actions: ['moveCurrentCursorForward'],
-            target: 'fetchingNextPage',
+            target: 'automaticFetchingNextPage',
           },
           {
             target: 'idle',
           },
         ],
+      },
+      automaticFetchingNextPage: {
+        tags: ['loading'],
+        entry: 'clearError',
+        invoke: {
+          src: 'getTransactionHistory',
+          data: (ctx) => {
+            return {
+              input: {
+                address: ctx.walletAddress,
+                pagination: {
+                  after: ctx.currentCursor?.endCursor,
+                },
+              },
+            };
+          },
+          onDone: [
+            {
+              actions: ['assignGetTransactionHistoryError'],
+              target: 'idle',
+              cond: FetchMachine.hasError,
+            },
+            {
+              actions: ['appendTransactionHistory'],
+              target: 'idle',
+            },
+          ],
+        },
       },
       fetchingNextPage: {
         entry: 'clearError',
