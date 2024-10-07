@@ -38,7 +38,7 @@ export function Assets() {
               />
             </Tabs.Content>
             <Tabs.Content value="listed">
-              <MemoAssetList assets={state.assetsListed} />
+              <MemoAssetList assets={state.assetsListed} showActions />
             </Tabs.Content>
           </Tabs>
         </AnimatePresence>
