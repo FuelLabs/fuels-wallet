@@ -101,7 +101,6 @@ export const applyDbVersioning = (db: Dexie) => {
       connections: 'origin',
       transactions: '&id',
       assets: '&name, &symbol',
-      assetsTemp: null,
       abis: '&contractId',
       errors: '&id',
     })
@@ -124,4 +123,30 @@ export const applyDbVersioning = (db: Dexie) => {
         });
       }
     });
+
+  // DB VERSION 23
+  // Drop transactions table since we don't use that anymore
+  db.version(23).stores({
+    vaults: 'key',
+    accounts: '&address, &name',
+    networks: '&id, &url, &name, chainId',
+    connections: 'origin',
+    transactions: null,
+    assets: '&name, &symbol',
+    abis: '&contractId',
+    errors: '&id',
+  });
+
+  // DB VERSION 24
+  // Add cursors table for handling tx pagination
+  db.version(24).stores({
+    vaults: 'key',
+    accounts: '&address, &name',
+    networks: '&id, &url, &name, chainId',
+    connections: 'origin',
+    transactionsCursors: '&id, address, providerUrl, endCursor',
+    assets: '&name, &symbol',
+    abis: '&contractId',
+    errors: '&id',
+  });
 };

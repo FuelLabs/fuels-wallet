@@ -17,6 +17,7 @@ type MachineContext = {
   error?: string;
   transactionHistory?: TransactionResult[];
   pageInfo?: {
+    hasPreviousPage: boolean;
     hasNextPage: boolean;
     endCursor?: string | null;
   };

@@ -21,7 +21,7 @@ import { WalletLockedCustom, db, uniqueId } from '~/systems/Core';
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
 import { NetworkService } from '~/systems/Network/services/network';
-import type { Transaction } from '../types';
+import type { TransactionCursor } from '../types';
 import {
   type GroupedErrors,
   getAbiMap,
@@ -32,13 +32,7 @@ import {
 import { getCurrentTips } from '../utils/fee';
 
 export type TxInputs = {
-  get: {
-    id: string;
-  };
-  add: Omit<Transaction, 'id'>;
-  remove: {
-    id: string;
-  };
+  addTxCursor: Omit<TransactionCursor, 'id'>;
   request: {
     providerUrl: string;
     transactionRequest: TransactionRequest;
@@ -95,6 +89,10 @@ export type TxInputs = {
       after: string | null;
     };
   };
+  getAllCursors: {
+    address: string;
+    providerUrl?: string;
+  };
   fundTransaction: {
     wallet: WalletLocked;
     transactionRequest: TransactionRequest;
@@ -106,42 +104,27 @@ export type TxInputs = {
 };
 
 const AMOUNT_SUB_PER_TX_RETRY = 200_000;
+const TXS_PER_PAGE = 20;
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class TxService {
-  static async clear() {
-    return db.transaction('rw', db.transactions, async () => {
-      return db.transactions.clear();
+  static getTxCursors() {
+    return db.transaction('r', db.transactionsCursors, async () => {
+      return db.transactionsCursors.toArray();
     });
   }
 
-  static getAll() {
-    return db.transaction('r', db.transactions, async () => {
-      return db.transactions.toArray();
-    });
-  }
+  static addTxCursor(input: TxInputs['addTxCursor']) {
+    const { address, providerUrl, endCursor } = input;
 
-  static get(input: TxInputs['get']) {
-    return db.transaction('r', db.transactions, async () => {
-      return db.transactions.where(input).first();
-    });
-  }
-
-  static add(input: TxInputs['add']) {
-    const { type } = input;
-
-    const data = normalizeJSON(input.data!);
-    return db.transaction('rw', db.transactions, async () => {
-      const id = await db.transactions.add({ type, data, id: uniqueId() });
-      return db.transactions.get(id);
-    });
-  }
-
-  static remove(input: TxInputs['remove']) {
-    return db.transaction('rw', db.transactions, async () => {
-      const tx = await db.transactions.where(input).first();
-      await db.transactions.where(input).delete();
-      return tx;
+    return db.transaction('rw', db.transactionsCursors, async () => {
+      const id = await db.transactionsCursors.add({
+        id: uniqueId(),
+        address,
+        providerUrl,
+        endCursor,
+      });
+      return db.transactionsCursors.get(id);
     });
   }
 
@@ -317,8 +300,7 @@ export class TxService {
     providerUrl = '',
     pagination,
   }: TxInputs['getTransactionHistory']) {
-    const provider = await createProvider(providerUrl || '');
-
+    const provider = await createProvider(providerUrl);
     const txSummaries = await getTransactionsSummaries({
       provider,
       filters: {
@@ -331,6 +313,39 @@ export class TxService {
     return {
       transactionHistory: txSummaries.transactions,
       pageInfo: txSummaries.pageInfo,
+    };
+  }
+
+  static async getAllCursors({
+    address,
+    providerUrl = '',
+  }: TxInputs['getAllCursors']) {
+    const provider = await createProvider(providerUrl);
+
+    let hasNextPage = true;
+    const endCursors: (string | null)[] = [null];
+    let endCursor: string | null | undefined = undefined;
+
+    while (hasNextPage) {
+      const { pageInfo } = await getTransactionsSummaries({
+        provider,
+        filters: {
+          owner: address,
+          first: TXS_PER_PAGE,
+          after: endCursor,
+        },
+      });
+
+      hasNextPage = pageInfo.hasNextPage;
+      endCursor = pageInfo.endCursor;
+
+      if (hasNextPage && endCursor) {
+        endCursors.push(endCursor);
+      }
+    }
+
+    return {
+      endCursors,
     };
   }
 
