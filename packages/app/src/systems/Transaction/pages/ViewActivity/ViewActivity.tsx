@@ -34,6 +34,7 @@ export function ViewActivity() {
             isLoading={isFetching || isLoadingAccounts || !account}
             ownerAddress={address}
           />
+
           {hasNextPage && (
             <Button
               size="xs"
@@ -43,7 +44,7 @@ export function ViewActivity() {
                 isFetchingNextPage ? undefined : Icon.is('ChevronDown')
               }
               onPress={fetchNextPage}
-              disabled={isFetchingNextPage}
+              disabled={isFetchingNextPage || !hasNextPage}
             >
               {isFetchingNextPage ? 'Loading...' : 'Load more'}
             </Button>

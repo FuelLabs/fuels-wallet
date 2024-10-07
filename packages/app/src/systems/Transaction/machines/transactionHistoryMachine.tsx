@@ -76,11 +76,13 @@ export const transactionHistoryMachine = createMachine(
           ],
           FETCH_NEXT_PAGE: {
             cond: 'hasNextPage',
+            actions: ['moveCurrentCursorForward'],
             target: 'fetchingNextPage',
           },
         },
       },
       getCachedCursors: {
+        tags: ['loading'],
         entry: 'clearError',
         invoke: {
           src: 'getCachedCursors',
@@ -94,13 +96,14 @@ export const transactionHistoryMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['assignCursors', 'assignCurrentCursor'],
+              actions: ['assignCursors', 'assignInitialCursor'],
               target: 'getAllCursors',
             },
           ],
         },
       },
       getAllCursors: {
+        tags: ['loading'],
         entry: 'clearError',
         invoke: {
           src: 'getAllCursors',
@@ -119,23 +122,23 @@ export const transactionHistoryMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['assignCursors', 'assignCurrentCursor'],
+              actions: ['assignCursors', 'assignInitialCursor'],
               target: 'fetching',
             },
           ],
         },
       },
       fetching: {
+        tags: ['loading'],
         entry: 'clearError',
         invoke: {
           src: 'getTransactionHistory',
           data: (ctx) => {
-            const latestCursor = ctx.cursors[ctx.cursors.length - 1];
             return {
               input: {
                 address: ctx.walletAddress,
                 pagination: {
-                  after: latestCursor?.endCursor,
+                  after: ctx.currentCursor?.endCursor,
                 },
               },
             };
@@ -148,26 +151,34 @@ export const transactionHistoryMachine = createMachine(
             },
             {
               actions: ['assignTransactionHistory'],
-              target: 'idle',
+              target: 'automaticFetchNextPage',
             },
           ],
         },
+      },
+      automaticFetchNextPage: {
+        tags: ['loading'],
+        always: [
+          {
+            cond: 'shouldFetchMoreAutomatically',
+            actions: ['moveCurrentCursorForward'],
+            target: 'fetchingNextPage',
+          },
+          {
+            target: 'idle',
+          },
+        ],
       },
       fetchingNextPage: {
         entry: 'clearError',
         invoke: {
           src: 'getTransactionHistory',
           data: (ctx) => {
-            const currentCursor = ctx.cursors.findIndex(
-              (c) => c.endCursor === ctx.currentCursor?.endCursor
-            );
-            const nextCursor = ctx.cursors[currentCursor - 1];
-
             return {
               input: {
                 address: ctx.walletAddress,
                 pagination: {
-                  after: nextCursor?.endCursor || null,
+                  after: ctx.currentCursor?.endCursor,
                 },
               },
             };
@@ -179,7 +190,7 @@ export const transactionHistoryMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['appendTransactionHistory', 'moveCurrentCursorForward'],
+              actions: ['appendTransactionHistory'],
               target: 'idle',
             },
           ],
@@ -191,6 +202,16 @@ export const transactionHistoryMachine = createMachine(
     guards: {
       isInvalidAddress: (_, ev) => {
         return !isB256(ev.input?.address) && !isBech32(ev.input?.address);
+      },
+      shouldFetchMoreAutomatically: (ctx, _ev) => {
+        if (ctx.transactionHistory) {
+          const hasCursor = Boolean(ctx.currentCursor?.endCursor);
+          const transactionCount = ctx.transactionHistory.length;
+          const MINIMUM_TX_COUNT = 7; // Just to fill the screen
+          return hasCursor && transactionCount < MINIMUM_TX_COUNT;
+        }
+
+        return false;
       },
       hasNextPage: (ctx, _ev) => {
         return Boolean(ctx.currentCursor?.endCursor);
@@ -209,7 +230,7 @@ export const transactionHistoryMachine = createMachine(
       assignCursors: assign({
         cursors: (_, ev) => ev.data.cursors,
       }),
-      assignCurrentCursor: assign({
+      assignInitialCursor: assign({
         currentCursor: (_, ev) => {
           return ev.data.cursors[ev.data.cursors.length - 1];
         },

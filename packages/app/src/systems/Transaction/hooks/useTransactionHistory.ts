@@ -8,11 +8,7 @@ import type { TxInputs } from '../services';
 
 const selectors = {
   isFetching: (state: TransactionHistoryMachineState) => {
-    return (
-      state.matches('getCachedCursors') ||
-      state.matches('getAllCursors') ||
-      state.matches('fetching')
-    );
+    return state.hasTag('loading');
   },
   isFetchingNextPage: (state: TransactionHistoryMachineState) => {
     return state.matches('fetchingNextPage');
