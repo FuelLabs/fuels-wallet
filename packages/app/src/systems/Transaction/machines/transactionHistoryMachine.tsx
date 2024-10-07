@@ -7,7 +7,7 @@ import { NetworkService } from '~/systems/Network';
 
 import { type TxInputs, TxService } from '../services';
 
-export const TRANSACTION_HISTORY_ERRORS = {
+const TRANSACTION_HISTORY_ERRORS = {
   INVALID_ADDRESS: 'Invalid address',
   NOT_FOUND: 'Address Transaction history not found',
 };
@@ -31,10 +31,15 @@ type MachineServices = {
   };
 };
 
-type MachineEvents = {
-  type: 'GET_TRANSACTION_HISTORY';
-  input: TxInputs['getTransactionHistory'];
-};
+type MachineEvents =
+  | {
+      type: 'GET_TRANSACTION_HISTORY';
+      input: TxInputs['getTransactionHistory'];
+    }
+  | {
+      type: 'FETCH_NEXT_PAGE';
+      input?: never;
+    };
 
 export const transactionHistoryMachine = createMachine(
   {
@@ -60,6 +65,10 @@ export const transactionHistoryMachine = createMachine(
               target: 'fetching',
             },
           ],
+          FETCH_NEXT_PAGE: {
+            cond: 'hasNextPage',
+            target: 'fetchingNextPage',
+          },
         },
       },
       fetching: {
@@ -82,12 +91,35 @@ export const transactionHistoryMachine = createMachine(
           ],
         },
       },
+      fetchingNextPage: {
+        entry: 'clearError',
+        invoke: {
+          src: 'getTransactionHistory',
+          data: (_, event: MachineEvents) => ({
+            input: event.input,
+          }),
+          onDone: [
+            {
+              actions: ['assignGetTransactionHistoryError'],
+              target: 'idle',
+              cond: FetchMachine.hasError,
+            },
+            {
+              actions: ['appendTransactionHistory', 'assignPageInfo'],
+              target: 'idle',
+            },
+          ],
+        },
+      },
     },
   },
   {
     guards: {
       isInvalidAddress: (_, ev) => {
         return !isB256(ev.input?.address) && !isBech32(ev.input?.address);
+      },
+      hasNextPage: (ctx, _ev) => {
+        return ctx.pageInfo?.hasNextPage ?? false;
       },
     },
     actions: {
@@ -102,6 +134,12 @@ export const transactionHistoryMachine = createMachine(
       }),
       assignPageInfo: assign({
         pageInfo: (_, ev) => ev.data.pageInfo,
+      }),
+      appendTransactionHistory: assign({
+        transactionHistory: (ctx, ev) => {
+          const history = ctx.transactionHistory || [];
+          return [...history, ...ev.data.transactionHistory];
+        },
       }),
       clearError: assign({
         error: (_) => undefined,
@@ -119,6 +157,7 @@ export const transactionHistoryMachine = createMachine(
           const result = await TxService.getTransactionHistory({
             address: address?.toString() || '',
             providerUrl: selectedNetwork?.url,
+            pagination: { after: input?.pagination?.after },
           });
           return result;
         },

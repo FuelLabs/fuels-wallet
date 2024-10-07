@@ -1,4 +1,4 @@
-import { Box } from '@fuel-ui/react';
+import { Box, Button, Icon } from '@fuel-ui/react';
 import { Address } from 'fuels';
 import { useNavigate } from 'react-router-dom';
 import { useAccounts } from '~/systems/Account';
@@ -17,21 +17,41 @@ export function ViewActivity() {
   const address = account
     ? Address.fromAddressOrString(account?.address).toB256()
     : '';
-  const { isLoading: isLoadingTx, transactionHistory } = useTransactionHistory({
+  const {
+    isFetching,
+    isFetchingNextPage,
+    transactionHistory,
+    hasNextPage,
+    fetchNextPage,
+  } = useTransactionHistory({
     address,
     providerUrl,
   });
 
   return (
-    <Layout title="History" isLoading={isLoadingTx || isLoadingAccounts}>
+    <Layout title="History" isLoading={isFetching || isLoadingAccounts}>
       <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
       <Layout.Content>
         <Box.Stack gap="$4">
           <ActivityList
             txs={transactionHistory ?? []}
-            isLoading={isLoadingTx || isLoadingAccounts || !account}
+            isLoading={isFetching || isLoadingAccounts || !account}
             ownerAddress={address}
           />
+          {hasNextPage && (
+            <Button
+              size="xs"
+              variant="link"
+              color="blue"
+              rightIcon={
+                isFetchingNextPage ? undefined : Icon.is('ChevronDown')
+              }
+              onPress={fetchNextPage}
+              disabled={isFetchingNextPage}
+            >
+              {isFetchingNextPage ? 'Loading...' : 'Load more'}
+            </Button>
+          )}
         </Box.Stack>
       </Layout.Content>
     </Layout>

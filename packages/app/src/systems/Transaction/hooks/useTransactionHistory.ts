@@ -3,20 +3,22 @@ import type { Address } from 'fuels';
 import { useEffect } from 'react';
 
 import type { TransactionHistoryMachineState } from '../machines';
-import {
-  TRANSACTION_HISTORY_ERRORS,
-  transactionHistoryMachine,
-} from '../machines';
+import { transactionHistoryMachine } from '../machines';
 import type { TxInputs } from '../services';
 
 const selectors = {
-  isFetching: (state: TransactionHistoryMachineState) =>
-    state.matches('fetching'),
-  context: (state: TransactionHistoryMachineState) => state.context,
-  isInvalidAddress: (state: TransactionHistoryMachineState) =>
-    state.context.error === TRANSACTION_HISTORY_ERRORS.INVALID_ADDRESS,
-  isNotFound: (state: TransactionHistoryMachineState) =>
-    state.context.error === TRANSACTION_HISTORY_ERRORS.NOT_FOUND,
+  isFetching: (state: TransactionHistoryMachineState) => {
+    return state.matches('fetching');
+  },
+  isFetchingNextPage: (state: TransactionHistoryMachineState) => {
+    return state.matches('fetchingNextPage');
+  },
+  transactionHistory: (state: TransactionHistoryMachineState) => {
+    return state.context.transactionHistory;
+  },
+  hasNextPage: (state: TransactionHistoryMachineState) => {
+    return state.context.pageInfo?.hasNextPage ?? false;
+  },
 };
 
 type UseTransactionHistoryProps = {
@@ -31,14 +33,16 @@ export function useTransactionHistory({
   const service = useInterpret(() => transactionHistoryMachine);
   const { send } = service;
   const isFetching = useSelector(service, selectors.isFetching);
-  const context = useSelector(service, selectors.context);
-  const isInvalidAddress = useSelector(service, selectors.isInvalidAddress);
-  const isNotFound = useSelector(service, selectors.isNotFound);
-
-  const { walletAddress, transactionHistory, error } = context;
+  const isFetchingNextPage = useSelector(service, selectors.isFetchingNextPage);
+  const transactionHistory = useSelector(service, selectors.transactionHistory);
+  const hasNextPage = useSelector(service, selectors.hasNextPage);
 
   function getTransactionHistory(input: TxInputs['getTransactionHistory']) {
     send('GET_TRANSACTION_HISTORY', { input });
+  }
+
+  function fetchNextPage() {
+    send('FETCH_NEXT_PAGE');
   }
 
   // TODO: remove the useEffect and add it to the Account Machine
@@ -49,12 +53,10 @@ export function useTransactionHistory({
   }, [address, providerUrl]);
 
   return {
-    isLoading: isFetching,
-    transactionHistory,
-    error,
-    walletAddress,
+    fetchNextPage,
     isFetching,
-    isInvalidAddress,
-    isNotFound,
+    isFetchingNextPage,
+    transactionHistory,
+    hasNextPage,
   };
 }
