@@ -3,15 +3,12 @@ import { Address } from 'fuels';
 import { useNavigate } from 'react-router-dom';
 import { useAccounts } from '~/systems/Account';
 import { Layout, Pages } from '~/systems/Core';
-import { useNetworks } from '~/systems/Network';
 
 import { ActivityList } from '../../components/ActivityList/ActivityList';
 import { useTransactionHistory } from '../../hooks';
 
 export function ViewActivity() {
   const navigate = useNavigate();
-  const networks = useNetworks();
-  const providerUrl = networks?.selectedNetwork?.url;
   const { account, isLoading: isLoadingAccounts } = useAccounts();
 
   const address = account
@@ -25,7 +22,6 @@ export function ViewActivity() {
     fetchNextPage,
   } = useTransactionHistory({
     address,
-    providerUrl,
   });
 
   return (

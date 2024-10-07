@@ -23,13 +23,9 @@ const selectors = {
 
 type UseTransactionHistoryProps = {
   address?: string | Address;
-  providerUrl?: string;
 };
 
-export function useTransactionHistory({
-  address,
-  providerUrl,
-}: UseTransactionHistoryProps) {
+export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
   const service = useInterpret(() => transactionHistoryMachine);
   const { send } = service;
   const isFetching = useSelector(service, selectors.isFetching);
@@ -45,12 +41,11 @@ export function useTransactionHistory({
     send('FETCH_NEXT_PAGE');
   }
 
-  // TODO: remove the useEffect and add it to the Account Machine
   useEffect(() => {
-    if (address && providerUrl) {
+    if (address) {
       getTransactionHistory({ address: address.toString() });
     }
-  }, [address, providerUrl]);
+  }, [address]);
 
   return {
     fetchNextPage,
