@@ -62,6 +62,7 @@ export const transactionHistoryMachine = createMachine(
               actions: 'assignInvalidAddressError',
             },
             {
+              actions: 'assignWalletAddress',
               target: 'fetching',
             },
           ],
@@ -95,8 +96,13 @@ export const transactionHistoryMachine = createMachine(
         entry: 'clearError',
         invoke: {
           src: 'getTransactionHistory',
-          data: (_, event: MachineEvents) => ({
-            input: event.input,
+          data: (ctx) => ({
+            input: {
+              address: ctx.walletAddress,
+              pagination: {
+                after: ctx.pageInfo?.endCursor,
+              },
+            },
           }),
           onDone: [
             {
@@ -128,6 +134,9 @@ export const transactionHistoryMachine = createMachine(
       }),
       assignGetTransactionHistoryError: assign({
         error: (_) => TRANSACTION_HISTORY_ERRORS.NOT_FOUND,
+      }),
+      assignWalletAddress: assign({
+        walletAddress: (_, ev) => ev.input.address,
       }),
       assignTransactionHistory: assign({
         transactionHistory: (_, ev) => ev.data.transactionHistory,
