@@ -5,7 +5,7 @@ import { assign, createMachine } from 'xstate';
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
-import { TxService } from '../services';
+import { type TxInputs, TxService } from '../services';
 
 export const TRANSACTION_HISTORY_ERRORS = {
   INVALID_ADDRESS: 'Invalid address',
@@ -101,7 +101,7 @@ export const transactionHistoryMachine = createMachine(
     },
     services: {
       getTransactionHistory: FetchMachine.create<
-        { address: string },
+        TxInputs['getTransactionHistory'],
         MachineServices['getTransactionHistory']['data']
       >({
         showError: true,

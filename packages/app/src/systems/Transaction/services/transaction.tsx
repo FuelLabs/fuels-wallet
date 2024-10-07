@@ -97,6 +97,9 @@ export type TxInputs = {
   getTransactionHistory: {
     address: string;
     providerUrl?: string;
+    pagination?: {
+      after?: string;
+    };
   };
   fundTransaction: {
     wallet: WalletLocked;
@@ -318,6 +321,7 @@ export class TxService {
   static async getTransactionHistory({
     address,
     providerUrl = '',
+    pagination,
   }: TxInputs['getTransactionHistory']) {
     const provider = await createProvider(providerUrl || '');
 
@@ -325,7 +329,8 @@ export class TxService {
       provider,
       filters: {
         owner: address,
-        first: 100,
+        first: 1,
+        after: pagination?.after,
       },
     });
 
