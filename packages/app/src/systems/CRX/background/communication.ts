@@ -58,7 +58,7 @@ function onRestartHandler() {
 
 errorBoundary(() => {
   // Initialize services when the background script starts up
-  // onStartupHandler();
+  onStartupHandler();
 
   chrome.runtime.onConnect.addListener(onConnectHandler);
   chrome.runtime.onSuspend.addListener(onSuspendHandler);
