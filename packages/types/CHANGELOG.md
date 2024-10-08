@@ -1,5 +1,7 @@
 # @fuel-wallet/types
 
+## 0.35.0
+
 ## 0.34.1
 
 ### Patch Changes

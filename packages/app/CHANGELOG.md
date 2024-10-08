@@ -1,5 +1,20 @@
 # fuels-wallet
 
+## 0.35.0
+
+### Minor Changes
+
+- [#1560](https://github.com/FuelLabs/fuels-wallet/pull/1560) [`b2702f7b`](https://github.com/FuelLabs/fuels-wallet/commit/b2702f7bc9186d24dc38c831fa905a1c1a0275c3) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - make wallet return currentAccount even if the wallet account is not selected
+
+- [#1558](https://github.com/FuelLabs/fuels-wallet/pull/1558) [`78a03b69`](https://github.com/FuelLabs/fuels-wallet/commit/78a03b692369d63aa29485dc8119d710902efc11) Thanks [@helciofranco](https://github.com/helciofranco)! - Add pagination to the Transaction History screen.
+
+### Patch Changes
+
+- [#1554](https://github.com/FuelLabs/fuels-wallet/pull/1554) [`2fd6468f`](https://github.com/FuelLabs/fuels-wallet/commit/2fd6468fe66a59aa2d1569d611b3047e543a8208) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Added copy button to asset list
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.35.0
+
 ## 0.34.1
 
 ### Patch Changes
