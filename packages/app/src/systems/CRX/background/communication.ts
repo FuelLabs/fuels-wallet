@@ -10,6 +10,8 @@ let backgroundService: BackgroundService | null = null;
 let vaultService: VaultService | null = null;
 let databaseEvents: DatabaseEvents | null = null;
 
+let hasStarted = false;
+
 function onConnectHandler(port: chrome.runtime.Port) {
   // Only allow connections from the extension
   // This is to prevent other extensions from connecting
@@ -27,6 +29,7 @@ function onConnectHandler(port: chrome.runtime.Port) {
 }
 
 function onSuspendHandler() {
+  hasStarted = false;
   // Handle cleanup before the background script is suspended
   backgroundService?.stop();
   vaultService?.stop();
@@ -37,6 +40,11 @@ function onSuspendHandler() {
   db.close();
 }
 function onStartupHandler() {
+  if (hasStarted) {
+    console.log('Background scripts have already started');
+    return;
+  }
+  hasStarted = true;
   // Handle initialization when the background script starts up
   backgroundService = BackgroundService.start(communicationProtocol);
   vaultService = VaultService.start(communicationProtocol);
@@ -50,7 +58,7 @@ function onRestartHandler() {
 
 errorBoundary(() => {
   // Initialize services when the background script starts up
-  onStartupHandler();
+  // onStartupHandler();
 
   chrome.runtime.onConnect.addListener(onConnectHandler);
   chrome.runtime.onSuspend.addListener(onSuspendHandler);
