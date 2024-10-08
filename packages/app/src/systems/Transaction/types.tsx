@@ -36,16 +36,10 @@ export type TxOutputCoin = CoinTransactionRequestOutput;
 export type TxOutputContract = OutputContract;
 export type TxOutputContractCreated = OutputContractCreated;
 
-export type Transaction = {
-  id?: string;
-  type?: TransactionType;
-  status?: TransactionStatus;
-  category?: TxCategory;
-  date?: Date;
-  from?: TxRecipientAddress;
-  to?: TxRecipientAddress;
-  amount?: AssetAmount;
-  data?: TxRequest | TransactionResponse;
+export type TransactionCursor = {
+  address: string;
+  providerUrl: string;
+  endCursor: string;
 };
 
 export enum OperationDirection {

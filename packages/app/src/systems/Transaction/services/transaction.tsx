@@ -1,9 +1,5 @@
 import type { Account } from '@fuel-wallet/types';
-import type {
-  TransactionRequest,
-  TransactionSummary,
-  WalletLocked,
-} from 'fuels';
+import type { TransactionRequest, WalletLocked } from 'fuels';
 import { clone } from 'ramda';
 
 import {
@@ -13,21 +9,18 @@ import {
   FuelError,
   TransactionResponse,
   TransactionStatus,
-  TransactionType,
   assembleTransactionSummary,
   bn,
   getTransactionSummary,
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
-  normalizeJSON,
-  transactionRequestify,
 } from 'fuels';
-import { WalletLockedCustom, db, uniqueId } from '~/systems/Core';
+import { WalletLockedCustom, db } from '~/systems/Core';
 
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
 import { NetworkService } from '~/systems/Network/services/network';
-import type { Transaction } from '../types';
+import type { TransactionCursor } from '../types';
 import {
   type GroupedErrors,
   getAbiMap,
@@ -38,12 +31,14 @@ import {
 import { getCurrentTips } from '../utils/fee';
 
 export type TxInputs = {
-  get: {
-    id: string;
+  getTxCursors: {
+    address: string;
+    providerUrl: string;
   };
-  add: Omit<Transaction, 'id'>;
-  remove: {
-    id: string;
+  addTxCursors: {
+    address: string;
+    providerUrl: string;
+    cursors: string[];
   };
   request: {
     providerUrl: string;
@@ -97,6 +92,14 @@ export type TxInputs = {
   getTransactionHistory: {
     address: string;
     providerUrl?: string;
+    pagination?: {
+      after: string | null;
+    };
+  };
+  getAllCursors: {
+    address: string;
+    providerUrl?: string;
+    initialEndCursor: string | null;
   };
   fundTransaction: {
     wallet: WalletLocked;
@@ -109,42 +112,36 @@ export type TxInputs = {
 };
 
 const AMOUNT_SUB_PER_TX_RETRY = 200_000;
+const TXS_PER_PAGE = 50;
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class TxService {
-  static async clear() {
-    return db.transaction('rw', db.transactions, async () => {
-      return db.transactions.clear();
+  static getTxCursors(input: TxInputs['getTxCursors']) {
+    return db.transaction('r', db.transactionsCursors, async () => {
+      return db.transactionsCursors
+        .where('providerUrl')
+        .equalsIgnoreCase(input.providerUrl)
+        .and((cursor) => {
+          return cursor.address.toLowerCase() === input.address.toLowerCase();
+        })
+        .sortBy('id');
     });
   }
 
-  static getAll() {
-    return db.transaction('r', db.transactions, async () => {
-      return db.transactions.toArray();
-    });
-  }
+  static addTxCursors(input: TxInputs['addTxCursors']) {
+    const { address, providerUrl, cursors } = input;
 
-  static get(input: TxInputs['get']) {
-    return db.transaction('r', db.transactions, async () => {
-      return db.transactions.where(input).first();
-    });
-  }
+    const transactionsCursors: TransactionCursor[] = cursors.map(
+      (endCursor) => ({
+        address,
+        providerUrl,
+        endCursor,
+      })
+    );
 
-  static add(input: TxInputs['add']) {
-    const { type } = input;
-
-    const data = normalizeJSON(input.data!);
-    return db.transaction('rw', db.transactions, async () => {
-      const id = await db.transactions.add({ type, data, id: uniqueId() });
-      return db.transactions.get(id);
-    });
-  }
-
-  static remove(input: TxInputs['remove']) {
-    return db.transaction('rw', db.transactions, async () => {
-      const tx = await db.transactions.where(input).first();
-      await db.transactions.where(input).delete();
-      return tx;
+    return db.transaction('rw', db.transactionsCursors, async () => {
+      await db.transactionsCursors.bulkAdd(transactionsCursors);
+      return true;
     });
   }
 
@@ -318,26 +315,55 @@ export class TxService {
   static async getTransactionHistory({
     address,
     providerUrl = '',
+    pagination,
   }: TxInputs['getTransactionHistory']) {
-    const provider = await createProvider(providerUrl || '');
-
+    const provider = await createProvider(providerUrl);
     const txSummaries = await getTransactionsSummaries({
       provider,
       filters: {
         owner: address,
-        first: 50,
+        first: TXS_PER_PAGE,
+        after: pagination?.after,
       },
     });
 
-    const sortedTransactions = txSummaries.transactions?.sort((a, b) => {
-      const aTime = bn(a.time, 10);
-      const bTime = bn(b.time, 10);
-      return aTime.gt(bTime) ? -1 : 1;
-    });
+    return {
+      transactionHistory: txSummaries.transactions,
+      pageInfo: txSummaries.pageInfo,
+    };
+  }
+
+  static async getAllCursors({
+    address,
+    providerUrl = '',
+    initialEndCursor,
+  }: TxInputs['getAllCursors']) {
+    const provider = await createProvider(providerUrl);
+
+    let hasNextPage = true;
+    const cursors: string[] = [];
+    let endCursor: string | null | undefined = initialEndCursor;
+
+    while (hasNextPage) {
+      const { pageInfo } = await getTransactionsSummaries({
+        provider,
+        filters: {
+          owner: address,
+          first: TXS_PER_PAGE,
+          after: endCursor,
+        },
+      });
+
+      hasNextPage = pageInfo.hasNextPage;
+      endCursor = pageInfo.endCursor;
+
+      if (hasNextPage && endCursor) {
+        cursors.push(endCursor);
+      }
+    }
 
     return {
-      transactionHistory: sortedTransactions,
-      pageInfo: txSummaries.pageInfo,
+      cursors,
     };
   }
 

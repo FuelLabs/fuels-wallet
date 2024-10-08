@@ -12,7 +12,7 @@ import type {
 import type { DbEvents, PromiseExtended, Table } from 'dexie';
 import Dexie from 'dexie';
 import 'dexie-observable';
-import type { Transaction } from '~/systems/Transaction/types';
+import type { TransactionCursor } from '~/systems/Transaction';
 import { applyDbVersioning } from './databaseVersioning';
 
 type FailureEvents = Extract<keyof DbEvents, 'close' | 'blocked'>;
@@ -22,7 +22,7 @@ export class FuelDB extends Dexie {
   accounts!: Table<Account, string>;
   networks!: Table<NetworkData, string>;
   connections!: Table<Connection, string>;
-  transactions!: Table<Transaction, string>;
+  transactionsCursors!: Table<TransactionCursor, string>;
   assets!: Table<AssetData, string>;
   abis!: Table<AbiTable, string>;
   errors!: Table<StoredFuelWalletError, string>;
@@ -89,7 +89,7 @@ export class FuelDB extends Dexie {
       this.accounts.clear(),
       this.networks.clear(),
       this.connections.clear(),
-      this.transactions.clear(),
+      this.transactionsCursors.clear(),
       this.assets.clear(),
       this.abis.clear(),
       this.errors.clear(),
