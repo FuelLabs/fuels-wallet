@@ -45,6 +45,7 @@ export const BalanceAssets = ({
           amount={balance.amount}
           onRemove={onRemove}
           onEdit={onEdit}
+          showActions
         />
       ))}
       {!!(!isLoading && unknownLength) && (
