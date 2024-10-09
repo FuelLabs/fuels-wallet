@@ -8,7 +8,7 @@ import { AmountVisibility, VisibilityButton } from '~/systems/Core';
 
 import { useAccounts } from '../../hooks';
 
-import { Address, type B256Address, DECIMAL_FUEL } from 'fuels';
+import { DECIMAL_FUEL } from 'fuels';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 type BalanceWidgetWrapperProps = {
@@ -43,7 +43,6 @@ export function BalanceWidget({
   onChangeVisibility,
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
-
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
   return (
