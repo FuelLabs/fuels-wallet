@@ -20,8 +20,10 @@ export type Account = {
   isCurrent?: boolean;
 };
 
-export interface AccountWithBalance extends Account {
+export type AccountBalance = {
   balance: BN;
   balanceSymbol: string;
   balances: CoinAsset[];
-}
+};
+
+export type AccountWithBalance = Account & AccountBalance;

@@ -1,6 +1,7 @@
 import { createProvider } from '@fuel-wallet/connections';
 import type {
   Account,
+  AccountBalance,
   AccountWithBalance,
   CoinAsset,
 } from '@fuel-wallet/types';
@@ -140,23 +141,30 @@ export class AccountService {
         (balance) => balance.assetId === baseAssetId.toString()
       );
       const ethBalance = ethAsset?.amount;
-      const accountAssets = {
+      const accountAssets: AccountBalance = {
         balance: ethBalance ?? bn(0),
         balanceSymbol: 'ETH',
         balances: nextBalancesWithAssets,
       };
 
-      return {
+      const result: AccountWithBalance = {
         ...account,
         ...accountAssets,
       };
+
+      return result;
     } catch (_error) {
-      return {
-        ...account,
+      const accountAssets: AccountBalance = {
         balance: bn(0),
         balanceSymbol: 'ETH',
         balances: [],
       };
+      const result: AccountWithBalance = {
+        ...account,
+        ...accountAssets,
+      };
+
+      return result;
     }
   }
 
