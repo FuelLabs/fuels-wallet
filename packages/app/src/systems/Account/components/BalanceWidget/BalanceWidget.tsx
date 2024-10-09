@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Button, Heading, Icon, Text } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
-import type { ReactNode } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { FuelAddress } from '~/systems/Account';
 import type { Maybe } from '~/systems/Core';
 import { AmountVisibility, VisibilityButton } from '~/systems/Core';
@@ -65,6 +65,7 @@ export function BalanceWidget({
             <FuelAddress
               address={account.address}
               css={styles.balanceAddress}
+              canOpenExplorer
             />
           </Box.Stack>
           <Button

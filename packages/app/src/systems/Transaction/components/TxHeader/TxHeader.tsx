@@ -1,5 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Card, Copyable, Icon, Text, Tooltip } from '@fuel-ui/react';
+import {
+  Box,
+  Card,
+  Copyable,
+  HStack,
+  Icon,
+  Text,
+  Tooltip,
+} from '@fuel-ui/react';
 import { TransactionStatus } from 'fuels';
 import type { TransactionTypeName } from 'fuels';
 import type { FC } from 'react';
@@ -7,6 +15,7 @@ import type { FC } from 'react';
 import { useExplorerLink } from '../../hooks/useExplorerLink';
 import { getTxStatusColor } from '../../utils';
 
+import { shortAddress } from '~/systems/Core';
 import { TxHeaderLoader } from './TxHeaderLoader';
 
 export type TxHeaderProps = {
@@ -24,21 +33,14 @@ export const TxHeader: TxHeaderComponent = ({ status, id, type }) => {
 
   return (
     <Card css={styles.root}>
-      <Box.Flex css={styles.row}>
-        <Box.Flex css={styles.item}>
-          <Text fontSize="sm">Status: </Text>
-          <Text fontSize="sm" className="status">
-            {status}
-          </Text>
-          <Text
-            aria-label="Status Circle"
-            className="circle"
-            data-status={status}
-          >
-            ●
+      <HStack align="center" justify="between" gap="$2">
+        <Box.Flex grow="1" gap="$2">
+          <Text fontSize="sm">ID: </Text>
+          <Text fontSize="sm" color="intentsBase12">
+            {shortAddress(id)}
           </Text>
         </Box.Flex>
-        <Box.Flex css={styles.actions}>
+        <HStack align="center">
           <Copyable
             value={id || ''}
             iconProps={{
@@ -57,24 +59,36 @@ export const TxHeader: TxHeaderComponent = ({ status, id, type }) => {
                   'aria-label': 'Copy Transaction Link',
                 }}
               />
-              <Tooltip content="Open explorer">
+              <Tooltip content="View on Explorer">
                 <Icon
                   css={styles.icon}
                   icon={Icon.is('ExternalLink')}
                   onClick={openExplorer}
-                  aria-label="Open explorer"
+                  aria-label="View on Explorer"
                 />
               </Tooltip>
             </>
           )}
-        </Box.Flex>
-      </Box.Flex>
-      <Box.Flex css={{ ...styles.row, ...styles.type }}>
+        </HStack>
+      </HStack>
+      <HStack align="center" gap="$2">
+        <Text fontSize="sm">Status: </Text>
+        <Text fontSize="sm" color="intentsBase12">
+          {status}
+        </Text>
+        <Text
+          as="span"
+          aria-label="Status Circle"
+          css={styles.circle}
+          data-status={status}
+        />
+      </HStack>
+      <HStack align="center" gap="$2">
         <Text fontSize="sm">Type: </Text>
-        <Text fontSize="sm" className="type">
+        <Text fontSize="sm" color="intentsBase12">
           {type}
         </Text>
-      </Box.Flex>
+      </HStack>
     </Card>
   );
 };
@@ -89,44 +103,24 @@ const styles = {
       color: '$brand !important',
     },
   }),
-  row: cssObj({
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    height: '$6',
-  }),
-  actions: cssObj({
-    gap: '$2',
-  }),
-  item: cssObj({
-    alignItems: 'center',
+  circle: cssObj({
+    borderRadius: '100%',
+    width: 6,
+    height: 6,
+    cursor: 'default',
 
-    '.status, .type': {
-      color: '$intentsBase12',
-      mx: '$2',
+    [`&[data-status="${TransactionStatus.success}"]`]: {
+      backgroundColor: `$${getTxStatusColor(TransactionStatus.success)}`,
     },
-
-    '.circle': {
-      borderRadius: '100%',
-      fontSize: 9,
-      cursor: 'default',
-
-      [`&[data-status="${TransactionStatus.success}"]`]: {
-        color: `$${getTxStatusColor(TransactionStatus.success)}`,
-      },
-      [`&[data-status="${TransactionStatus.failure}"]`]: {
-        color: `$${getTxStatusColor(TransactionStatus.failure)}`,
-      },
-      [`&[data-status="${TransactionStatus.submitted}"]`]: {
-        color: `$${getTxStatusColor(TransactionStatus.submitted)}`,
-      },
+    [`&[data-status="${TransactionStatus.failure}"]`]: {
+      backgroundColor: `$${getTxStatusColor(TransactionStatus.failure)}`,
+    },
+    [`&[data-status="${TransactionStatus.submitted}"]`]: {
+      backgroundColor: `$${getTxStatusColor(TransactionStatus.submitted)}`,
     },
   }),
   icon: cssObj({
     cursor: 'pointer',
-  }),
-  type: cssObj({
-    justifyContent: 'flex-start',
-    gap: '$2',
   }),
 };
 

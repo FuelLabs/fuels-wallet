@@ -1,32 +1,45 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
-import { Box, Copyable, Text } from '@fuel-ui/react';
-import { Address } from 'fuels';
+import { Box, Copyable, Icon, IconButton, Text } from '@fuel-ui/react';
+import { Address, type B256Address, type Bech32Address } from 'fuels';
 import { useMemo } from 'react';
 import { shortAddress } from '~/systems/Core';
+import { useExplorerLink } from '../../hooks/useExplorerLink';
 
 export type AddressProps = {
-  address: string;
+  address: B256Address | Bech32Address;
+  canOpenExplorer?: boolean;
   css?: ThemeUtilsCSS;
 };
 
-export const FuelAddress = ({ address, css }: AddressProps) => {
-  const fuelAddress = useMemo(
-    () => Address.fromDynamicInput(address).toB256(),
-    [address]
-  );
+export const FuelAddress = ({
+  address,
+  canOpenExplorer = false,
+  css,
+}: AddressProps) => {
+  const account = useMemo<B256Address>(() => {
+    return Address.fromDynamicInput(address).toB256();
+  }, [address]);
+
+  const { openExplorer, href } = useExplorerLink(account);
 
   return (
-    <Box.Flex css={styles.root}>
-      <Copyable
-        value={fuelAddress}
-        css={styles.copyable}
-        aria-label={fuelAddress}
-      >
+    <Box.Flex align="center" gap="$0" css={styles.root}>
+      <Copyable value={account} css={styles.copyable} aria-label={account}>
         <Text className="address" css={css}>
-          {shortAddress(fuelAddress)}
+          {shortAddress(account)}
         </Text>
       </Copyable>
+      {href && canOpenExplorer && (
+        <IconButton
+          intent="base"
+          tooltip="View on Explorer"
+          onPress={openExplorer}
+          variant="link"
+          icon={<Icon icon="ExternalLink" size={16} />}
+          aria-label="View"
+        />
+      )}
     </Box.Flex>
   );
 };
