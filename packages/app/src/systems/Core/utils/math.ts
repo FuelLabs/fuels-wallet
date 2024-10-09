@@ -1,7 +1,8 @@
 import type { BN, BNInput } from 'fuels';
-import { DECIMAL_WEI, DEFAULT_MIN_PRECISION, bn } from 'fuels';
+import { DECIMAL_FUEL, bn } from 'fuels';
 
 const MINIMUM_ZEROS_TO_DISPLAY = 2; // it means 0.001 (at least two zeros in decimals)
+const PRECISION = 6;
 
 export type FormatAmountResult = {
   amount: BN;
@@ -17,7 +18,7 @@ export type FormatAmountResult = {
 
 export const formatAmount = (
   input: BNInput | null | undefined = '0',
-  units: number | undefined = DECIMAL_WEI
+  units: number | undefined = DECIMAL_FUEL
 ): FormatAmountResult => {
   const amount = bn(input);
   const minimum = bn('1'.padEnd(units - MINIMUM_ZEROS_TO_DISPLAY, '0'));
@@ -49,9 +50,9 @@ export const formatAmount = (
       formatted: {
         display: `<${minimum.format({
           units: units,
-          precision: DEFAULT_MIN_PRECISION,
+          precision: PRECISION,
         })}`,
-        fractionDigits: DEFAULT_MIN_PRECISION,
+        fractionDigits: PRECISION,
       },
       original: {
         display: originalDisplay,
@@ -65,9 +66,9 @@ export const formatAmount = (
     formatted: {
       display: amount.format({
         units: units,
-        precision: DEFAULT_MIN_PRECISION,
+        precision: PRECISION,
       }),
-      fractionDigits: DEFAULT_MIN_PRECISION,
+      fractionDigits: PRECISION,
     },
     original: {
       display: originalDisplay,
