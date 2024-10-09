@@ -1,7 +1,7 @@
 import type { Account } from '@fuel-wallet/types';
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium, expect } from '@playwright/test';
-import { Provider, Wallet, bn } from 'fuels';
+import { DECIMAL_FUEL, Provider, Wallet, bn } from 'fuels';
 
 import {
   getButtonByText,
@@ -371,7 +371,8 @@ test.describe('SendTransaction', () => {
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const maxAmountAfterFee = await getInputByName(page, 'amount').inputValue();
-    const totalAmount = feeAmount.add(bn.parseUnits(maxAmountAfterFee));
+    const maxAmountAfterFeeUnits = bn.parseUnits(maxAmountAfterFee);
+    const totalAmount = feeAmount.add(maxAmountAfterFeeUnits);
     await expect(bn.parseUnits(maxAmount).toString()).toBe(
       totalAmount.toString()
     );
@@ -380,7 +381,11 @@ test.describe('SendTransaction', () => {
     await getButtonByText(page, 'Review').click();
 
     // Approve transaction
-    await hasText(page, `${maxAmountAfterFee} ETH`);
+    const maxAmountAfterFeeFormatted = maxAmountAfterFeeUnits.format({
+      units: DECIMAL_FUEL,
+      precision: 6,
+    });
+    await hasText(page, `${maxAmountAfterFeeFormatted} ETH`);
     await getButtonByText(page, 'Approve').click();
 
     // Wait for transaction to be confirmed
