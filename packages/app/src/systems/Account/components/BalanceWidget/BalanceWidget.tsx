@@ -103,7 +103,12 @@ export function BalanceWidget({
           <Box.Flex>
             {account.balance.isZero() ? (
               <Text aria-hidden={visibility} data-account-name={account.name}>
-                {account.balanceSymbol || '$'}&nbsp;0
+                {account.balanceSymbol || '$'}&nbsp;
+                <AmountVisibility
+                  value={account.balance}
+                  visibility={visibility}
+                  units={decimals}
+                />
               </Text>
             ) : (
               <Tooltip
