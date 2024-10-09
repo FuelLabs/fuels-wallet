@@ -1,14 +1,14 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Button, Heading, Icon, Text } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
-import type { ReactNode } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { FuelAddress } from '~/systems/Account';
 import type { Maybe } from '~/systems/Core';
 import { AmountVisibility, VisibilityButton } from '~/systems/Core';
 
 import { useAccounts } from '../../hooks';
 
-import { DECIMAL_FUEL } from 'fuels';
+import { Address, type B256Address, DECIMAL_FUEL } from 'fuels';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 type BalanceWidgetWrapperProps = {
@@ -43,6 +43,12 @@ export function BalanceWidget({
   onChangeVisibility,
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
+
+  const fuelAddress = useMemo<B256Address>(() => {
+    if (!account) return '';
+    return Address.fromDynamicInput(account.address).toB256();
+  }, [account]);
+
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
   return (
@@ -62,10 +68,7 @@ export function BalanceWidget({
             >
               {account.name}
             </Heading>
-            <FuelAddress
-              address={account.address}
-              css={styles.balanceAddress}
-            />
+            <FuelAddress address={fuelAddress} css={styles.balanceAddress} />
           </Box.Stack>
           <Button
             size="sm"
