@@ -1,7 +1,7 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
-import { Box, Copyable, Flex, Icon, IconButton, Text } from '@fuel-ui/react';
-import { Address, type B256Address, type Bech32Address, isB256 } from 'fuels';
+import { Box, Copyable, Icon, IconButton, Text } from '@fuel-ui/react';
+import { Address, type B256Address, type Bech32Address } from 'fuels';
 import { useMemo } from 'react';
 import { shortAddress } from '~/systems/Core';
 import { useExplorerLink } from '../../hooks/useExplorerLink';
@@ -18,10 +18,6 @@ export const FuelAddress = ({
   css,
 }: AddressProps) => {
   const account = useMemo<B256Address>(() => {
-    if (isB256(address)) {
-      return address;
-    }
-
     return Address.fromDynamicInput(address).toB256();
   }, [address]);
 
