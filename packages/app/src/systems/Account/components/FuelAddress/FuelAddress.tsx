@@ -28,24 +28,22 @@ export const FuelAddress = ({
   const { openExplorer, href } = useExplorerLink(account);
 
   return (
-    <Box.Flex css={styles.root}>
-      <Flex align="center" gap="$2">
-        <Copyable value={account} css={styles.copyable} aria-label={account}>
-          <Text className="address" css={css}>
-            {shortAddress(account)}
-          </Text>
-        </Copyable>
-        {href && canOpenExplorer && (
-          <IconButton
-            intent="base"
-            tooltip="View on Explorer"
-            onPress={openExplorer}
-            variant="link"
-            icon={<Icon icon="ExternalLink" size={16} />}
-            aria-label="View"
-          />
-        )}
-      </Flex>
+    <Box.Flex align="center" gap="$0" css={styles.root}>
+      <Copyable value={account} css={styles.copyable} aria-label={account}>
+        <Text className="address" css={css}>
+          {shortAddress(account)}
+        </Text>
+      </Copyable>
+      {href && canOpenExplorer && (
+        <IconButton
+          intent="base"
+          tooltip="View on Explorer"
+          onPress={openExplorer}
+          variant="link"
+          icon={<Icon icon="ExternalLink" size={16} />}
+          aria-label="View"
+        />
+      )}
     </Box.Flex>
   );
 };
