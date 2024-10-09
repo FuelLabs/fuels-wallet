@@ -6,7 +6,7 @@
 
 import { cssObj } from '@fuel-ui/css';
 import type { BN } from 'fuels';
-import { DEFAULT_DECIMAL_UNITS, bn, format } from 'fuels';
+import { DEFAULT_DECIMAL_UNITS, bn } from 'fuels';
 import { useEffect, useState } from 'react';
 import type { FC } from 'react';
 
@@ -98,7 +98,7 @@ export const InputAmount: InputAmountComponent = ({
   ...props
 }) => {
   const [assetAmount, setAssetAmount] = useState<string>(
-    !value || value.eq(0) ? '' : formatAmount(value, units).formatted.display
+    !value || value.eq(0) ? '' : formatAmount(value, units).original.display
   );
 
   const balance = initialBalance ?? bn(initialBalance);
@@ -108,9 +108,9 @@ export const InputAmount: InputAmountComponent = ({
   // biome-ignore lint/correctness/useExhaustiveDependencies: allow any
   useEffect(() => {
     handleAmountChange(
-      value ? formatAmount(value, units).formatted.display : ''
+      value ? formatAmount(value, units).original.display : ''
     );
-  }, [value?.toString(), units]);
+  }, [value?.toString()]);
 
   const handleAmountChange = (text: string) => {
     const { text: newText, amount } = createAmount(text, units);
