@@ -1,9 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Button, Heading, Icon, Text } from '@fuel-ui/react';
-import type { Account } from '@fuel-wallet/types';
-import { type ReactNode, useMemo } from 'react';
+import type { AccountWithBalance } from '@fuel-wallet/types';
+import type { ReactNode } from 'react';
 import { FuelAddress } from '~/systems/Account';
-import type { Maybe } from '~/systems/Core';
 import { AmountVisibility, VisibilityButton } from '~/systems/Core';
 
 import { useAccounts } from '../../hooks';
@@ -29,7 +28,7 @@ export function BalanceWidgetWrapper({
 }
 
 export type BalanceWidgetProps = {
-  account?: Maybe<Account>;
+  account?: AccountWithBalance;
   isLoading?: boolean;
   visibility?: boolean;
   onPressAccounts?: () => void;

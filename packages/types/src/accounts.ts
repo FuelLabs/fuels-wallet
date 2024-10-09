@@ -1,4 +1,4 @@
-import type { AssetFuel, BN, BigNumberish } from 'fuels';
+import type { AssetFuel, BN } from 'fuels';
 
 import type { Coin } from './coin';
 
@@ -7,7 +7,9 @@ export type Vault = {
   data: string;
 };
 
-export type CoinAsset = Coin & { asset?: AssetFuel };
+export interface CoinAsset extends Coin {
+  asset?: AssetFuel;
+}
 
 export type Account = {
   name: string;
@@ -15,8 +17,11 @@ export type Account = {
   vaultId?: number;
   publicKey: string;
   isHidden?: boolean;
-  balance?: BigNumberish | BN;
-  balanceSymbol?: string;
-  balances?: CoinAsset[];
   isCurrent?: boolean;
 };
+
+export interface AccountWithBalance extends Account {
+  balance: BN;
+  balanceSymbol: string;
+  balances: CoinAsset[];
+}

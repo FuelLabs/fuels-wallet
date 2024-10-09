@@ -1,5 +1,9 @@
 import { createProvider } from '@fuel-wallet/connections';
-import type { Account, CoinAsset } from '@fuel-wallet/types';
+import type {
+  Account,
+  AccountWithBalance,
+  CoinAsset,
+} from '@fuel-wallet/types';
 import { Address, type Provider, bn } from 'fuels';
 import { AssetService } from '~/systems/Asset/services';
 import { getFuelAssetByAssetId } from '~/systems/Asset/utils';
@@ -24,9 +28,6 @@ export type AccountInputs = {
   fetchAccount: {
     address: string;
   };
-  setBalance: {
-    data: Pick<Account, 'address' | 'balance' | 'balanceSymbol' | 'balances'>;
-  };
   setCurrentAccount: {
     address: string;
   };
@@ -46,6 +47,10 @@ export type AccountInputs = {
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class AccountService {
   static async addAccount(input: AccountInputs['addAccount']) {
+    // @TODO: Remove it
+    // input.data.address =
+    //   'fuel1m7usvt6vnufeh36ryccwc8w5dp7h3wenupp469705vfps29neeks3c3gum';
+    // input.data.publicKey = 'unknown';
     return db.transaction('rw', db.accounts, async () => {
       const count = await db.accounts.count();
       const account = {
@@ -85,7 +90,9 @@ export class AccountService {
     return account;
   }
 
-  static async fetchBalance(input: AccountInputs['fetchBalance']) {
+  static async fetchBalance(
+    input: AccountInputs['fetchBalance']
+  ): Promise<AccountWithBalance> {
     if (!input.account) {
       throw new Error('Account not defined');
     }
@@ -111,7 +118,7 @@ export class AccountService {
             ...prev,
             {
               ...balance,
-              amount: balance.amount.toString(),
+              amount: balance.amount,
               asset,
             },
           ];
@@ -137,38 +144,24 @@ export class AccountService {
         (balance) => balance.assetId === baseAssetId.toString()
       );
       const ethBalance = ethAsset?.amount;
-      const nextAccountWithAssets = {
-        address: account.address || '',
-        balance: bn(ethBalance || 0).toString(),
+      const accountAssets = {
+        balance: ethBalance ?? bn(0),
         balanceSymbol: 'ETH',
         balances: nextBalancesWithAssets,
       };
 
-      const nextAccount = await AccountService.setBalance({
-        data: nextAccountWithAssets,
-      });
-
-      return nextAccount ?? account;
+      return {
+        ...account,
+        ...accountAssets,
+      };
     } catch (_error) {
-      const nextAccount = await AccountService.setBalance({
-        data: {
-          address: account.address || '',
-          balance: bn(0).toString(),
-          balanceSymbol: 'ETH',
-          balances: [],
-        },
-      });
-      return nextAccount ?? account;
+      return {
+        ...account,
+        balance: bn(0),
+        balanceSymbol: 'ETH',
+        balances: [],
+      };
     }
-  }
-
-  static async setBalance(input: AccountInputs['setBalance']) {
-    if (!db.isOpen()) return;
-    return db.transaction('rw!', db.accounts, async () => {
-      const { address, ...updateData } = input.data;
-      await db.accounts.update(address, updateData);
-      return db.accounts.get({ address: input.data.address });
-    });
   }
 
   static toMap(accounts: Account[]) {
