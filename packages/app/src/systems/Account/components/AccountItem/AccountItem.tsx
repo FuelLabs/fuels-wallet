@@ -14,7 +14,6 @@ import type { Account } from '@fuel-wallet/types';
 import type { FC } from 'react';
 import { FuelAddress } from '~/systems/Account';
 
-import { ViewOnExplorer } from '../ViewOnExplorer/ViewOnExplorer';
 import { AccountItemLoader } from './AccountItemLoader';
 
 export type AccountItemProps = {
@@ -150,8 +149,11 @@ export const AccountItem: AccountItemComponent = ({
         <Heading as="h6" css={styles.name}>
           {account.name}
         </Heading>
-        <FuelAddress address={account.address} css={styles.address} />
-        {canOpenExplorer && <ViewOnExplorer address={account.address} />}
+        <FuelAddress
+          address={account.address}
+          css={styles.address}
+          canOpenExplorer={canOpenExplorer}
+        />
       </Box.Flex>
     </CardList.Item>
   );

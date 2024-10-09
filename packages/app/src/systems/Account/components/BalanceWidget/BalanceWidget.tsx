@@ -9,7 +9,6 @@ import { AmountVisibility, VisibilityButton } from '~/systems/Core';
 import { useAccounts } from '../../hooks';
 
 import { Address, type B256Address, DECIMAL_FUEL } from 'fuels';
-import { ViewOnExplorer } from '../ViewOnExplorer/ViewOnExplorer';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 type BalanceWidgetWrapperProps = {
@@ -69,8 +68,11 @@ export function BalanceWidget({
             >
               {account.name}
             </Heading>
-            <FuelAddress address={fuelAddress} css={styles.balanceAddress} />
-            <ViewOnExplorer address={fuelAddress} />
+            <FuelAddress
+              address={fuelAddress}
+              css={styles.balanceAddress}
+              canOpenExplorer
+            />
           </Box.Stack>
           <Button
             size="sm"
