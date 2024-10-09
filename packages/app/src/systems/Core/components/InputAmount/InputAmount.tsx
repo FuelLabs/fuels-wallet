@@ -64,7 +64,6 @@ export type InputAmountProps = Omit<InputProps, 'size'> & {
   label?: string;
   balance?: BN;
   units?: number;
-  balancePrecision?: number;
   asset?: { name?: string; icon?: string; address?: string };
   assetTooltip?: string;
   hiddenMaxButton?: boolean;
@@ -86,7 +85,6 @@ export const InputAmount: InputAmountComponent = ({
   name,
   label,
   balance: initialBalance,
-  balancePrecision = 3,
   value,
   units,
   hiddenBalance,
@@ -99,35 +97,24 @@ export const InputAmount: InputAmountComponent = ({
   onClickAsset,
   ...props
 }) => {
-  const formatOpts = { units, precision: units };
   const [assetAmount, setAssetAmount] = useState<string>(
-    !value || value.eq(0)
-      ? ''
-      : formatAmount({ amount: value, options: formatOpts })
+    !value || value.eq(0) ? '' : formatAmount(value, units).formatted.display
   );
 
   const balance = initialBalance ?? bn(initialBalance);
-  const formattedBalance = formatAmount({
-    amount: balance,
-    options: {
-      ...formatOpts,
-      precision: balancePrecision,
-    },
-  });
+  const { formatted: formattedBalance, original: originalBalance } =
+    formatAmount(balance, units);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: allow any
   useEffect(() => {
     handleAmountChange(
-      value ? formatAmount({ amount: value, options: formatOpts }) : ''
+      value ? formatAmount(value, units).formatted.display : ''
     );
-  }, [value?.toString()]);
+  }, [value?.toString(), units]);
 
   const handleAmountChange = (text: string) => {
-    const { text: newText, amount } = createAmount(text, formatOpts.units);
-    const { amount: currentAmount } = createAmount(
-      assetAmount,
-      formatOpts.units
-    );
+    const { text: newText, amount } = createAmount(text, units);
+    const { amount: currentAmount } = createAmount(assetAmount, units);
 
     if (!currentAmount.eq(amount)) {
       onChange?.(amount);
@@ -218,16 +205,13 @@ export const InputAmount: InputAmountComponent = ({
       </Flex>
       <Box.Flex gap={'$2'}>
         {!hiddenBalance && (
-          <Tooltip
-            content={formatAmount({ amount: balance, options: formatOpts })}
-            sideOffset={-5}
-          >
+          <Tooltip content={originalBalance.display} sideOffset={-5}>
             <Text
               fontSize="sm"
-              aria-label={`Balance: ${formattedBalance}`}
+              aria-label={`Balance: ${formattedBalance.display}`}
               color="textSubtext"
             >
-              Balance: {formattedBalance}
+              Balance: {formattedBalance.display}
             </Text>
           </Tooltip>
         )}

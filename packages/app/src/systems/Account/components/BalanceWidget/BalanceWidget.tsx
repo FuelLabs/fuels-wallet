@@ -1,9 +1,21 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Button, Heading, Icon, Text } from '@fuel-ui/react';
+import {
+  Avatar,
+  Box,
+  Button,
+  Heading,
+  Icon,
+  Text,
+  Tooltip,
+} from '@fuel-ui/react';
 import type { AccountWithBalance } from '@fuel-wallet/types';
-import type { ReactNode } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { FuelAddress } from '~/systems/Account';
-import { AmountVisibility, VisibilityButton } from '~/systems/Core';
+import {
+  AmountVisibility,
+  VisibilityButton,
+  formatAmount,
+} from '~/systems/Core';
 
 import { useAccounts } from '../../hooks';
 
@@ -35,6 +47,7 @@ export type BalanceWidgetProps = {
   onChangeVisibility?: (visibility: boolean) => void;
 };
 
+const decimals = DECIMAL_FUEL;
 export function BalanceWidget({
   account,
   isLoading,
@@ -42,6 +55,11 @@ export function BalanceWidget({
   onChangeVisibility,
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
+
+  const { original } = useMemo(() => {
+    return formatAmount(account?.balance, decimals);
+  }, [account]);
+
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
   return (
@@ -85,11 +103,15 @@ export function BalanceWidget({
           <Box.Flex>
             <Text aria-hidden={visibility} data-account-name={account.name}>
               {account.balanceSymbol || '$'}&nbsp;
-              <AmountVisibility
-                value={account.balance}
-                visibility={visibility}
-                units={DECIMAL_FUEL}
-              />
+              <Tooltip content={original.display}>
+                <span>
+                  <AmountVisibility
+                    value={account.balance}
+                    visibility={visibility}
+                    units={decimals}
+                  />
+                </span>
+              </Tooltip>
             </Text>
             <VisibilityButton
               aria-label={visibility ? 'Hide balance' : 'Show balance'}

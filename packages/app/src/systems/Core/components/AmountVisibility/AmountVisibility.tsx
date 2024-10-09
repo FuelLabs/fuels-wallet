@@ -13,11 +13,6 @@ export function AmountVisibility({
   value,
   units,
 }: AmountVisibilityProps) {
-  return (
-    <>
-      {visibility
-        ? formatAmount({ amount: value, options: { units } })
-        : '•••••'}
-    </>
-  );
+  const { formatted } = formatAmount(value, units);
+  return <>{visibility ? formatted.display : '•••••'}</>;
 }
