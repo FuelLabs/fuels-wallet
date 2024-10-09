@@ -7,7 +7,7 @@ import { Storage } from '../utils/storage';
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class CoreService {
   static async clear() {
-    toast.success('Your wallet will be resetted');
+    toast.success('Your wallet will be reset');
     await delay(1500);
     await VaultService.clear();
     await db.clear();
