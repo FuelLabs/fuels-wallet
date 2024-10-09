@@ -121,7 +121,11 @@ export const AssetItem: AssetItemComponent = ({
       const { original } = formatAmount(amount, decimals);
 
       return (
-        <Tooltip content={original.display}>
+        <Tooltip
+          content={original.display}
+          delayDuration={0}
+          open={visibility ? undefined : false}
+        >
           <Text css={{ fontSize: '$sm', fontWeight: '$normal' }}>
             <AmountVisibility
               value={amount}

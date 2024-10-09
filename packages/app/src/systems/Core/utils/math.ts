@@ -1,7 +1,7 @@
 import type { BN, BNInput } from 'fuels';
 import { DECIMAL_FUEL, bn } from 'fuels';
 
-const MINIMUM_ZEROS_TO_DISPLAY = 2; // it means 0.001 (at least two zeros in decimals)
+const MINIMUM_ZEROS_TO_DISPLAY = 5; // it means 0.001 (at least two zeros in decimals)
 const PRECISION = 6;
 
 export type FormatAmountResult = {

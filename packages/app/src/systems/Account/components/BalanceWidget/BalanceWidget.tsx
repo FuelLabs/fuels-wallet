@@ -101,18 +101,26 @@ export function BalanceWidget({
         <>
           <Text className="label">Balance</Text>
           <Box.Flex>
-            <Text aria-hidden={visibility} data-account-name={account.name}>
-              {account.balanceSymbol || '$'}&nbsp;
-              <Tooltip content={original.display}>
-                <span>
+            {account.balance.isZero() ? (
+              <Text aria-hidden={visibility} data-account-name={account.name}>
+                {account.balanceSymbol || '$'}&nbsp;0
+              </Text>
+            ) : (
+              <Tooltip
+                content={original.display}
+                delayDuration={0}
+                open={visibility ? undefined : false}
+              >
+                <Text aria-hidden={visibility} data-account-name={account.name}>
+                  {account.balanceSymbol || '$'}&nbsp;
                   <AmountVisibility
                     value={account.balance}
                     visibility={visibility}
                     units={decimals}
                   />
-                </span>
+                </Text>
               </Tooltip>
-            </Text>
+            )}
             <VisibilityButton
               aria-label={visibility ? 'Hide balance' : 'Show balance'}
               visibility={visibility}
@@ -132,7 +140,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     borderRadius: '$default',
-    pb: '$3',
   }),
   balanceAddress: cssObj({
     color: '$intentsBase11',
@@ -152,6 +159,10 @@ const styles = {
       color: '$textInverse',
       fontSize: '$3xl',
       fontFamily: '$mono',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      lineHeight: 'normal',
     },
     '.label': {
       lineHeight: '$tight',
