@@ -4,6 +4,7 @@ import { shortAddress } from '~/systems/Core';
 import { MOCK_ACCOUNTS } from '../../__mocks__';
 
 import { Address } from 'fuels';
+import { useNetworks } from '~/systems/Network';
 import { AccountItem } from './AccountItem';
 
 const ACCOUNT = MOCK_ACCOUNTS[0];
@@ -11,7 +12,24 @@ const SHORT_ADDRESS = shortAddress(
   Address.fromDynamicInput(ACCOUNT.address).toB256()
 );
 
+jest.mock('~/systems/Network', () => ({
+  useNetworks: jest.fn(),
+}));
+
+const useNetworksMock = useNetworks as jest.Mock;
+
 describe('AccountItem', () => {
+  beforeAll(() => {
+    useNetworksMock.mockReturnValue({
+      selectedNetwork: {
+        chainId: 1,
+        name: 'Fuel Sepolia Testnet',
+        url: 'https://testnet.fuel.network/v1/graphql',
+        explorerUrl: 'https://testnet.fuel.network/v1/explorer',
+      },
+    });
+  });
+
   it('a11y', async () => {
     await testA11y(<AccountItem account={ACCOUNT} />);
   });
