@@ -1,24 +1,28 @@
 import { cssObj } from '@fuel-ui/css';
 import { HStack, Icon } from '@fuel-ui/react';
-import type { B256Address } from 'fuels';
+import { Address, type B256Address, type Bech32Address, isB256 } from 'fuels';
+import { useMemo } from 'react';
 import { useExplorerLink } from '../../hooks/useExplorerLink';
 
 export type ViewOnExplorerProps = {
-  address: B256Address;
+  address: B256Address | Bech32Address;
 };
 
 export const ViewOnExplorer = ({ address }: ViewOnExplorerProps) => {
-  const { openExplorer } = useExplorerLink(address);
+  const account = useMemo<B256Address>(() => {
+    if (isB256(address)) {
+      return address;
+    }
+
+    return Address.fromDynamicInput(address).toB256();
+  }, [address]);
+
+  const { openExplorer } = useExplorerLink(account);
 
   return (
     <HStack align="center" gap="$2" css={styles.root} onClick={openExplorer}>
       View on Explorer
-      <Icon
-        css={styles.icon}
-        icon={Icon.is('ExternalLink')}
-        size={10}
-        aria-label="View on Explorer"
-      />
+      <Icon icon={Icon.is('ExternalLink')} aria-label="View on Explorer" />
     </HStack>
   );
 };
@@ -28,7 +32,6 @@ const styles = {
     cursor: 'pointer',
     textDecoration: 'none',
     fontWeight: '$normal',
-    lineHeight: '$4',
     fontSize: '$xs',
     userSelect: 'none',
     color: '$intentsBase11',
@@ -38,9 +41,5 @@ const styles = {
       color: '$intentsBase12',
       textDecoration: 'underline',
     },
-  }),
-  icon: cssObj({
-    width: 16,
-    height: 16,
   }),
 };

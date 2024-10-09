@@ -14,6 +14,7 @@ import type { Account } from '@fuel-wallet/types';
 import type { FC } from 'react';
 import { FuelAddress } from '~/systems/Account';
 
+import { ViewOnExplorer } from '../ViewOnExplorer/ViewOnExplorer';
 import { AccountItemLoader } from './AccountItemLoader';
 
 export type AccountItemProps = {
@@ -22,6 +23,7 @@ export type AccountItemProps = {
   isToggleChecked?: boolean;
   isCurrent?: boolean;
   isHidden?: boolean;
+  canOpenExplorer?: boolean;
   onPress?: () => void;
   isDisabled?: boolean;
   compact?: boolean;
@@ -43,6 +45,7 @@ export const AccountItem: AccountItemComponent = ({
   isToggleChecked,
   isCurrent,
   isHidden,
+  canOpenExplorer = false,
   onPress,
   isDisabled,
   compact,
@@ -148,6 +151,7 @@ export const AccountItem: AccountItemComponent = ({
           {account.name}
         </Heading>
         <FuelAddress address={account.address} css={styles.address} />
+        {canOpenExplorer && <ViewOnExplorer address={account.address} />}
       </Box.Flex>
     </CardList.Item>
   );
