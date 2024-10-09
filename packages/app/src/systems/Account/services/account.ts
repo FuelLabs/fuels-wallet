@@ -47,10 +47,6 @@ export type AccountInputs = {
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class AccountService {
   static async addAccount(input: AccountInputs['addAccount']) {
-    // @TODO: Remove it
-    // input.data.address =
-    //   'fuel1m7usvt6vnufeh36ryccwc8w5dp7h3wenupp469705vfps29neeks3c3gum';
-    // input.data.publicKey = 'unknown';
     return db.transaction('rw', db.accounts, async () => {
       const count = await db.accounts.count();
       const account = {
