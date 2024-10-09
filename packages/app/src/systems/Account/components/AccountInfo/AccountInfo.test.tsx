@@ -10,6 +10,17 @@ const PROPS = {
   headerText: 'Connect to',
 };
 
+jest.mock('~/systems/Network', () => ({
+  useNetworks: jest.fn().mockReturnValue({
+    selectedNetwork: {
+      chainId: 1,
+      name: 'Fuel Sepolia Testnet',
+      url: 'https://testnet.fuel.network/v1/graphql',
+      explorerUrl: 'https://testnet.fuel.network/v1/explorer',
+    },
+  }),
+}));
+
 describe('AccountInfo', () => {
   beforeEach(async () => {
     await AccountService.clearAccounts();
