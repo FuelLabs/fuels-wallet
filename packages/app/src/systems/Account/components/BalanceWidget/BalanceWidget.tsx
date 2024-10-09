@@ -44,11 +44,6 @@ export function BalanceWidget({
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
 
-  const fuelAddress = useMemo<B256Address>(() => {
-    if (!account) return '';
-    return Address.fromDynamicInput(account.address).toB256();
-  }, [account]);
-
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
   return (
@@ -69,7 +64,7 @@ export function BalanceWidget({
               {account.name}
             </Heading>
             <FuelAddress
-              address={fuelAddress}
+              address={account.address}
               css={styles.balanceAddress}
               canOpenExplorer
             />
