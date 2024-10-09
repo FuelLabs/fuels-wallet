@@ -111,11 +111,13 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
           {shortAddress(assetId)}
         </Text>
       </Copyable>
-      <Tooltip content={original.display}>
-        <Box.Flex css={styles.amount}>
-          {formatted.display} {symbol}
-        </Box.Flex>
-      </Tooltip>
+      <Box.Flex css={styles.amount}>
+        <Tooltip content={original.display} delayDuration={0}>
+          <span>
+            {formatted.display} {symbol}
+          </span>
+        </Tooltip>
+      </Box.Flex>
     </Grid>
   );
 };
