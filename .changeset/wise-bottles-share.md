@@ -2,4 +2,4 @@
 "fuels-wallet": minor
 ---
 
-Add `View on Explorer` link below Account Address
+Add `View on Explorer` button besides the Account Address
