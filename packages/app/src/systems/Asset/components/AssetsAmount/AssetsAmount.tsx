@@ -2,10 +2,10 @@ import { cx } from '@fuel-ui/css';
 import { Avatar, Box, Copyable, Grid, Text } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
+import type { FC } from 'react';
 import { formatAmount, shortAddress } from '~/systems/Core';
 import type { InsufficientInputAmountError } from '~/systems/Transaction';
 
-import type { FC } from 'react';
 import { AssetsAmountLoader } from './AssetsAmountLoader';
 import { styles } from './styles';
 
