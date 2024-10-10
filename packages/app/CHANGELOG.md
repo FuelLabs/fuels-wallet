@@ -1,5 +1,20 @@
 # fuels-wallet
 
+## 0.36.0
+
+### Minor Changes
+
+- [#1569](https://github.com/FuelLabs/fuels-wallet/pull/1569) [`d344c07e`](https://github.com/FuelLabs/fuels-wallet/commit/d344c07ea39425806dcb442f717708d9a8de12a0) Thanks [@helciofranco](https://github.com/helciofranco)! - Add `Tx ID` to the Tx Details Screen
+
+- [#1569](https://github.com/FuelLabs/fuels-wallet/pull/1569) [`d344c07e`](https://github.com/FuelLabs/fuels-wallet/commit/d344c07ea39425806dcb442f717708d9a8de12a0) Thanks [@helciofranco](https://github.com/helciofranco)! - Add `View on Explorer` button besides the Account Address
+
+### Patch Changes
+
+- [#1563](https://github.com/FuelLabs/fuels-wallet/pull/1563) [`41e0465e`](https://github.com/FuelLabs/fuels-wallet/commit/41e0465ecf70fddc8527ba2d7fbc1a4ce23e8938) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed duplicated instance of services on browser session restore
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.36.0
+
 ## 0.35.0
 
 ### Minor Changes
