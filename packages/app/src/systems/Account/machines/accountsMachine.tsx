@@ -1,9 +1,8 @@
-import type { Account } from '@fuel-wallet/types';
+import type { Account, AccountWithBalance } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
-import type { Maybe } from '~/systems/Core';
 import { CoreService, FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
@@ -12,7 +11,7 @@ import type { AccountInputs } from '../services/account';
 
 type MachineContext = {
   accounts?: Account[];
-  account?: Maybe<Account>;
+  account?: AccountWithBalance;
   error?: unknown;
 };
 
@@ -21,7 +20,7 @@ type MachineServices = {
     data: Account[];
   };
   fetchAccount: {
-    data: Account;
+    data: AccountWithBalance;
   };
   setCurrentAccount: {
     data: Account;
@@ -229,7 +228,7 @@ export const accountsMachine = createMachine(
           return AccountService.getAccounts();
         },
       }),
-      fetchAccount: FetchMachine.create<never, Account | undefined>({
+      fetchAccount: FetchMachine.create<never, AccountWithBalance | undefined>({
         showError: true,
         maxAttempts: 1,
         async fetch() {
@@ -245,6 +244,7 @@ export const accountsMachine = createMachine(
             account: accountToFetch,
             providerUrl,
           });
+
           return accountWithBalance;
         },
       }),

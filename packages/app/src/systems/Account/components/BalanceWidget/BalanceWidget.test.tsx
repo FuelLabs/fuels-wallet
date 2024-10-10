@@ -6,14 +6,16 @@ import { renderWithProvider } from '~/systems/Core/__tests__/utils';
 
 import { MOCK_ACCOUNTS } from '../../__mocks__';
 
-import { Address } from 'fuels';
+import type { AccountWithBalance } from '@fuel-wallet/types';
+import { Address, bn } from 'fuels';
 import { act } from 'react';
 import { BalanceWidget } from './BalanceWidget';
 
-const ACCOUNT = {
+const ACCOUNT: AccountWithBalance = {
   ...MOCK_ACCOUNTS[0],
-  balance: '4999989994',
+  balance: bn(4999989994),
   balanceSymbol: 'ETH',
+  balances: [],
 };
 
 describe('BalanceWidget', () => {
