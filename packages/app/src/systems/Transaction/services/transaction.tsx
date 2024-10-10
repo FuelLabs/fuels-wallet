@@ -7,18 +7,24 @@ import {
   type BN,
   ErrorCode,
   FuelError,
+  TransactionCoder,
   TransactionResponse,
   TransactionStatus,
+  arrayify,
   assembleTransactionSummary,
   bn,
+  getOperations,
+  getTransactionStatusName,
   getTransactionSummary,
   getTransactionSummaryFromRequest,
-  getTransactionsSummaries,
+  hexlify,
+  processGqlReceipt,
 } from 'fuels';
 import { WalletLockedCustom, db } from '~/systems/Core';
 
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
+import { graphqlRequest } from '~/systems/Core/utils/graphql';
 import { NetworkService } from '~/systems/Network/services/network';
 import type { TransactionCursor } from '../types';
 import {
@@ -29,6 +35,12 @@ import {
   setGasLimitToTxRequest,
 } from '../utils';
 import { getCurrentTips } from '../utils/fee';
+import {
+  type GetPageInfoQuery,
+  type GetTransactionsByOwnerQuery,
+  getPageInfoQuery,
+  getTransactionsByOwnerQuery,
+} from './queries';
 
 export type TxInputs = {
   getTxCursors: {
@@ -112,7 +124,7 @@ export type TxInputs = {
 };
 
 const AMOUNT_SUB_PER_TX_RETRY = 200_000;
-const TXS_PER_PAGE = 50;
+const TXS_PER_PAGE = 200;
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class TxService {
@@ -124,6 +136,9 @@ export class TxService {
         .and((cursor) => {
           return cursor.address.toLowerCase() === input.address.toLowerCase();
         })
+        .and((cursor) => {
+          return cursor.size === TXS_PER_PAGE;
+        })
         .sortBy('id');
     });
   }
@@ -134,6 +149,7 @@ export class TxService {
     const transactionsCursors: TransactionCursor[] = cursors.map(
       (endCursor) => ({
         address,
+        size: TXS_PER_PAGE,
         providerUrl,
         endCursor,
       })
@@ -318,18 +334,55 @@ export class TxService {
     pagination,
   }: TxInputs['getTransactionHistory']) {
     const provider = await createProvider(providerUrl);
-    const txSummaries = await getTransactionsSummaries({
-      provider,
-      filters: {
+    const {
+      consensusParameters: {
+        txParameters: { maxInputs },
+      },
+    } = provider.getChain();
+    const baseAssetId = provider.getBaseAssetId();
+
+    const result: GetTransactionsByOwnerQuery = await graphqlRequest(
+      providerUrl,
+      'getTransactionsByOwner',
+      getTransactionsByOwnerQuery,
+      {
         owner: address,
         first: TXS_PER_PAGE,
         after: pagination?.after,
-      },
+      }
+    );
+
+    const txSummaries = result.transactionsByOwner.edges.map((e) => {
+      const gqlTransaction = e.node;
+      const receipts = gqlTransaction.status.receipts.map(processGqlReceipt);
+      const rawPayload = hexlify(arrayify(gqlTransaction.rawPayload));
+
+      const [transaction] = new TransactionCoder().decode(
+        arrayify(rawPayload),
+        0
+      );
+
+      const operations = getOperations({
+        transactionType: transaction.type,
+        inputs: transaction.inputs || [],
+        outputs: transaction.outputs || [],
+        receipts,
+        rawPayload,
+        maxInputs,
+        baseAssetId,
+      });
+
+      return {
+        id: gqlTransaction.id,
+        time: gqlTransaction.status.time,
+        status: getTransactionStatusName(gqlTransaction.status.type),
+        operations,
+      };
     });
 
     return {
-      transactionHistory: txSummaries.transactions,
-      pageInfo: txSummaries.pageInfo,
+      transactionHistory: txSummaries,
+      pageInfo: result.transactionsByOwner.pageInfo,
     };
   }
 
@@ -338,21 +391,22 @@ export class TxService {
     providerUrl = '',
     initialEndCursor,
   }: TxInputs['getAllCursors']) {
-    const provider = await createProvider(providerUrl);
-
     let hasNextPage = true;
     const cursors: string[] = [];
     let endCursor: string | null | undefined = initialEndCursor;
 
     while (hasNextPage) {
-      const { pageInfo } = await getTransactionsSummaries({
-        provider,
-        filters: {
+      const result: GetPageInfoQuery = await graphqlRequest(
+        providerUrl,
+        'getTransactionsByOwner',
+        getPageInfoQuery,
+        {
           owner: address,
           first: TXS_PER_PAGE,
           after: endCursor,
-        },
-      });
+        }
+      );
+      const pageInfo = result.transactionsByOwner.pageInfo;
 
       hasNextPage = pageInfo.hasNextPage;
       endCursor = pageInfo.endCursor;
