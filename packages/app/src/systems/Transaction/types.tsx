@@ -1,4 +1,3 @@
-import type { AssetAmount } from '@fuel-wallet/types';
 import type {
   AddressType,
   CallResult,
@@ -9,9 +8,6 @@ import type {
   OutputContractCreated,
   TransactionRequestInput,
   TransactionRequestLike,
-  TransactionResponse,
-  TransactionStatus,
-  TransactionType,
 } from 'fuels';
 
 export enum TxCategory {
@@ -38,6 +34,7 @@ export type TxOutputContractCreated = OutputContractCreated;
 
 export type TransactionCursor = {
   address: string;
+  size: number;
   providerUrl: string;
   endCursor: string;
 };
