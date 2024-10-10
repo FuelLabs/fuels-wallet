@@ -221,13 +221,16 @@ export const networksMachine = createMachine(
           await NetworkService.validateNetworkExists(input.data);
           await NetworkService.validateNetworkVersion(input.data);
 
+          const nameCheck = await NetworkService.checkNetworkByName({name: input.data.name});
+          const DateNow = new Date().toISOString();
+
           const provider = await Provider.create(input.data.url);
           const chainId = provider.getChainId();
 
           const createdNetwork = await NetworkService.addNetwork({
             data: {
               chainId,
-              name: input.data.name,
+              name: nameCheck == true ? (input.data.name + ' ' + DateNow) : input.data.name,
               url: input.data.url,
             },
           });

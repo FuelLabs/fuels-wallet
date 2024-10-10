@@ -18,6 +18,9 @@ export type NetworkInputs = {
   getNetworkByUrl: {
     url: string;
   };
+  getNetworkByName: {
+    name: string;
+  };
   getNetworkByNameOrUrl: {
     name: string;
     url: string;
@@ -83,6 +86,25 @@ export class NetworkService {
   static getNetworkByUrl(input: NetworkInputs['getNetworkByUrl']) {
     return db.transaction('r', db.networks, async () => {
       return db.networks.get({ url: input.url });
+    });
+  }
+
+  static getNetworkByName(input: NetworkInputs['getNetworkByName']) {
+    return db.transaction('r', db.networks, async () => {
+      return db.networks
+        .where('name')
+        .equalsIgnoreCase(input.name)
+        .first();
+    });
+  }
+
+  static async checkNetworkByName(input: NetworkInputs['getNetworkByName']) {
+    return db.transaction('r', db.networks, async () => {
+      const network = await db.networks
+        .where('name')
+        .equalsIgnoreCase(input.name)
+        .first();
+      return Boolean(network);
     });
   }
 
@@ -356,13 +378,12 @@ export class NetworkService {
   static async validateNetworkExists(
     input: NetworkInputs['validateNetworkExists']
   ) {
-    const { name, url } = input;
-    const network = await NetworkService.getNetworkByNameOrUrl({
-      name,
-      url,
+    const { url } = input;
+    const network = await NetworkService.getNetworkByUrl({
+      url
     });
     if (network) {
-      throw new Error('Network with Name or URL already exists');
+      throw new Error('Network URL already exists');
     }
   }
 
