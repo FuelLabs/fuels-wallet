@@ -29,8 +29,8 @@
     "fuels": ">=0.94.6"
   },
   "devDependencies": {
-    "@fuels/connectors": "0.25.0",
-    "fuels": "pr-3167",
+    "@fuels/connectors": "0.31.3",
+    "fuels": "0.94.9",
     "tsup": "^7.2.0"
   }
 }
