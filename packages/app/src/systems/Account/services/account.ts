@@ -231,9 +231,9 @@ export class AccountService {
   }
 
   static filterByName(accounts: Account[], name = '') {
-    return accounts.filter((account) => {
-      return account.name.includes(name);
-    });
+    return accounts.filter((account) =>
+      account.name.toLowerCase().includes(name.toLowerCase())
+    );
   }
 
   static existsAccountWithName(accounts: Account[], name = '') {
