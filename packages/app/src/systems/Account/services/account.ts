@@ -232,7 +232,7 @@ export class AccountService {
 
   static filterByName(accounts: Account[], name = '') {
     return accounts.filter((account) => {
-      return account.name === name;
+      return account.name.includes(name);
     });
   }
 }
