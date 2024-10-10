@@ -1,5 +1,16 @@
 # fuels-wallet
 
+## 0.37.0
+
+### Minor Changes
+
+- [#1572](https://github.com/FuelLabs/fuels-wallet/pull/1572) [`97185130`](https://github.com/FuelLabs/fuels-wallet/commit/97185130936b9d7efcc19a54213c69401105a67b) Thanks [@helciofranco](https://github.com/helciofranco)! - Reduce transaction history loading time by optimizing the complexity of the page info query.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.37.0
+
 ## 0.36.0
 
 ### Minor Changes
