@@ -40,7 +40,11 @@ export function useTxMetadata({
   // Avoid screen to break with empty operations
   const mainOperation = operations[0] || {};
   const label = getLabel(mainOperation, account?.address as Bech32Address);
-  const timeFormatted = time ? formatDate(time) : undefined;
+  const timeFormattedRaw = time ? formatDate(time) : undefined;
+  const timeFormatted = timeFormattedRaw?.replace(
+    'a few seconds ago',
+    'seconds ago'
+  );
 
   const toOrFromText = useMemo(() => {
     const opDirection = getOperationDirection(mainOperation, ownerAddress);

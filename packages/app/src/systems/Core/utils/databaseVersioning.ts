@@ -101,7 +101,6 @@ export const applyDbVersioning = (db: Dexie) => {
       connections: 'origin',
       transactions: '&id',
       assets: '&name, &symbol',
-      assetsTemp: null,
       abis: '&contractId',
       errors: '&id',
     })
@@ -123,5 +122,38 @@ export const applyDbVersioning = (db: Dexie) => {
           ...network,
         });
       }
+    });
+
+  // DB VERSION 23
+  // 1. Drop transactions table since we don't use that anymore
+  // 2. Add cursors table for handling tx pagination
+  db.version(23).stores({
+    vaults: 'key',
+    accounts: '&address, &name',
+    networks: '&id, &url, &name, chainId',
+    connections: 'origin',
+    transactions: null,
+    transactionsCursors: '++id, address, providerUrl, endCursor',
+    assets: '&name, &symbol',
+    abis: '&contractId',
+    errors: '&id',
+  });
+
+  // DB VERSION 24
+  // Add transactionCursors page size column
+  db.version(24)
+    .stores({
+      vaults: 'key',
+      accounts: '&address, &name',
+      networks: '&id, &url, &name, chainId',
+      connections: 'origin',
+      transactionsCursors: '++id, address, size, providerUrl, endCursor',
+      assets: '&name, &symbol',
+      abis: '&contractId',
+      errors: '&id',
+    })
+    .upgrade(async (tx) => {
+      const transactionsCursors = tx.table('transactionsCursors');
+      await transactionsCursors.clear();
     });
 };

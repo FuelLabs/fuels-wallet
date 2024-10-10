@@ -5,6 +5,17 @@ import { MOCK_ACCOUNTS } from '../../__mocks__';
 
 import { AccountList } from './AccountList';
 
+jest.mock('~/systems/Network', () => ({
+  useNetworks: jest.fn().mockReturnValue({
+    selectedNetwork: {
+      chainId: 1,
+      name: 'Fuel Sepolia Testnet',
+      url: 'https://testnet.fuel.network/v1/graphql',
+      explorerUrl: 'https://testnet.fuel.network/v1/explorer',
+    },
+  }),
+}));
+
 describe('AccountList', () => {
   it('a11y', async () => {
     await testA11y(

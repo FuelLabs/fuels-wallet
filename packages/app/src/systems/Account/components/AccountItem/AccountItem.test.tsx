@@ -11,6 +11,17 @@ const SHORT_ADDRESS = shortAddress(
   Address.fromDynamicInput(ACCOUNT.address).toB256()
 );
 
+jest.mock('~/systems/Network', () => ({
+  useNetworks: jest.fn().mockReturnValue({
+    selectedNetwork: {
+      chainId: 1,
+      name: 'Fuel Sepolia Testnet',
+      url: 'https://testnet.fuel.network/v1/graphql',
+      explorerUrl: 'https://testnet.fuel.network/v1/explorer',
+    },
+  }),
+}));
+
 describe('AccountItem', () => {
   it('a11y', async () => {
     await testA11y(<AccountItem account={ACCOUNT} />);

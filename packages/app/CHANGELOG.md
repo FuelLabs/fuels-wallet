@@ -1,5 +1,65 @@
 # fuels-wallet
 
+## 0.36.0
+
+### Minor Changes
+
+- [#1569](https://github.com/FuelLabs/fuels-wallet/pull/1569) [`d344c07e`](https://github.com/FuelLabs/fuels-wallet/commit/d344c07ea39425806dcb442f717708d9a8de12a0) Thanks [@helciofranco](https://github.com/helciofranco)! - Add `Tx ID` to the Tx Details Screen
+
+- [#1569](https://github.com/FuelLabs/fuels-wallet/pull/1569) [`d344c07e`](https://github.com/FuelLabs/fuels-wallet/commit/d344c07ea39425806dcb442f717708d9a8de12a0) Thanks [@helciofranco](https://github.com/helciofranco)! - Add `View on Explorer` button besides the Account Address
+
+### Patch Changes
+
+- [#1563](https://github.com/FuelLabs/fuels-wallet/pull/1563) [`41e0465e`](https://github.com/FuelLabs/fuels-wallet/commit/41e0465ecf70fddc8527ba2d7fbc1a4ce23e8938) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed duplicated instance of services on browser session restore
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.36.0
+
+## 0.35.0
+
+### Minor Changes
+
+- [#1560](https://github.com/FuelLabs/fuels-wallet/pull/1560) [`b2702f7b`](https://github.com/FuelLabs/fuels-wallet/commit/b2702f7bc9186d24dc38c831fa905a1c1a0275c3) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - make wallet return currentAccount even if the wallet account is not selected
+
+- [#1558](https://github.com/FuelLabs/fuels-wallet/pull/1558) [`78a03b69`](https://github.com/FuelLabs/fuels-wallet/commit/78a03b692369d63aa29485dc8119d710902efc11) Thanks [@helciofranco](https://github.com/helciofranco)! - Add pagination to the Transaction History screen.
+
+### Patch Changes
+
+- [#1554](https://github.com/FuelLabs/fuels-wallet/pull/1554) [`2fd6468f`](https://github.com/FuelLabs/fuels-wallet/commit/2fd6468fe66a59aa2d1569d611b3047e543a8208) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Added copy button to asset list
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.35.0
+
+## 0.34.1
+
+### Patch Changes
+
+- [#1550](https://github.com/FuelLabs/fuels-wallet/pull/1550) [`c38db1ab`](https://github.com/FuelLabs/fuels-wallet/commit/c38db1ab536b587226db90b6b872fd8c1b01c405) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed duplicate instances of ContentScript after extension sleep/wakeup. Closes [#326](https://github.com/FuelLabs/fuel-connectors/issues/326)
+
+- [#1550](https://github.com/FuelLabs/fuels-wallet/pull/1550) [`c38db1ab`](https://github.com/FuelLabs/fuels-wallet/commit/c38db1ab536b587226db90b6b872fd8c1b01c405) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Ensure popup is closed on resolve timeout
+
+- [#1555](https://github.com/FuelLabs/fuels-wallet/pull/1555) [`3defdf83`](https://github.com/FuelLabs/fuels-wallet/commit/3defdf83c97b1a1bed1edf7a932557f69263b64c) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: fix size of query complex
+
+- Updated dependencies [[`c38db1ab`](https://github.com/FuelLabs/fuels-wallet/commit/c38db1ab536b587226db90b6b872fd8c1b01c405)]:
+  - @fuel-wallet/connections@0.34.1
+
+## 0.34.0
+
+### Minor Changes
+
+- [#1549](https://github.com/FuelLabs/fuels-wallet/pull/1549) [`c163db48`](https://github.com/FuelLabs/fuels-wallet/commit/c163db487df1c5befe4090a19ccc3eb2e9d18abb) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Increase gasLimit by 20% to avoid OutOfGas error
+
+- [#1549](https://github.com/FuelLabs/fuels-wallet/pull/1549) [`c163db48`](https://github.com/FuelLabs/fuels-wallet/commit/c163db487df1c5befe4090a19ccc3eb2e9d18abb) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Refactor transaction estimation / customization of fees flow
+
+### Patch Changes
+
+- [#1548](https://github.com/FuelLabs/fuels-wallet/pull/1548) [`6dd69ceb`](https://github.com/FuelLabs/fuels-wallet/commit/6dd69ceb614cc5ce1653f5442afc6ed7b7acbb83) Thanks [@helciofranco](https://github.com/helciofranco)! - Fix asset list scrollable container when there are many assets available.
+
+- [#1543](https://github.com/FuelLabs/fuels-wallet/pull/1543) [`a64d31f5`](https://github.com/FuelLabs/fuels-wallet/commit/a64d31f54beed711d88c118794a3b151eba4791e) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: test version publish of multiple packages
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.34.0
+
 ## 0.33.1
 
 ### Patch Changes

@@ -35,7 +35,7 @@ export function WalletCreated({ account }: WalletCreatedProps) {
           <PinWalletText />
         ) : (
           <>
-            {account && <AccountItem account={account} />}
+            {account && <AccountItem account={account} canOpenExplorer />}
             <Button intent="primary" onPress={handleGoToWallet}>
               Go to wallet
             </Button>
