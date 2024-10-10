@@ -7,18 +7,13 @@ import {
   type BN,
   ErrorCode,
   FuelError,
-  TransactionCoder,
   TransactionResponse,
   TransactionStatus,
-  arrayify,
   assembleTransactionSummary,
   bn,
-  getOperations,
-  getTransactionStatusName,
   getTransactionSummary,
   getTransactionSummaryFromRequest,
-  hexlify,
-  processGqlReceipt,
+  getTransactionsSummaries,
 } from 'fuels';
 import { WalletLockedCustom, db } from '~/systems/Core';
 
@@ -35,12 +30,7 @@ import {
   setGasLimitToTxRequest,
 } from '../utils';
 import { getCurrentTips } from '../utils/fee';
-import {
-  type GetPageInfoQuery,
-  type GetTransactionsByOwnerQuery,
-  getPageInfoQuery,
-  getTransactionsByOwnerQuery,
-} from './queries';
+import { type GetPageInfoQuery, getPageInfoQuery } from './queries';
 
 export type TxInputs = {
   getTxCursors: {
@@ -124,7 +114,7 @@ export type TxInputs = {
 };
 
 const AMOUNT_SUB_PER_TX_RETRY = 200_000;
-const TXS_PER_PAGE = 200;
+const TXS_PER_PAGE = 50;
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class TxService {
@@ -334,55 +324,18 @@ export class TxService {
     pagination,
   }: TxInputs['getTransactionHistory']) {
     const provider = await createProvider(providerUrl);
-    const {
-      consensusParameters: {
-        txParameters: { maxInputs },
-      },
-    } = provider.getChain();
-    const baseAssetId = provider.getBaseAssetId();
-
-    const result: GetTransactionsByOwnerQuery = await graphqlRequest(
-      providerUrl,
-      'getTransactionsByOwner',
-      getTransactionsByOwnerQuery,
-      {
+    const txSummaries = await getTransactionsSummaries({
+      provider,
+      filters: {
         owner: address,
         first: TXS_PER_PAGE,
         after: pagination?.after,
-      }
-    );
-
-    const txSummaries = result.transactionsByOwner.edges.map((e) => {
-      const gqlTransaction = e.node;
-      const receipts = gqlTransaction.status.receipts.map(processGqlReceipt);
-      const rawPayload = hexlify(arrayify(gqlTransaction.rawPayload));
-
-      const [transaction] = new TransactionCoder().decode(
-        arrayify(rawPayload),
-        0
-      );
-
-      const operations = getOperations({
-        transactionType: transaction.type,
-        inputs: transaction.inputs || [],
-        outputs: transaction.outputs || [],
-        receipts,
-        rawPayload,
-        maxInputs,
-        baseAssetId,
-      });
-
-      return {
-        id: gqlTransaction.id,
-        time: gqlTransaction.status.time,
-        status: getTransactionStatusName(gqlTransaction.status.type),
-        operations,
-      };
+      },
     });
 
     return {
-      transactionHistory: txSummaries,
-      pageInfo: result.transactionsByOwner.pageInfo,
+      transactionHistory: txSummaries.transactions,
+      pageInfo: txSummaries.pageInfo,
     };
   }
 
