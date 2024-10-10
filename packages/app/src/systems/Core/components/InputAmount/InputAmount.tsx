@@ -6,7 +6,7 @@
 
 import { cssObj } from '@fuel-ui/css';
 import type { BN } from 'fuels';
-import { DEFAULT_DECIMAL_UNITS, bn } from 'fuels';
+import { DEFAULT_DECIMAL_UNITS, bn, format } from 'fuels';
 import { useEffect, useState } from 'react';
 import type { FC } from 'react';
 
@@ -64,6 +64,7 @@ export type InputAmountProps = Omit<InputProps, 'size'> & {
   label?: string;
   balance?: BN;
   units?: number;
+  balancePrecision?: number;
   asset?: { name?: string; icon?: string; address?: string };
   assetTooltip?: string;
   hiddenMaxButton?: boolean;
@@ -85,6 +86,7 @@ export const InputAmount: InputAmountComponent = ({
   name,
   label,
   balance: initialBalance,
+  balancePrecision = 3,
   value,
   units,
   hiddenBalance,
@@ -97,24 +99,35 @@ export const InputAmount: InputAmountComponent = ({
   onClickAsset,
   ...props
 }) => {
+  const formatOpts = { units, precision: units };
   const [assetAmount, setAssetAmount] = useState<string>(
-    !value || value.eq(0) ? '' : formatAmount(value, units).original.display
+    !value || value.eq(0)
+      ? ''
+      : formatAmount({ amount: value, options: formatOpts })
   );
 
   const balance = initialBalance ?? bn(initialBalance);
-  const { formatted: formattedBalance, original: originalBalance } =
-    formatAmount(balance, units);
+  const formattedBalance = formatAmount({
+    amount: balance,
+    options: {
+      ...formatOpts,
+      precision: balancePrecision,
+    },
+  });
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: allow any
   useEffect(() => {
     handleAmountChange(
-      value ? formatAmount(value, units).original.display : ''
+      value ? formatAmount({ amount: value, options: formatOpts }) : ''
     );
   }, [value?.toString()]);
 
   const handleAmountChange = (text: string) => {
-    const { text: newText, amount } = createAmount(text, units);
-    const { amount: currentAmount } = createAmount(assetAmount, units);
+    const { text: newText, amount } = createAmount(text, formatOpts.units);
+    const { amount: currentAmount } = createAmount(
+      assetAmount,
+      formatOpts.units
+    );
 
     if (!currentAmount.eq(amount)) {
       onChange?.(amount);
@@ -205,13 +218,16 @@ export const InputAmount: InputAmountComponent = ({
       </Flex>
       <Box.Flex gap={'$2'}>
         {!hiddenBalance && (
-          <Tooltip content={originalBalance.display} sideOffset={-5}>
+          <Tooltip
+            content={formatAmount({ amount: balance, options: formatOpts })}
+            sideOffset={-5}
+          >
             <Text
               fontSize="sm"
-              aria-label={`Balance: ${formattedBalance.display}`}
+              aria-label={`Balance: ${formattedBalance}`}
               color="textSubtext"
             >
-              Balance: {formattedBalance.display}
+              Balance: {formattedBalance}
             </Text>
           </Tooltip>
         )}

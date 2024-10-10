@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   AmountVisibility,
   Pages,
-  formatAmount,
+  formatBalance,
   shortAddress,
 } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
@@ -24,7 +24,7 @@ import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 import { AssetRemoveDialog } from '../AssetRemoveDialog';
 
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
-import { type BNInput, bn } from 'fuels';
+import type { BNInput } from 'fuels';
 import useFuelAsset from '../../hooks/useFuelAsset';
 import { AssetItemLoader } from './AssetItemLoader';
 
@@ -118,7 +118,7 @@ export const AssetItem: AssetItemComponent = ({
     }
 
     if (amount) {
-      const { original } = formatAmount(amount, decimals);
+      const { original } = formatBalance(amount, decimals);
 
       return (
         <Tooltip

@@ -14,7 +14,7 @@ import { FuelAddress } from '~/systems/Account';
 import {
   AmountVisibility,
   VisibilityButton,
-  formatAmount,
+  formatBalance,
 } from '~/systems/Core';
 
 import { useAccounts } from '../../hooks';
@@ -57,7 +57,7 @@ export function BalanceWidget({
   const { handlers } = useAccounts();
 
   const { original } = useMemo(() => {
-    return formatAmount(account?.balance, decimals);
+    return formatBalance(account?.balance, decimals);
   }, [account]);
 
   if (isLoading || !account) return <BalanceWidget.Loader />;

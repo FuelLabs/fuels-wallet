@@ -1,6 +1,6 @@
 import type { BNInput, BigNumberish } from 'fuels';
 
-import { formatAmount } from '../../utils';
+import { formatBalance } from '../../utils';
 
 export type AmountVisibilityProps = {
   value?: BigNumberish | BNInput;
@@ -13,6 +13,6 @@ export function AmountVisibility({
   value,
   units,
 }: AmountVisibilityProps) {
-  const { formatted } = formatAmount(value, units);
+  const { formatted } = formatBalance(value, units);
   return <>{visibility ? formatted.display : '•••••'}</>;
 }

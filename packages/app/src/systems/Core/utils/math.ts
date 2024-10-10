@@ -1,10 +1,11 @@
-import type { BN, BNInput } from 'fuels';
+import type { BN, BNInput, FormatConfig } from 'fuels';
 import { DECIMAL_FUEL, bn } from 'fuels';
+import { MAX_FRACTION_DIGITS } from '~/config';
 
 const MINIMUM_ZEROS_TO_DISPLAY = 5; // it means 0.001 (at least two zeros in decimals)
 const PRECISION = 6;
 
-export type FormatAmountResult = {
+export type FormatBalanceResult = {
   amount: BN;
   formatted: {
     display: string;
@@ -16,10 +17,34 @@ export type FormatAmountResult = {
   };
 };
 
-export const formatAmount = (
+// this function replaces native bn.format because it fails when it's 0 units
+// put link to ts-sdk issue here
+export function formatAmount({
+  amount,
+  options,
+}: { amount?: BNInput; options?: FormatConfig }) {
+  const formatParams = {
+    precision: MAX_FRACTION_DIGITS,
+    ...(options ?? {}),
+  };
+
+  const isZeroUnits = !options?.units;
+  // covers a bug in the sdk that format don't work when unit is zero. we'll use 1 instead, then multiply by 10 later
+  if (isZeroUnits) {
+    // we'll multiply by 10, then can reduce 1 unit later, resulting in same zero units
+    const amountZeroUnits = bn(amount).mul(10);
+    formatParams.units = 1;
+    formatParams.precision = 0;
+    return amountZeroUnits.format(formatParams);
+  }
+
+  return bn(amount).format(formatParams);
+}
+
+export const formatBalance = (
   input: BNInput | null | undefined = '0',
   units: number | undefined = DECIMAL_FUEL
-): FormatAmountResult => {
+): FormatBalanceResult => {
   const amount = bn(input);
   const minimum = bn('1'.padEnd(units - MINIMUM_ZEROS_TO_DISPLAY, '0'));
 
