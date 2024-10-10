@@ -2,4 +2,4 @@
 "fuels-wallet": minor
 ---
 
-Increase transaction history page size to 200 items
+Reduce transaction history loading time by optimizing the complexity of the page info query.
