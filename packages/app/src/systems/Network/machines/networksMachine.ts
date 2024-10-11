@@ -20,6 +20,7 @@ type MachineContext = {
   networkId?: string;
   network?: Maybe<NetworkData>;
   error?: unknown;
+  provider?: Promise<Provider>;
 };
 
 export type AddNetworkInput = {
@@ -77,7 +78,7 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['assignNetworks', 'assignNetwork'],
+              actions: ['assignNetworks', 'assignNetwork', 'assignProvider'],
               target: 'idle',
             },
           ],
@@ -172,8 +173,13 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['notifyUpdateAccounts', 'redirectToHome'],
-              target: 'fetchingNetworks',
+              actions: [
+                'assignNetwork',
+                'assignProvider',
+                'notifyUpdateAccounts',
+                'redirectToHome',
+              ],
+              target: 'idle',
             },
           ],
         },
@@ -204,6 +210,11 @@ export const networksMachine = createMachine(
           return (ev.data as NetworkData[]).find(
             ctx.networkId ? isNetworkId : selected
           );
+        },
+      }),
+      assignProvider: assign({
+        provider: (ctx, _ev) => {
+          return ctx.network ? Provider.create(ctx.network?.url) : undefined;
         },
       }),
       notifyUpdateAccounts: () => {
