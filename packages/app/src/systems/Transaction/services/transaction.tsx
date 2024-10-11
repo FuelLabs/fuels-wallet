@@ -19,6 +19,7 @@ import { WalletLockedCustom, db } from '~/systems/Core';
 
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
+import { graphqlRequest } from '~/systems/Core/utils/graphql';
 import { NetworkService } from '~/systems/Network/services/network';
 import type { TransactionCursor } from '../types';
 import {
@@ -29,6 +30,7 @@ import {
   setGasLimitToTxRequest,
 } from '../utils';
 import { getCurrentTips } from '../utils/fee';
+import { type GetPageInfoQuery, getPageInfoQuery } from './queries';
 
 export type TxInputs = {
   getTxCursors: {
@@ -124,6 +126,9 @@ export class TxService {
         .and((cursor) => {
           return cursor.address.toLowerCase() === input.address.toLowerCase();
         })
+        .and((cursor) => {
+          return cursor.size === TXS_PER_PAGE;
+        })
         .sortBy('id');
     });
   }
@@ -134,6 +139,7 @@ export class TxService {
     const transactionsCursors: TransactionCursor[] = cursors.map(
       (endCursor) => ({
         address,
+        size: TXS_PER_PAGE,
         providerUrl,
         endCursor,
       })
@@ -338,21 +344,22 @@ export class TxService {
     providerUrl = '',
     initialEndCursor,
   }: TxInputs['getAllCursors']) {
-    const provider = await createProvider(providerUrl);
-
     let hasNextPage = true;
     const cursors: string[] = [];
     let endCursor: string | null | undefined = initialEndCursor;
 
     while (hasNextPage) {
-      const { pageInfo } = await getTransactionsSummaries({
-        provider,
-        filters: {
+      const result: GetPageInfoQuery = await graphqlRequest(
+        providerUrl,
+        'getTransactionsByOwner',
+        getPageInfoQuery,
+        {
           owner: address,
           first: TXS_PER_PAGE,
           after: endCursor,
-        },
-      });
+        }
+      );
+      const pageInfo = result.transactionsByOwner.pageInfo;
 
       hasNextPage = pageInfo.hasNextPage;
       endCursor = pageInfo.endCursor;
@@ -457,10 +464,4 @@ export class TxService {
       providerUrl: network.url,
     };
   }
-}
-
-export function getAssetAccountBalance(account: Account, assetId: string) {
-  const balances = account.balances || [];
-  const asset = balances.find((balance) => balance.assetId === assetId);
-  return bn(asset?.amount);
 }

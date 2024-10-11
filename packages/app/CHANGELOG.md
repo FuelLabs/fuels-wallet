@@ -1,5 +1,35 @@
 # fuels-wallet
 
+## 0.37.0
+
+### Minor Changes
+
+- [#1572](https://github.com/FuelLabs/fuels-wallet/pull/1572) [`97185130`](https://github.com/FuelLabs/fuels-wallet/commit/97185130936b9d7efcc19a54213c69401105a67b) Thanks [@helciofranco](https://github.com/helciofranco)! - Reduce transaction history loading time by optimizing the complexity of the page info query.
+
+- [#1571](https://github.com/FuelLabs/fuels-wallet/pull/1571) [`112e002c`](https://github.com/FuelLabs/fuels-wallet/commit/112e002ce6995656346a9a8889bc8800d2a868e1) Thanks [@helciofranco](https://github.com/helciofranco)! - Format tiny, large, and regular amounts, applying 6 decimal places of precision.
+
+### Patch Changes
+
+- [#1570](https://github.com/FuelLabs/fuels-wallet/pull/1570) [`8e42400c`](https://github.com/FuelLabs/fuels-wallet/commit/8e42400c42e90fd1f7a42724fe5e217f5e058316) Thanks [@nelitow](https://github.com/nelitow)! - Improve account name colision verification
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.37.0
+
+## 0.36.0
+
+### Minor Changes
+
+- [#1569](https://github.com/FuelLabs/fuels-wallet/pull/1569) [`d344c07e`](https://github.com/FuelLabs/fuels-wallet/commit/d344c07ea39425806dcb442f717708d9a8de12a0) Thanks [@helciofranco](https://github.com/helciofranco)! - Add `Tx ID` to the Tx Details Screen
+
+- [#1569](https://github.com/FuelLabs/fuels-wallet/pull/1569) [`d344c07e`](https://github.com/FuelLabs/fuels-wallet/commit/d344c07ea39425806dcb442f717708d9a8de12a0) Thanks [@helciofranco](https://github.com/helciofranco)! - Add `View on Explorer` button besides the Account Address
+
+### Patch Changes
+
+- [#1563](https://github.com/FuelLabs/fuels-wallet/pull/1563) [`41e0465e`](https://github.com/FuelLabs/fuels-wallet/commit/41e0465ecf70fddc8527ba2d7fbc1a4ce23e8938) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed duplicated instance of services on browser session restore
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.36.0
+
 ## 0.35.0
 
 ### Minor Changes

@@ -1,7 +1,7 @@
 import { cx } from '@fuel-ui/css';
 import { Avatar, Box, Copyable, Grid, Text } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
-import { AssetFuel, BNInput, bn } from 'fuels';
+import { bn } from 'fuels';
 import type { FC } from 'react';
 import { formatAmount, shortAddress } from '~/systems/Core';
 import type { InsufficientInputAmountError } from '~/systems/Transaction';
@@ -92,7 +92,6 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
     decimals,
     amount,
   } = assetAmount || {};
-
   return (
     <Grid key={assetId} css={styles.root} className={assetAmountClass}>
       <Box.Flex css={styles.asset}>

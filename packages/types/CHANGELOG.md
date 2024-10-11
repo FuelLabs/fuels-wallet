@@ -1,5 +1,13 @@
 # @fuel-wallet/types
 
+## 0.37.0
+
+### Minor Changes
+
+- [#1571](https://github.com/FuelLabs/fuels-wallet/pull/1571) [`112e002c`](https://github.com/FuelLabs/fuels-wallet/commit/112e002ce6995656346a9a8889bc8800d2a868e1) Thanks [@helciofranco](https://github.com/helciofranco)! - Format tiny, large, and regular amounts, applying 6 decimal places of precision.
+
+## 0.36.0
+
 ## 0.35.0
 
 ## 0.34.1

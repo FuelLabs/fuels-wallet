@@ -9,7 +9,7 @@ The `@fuels/playwright-utils` package allows developers building frontend applic
 
 ## Fixtures
 
-If you are not using any custom test fixtures in your playwright tests import the fixtures directly from this package, and pass in the path to the fuel extension. You can download the extension manually or use our `downloadFuel` function.
+If you are not using any custom test fixtures in your playwright tests, import the fixtures directly from this package, and pass in the path to the fuel extension. You can download the extension manually or use our `downloadFuel` function.
 
 ```tsx
 // e2e.test.ts
@@ -17,7 +17,7 @@ import { test } from '@fuel-wallet/playwright-utils';
 
 test.use({ pathToExtension: './path/to/extension' });
 // OR
-const fuelPathToExtension = downloadFuel(FUEL_WALLET_VERSION');
+const fuelPathToExtension = await downloadFuel(FUEL_WALLET_VERSION);
 test.use({ pathToExtension: fuelPathToExtension });
 ```
 
