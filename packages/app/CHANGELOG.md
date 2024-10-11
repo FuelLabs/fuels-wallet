@@ -1,5 +1,20 @@
 # fuels-wallet
 
+## 0.37.0
+
+### Minor Changes
+
+- [#1572](https://github.com/FuelLabs/fuels-wallet/pull/1572) [`97185130`](https://github.com/FuelLabs/fuels-wallet/commit/97185130936b9d7efcc19a54213c69401105a67b) Thanks [@helciofranco](https://github.com/helciofranco)! - Reduce transaction history loading time by optimizing the complexity of the page info query.
+
+- [#1571](https://github.com/FuelLabs/fuels-wallet/pull/1571) [`112e002c`](https://github.com/FuelLabs/fuels-wallet/commit/112e002ce6995656346a9a8889bc8800d2a868e1) Thanks [@helciofranco](https://github.com/helciofranco)! - Format tiny, large, and regular amounts, applying 6 decimal places of precision.
+
+### Patch Changes
+
+- [#1570](https://github.com/FuelLabs/fuels-wallet/pull/1570) [`8e42400c`](https://github.com/FuelLabs/fuels-wallet/commit/8e42400c42e90fd1f7a42724fe5e217f5e058316) Thanks [@nelitow](https://github.com/nelitow)! - Improve account name colision verification
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.37.0
+
 ## 0.36.0
 
 ### Minor Changes
