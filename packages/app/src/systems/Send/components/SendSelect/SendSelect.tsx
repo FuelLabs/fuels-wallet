@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Form, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { type BN, DECIMAL_FUEL, bn } from 'fuels';
+import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import {
