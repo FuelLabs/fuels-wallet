@@ -79,7 +79,7 @@ type SchemaOptions = {
   maxGasLimit: BN | undefined;
 };
 
-const schemaFactory = (provider: Provider | undefined) =>
+const schemaFactory = (_provider: Promise<Provider> | undefined) =>
   yup
     .object({
       asset: yup.string().required('Asset is required'),
@@ -118,21 +118,19 @@ const schemaFactory = (provider: Provider | undefined) =>
         .test(
           'is-user-address',
           'Address is not a valid user address',
-          async (value, values) => {
+          async (value) => {
             try {
+              const provider = await _provider;
               const validations = [
-                provider?.isUserAccount(value).then((res) => {
-                  if (!res) throw new Error('is-user-address');
-                  return res;
-                }),
-                provider?.getAddressType(value).then((res) => {
-                  if (res !== 'Account') throw new Error('is-user-address');
-                  return res === 'Account';
-                }),
+                provider?.isUserAccount(value).then((res) => !!res),
+                provider
+                  ?.getAddressType(value)
+                  .then((res) => res === 'Account'),
               ];
               return (await Promise.all(validations)).every(Boolean);
-            } catch (_) {
-              return values.createError({ path: 'is-user-address' });
+            } catch (error) {
+              console.error(error);
+              return false;
             }
           }
         ),
@@ -244,26 +242,7 @@ export function useSend() {
   const navigate = useNavigate();
   const txRequest = useTransactionRequest();
   const { account } = useAccounts();
-  const providerResolve = store.useSelector(
-    Services.networks,
-    selectors.provider
-  );
-  const [resolvedProvider, setResolvedProvider] = useState<
-    Provider | undefined
-  >(undefined);
-
-  useEffect(() => {
-    let abort = false;
-    providerResolve
-      ?.then((provider) => {
-        !abort && setResolvedProvider(provider);
-      })
-      .catch(() => setResolvedProvider(undefined));
-
-    return () => {
-      abort = true;
-    };
-  }, [providerResolve]);
+  const provider = store.useSelector(Services.networks, selectors.provider);
 
   const service = useInterpret(() =>
     sendMachine.withConfig({
@@ -308,8 +287,8 @@ export function useSend() {
   const errorMessage = useSelector(service, selectors.error);
 
   const resolver = useMemo(
-    () => yupResolver(schemaFactory(resolvedProvider)),
-    [resolvedProvider]
+    () => yupResolver(schemaFactory(provider)),
+    [provider]
   );
   const form = useForm<SendFormValues>({
     resolver,
