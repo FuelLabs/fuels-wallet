@@ -1,7 +1,14 @@
 import type { Account } from '@fuel-wallet/types';
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium, expect } from '@playwright/test';
-import { Provider, Wallet, bn } from 'fuels';
+import {
+  type Bech32Address,
+  Provider,
+  Wallet,
+  bn,
+  fromBech32,
+  toB256,
+} from 'fuels';
 
 import {
   getButtonByText,
@@ -76,7 +83,9 @@ test.describe('SendTransaction', () => {
     await page.getByText('Ethereum').click();
 
     // Fill address
-    await getInputByName(page, 'address').fill(account.address.toString());
+    await getInputByName(page, 'address').fill(
+      toB256(account.address as Bech32Address)
+    );
 
     // Focus on input and wait, to avoid flakiness
     await getInputByName(page, 'amount').focus();
@@ -120,8 +129,9 @@ test.describe('SendTransaction', () => {
 
     // Fill amount
     await getInputByName(page, 'amount').fill('0.01');
+
     // Check the balance is correct formated with only 2 decimals
-    await hasAriaLabel(page, 'Balance: 1,000,000.00');
+    await hasText(page, 'Balance: 1,000,000.000');
 
     // Submit transaction
     await getButtonByText(page, 'Review').click();
