@@ -56,7 +56,7 @@ export function BalanceWidget({
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
 
-  const { original, amount } = useMemo(() => {
+  const { original, tooltip } = useMemo(() => {
     return formatBalance(account?.balance, decimals);
   }, [account]);
 
@@ -104,12 +104,12 @@ export function BalanceWidget({
             <Tooltip
               content={original.display}
               delayDuration={0}
-              open={visibility && amount.gt(0) ? undefined : false}
+              open={visibility && tooltip ? undefined : false}
             >
               <Text aria-hidden={visibility} data-account-name={account.name}>
                 {account.balanceSymbol || '$'}&nbsp;
                 <AmountVisibility
-                  value={amount}
+                  value={account.balance}
                   visibility={visibility}
                   units={decimals}
                 />

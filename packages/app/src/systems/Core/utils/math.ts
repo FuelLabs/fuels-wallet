@@ -7,6 +7,7 @@ const PRECISION = 6;
 
 export type FormatBalanceResult = {
   amount: BN;
+  tooltip: boolean;
   formatted: {
     display: string;
     fractionDigits: number;
@@ -48,9 +49,28 @@ export const formatBalance = (
   const amount = bn(input);
   const minimum = bn('1'.padEnd(units - MINIMUM_ZEROS_TO_DISPLAY, '0'));
 
+  // covers a bug in the sdk that format don't work when unit is zero. we'll use 1 instead, then multiply by 10 later
+  if (!units) {
+    const display = formatAmount({ amount, options: { units: 0 } });
+
+    return {
+      amount,
+      tooltip: false,
+      formatted: {
+        display,
+        fractionDigits: 0,
+      },
+      original: {
+        display,
+        fractionDigits: 0,
+      },
+    };
+  }
+
   if (amount.isZero()) {
     return {
       amount,
+      tooltip: false,
       formatted: {
         display: '0',
         fractionDigits: 0,
@@ -72,6 +92,7 @@ export const formatBalance = (
   if (minimum.gt(amount)) {
     return {
       amount,
+      tooltip: true,
       formatted: {
         display: `<${minimum.format({
           units: units,
@@ -86,13 +107,16 @@ export const formatBalance = (
     };
   }
 
+  const formattedDisplay = amount.format({
+    units: units,
+    precision: PRECISION,
+  });
+
   return {
     amount,
+    tooltip: formattedDisplay !== originalDisplay,
     formatted: {
-      display: amount.format({
-        units: units,
-        precision: PRECISION,
-      }),
+      display: formattedDisplay,
       fractionDigits: PRECISION,
     },
     original: {

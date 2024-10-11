@@ -118,13 +118,13 @@ export const AssetItem: AssetItemComponent = ({
     }
 
     if (amount) {
-      const { original } = formatBalance(amount, decimals);
+      const { original, tooltip } = formatBalance(amount, decimals);
 
       return (
         <Tooltip
           content={original.display}
           delayDuration={0}
-          open={visibility ? undefined : false}
+          open={visibility && tooltip ? undefined : false}
         >
           <Text css={{ fontSize: '$sm', fontWeight: '$normal' }}>
             <AmountVisibility
