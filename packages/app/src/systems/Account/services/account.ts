@@ -210,9 +210,9 @@ export class AccountService {
 
   static async checkAccountNameExists(name = '') {
     const accounts = await AccountService.getAccounts();
-    // biome-ignore lint/complexity/noThisInStatic: <explanation>
-    const exitsAccountWithName = this.filterByName(accounts, name).length > 0;
-    return exitsAccountWithName;
+    const existsAccountWithName =
+      AccountService.existsAccountWithName(accounts, name).length > 0;
+    return existsAccountWithName;
   }
 
   static async generateAccountName() {
@@ -231,6 +231,12 @@ export class AccountService {
     return accounts.filter((account) =>
       account.name.toLowerCase().includes(name.toLowerCase())
     );
+  }
+
+  static existsAccountWithName(accounts: Account[], name = '') {
+    return accounts.filter((account) => {
+      return account.name === name;
+    });
   }
 }
 
