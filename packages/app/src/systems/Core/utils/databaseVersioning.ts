@@ -138,4 +138,22 @@ export const applyDbVersioning = (db: Dexie) => {
     abis: '&contractId',
     errors: '&id',
   });
+
+  // DB VERSION 24
+  // Add transactionCursors page size column
+  db.version(24)
+    .stores({
+      vaults: 'key',
+      accounts: '&address, &name',
+      networks: '&id, &url, &name, chainId',
+      connections: 'origin',
+      transactionsCursors: '++id, address, size, providerUrl, endCursor',
+      assets: '&name, &symbol',
+      abis: '&contractId',
+      errors: '&id',
+    })
+    .upgrade(async (tx) => {
+      const transactionsCursors = tx.table('transactionsCursors');
+      await transactionsCursors.clear();
+    });
 };
