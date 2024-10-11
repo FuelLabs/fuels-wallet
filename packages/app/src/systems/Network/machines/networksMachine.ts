@@ -197,8 +197,14 @@ export const networksMachine = createMachine(
         };
       }),
       assignNetwork: assign({
-        network: (ctx, ev) =>
-          ctx.networkId ? ev.data.find((n) => n.id === ctx.networkId) : null,
+        network: (ctx, ev) => {
+          const selected = (network: NetworkData) => network.isSelected;
+          const isNetworkId = (network: NetworkData) =>
+            network.id === ctx.networkId;
+          return (ev.data as NetworkData[]).find(
+            ctx.networkId ? isNetworkId : selected
+          );
+        },
       }),
       notifyUpdateAccounts: () => {
         store.updateAccounts();
