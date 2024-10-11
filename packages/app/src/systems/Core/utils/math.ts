@@ -1,5 +1,5 @@
 import type { BN, BNInput, FormatConfig } from 'fuels';
-import { DECIMAL_FUEL, bn } from 'fuels';
+import { DEFAULT_DECIMAL_UNITS, bn } from 'fuels';
 import { MAX_FRACTION_DIGITS } from '~/config';
 
 const MINIMUM_ZEROS_TO_DISPLAY = 5; // it means 0.000001 (at least 5 zeros in decimals)
@@ -44,7 +44,7 @@ export function formatAmount({
 
 export const formatBalance = (
   input: BNInput | null | undefined = '0',
-  units: number | undefined = DECIMAL_FUEL
+  units: number | undefined = DEFAULT_DECIMAL_UNITS
 ): FormatBalanceResult => {
   const amount = bn(input);
   const minimum = bn('1'.padEnd(units - MINIMUM_ZEROS_TO_DISPLAY, '0'));
