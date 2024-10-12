@@ -30,7 +30,7 @@ describe('BalanceWidget', () => {
     expect(screen.getByText(ACCOUNT.name)).toBeInTheDocument();
     expect(
       screen.getByText(
-        shortAddress(Address.fromDynamicInput(ACCOUNT.address).toB256())
+        shortAddress(Address.fromDynamicInput(ACCOUNT.address).toString())
       )
     ).toBeInTheDocument();
   });
@@ -77,7 +77,7 @@ describe('BalanceWidget', () => {
     await act(async () => {
       fireEvent.click(btn);
       expect(await navigator.clipboard.readText()).toBe(
-        Address.fromDynamicInput(ACCOUNT.address).toB256()
+        Address.fromDynamicInput(ACCOUNT.address).toString()
       );
     });
   });

@@ -1,11 +1,14 @@
 import { BaseConnection, createUUID } from '@fuel-wallet/connections';
-import type { CommunicationEventArg } from '@fuel-wallet/types';
-import { BACKGROUND_SCRIPT_NAME, VAULT_SCRIPT_NAME } from '@fuel-wallet/types';
+import type {
+  CommunicationEventArg,
+  CommunicationMessage,
+  EventMessage,
+} from '@fuel-wallet/types';
 import {
-  type CommunicationMessage,
-  type EventMessage,
+  BACKGROUND_SCRIPT_NAME,
   MessageTypes,
-} from '@fuels/connectors';
+  VAULT_SCRIPT_NAME,
+} from '@fuel-wallet/types';
 
 export class CommunicationProtocol extends BaseConnection {
   ports: Map<string, chrome.runtime.Port>;

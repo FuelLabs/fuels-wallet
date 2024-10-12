@@ -22,6 +22,7 @@ import {
 } from '../mocks';
 
 import {
+  Address,
   type Asset,
   type NetworkFuel,
   Provider,
@@ -316,12 +317,19 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.getWallet()', async () => {
-      const isCorrectAddress = blankPage.evaluate(async () => {
-        const currentAccount = await window.fuel.currentAccount();
-        const wallet = await window.fuel.getWallet(currentAccount);
-        return wallet.address.toString() === currentAccount;
+      const currentAccount = await blankPage.evaluate(async () => {
+        return window.fuel.currentAccount();
       });
-      expect(await isCorrectAddress).toBeTruthy();
+      const walletAccount = await blankPage.evaluate(
+        async ([currentAccount]) => {
+          const wallet = await window.fuel.getWallet(currentAccount);
+          return wallet.address.toString();
+        },
+        [currentAccount]
+      );
+      expect(Address.fromString(currentAccount).toString()).toEqual(
+        walletAccount
+      );
     });
 
     await test.step('window.fuel.accounts()', async () => {

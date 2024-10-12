@@ -86,7 +86,11 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
               {isNetwork ? address : name}
             </Heading>
             {!isNetwork && (
-              <FuelAddress address={fuelAddress} css={styles.address} />
+              <FuelAddress
+                isContract={isContract}
+                address={fuelAddress}
+                css={styles.address}
+              />
             )}
           </Box.Flex>
         </>

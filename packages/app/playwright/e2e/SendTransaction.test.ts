@@ -14,7 +14,6 @@ import {
   getButtonByText,
   getByAriaLabel,
   getInputByName,
-  hasAriaLabel,
   hasText,
   visit,
 } from '../commons';
@@ -152,7 +151,9 @@ test.describe('SendTransaction', () => {
     await page.waitForSelector('[aria-disabled="true"]');
     await getButtonByText(page, 'Select one asset').click();
     await page.getByText('Ethereum').click();
-    await getInputByName(page, 'address').fill(receiverWallet.address.toB256());
+    await getInputByName(page, 'address').fill(
+      receiverWallet.address.toString()
+    );
 
     // Focus on input and wait, to avoid flakiness
     await getInputByName(page, 'amount').focus();
@@ -202,7 +203,9 @@ test.describe('SendTransaction', () => {
     await page.waitForSelector('[aria-disabled="true"]');
     await getButtonByText(page, 'Select one asset').click();
     await page.getByText('Ethereum').click();
-    await getInputByName(page, 'address').fill(receiverWallet.address.toB256());
+    await getInputByName(page, 'address').fill(
+      receiverWallet.address.toString()
+    );
 
     // Focus on input and wait, to avoid flakiness
     await getInputByName(page, 'amount').focus();
@@ -254,7 +257,9 @@ test.describe('SendTransaction', () => {
     await page.waitForSelector('[aria-disabled="true"]');
     await getButtonByText(page, 'Select one asset').click();
     await page.getByText('Ethereum').click();
-    await getInputByName(page, 'address').fill(receiverWallet.address.toB256());
+    await getInputByName(page, 'address').fill(
+      receiverWallet.address.toString()
+    );
 
     // Focus on input and wait, to avoid flakiness
     await getInputByName(page, 'amount').focus();

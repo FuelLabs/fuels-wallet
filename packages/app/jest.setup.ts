@@ -30,6 +30,8 @@ jest.mock('react-dom/test-utils', () => {
   };
 });
 
+console.warn = jest.fn();
+
 const noop = () => {};
 Object.defineProperty(window, 'scrollTo', { value: noop, writable: true });
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });

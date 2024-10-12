@@ -65,7 +65,6 @@ const config: JestConfigWithTsJest = {
     '^react-dom$': require.resolve('react-dom'),
     '^uuid$': require.resolve('uuid'),
     '^@web3modal/core$': require.resolve('@web3modal/core'),
-    '^@fuels/connectors$': require.resolve('@fuels/connectors'),
   },
 };
 

@@ -17,11 +17,11 @@ describe('FuelAddress', () => {
 
   it('should show b256 address from b256', () => {
     renderWithProvider(<FuelAddress address={accountAddressB256} />);
-    expect(screen.getByText('0x2230...5c6c')).toBeInTheDocument();
+    expect(screen.getByText('0x2230...5C6C')).toBeInTheDocument();
   });
 
   it('should show b256 address from bech32', () => {
     renderWithProvider(<FuelAddress address={accountAddressBech32} />);
-    expect(screen.getByText('0x2230...5c6c')).toBeInTheDocument();
+    expect(screen.getByText('0x2230...5C6C')).toBeInTheDocument();
   });
 });
