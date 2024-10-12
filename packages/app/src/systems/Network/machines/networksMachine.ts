@@ -179,7 +179,7 @@ export const networksMachine = createMachine(
                 'redirectToHome',
                 'assignProvider',
               ],
-              target: 'fetchingNetworks',
+              target: 'idle',
             },
           ],
         },
@@ -205,15 +205,20 @@ export const networksMachine = createMachine(
       assignNetwork: assign({
         network: (ctx, ev) => {
           const noChange = ctx.network?.id === ctx.networkId;
-          if (noChange && !!ctx.network) return ctx.network;
+          if (noChange && !!ctx.network)
+            return ctx.network
+              ? ({ ...ctx.network, isSelected: true } as NetworkData)
+              : undefined;
 
           const selectById = (n: NetworkData | null) => n?.id === ctx.networkId;
           const selectByIsSelected = (n: NetworkData | null) => !!n?.isSelected;
           const selector = ctx.networkId ? selectById : selectByIsSelected;
-
-          return (Object.values(ev.data ?? {}) as Array<NetworkData>).find(
-            selector
-          );
+          const network = (
+            Object.values(ev.data ?? {}) as Array<NetworkData>
+          ).find(selector);
+          return network
+            ? ({ ...network, isSelected: true } as NetworkData)
+            : undefined;
         },
         networks: (ctx) => {
           const selectedId = ctx.network?.id || ctx.networkId;
