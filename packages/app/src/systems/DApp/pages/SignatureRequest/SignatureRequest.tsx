@@ -44,7 +44,8 @@ export function SignatureRequest() {
                     <Text
                       css={{
                         width: message.length > 80 ? '800px' : '100%',
-                        wordBreak: 'break-all',
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-word',
                       }}
                     >
                       {message}
