@@ -8,7 +8,7 @@ import { AccountItem } from './AccountItem';
 
 const ACCOUNT = MOCK_ACCOUNTS[0];
 const SHORT_ADDRESS = shortAddress(
-  Address.fromDynamicInput(ACCOUNT.address).toB256()
+  Address.fromDynamicInput(ACCOUNT.address).toChecksum()
 );
 
 jest.mock('~/systems/Network', () => ({
