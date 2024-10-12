@@ -204,12 +204,21 @@ export const networksMachine = createMachine(
       }),
       assignNetwork: assign({
         network: (ctx, ev) => {
-          if (ctx.network?.id === ctx.networkId) return ctx.network;
-          return ctx.networkId
-            ? (ev.data as FetchResponse<NetworkData[]>).find(
-                (n) => n.id === ctx.networkId
-              )
-            : null;
+          const noChange = ctx.network?.id === ctx.networkId;
+          if (noChange && !!ctx.network) return ctx.network;
+
+          const selectById = (n: NetworkData | null) => n?.id === ctx.networkId;
+          const selectByIsSelected = (n: NetworkData | null) => !!n?.isSelected;
+          const selector = ctx.networkId ? selectById : selectByIsSelected;
+          if (typeof ev.data === 'object' && !!ev.data) {
+            return (Object.values(ev.data) as Array<NetworkData>).find(
+              selector
+            );
+          }
+
+          return (
+            (ev.data as FetchResponse<NetworkData[]>)?.find?.(selector) ?? null
+          );
         },
       }),
       assignProvider: assign({
