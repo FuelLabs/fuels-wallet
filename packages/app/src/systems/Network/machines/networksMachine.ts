@@ -204,12 +204,12 @@ export const networksMachine = createMachine(
       }),
       assignNetwork: assign({
         network: (ctx, ev) => {
-          const selected = (network: NetworkData) => network.isSelected;
-          const isNetworkId = (network: NetworkData) =>
-            network.id === ctx.networkId;
-          return (Object.values(ev.data) as Array<NetworkData>).find(
-            ctx.networkId ? isNetworkId : selected
-          );
+          if (ctx.network?.id === ctx.networkId) return ctx.network;
+          return ctx.networkId
+            ? (ev.data as FetchResponse<NetworkData[]>).find(
+                (n) => n.id === ctx.networkId
+              )
+            : null;
         },
       }),
       assignProvider: assign({
