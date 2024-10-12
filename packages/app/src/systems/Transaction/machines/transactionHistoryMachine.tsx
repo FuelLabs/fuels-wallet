@@ -350,13 +350,11 @@ export const transactionHistoryMachine = createMachine(
           const address = input.address;
           const providerUrl = selectedNetwork?.url || '';
           const initialEndCursor = input.initialEndCursor;
-
           const result = await TxService.getAllCursors({
             address,
             providerUrl,
             initialEndCursor,
           });
-
           // Adding missing cursors
           if (result.cursors.length > 0) {
             await TxService.addTxCursors({
@@ -365,7 +363,6 @@ export const transactionHistoryMachine = createMachine(
               cursors: result.cursors,
             });
           }
-
           const cursors = await TxService.getTxCursors({
             address,
             providerUrl,
