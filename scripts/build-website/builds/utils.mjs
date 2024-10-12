@@ -49,8 +49,8 @@ export function setEnv() {
   );
 }
 
-export async function runPnpmCmd(cmds) {
-  await execa('pnpm', cmds, { stdout: 'inherit' });
+export async function runPnpmCmd(cmds, env) {
+  await execa(`${env} pnpm`, cmds, { stdout: 'inherit' });
 }
 
 export async function moveDocs() {
@@ -61,5 +61,9 @@ export async function buildWebsite() {
   fs.rmSync(DIST_FOLDER, { recursive: true, force: true });
   await runPnpmCmd(['build:preview', '--force', '--no-cache']);
   await moveDocs();
-  await runPnpmCmd(['build:all', '--force', '--no-cache']);
+  await runPnpmCmd([
+    'NODE_ENV=production VITE_CRX_RELEASE=true build:all',
+    '--force',
+    '--no-cache',
+  ]);
 }
