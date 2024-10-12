@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BNInput } from 'fuels';
-import { type Provider, bn } from 'fuels';
+import { type Provider, bn, Address } from 'fuels';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -121,11 +121,20 @@ const schemaFactory = (_provider: Promise<Provider | undefined> | undefined) =>
           async (value) => {
             try {
               const provider = await _provider;
+              if (!provider) {
+                return true;
+              }
+
+              const standardizedAddress = Address.fromString(value).toString();
               const validations = [
-                provider?.isUserAccount(value).then((res) => !!res),
                 provider
-                  ?.getAddressType(value)
-                  .then((res) => res === 'Account'),
+                  ?.isUserAccount(standardizedAddress)
+                  .then((res) => !!res)
+                  .catch(() => false),
+                provider
+                  ?.getAddressType(standardizedAddress)
+                  .then((res) => res === 'Account')
+                  .catch(() => false),
               ];
               return (await Promise.all(validations)).every(Boolean);
             } catch (error) {
