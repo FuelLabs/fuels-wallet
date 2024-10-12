@@ -53,7 +53,7 @@ if (process.env.CI) {
   });
 }
 
-const mockNetworks = [
+const _mockNetworks = [
   {
     asset_id: 'TKN',
     name: 'Token',
@@ -76,12 +76,12 @@ const mockNetworks = [
     decimals: 9,
   },
 ];
-global.fetch = jest.fn((url) => {
-  if (url === 'https://verified-assets.fuel.network/assets.json') {
-    return Promise.resolve({
-      ok: true,
-      json: () => Promise.resolve(mockNetworks),
-    });
-  }
-  return jest.requireActual('node-fetch')(url);
-}) as jest.Mock;
+// global.fetch = jest.fn((url) => {
+//   if (url === 'https://verified-assets.fuel.network/assets.json') {
+//     return Promise.resolve({
+//       ok: true,
+//       json: () => Promise.resolve(mockNetworks),
+//     });
+//   }
+//   return jest.requireActual('node-fetch')(url);
+// }) as jest.Mock;

@@ -134,8 +134,8 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
+              target: 'fetchingNetworks',
               actions: ['redirectToList'],
-              target: 'idle',
             },
           ],
         },
