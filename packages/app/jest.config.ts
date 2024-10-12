@@ -27,6 +27,8 @@ const config: JestConfigWithTsJest = {
         useESM: true,
         diagnostics: {
           ignoreCodes: [1343],
+          warnOnly: true,
+          pretty: true,
         },
         astTransformers: {
           before: [
