@@ -17,7 +17,6 @@ const machine = networksMachine
       redirectToList() {},
       redirectToHome() {},
       notifyUpdateAccounts() {},
-      fetchNetworks() {},
     },
   })
   .withContext({});
@@ -108,7 +107,8 @@ describe('networksMachine', () => {
       state = await expectStateMatch(service, 'idle');
 
       let networks = state.context.networks || [];
-      const idx = networks.findIndex((n) => n.isSelected);
+      const idx = networks.findIndex((n) => n.id === state.context.network?.id);
+      if (idx === -1) throw new Error('Network ID not found');
       const invertIdx = idx === 0 ? 1 : 0;
       expect(networks[idx]?.isSelected).toBeTruthy();
       expect(networks[invertIdx]?.isSelected).toBeFalsy();

@@ -77,7 +77,11 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['reloadAssets', 'assignNetwork', 'assignProvider'],
+              actions: [
+                'reloadAssetsAndSetNetworks',
+                'assignNetwork',
+                'assignProvider',
+              ],
               target: 'idle',
             },
           ],
@@ -115,8 +119,14 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['notifyUpdateAccounts', 'redirectToHome'],
-              target: 'fetchingNetworks',
+              actions: [
+                'addSelectedNetwork',
+                'assignProvider',
+                'reloadAssets',
+                'notifyUpdateAccounts',
+                'redirectToHome',
+              ],
+              target: 'idle',
             },
           ],
         },
@@ -157,8 +167,8 @@ export const networksMachine = createMachine(
               actions: [
                 'filterNetworks',
                 'selectNextValidNetwork',
+                'reloadAssets',
                 'assignProvider',
-                'fetchNetworks',
               ],
             },
           ],
@@ -176,14 +186,14 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
+              target: 'idle',
               actions: [
                 'selectNetwork',
-                'fetchNetworks',
                 'assignProvider',
+                'reloadAssets',
                 'notifyUpdateAccounts',
                 'redirectToHome',
               ],
-              target: 'idle',
             },
           ],
         },
@@ -197,16 +207,18 @@ export const networksMachine = createMachine(
   },
   {
     actions: {
-      reloadAssets: assign((ctx, event) => {
+      reloadAssetsAndSetNetworks: assign({
+        networks: (ctx, event) => {
+          store.reloadListedAssets();
+          if (Array.isArray(event.data)) {
+            return event.data;
+          }
+          return ctx.networks;
+        },
+      }),
+      reloadAssets: assign((ctx) => {
         store.reloadListedAssets();
-        if (Array.isArray(event.data)) {
-          return {
-            networks: event.data,
-          };
-        }
-        return {
-          networks: ctx.networks,
-        };
+        return ctx;
       }),
       selectNextValidNetwork: assign({
         network: (ctx, ev) => {
@@ -238,17 +250,26 @@ export const networksMachine = createMachine(
           return network ? { ...network, isSelected: true } : network;
         },
         networks: (ctx, ev) => {
-          const networks = Object.values(
-            ctx.networks ?? {}
-          ) as Array<NetworkData>;
-          const networksParsed =
-            (ev.data?.id &&
-              networks.map((data) => ({
-                ...data,
-                isSelected: data.id === ev.data.id,
-              }))) ||
-            [];
-          return networksParsed;
+          const matchingId = ev.data?.id || ctx.network?.id;
+          return ctx?.networks?.map((data) => ({
+            ...data,
+            isSelected: data.id === matchingId,
+          }));
+        },
+      }),
+      addSelectedNetwork: assign({
+        network: (ctx, ev) => {
+          return ev.data ? { ...ev.data, isSelected: true } : ctx.network;
+        },
+        networks: (ctx, ev) => {
+          const selectedId = ev.data?.id || ctx.network?.id;
+          const filteredNetworks = ctx.networks?.map((data) => ({
+            ...data,
+            isSelected: data.id === selectedId,
+          }));
+          if (ev.data) filteredNetworks?.push({ ...ev.data, isSelected: true });
+
+          return filteredNetworks;
         },
       }),
       assignNetwork: assign({
