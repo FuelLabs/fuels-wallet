@@ -220,6 +220,13 @@ export const networksMachine = createMachine(
             (ev.data as FetchResponse<NetworkData[]>)?.find?.(selector) ?? null
           );
         },
+        networks: (ctx) => {
+          const selectedId = ctx.network?.id || ctx.networkId;
+          return ctx.networks?.map((network) => ({
+            ...network,
+            isSelected: network.id === selectedId,
+          }));
+        },
       }),
       assignProvider: assign({
         provider: async (ctx, _ev) => {

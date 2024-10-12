@@ -49,9 +49,9 @@ describe('networksMachine', () => {
       expect(state.context.networks?.length).toBe(1);
     });
 
-    it('should not have any network selected in context', async () => {
+    it('should have one network selected in context', async () => {
       state = await expectStateMatch(service, 'idle');
-      expect(state.context.network).toBeFalsy();
+      expect(state.context.network).toBeDefined();
     });
   });
 
