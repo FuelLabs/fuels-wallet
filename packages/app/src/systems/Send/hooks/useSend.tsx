@@ -79,7 +79,7 @@ type SchemaOptions = {
   maxGasLimit: BN | undefined;
 };
 
-const schemaFactory = (_provider: Promise<Provider> | undefined) =>
+const schemaFactory = (_provider: Promise<Provider | undefined> | undefined) =>
   yup
     .object({
       asset: yup.string().required('Asset is required'),
