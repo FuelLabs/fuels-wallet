@@ -49,8 +49,8 @@ export function setEnv() {
   );
 }
 
-export async function runPnpmCmd(cmds, env = '') {
-  await execa(`${env} pnpm`, cmds, { stdout: 'inherit' });
+export async function runPnpmCmd(cmds, env) {
+  await execa(`${env ? `${env} ` : ''}pnpm`, cmds, { stdout: 'inherit' });
 }
 
 export async function moveDocs() {
