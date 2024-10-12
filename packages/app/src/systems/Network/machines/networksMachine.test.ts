@@ -18,6 +18,7 @@ const machine = networksMachine
       redirectToHome() {},
       notifyUpdateAccounts() {},
     },
+    delays: {},
   })
   .withContext({});
 
