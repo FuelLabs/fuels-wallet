@@ -13,13 +13,18 @@ import {
 } from '@fuel-ui/react';
 import { type FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AmountVisibility, Pages, shortAddress } from '~/systems/Core';
+import {
+  AmountVisibility,
+  Pages,
+  formatBalance,
+  shortAddress,
+} from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 import { AssetRemoveDialog } from '../AssetRemoveDialog';
 
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
-import { type BNInput, bn } from 'fuels';
+import type { BNInput } from 'fuels';
 import useFuelAsset from '../../hooks/useFuelAsset';
 import { AssetItemLoader } from './AssetItemLoader';
 
@@ -113,11 +118,13 @@ export const AssetItem: AssetItemComponent = ({
     }
 
     if (amount) {
+      const { original, tooltip } = formatBalance(amount, decimals);
+
       return (
         <Tooltip
-          content={bn(amount).format({
-            units: decimals,
-          })}
+          content={original.display}
+          delayDuration={0}
+          open={visibility && tooltip ? undefined : false}
         >
           <Text css={{ fontSize: '$sm', fontWeight: '$normal' }}>
             <AmountVisibility
