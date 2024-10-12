@@ -15,16 +15,19 @@ export type AddressProps = {
   address: ChecksumAddress | Bech32Address | B256Address;
   canOpenExplorer?: boolean;
   css?: ThemeUtilsCSS;
+  isContract?: boolean;
 };
 
 export const FuelAddress = ({
   address,
+  isContract,
   canOpenExplorer = false,
   css,
 }: AddressProps) => {
-  const account = useMemo<ChecksumAddress>(() => {
+  const account = useMemo<string>(() => {
+    if (isContract) return Address.fromDynamicInput(address).toB256();
     return Address.fromDynamicInput(address).toString();
-  }, [address]);
+  }, [isContract, address]);
 
   const { openExplorer, href } = useExplorerLink(account);
 
