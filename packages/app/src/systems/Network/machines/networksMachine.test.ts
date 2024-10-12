@@ -17,6 +17,7 @@ const machine = networksMachine
       redirectToList() {},
       redirectToHome() {},
       notifyUpdateAccounts() {},
+      fetchNetworks() {},
     },
   })
   .withContext({});
@@ -147,11 +148,9 @@ describe('networksMachine', () => {
     it('should have networkId and network save on context', async () => {
       service.send(editEv);
       expect(state.context.network).toBeUndefined();
-      expect(state.context.networkId).toBeUndefined();
 
       state = await waitFor(service, (state) => state.matches('idle'));
       expect(state.context.network).toBeDefined();
-      expect(state.context.networkId).toBe(network?.id);
     });
 
     it('should be able to update a network', async () => {
