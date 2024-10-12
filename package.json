@@ -17,7 +17,9 @@
   "bugs": {
     "url": "https://github.com/FuelLabs/fuels-wallet/issues"
   },
-  "workspaces": ["./packages/*"],
+  "workspaces": [
+    "./packages/*"
+  ],
   "scripts": {
     "build:website": "node ./scripts/build-website/index.mjs",
     "build:preview": "turbo run build:preview",
@@ -69,7 +71,6 @@
     "@changesets/cli": "^2.26.2",
     "@fuels/ts-config": "0.20.0",
     "@jest/types": "29.6.3",
-    "@playwright/test": "^1.46.1",
     "@types/jest": "^29.5.5",
     "@types/node": "20.8.4",
     "@types/react": "^18.3.3",
@@ -89,12 +90,19 @@
     "ts-node": "^10.9.1",
     "turbo": "^1.10.15",
     "typescript": "^5.2.2",
-    "updates": "^15.0.2"
+    "updates": "^15.0.2",
+    "@playwright/test": "1.46.1"
   },
   "pnpm": {
     "peerDependencyRules": {
-      "allowAny": ["react", "react-dom"],
-      "ignoreMissing": ["react", "react-dom"]
+      "allowAny": [
+        "react",
+        "react-dom"
+      ],
+      "ignoreMissing": [
+        "react",
+        "react-dom"
+      ]
     },
     "overrides": {
       "follow-redirects": ">=1.15.6",

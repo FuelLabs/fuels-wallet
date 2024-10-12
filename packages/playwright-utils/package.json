@@ -16,7 +16,9 @@
       }
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "pnpm ts:check && tsup",
     "ts:check": "pnpm tsc --noEmit"
@@ -28,12 +30,12 @@
     "fuels": "0.95.0",
     "@fuels/ts-config": "^0.23.0",
     "@fuels/tsup-config": "^0.23.0",
-    "@playwright/test": "^1.39.0",
+    "@playwright/test": "1.46.1",
     "@types/adm-zip": "^0.5.3",
     "tsup": "^7.2.0"
   },
   "peerDependencies": {
     "fuels": ">=0.95.0",
-    "@playwright/test": "^1.39.0"
+    "@playwright/test": ">=1.46.1"
   }
 }
