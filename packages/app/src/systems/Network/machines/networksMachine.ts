@@ -157,6 +157,7 @@ export const networksMachine = createMachine(
               actions: [
                 'filterNetworks',
                 'selectNextValidNetwork',
+                'assignProvider',
                 'fetchNetworks',
               ],
             },
@@ -178,6 +179,7 @@ export const networksMachine = createMachine(
               actions: [
                 'selectNetwork',
                 'fetchNetworks',
+                'assignProvider',
                 'notifyUpdateAccounts',
                 'redirectToHome',
               ],
