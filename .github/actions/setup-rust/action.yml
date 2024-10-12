@@ -4,7 +4,7 @@ inputs:
   rust-version:
     default: 1.77.2
   forc-components:
-    default: 'forc@0.63.1, fuel-core@0.33.0'
+    default: 'forc@0.65.2, fuel-core@0.38.0'
 
 runs:
   using: 'composite'
