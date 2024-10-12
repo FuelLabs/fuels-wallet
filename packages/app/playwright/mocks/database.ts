@@ -152,7 +152,7 @@ export async function createManager(mnemonic: string) {
 
 export function createAccount(wallet: WalletManagerAccount, index = 0) {
   return {
-    address: wallet.address.toAddress(),
+    address: wallet.address.toString(),
     balance: '0',
     balanceSymbol: 'ETH',
     balances: [],

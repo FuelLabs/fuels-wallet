@@ -129,8 +129,8 @@ importers:
   examples/cra-dapp:
     dependencies:
       '@fuels/connectors':
-        specifier: 0.32.0
-        version: 0.32.0(smvgixclxzil7ootjil4u4dra4)
+        specifier: main
+        version: 0.34.0-main-cdac8d4(smvgixclxzil7ootjil4u4dra4)
       '@fuels/react':
         specifier: 0.32.0
         version: 0.32.0(@tanstack/react-query@5.28.4(react@18.3.1))(@types/react-dom@18.3.0)(@types/react@18.3.3)(fuels@0.95.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -293,8 +293,8 @@ importers:
         specifier: workspace:*
         version: link:../types
       '@fuels/connectors':
-        specifier: 0.32.0
-        version: 0.32.0(jx556n25rpzacymgaphzuodtle)
+        specifier: main
+        version: 0.34.0-main-cdac8d4(jx556n25rpzacymgaphzuodtle)
       '@playwright/test':
         specifier: 1.46.1
         version: 1.46.1
@@ -486,8 +486,8 @@ importers:
         specifier: 0.23.3
         version: 0.23.3(@fuel-ui/css@0.23.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@fuel-ui/icons@0.23.3)(@types/react-dom@18.3.0)(@types/react@18.3.3)(fuels@0.95.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@fuels/connectors':
-        specifier: 0.32.0
-        version: 0.32.0(gapzt7jkin4xwbjguf6gucqokm)
+        specifier: main
+        version: 0.34.0-main-cdac8d4(gapzt7jkin4xwbjguf6gucqokm)
       '@fuels/react':
         specifier: 0.32.0
         version: 0.32.0(@tanstack/react-query@5.28.4(react@18.3.1))(@types/react-dom@18.3.0)(@types/react@18.3.3)(fuels@0.95.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -613,8 +613,8 @@ importers:
   packages/e2e-contract-tests:
     dependencies:
       '@fuels/connectors':
-        specifier: 0.32.0
-        version: 0.32.0(4muwc2roiyfdkngop6uejg3v6e)
+        specifier: main
+        version: 0.34.0-main-cdac8d4(4muwc2roiyfdkngop6uejg3v6e)
       '@fuels/react':
         specifier: 0.32.0
         version: 0.32.0(@tanstack/react-query@5.28.4(react@18.3.1))(@types/react-dom@18.3.0)(@types/react@18.3.3)(fuels@0.95.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2938,8 +2938,8 @@ packages:
     peerDependencies:
       react: '>=18.2.0'
 
-  '@fuels/connectors@0.32.0':
-    resolution: {integrity: sha512-1XYbMrK5JhHmod13dEOwZfa4O5uwaKeb5sa+f8ABJ8lBBI010v9ZIUVrqcGHX//6+UnqrFligjhDPHb8pyxiCw==}
+  '@fuels/connectors@0.34.0-main-cdac8d4':
+    resolution: {integrity: sha512-PlOavAgEKZxfKMsaC5EyH3tyLZ/IJTIxXzGBeNz8XvUnvvCzzj7atQ9o0bqBpFNBCpK0c7T3NsqN9dCXtakJ1A==}
     peerDependencies:
       fuels: 0.95.0
 
@@ -18065,7 +18065,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@fuels/connectors@0.32.0(4muwc2roiyfdkngop6uejg3v6e)':
+  '@fuels/connectors@0.34.0-main-cdac8d4(4muwc2roiyfdkngop6uejg3v6e)':
     dependencies:
       '@ethereumjs/util': 9.0.3
       '@ethersproject/bytes': 5.7.0
@@ -18108,7 +18108,7 @@ snapshots:
       - vue
       - zod
 
-  '@fuels/connectors@0.32.0(gapzt7jkin4xwbjguf6gucqokm)':
+  '@fuels/connectors@0.34.0-main-cdac8d4(gapzt7jkin4xwbjguf6gucqokm)':
     dependencies:
       '@ethereumjs/util': 9.0.3
       '@ethersproject/bytes': 5.7.0
@@ -18151,7 +18151,7 @@ snapshots:
       - vue
       - zod
 
-  '@fuels/connectors@0.32.0(jx556n25rpzacymgaphzuodtle)':
+  '@fuels/connectors@0.34.0-main-cdac8d4(jx556n25rpzacymgaphzuodtle)':
     dependencies:
       '@ethereumjs/util': 9.0.3
       '@ethersproject/bytes': 5.7.0
@@ -18194,7 +18194,7 @@ snapshots:
       - vue
       - zod
 
-  '@fuels/connectors@0.32.0(smvgixclxzil7ootjil4u4dra4)':
+  '@fuels/connectors@0.34.0-main-cdac8d4(smvgixclxzil7ootjil4u4dra4)':
     dependencies:
       '@ethereumjs/util': 9.0.3
       '@ethersproject/bytes': 5.7.0
@@ -23899,7 +23899,7 @@ snapshots:
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/safe-json': 1.0.2
       events: 3.3.0
-      ws: 7.5.10(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
