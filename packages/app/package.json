@@ -62,7 +62,7 @@
   "devDependencies": {
     "@crxjs/vite-plugin": "1.0.14",
     "@fuel-wallet/types": "workspace:*",
-    "@fuels/connectors": "main",
+    "@fuels/connectors": "pr-382",
     "@playwright/test": "1.46.1",
     "@sentry/cli": "2.33.1",
     "@storybook/addon-a11y": "7.4.6",
