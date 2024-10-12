@@ -27,7 +27,7 @@
     "@fuel-wallet/connections": "workspace:*",
     "@fuels/local-storage": "0.20.0",
     "@fuels/react-xstore": "0.20.0",
-    "@hookform/resolvers": "3.3.2",
+    "@hookform/resolvers": "3.9.0",
     "@react-aria/utils": "3.21.0",
     "@sentry/react": "8.33.1",
     "@storybook/addon-viewport": "7.4.6",
