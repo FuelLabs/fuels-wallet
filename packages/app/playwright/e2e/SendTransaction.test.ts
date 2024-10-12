@@ -403,4 +403,29 @@ test.describe('SendTransaction', () => {
     // Wait for transaction to be confirmed
     await hasText(page, 'success');
   });
+  test('Should validate address checksum', async () => {
+    const receiverWallet = Wallet.generate({
+      provider,
+    });
+    await visit(page, '/send');
+    await page.waitForSelector('[aria-disabled="true"]');
+    await getButtonByText(page, 'Select one asset').click();
+    await page.getByText('Ethereum').click();
+    // Place in invalid checksum address
+    await getInputByName(page, 'address').fill(
+      receiverWallet.address.toString().replace(/0x[a-z0-9]{1,2}/i, '0x99')
+    );
+
+    // Focus on input and wait, to avoid flakiness
+    await getInputByName(page, 'amount').focus();
+    await page.waitForTimeout(500);
+
+    await getInputByName(page, 'amount').fill('0.001');
+
+    // Waiting button change to Review in order to ensure it has time to think
+    await page.waitForSelector('button:has-text("Review")');
+    await page.waitForTimeout(1000);
+    // Extract and compare the network fee amount, checking if its equal to regular fee amont
+    await hasText(page, 'Checksum is invalid. Use at your own risk.');
+  });
 });
