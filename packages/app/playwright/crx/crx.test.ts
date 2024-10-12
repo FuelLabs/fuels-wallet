@@ -319,7 +319,7 @@ test.describe('FuelWallet Extension', () => {
       const isCorrectAddress = blankPage.evaluate(async () => {
         const currentAccount = await window.fuel.currentAccount();
         const wallet = await window.fuel.getWallet(currentAccount);
-        return wallet.address.toString() === currentAccount;
+        return wallet.address.toString() === currentAccount.toLowerCase();
       });
       expect(await isCorrectAddress).toBeTruthy();
     });

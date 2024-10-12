@@ -27,7 +27,6 @@ export function Connected() {
   const { networks } = useNetworks();
   const { selectNetworkAsync, isPending: isSelectingNetwork } =
     useSelectNetwork();
-
   const { addNetworkAsync, isPending: isAddingNetwork } = useAddNetwork();
 
   return (
@@ -164,6 +163,19 @@ export function Connected() {
           }}
         >
           {isAddingNetwork ? 'Loading...' : 'Add testnet'}
+        </button>
+        <button
+          type="button"
+          onClick={async () => {
+            try {
+              const account = await fuel.currentAccount();
+              console.log(await fuel.signMessage(account!, 'test message'));
+            } catch (e) {
+              console.error(e);
+            }
+          }}
+        >
+          {isAddingNetwork ? 'Signing...' : 'Sign message'}
         </button>
       </div>
 
