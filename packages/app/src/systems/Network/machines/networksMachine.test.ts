@@ -19,7 +19,7 @@ const machine = networksMachine
       notifyUpdateAccounts() {},
     },
     delays: {},
-  })
+  } as Parameters<(typeof networksMachine)['withConfig']>[0])
   .withContext({});
 
 describe('networksMachine', () => {

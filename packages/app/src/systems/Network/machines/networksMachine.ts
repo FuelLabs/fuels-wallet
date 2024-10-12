@@ -186,7 +186,7 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              target: 'idle',
+              target: 'fetchingNetworks',
               actions: [
                 'selectNetwork',
                 'assignProvider',

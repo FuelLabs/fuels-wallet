@@ -42,9 +42,6 @@ export function useNetworks() {
       redirectToHome() {
         closeDialog();
       },
-      fetchNetworks() {
-        store.refreshNetworks();
-      },
     },
   });
 
