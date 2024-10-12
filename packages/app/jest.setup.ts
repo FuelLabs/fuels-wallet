@@ -52,3 +52,36 @@ if (process.env.CI) {
     logErrorsBeforeRetry: true,
   });
 }
+
+const mockNetworks = [
+  {
+    asset_id: 'TKN',
+    name: 'Token',
+    type: 'token',
+    symbol: 'TKN',
+    decimals: 9,
+  },
+  {
+    asset_id: 'ETH',
+    name: 'Ethereum',
+    type: 'token',
+    symbol: 'ETH',
+    decimals: 18,
+  },
+  {
+    asset_id: 'Fuel',
+    name: 'Fuel',
+    type: 'token',
+    symbol: 'Fuel',
+    decimals: 9,
+  },
+];
+global.fetch = jest.fn((url) => {
+  if (url === 'https://verified-assets.fuel.network/assets.json') {
+    return Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve(mockNetworks),
+    });
+  }
+  return jest.requireActual('node-fetch')(url);
+}) as jest.Mock;
