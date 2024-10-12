@@ -19,7 +19,7 @@ import type { UseSendReturn } from '../../hooks';
 
 const MotionContent = motion(Layout.Content);
 
-type SendSelectProps = UseSendReturn;
+type SendSelectProps = UseSendReturn & { warningMessage?: string };
 
 export function SendSelect({
   form,
@@ -31,6 +31,7 @@ export function SendSelect({
   regularTip,
   fastTip,
   errorMessage,
+  warningMessage,
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
   const isAmountFocused = useRef<boolean>(false);
@@ -103,6 +104,7 @@ export function SendSelect({
               isRequired
               name="address"
               control={form.control}
+              warning={warningMessage}
               isInvalid={Boolean(form.formState.errors?.address)}
               render={({ field }) => (
                 <Input size="sm">
