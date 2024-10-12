@@ -43,6 +43,7 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   trailingSlash: true,
+  transpilePackages: ['@fuels/connectors'],
   webpack(config) {
     const depsAlias = resolveLinkDeps();
     config.resolve.alias = {
