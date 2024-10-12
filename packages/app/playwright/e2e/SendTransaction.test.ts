@@ -82,9 +82,7 @@ test.describe('SendTransaction', () => {
     await page.getByText('Ethereum').click();
 
     // Fill address
-    await getInputByName(page, 'address').fill(
-      toB256(account.address as Bech32Address)
-    );
+    await getInputByName(page, 'address').fill(account.address.toString());
 
     // Focus on input and wait, to avoid flakiness
     await getInputByName(page, 'amount').focus();
