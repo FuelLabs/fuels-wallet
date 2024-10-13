@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BNInput } from 'fuels';
-import { type Provider, bn, Address } from 'fuels';
+import { Address, type Provider, bn, isB256 } from 'fuels';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -115,34 +115,31 @@ const schemaFactory = (_provider: Promise<Provider | undefined> | undefined) =>
       address: yup
         .string()
         .required('Address is required')
-        .test(
-          'is-user-address',
-          'Address is not a valid user address',
-          async (value) => {
-            try {
-              const provider = await _provider;
-              if (!provider) {
-                return true;
-              }
-
-              const standardizedAddress = Address.fromString(value).toString();
-              const validations = [
-                provider
-                  ?.isUserAccount(standardizedAddress)
-                  .then((res) => !!res)
-                  .catch(() => false),
-                provider
-                  ?.getAddressType(standardizedAddress)
-                  .then((res) => res === 'Account')
-                  .catch(() => false),
-              ];
-              return (await Promise.all(validations)).every(Boolean);
-            } catch (error) {
-              console.error(error);
-              return false;
+        .test('is-user-address', async (value, ctx) => {
+          try {
+            const provider = await _provider;
+            if (!provider) {
+              return true;
             }
+            if (!isB256(value)) {
+              return ctx.createError({
+                message: 'Address is not a valid',
+              });
+            }
+            const standardizedAddress = Address.fromString(value).toString();
+            const accountType =
+              await provider?.getAddressType(standardizedAddress);
+            if (accountType !== 'Account') {
+              return ctx.createError({
+                message: `You can't send to ${accountType} address`,
+              });
+            }
+            return true;
+          } catch (error) {
+            console.error(error);
+            return false;
           }
-        ),
+        }),
       fees: yup
         .object({
           tip: yup.object({
@@ -359,6 +356,9 @@ export function useSend() {
   useEffect(() => {
     const { unsubscribe } = form.watch(() => {
       const { address, asset, amount } = form.getValues();
+      if (address) {
+        form.trigger('address');
+      }
       if (!address || !asset || amount.eq(0)) {
         return;
       }

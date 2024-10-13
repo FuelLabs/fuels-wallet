@@ -1,15 +1,16 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
-import { Layout, MotionStack, animations } from '~/systems/Core';
+import { Address, isB256 } from 'fuels';
 import { useWatch } from 'react-hook-form';
-import { Address } from 'fuels';
+import { Layout, MotionStack, animations, coreStyles } from '~/systems/Core';
 
+import { useEffect, useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { Send } from '../../components';
 import { useSend } from '../../hooks';
-import { useEffect, useState } from 'react';
 
-const CHECKSUM_MESSAGE = 'Checksum is invalid. Use at your own risk.';
+const CHECKSUM_MESSAGE =
+  "We couldn't verify the address. Make sure you are sending to a valid address.";
 
 export function SendPage() {
   const send = useSend();
@@ -23,13 +24,15 @@ export function SendPage() {
   });
 
   useEffect(() => {
-    if (address && form.formState.isValid) {
-      const isValid = Address.isChecksumValid(address);
-      setWarningMessage(isValid ? undefined : CHECKSUM_MESSAGE);
-      return;
+    if (address) {
+      if (isB256(address)) {
+        const isValid = Address.isChecksumValid(address);
+        setWarningMessage(isValid ? undefined : CHECKSUM_MESSAGE);
+        return;
+      }
     }
     setWarningMessage(undefined);
-  }, [address, form.formState.isValid]);
+  }, [address]);
 
   return (
     <FormProvider {...form}>
@@ -70,6 +73,12 @@ export function SendPage() {
 
 const styles = {
   content: cssObj({
+    ...coreStyles.scrollable('$intentsBase3'),
+    overflowY: 'scroll !important',
+    '&::-webkit-scrollbar': {
+      width: '$1',
+      backgroundColor: 'transparent',
+    },
     flex: 1,
   }),
 };

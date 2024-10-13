@@ -90,7 +90,11 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
               {!!warning && !props.fieldState.error && (
                 <Form.HelperText
                   aria-label="Error message"
-                  style={{ fontSize: '14px' }}
+                  css={{
+                    fontSize: '14px',
+                    lineHeight: '18px',
+                    color: '$intentsWarning8',
+                  }}
                 >
                   {warning}
                 </Form.HelperText>

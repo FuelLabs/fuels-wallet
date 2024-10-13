@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "json-rpc-2.0": "1.7.0",
-    "fuels": "0.95.0",
+    "fuels": "0.96.0",
     "tsup": "^7.2.0"
   }
 }

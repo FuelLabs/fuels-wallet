@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Form, Input, Text } from '@fuel-ui/react';
+import { Alert, Box, Form, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -105,7 +105,10 @@ export function SendSelect({
               name="address"
               control={form.control}
               warning={warningMessage}
-              isInvalid={Boolean(form.formState.errors?.address)}
+              isInvalid={
+                Boolean(form.formState.errors?.address) &&
+                !form.formState.isValidating
+              }
               render={({ field }) => (
                 <Input size="sm">
                   <Input.Field
@@ -216,5 +219,11 @@ const styles = {
       fontSize: '$sm',
       color: '$intentsError9',
     },
+  }),
+  alert: cssObj({
+    fontSize: '$sm',
+    lineHeight: '$tight',
+    color: '$intentsWarning8',
+    marginTop: '$2',
   }),
 };
