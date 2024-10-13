@@ -12,23 +12,7 @@ export async function executeContentScript() {
   chrome.tabs.query({ url: '<all_urls>' }, (tabs) => {
     for (const tab of tabs) {
       if (!tab.id || tab.url?.startsWith('chrome://')) continue;
-
-      // Send a ping message to check if content script is already injected
-      chrome.tabs.sendMessage(
-        tab.id,
-        {
-          type: ContentScriptMessageTypes.PING,
-        },
-        (response) => {
-          if (
-            response?.type !== ContentScriptMessageTypes.PONG ||
-            chrome.runtime.lastError
-          ) {
-            // No response, content script is not injected
-            injectContentScript(tab.id!);
-          }
-        }
-      );
+      injectContentScript(tab.id!);
     }
   });
 }
