@@ -1,5 +1,9 @@
 # @fuel-wallet/types
 
+## 0.37.2
+
+## 0.37.1
+
 ## 0.37.0
 
 ### Minor Changes

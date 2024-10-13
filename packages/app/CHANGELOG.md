@@ -1,5 +1,31 @@
 # fuels-wallet
 
+## 0.37.2
+
+### Patch Changes
+
+- Updated dependencies [[`0f14e909`](https://github.com/FuelLabs/fuels-wallet/commit/0f14e9093f6157f10a619703a2d82c28f8dadf96)]:
+  - @fuel-wallet/connections@0.37.2
+
+## 0.37.1
+
+### Patch Changes
+
+- [#1592](https://github.com/FuelLabs/fuels-wallet/pull/1592) [`7f562a81`](https://github.com/FuelLabs/fuels-wallet/commit/7f562a81cd28a1550fb992d0ef8def79ef7208b2) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: add support to send NFT in send transaction page
+
+- [#1589](https://github.com/FuelLabs/fuels-wallet/pull/1589) [`a94e9855`](https://github.com/FuelLabs/fuels-wallet/commit/a94e98558f063d7928c10ff5ecef859b6f0f7a21) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: transaction history error on gql request when using basic auth
+
+- [#1578](https://github.com/FuelLabs/fuels-wallet/pull/1578) [`88516812`](https://github.com/FuelLabs/fuels-wallet/commit/8851681231a083e6e08bc7947cf4eb5331cff496) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Add address type validation to send screen
+
+- [#1587](https://github.com/FuelLabs/fuels-wallet/pull/1587) [`3e819dfe`](https://github.com/FuelLabs/fuels-wallet/commit/3e819dfe8826b14250df28fced755d755f3e3cdd) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: break line of signMessage
+
+- [#1593](https://github.com/FuelLabs/fuels-wallet/pull/1593) [`937562ea`](https://github.com/FuelLabs/fuels-wallet/commit/937562ea853a48535e55df2653dc6d4cee9674b3) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: design nits
+
+- [#1592](https://github.com/FuelLabs/fuels-wallet/pull/1592) [`7f562a81`](https://github.com/FuelLabs/fuels-wallet/commit/7f562a81cd28a1550fb992d0ef8def79ef7208b2) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: fix wallet discounting fee from token value when sending tokens
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.37.1
+
 ## 0.37.0
 
 ### Minor Changes

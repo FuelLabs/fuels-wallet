@@ -8,6 +8,7 @@ import { Layout, Pages, animations } from '~/systems/Core';
 import { useNetworks } from '~/systems/Network';
 import { ActivityList } from '../../components/ActivityList/ActivityList';
 import { useTransactionHistory } from '../../hooks';
+import { useBridgeLink } from '../../hooks/useBridgeLink';
 
 export function ViewActivity() {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ export function ViewActivity() {
     address,
   });
   const { selectedNetwork } = useNetworks();
+  const { openBridge } = useBridgeLink();
 
   return (
     <Layout title="History" isLoading={isFetching || isLoadingAccounts}>
@@ -36,7 +38,7 @@ export function ViewActivity() {
             <Alert status="info" hideIcon>
               <Text css={styles.bridgeAlertText}>
                 Bridge transactions are not shown in Fuel Wallet.{' '}
-                <Link href="https://bridge.fuel.network">Go to the bridge</Link>
+                <Link onClick={() => openBridge()}>Go to the bridge</Link>
               </Text>
             </Alert>
           )}

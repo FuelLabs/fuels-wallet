@@ -27,6 +27,7 @@ export function ActivityListEmpty() {
           size="sm"
           leftIcon={hasFaucet ? Icon.is('Wand') : Icon.is('Bridge')}
           onPress={open}
+          css={{ mt: '$4' }}
         >
           {hasFaucet ? 'Faucet' : 'Bridge to Fuel'}
         </Button>

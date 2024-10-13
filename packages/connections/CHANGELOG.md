@@ -1,5 +1,13 @@
 # @fuel-wallet/connections
 
+## 0.37.2
+
+### Patch Changes
+
+- [#1594](https://github.com/FuelLabs/fuels-wallet/pull/1594) [`0f14e909`](https://github.com/FuelLabs/fuels-wallet/commit/0f14e9093f6157f10a619703a2d82c28f8dadf96) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: send a ready event to avoid application not recognize wallet
+
+## 0.37.1
+
 ## 0.37.0
 
 ## 0.36.0
