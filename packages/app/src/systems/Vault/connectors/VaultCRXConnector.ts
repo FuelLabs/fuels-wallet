@@ -4,8 +4,8 @@ import type {
   EventMessage,
   RequestMessage,
   ResponseMessage,
-} from '@fuels/connectors';
-import { MessageTypes } from '@fuels/connectors';
+} from '@fuel-wallet/types';
+import { MessageTypes } from '@fuel-wallet/types';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 
 import type { VaultClient } from '../services/VaultClient';

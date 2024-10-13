@@ -13,13 +13,18 @@ import {
 } from '@fuel-ui/react';
 import { type FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AmountVisibility, Pages, shortAddress } from '~/systems/Core';
+import {
+  AmountVisibility,
+  Pages,
+  formatBalance,
+  shortAddress,
+} from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 import { AssetRemoveDialog } from '../AssetRemoveDialog';
 
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
-import { type BNInput, bn } from 'fuels';
+import type { BNInput } from 'fuels';
 import useFuelAsset from '../../hooks/useFuelAsset';
 import { AssetItemLoader } from './AssetItemLoader';
 
@@ -66,6 +71,22 @@ export const AssetItem: AssetItemComponent = ({
 
   const { assetId, name, symbol, icon, decimals, isCustom } = asset;
 
+  function getLeftEl() {
+    if (assetId) {
+      return (
+        <Copyable
+          value={assetId}
+          tooltipMessage="Copy asset address"
+          css={styles.assetIdCopy}
+          iconProps={{
+            icon: Icon.is('Copy'),
+            'aria-label': 'Copy asset address',
+          }}
+        />
+      );
+    }
+  }
+
   function getRightEl() {
     if (showActions) {
       return (
@@ -97,11 +118,13 @@ export const AssetItem: AssetItemComponent = ({
     }
 
     if (amount) {
+      const { original, tooltip } = formatBalance(amount, decimals);
+
       return (
         <Tooltip
-          content={bn(amount).format({
-            units: decimals,
-          })}
+          content={original.display}
+          delayDuration={0}
+          open={visibility && tooltip ? undefined : false}
         >
           <Text css={{ fontSize: '$sm', fontWeight: '$normal' }}>
             <AmountVisibility
@@ -153,13 +176,18 @@ export const AssetItem: AssetItemComponent = ({
             </Box.Flex>
           )}
         </Heading>
-        {symbol ? (
-          <Text css={styles.assetSymbol}>{symbol}</Text>
-        ) : (
-          <Copyable value={assetId || ''} css={styles.unknownAssetId}>
-            {shortAddress(assetId)}
-          </Copyable>
-        )}
+        <Box.Flex direction="row">
+          {symbol ? (
+            <>
+              <Text css={styles.assetSymbol}>{symbol}</Text>
+              {getLeftEl()}
+            </>
+          ) : (
+            <Copyable value={assetId || ''} css={styles.unknownAssetId}>
+              {shortAddress(assetId)}
+            </Copyable>
+          )}
+        </Box.Flex>
       </Box.Flex>
     </CardList.Item>
   );
@@ -171,6 +199,9 @@ const styles = {
   assetName: cssObj({
     margin: 0,
     textSize: 'base',
+  }),
+  assetIdCopy: cssObj({
+    marginLeft: 2,
   }),
   assetSymbol: cssObj({
     textSize: 'sm',

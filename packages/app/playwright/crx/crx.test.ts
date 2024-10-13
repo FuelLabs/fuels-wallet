@@ -22,6 +22,7 @@ import {
 } from '../mocks';
 
 import {
+  Address,
   type Asset,
   type NetworkFuel,
   Provider,
@@ -316,12 +317,19 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.getWallet()', async () => {
-      const isCorrectAddress = blankPage.evaluate(async () => {
-        const currentAccount = await window.fuel.currentAccount();
-        const wallet = await window.fuel.getWallet(currentAccount);
-        return wallet.address.toString() === currentAccount;
+      const currentAccount = await blankPage.evaluate(async () => {
+        return window.fuel.currentAccount();
       });
-      expect(await isCorrectAddress).toBeTruthy();
+      const walletAccount = await blankPage.evaluate(
+        async ([currentAccount]) => {
+          const wallet = await window.fuel.getWallet(currentAccount);
+          return wallet.address.toString();
+        },
+        [currentAccount]
+      );
+      expect(Address.fromString(currentAccount).toString()).toEqual(
+        walletAccount
+      );
     });
 
     await test.step('window.fuel.accounts()', async () => {
@@ -339,8 +347,22 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.currentAccount()', async () => {
+      let account1Address: string;
       await test.step('Current authorized current Account', async () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+        account1Address = authorizedAccount.address;
+        // delay to avoid the page to get the wrong currentAccount
+        await delay(2000);
+
+        const currentAccountPromise = await blankPage.evaluate(async () => {
+          return window.fuel.currentAccount();
+        });
+
+        await expect(currentAccountPromise).toBe(authorizedAccount.address);
+      });
+
+      await test.step('Changing to not connected wallet should keep Account 1 as connected', async () => {
+        await switchAccount(popupPage, 'Account 2');
 
         // delay to avoid the page to get the wrong currentAccount
         await delay(2000);
@@ -348,21 +370,19 @@ test.describe('FuelWallet Extension', () => {
         const currentAccountPromise = await blankPage.evaluate(async () => {
           return window.fuel.currentAccount();
         });
-        await expect(currentAccountPromise).toBe(authorizedAccount.address);
+
+        expect(currentAccountPromise).toBe(account1Address);
       });
 
-      await test.step('Throw on not Authorized Account', async () => {
-        await switchAccount(popupPage, 'Account 2');
-
+      await test.step('Changing to Account 3 show work as authorized account', async () => {
+        const authorizedAccount = await switchAccount(popupPage, 'Account 3');
         // delay to avoid the page to get the wrong currentAccount
         await delay(2000);
 
-        const currentAccountPromise = blankPage.evaluate(async () => {
+        const currentAccountPromise = await blankPage.evaluate(async () => {
           return window.fuel.currentAccount();
         });
-        await expect(currentAccountPromise).rejects.toThrowError(
-          'address is not authorized for this connection.'
-        );
+        await expect(currentAccountPromise).toBe(authorizedAccount.address);
       });
     });
 

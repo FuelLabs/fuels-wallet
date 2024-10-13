@@ -6,14 +6,16 @@ import { renderWithProvider } from '~/systems/Core/__tests__/utils';
 
 import { MOCK_ACCOUNTS } from '../../__mocks__';
 
-import { Address } from 'fuels';
+import type { AccountWithBalance } from '@fuel-wallet/types';
+import { Address, bn } from 'fuels';
 import { act } from 'react';
 import { BalanceWidget } from './BalanceWidget';
 
-const ACCOUNT = {
+const ACCOUNT: AccountWithBalance = {
   ...MOCK_ACCOUNTS[0],
-  balance: '4999989994',
+  balance: bn(4999989994),
   balanceSymbol: 'ETH',
+  balances: [],
 };
 
 describe('BalanceWidget', () => {
@@ -28,7 +30,7 @@ describe('BalanceWidget', () => {
     expect(screen.getByText(ACCOUNT.name)).toBeInTheDocument();
     expect(
       screen.getByText(
-        shortAddress(Address.fromDynamicInput(ACCOUNT.address).toB256())
+        shortAddress(Address.fromDynamicInput(ACCOUNT.address).toString())
       )
     ).toBeInTheDocument();
   });
@@ -75,7 +77,7 @@ describe('BalanceWidget', () => {
     await act(async () => {
       fireEvent.click(btn);
       expect(await navigator.clipboard.readText()).toBe(
-        Address.fromDynamicInput(ACCOUNT.address).toB256()
+        Address.fromDynamicInput(ACCOUNT.address).toString()
       );
     });
   });

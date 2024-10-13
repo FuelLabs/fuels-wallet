@@ -16,8 +16,7 @@ const selectors = {
     return state.hasTag('loading');
   },
   selectedNetwork: (state: NetworksMachineState) => {
-    const networks = state.context?.networks || [];
-    return networks.find((n) => n.isSelected) as NetworkData;
+    return state.context?.network || undefined;
   },
 };
 

@@ -1,5 +1,21 @@
 # @fuel-wallet/types
 
+## 0.37.0
+
+### Minor Changes
+
+- [#1571](https://github.com/FuelLabs/fuels-wallet/pull/1571) [`112e002c`](https://github.com/FuelLabs/fuels-wallet/commit/112e002ce6995656346a9a8889bc8800d2a868e1) Thanks [@helciofranco](https://github.com/helciofranco)! - Format tiny, large, and regular amounts, applying 6 decimal places of precision.
+
+## 0.36.0
+
+## 0.35.0
+
+## 0.34.1
+
+### Patch Changes
+
+- [#1550](https://github.com/FuelLabs/fuels-wallet/pull/1550) [`c38db1ab`](https://github.com/FuelLabs/fuels-wallet/commit/c38db1ab536b587226db90b6b872fd8c1b01c405) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed duplicate instances of ContentScript after extension sleep/wakeup. Closes [#326](https://github.com/FuelLabs/fuel-connectors/issues/326)
+
 ## 0.34.0
 
 ## 0.33.1

@@ -18,7 +18,8 @@ const machine = networksMachine
       redirectToHome() {},
       notifyUpdateAccounts() {},
     },
-  })
+    delays: {},
+  } as Parameters<(typeof networksMachine)['withConfig']>[0])
   .withContext({});
 
 describe('networksMachine', () => {
@@ -49,9 +50,9 @@ describe('networksMachine', () => {
       expect(state.context.networks?.length).toBe(1);
     });
 
-    it('should not have any network selected in context', async () => {
+    it('should have one network selected in context', async () => {
       state = await expectStateMatch(service, 'idle');
-      expect(state.context.network).toBeFalsy();
+      expect(state.context.network).toBeDefined();
     });
   });
 
@@ -107,7 +108,8 @@ describe('networksMachine', () => {
       state = await expectStateMatch(service, 'idle');
 
       let networks = state.context.networks || [];
-      const idx = networks.findIndex((n) => n.isSelected);
+      const idx = networks.findIndex((n) => n.id === state.context.network?.id);
+      if (idx === -1) throw new Error('Network ID not found');
       const invertIdx = idx === 0 ? 1 : 0;
       expect(networks[idx]?.isSelected).toBeTruthy();
       expect(networks[invertIdx]?.isSelected).toBeFalsy();
@@ -147,11 +149,9 @@ describe('networksMachine', () => {
     it('should have networkId and network save on context', async () => {
       service.send(editEv);
       expect(state.context.network).toBeUndefined();
-      expect(state.context.networkId).toBeUndefined();
 
       state = await waitFor(service, (state) => state.matches('idle'));
       expect(state.context.network).toBeDefined();
-      expect(state.context.networkId).toBe(network?.id);
     });
 
     it('should be able to update a network', async () => {

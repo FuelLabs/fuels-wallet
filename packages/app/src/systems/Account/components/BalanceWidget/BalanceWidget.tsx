@@ -1,14 +1,25 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Button, Heading, Icon, Text } from '@fuel-ui/react';
-import type { Account } from '@fuel-wallet/types';
-import type { ReactNode } from 'react';
+import {
+  Avatar,
+  Box,
+  Button,
+  Heading,
+  Icon,
+  Text,
+  Tooltip,
+} from '@fuel-ui/react';
+import type { AccountWithBalance } from '@fuel-wallet/types';
+import { type ReactNode, useMemo } from 'react';
 import { FuelAddress } from '~/systems/Account';
-import type { Maybe } from '~/systems/Core';
-import { AmountVisibility, VisibilityButton } from '~/systems/Core';
+import {
+  AmountVisibility,
+  VisibilityButton,
+  formatBalance,
+} from '~/systems/Core';
 
 import { useAccounts } from '../../hooks';
 
-import { DECIMAL_FUEL } from 'fuels';
+import { DEFAULT_DECIMAL_UNITS } from 'fuels';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 type BalanceWidgetWrapperProps = {
@@ -29,13 +40,14 @@ export function BalanceWidgetWrapper({
 }
 
 export type BalanceWidgetProps = {
-  account?: Maybe<Account>;
+  account?: AccountWithBalance;
   isLoading?: boolean;
   visibility?: boolean;
   onPressAccounts?: () => void;
   onChangeVisibility?: (visibility: boolean) => void;
 };
 
+const decimals = DEFAULT_DECIMAL_UNITS;
 export function BalanceWidget({
   account,
   isLoading,
@@ -43,6 +55,11 @@ export function BalanceWidget({
   onChangeVisibility,
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
+
+  const { original, tooltip } = useMemo(() => {
+    return formatBalance(account?.balance, decimals);
+  }, [account]);
+
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
   return (
@@ -65,6 +82,7 @@ export function BalanceWidget({
             <FuelAddress
               address={account.address}
               css={styles.balanceAddress}
+              canOpenExplorer
             />
           </Box.Stack>
           <Button
@@ -83,14 +101,20 @@ export function BalanceWidget({
         <>
           <Text className="label">Balance</Text>
           <Box.Flex>
-            <Text aria-hidden={visibility} data-account-name={account.name}>
-              {account.balanceSymbol || '$'}&nbsp;
-              <AmountVisibility
-                value={account.balance}
-                visibility={visibility}
-                units={DECIMAL_FUEL}
-              />
-            </Text>
+            <Tooltip
+              content={original.display}
+              delayDuration={0}
+              open={visibility && tooltip ? undefined : false}
+            >
+              <Text aria-hidden={visibility} data-account-name={account.name}>
+                {account.balanceSymbol || '$'}&nbsp;
+                <AmountVisibility
+                  value={account.balance}
+                  visibility={visibility}
+                  units={decimals}
+                />
+              </Text>
+            </Tooltip>
             <VisibilityButton
               aria-label={visibility ? 'Hide balance' : 'Show balance'}
               visibility={visibility}
@@ -110,7 +134,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     borderRadius: '$default',
-    pb: '$3',
   }),
   balanceAddress: cssObj({
     color: '$intentsBase11',
@@ -130,6 +153,10 @@ const styles = {
       color: '$textInverse',
       fontSize: '$3xl',
       fontFamily: '$mono',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      lineHeight: 'normal',
     },
     '.label': {
       lineHeight: '$tight',

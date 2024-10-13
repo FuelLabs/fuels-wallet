@@ -1,6 +1,10 @@
-import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
+import {
+  BACKGROUND_SCRIPT_NAME,
+  CONTENT_SCRIPT_NAME,
+  MessageTypes,
+} from '@fuel-wallet/types';
 import type { CommunicationEventArg, Connection } from '@fuel-wallet/types';
-import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuels/connectors';
+import {} from '@fuel-wallet/types';
 import { Address, type Network } from 'fuels';
 import type {
   JSONRPCParams,
@@ -330,12 +334,20 @@ export class BackgroundService {
   async currentAccount(_: unknown, serverParams: EventOrigin) {
     const currentAccount = await AccountService.getCurrentAccount();
 
-    await this.requireAccountConnection(
-      serverParams.connection,
-      currentAccount?.address
+    await this.requireConnection(serverParams.connection);
+
+    const connectedAccounts = serverParams?.connection?.accounts || [];
+    const hasAccessToAddress = connectedAccounts.includes(
+      Address.fromString(currentAccount?.address || '0x00').toString()
     );
 
-    return currentAccount?.address;
+    if (hasAccessToAddress) return currentAccount?.address;
+
+    const accounts = await AccountService.getAccounts();
+    const firstConnectedAccount = accounts?.find((acc) =>
+      connectedAccounts.includes(Address.fromString(acc.address).toString())
+    );
+    return firstConnectedAccount?.address;
   }
 
   async network(): Promise<Network> {

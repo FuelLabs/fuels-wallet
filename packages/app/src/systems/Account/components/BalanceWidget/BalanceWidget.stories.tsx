@@ -3,6 +3,7 @@ import { bn } from 'fuels';
 
 import { MOCK_ACCOUNTS } from '../../__mocks__';
 
+import type { AccountWithBalance } from '@fuel-wallet/types';
 import type { BalanceWidgetProps } from './BalanceWidget';
 import { BalanceWidget } from './BalanceWidget';
 
@@ -11,10 +12,11 @@ export default {
   title: 'Account/Components/BalanceWidget',
 };
 
-const ACCOUNT = {
+const ACCOUNT: AccountWithBalance = {
   ...MOCK_ACCOUNTS[0],
   balance: bn(12008943834),
   balanceSymbol: '$',
+  balances: [],
 };
 
 export const Usage = (args: BalanceWidgetProps) => (

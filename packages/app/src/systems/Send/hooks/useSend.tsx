@@ -1,18 +1,19 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BNInput } from 'fuels';
-import { bn, isB256, isBech32 } from 'fuels';
-import { useCallback, useEffect, useMemo } from 'react';
+import { Address, type Provider, bn, isB256 } from 'fuels';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useAccounts } from '~/systems/Account';
-import { useAssets } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
 import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
 
+import { Services, store } from '~/store';
+import type { NetworksMachineState } from '~/systems/Network';
 import { formatGasLimit } from '~/systems/Transaction';
 import { sendMachine } from '../machines/sendMachine';
 import type { SendMachineState } from '../machines/sendMachine';
@@ -63,6 +64,7 @@ const selectors = {
       [txStatus]
     );
   },
+  provider: (state: NetworksMachineState) => state.context.provider,
 };
 
 type BalanceAsset = {
@@ -77,114 +79,138 @@ type SchemaOptions = {
   maxGasLimit: BN | undefined;
 };
 
-const schema = yup
-  .object({
-    asset: yup.string().required('Asset is required'),
-    amount: yup
-      .mixed<BN>()
-      .test('positive', 'Amount must be greater than 0', (value) => {
-        return value?.gt(0);
-      })
-      .test('balance', 'Insufficient funds', (value, ctx) => {
-        const { asset, fees } = ctx.parent as SendFormValues;
-        const { balances, baseFee } = ctx.options.context as SchemaOptions;
+const schemaFactory = (_provider: Promise<Provider | undefined> | undefined) =>
+  yup
+    .object({
+      asset: yup.string().required('Asset is required'),
+      amount: yup
+        .mixed<BN>()
+        .test('positive', 'Amount must be greater than 0', (value) => {
+          return value?.gt(0);
+        })
+        .test('balance', 'Insufficient funds', (value, ctx) => {
+          const { asset, fees } = ctx.parent as SendFormValues;
+          const { balances, baseFee } = ctx.options.context as SchemaOptions;
 
-        const balanceAssetSelected = balances?.find(
-          ({ assetId }) => assetId === asset
-        );
-        if (!balanceAssetSelected?.amount || !value) {
-          return false;
-        }
+          const balanceAssetSelected = balances?.find(
+            ({ assetId }) => assetId === asset
+          );
+          if (!balanceAssetSelected?.amount || !value) {
+            return false;
+          }
 
-        if (value.gt(balanceAssetSelected.amount)) {
-          return false;
-        }
+          if (value.gt(balanceAssetSelected.amount)) {
+            return false;
+          }
 
-        // It means "baseFee" is being calculated
-        if (!baseFee) {
-          return true;
-        }
+          // It means "baseFee" is being calculated
+          if (!baseFee) {
+            return true;
+          }
 
-        const totalAmount = value.add(baseFee.add(fees.tip.amount));
-        return totalAmount.lte(bn(balanceAssetSelected.amount));
-      })
-      .required('Amount is required'),
-    address: yup
-      .string()
-      .required('Address is required')
-      .test('is-address', 'Invalid address', (value) => {
-        try {
-          return Boolean(value && (isBech32(value) || isB256(value)));
-        } catch (_error) {
-          return false;
-        }
-      }),
-    fees: yup
-      .object({
-        tip: yup.object({
-          amount: yup
-            .mixed<BN>()
-            .test('min', 'Tip must be greater than or equal to 0', (value) => {
-              return value?.gte(0);
-            })
-            .test({
-              name: 'max',
-              test: (value, ctx) => {
-                const { asset, amount } = ctx.from?.[2].value as SendFormValues; // Two levels up
-                const { balances, baseFee } = ctx.options
-                  .context as SchemaOptions;
-
-                const balanceAssetSelected = balances?.find(
-                  ({ assetId }) => assetId === asset
-                );
-
-                // It means "baseFee" and/or "current balance" is being calculated
-                if (!balanceAssetSelected?.amount || !value || !baseFee) {
-                  return true;
-                }
-
-                const balance = bn(balanceAssetSelected.amount);
-
-                const totalBlocked = baseFee.add(amount);
-                const totalAmount = totalBlocked.add(value);
-                if (totalAmount.lte(balance) || value.isZero()) {
-                  return true;
-                }
-
-                return totalAmount.lte(balance);
-              },
-            })
-            .required('Tip is required'),
-          text: yup.string().required('Tip is required'),
+          const totalAmount = value.add(baseFee.add(fees.tip.amount));
+          return totalAmount.lte(bn(balanceAssetSelected.amount));
+        })
+        .required('Amount is required'),
+      address: yup
+        .string()
+        .required('Address is required')
+        .test('is-user-address', async (value, ctx) => {
+          try {
+            const provider = await _provider;
+            if (!provider) {
+              return true;
+            }
+            if (!isB256(value)) {
+              return ctx.createError({
+                message: 'Address is not a valid',
+              });
+            }
+            const standardizedAddress = Address.fromString(value).toString();
+            const accountType =
+              await provider?.getAddressType(standardizedAddress);
+            if (accountType !== 'Account') {
+              return ctx.createError({
+                message: `You can't send to ${accountType} address`,
+              });
+            }
+            return true;
+          } catch (error) {
+            console.error(error);
+            return false;
+          }
         }),
-        gasLimit: yup.object({
-          amount: yup
-            .mixed<BN>()
-            .test({
-              name: 'max',
-              test: (value, ctx) => {
-                const { maxGasLimit } = ctx.options.context as SchemaOptions;
-                if (!maxGasLimit) return false;
-
-                if (value?.lte(maxGasLimit)) {
-                  return true;
+      fees: yup
+        .object({
+          tip: yup.object({
+            amount: yup
+              .mixed<BN>()
+              .test(
+                'min',
+                'Tip must be greater than or equal to 0',
+                (value) => {
+                  return value?.gte(0);
                 }
+              )
+              .test({
+                name: 'max',
+                test: (value, ctx) => {
+                  const { asset, amount } = ctx.from?.[2]
+                    .value as SendFormValues; // Two levels up
+                  const { balances, baseFee } = ctx.options
+                    .context as SchemaOptions;
 
-                return ctx.createError({
-                  path: 'fees.gasLimit',
-                  message: `Gas limit must be lower than or equal to ${formatGasLimit(
-                    maxGasLimit
-                  )}.`,
-                });
-              },
-            })
-            .required('Gas limit is required'),
-          text: yup.string().required('Gas limit is required'),
-        }),
-      })
-      .required('Fees are required'),
-  })
-  .required();
+                  const balanceAssetSelected = balances?.find(
+                    ({ assetId }) => assetId === asset
+                  );
+
+                  // It means "baseFee" and/or "current balance" is being calculated
+                  if (!balanceAssetSelected?.amount || !value || !baseFee) {
+                    return true;
+                  }
+
+                  const balance = bn(balanceAssetSelected.amount);
+
+                  const totalBlocked = baseFee.add(amount);
+                  const totalAmount = totalBlocked.add(value);
+                  if (totalAmount.lte(balance) || value.isZero()) {
+                    return true;
+                  }
+
+                  return totalAmount.lte(balance);
+                },
+              })
+              .required('Tip is required'),
+            text: yup.string().required('Tip is required'),
+          }),
+          gasLimit: yup.object({
+            amount: yup
+              .mixed<BN>()
+              .test({
+                name: 'max',
+                test: (value, ctx) => {
+                  const { maxGasLimit } = ctx.options.context as SchemaOptions;
+                  if (!maxGasLimit) return false;
+
+                  if (value?.lte(maxGasLimit)) {
+                    return true;
+                  }
+
+                  return ctx.createError({
+                    path: 'fees.gasLimit',
+                    message: `Gas limit must be lower than or equal to ${formatGasLimit(
+                      maxGasLimit
+                    )}.`,
+                  });
+                },
+              })
+              .required('Gas limit is required'),
+            text: yup.string().required('Gas limit is required'),
+          }),
+        })
+        .required('Fees are required'),
+    })
+    .required();
 
 export type SendFormValues = {
   asset: string;
@@ -222,6 +248,7 @@ export function useSend() {
   const navigate = useNavigate();
   const txRequest = useTransactionRequest();
   const { account } = useAccounts();
+  const provider = store.useSelector(Services.networks, selectors.provider);
 
   const service = useInterpret(() =>
     sendMachine.withConfig({
@@ -265,8 +292,12 @@ export function useSend() {
   const maxGasLimit = useSelector(service, selectors.maxGasLimit);
   const errorMessage = useSelector(service, selectors.error);
 
+  const resolver = useMemo(
+    () => yupResolver(schemaFactory(provider)),
+    [provider]
+  );
   const form = useForm<SendFormValues>({
-    resolver: yupResolver(schema),
+    resolver,
     mode: 'onSubmit',
     defaultValues: DEFAULT_VALUES,
     context: {
@@ -325,6 +356,9 @@ export function useSend() {
   useEffect(() => {
     const { unsubscribe } = form.watch(() => {
       const { address, asset, amount } = form.getValues();
+      if (address) {
+        form.trigger('address');
+      }
       if (!address || !asset || amount.eq(0)) {
         return;
       }

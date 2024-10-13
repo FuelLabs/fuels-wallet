@@ -1,7 +1,6 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium, expect } from '@playwright/test';
 
-import { Address } from 'fuels';
 import {
   getButtonByText,
   getByAriaLabel,
@@ -62,7 +61,7 @@ test.describe('RecoverWallet', () => {
     /** Account created */
     await hasText(page, /Wallet created successfully/i);
     await hasText(page, /Account 1/i);
-    await hasText(page, '0x1d23...e8e2');
+    await hasText(page, '0x1d23...E8E2');
   });
 
   test.describe('when pasting', () => {

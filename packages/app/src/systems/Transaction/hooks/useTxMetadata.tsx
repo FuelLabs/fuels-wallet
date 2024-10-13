@@ -19,7 +19,7 @@ export function getAddress(address?: string) {
 
 export function getLabel(operation: Operation, address?: Bech32Address) {
   const { name } = operation;
-  const me = address ? new Address(address).toHexString() : '';
+  const me = address ? Address.fromString(address).toHexString() : '';
 
   if (name === OperationName.transfer && operation.from?.address === me) {
     return 'Sent asset';
@@ -40,7 +40,11 @@ export function useTxMetadata({
   // Avoid screen to break with empty operations
   const mainOperation = operations[0] || {};
   const label = getLabel(mainOperation, account?.address as Bech32Address);
-  const timeFormatted = time ? formatDate(time) : undefined;
+  const timeFormattedRaw = time ? formatDate(time) : undefined;
+  const timeFormatted = timeFormattedRaw?.replace(
+    'a few seconds ago',
+    'seconds ago'
+  );
 
   const toOrFromText = useMemo(() => {
     const opDirection = getOperationDirection(mainOperation, ownerAddress);

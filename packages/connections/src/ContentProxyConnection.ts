@@ -1,14 +1,12 @@
 import {
   BACKGROUND_SCRIPT_NAME,
-  ContentScriptMessageTypes,
-} from '@fuel-wallet/types';
-import {
   CONNECTOR_SCRIPT,
   CONTENT_SCRIPT_NAME,
-  type CommunicationMessage,
+  ContentScriptMessageTypes,
   EVENT_MESSAGE,
   MessageTypes,
-} from '@fuels/connectors';
+} from '@fuel-wallet/types';
+import type { CommunicationMessage } from '@fuel-wallet/types';
 import { createJSONRPCSuccessResponse } from 'json-rpc-2.0';
 import type { JSONRPCID } from 'json-rpc-2.0';
 

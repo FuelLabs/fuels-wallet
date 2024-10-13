@@ -16,8 +16,8 @@ export const playwrightConfig: PlaywrightTestConfig = {
   ],
   webServer: {
     command: 'NODE_ENV=test pnpm dev:crx',
-    port: Number(PORT),
     reuseExistingServer: true,
+    port: Number(PORT),
     timeout: 20000,
   },
   use: {
