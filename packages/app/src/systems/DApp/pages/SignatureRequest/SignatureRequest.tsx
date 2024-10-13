@@ -43,7 +43,7 @@ export function SignatureRequest() {
                   <div>
                     <Text
                       css={{
-                        width: message.length > 80 ? '800px' : '100%',
+                        overflowX: 'hidden',
                         whiteSpace: 'pre-wrap',
                         wordBreak: 'break-word',
                       }}
