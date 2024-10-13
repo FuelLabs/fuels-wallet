@@ -1,5 +1,12 @@
 # fuels-wallet
 
+## 0.37.2
+
+### Patch Changes
+
+- Updated dependencies [[`0f14e909`](https://github.com/FuelLabs/fuels-wallet/commit/0f14e9093f6157f10a619703a2d82c28f8dadf96)]:
+  - @fuel-wallet/connections@0.37.2
+
 ## 0.37.1
 
 ### Patch Changes
