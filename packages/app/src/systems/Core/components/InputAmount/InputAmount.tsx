@@ -48,10 +48,16 @@ export function createAmount(text: string, units = 0) {
   const textAmountFixed = formatAmountLeadingZeros(text);
 
   const isZeroUnits = !units;
-  // covers a bug in the sdk that format don't work when unit is zero. we'll use 1 instead, then multiply by 10 later
-  const amount = isZeroUnits
-    ? bn.parseUnits(text.replaceAll(',', ''), 1).div(10)
-    : bn.parseUnits(text.replaceAll(',', ''), units);
+
+  let amount: BN | undefined;
+  if (isZeroUnits) {
+    const textWithoutDecimals = textAmountFixed
+      .replaceAll(',', '')
+      .split('.')[0];
+    amount = bn(textWithoutDecimals);
+  } else {
+    amount = bn.parseUnits(textAmountFixed.replaceAll(',', ''), units);
+  }
 
   return {
     text: textAmountFixed,

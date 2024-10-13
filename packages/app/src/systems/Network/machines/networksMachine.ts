@@ -9,14 +9,13 @@ import { store } from '~/store';
 import type { FetchResponse, Maybe } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
 
-import { Provider } from 'fuels';
+import { createProvider } from '@fuel-wallet/connections';
 import { type NetworkInputs, NetworkService } from '../services';
 
 type MachineContext = {
   networks?: NetworkData[];
   network?: Maybe<NetworkData>;
   error?: unknown;
-  provider?: Promise<Provider | undefined>;
 };
 
 export type AddNetworkInput = {
@@ -77,11 +76,7 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: [
-                'reloadAssetsAndSetNetworks',
-                'assignNetwork',
-                'assignProvider',
-              ],
+              actions: ['reloadAssetsAndSetNetworks', 'assignNetwork'],
               target: 'idle',
             },
           ],
@@ -121,7 +116,6 @@ export const networksMachine = createMachine(
             {
               actions: [
                 'addSelectedNetwork',
-                'assignProvider',
                 'reloadAssets',
                 'notifyUpdateAccounts',
                 'redirectToHome',
@@ -168,7 +162,6 @@ export const networksMachine = createMachine(
                 'filterNetworks',
                 'selectNextValidNetwork',
                 'reloadAssets',
-                'assignProvider',
               ],
             },
           ],
@@ -189,7 +182,6 @@ export const networksMachine = createMachine(
               target: 'fetchingNetworks',
               actions: [
                 'selectNetwork',
-                'assignProvider',
                 'reloadAssets',
                 'notifyUpdateAccounts',
                 'redirectToHome',
@@ -290,15 +282,6 @@ export const networksMachine = createMachine(
           );
         },
       }),
-      assignProvider: assign({
-        provider: async (ctx, _ev) => {
-          if ((await ctx.provider)?.url === ctx.network?.url) {
-            return ctx.provider;
-          }
-
-          return ctx.network ? Provider.create(ctx.network.url) : undefined;
-        },
-      }),
       notifyUpdateAccounts: () => {
         store.updateAccounts();
       },
@@ -320,7 +303,7 @@ export const networksMachine = createMachine(
           await NetworkService.validateNetworkExists(input.data);
           await NetworkService.validateNetworkVersion(input.data);
 
-          const provider = await Provider.create(input.data.url);
+          const provider = await createProvider(input.data.url);
           const chainId = provider.getChainId();
 
           const createdNetwork = await NetworkService.addNetwork({

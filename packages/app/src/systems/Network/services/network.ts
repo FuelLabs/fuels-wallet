@@ -236,7 +236,7 @@ export class NetworkService {
       });
 
       if (!networkByChainId || !networkByUrl) {
-        const provider = await Provider.create(url);
+        const provider = await createProvider(url);
         const providerName = provider.getChain().name;
         const providerChainId = provider.getChainId();
 
@@ -315,7 +315,7 @@ export class NetworkService {
       });
 
       if (!networkByUrl) {
-        const provider = await Provider.create(url);
+        const provider = await createProvider(url);
         const providerName = provider.getChain().name;
         const providerChainId = await provider.getChainId();
 
