@@ -41,7 +41,7 @@ export function useNetworks() {
         ...selectedNetworkState,
         bridgeUrl: networkFromDefault.bridgeUrl,
         faucetUrl: networkFromDefault.faucetUrl,
-      };
+      } as NetworkData;
     }
 
     return selectedNetworkState;

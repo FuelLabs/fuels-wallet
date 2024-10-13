@@ -100,7 +100,9 @@ export class NetworkService {
   static async addNetwork(input: NetworkInputs['addNetwork']) {
     return db.transaction('rw', db.networks, async () => {
       const count = await db.networks.count();
-      const inputToAdd: Required<Omit<NetworkData, 'explorerUrl'>> & {
+      const inputToAdd: Required<
+        Omit<NetworkData, 'explorerUrl' | 'bridgeUrl' | 'faucetUrl'>
+      > & {
         explorerUrl?: string;
       } = {
         id: input.data.id || createUUID(),
