@@ -27,6 +27,7 @@ export const DEFAULT_NETWORKS: Array<
     chainId: CHAIN_IDS.fuel.testnet,
     explorerUrl: 'https://app-testnet.fuel.network',
     faucetUrl: 'https://faucet-testnet.fuel.network/',
+    bridgeUrl: 'https://app-testnet.fuel.network/bridge',
     isSelected: true,
     // isSelected: !IS_RELEASE,
   },

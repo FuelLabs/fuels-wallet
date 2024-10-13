@@ -5,4 +5,6 @@ export type NetworkData = {
   url: string;
   isSelected?: boolean;
   explorerUrl?: string;
+  bridgeUrl?: string;
+  faucetUrl?: string;
 };
