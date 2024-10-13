@@ -61,7 +61,7 @@ test.describe('RecoverWallet', () => {
     /** Account created */
     await hasText(page, /Wallet created successfully/i);
     await hasText(page, /Account 1/i);
-    await hasText(page, '0x1d23...E8e2');
+    await hasText(page, '0x1d23...E8E2');
   });
 
   test.describe('when pasting', () => {
@@ -114,7 +114,7 @@ test.describe('RecoverWallet', () => {
       /** Account created */
       await hasText(page, /Wallet created successfully/i);
       await hasText(page, /Account 1/i);
-      await hasText(page, '0x73da...a71B');
+      await hasText(page, '0x73da...a71b');
     });
 
     test('should be able to auto-select a 15-word mnemonic if pasting only 13-words', async () => {
@@ -188,6 +188,6 @@ test.describe('RecoverWallet', () => {
     /** Account created */
     await hasText(page, /Wallet created successfully/i);
     await hasText(page, /Account 1/i);
-    await hasText(page, '0x73da...a71B');
+    await hasText(page, '0x73da...a71b');
   });
 });
