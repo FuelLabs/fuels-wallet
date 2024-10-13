@@ -76,12 +76,3 @@ const _mockNetworks = [
     decimals: 9,
   },
 ];
-// global.fetch = jest.fn((url) => {
-//   if (url === 'https://verified-assets.fuel.network/assets.json') {
-//     return Promise.resolve({
-//       ok: true,
-//       json: () => Promise.resolve(mockNetworks),
-//     });
-//   }
-//   return jest.requireActual('node-fetch')(url);
-// }) as jest.Mock;
