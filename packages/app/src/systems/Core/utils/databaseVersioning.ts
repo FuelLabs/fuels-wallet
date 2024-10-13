@@ -1,6 +1,11 @@
 import { createUUID } from '@fuel-wallet/connections';
 import type Dexie from 'dexie';
-import { CHAIN_IDS, DEVNET_NETWORK_URL, TESTNET_NETWORK_URL } from 'fuels';
+import {
+  Address,
+  CHAIN_IDS,
+  DEVNET_NETWORK_URL,
+  TESTNET_NETWORK_URL,
+} from 'fuels';
 import { DEFAULT_NETWORKS } from '~/networks';
 
 export const applyDbVersioning = (db: Dexie) => {
@@ -61,8 +66,8 @@ export const applyDbVersioning = (db: Dexie) => {
       // *
       // transfer from asset table to assetTemp, to delete asset and create new with other pkey
       // *
-      const friends = await tx.table('assets').toArray();
-      await tx.table('assetsTemp').bulkAdd(friends);
+      const assets = await tx.table('assets').toArray();
+      await tx.table('assetsTemp').bulkAdd(assets);
     });
 
   // DB VERSION 21
@@ -155,5 +160,29 @@ export const applyDbVersioning = (db: Dexie) => {
     .upgrade(async (tx) => {
       const transactionsCursors = tx.table('transactionsCursors');
       await transactionsCursors.clear();
+    });
+
+  // DB VERSION 25
+  // Update accounts to use checksum address
+  db.version(25)
+    .stores({
+      vaults: 'key',
+      accounts: '&address, &name',
+      networks: '&id, &url, &name, chainId',
+      connections: 'origin',
+      transactionsCursors: '++id, address, size, providerUrl, endCursor',
+      assets: '&name, &symbol',
+      abis: '&contractId',
+      errors: '&id',
+    })
+    .upgrade(async (tx) => {
+      const accountsTable = tx.table('accounts');
+      const accounts = await accountsTable.toArray();
+      const updatedAccounts = accounts.map((account) => ({
+        ...account,
+        address: Address.fromString(account.address).toChecksum(),
+      }));
+      await accountsTable.clear();
+      await accountsTable.bulkAdd(updatedAccounts);
     });
 };

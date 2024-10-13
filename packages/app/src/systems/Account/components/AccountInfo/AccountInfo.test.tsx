@@ -38,7 +38,7 @@ describe('AccountInfo', () => {
     expect(
       screen.getByText(
         shortAddress(
-          Address.fromDynamicInput(MOCK_ACCOUNTS[0].address).toB256()
+          Address.fromDynamicInput(MOCK_ACCOUNTS[0].address).toString()
         )
       )
     ).toBeInTheDocument();

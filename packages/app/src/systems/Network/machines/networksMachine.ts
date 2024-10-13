@@ -14,12 +14,9 @@ import { type NetworkInputs, NetworkService } from '../services';
 
 type MachineContext = {
   networks?: NetworkData[];
-  /**
-   * Used as data on network update
-   */
-  networkId?: string;
   network?: Maybe<NetworkData>;
   error?: unknown;
+  provider?: Promise<Provider | undefined>;
 };
 
 export type AddNetworkInput = {
@@ -40,6 +37,9 @@ type MachineServices = {
     data: FetchResponse<NetworkData>;
   };
   removeNetwork: {
+    data: FetchResponse<string>;
+  };
+  selectNextValidNetwork: {
     data: FetchResponse<string>;
   };
   selectNetwork: {
@@ -77,7 +77,11 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['assignNetworks', 'assignNetwork'],
+              actions: [
+                'reloadAssetsAndSetNetworks',
+                'assignNetwork',
+                'assignProvider',
+              ],
               target: 'idle',
             },
           ],
@@ -89,7 +93,6 @@ export const networksMachine = createMachine(
             target: 'addingNetwork',
           },
           EDIT_NETWORK: {
-            actions: ['assignNetworkId'],
             target: 'fetchingNetworks',
           },
           UPDATE_NETWORK: {
@@ -116,8 +119,14 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['notifyUpdateAccounts', 'redirectToHome'],
-              target: 'fetchingNetworks',
+              actions: [
+                'addSelectedNetwork',
+                'assignProvider',
+                'reloadAssets',
+                'notifyUpdateAccounts',
+                'redirectToHome',
+              ],
+              target: 'idle',
             },
           ],
         },
@@ -135,8 +144,8 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['redirectToList'],
               target: 'fetchingNetworks',
+              actions: ['redirectToList'],
             },
           ],
         },
@@ -154,8 +163,13 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['redirectToList'],
-              target: 'fetchingNetworks',
+              target: 'idle',
+              actions: [
+                'filterNetworks',
+                'selectNextValidNetwork',
+                'reloadAssets',
+                'assignProvider',
+              ],
             },
           ],
         },
@@ -172,8 +186,14 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['notifyUpdateAccounts', 'redirectToHome'],
               target: 'fetchingNetworks',
+              actions: [
+                'selectNetwork',
+                'assignProvider',
+                'reloadAssets',
+                'notifyUpdateAccounts',
+                'redirectToHome',
+              ],
             },
           ],
         },
@@ -187,18 +207,97 @@ export const networksMachine = createMachine(
   },
   {
     actions: {
-      assignNetworkId: assign({
-        networkId: (_, ev) => ev.input.id,
+      reloadAssetsAndSetNetworks: assign({
+        networks: (ctx, event) => {
+          store.reloadListedAssets();
+          if (Array.isArray(event.data)) {
+            return event.data;
+          }
+          return ctx.networks;
+        },
       }),
-      assignNetworks: assign((_, event) => {
+      reloadAssets: assign((ctx) => {
         store.reloadListedAssets();
-        return {
-          networks: event.data,
-        };
+        return ctx;
+      }),
+      selectNextValidNetwork: assign({
+        network: (ctx, ev) => {
+          if (ctx?.network && ctx.network.id !== ev.data) {
+            return ctx.network;
+          }
+          const network =
+            ctx.networks?.find(({ id }) => id !== ev.data) ?? ctx.networks?.[0];
+          return network ? { ...network, isSelected: true } : network;
+        },
+        networks: (ctx) => {
+          return ctx?.networks?.map((data, idx) => ({
+            ...data,
+            isSelected: idx === 0,
+          }));
+        },
+      }),
+      filterNetworks: assign({
+        networks: (ctx, ev) => {
+          if (!ctx?.network || !ctx?.networks) return ctx.networks;
+          return ctx?.networks?.filter(({ id }) => id !== ev.data);
+        },
+      }),
+      selectNetwork: assign({
+        network: (ctx, ev) => {
+          const network =
+            ctx?.networks?.find(({ id }) => id === ev.data.id) ??
+            ctx.networks?.[0];
+          return network ? { ...network, isSelected: true } : network;
+        },
+        networks: (ctx, ev) => {
+          const matchingId = ev.data?.id || ctx.network?.id;
+          return ctx?.networks?.map((data) => ({
+            ...data,
+            isSelected: data.id === matchingId,
+          }));
+        },
+      }),
+      addSelectedNetwork: assign({
+        network: (ctx, ev) => {
+          return ev.data ? { ...ev.data, isSelected: true } : ctx.network;
+        },
+        networks: (ctx, ev) => {
+          const selectedId = ev.data?.id || ctx.network?.id;
+          const filteredNetworks = ctx.networks?.map((data) => ({
+            ...data,
+            isSelected: data.id === selectedId,
+          }));
+          if (ev.data) filteredNetworks?.push({ ...ev.data, isSelected: true });
+
+          return filteredNetworks;
+        },
       }),
       assignNetwork: assign({
-        network: (ctx, ev) =>
-          ctx.networkId ? ev.data.find((n) => n.id === ctx.networkId) : null,
+        network: (ctx) => {
+          const selectByIsSelected = (n: NetworkData | null) => !!n?.isSelected;
+          const network = ctx.networks?.find(selectByIsSelected);
+          return network
+            ? ({ ...network, isSelected: true } as NetworkData)
+            : undefined;
+        },
+        networks: (ctx) => {
+          const selectedId = ctx.network?.id;
+          return (
+            ctx.networks?.map((n) => ({
+              ...n,
+              isSelected: n.id === selectedId,
+            })) || []
+          );
+        },
+      }),
+      assignProvider: assign({
+        provider: async (ctx, _ev) => {
+          if ((await ctx.provider)?.url === ctx.network?.url) {
+            return ctx.provider;
+          }
+
+          return ctx.network ? Provider.create(ctx.network.url) : undefined;
+        },
       }),
       notifyUpdateAccounts: () => {
         store.updateAccounts();

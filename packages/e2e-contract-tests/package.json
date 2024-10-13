@@ -12,10 +12,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fuels/connectors": "0.28.0",
-    "@fuels/react": "0.28.0",
+    "@fuels/connectors": "0.35.0",
+    "@fuels/react": "0.35.0",
     "@tanstack/react-query": "5.28.4",
-    "fuels": "pr-3167",
+    "fuels": "0.96.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-error-boundary": "^4.0.11",
@@ -24,7 +24,7 @@
   "devDependencies": {
     "@fuel-wallet/types": "workspace:*",
     "@fuels/playwright-utils": "workspace:*",
-    "@playwright/test": "^1.46.1",
+    "@playwright/test": "1.46.1",
     "@types/chrome": "^0.0.246",
     "@types/node": "^20.8.4",
     "@types/react": "18.3.3",

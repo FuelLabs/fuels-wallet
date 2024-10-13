@@ -1,14 +1,38 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
-import { Layout, MotionStack, animations } from '~/systems/Core';
+import { Address, isB256 } from 'fuels';
+import { useWatch } from 'react-hook-form';
+import { Layout, MotionStack, animations, coreStyles } from '~/systems/Core';
 
+import { useEffect, useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { Send } from '../../components';
 import { useSend } from '../../hooks';
 
+const CHECKSUM_MESSAGE =
+  "We couldn't verify the address. Make sure you are sending to a valid address.";
+
 export function SendPage() {
   const send = useSend();
   const { handlers, txRequest, status, form, readyToSend } = send;
+  const [warningMessage, setWarningMessage] = useState<string | undefined>(
+    undefined
+  );
+  const address = useWatch({
+    control: form.control,
+    name: 'address',
+  });
+
+  useEffect(() => {
+    if (address) {
+      if (isB256(address)) {
+        const isValid = Address.isChecksumValid(address);
+        setWarningMessage(isValid ? undefined : CHECKSUM_MESSAGE);
+        return;
+      }
+    }
+    setWarningMessage(undefined);
+  }, [address]);
 
   return (
     <FormProvider {...form}>
@@ -24,7 +48,7 @@ export function SendPage() {
             gap="$4"
             css={styles.content}
           >
-            <Send.Select {...send} />
+            <Send.Select {...send} warningMessage={warningMessage} />
           </MotionStack>
           {txRequest.shouldShowActions && (
             <Layout.BottomBar>
@@ -49,6 +73,12 @@ export function SendPage() {
 
 const styles = {
   content: cssObj({
+    ...coreStyles.scrollable('$intentsBase3'),
+    overflowY: 'scroll !important',
+    '&::-webkit-scrollbar': {
+      width: '$1',
+      backgroundColor: 'transparent',
+    },
     flex: 1,
   }),
 };

@@ -29,6 +29,7 @@ export type ControlledFieldProps = Omit<ControllerProps<any>, 'render'> & {
   isReadOnly?: boolean;
   render: (props: RenderProps) => ReactElement;
   hideError?: boolean;
+  warning?: string;
 };
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -46,6 +47,7 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
       isDisabled,
       isReadOnly,
       hideError,
+      warning,
     },
     ref
   ) => {
@@ -62,6 +64,7 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
             isReadOnly,
             isInvalid: isInvalid || Boolean(props.fieldState.error),
           };
+
           return (
             <Form.Control {...controlProps}>
               {label && labelSide === 'left' && (
@@ -83,6 +86,18 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
                 <Form.ErrorMessage aria-label="Error message">
                   {props.fieldState.error.message}
                 </Form.ErrorMessage>
+              )}
+              {!!warning && !props.fieldState.error && (
+                <Form.HelperText
+                  aria-label="Error message"
+                  css={{
+                    fontSize: '14px',
+                    lineHeight: '18px',
+                    color: '$intentsWarning8',
+                  }}
+                >
+                  {warning}
+                </Form.HelperText>
               )}
             </Form.Control>
           );

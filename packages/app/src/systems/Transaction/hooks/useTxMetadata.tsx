@@ -19,7 +19,7 @@ export function getAddress(address?: string) {
 
 export function getLabel(operation: Operation, address?: Bech32Address) {
   const { name } = operation;
-  const me = address ? new Address(address).toHexString() : '';
+  const me = address ? Address.fromString(address).toHexString() : '';
 
   if (name === OperationName.transfer && operation.from?.address === me) {
     return 'Sent asset';

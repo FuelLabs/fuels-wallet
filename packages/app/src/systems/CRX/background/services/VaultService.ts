@@ -1,9 +1,9 @@
 import {
-  type DatabaseRestartEvent,
+  MessageTypes,
   POPUP_SCRIPT_NAME,
   VAULT_SCRIPT_NAME,
 } from '@fuel-wallet/types';
-import { MessageTypes, type RequestMessage } from '@fuels/connectors';
+import type { DatabaseRestartEvent, RequestMessage } from '@fuel-wallet/types';
 import { AUTO_LOCK_IN_MINUTES } from '~/config';
 import { VaultServer } from '~/systems/Vault/services/VaultServer';
 

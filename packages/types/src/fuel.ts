@@ -1,15 +1,15 @@
 import type {
+  ICreateChange,
+  IDeleteChange,
+  IUpdateChange,
+} from 'dexie-observable/api';
+import type {
   EventMessage,
   MessageTypes,
   RequestMessage,
   ResponseMessage,
   UIEventMessage,
-} from '@fuels/connectors';
-import type {
-  ICreateChange,
-  IDeleteChange,
-  IUpdateChange,
-} from 'dexie-observable/api';
+} from './connector';
 
 export type CommunicationEventArg<T> = T extends MessageTypes.request
   ? RequestMessage

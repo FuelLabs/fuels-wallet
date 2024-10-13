@@ -4,7 +4,7 @@ import {
   MessageTypes,
   type RequestMessage,
   type ResponseMessage,
-} from '@fuels/connectors';
+} from '@fuel-wallet/types';
 import type { JSONRPCResponse } from 'json-rpc-2.0';
 
 import { BaseConnection } from './BaseConnection';

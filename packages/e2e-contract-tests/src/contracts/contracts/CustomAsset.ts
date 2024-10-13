@@ -6,9 +6,9 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 /*
-  Fuels version: 0.94.4
-  Forc version: 0.63.3
-  Fuel-Core version: 0.35.0
+  Fuels version: 0.95.0
+  Forc version: 0.65.2
+  Fuel-Core version: 0.37.1
 */
 
 import { Contract, Interface } from "fuels";
@@ -17,9 +17,15 @@ import type {
   Account,
   StorageSlot,
   AbstractAddress,
+  BigNumberish,
+  BN,
+  Bytes,
+  FunctionFragment,
+  InvokeFunction,
+  StdString,
 } from 'fuels';
 
-import type { Enum } from "./common";
+import type { Option, Enum } from "./common";
 
 export enum BurnErrorInput { NotEnoughCoins = 'NotEnoughCoins' };
 export enum BurnErrorOutput { NotEnoughCoins = 'NotEnoughCoins' };
@@ -516,7 +522,6 @@ export class CustomAssetInterface extends Interface {
 export class CustomAsset extends Contract {
   static readonly abi = abi;
   static readonly storageSlots = storageSlots;
-
   constructor(
     id: string | AbstractAddress,
     accountOrProvider: Account | Provider,

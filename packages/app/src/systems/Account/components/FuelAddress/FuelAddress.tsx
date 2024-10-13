@@ -1,25 +1,33 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Box, Copyable, Icon, IconButton, Text } from '@fuel-ui/react';
-import { Address, type B256Address, type Bech32Address } from 'fuels';
+import {
+  Address,
+  type B256Address,
+  type Bech32Address,
+  type ChecksumAddress,
+} from 'fuels';
 import { useMemo } from 'react';
 import { shortAddress } from '~/systems/Core';
 import { useExplorerLink } from '../../hooks/useExplorerLink';
 
 export type AddressProps = {
-  address: B256Address | Bech32Address;
+  address: ChecksumAddress | Bech32Address | B256Address;
   canOpenExplorer?: boolean;
   css?: ThemeUtilsCSS;
+  isContract?: boolean;
 };
 
 export const FuelAddress = ({
   address,
+  isContract,
   canOpenExplorer = false,
   css,
 }: AddressProps) => {
-  const account = useMemo<B256Address>(() => {
-    return Address.fromDynamicInput(address).toB256();
-  }, [address]);
+  const account = useMemo<string>(() => {
+    if (isContract) return Address.fromDynamicInput(address).toB256();
+    return Address.fromDynamicInput(address).toString();
+  }, [isContract, address]);
 
   const { openExplorer, href } = useExplorerLink(account);
 

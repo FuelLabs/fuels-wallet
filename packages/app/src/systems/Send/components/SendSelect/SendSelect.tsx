@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Form, Input, Text } from '@fuel-ui/react';
+import { Alert, Box, Form, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { type BN, DECIMAL_FUEL, bn } from 'fuels';
+import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import {
@@ -19,7 +19,7 @@ import type { UseSendReturn } from '../../hooks';
 
 const MotionContent = motion(Layout.Content);
 
-type SendSelectProps = UseSendReturn;
+type SendSelectProps = UseSendReturn & { warningMessage?: string };
 
 export function SendSelect({
   form,
@@ -31,6 +31,7 @@ export function SendSelect({
   regularTip,
   fastTip,
   errorMessage,
+  warningMessage,
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
   const isAmountFocused = useRef<boolean>(false);
@@ -103,7 +104,11 @@ export function SendSelect({
               isRequired
               name="address"
               control={form.control}
-              isInvalid={Boolean(form.formState.errors?.address)}
+              warning={warningMessage}
+              isInvalid={
+                Boolean(form.formState.errors?.address) &&
+                !form.formState.isValidating
+              }
               render={({ field }) => (
                 <Input size="sm">
                   <Input.Field
@@ -214,5 +219,11 @@ const styles = {
       fontSize: '$sm',
       color: '$intentsError9',
     },
+  }),
+  alert: cssObj({
+    fontSize: '$sm',
+    lineHeight: '$tight',
+    color: '$intentsWarning8',
+    marginTop: '$2',
   }),
 };

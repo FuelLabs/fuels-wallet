@@ -77,7 +77,9 @@ export class AccountService {
   static async fetchAccount(input: AccountInputs['fetchAccount']) {
     const { address } = input;
     const account = await db.transaction('r', db.accounts, async () => {
-      return db.accounts.get({ address });
+      return db.accounts.get({
+        address: Address.fromString(address).toString(),
+      });
     });
 
     if (!account) {

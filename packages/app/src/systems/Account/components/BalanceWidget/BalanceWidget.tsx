@@ -19,7 +19,7 @@ import {
 
 import { useAccounts } from '../../hooks';
 
-import { DECIMAL_FUEL } from 'fuels';
+import { DEFAULT_DECIMAL_UNITS } from 'fuels';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 type BalanceWidgetWrapperProps = {
@@ -47,7 +47,7 @@ export type BalanceWidgetProps = {
   onChangeVisibility?: (visibility: boolean) => void;
 };
 
-const decimals = DECIMAL_FUEL;
+const decimals = DEFAULT_DECIMAL_UNITS;
 export function BalanceWidget({
   account,
   isLoading,

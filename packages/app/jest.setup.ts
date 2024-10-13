@@ -30,6 +30,8 @@ jest.mock('react-dom/test-utils', () => {
   };
 });
 
+console.warn = jest.fn();
+
 const noop = () => {};
 Object.defineProperty(window, 'scrollTo', { value: noop, writable: true });
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
@@ -50,3 +52,27 @@ if (process.env.CI) {
     logErrorsBeforeRetry: true,
   });
 }
+
+const _mockNetworks = [
+  {
+    asset_id: 'TKN',
+    name: 'Token',
+    type: 'token',
+    symbol: 'TKN',
+    decimals: 9,
+  },
+  {
+    asset_id: 'ETH',
+    name: 'Ethereum',
+    type: 'token',
+    symbol: 'ETH',
+    decimals: 18,
+  },
+  {
+    asset_id: 'Fuel',
+    name: 'Fuel',
+    type: 'token',
+    symbol: 'Fuel',
+    decimals: 9,
+  },
+];

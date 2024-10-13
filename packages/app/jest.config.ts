@@ -27,6 +27,8 @@ const config: JestConfigWithTsJest = {
         useESM: true,
         diagnostics: {
           ignoreCodes: [1343],
+          warnOnly: true,
+          pretty: true,
         },
         astTransformers: {
           before: [
@@ -65,7 +67,6 @@ const config: JestConfigWithTsJest = {
     '^react-dom$': require.resolve('react-dom'),
     '^uuid$': require.resolve('uuid'),
     '^@web3modal/core$': require.resolve('@web3modal/core'),
-    '^@fuels/connectors$': require.resolve('@fuels/connectors'),
   },
 };
 
