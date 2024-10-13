@@ -41,6 +41,10 @@ export class ContentProxyConnection {
         },
       ],
     });
+    // Send start event after 1 second to ensure the connection is established
+    setTimeout(() => {
+      this.onStartEvent();
+    }, 1000);
   }
 
   connectAndAttachListeners() {
