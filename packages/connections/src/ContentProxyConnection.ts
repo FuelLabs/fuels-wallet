@@ -30,17 +30,19 @@ export class ContentProxyConnection {
    * or if the service is restarted.
    */
   onStartEvent() {
-    this.postMessage({
-      type: MessageTypes.event,
-      target: CONNECTOR_SCRIPT,
-      connectorName: this.connectorName,
-      events: [
-        {
-          event: 'start',
-          params: [],
-        },
-      ],
-    });
+    setTimeout(() => {
+      this.postMessage({
+        type: MessageTypes.event,
+        target: CONNECTOR_SCRIPT,
+        connectorName: this.connectorName,
+        events: [
+          {
+            event: 'start',
+            params: [],
+          },
+        ],
+      });
+    }, 2000);
   }
 
   connectAndAttachListeners() {
