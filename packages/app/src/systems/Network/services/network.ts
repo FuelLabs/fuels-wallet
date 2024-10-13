@@ -100,7 +100,9 @@ export class NetworkService {
   static async addNetwork(input: NetworkInputs['addNetwork']) {
     return db.transaction('rw', db.networks, async () => {
       const count = await db.networks.count();
-      const inputToAdd: Required<Omit<NetworkData, 'explorerUrl'>> & {
+      const inputToAdd: Required<
+        Omit<NetworkData, 'explorerUrl' | 'bridgeUrl' | 'faucetUrl'>
+      > & {
         explorerUrl?: string;
       } = {
         id: input.data.id || createUUID(),
@@ -236,7 +238,7 @@ export class NetworkService {
       });
 
       if (!networkByChainId || !networkByUrl) {
-        const provider = await Provider.create(url);
+        const provider = await createProvider(url);
         const providerName = provider.getChain().name;
         const providerChainId = provider.getChainId();
 
@@ -315,7 +317,7 @@ export class NetworkService {
       });
 
       if (!networkByUrl) {
-        const provider = await Provider.create(url);
+        const provider = await createProvider(url);
         const providerName = provider.getChain().name;
         const providerChainId = await provider.getChainId();
 
