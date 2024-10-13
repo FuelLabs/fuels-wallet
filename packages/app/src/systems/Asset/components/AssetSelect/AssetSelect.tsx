@@ -34,7 +34,7 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
       isOpen={isOpen}
       onOpenChange={setIsOpen}
       popoverProps={{ align: 'start' }}
-      className="fuel_asset-select"
+      css={styles.dropdownRoot}
     >
       <Dropdown.Trigger asChild>
         <Button
@@ -226,5 +226,8 @@ const styles = {
     '.asset-name': {
       mb: '2px',
     },
+  }),
+  dropdownRoot: cssObj({
+    zIndex: '1 !important',
   }),
 };
