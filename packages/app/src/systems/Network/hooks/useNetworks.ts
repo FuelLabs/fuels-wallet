@@ -1,8 +1,9 @@
 import type { NetworkData } from '@fuel-wallet/types';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Services, store } from '~/store';
 import { useOverlay } from '~/systems/Overlay';
 
+import { DEFAULT_NETWORKS } from '~/networks';
 import type { NetworksMachineState } from '../machines/networksMachine';
 
 const selectors = {
@@ -25,10 +26,26 @@ export function useNetworks() {
   const networks = store.useSelector(Services.networks, selectors.networks);
   const network = store.useSelector(Services.networks, selectors.network);
   const isLoading = store.useSelector(Services.networks, selectors.isLoading);
-  const selectedNetwork = store.useSelector(
+  const selectedNetworkState = store.useSelector(
     Services.networks,
     selectors.selectedNetwork
   );
+
+  const selectedNetwork = useMemo(() => {
+    const networkFromDefault = DEFAULT_NETWORKS.find(
+      (n) => n.url === selectedNetworkState?.url
+    );
+
+    if (networkFromDefault) {
+      return {
+        ...selectedNetworkState,
+        bridgeUrl: networkFromDefault.bridgeUrl,
+        faucetUrl: networkFromDefault.faucetUrl,
+      } as NetworkData;
+    }
+
+    return selectedNetworkState;
+  }, [selectedNetworkState]);
 
   useEffect(() => {
     store.refreshNetworks();
