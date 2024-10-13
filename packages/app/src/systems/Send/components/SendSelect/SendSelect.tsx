@@ -32,6 +32,7 @@ export function SendSelect({
   fastTip,
   errorMessage,
   warningMessage,
+  provider,
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
   const isAmountFocused = useRef<boolean>(false);
@@ -53,8 +54,16 @@ export function SendSelect({
     return selectedAsset?.asset?.decimals;
   }, [assetId, balances]);
 
+  const isSendingBaseAssetId = useMemo(() => {
+    return (
+      assetId &&
+      provider?.getBaseAssetId().toLowerCase() === assetId.toLowerCase()
+    );
+  }, [provider, assetId]);
+
   useEffect(() => {
     if (
+      isSendingBaseAssetId &&
       watchMax &&
       (!baseFeeRef.current?.eq(baseFee) || !tipRef.current.eq(tip))
     ) {
@@ -67,7 +76,14 @@ export function SendSelect({
 
       form.setValue('amount', balanceAssetSelected.sub(maxFee));
     }
-  }, [watchMax, balanceAssetSelected, baseFee, tip, form.setValue]);
+  }, [
+    watchMax,
+    balanceAssetSelected,
+    baseFee,
+    tip,
+    form.setValue,
+    isSendingBaseAssetId,
+  ]);
 
   const assetSelectItems = balances?.map((b) => ({
     assetId: b.assetId,
@@ -90,7 +106,11 @@ export function SendSelect({
               <AssetSelect
                 items={assetSelectItems}
                 selected={field.value}
-                onSelect={field.onChange}
+                onSelect={(asset) => {
+                  form.setValue('amount', bn(0));
+                  setWatchMax(false);
+                  field.onChange(asset);
+                }}
               />
             )}
           />
@@ -142,8 +162,12 @@ export function SendSelect({
                 }
               }}
               onClickMax={() => {
-                baseFeeRef.current = null; // Workaround just to trigger the watcher when max is clicked and base fee is stable
-                setWatchMax(true);
+                if (isSendingBaseAssetId) {
+                  baseFeeRef.current = null; // Workaround just to trigger the watcher when max is clicked and base fee is stable
+                  setWatchMax(true);
+                } else {
+                  form.setValue('amount', balanceAssetSelected);
+                }
               }}
               inputProps={{
                 onFocus: () => {
@@ -164,7 +188,7 @@ export function SendSelect({
           </Form.Control>
         </Box.Stack>
 
-        {amount.value.gt(0) &&
+        {amount.value?.gt(0) &&
           assetId &&
           baseFee.gt(0) &&
           regularTip &&

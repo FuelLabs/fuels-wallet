@@ -12,8 +12,7 @@ import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
 
-import { Services, store } from '~/store';
-import type { NetworksMachineState } from '~/systems/Network';
+import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { formatGasLimit } from '~/systems/Transaction';
 import { sendMachine } from '../machines/sendMachine';
 import type { SendMachineState } from '../machines/sendMachine';
@@ -64,7 +63,6 @@ const selectors = {
       [txStatus]
     );
   },
-  provider: (state: NetworksMachineState) => state.context.provider,
 };
 
 type BalanceAsset = {
@@ -79,7 +77,7 @@ type SchemaOptions = {
   maxGasLimit: BN | undefined;
 };
 
-const schemaFactory = (_provider: Promise<Provider | undefined> | undefined) =>
+const schemaFactory = (provider?: Provider) =>
   yup
     .object({
       asset: yup.string().required('Asset is required'),
@@ -88,7 +86,7 @@ const schemaFactory = (_provider: Promise<Provider | undefined> | undefined) =>
         .test('positive', 'Amount must be greater than 0', (value) => {
           return value?.gt(0);
         })
-        .test('balance', 'Insufficient funds', (value, ctx) => {
+        .test('balance', 'Insufficient funds', async (value, ctx) => {
           const { asset, fees } = ctx.parent as SendFormValues;
           const { balances, baseFee } = ctx.options.context as SchemaOptions;
 
@@ -103,13 +101,20 @@ const schemaFactory = (_provider: Promise<Provider | undefined> | undefined) =>
             return false;
           }
 
-          // It means "baseFee" is being calculated
-          if (!baseFee) {
-            return true;
+          const isSendingBaseAssetId =
+            asset &&
+            provider?.getBaseAssetId().toLowerCase() === asset.toLowerCase();
+          if (isSendingBaseAssetId) {
+            // It means "baseFee" is being calculated
+            if (!baseFee) {
+              return true;
+            }
+
+            const totalAmount = value.add(baseFee.add(fees.tip.amount));
+            return totalAmount.lte(bn(balanceAssetSelected.amount));
           }
 
-          const totalAmount = value.add(baseFee.add(fees.tip.amount));
-          return totalAmount.lte(bn(balanceAssetSelected.amount));
+          return true;
         })
         .required('Amount is required'),
       address: yup
@@ -117,7 +122,6 @@ const schemaFactory = (_provider: Promise<Provider | undefined> | undefined) =>
         .required('Address is required')
         .test('is-user-address', async (value, ctx) => {
           try {
-            const provider = await _provider;
             if (!provider) {
               return true;
             }
@@ -171,7 +175,7 @@ const schemaFactory = (_provider: Promise<Provider | undefined> | undefined) =>
 
                   const balance = bn(balanceAssetSelected.amount);
 
-                  const totalBlocked = baseFee.add(amount);
+                  const totalBlocked = baseFee.add(bn(amount));
                   const totalAmount = totalBlocked.add(value);
                   if (totalAmount.lte(balance) || value.isZero()) {
                     return true;
@@ -248,7 +252,7 @@ export function useSend() {
   const navigate = useNavigate();
   const txRequest = useTransactionRequest();
   const { account } = useAccounts();
-  const provider = store.useSelector(Services.networks, selectors.provider);
+  const provider = useProvider();
 
   const service = useInterpret(() =>
     sendMachine.withConfig({
@@ -359,7 +363,7 @@ export function useSend() {
       if (address) {
         form.trigger('address');
       }
-      if (!address || !asset || amount.eq(0)) {
+      if (!address || !asset || amount == null || amount?.eq(0)) {
         return;
       }
 
@@ -403,6 +407,7 @@ export function useSend() {
     balances: account?.balances,
     balanceAssetSelected,
     errorMessage,
+    provider,
     handlers: {
       cancel,
       submit,
