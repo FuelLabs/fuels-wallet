@@ -46,6 +46,7 @@ export function SignatureRequest() {
                         overflowX: 'hidden',
                         whiteSpace: 'pre-wrap',
                         wordBreak: 'break-word',
+                        textIndent: '-0.25em',
                       }}
                     >
                       {message}
