@@ -2,7 +2,7 @@
   "name": "@fuel-wallet/connections",
   "private": true,
   "description": "Fuel Wallet Connections for CRX.",
-  "version": "0.37.2",
+  "version": "0.38.0",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
@@ -37,7 +37,7 @@
     "@fuel-wallet/types": "workspace:*",
     "@types/uuid": "^9.0.5",
     "blob-polyfill": "^7.0.20220408",
-    "fuels": "0.96.0",
+    "fuels": "0.96.1",
     "jest-environment-jsdom": "29.6.2",
     "tsup": "^7.2.0",
     "undici": "^6.4.0",

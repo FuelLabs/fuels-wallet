@@ -1,7 +1,7 @@
 {
   "name": "fuels-wallet",
   "private": true,
-  "version": "0.37.2",
+  "version": "0.38.0",
   "database": "23",
   "scripts": {
     "build:all": "run-s build:web build:crx build:storybook",
@@ -42,7 +42,7 @@
     "events": "3.3.0",
     "fake-indexeddb": "4.0.2",
     "framer-motion": "10.16.4",
-    "fuels": "0.96.0",
+    "fuels": "0.96.1",
     "json-edit-react": "1.13.3",
     "json-rpc-2.0": "1.7.0",
     "lodash.debounce": "4.0.8",
@@ -62,7 +62,7 @@
   "devDependencies": {
     "@crxjs/vite-plugin": "1.0.14",
     "@fuel-wallet/types": "workspace:*",
-    "@fuels/connectors": "0.35.0",
+    "@fuels/connectors": "0.35.1",
     "@playwright/test": "1.46.1",
     "@sentry/cli": "2.33.1",
     "@storybook/addon-a11y": "7.4.6",
