@@ -1,5 +1,18 @@
 # fuels-wallet
 
+## 0.38.0
+
+### Patch Changes
+
+- [#1601](https://github.com/FuelLabs/fuels-wallet/pull/1601) [`67f23764`](https://github.com/FuelLabs/fuels-wallet/commit/67f23764848b7e8ac29cdceebfc84b492b1679c3) Thanks [@pedronauck](https://github.com/pedronauck)! - Fix sign message text area remove horizontal scroll
+
+- [#1602](https://github.com/FuelLabs/fuels-wallet/pull/1602) [`72f57a3f`](https://github.com/FuelLabs/fuels-wallet/commit/72f57a3f97c329f0de65520d5c9f77f085c4f4b6) Thanks [@luizstacio](https://github.com/luizstacio)! - chore: Update fuels sdk to version 0.96.1
+
+- [#1604](https://github.com/FuelLabs/fuels-wallet/pull/1604) [`dde6e3a7`](https://github.com/FuelLabs/fuels-wallet/commit/dde6e3a7c3b307daa01e173d8a861b85dcd16321) Thanks [@luizstacio](https://github.com/luizstacio)! - chore: update connectors and react version to 0.35.1
+
+- Updated dependencies [[`9020920d`](https://github.com/FuelLabs/fuels-wallet/commit/9020920d2b6f2b7402231c074236ba83c05fb827), [`72f57a3f`](https://github.com/FuelLabs/fuels-wallet/commit/72f57a3f97c329f0de65520d5c9f77f085c4f4b6)]:
+  - @fuel-wallet/connections@0.38.0
+
 ## 0.37.2
 
 ### Patch Changes
