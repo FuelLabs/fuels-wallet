@@ -27,7 +27,7 @@ RUN git clone \
 RUN cp -R /chain-configuration/local/* ./
 
 # Copy the testnet consensus parameters and state transition bytecode
-RUN cp /chain-configuration/upgradelog/ignition-devnet/consensus_parameters/13.json \
+RUN cp /chain-configuration/upgradelog/ignition-devnet/consensus_parameters/14.json \
     ./latest_consensus_parameters.json
 RUN cp /chain-configuration/upgradelog/ignition-devnet/state_transition_function/15.wasm \
     ./state_transition_bytecode.wasm
