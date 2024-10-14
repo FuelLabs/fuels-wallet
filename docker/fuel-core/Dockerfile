@@ -6,7 +6,7 @@
 
 # We should be supporting always the same fuel-core version as the fuels (ts-sdk)
 # https://github.com/FuelLabs/fuels-ts/blob/master/internal/fuel-core/VERSION
-FROM ghcr.io/fuellabs/fuel-core:v0.38.0
+FROM ghcr.io/fuellabs/fuel-core:v0.39.0
 
 # dependencies
 ENV DEBIAN_FRONTEND=noninteractive
@@ -21,7 +21,7 @@ RUN git clone \
     https://github.com/FuelLabs/chain-configuration.git \
     /chain-configuration && \
     cd /chain-configuration && \
-    git checkout f31f565905e001b4d6ed9c9d09479dc961ad7367
+    git checkout 0dc0960f14da7b6650b5438dc1e99d7ff7acec73
 
 # Copy the base local configuration
 RUN cp -R /chain-configuration/local/* ./
@@ -29,7 +29,7 @@ RUN cp -R /chain-configuration/local/* ./
 # Copy the testnet consensus parameters and state transition bytecode
 RUN cp /chain-configuration/upgradelog/ignition-devnet/consensus_parameters/13.json \
     ./latest_consensus_parameters.json
-RUN cp /chain-configuration/upgradelog/ignition-devnet/state_transition_function/14.wasm \
+RUN cp /chain-configuration/upgradelog/ignition-devnet/state_transition_function/15.wasm \
     ./state_transition_bytecode.wasm
 
 # update local state_config with custom genesis coins config
