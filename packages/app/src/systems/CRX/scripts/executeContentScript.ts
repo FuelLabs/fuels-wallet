@@ -9,7 +9,7 @@ import fileName from './contentScript?script';
 
 // Ping to check if the content script is already injected
 export async function executeContentScript() {
-  chrome.tabs.query({ url: '<all_urls>' }, (tabs) => {
+  chrome.tabs.query({ active: true, url: '<all_urls>' }, (tabs) => {
     for (const tab of tabs) {
       if (!tab.id || tab.url?.startsWith('chrome://')) continue;
 
