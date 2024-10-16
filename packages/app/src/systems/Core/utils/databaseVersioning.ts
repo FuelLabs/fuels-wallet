@@ -193,8 +193,8 @@ export const applyDbVersioning = (db: Dexie) => {
       accounts: '&address, &name',
       networks: '&id, &url, &name, chainId',
       connections: 'origin',
+      transactionsCursors: '++id, address, size, providerUrl, endCursor',
       assets: '&name, &symbol',
-      assetsTemp: null,
       abis: '&contractId',
       errors: '&id',
     })
