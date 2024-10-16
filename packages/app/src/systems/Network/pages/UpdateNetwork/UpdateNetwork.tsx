@@ -31,7 +31,11 @@ export function UpdateNetwork() {
         </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
-        <Button variant="ghost" onPress={handlers.openNetworks}>
+        <Button
+          variant="ghost"
+          onPress={handlers.openNetworks}
+          aria-label="Cancel network update"
+        >
           Cancel
         </Button>
         <Button
