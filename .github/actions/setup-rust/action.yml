@@ -1,23 +1,12 @@
-name: 'Rust & Forc Setup'
+name: 'Forc Setup'
 
 inputs:
-  rust-version:
-    default: 1.77.2
   forc-components:
-    default: 'forc@0.65.2, fuel-core@0.38.0'
+    default: 'forc@0.65.2, fuel-core@0.39.0'
 
 runs:
   using: 'composite'
   steps:
-    - name: Install Rust toolchain
-      uses: dtolnay/rust-toolchain@master
-      with:
-        toolchain: ${{ inputs.rust-version }}
-        components: clippy, rustfmt
-
-    - name: Init cache
-      uses: Swatinem/rust-cache@v2
-
     - name: Install Fuel toolchain
       uses: FuelLabs/action-fuel-toolchain@v0.6.0
       with:

@@ -1,5 +1,15 @@
 # @fuel-wallet/connections
 
+## 0.38.0
+
+### Minor Changes
+
+- [#1597](https://github.com/FuelLabs/fuels-wallet/pull/1597) [`9020920d`](https://github.com/FuelLabs/fuels-wallet/commit/9020920d2b6f2b7402231c074236ba83c05fb827) Thanks [@luizstacio](https://github.com/luizstacio)! - Remove delay start message to script page
+
+### Patch Changes
+
+- [#1602](https://github.com/FuelLabs/fuels-wallet/pull/1602) [`72f57a3f`](https://github.com/FuelLabs/fuels-wallet/commit/72f57a3f97c329f0de65520d5c9f77f085c4f4b6) Thanks [@luizstacio](https://github.com/luizstacio)! - chore: Update fuels sdk to version 0.96.1
+
 ## 0.37.2
 
 ### Patch Changes
