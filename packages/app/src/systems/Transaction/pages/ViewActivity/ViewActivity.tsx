@@ -3,6 +3,7 @@ import { Alert, Box, Button, Icon, Link, Text } from '@fuel-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Address } from 'fuels';
 import { useNavigate } from 'react-router-dom';
+import { IS_CRX } from '~/config';
 import { useAccounts } from '~/systems/Account';
 import { Layout, Pages, animations } from '~/systems/Core';
 import { useNetworks } from '~/systems/Network';
@@ -27,7 +28,7 @@ export function ViewActivity() {
     address,
   });
   const { selectedNetwork } = useNetworks();
-  const { openBridge } = useBridgeLink();
+  const { openBridge, href } = useBridgeLink();
 
   return (
     <Layout title="History" isLoading={isFetching || isLoadingAccounts}>
@@ -38,7 +39,13 @@ export function ViewActivity() {
             <Alert status="info" hideIcon>
               <Text css={styles.bridgeAlertText}>
                 Bridge transactions are not shown in Fuel Wallet.{' '}
-                <Link onClick={() => openBridge()}>Go to the bridge</Link>
+                <Link
+                  href={(IS_CRX && href) || undefined}
+                  onClick={openBridge}
+                  isExternal
+                >
+                  Go to the bridge
+                </Link>
               </Text>
             </Alert>
           )}

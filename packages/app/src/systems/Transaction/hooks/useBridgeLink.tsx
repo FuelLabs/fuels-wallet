@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { type MouseEvent, useCallback, useMemo } from 'react';
 import { IS_CRX } from '~/config';
 import { openTab } from '~/systems/CRX/utils';
 import { urlJoin } from '~/systems/Core';
@@ -11,14 +11,14 @@ export function useBridgeLink() {
     return urlJoin(selectedNetwork.bridgeUrl, '/history');
   }, [selectedNetwork]);
 
-  const openBridge = useCallback(() => {
-    if (!href) return;
-    if (IS_CRX) {
-      openTab(href);
-    } else {
+  const openBridge = useCallback(
+    (e?: MouseEvent<HTMLAnchorElement>) => {
+      if (!href || IS_CRX) return;
+      e?.preventDefault();
       window.location.href = href;
-    }
-  }, [href]);
+    },
+    [href]
+  );
 
   return {
     href,
