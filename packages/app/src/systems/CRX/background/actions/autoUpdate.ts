@@ -11,11 +11,20 @@ async function isOpen() {
   return isOpen;
 }
 
-async function getLatestVersion() {
-  const latestVersion = await fetch(VITE_CRX_VERSION_API)
+function getCacheParam() {
+  return `?v=${Date.now()}`;
+}
+async function fetchFeatureFlags() {
+  const featureFlags = await fetch(VITE_CRX_VERSION_API + getCacheParam())
     .then((res) => res.json())
     // If fails to fetch the version return a empty object
     .catch(() => ({}));
+
+  return featureFlags;
+}
+
+async function getLatestVersion() {
+  const latestVersion = await fetchFeatureFlags();
   return latestVersion[WALLET_NAME] || APP_VERSION;
 }
 
