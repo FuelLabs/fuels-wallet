@@ -54,7 +54,6 @@ test.describe('Networks', () => {
     await visit(page, '/wallet');
     await getByAriaLabel(page, 'Selected Network').click();
     const networkItems = page.locator('[aria-label^="fuel_network-item-"]');
-    await page.pause();
     for (const networkItem of await networkItems.all()) {
       const networkName = await networkItem
         .locator('[aria-label="Network name"]')
