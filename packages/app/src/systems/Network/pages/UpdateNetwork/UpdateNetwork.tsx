@@ -5,14 +5,14 @@ import { NetworkForm, useNetworkForm, useNetworks } from '~/systems/Network';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export function UpdateNetwork() {
-  const { network, isLoading, handlers } = useNetworks();
+  const { editingNetwork, isLoading, handlers } = useNetworks();
 
   const form = useNetworkForm({
-    defaultValues: network,
+    defaultValues: editingNetwork,
   });
 
   function onSubmit(data: NetworkFormValues) {
-    handlers.updateNetwork({ id: network?.id as string, data });
+    handlers.updateNetwork({ id: editingNetwork?.id as string, data });
   }
 
   return (
