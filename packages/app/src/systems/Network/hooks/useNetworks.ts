@@ -19,13 +19,27 @@ const selectors = {
   selectedNetwork: (state: NetworksMachineState) => {
     return state.context?.network || undefined;
   },
+  editingNetwork: (id: string) => (state: NetworksMachineState) => {
+    return (
+      (id && state.context?.networks?.find((n) => n.id === id)) || undefined
+    );
+  },
 };
 
 export function useNetworks() {
   const overlay = useOverlay();
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  const selectedNetworkId = (overlay.metadata as any)?.id;
   const networks = store.useSelector(Services.networks, selectors.networks);
   const network = store.useSelector(Services.networks, selectors.network);
   const isLoading = store.useSelector(Services.networks, selectors.isLoading);
+  const editingNetwork = store.useSelector(
+    Services.networks,
+    useMemo(
+      () => selectors.editingNetwork(selectedNetworkId),
+      [selectedNetworkId]
+    )
+  );
   const selectedNetworkState = store.useSelector(
     Services.networks,
     selectors.selectedNetwork
@@ -68,7 +82,7 @@ export function useNetworks() {
   function goToUpdate(id?: string) {
     if (!id) return;
     store.editNetwork({ id });
-    store.openNetworkUpdate();
+    store.openNetworkUpdate({ id });
   }
 
   return {
@@ -84,6 +98,7 @@ export function useNetworks() {
     },
     isLoading,
     selectedNetwork,
+    editingNetwork,
     network,
     networks,
   };

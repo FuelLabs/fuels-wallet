@@ -70,7 +70,7 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
         {...(showActions && { rightEl: actions })}
       >
         {/* <NetworkStatus network={network} /> */}
-        <Text>{network?.name}</Text>
+        <Text aria-label="Network name">{network?.name}</Text>
       </CardList.Item>
     );
   }
