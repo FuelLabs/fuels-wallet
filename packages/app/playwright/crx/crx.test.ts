@@ -186,7 +186,6 @@ test.describe('FuelWallet Extension', () => {
       await waitWalletToLoad(popupPage);
       await getByAriaLabel(popupPage, 'Selected Network').click();
       await getElementByText(popupPage, 'Local network').click();
-      await popupPage.close();
     });
 
     await test.step('Add more accounts', async () => {
