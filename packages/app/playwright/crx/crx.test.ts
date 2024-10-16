@@ -10,6 +10,7 @@ import {
   hasText,
   reload,
   seedWallet,
+  visit,
   waitAriaLabel,
 } from '../commons';
 import {
@@ -19,6 +20,7 @@ import {
   CUSTOM_ASSET_INPUT_4,
   FUEL_NETWORK,
   PRIVATE_KEY,
+  mockData,
 } from '../mocks';
 
 import {
@@ -176,6 +178,15 @@ test.describe('FuelWallet Extension', () => {
       await page.goto(`chrome-extension://${extensionId}/popup.html`);
       await hasText(page, /Assets/i);
       return page;
+    });
+
+    await test.step('Should select local network', async () => {
+      const page = await context.newPage();
+      await mockData(page);
+      await waitWalletToLoad(popupPage);
+      await getByAriaLabel(popupPage, 'Selected Network').click();
+      await getElementByText(popupPage, 'Local network').click();
+      await popupPage.close();
     });
 
     await test.step('Add more accounts', async () => {

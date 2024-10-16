@@ -173,8 +173,6 @@ export class NetworkService {
 
   static async addDefaultNetworks() {
     for (const [index, network] of DEFAULT_NETWORKS.entries()) {
-      if (network.hidden) continue;
-
       const networkAdded = await NetworkService.addNetwork({
         data: {
           id: index.toString(),
@@ -184,18 +182,6 @@ export class NetworkService {
       if (network.isSelected) {
         await NetworkService.selectNetwork({ id: networkAdded.id || '' });
       }
-    }
-
-    try {
-      const envNetwork = await NetworkService.getNetworkByNameOrUrl({
-        url: VITE_FUEL_PROVIDER_URL,
-        name: '',
-      });
-      if (envNetwork) {
-        await NetworkService.selectNetwork({ id: envNetwork.id || '' });
-      }
-    } catch (error) {
-      console.log(error);
     }
   }
 
