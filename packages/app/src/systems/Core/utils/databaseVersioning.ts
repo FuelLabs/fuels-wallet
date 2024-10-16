@@ -209,12 +209,12 @@ export const applyDbVersioning = (db: Dexie) => {
         .first();
 
       // De-select all networks
-      networks.each((_, { primaryKey }) => {
-        networks.update(primaryKey, { isSelected: false });
+      await networks.each(async (_, { primaryKey }) => {
+        await networks.update(primaryKey, { isSelected: false });
       });
 
       if (network) {
-        networks.update(network.id, { isSelected: true });
+        await networks.update(network.id, { isSelected: true });
         return;
       }
 
