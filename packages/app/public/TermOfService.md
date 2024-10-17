@@ -1,5 +1,7 @@
 ## Fuel Wallet Terms Of Use Agreement
 
+Last updated: October 16, 2024
+
 ## 1. The Fuel Wallet
 
 The “**Fuel Wallet**” is a web3 software wallet application developed by **Fuel Labs Inc.**, a British Virgin Islands company (“Fuel” or “we”) for the purpose of managing private-public key pairs, blockchain addresses, and other data connected to user-controlled wallets. This agreement is between you and Fuel.  
