@@ -10,28 +10,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  setup:
-    name: Setup
-    runs-on: buildjet-8vcpu-ubuntu-2204
-    steps:
-      - uses: actions/checkout@v4
-      - uses: FuelLabs/github-actions/setups/node@pn/fix/pnpm-cache
-      - uses: FuelLabs/github-actions/setups/docker@master
-        with:
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build libs
-        run: pnpm build:libs
-
-      - name: Cache build
-        uses: actions/cache@v4
-        with:
-          path: |
-            **/dist
-            **/build
-          key: ${{ runner.os }}-build-${{ github.sha }}
-
   tests:
     needs: setup
     name: ${{ matrix.test-type }}
@@ -51,13 +29,8 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Restore build cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            **/dist
-            **/build
-          key: ${{ runner.os }}-build-${{ github.sha }}
+      - name: Build libs
+        run: pnpm build:libs
 
       - name: Start Test Node
         run: pnpm node:up
