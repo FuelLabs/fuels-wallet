@@ -10,6 +10,7 @@ import {
   hasText,
   reload,
   seedWallet,
+  visit,
   waitAriaLabel,
 } from '../commons';
 import {
@@ -19,6 +20,7 @@ import {
   CUSTOM_ASSET_INPUT_4,
   FUEL_NETWORK,
   PRIVATE_KEY,
+  mockData,
 } from '../mocks';
 
 import {
@@ -76,9 +78,15 @@ test.describe('FuelWallet Extension', () => {
 
     await test.step('Has window.fuel', async () => {
       const hasFuel = await blankPage.evaluate(async () => {
-        // wait for the script to load
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        return typeof window.fuel === 'object';
+        const maxRetries = 20;
+        const interval = 1000; // ms
+        for (let i = 0; i < maxRetries; i++) {
+          if (typeof window.fuel === 'object') {
+            return true;
+          }
+          await new Promise((resolve) => setTimeout(resolve, interval));
+        }
+        return false;
       });
       expect(hasFuel).toBeTruthy();
     });
@@ -176,6 +184,14 @@ test.describe('FuelWallet Extension', () => {
       await page.goto(`chrome-extension://${extensionId}/popup.html`);
       await hasText(page, /Assets/i);
       return page;
+    });
+
+    await test.step('Should select local network', async () => {
+      const page = await context.newPage();
+      await mockData(page);
+      await waitWalletToLoad(popupPage);
+      await getByAriaLabel(popupPage, 'Selected Network').click();
+      await getElementByText(popupPage, 'Local network').click();
     });
 
     await test.step('Add more accounts', async () => {
@@ -714,7 +730,7 @@ test.describe('FuelWallet Extension', () => {
         await popupPage.reload();
       }
 
-      const initialNetworkAmount = 3;
+      const initialNetworkAmount = 4;
       let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
       await networkSelector.click();
 

@@ -35,9 +35,15 @@ test.describe('Lock FuelWallet after inactivity', () => {
 
     await test.step('Has window.fuel', async () => {
       const hasFuel = await blankPage.evaluate(async () => {
-        // wait for the script to load
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        return typeof window.fuel === 'object';
+        const maxRetries = 20;
+        const interval = 1000; // ms
+        for (let i = 0; i < maxRetries; i++) {
+          if (typeof window.fuel === 'object') {
+            return true;
+          }
+          await new Promise((resolve) => setTimeout(resolve, interval));
+        }
+        return false;
       });
       expect(hasFuel).toBeTruthy();
     });
