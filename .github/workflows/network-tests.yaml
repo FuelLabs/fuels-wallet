@@ -34,7 +34,7 @@ jobs:
     if: github.event_name == 'push' || github.event.inputs.network == matrix.network
     steps:
       - uses: actions/checkout@v4
-      - uses: FuelLabs/github-actions/setups/node@master
+      - uses: FuelLabs/github-actions/setups/node@pn/fix/pnpm-cache
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}

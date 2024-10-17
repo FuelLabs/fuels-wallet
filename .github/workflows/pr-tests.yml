@@ -15,7 +15,7 @@ jobs:
     runs-on: buildjet-8vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v4
-      - uses: FuelLabs/github-actions/setups/node@master
+      - uses: FuelLabs/github-actions/setups/node@pn/fix/pnpm-cache
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}
@@ -45,7 +45,7 @@ jobs:
         test-type: [jest, e2e, e2e-crx-lock]
     steps:
       - uses: actions/checkout@v4
-      - uses: FuelLabs/github-actions/setups/node@master
+      - uses: FuelLabs/github-actions/setups/node@pn/fix/pnpm-cache
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}
@@ -100,7 +100,7 @@ jobs:
     if: false
     steps:
       - uses: actions/checkout@v4
-      - uses: FuelLabs/github-actions/setups/node@master
+      - uses: FuelLabs/github-actions/setups/node@pn/fix/pnpm-cache
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}

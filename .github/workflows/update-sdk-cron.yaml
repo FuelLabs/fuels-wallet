@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: FuelLabs/github-actions/setups/node@master
+      - uses: FuelLabs/github-actions/setups/node@pn/fix/pnpm-cache
 
       - name: Checking updates
         uses: FuelLabs/github-actions/update-sdk@master
