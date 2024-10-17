@@ -50,7 +50,19 @@ test.describe('Lock FuelWallet after inactivity', () => {
 
     await test.step('Create wallet', async () => {
       const pages = context.pages();
-      const [page] = pages.filter((page) => page.url().includes('sign-up'));
+      let page = pages.find((page) => page.url().includes('sign-up'));
+
+      if (!page) {
+        page = await context.waitForEvent('page', {
+          predicate: (page) => page.url().includes('sign-up'),
+          timeout: 10000, // Adjust timeout as needed
+        });
+      }
+
+      if (!page) {
+        throw new Error('Sign-up page did not open');
+      }
+
       await reload(page);
       await getElementByText(page, /Create new wallet/i).click();
 
