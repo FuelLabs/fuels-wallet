@@ -7,20 +7,20 @@
       "dependsOn": [],
       "outputs": ["./**/*.typegen.ts"]
     },
-    "build": {
+    "build:libs": {
       "dependsOn": ["ts:check"],
       "outputs": ["dist/**"]
     },
     "build:docs": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build:libs"],
       "outputs": ["dist/**"]
     },
     "build:crx": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build:libs"],
       "outputs": ["dist-crx*/**", "dist/fuel-wallet*.zip"]
     },
     "build:web": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build:libs"],
       "outputs": ["dist/**"]
     },
     "build:app": {
@@ -28,15 +28,15 @@
       "outputs": ["dist/**", "dist-crx/**"]
     },
     "build:all": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build:libs"],
       "outputs": ["dist/**"]
     },
     "build:preview": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build:libs"],
       "outputs": ["./dist/"]
     },
     "test": {
-      "dependsOn": ["build"],
+      "dependsOn": ["build:libs"],
       "outputs": ["coverage/**", "test-results/**"]
     },
     "test:e2e": {
