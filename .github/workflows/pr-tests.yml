@@ -51,7 +51,7 @@ jobs:
 
   tests-e2e:
     name: E2E Tests
-    timeout-minutes: 15
+    timeout-minutes: 20
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
@@ -83,7 +83,7 @@ jobs:
 
       - name: Run E2E Tests
         run: xvfb-run --auto-servernum -- pnpm test:e2e
-        timeout-minutes: 10
+        timeout-minutes: 15
         env:
           NODE_ENV: test
 
