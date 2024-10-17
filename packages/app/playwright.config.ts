@@ -10,6 +10,8 @@ export const playwrightConfig: PlaywrightTestConfig = {
   testMatch: join(__dirname, './playwright/**/*.test.ts'),
   testDir: join(__dirname, './playwright/'),
   outputDir: join(__dirname, './playwright-results/'),
+  // stop on first failure
+  maxFailures: 1,
   reporter: [
     ['list', { printSteps: true }],
     ['html', { outputFolder: join(__dirname, './playwright-html/') }],

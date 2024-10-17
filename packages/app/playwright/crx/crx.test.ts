@@ -230,10 +230,28 @@ test.describe('FuelWallet Extension', () => {
 
     async function connectAccounts() {
       await reload(blankPage);
+
       await blankPage.waitForFunction(async () => {
+        async function waitForConnection(depth = 0) {
+          if (depth > 20) {
+            throw new Error('Account never connected');
+          }
+          await new Promise((resolve) => {
+            setTimeout(async () => {
+              const currentConnectors = await window.fuel.currentConnector();
+              if (currentConnectors.installed) {
+                resolve(true);
+              } else {
+                await waitForConnection(depth + 1);
+              }
+              resolve(true);
+            }, 500);
+          });
+        }
         // needs to select the connector after refresh
         await window.fuel.selectConnector('Fuel Wallet Development');
         await window.fuel.hasConnector();
+        await waitForConnection();
       });
       const connectionResponse = blankPage.evaluate(async () => {
         const isConnected = await window.fuel.connect();
