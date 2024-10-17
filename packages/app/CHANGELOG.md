@@ -1,5 +1,31 @@
 # fuels-wallet
 
+## 0.39.0
+
+### Minor Changes
+
+- [#1551](https://github.com/FuelLabs/fuels-wallet/pull/1551) [`fc87b6f3`](https://github.com/FuelLabs/fuels-wallet/commit/fc87b6f3c6bfcfa506c77f2f7365f2637fb2df77) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Upgrade Database to Version 23 with Network Adjustments
+
+  • Added mainnet network to default networks in DB versioning.
+  • Set the mainnet network as the selected network by default.
+  Remove Feature Flag Logic
+
+  • Eliminated obsolete feature flag functions related to network URLs.
+  Simplify Auto-Update Mechanism
+
+  • Removed unnecessary alarms and background tasks for network creation.
+
+### Patch Changes
+
+- [#1610](https://github.com/FuelLabs/fuels-wallet/pull/1610) [`320dec04`](https://github.com/FuelLabs/fuels-wallet/commit/320dec047637dec9add7f283998ee56f86cc15b1) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed e2e send transaction flaky test
+
+- [#1551](https://github.com/FuelLabs/fuels-wallet/pull/1551) [`fc87b6f3`](https://github.com/FuelLabs/fuels-wallet/commit/fc87b6f3c6bfcfa506c77f2f7365f2637fb2df77) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed bridge link in transaction bridge opening twice
+
+- [#1551](https://github.com/FuelLabs/fuels-wallet/pull/1551) [`fc87b6f3`](https://github.com/FuelLabs/fuels-wallet/commit/fc87b6f3c6bfcfa506c77f2f7365f2637fb2df77) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed Edit Network screen not displaying correct information.
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.39.0
+
 ## 0.38.0
 
 ### Patch Changes

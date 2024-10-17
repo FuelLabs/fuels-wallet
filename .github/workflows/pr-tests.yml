@@ -12,7 +12,7 @@ concurrency:
 jobs:
   tests-jest:
     name: JEST Tests
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: buildjet-8vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
@@ -52,7 +52,7 @@ jobs:
   tests-e2e:
     name: E2E Tests
     timeout-minutes: 20
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: buildjet-8vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
@@ -99,7 +99,7 @@ jobs:
 
   tests-e2e-crx-lock:
     name: E2E Tests - Lock CRX
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: buildjet-8vcpu-ubuntu-2204
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v3
@@ -147,7 +147,7 @@ jobs:
 
   tests-e2e-contracts:
     name: E2E Contract Tests - Local
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: buildjet-8vcpu-ubuntu-2204
     # Commented until the Playwright bug is fixed
     if: false
     steps:
