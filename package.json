@@ -26,7 +26,7 @@
     "build:web": "turbo run build:web",
     "build:crx": "turbo run build:crx",
     "build:app": "turbo run build:app",
-    "build:libs": "turbo run build",
+    "build:libs": "turbo run build:libs",
     "changeset": "changeset",
     "changeset:empty": "changeset --empty",
     "changeset:release": "changeset publish --no-git-tag",
