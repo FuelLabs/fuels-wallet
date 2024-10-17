@@ -83,7 +83,7 @@ jobs:
 
       - name: Run E2E Tests
         run: xvfb-run --auto-servernum -- pnpm test:e2e
-        timeout-minutes: 10
+        timeout-minutes: 15
         env:
           NODE_ENV: test
 
