@@ -10,6 +10,7 @@ import {
   hasText,
   reload,
   seedWallet,
+  visit,
   waitAriaLabel,
 } from '../commons';
 import {
@@ -19,6 +20,7 @@ import {
   CUSTOM_ASSET_INPUT_4,
   FUEL_NETWORK,
   PRIVATE_KEY,
+  mockData,
 } from '../mocks';
 
 import {
@@ -76,9 +78,15 @@ test.describe('FuelWallet Extension', () => {
 
     await test.step('Has window.fuel', async () => {
       const hasFuel = await blankPage.evaluate(async () => {
-        // wait for the script to load
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        return typeof window.fuel === 'object';
+        const maxRetries = 20;
+        const interval = 1000; // ms
+        for (let i = 0; i < maxRetries; i++) {
+          if (typeof window.fuel === 'object') {
+            return true;
+          }
+          await new Promise((resolve) => setTimeout(resolve, interval));
+        }
+        return false;
       });
       expect(hasFuel).toBeTruthy();
     });
@@ -178,6 +186,14 @@ test.describe('FuelWallet Extension', () => {
       return page;
     });
 
+    await test.step('Should select local network', async () => {
+      const page = await context.newPage();
+      await mockData(page);
+      await waitWalletToLoad(popupPage);
+      await getByAriaLabel(popupPage, 'Selected Network').click();
+      await getElementByText(popupPage, 'Local network').click();
+    });
+
     await test.step('Add more accounts', async () => {
       async function createAccount() {
         await waitWalletToLoad(popupPage);
@@ -214,10 +230,28 @@ test.describe('FuelWallet Extension', () => {
 
     async function connectAccounts() {
       await reload(blankPage);
+
       await blankPage.waitForFunction(async () => {
+        async function waitForConnection(depth = 0) {
+          if (depth > 20) {
+            throw new Error('Account never connected');
+          }
+          await new Promise((resolve) => {
+            setTimeout(async () => {
+              const currentConnectors = await window.fuel.currentConnector();
+              if (currentConnectors.installed) {
+                resolve(true);
+              } else {
+                await waitForConnection(depth + 1);
+              }
+              resolve(true);
+            }, 500);
+          });
+        }
         // needs to select the connector after refresh
         await window.fuel.selectConnector('Fuel Wallet Development');
         await window.fuel.hasConnector();
+        await waitForConnection();
       });
       const connectionResponse = blankPage.evaluate(async () => {
         const isConnected = await window.fuel.connect();
@@ -696,7 +730,7 @@ test.describe('FuelWallet Extension', () => {
         await popupPage.reload();
       }
 
-      const initialNetworkAmount = 3;
+      const initialNetworkAmount = 4;
       let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
       await networkSelector.click();
 

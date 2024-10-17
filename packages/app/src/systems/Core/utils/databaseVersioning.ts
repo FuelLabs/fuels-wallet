@@ -185,4 +185,36 @@ export const applyDbVersioning = (db: Dexie) => {
       await accountsTable.clear();
       await accountsTable.bulkAdd(updatedAccounts);
     });
+
+  // DB VERSION 26
+  db.version(26)
+    .stores({
+      vaults: 'key',
+      accounts: '&address, &name',
+      networks: '&id, &url, &name, chainId',
+      connections: 'origin',
+      transactionsCursors: '++id, address, size, providerUrl, endCursor',
+      assets: '&name, &symbol',
+      abis: '&contractId',
+      errors: '&id',
+    })
+    .upgrade(async (tx) => {
+      const networks = tx.table('networks');
+      // *
+      // Drop all networks
+      // *
+      await networks.clear();
+      // *
+      // Add default networks
+      // *
+      for (const [index, network] of DEFAULT_NETWORKS.entries()) {
+        if (network.hidden) continue;
+
+        await networks.add({
+          // Ensure we add to database in the same order as the DEFAULT_NETWORKS
+          id: index.toString(),
+          ...network,
+        });
+      }
+    });
 };
