@@ -1,4 +1,4 @@
-## Fuel Wallet Testnet Terms Of Use Agreement
+## Fuel Wallet Terms Of Use Agreement
 
 ## 1. The Fuel Wallet
 
