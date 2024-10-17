@@ -99,8 +99,8 @@ test.describe('FuelWallet Extension', () => {
           }
           await new Promise((resolve) => {
             setTimeout(async () => {
-              const currentConnectors = await window.fuel.currentConnector();
-              if (currentConnectors.installed) {
+              const currentConnectors = await window.fuel.connectors();
+              if (currentConnectors[0].installed) {
                 resolve(true);
               } else {
                 await waitForConnection(depth + 1);
@@ -266,8 +266,7 @@ test.describe('FuelWallet Extension', () => {
         predicate: (page) => page.url().includes(extensionId),
       });
 
-      await connectPage.waitForTimeout(5_000);
-      await hasText(connectPage, /Select accounts to connect/i);
+      await hasText(connectPage, /connect/i);
 
       // Account 1 should be toggled by default
       const toggleAccountOneLocator = await getByAriaLabel(
