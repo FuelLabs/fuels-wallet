@@ -200,39 +200,21 @@ export const applyDbVersioning = (db: Dexie) => {
     })
     .upgrade(async (tx) => {
       const networks = tx.table('networks');
+      // *
+      // Drop all networks
+      // *
+      await networks.clear();
+      // *
+      // Add default networks
+      // *
+      for (const [index, network] of DEFAULT_NETWORKS.entries()) {
+        if (network.hidden) continue;
 
-      const network = await networks
-        .where('chainId')
-        .equals(CHAIN_IDS.fuel.mainnet)
-        .or('name')
-        .equals('Ignition')
-        .first();
-
-      // De-select all networks
-      await networks.each(async (_, { primaryKey }) => {
-        await networks.update(primaryKey, { isSelected: false });
-      });
-
-      if (network) {
-        await networks.update(network.id, { isSelected: true });
-        return;
+        await networks.add({
+          // Ensure we add to database in the same order as the DEFAULT_NETWORKS
+          id: index.toString(),
+          ...network,
+        });
       }
-
-      // Add mainnet network
-      const networkToAddIndex = DEFAULT_NETWORKS.findIndex(
-        (network) =>
-          network.chainId === CHAIN_IDS.fuel.mainnet ||
-          network.name === 'Ignition'
-      );
-
-      if (networkToAddIndex <= -1) {
-        return;
-      }
-
-      await networks.add({
-        id: networkToAddIndex.toString(),
-        ...DEFAULT_NETWORKS[networkToAddIndex],
-        isSelected: true,
-      });
     });
 };
