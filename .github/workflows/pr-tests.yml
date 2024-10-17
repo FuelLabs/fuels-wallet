@@ -46,13 +46,13 @@ jobs:
         if: matrix.test-type == 'e2e'
         run: |
           pnpm exec playwright install --with-deps chromium
-          xvfb-run --auto-servernum -- pnpm test:e2e -- --headed false
+          xvfb-run --auto-servernum -- pnpm test:e2e -- --headed
 
       - name: Run E2E CRX Lock Tests
         if: matrix.test-type == 'e2e-crx-lock'
         run: |
           pnpm exec playwright install --with-deps chromium
-          xvfb-run --auto-servernum -- pnpm test:e2e:crx-lock -- --headed false
+          xvfb-run --auto-servernum -- pnpm test:e2e:crx-lock -- --headed
 
       - uses: actions/upload-artifact@v4
         if: always() && matrix.test-type != 'jest'
