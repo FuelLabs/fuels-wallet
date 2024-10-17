@@ -2,7 +2,6 @@ import type { NetworkData } from '@fuel-wallet/types';
 import { CHAIN_IDS } from 'fuels';
 import {
   IS_DEVELOPMENT,
-  IS_RELEASE,
   IS_TEST,
   VITE_EXPLORER_URL,
   VITE_FUEL_FAUCET_URL,
@@ -18,8 +17,7 @@ export const DEFAULT_NETWORKS: Array<
     chainId: CHAIN_IDS.fuel.mainnet,
     explorerUrl: 'https://app.fuel.network',
     bridgeUrl: 'https://app.fuel.network/bridge',
-    isSelected: IS_RELEASE,
-    hidden: true,
+    isSelected: true,
   },
   {
     name: 'Fuel Sepolia Testnet',
@@ -28,8 +26,7 @@ export const DEFAULT_NETWORKS: Array<
     explorerUrl: 'https://app-testnet.fuel.network',
     faucetUrl: 'https://faucet-testnet.fuel.network/',
     bridgeUrl: 'https://app-testnet.fuel.network/bridge',
-    isSelected: true,
-    // isSelected: !IS_RELEASE,
+    isSelected: false,
   },
   {
     name: 'Fuel Sepolia Devnet',

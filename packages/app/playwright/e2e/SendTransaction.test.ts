@@ -3,6 +3,7 @@ import type { Browser, Page } from '@playwright/test';
 import test, { chromium, expect } from '@playwright/test';
 import {
   type Bech32Address,
+  DECIMAL_WEI,
   Provider,
   Wallet,
   bn,
@@ -182,8 +183,11 @@ test.describe('SendTransaction', () => {
       .replace(' ETH', '')
       .trim();
     // Validating the amount
-    const regularFeeBigNumber = bn.parseUnits(regularFeeAmount);
-    const networkFeeBigNumber = bn.parseUnits(networkFeeAmountWithRegular);
+    const regularFeeBigNumber = bn.parseUnits(regularFeeAmount, DECIMAL_WEI);
+    const networkFeeBigNumber = bn.parseUnits(
+      networkFeeAmountWithRegular,
+      DECIMAL_WEI
+    );
 
     // Ensure regularFeeAmount is greater than or equal to networkFeeAmountWithRegular
     expect(regularFeeBigNumber.gte(networkFeeBigNumber)).toBe(true);

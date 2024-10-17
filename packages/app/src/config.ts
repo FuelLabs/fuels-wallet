@@ -38,5 +38,3 @@ export const IS_CRX_POPUP =
 /** Time in minutes before Wallet auto locks */
 export const AUTO_LOCK_IN_MINUTES = VITE_AUTO_LOCK_IN_MINUTES;
 export const MIN_NODE_VERSION = '0.33.0';
-export const IS_RELEASE =
-  !IS_DEVELOPMENT && !IS_TEST && process.env.VITE_CRX_RELEASE === 'true';

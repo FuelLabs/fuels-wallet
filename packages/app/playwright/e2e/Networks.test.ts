@@ -50,6 +50,23 @@ test.describe('Networks', () => {
     await expect(selector).toHaveText(/Another/i);
   });
 
+  test('should display correct network data while editing', async () => {
+    await visit(page, '/wallet');
+    await getByAriaLabel(page, 'Selected Network').click();
+    const networkItems = page.locator('[aria-label^="fuel_network-item-"]');
+    for (const networkItem of await networkItems.all()) {
+      const networkName = await networkItem
+        .locator('[aria-label="Network name"]')
+        .textContent();
+      await networkItem.locator('[aria-label="Update"]').click();
+      await hasText(page, /Update network/i);
+      const inputName = getInputByName(page, 'name');
+      await expect(inputName).toHaveValue(networkName.trim());
+      getByAriaLabel(page, 'Cancel network update').click();
+      await hasText(page, /Networks/i);
+    }
+  });
+
   test('should be able to update a network', async () => {
     await visit(page, '/wallet');
     await getByAriaLabel(page, 'Selected Network').click();
@@ -61,7 +78,7 @@ test.describe('Networks', () => {
     const inputName = getInputByName(page, 'name');
     await expect(inputName).toBeFocused();
     await inputName.fill('Local 1');
-    const update = getButtonByText(page, /update/i);
+    const update = getByAriaLabel(page, 'Update network');
     expect(update).toBeEnabled();
     await update.click();
     await hasText(page, /Local 1/);

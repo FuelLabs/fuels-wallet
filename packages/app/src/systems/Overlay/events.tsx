@@ -55,10 +55,10 @@ export function overlayEvents(store: Store) {
         input: { modal: 'networks.add' },
       });
     },
-    openNetworkUpdate() {
+    openNetworkUpdate(params: { id: string }) {
       store.send(Services.overlay, {
         type: 'OPEN',
-        input: { modal: 'networks.update' },
+        input: { modal: 'networks.update', params },
       });
     },
     openTransactionApprove() {
