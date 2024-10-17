@@ -185,8 +185,8 @@ test.describe('SendTransaction', () => {
     const regularFeeBigNumber = bn.parseUnits(regularFeeAmount);
     const networkFeeBigNumber = bn.parseUnits(networkFeeAmountWithRegular);
 
-    // Ensure regularFeeAmount is greater than or equal to networkFeeAmountWithRegular
-    expect(regularFeeBigNumber.gte(networkFeeBigNumber)).toBe(true);
+    // Ensure networkFeeAmountWithRegular is greater than or equal to regularFeeAmount
+    expect(networkFeeBigNumber.gte(regularFeeBigNumber)).toBe(true);
 
     await hasText(page, /(.*)ETH/);
 
