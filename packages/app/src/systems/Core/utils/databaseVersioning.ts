@@ -185,4 +185,54 @@ export const applyDbVersioning = (db: Dexie) => {
       await accountsTable.clear();
       await accountsTable.bulkAdd(updatedAccounts);
     });
+
+  // DB VERSION 26
+  db.version(26)
+    .stores({
+      vaults: 'key',
+      accounts: '&address, &name',
+      networks: '&id, &url, &name, chainId',
+      connections: 'origin',
+      transactionsCursors: '++id, address, size, providerUrl, endCursor',
+      assets: '&name, &symbol',
+      abis: '&contractId',
+      errors: '&id',
+    })
+    .upgrade(async (tx) => {
+      const networks = tx.table('networks');
+
+      const network = await networks
+        .where('chainId')
+        .equals(CHAIN_IDS.fuel.mainnet)
+        .or('name')
+        .equals('Ignition')
+        .first();
+
+      // De-select all networks
+      await networks.each(async (_, { primaryKey }) => {
+        await networks.update(primaryKey, { isSelected: false });
+      });
+
+      if (network) {
+        await networks.update(network.id, { isSelected: true });
+        return;
+      }
+
+      // Add mainnet network
+      const networkToAddIndex = DEFAULT_NETWORKS.findIndex(
+        (network) =>
+          network.chainId === CHAIN_IDS.fuel.mainnet ||
+          network.name === 'Ignition'
+      );
+
+      if (networkToAddIndex <= -1) {
+        return;
+      }
+
+      await networks.add({
+        id: networkToAddIndex.toString(),
+        ...DEFAULT_NETWORKS[networkToAddIndex],
+        isSelected: true,
+      });
+    });
 };
