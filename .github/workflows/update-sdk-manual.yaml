@@ -14,7 +14,7 @@ on:
         default: fuels
         required: true
       tag:
-        description: NPM tag to use 
+        description: NPM tag to use
         default: latest
         required: true
 
@@ -31,11 +31,8 @@ jobs:
     runs-on: buildjet-4vcpu-ubuntu-2204
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 20.11.0
-          pnpm-version: 9.5.0
 
       - name: Checking updates
         id: update

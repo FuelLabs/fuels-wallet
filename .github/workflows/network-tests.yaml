@@ -1,11 +1,20 @@
-name: Testnet tests
+name: Network Tests
 
 on:
   workflow_dispatch:
     inputs:
+      network:
+        description: 'Network to run tests on'
+        required: true
+        default: 'testnet'
+        type: choice
+        options:
+          - testnet
+          - devnet
       masterMnemonic:
         description: Mnemonic of the wallet that will fund the tests
         required: false
+        type: string
   push:
     branches:
       - master
@@ -16,23 +25,20 @@ concurrency:
 
 jobs:
   tests-e2e-contracts:
-    name: E2E Contract Tests - Testnet
+    name: E2E Contract Tests - ${{ github.event_name == 'workflow_dispatch' && inputs.network || matrix.network }}
     runs-on: buildjet-4vcpu-ubuntu-2204
+    strategy:
+      matrix:
+        network: [testnet, devnet]
+      fail-fast: false
+    if: github.event_name == 'push' || github.event.inputs.network == matrix.network
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 20.11.0
-          pnpm-version: 9.5.0
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run PNPM install
-        id: pnpm-cache
-        run:
-          pnpm recursive install --frozen-lockfile
 
       - name: Generate .env app
         run: cp packages/app/.env.example packages/app/.env
@@ -40,8 +46,8 @@ jobs:
       - name: Generate .env e2e-contracts
         run: cp packages/e2e-contract-tests/.env.example packages/e2e-contract-tests/.env
 
-      - name: Run E2E Contract Tests - Testnet
+      - name: Run E2E Contract Tests
         uses: ./.github/actions/e2e-tests-contracts
         with:
-          providerUrl: "https://testnet.fuel.network/v1/graphql"
+          providerUrl: ${{ matrix.network == 'devnet' && 'https://devnet.fuel.network/v1/graphql' || 'https://testnet.fuel.network/v1/graphql' }}
           masterMnemonic: ${{ inputs.masterMnemonic || secrets.VITE_MASTER_WALLET_MNEMONIC }}
