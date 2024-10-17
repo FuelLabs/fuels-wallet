@@ -33,8 +33,9 @@ jobs:
           key: ${{ runner.os }}-build-${{ github.sha }}
 
   tests:
-    name: ${{ matrix.test-type }}
     needs: setup
+    name: ${{ matrix.test-type }}
+    timeout-minutes: 20
     runs-on: buildjet-8vcpu-ubuntu-2204
     env:
       NODE_OPTIONS: "--max-old-space-size=4096"
