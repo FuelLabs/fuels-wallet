@@ -23,7 +23,7 @@ jobs:
     outputs:
       changed: ${{ steps.packages-changed.outputs.any_changed }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Check external packages changes
         id: packages-changed
         uses: tj-actions/changed-files@v22.2
@@ -40,15 +40,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: CI Setup
-        uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 20.11.0
-          pnpm-version: 9.5.0
+        uses: FuelLabs/github-actions/setups/node@pn/fix/pnpm-cache
 
       - name: Validate Changeset
         run: pnpm changeset status --since=origin/${{ github.base_ref }}
@@ -57,11 +52,8 @@ jobs:
     name: Audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 20.11.0
-          pnpm-version: 9.5.0
+      - uses: actions/checkout@v4
+      - uses: FuelLabs/github-actions/setups/node@pn/fix/pnpm-cache
       - name: Install jq
         run: sudo apt-get install jq
       - run: |
@@ -81,16 +73,13 @@ jobs:
             echo "No actionable vulnerabilities"
             exit 0
           fi
-  
+
   strict-audit:
     name: Strict Audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 20.11.0
-          pnpm-version: 9.5.0
+      - uses: actions/checkout@v4
+      - uses: FuelLabs/github-actions/setups/node@pn/fix/pnpm-cache
       - run: pnpm audit --prod
 
   lint:
@@ -102,23 +91,20 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 20.11.0
-          pnpm-version: 9.5.0
+        uses: FuelLabs/github-actions/setups/node@pn/fix/pnpm-cache
 
       - name: Run lint
         run: |
           pnpm ts:check
           pnpm lint:ci
-          
+
   docs:
     name: Docs
     uses: FuelLabs/github-actions/.github/workflows/next-docs.yml@master
     with:
-      doc-folder-path: 'packages/docs/docs'
-      src-folder-path: 'packages/docs/src'
-      spellcheck-config-path: 'packages/docs/.spellcheck.yml'
+      doc-folder-path: "packages/docs/docs"
+      src-folder-path: "packages/docs/src"
+      spellcheck-config-path: "packages/docs/.spellcheck.yml"

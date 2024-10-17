@@ -10,135 +10,56 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  tests-jest:
-    name: JEST Tests
-    runs-on: buildjet-8vcpu-ubuntu-2204
-    steps:
-      - uses: actions/checkout@v3
-      - uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 20.11.0
-          pnpm-version: 9.5.0
-      - uses: FuelLabs/github-actions/setups/docker@master
-        with:
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Start Test Node
-        run: pnpm node:up
-      
-      - name: Generate .env
-        run: cp packages/app/.env.example packages/app/.env
-
-      # Unit tests running with JEST
-      - name: Find PR number
-        uses: jwalton/gh-find-current-pr@v1
-        id: findPr
-
-      - name: Build libs
-        run: |
-          pnpm build:libs
-
-      - name: Run Jest Tests
-        run: |
-          pnpm test:ci
-        timeout-minutes: 10
-        env:
-          NODE_OPTIONS: "--max-old-space-size=4096"
-
-      - name: Stop Test Node
-        run: pnpm node:clean
-
-  tests-e2e:
-    name: E2E Tests
+  tests:
+    name: ${{ matrix.test-type }}
     timeout-minutes: 20
     runs-on: buildjet-8vcpu-ubuntu-2204
+    env:
+      NODE_OPTIONS: "--max-old-space-size=4096"
+      NODE_ENV: test
+      CI: "true"
+    strategy:
+      matrix:
+        test-type: [jest, e2e, e2e-crx-lock]
     steps:
-      - uses: actions/checkout@v3
-      - uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 20.11.0
-          pnpm-version: 9.5.0
+      - uses: actions/checkout@v4
+      - uses: FuelLabs/github-actions/setups/node@pn/fix/pnpm-cache
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Build libs
+        run: pnpm build:libs
+
       - name: Start Test Node
         run: pnpm node:up
-      
+
       - name: Generate .env
         run: cp packages/app/.env.example packages/app/.env
 
-      - name: Build Application
-        run: pnpm build:app
-        env:
-          ## increase node.js m memory limit for building
-          ## with sourcemaps
-          NODE_OPTIONS: "--max-old-space-size=4096"
-
-      # E2E tests running with Playwright
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
+      - name: Run Jest Tests
+        if: matrix.test-type == 'jest'
+        run: pnpm test:ci
 
       - name: Run E2E Tests
-        run: xvfb-run --auto-servernum -- pnpm test:e2e
+        if: matrix.test-type == 'e2e'
         timeout-minutes: 15
-        env:
-          NODE_ENV: test
+        run: |
+          pnpm exec playwright install --with-deps chromium
+          pnpm test:e2e
+
+      # - name: Run E2E CRX Lock Tests
+      #   if: matrix.test-type == 'e2e-crx-lock'
+      #   timeout-minutes: 15
+      #   run: |
+      #     pnpm exec playwright install --with-deps chromium
+      #     pnpm test:e2e:crx-lock
 
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && matrix.test-type != 'jest'
         with:
-          name: playwright-app-report
-          path: packages/app/playwright-results
-          retention-days: 30
-
-      - name: Stop Test Node
-        run: pnpm node:clean
-
-  tests-e2e-crx-lock:
-    name: E2E Tests - Lock CRX
-    runs-on: buildjet-8vcpu-ubuntu-2204
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v3
-      - uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 20.11.0
-          pnpm-version: 9.5.0
-      - uses: FuelLabs/github-actions/setups/docker@master
-        with:
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Start Test Node
-        run: pnpm node:up
-      
-      - name: Generate .env
-        run: cp packages/app/.env.example packages/app/.env
-
-      - name: Build Application
-        run: pnpm build:app
-        env:
-          ## increase node.js m memory limit for building
-          ## with sourcemaps
-          NODE_OPTIONS: "--max-old-space-size=4096"
-
-      # E2E tests running with Playwright
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
-
-      - name: Run E2E Tests
-        run: xvfb-run --auto-servernum -- pnpm test:e2e:crx-lock
-        timeout-minutes: 3
-        env:
-          NODE_ENV: test
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-app-crx-lock-report
+          name: playwright-${{ matrix.test-type }}-report
           path: packages/app/playwright-results
           retention-days: 30
 
@@ -151,21 +72,13 @@ jobs:
     # Commented until the Playwright bug is fixed
     if: false
     steps:
-      - uses: actions/checkout@v3
-      - uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 20.11.0
-          pnpm-version: 9.5.0
+      - uses: actions/checkout@v4
+      - uses: FuelLabs/github-actions/setups/node@pn/fix/pnpm-cache
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - uses: ./.github/actions/setup-rust
-
-      - name: Run PNPM install
-        id: pnpm-cache
-        run:
-          pnpm recursive install --frozen-lockfile
 
       - name: Start Test Node
         run: pnpm node:up

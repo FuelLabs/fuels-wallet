@@ -2,7 +2,7 @@ name: Check SDK updates
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 concurrency:
@@ -18,14 +18,11 @@ jobs:
     runs-on: buildjet-4vcpu-ubuntu-2204
     strategy:
       matrix:
-        tag: ['latest'] # Currently only "latest" tag is available across all packages
+        tag: ["latest"] # Currently only "latest" tag is available across all packages
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 20.11.0
-          pnpm-version: 9.5.0
+      - uses: actions/checkout@v4
+      - uses: FuelLabs/github-actions/setups/node@pn/fix/pnpm-cache
 
       - name: Checking updates
         uses: FuelLabs/github-actions/update-sdk@master

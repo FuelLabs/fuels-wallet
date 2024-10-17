@@ -2,12 +2,16 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": [".env", ".env.production"],
   "globalEnv": ["NODE_ENV", "CRX_OUT", "CRX_NAME"],
-  "pipeline": {
+  "tasks": {
     "ts:check": {
       "dependsOn": [],
       "outputs": ["./**/*.typegen.ts"]
     },
     "build": {
+      "dependsOn": ["ts:check"],
+      "outputs": ["dist/**"]
+    },
+    "build:libs": {
       "dependsOn": ["ts:check"],
       "outputs": ["dist/**"]
     },
@@ -36,10 +40,20 @@
       "outputs": ["./dist/"]
     },
     "test": {
-      "dependsOn": []
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**", "test-results/**"]
     },
     "test:e2e": {
-      "dependsOn": []
+      "dependsOn": ["build:crx"],
+      "outputs": ["playwright-results/**", "playwright-report/**"]
+    },
+    "test:e2e:crx-lock": {
+      "dependsOn": ["build:crx"],
+      "outputs": ["playwright-results/**", "playwright-report/**"]
+    },
+    "test:e2e:contracts": {
+      "dependsOn": ["build:crx"],
+      "outputs": ["playwright-results/**", "playwright-report/**"]
     },
     "dev": {
       "cache": false
