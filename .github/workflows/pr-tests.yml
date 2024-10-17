@@ -44,13 +44,13 @@ jobs:
       - name: Run E2E Tests
         if: matrix.test-type == 'e2e'
         run: |
-          pnpx playwright install --with-deps chromium
+          npx playwright install --with-deps chromium
           xvfb-run --auto-servernum -- pnpm test:e2e
 
       - name: Run E2E CRX Lock Tests
         if: matrix.test-type == 'e2e-crx-lock'
         run: |
-          pnpx playwright install --with-deps chromium
+          npx playwright install --with-deps chromium
           xvfb-run --auto-servernum -- pnpm test:e2e:crx-lock
 
       - uses: actions/upload-artifact@v4
