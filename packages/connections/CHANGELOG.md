@@ -1,5 +1,7 @@
 # @fuel-wallet/connections
 
+## 0.39.0
+
 ## 0.38.0
 
 ### Minor Changes
