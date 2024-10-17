@@ -8,6 +8,7 @@
     "node": ">=20.11.0",
     "pnpm": ">=9"
   },
+  "packageManager": "pnpm@9.5.0",
   "homepage": "https://github.com/FuelLabs/fuels-wallet",
   "repository": {
     "type": "git",
@@ -124,6 +125,5 @@
       "rollup@>=4.0.0 <4.22.4": ">=4.22.4",
       "fuels": "0.96.1"
     }
-  },
-  "packageManager": "pnpm@9.11.0"
+  }
 }
