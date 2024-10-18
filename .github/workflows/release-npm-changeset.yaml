@@ -17,17 +17,14 @@ jobs:
     name: Release master or rc
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           # need this to get full git-history/clone in order to build changelogs and check changesets
           fetch-depth: 0
           # workaround to ensure force pushes to changeset branch use REPO_TOKEN owner's account
           # see https://github.com/changesets/action/issues/70
           persist-credentials: false
-      - uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 20.11.0
-          pnpm-version: 9.5.0
+      - uses: FuelLabs/github-actions/setups/node@pn/fix/pnpm-cache
       - uses: FuelLabs/github-actions/setups/npm@master
         with:
           npm-token: ${{ secrets.NPM_TOKEN }}
