@@ -8,6 +8,7 @@
     "build:web": "./scripts/build.sh --app=vite",
     "build:crx": "./scripts/build.sh --app=crx",
     "build:storybook": "./scripts/build.sh --app=storybook",
+    "validate:manifest": "node ./vite-utils/validate-manifest.js",
     "dev": "vite",
     "dev:crx": "vite --config vite.crx.config.ts",
     "dev:storybook": "storybook dev -p 6006",
