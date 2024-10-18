@@ -1,5 +1,14 @@
 # fuels-wallet
 
+## 0.40.1
+
+### Patch Changes
+
+- [#1617](https://github.com/FuelLabs/fuels-wallet/pull/1617) [`3e754563`](https://github.com/FuelLabs/fuels-wallet/commit/3e75456306e43b2c6edf23869667d3dc1b54bfef) Thanks [@luizstacio](https://github.com/luizstacio)! - fix chrome runtim loader
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.40.1
+
 ## 0.40.0
 
 ### Minor Changes
