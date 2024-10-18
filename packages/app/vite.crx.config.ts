@@ -2,7 +2,7 @@ import { type ManifestV3Export, crx } from '@crxjs/vite-plugin';
 import { defineConfig } from 'vite';
 
 import manifest from './manifest.config';
-import { patchManifestPlugin } from './vite-utils/fix-build-crx.plugin';
+import { patchManifestPlugin } from './vite-utils/patch-manifest.plugin';
 import baseConfig from './vite-utils/vite.base.config';
 import { zipBuildPlugin } from './vite-utils/zip-build.plugin';
 
