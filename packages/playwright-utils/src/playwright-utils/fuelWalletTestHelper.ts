@@ -114,6 +114,13 @@ export class FuelWalletTestHelper {
     await approveButton.click();
   }
 
+  async walletSign() {
+    const walletPage = await this.getWalletPopupPage();
+
+    const approveButton = getButtonByText(walletPage, 'Sign');
+    await approveButton.click();
+  }
+
   async getWalletPopupPage() {
     let walletNotificationPage = this.context.pages().find((page) => {
       const url = page.url();
