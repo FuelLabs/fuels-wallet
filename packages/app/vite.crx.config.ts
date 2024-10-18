@@ -2,6 +2,7 @@ import { crx } from '@crxjs/vite-plugin';
 import { defineConfig } from 'vite';
 
 import manifest from './manifest.config';
+import { fixCRXBuildPlugin } from './vite-utils/fix-build-crx.plugin';
 import baseConfig from './vite-utils/vite.base.config';
 import { zipBuildPlugin } from './vite-utils/zip-build.plugin';
 
@@ -20,6 +21,9 @@ export default defineConfig({
   plugins: baseConfig.plugins?.concat([
     crx({
       manifest,
+    }),
+    fixCRXBuildPlugin({
+      outDir: OUT_DIT,
     }),
     zipBuildPlugin({
       inDir: OUT_DIT,

@@ -6,6 +6,7 @@ import { Mode, plugin as viteMdPlugin } from 'vite-plugin-markdown';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 import '../load.envs.js';
+import { fixCRXBuildPlugin } from './fix-build-crx.plugin.js';
 
 const linkDeps = process.env.LINK_DEPS?.trim().split(' ').filter(Boolean) || [];
 
