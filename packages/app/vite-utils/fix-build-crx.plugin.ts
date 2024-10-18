@@ -6,7 +6,7 @@ type FixCRXPlugin = {
   outDir?: string;
 };
 
-export const fixCRXBuildPlugin = ({ outDir }: FixCRXPlugin): Plugin => {
+export const patchManifestPlugin = ({ outDir }: FixCRXPlugin): Plugin => {
   return {
     name: 'patch-manifest-plugin',
     apply: 'build',
