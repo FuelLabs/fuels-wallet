@@ -217,4 +217,17 @@ export const applyDbVersioning = (db: Dexie) => {
         });
       }
     });
+
+  // DB VERSION 27
+  db.version(27).stores({
+    vaults: 'key',
+    accounts: '&address, &name',
+    networks: '&id, &url, &name, chainId',
+    connections: 'origin',
+    transactionsCursors: '++id, address, size, providerUrl, endCursor',
+    assets: '&name, &symbol',
+    indexedAssets: 'key',
+    abis: '&contractId',
+    errors: '&id',
+  });
 };

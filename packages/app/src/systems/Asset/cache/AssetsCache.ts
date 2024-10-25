@@ -1,5 +1,6 @@
+import type { AssetData } from '@fuel-wallet/types';
 import type { Asset } from 'fuels';
-import { IndexedDBStorage } from '~/systems/Account';
+import { db } from '~/systems/Core/utils/database';
 
 export default class AssetsCache {
   private cache: { [network: string]: { [assetId: string]: Asset } };
@@ -24,11 +25,11 @@ export default class AssetsCache {
       url: 'https://explorer-indexer-devnet.fuel.network',
     },
   ];
-  private storage: IndexedDBStorage;
+  private storage: LocalDB;
 
   private constructor() {
     this.cache = {};
-    this.storage = new IndexedDBStorage();
+    this.storage = new LocalDB();
   }
 
   private getEndpoint(chainId: number, networkId: string) {
@@ -70,7 +71,11 @@ export default class AssetsCache {
     const savedAsset = await this.storage.getItem(
       `${endpoint.networkName}/${assetId}`
     );
-    if (savedAsset) return savedAsset;
+    // console.log('savedAsset', savedAsset);
+    if (savedAsset) {
+      this.cache[endpoint.networkName][assetId] = savedAsset;
+      return savedAsset;
+    }
     const asset = await this.fetchAssetFromIndexer(endpoint.url, assetId);
     if (!asset) return;
     this.cache[endpoint.networkName][assetId] = asset;
@@ -83,6 +88,21 @@ export default class AssetsCache {
       AssetsCache.instance = new AssetsCache();
     }
     return AssetsCache.instance;
+  }
+}
+
+class LocalDB {
+  async getItem(key: string) {
+    return db.transaction('r', db.indexedAssets, async () => {
+      const asset = await db.indexedAssets.get({ key });
+      return asset;
+    });
+  }
+
+  async setItem(key: string, data: AssetData) {
+    await db.transaction('rw', db.indexedAssets, async () => {
+      await db.indexedAssets.put({ key, ...data });
+    });
   }
 }
 
