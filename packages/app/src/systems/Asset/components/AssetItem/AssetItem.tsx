@@ -24,7 +24,7 @@ import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 import { AssetRemoveDialog } from '../AssetRemoveDialog';
 
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
-import type { BNInput } from 'fuels';
+import type { AssetFuel, BNInput } from 'fuels';
 import useFuelAsset from '../../hooks/useFuelAsset';
 import { AssetItemLoader } from './AssetItemLoader';
 
@@ -126,7 +126,9 @@ export const AssetItem: AssetItemComponent = ({
           delayDuration={0}
           open={visibility && tooltip ? undefined : false}
         >
-          <Text css={{ fontSize: '$sm', fontWeight: '$normal' }}>
+          <Text
+            css={{ fontSize: '$sm', fontWeight: '$normal', textAlign: 'right' }}
+          >
             <AmountVisibility
               value={amount}
               units={decimals}
@@ -141,9 +143,22 @@ export const AssetItem: AssetItemComponent = ({
     return null;
   }
 
-  function goToAsset() {
-    navigate(Pages.assetsAdd({ assetId }));
+  function goToAsset(asset: {
+    assetId?: string;
+    name?: string;
+    symbol?: string;
+    decimals?: number;
+  }) {
+    navigate(Pages.assetsAdd({ assetId }), { state: asset });
   }
+
+  const suspiciousTooltipContent = (
+    <div style={{ textAlign: 'center' }}>
+      This asset is flagged as suspicious,
+      <br /> it may mimicking another asset.
+      <br /> Proceed with caution.
+    </div>
+  );
 
   return (
     <CardList.Item rightEl={getRightEl()} css={{ alignItems: 'center' }}>
@@ -161,20 +176,30 @@ export const AssetItem: AssetItemComponent = ({
       )}
       <Box.Flex direction="column">
         <Heading as="h6" css={styles.assetName}>
-          {name || (
-            <Box.Flex>
-              Unknown
+          <Box.Flex>
+            {name || 'Unknown'}
+            {asset.suspicious ? (
+              <Tooltip content={suspiciousTooltipContent}>
+                <Icon
+                  css={styles.assetSuspicious}
+                  icon={Icon.is('AlertTriangle')}
+                />
+              </Tooltip>
+            ) : (
+              ''
+            )}
+            {(!name || asset.indexed) && (
               <Button
                 size="xs"
                 intent="primary"
                 variant="link"
-                onPress={goToAsset}
+                onPress={() => goToAsset(asset)}
                 css={styles.addAssetBtn}
               >
                 (Add)
               </Button>
-            </Box.Flex>
-          )}
+            )}
+          </Box.Flex>
         </Heading>
         <Box.Flex direction="row">
           {symbol ? (
@@ -206,6 +231,11 @@ const styles = {
   assetSymbol: cssObj({
     textSize: 'sm',
     fontWeight: '$normal',
+  }),
+  assetSuspicious: cssObj({
+    marginLeft: 5,
+    marginRight: 5,
+    color: 'orange',
   }),
   addAssetBtn: cssObj({
     p: '0',

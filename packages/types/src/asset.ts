@@ -4,6 +4,8 @@ export type AssetData = Asset & {
   // override icon to don't be required
   icon?: string;
   isCustom?: boolean;
+  indexed?: boolean;
+  suspicious?: boolean;
 };
 
 export type AssetAmount = AssetData & {
@@ -14,6 +16,8 @@ export type AssetFuelData = AssetFuel & {
   // override icon to don't be required
   icon?: string;
   isCustom?: boolean;
+  indexed?: boolean;
+  suspicious?: boolean;
 };
 
 export type AssetFuelAmount = AssetFuelData & {
