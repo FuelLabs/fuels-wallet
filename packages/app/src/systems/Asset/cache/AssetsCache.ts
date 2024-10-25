@@ -71,7 +71,6 @@ export default class AssetsCache {
     const savedAsset = await this.storage.getItem(
       `${endpoint.networkName}/${assetId}`
     );
-    // console.log('savedAsset', savedAsset);
     if (savedAsset) {
       this.cache[endpoint.networkName][assetId] = savedAsset;
       return savedAsset;
