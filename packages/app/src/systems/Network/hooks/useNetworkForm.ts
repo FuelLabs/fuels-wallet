@@ -1,31 +1,56 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import type { Maybe } from '~/systems/Core';
 
 import { isValidNetworkUrl } from '../utils';
 
-export type NetworkFormValues = {
-  name: string;
-  url: string;
-  explorerUrl?: string;
-};
+export type NetworkFormValues = yup.InferType<typeof schema>;
 
 const schema = yup
   .object({
-    name: yup.string().required('Name is required'),
+    name: yup
+      .string()
+      .test('is-required', 'Name is required', function (value) {
+        return this.options?.context?.step === 1 || !!value;
+      }),
     url: yup
       .string()
       .test('is-url-valid', 'URL is not valid', isValidNetworkUrl)
       .required('URL is required'),
     explorerUrl: yup
       .string()
-      .test('is-url-valid', 'Explorer URL is not valid', (url) => {
-        if (!url) return true;
+      .test('is-url-valid', 'Explorer URL is not valid', function (url) {
+        if (!url || this.options.context?.step === 1) return true;
         return isValidNetworkUrl(url);
       })
       .optional(),
+    chainId: yup
+      .string()
+      .when(
+        'acceptRisk',
+        (_acceptRisk: Array<boolean>, schema: yup.StringSchema) => {
+          const acceptRisk = !!_acceptRisk?.[0];
+          return !acceptRisk
+            ? schema.required('Chain ID is required')
+            : schema.notRequired();
+        }
+      )
+      .test(
+        'chainId-match',
+        'Chain ID does not match the provider Chain ID.',
+        function (value) {
+          const providerChainId = this.parent.providerChainId;
+          return !value || !providerChainId || value === providerChainId;
+        }
+      )
+      .test(
+        'is-numbers-only',
+        'Chain ID must contain only numbers',
+        (value) => !value || /^\d+$/.test(value)
+      ),
+    acceptRisk: yup.boolean().notRequired(),
   })
   .required();
 
@@ -33,26 +58,34 @@ const DEFAULT_VALUES = {
   name: '',
   url: '',
   explorerUrl: '',
+  chainId: '',
+  acceptRisk: false,
 };
 
 export type UseNetworkFormReturn = ReturnType<typeof useNetworkForm>;
 
 export type UseAddNetworkOpts = {
   defaultValues?: Maybe<NetworkFormValues>;
+  context?: {
+    providerChainId?: string;
+    step?: number;
+  };
 };
 
-export function useNetworkForm(opts: UseAddNetworkOpts = {}) {
+export function useNetworkForm({ defaultValues, context }: UseAddNetworkOpts) {
   const form = useForm<NetworkFormValues>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver<NetworkFormValues>(schema),
     reValidateMode: 'onChange',
-    mode: 'onChange',
-    defaultValues: opts.defaultValues || DEFAULT_VALUES,
+    mode: 'onBlur',
+    defaultValues: defaultValues || DEFAULT_VALUES,
+    context,
   });
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    opts.defaultValues && form.reset(opts.defaultValues);
-  }, [opts.defaultValues?.name, opts.defaultValues?.url]);
+    if (defaultValues) {
+      form.reset(defaultValues);
+    }
+  }, [defaultValues, form]);
 
   return form;
 }
