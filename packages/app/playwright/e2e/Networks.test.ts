@@ -110,12 +110,50 @@ test.describe('Networks', () => {
     await chainIdInput.fill('0');
     await hasText(page, /Test connection/i);
     await getByAriaLabel(page, 'Test connection').click();
-    await hasText(page, /Fuel Sepolia Testnet/i, 0, 15000);
-    await expect(buttonCreate).toBeEnabled();
+    await expect
+      .poll(
+        async () =>
+          await hasText(page, /Fuel Sepolia Testnet/i)
+            .then(() => true)
+            .catch(() => false),
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeTruthy();
+    console.log('asd waiting for button to be enabled');
+    await expect
+      .poll(async () => await buttonCreate.isEnabled(), {
+        timeout: 15000,
+      })
+      .toBeTruthy();
+    console.log('asd button is enabled');
     await buttonCreate.click();
-    // Wait for save and close popup;
-    await page.waitForTimeout(2000);
-    await reload(page);
-    await hasText(page, /Fuel Sepolia Testnet/i);
+    // Wait for popup to close
+    await expect
+      .poll(
+        async () => {
+          return await hasText(page, /Add network/i)
+            .then(() => true)
+            .catch(() => false);
+        },
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeFalsy();
+    await expect
+      .poll(
+        async () => {
+          await reload(page);
+          return await hasText(page, /Fuel Sepolia Testnet/i)
+            .then(() => true)
+            .catch(() => false);
+        },
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeTruthy();
   });
 });
