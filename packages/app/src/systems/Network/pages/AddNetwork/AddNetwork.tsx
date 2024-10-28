@@ -35,6 +35,16 @@ export function AddNetwork() {
   const isValidUrl = isDirty && !invalid;
 
   useEffect(() => {
+    if (!chainInfo) return;
+    if (form.getValues('acceptRisk') && !form.getValues('chainId')) {
+      form.setValue(
+        'chainId',
+        chainInfo.consensusParameters?.chainId.toString()
+      );
+    }
+  }, [chainInfo, form.setValue, form.getValues]);
+
+  useEffect(() => {
     if (isValidUrl && !isLoadingChainInfo && chainInfo) {
       form.setValue('name', chainInfo.name, { shouldValidate: true });
 
@@ -61,8 +71,17 @@ export function AddNetwork() {
   }, [chainInfoError, form]);
 
   function onSubmit(data: NetworkFormValues) {
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    handlers.addNetwork({ data: data as any });
+    if (!data.name || !data.chainId || !data.url) {
+      throw new Error('Missing required fields');
+    }
+
+    handlers.addNetwork({
+      data: {
+        name: data.name,
+        url: data.url,
+        chainId: data.chainId,
+      },
+    });
   }
 
   function onClickReview() {
