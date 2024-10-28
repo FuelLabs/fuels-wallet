@@ -1,3 +1,6 @@
 {
-  "extends": "@fuels/ts-config/base.json"
+  "extends": "@fuels/ts-config/base.json",
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
 }
