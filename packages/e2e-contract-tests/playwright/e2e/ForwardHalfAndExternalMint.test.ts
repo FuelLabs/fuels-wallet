@@ -65,7 +65,16 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
       page,
       'Forward Half And External Mint'
     );
-    await page.waitForTimeout(2500);
+    await expect
+      .poll(
+        () =>
+          forwardHalfAndMintButton
+            .isEnabled()
+            .then(() => true)
+            .catch(() => false),
+        { timeout: 15000 }
+      )
+      .toBeTruthy();
     await forwardHalfAndMintButton.click();
 
     const walletNotificationPage =

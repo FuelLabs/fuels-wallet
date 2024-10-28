@@ -62,7 +62,16 @@ test.describe('Forward and Mint Multicall', () => {
       page,
       'Deposit And Mint Multicall'
     );
-    await page.waitForTimeout(2500);
+    await expect
+      .poll(
+        () =>
+          forwardHalfAndMintButton
+            .isEnabled()
+            .then(() => true)
+            .catch(() => false),
+        { timeout: 15000 }
+      )
+      .toBeTruthy();
     await forwardHalfAndMintButton.click();
 
     const walletNotificationPage =

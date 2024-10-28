@@ -54,7 +54,16 @@ test.describe('Deposit Half ETH', () => {
 
     const depositHalfButton = getButtonByText(page, 'Deposit Half ETH', true);
 
-    await page.waitForTimeout(3000);
+    await expect
+      .poll(
+        () =>
+          depositHalfButton
+            .isEnabled()
+            .then(() => true)
+            .catch(() => false),
+        { timeout: 15000 }
+      )
+      .toBeTruthy();
     await depositHalfButton.click();
 
     const walletNotificationPage =
