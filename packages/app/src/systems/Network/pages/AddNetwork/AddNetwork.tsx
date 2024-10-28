@@ -39,7 +39,7 @@ export function AddNetwork() {
     if (form.getValues('acceptRisk') && !form.getValues('chainId')) {
       form.setValue(
         'chainId',
-        chainInfo.consensusParameters?.chainId.toString()
+        chainInfo.consensusParameters?.chainId.toNumber()
       );
     }
   }, [chainInfo, form.setValue, form.getValues]);
@@ -51,7 +51,7 @@ export function AddNetwork() {
       if (
         form.getValues('chainId') &&
         form.getValues('chainId') !==
-          chainInfo.consensusParameters?.chainId.toString()
+          chainInfo.consensusParameters?.chainId.toNumber()
       ) {
         form.setError('chainId', {
           type: 'manual',

@@ -28,16 +28,13 @@ const schema = yup
       )
       .optional(),
     chainId: yup
-      .string()
-      .when(
-        'acceptRisk',
-        (_acceptRisk: Array<boolean>, schema: yup.StringSchema) => {
-          const acceptRisk = !!_acceptRisk?.[0];
-          return !acceptRisk
-            ? schema.required('Chain ID is required')
-            : schema.notRequired();
-        }
-      )
+      .number()
+      .when('acceptRisk', (_acceptRisk: Array<boolean>, schema) => {
+        const acceptRisk = !!_acceptRisk?.[0];
+        return !acceptRisk
+          ? schema.required('Chain ID is required')
+          : schema.notRequired();
+      })
       .test(
         'chainId-match',
         'Chain ID does not match the provider Chain ID.',
@@ -49,7 +46,7 @@ const schema = yup
       .test(
         'is-numbers-only',
         'Chain ID must contain only numbers',
-        (value) => !value || /^\d+$/.test(value)
+        (value) => !value || /^\d+$/.test(value.toString())
       ),
     acceptRisk: yup.boolean().notRequired(),
   })
@@ -59,7 +56,7 @@ const DEFAULT_VALUES = {
   name: '',
   url: '',
   explorerUrl: '',
-  chainId: '',
+  chainId: undefined,
   acceptRisk: false,
 };
 

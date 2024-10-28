@@ -22,7 +22,7 @@ export type AddNetworkInput = {
   data: {
     name: string;
     url: string;
-    chainId: string;
+    chainId: number;
   };
 };
 
@@ -304,7 +304,7 @@ export const networksMachine = createMachine(
           await NetworkService.validateNetworkExists(input.data);
           await NetworkService.validateNetworkVersion(input.data);
 
-          const chainId = Number.parseInt(input.data.chainId);
+          const chainId = input.data?.chainId;
 
           const createdNetwork = await NetworkService.addNetwork({
             data: {

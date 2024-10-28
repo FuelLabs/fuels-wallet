@@ -50,7 +50,7 @@ export type NetworkInputs = {
   getChainInfo: {
     providerUrl: string;
   };
-  validateNetworkSelect: SelectNetworkArguments;
+  validateNetworkSelect: Pick<NetworkData, 'chainId' | 'url'>;
   validateNetworkExists: {
     name: string;
     url: string;
