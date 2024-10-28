@@ -125,7 +125,9 @@ export function NetworkForm({
               {formState.errors?.chainId?.message}
             </Form.ErrorMessage>
           )}
-          {!isEditing && (
+
+          {/* @TODO: Enable code bellow if users complain about not being able to use networks' chain id straight away.*/}
+          {/* {!isEditing && (
             <Box css={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
               <Controller
                 control={control}
@@ -155,7 +157,7 @@ export function NetworkForm({
                 Accept risks and fetch Chain ID from the network URL
               </Form.Label>
             </Box>
-          )}
+          )} */}
 
           {!isEditing && isFirstShownTestConnectionBtn && (
             <MotionButton

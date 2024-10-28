@@ -89,6 +89,7 @@ test.describe('Networks', () => {
     await getByAriaLabel(page, 'Selected Network').click();
     const items = page.locator('[aria-label*=fuel_network]');
     await expect(items).toHaveCount(2);
+    await page.pause();
     await getByAriaLabel(page, 'Remove').first().click();
     await hasText(page, /Are you sure/i);
     await getButtonByText(page, /confirm/i).click();
@@ -96,7 +97,7 @@ test.describe('Networks', () => {
     await expect(items.first()).toHaveAttribute('data-active', 'true');
   });
 
-  test('should be able to add a new network', async () => {
+  test('should be able to add a new network with a manual chain ID', async () => {
     await visit(page, '/wallet');
     await getByAriaLabel(page, 'Selected Network').click();
     await hasText(page, /Add new network/i);
@@ -106,6 +107,8 @@ test.describe('Networks', () => {
     const urlInput = getInputByName(page, 'url');
     await expect(urlInput).toBeFocused();
     await urlInput.fill('https://testnet.fuel.network/v1/graphql');
+    const chainIdInput = getInputByName(page, 'chainId');
+    await chainIdInput.fill('0');
     await hasText(page, /Test connection/i);
     await getByAriaLabel(page, 'Test connection').click();
     await hasText(page, /Fuel Sepolia Testnet/i, 0, 15000);
