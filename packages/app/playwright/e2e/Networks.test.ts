@@ -89,7 +89,6 @@ test.describe('Networks', () => {
     await getByAriaLabel(page, 'Selected Network').click();
     const items = page.locator('[aria-label*=fuel_network]');
     await expect(items).toHaveCount(2);
-    await page.pause();
     await getByAriaLabel(page, 'Remove').first().click();
     await hasText(page, /Are you sure/i);
     await getButtonByText(page, /confirm/i).click();
