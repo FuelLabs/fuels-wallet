@@ -40,7 +40,7 @@ export function AddNetwork() {
       form.setValue('name', chainInfo.name, { shouldValidate: true });
 
       // @TODO: When form.getValues('acceptRisk') is implemented add it to the if statement
-      if (!formChainId) {
+      if (formChainId != null) {
         form.setValue(
           'chainId',
           chainInfo.consensusParameters?.chainId.toNumber()
@@ -67,7 +67,7 @@ export function AddNetwork() {
   }, [chainInfoError, form]);
 
   function onSubmit(data: NetworkFormValues) {
-    if (!data.name || !data.chainId || !data.url) {
+    if (!data.name || data.chainId == null || !data.url) {
       throw new Error('Missing required fields');
     }
 

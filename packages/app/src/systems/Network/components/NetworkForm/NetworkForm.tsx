@@ -48,7 +48,7 @@ export function NetworkForm({
     () => formState.isValid && !Object.keys(formState.errors ?? {}).length,
     [formState.isValid, formState.errors]
   );
-  const showReview = !isEditing && name && chainId && isValid;
+  const showReview = !isEditing && name && chainId != null && isValid;
 
   function onChangeUrl() {
     form.setValue('name', '', { shouldValidate: true });
@@ -71,7 +71,7 @@ export function NetworkForm({
         <NetworkReviewCard
           headerText="You're adding this network"
           name={name}
-          chainId={chainId || providerChainId}
+          chainId={chainId != null ? chainId : providerChainId}
           onChangeUrl={onChangeUrl}
           url={url}
         />
