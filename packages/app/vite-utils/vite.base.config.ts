@@ -32,7 +32,7 @@ export function resolveLinkDeps() {
 const baseConfig: UserConfig = {
   base: process.env.BASE_URL || '/',
   build: {
-    target: 'es2020',
+    target: 'esnext',
     sourcemap: true,
     outDir: process.env.APP_DIST || 'dist',
     rollupOptions: {
@@ -46,12 +46,12 @@ const baseConfig: UserConfig = {
     port: Number(process.env.PORT),
     strictPort: true,
     watch: {
-      ignored: ['**/playwright-html/**'], // Ignore changes in any 'playwright' folder
+      ignored: ['**/playwright*/**'], // Ignore changes in any 'playwright' folder
     },
   },
   optimizeDeps: {
     esbuildOptions: {
-      target: 'es2020',
+      target: 'esnext',
       supported: {
         bigint: true,
       },
