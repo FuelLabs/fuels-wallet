@@ -11,4 +11,6 @@ export const connect = async (
   await connectButton.click();
   await getByAriaLabel(page, `Connect to ${walletName}`, true).click();
   await fuelWalletTestHelper.walletConnect();
+
+  await page.waitForTimeout(3000);
 };

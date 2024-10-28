@@ -117,22 +117,21 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
     //   maxFee: fee.add(100),
     // });
 
-    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
-      { address: fuelWallet.address.toAddress(), isContract: false },
-      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
       walletNotificationPage
     );
     await checkAddresses(
-      { address: fuelWallet.address.toAddress(), isContract: false },
-      { address: toBech32(EXTERNAL_CONTRACT_ID), isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: EXTERNAL_CONTRACT_ID, isContract: true },
       walletNotificationPage,
       1,
       1
     );
     await checkAddresses(
-      { address: fuelContractId, isContract: true },
-      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
       walletNotificationPage
     );
 
