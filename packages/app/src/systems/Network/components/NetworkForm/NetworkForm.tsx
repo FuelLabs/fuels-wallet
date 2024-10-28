@@ -109,6 +109,7 @@ export function NetworkForm({
             isRequired={!acceptRisk}
             isInvalid={Boolean(formState.errors?.chainId)}
             label="Chain ID"
+            tooltipContent="We ask you this since fetching the Chain ID directly from the network URL exposes you to malicious interference."
             render={({ field }) => (
               <MotionInput {...animations.slideInTop()}>
                 <Input.Field
