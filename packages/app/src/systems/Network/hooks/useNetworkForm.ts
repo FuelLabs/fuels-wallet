@@ -13,7 +13,7 @@ const schema = yup
     name: yup
       .string()
       .test('is-required', 'Name is required', function (value) {
-        return this.options?.context?.step === 1 || !!value;
+        return !this.options?.context?.isEditing || !!value;
       }),
     url: yup
       .string()
@@ -21,10 +21,11 @@ const schema = yup
       .required('URL is required'),
     explorerUrl: yup
       .string()
-      .test('is-url-valid', 'Explorer URL is not valid', function (url) {
-        if (!url || this.options.context?.step === 1) return true;
-        return isValidNetworkUrl(url);
-      })
+      .test(
+        'is-url-valid',
+        'Explorer URL is not valid',
+        (url) => !url || isValidNetworkUrl(url)
+      )
       .optional(),
     chainId: yup
       .string()
@@ -68,7 +69,7 @@ export type UseAddNetworkOpts = {
   defaultValues?: Maybe<NetworkFormValues>;
   context?: {
     providerChainId?: string;
-    step?: number;
+    isEditing?: boolean;
   };
 };
 

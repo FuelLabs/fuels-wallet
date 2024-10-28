@@ -14,6 +14,7 @@ import { OverlayDialogTopbar } from '~/systems/Overlay';
 const MotionStack = motion(Box.Stack);
 
 export function AddNetwork() {
+  const isEditing = false;
   const { handlers, isLoading } = useNetworks();
   const {
     chainInfo,
@@ -22,14 +23,11 @@ export function AddNetwork() {
     handlers: chainInfoHandlers,
   } = useChainInfo();
 
-  const step = chainInfo ? 2 : 1;
-
   const context = useMemo(
     () => ({
       providerChainId: chainInfo?.consensusParameters?.chainId?.toString(),
-      step,
     }),
-    [chainInfo, step]
+    [chainInfo?.consensusParameters?.chainId]
   );
 
   const form = useNetworkForm({ context });
@@ -78,7 +76,6 @@ export function AddNetwork() {
       as="form"
       gap="$4"
       onSubmit={form.handleSubmit(onSubmit)}
-      autoComplete="off"
     >
       <OverlayDialogTopbar onClose={handlers.closeDialog}>
         Add Network
@@ -87,10 +84,11 @@ export function AddNetwork() {
         <Focus.Scope autoFocus>
           <NetworkForm
             form={form}
-            isEditing={false}
+            isEditing={isEditing}
             isLoading={isLoadingChainInfo}
             onClickReview={onClickReview}
             isValidUrl={isValidUrl}
+            providerChainId={chainInfo?.consensusParameters?.chainId?.toNumber()}
           />
         </Focus.Scope>
       </Dialog.Description>
@@ -101,7 +99,7 @@ export function AddNetwork() {
         <Button
           type="submit"
           intent="primary"
-          isDisabled={!form.formState.isValid || step === 1}
+          isDisabled={!form.formState.isValid || !chainInfo}
           isLoading={isLoading}
           leftIcon={<Icon icon="Plus" />}
           aria-label="Add new network"

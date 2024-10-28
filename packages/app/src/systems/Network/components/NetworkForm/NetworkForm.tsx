@@ -25,6 +25,7 @@ export type NetworkFormProps = {
   isLoading?: boolean;
   onClickReview?: () => void;
   isValidUrl?: boolean;
+  providerChainId?: number;
 };
 
 export function NetworkForm({
@@ -33,6 +34,7 @@ export function NetworkForm({
   isLoading,
   onClickReview,
   isValidUrl,
+  providerChainId,
 }: NetworkFormProps) {
   const [isFirstClickedReview, setIsFirstClickedReview] = useState(false);
   const [isFirstShownTestConnectionBtn, setIsFirstShownTestConnectionBtn] =
@@ -43,6 +45,7 @@ export function NetworkForm({
   const name = getValues('name');
   const url = getValues('url');
   const acceptRisk = watch('acceptRisk');
+  const chainId = getValues('chainId');
   const showReview = !isEditing && name;
 
   function onChangeUrl() {
@@ -66,6 +69,7 @@ export function NetworkForm({
         <NetworkReviewCard
           headerText="You're adding this network"
           name={name}
+          chainId={chainId || providerChainId}
           onChangeUrl={onChangeUrl}
           url={url}
         />
@@ -116,7 +120,7 @@ export function NetworkForm({
               </MotionInput>
             )}
           />
-          {!!formState.errors?.chainId && (
+          {!acceptRisk && !!formState.errors?.chainId && (
             <Form.ErrorMessage aria-label="Error message">
               {formState.errors?.chainId?.message}
             </Form.ErrorMessage>

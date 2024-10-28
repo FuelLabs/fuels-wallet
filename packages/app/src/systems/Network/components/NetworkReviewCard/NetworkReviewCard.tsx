@@ -9,6 +9,7 @@ export type NetworkReviewCardProps = {
   headerText: string;
   name: string;
   onChangeUrl?: () => void;
+  chainId?: number | string;
   url: string;
 };
 
@@ -16,6 +17,7 @@ export function NetworkReviewCard({
   headerText,
   name,
   onChangeUrl,
+  chainId,
   url,
 }: NetworkReviewCardProps) {
   return (
@@ -33,6 +35,11 @@ export function NetworkReviewCard({
         <Text fontSize="sm" css={styles.url}>
           {url}
         </Text>
+        {chainId && (
+          <Text fontSize="sm" css={styles.url}>
+            Chain ID: {chainId}
+          </Text>
+        )}
       </Card.Body>
     </MotionCard>
   );
