@@ -5,7 +5,7 @@ import cleanPlugin from 'vite-plugin-clean';
 import { Mode, plugin as viteMdPlugin } from 'vite-plugin-markdown';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-import '../load.envs.js';
+import '../load.envs.cts';
 
 const linkDeps = process.env.LINK_DEPS?.trim().split(' ').filter(Boolean) || [];
 
