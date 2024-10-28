@@ -39,7 +39,7 @@ const schema = yup
         'chainId-match',
         'Chain ID does not match the provider Chain ID.',
         function (value) {
-          const providerChainId = this.parent.providerChainId;
+          const providerChainId = this.options.context?.providerChainId;
           return !value || !providerChainId || value === providerChainId;
         }
       )
@@ -65,7 +65,7 @@ export type UseNetworkFormReturn = ReturnType<typeof useNetworkForm>;
 export type UseAddNetworkOpts = {
   defaultValues?: Maybe<NetworkFormValues>;
   context?: {
-    providerChainId?: string;
+    providerChainId?: number;
     isEditing?: boolean;
   };
 };
@@ -74,7 +74,7 @@ export function useNetworkForm({ defaultValues, context }: UseAddNetworkOpts) {
   const form = useForm<NetworkFormValues>({
     resolver: yupResolver<NetworkFormValues>(schema),
     reValidateMode: 'onChange',
-    mode: 'onBlur',
+    mode: 'all',
     defaultValues: defaultValues || DEFAULT_VALUES,
     context,
   });

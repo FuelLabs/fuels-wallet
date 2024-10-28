@@ -12,7 +12,7 @@ import { motion } from 'framer-motion';
 import { ControlledField, animations } from '~/systems/Core';
 import { NetworkReviewCard } from '~/systems/Network';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import type { UseNetworkFormReturn } from '../../hooks';
 
@@ -36,24 +36,26 @@ export function NetworkForm({
   isValidUrl,
   providerChainId,
 }: NetworkFormProps) {
-  const [isFirstClickedReview, setIsFirstClickedReview] = useState(false);
   const [isFirstShownTestConnectionBtn, setIsFirstShownTestConnectionBtn] =
     useState(false);
   const { control, formState, getValues, watch } = form;
 
-  const isValid = formState.isValid;
   const name = getValues('name');
   const url = getValues('url');
   const acceptRisk = watch('acceptRisk');
   const chainId = getValues('chainId');
-  const showReview = !isEditing && name;
+  const isValid = useMemo(
+    () => formState.isValid && !Object.keys(formState.errors ?? {}).length,
+    [formState.isValid, formState.errors]
+  );
+  const showReview = !isEditing && name && chainId && isValid;
 
   function onChangeUrl() {
     form.setValue('name', '', { shouldValidate: true });
+    form.clearErrors();
   }
 
-  function onClickCheckNetwork() {
-    setIsFirstClickedReview(true);
+  async function onClickCheckNetwork() {
     onClickReview?.();
   }
 
@@ -88,7 +90,6 @@ export function NetworkForm({
                 URL
               </HelperIcon>
             }
-            hideError={!isFirstClickedReview}
             render={({ field }) => (
               <MotionInput {...animations.slideInTop()}>
                 <Input.Field
@@ -108,7 +109,6 @@ export function NetworkForm({
             isRequired={!acceptRisk}
             isInvalid={Boolean(formState.errors?.chainId)}
             label="Chain ID"
-            hideError={!isFirstClickedReview}
             render={({ field }) => (
               <MotionInput {...animations.slideInTop()}>
                 <Input.Field

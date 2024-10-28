@@ -25,7 +25,7 @@ export function AddNetwork() {
 
   const context = useMemo(
     () => ({
-      providerChainId: chainInfo?.consensusParameters?.chainId?.toString(),
+      providerChainId: chainInfo?.consensusParameters?.chainId?.toNumber(),
     }),
     [chainInfo?.consensusParameters?.chainId]
   );
@@ -33,33 +33,29 @@ export function AddNetwork() {
   const form = useNetworkForm({ context });
   const { isDirty, invalid } = form.getFieldState('url', form.formState);
   const isValidUrl = isDirty && !invalid;
-
-  useEffect(() => {
-    if (!chainInfo) return;
-    if (form.getValues('acceptRisk') && !form.getValues('chainId')) {
-      form.setValue(
-        'chainId',
-        chainInfo.consensusParameters?.chainId.toNumber()
-      );
-    }
-  }, [chainInfo, form.setValue, form.getValues]);
+  const formChainId = form.getValues('chainId');
 
   useEffect(() => {
     if (isValidUrl && !isLoadingChainInfo && chainInfo) {
       form.setValue('name', chainInfo.name, { shouldValidate: true });
 
-      if (
-        form.getValues('chainId') &&
-        form.getValues('chainId') !==
+      // @TODO: When form.getValues('acceptRisk') is implemented add it to the if statement
+      if (!formChainId) {
+        form.setValue(
+          'chainId',
           chainInfo.consensusParameters?.chainId.toNumber()
-      ) {
+        );
+        return;
+      }
+
+      if (formChainId !== chainInfo.consensusParameters?.chainId.toNumber()) {
         form.setError('chainId', {
           type: 'manual',
           message: 'Chain ID does not match the fetched value.',
         });
       }
     }
-  }, [chainInfo, isLoadingChainInfo, isValidUrl, form]);
+  }, [chainInfo, isLoadingChainInfo, isValidUrl, form, formChainId]);
 
   useEffect(() => {
     if (chainInfoError) {
