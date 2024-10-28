@@ -48,7 +48,7 @@ test.describe('Forward Eth', () => {
 
     const forwardEthInput = page
       .getByLabel('Forward eth card')
-      .locator('input');
+      .getByRole('textbox');
     await forwardEthInput.fill(forwardEthAmount);
 
     const forwardEthButton = getButtonByText(page, 'Forward ETH');
@@ -85,10 +85,9 @@ test.describe('Forward Eth', () => {
     // });
 
     // test to and from addresses
-    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
-      { address: fuelWallet.address.toAddress(), isContract: false },
-      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
       walletNotificationPage
     );
 

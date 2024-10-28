@@ -31,6 +31,8 @@ export const testSetup = async ({
   const fuelProvider = await Provider.create(VITE_FUEL_PROVIDER_URL!);
   const masterWallet = Wallet.fromMnemonic(VITE_MASTER_WALLET_MNEMONIC!);
   masterWallet.connect(fuelProvider);
+
+  console.log('--- Master wallet address:', masterWallet.address.toString());
   if (VITE_WALLET_SECRET) {
     await seedWallet(
       masterWallet.address.toString(),
