@@ -221,7 +221,6 @@ const styles = {
     },
   }),
   chainId: cssObj({
-    marginTop: '$3',
     'input[aria-disabled="true"]': {
       opacity: 0.5,
     },
