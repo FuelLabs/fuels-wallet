@@ -148,8 +148,6 @@ jobs:
   tests-e2e-contracts:
     name: E2E Contract Tests - Local
     runs-on: buildjet-8vcpu-ubuntu-2204
-    # Commented until the Playwright bug is fixed
-    if: false
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master

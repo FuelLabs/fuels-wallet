@@ -50,7 +50,7 @@ test.describe('Mint Assets', () => {
 
     const mintAmount = '12345';
     const formattedMintAmount = '12,345';
-    const mintInput = page.getByLabel('Mint asset card').locator('input');
+    const mintInput = page.getByLabel('Mint asset card').getByRole('textbox');
     await mintInput.fill(mintAmount);
 
     const mintButton = getButtonByText(page, 'Mint', true);
@@ -75,15 +75,14 @@ test.describe('Mint Assets', () => {
     //   maxFee: fee.add(100),
     // });
 
-    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
-      { address: fuelWallet.address.toAddress(), isContract: false },
-      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
       walletNotificationPage
     );
     await checkAddresses(
-      { address: fuelContractId, isContract: true },
-      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
       walletNotificationPage
     );
 
@@ -157,15 +156,14 @@ test.describe('Mint Assets', () => {
     // });
 
     // test to and from addresses
-    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
-      { address: fuelWallet.address.toAddress(), isContract: false },
-      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
       walletNotificationPage
     );
     await checkAddresses(
-      { address: fuelContractId, isContract: true },
-      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
       walletNotificationPage
     );
 

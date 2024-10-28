@@ -12,6 +12,10 @@ export async function seedWallet(
   const baseAssetId = fuelProvider.getBaseAssetId();
   const genesisWallet = Wallet.fromPrivateKey(genesisSecret!, fuelProvider);
   const parameters: TxParamsType = { gasLimit: bn(100_000), ...options };
+  console.log(
+    '--- Seeding wallet from SECRET wallet',
+    genesisWallet.address.toString()
+  );
   const response = await genesisWallet.transfer(
     Address.fromString(address),
     amount,
