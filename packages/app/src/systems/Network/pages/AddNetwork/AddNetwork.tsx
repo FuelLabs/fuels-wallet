@@ -40,7 +40,7 @@ export function AddNetwork() {
       form.setValue('name', chainInfo.name, { shouldValidate: true });
 
       // @TODO: When form.getValues('acceptRisk') is implemented add it to the if statement
-      if (formChainId != null) {
+      if (formChainId == null) {
         form.setValue(
           'chainId',
           chainInfo.consensusParameters?.chainId.toNumber()
