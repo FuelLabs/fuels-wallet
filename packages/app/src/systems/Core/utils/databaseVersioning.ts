@@ -187,6 +187,7 @@ export const applyDbVersioning = (db: Dexie) => {
     });
 
   // DB VERSION 26
+  // cleanup networks and add defaults
   db.version(26)
     .stores({
       vaults: 'key',
@@ -219,6 +220,7 @@ export const applyDbVersioning = (db: Dexie) => {
     });
 
   // DB VERSION 27
+  // add indexedAssets table
   db.version(27).stores({
     vaults: 'key',
     accounts: '&address, &name',

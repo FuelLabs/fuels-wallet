@@ -8,7 +8,11 @@ export type Vault = {
 };
 
 export interface CoinAsset extends Coin {
-  asset?: AssetFuel & { indexed?: boolean; suspicious?: boolean };
+  asset?: AssetFuel & {
+    indexed?: boolean;
+    suspicious?: boolean;
+    isNft?: boolean;
+  };
 }
 
 export type Account = {

@@ -1,51 +1,45 @@
 import type { AssetData } from '@fuel-wallet/types';
-import type { Asset } from 'fuels';
+import type { Asset, Provider } from 'fuels';
 import { db } from '~/systems/Core/utils/database';
+import { isNft } from '../utils/isNft';
 
-export default class AssetsCache {
-  private cache: { [network: string]: { [assetId: string]: Asset } };
+type Endpoint = {
+  chainId: number;
+  url: string;
+};
+
+export class AssetsCache {
+  private cache: { [chainId: number]: { [assetId: string]: Asset } };
   private static instance: AssetsCache;
   private endpoints: Endpoint[] = [
     {
       chainId: 9889,
-      networkId: '0',
-      networkName: 'mainnet',
       url: 'https://explorer-indexer-mainnet.fuel.network',
     },
     {
       chainId: 0,
-      networkId: '1',
-      networkName: 'testnet',
       url: 'https://explorer-indexer-testnet.fuel.network',
     },
-    {
-      chainId: 0,
-      networkId: '2',
-      networkName: 'devnet',
-      url: 'https://explorer-indexer-devnet.fuel.network',
-    },
   ];
-  private storage: LocalDB;
+  private storage: IndexedAssetsDB;
 
   private constructor() {
     this.cache = {};
-    this.storage = new LocalDB();
+    this.storage = new IndexedAssetsDB();
   }
 
-  private getEndpoint(chainId: number, networkId: string) {
-    return this.endpoints.find((endpoint: Endpoint) =>
-      chainId === 0
-        ? endpoint.networkId === networkId
-        : endpoint.chainId === chainId
+  private getIndexerEndpoint(chainId: number) {
+    return this.endpoints.find(
+      (endpoint: Endpoint) => endpoint.chainId === chainId
     );
   }
 
   private async fetchAssetFromIndexer(url: string, assetId: string) {
     try {
       const timeout = new Promise<null>((_, reject) =>
-        setTimeout(() => reject(new Error('Timeout')), 500)
+        setTimeout(() => reject(new Error('Timeout')), 2000)
       );
-      // limit on 500ms request time
+      // limit on 2000ms request time
       const response = await Promise.race([
         fetch(`${url}/assets/${assetId}`),
         timeout,
@@ -56,29 +50,48 @@ export default class AssetsCache {
     } catch (_e: unknown) {}
   }
 
-  async getAsset(chainId: number, networkId: string, assetId: string) {
-    if (chainId === null || chainId === undefined || !networkId || !assetId) {
+  async getAsset({
+    chainId,
+    assetId,
+    provider,
+  }: { chainId: number; assetId: string; provider: Provider }) {
+    if (chainId == null || !assetId) {
       return;
     }
-    const endpoint = this.getEndpoint(chainId, networkId);
+    const endpoint = this.getIndexerEndpoint(chainId);
     if (!endpoint) return;
     // try to get from memory cache first
-    this.cache[endpoint.networkName] = this.cache[endpoint.networkName] || {};
-    if (this.cache[endpoint.networkName][assetId]) {
-      return this.cache[endpoint.networkName][assetId];
+    this.cache[endpoint.chainId] = this.cache[endpoint.chainId] || {};
+    if (this.cache[endpoint.chainId][assetId]) {
+      return this.cache[endpoint.chainId][assetId];
     }
     // get from indexed db if not in memory
     const savedAsset = await this.storage.getItem(
-      `${endpoint.networkName}/${assetId}`
+      `${endpoint.chainId}/${assetId}`
     );
     if (savedAsset) {
-      this.cache[endpoint.networkName][assetId] = savedAsset;
+      this.cache[endpoint.chainId][assetId] = savedAsset;
       return savedAsset;
     }
-    const asset = await this.fetchAssetFromIndexer(endpoint.url, assetId);
-    if (!asset) return;
-    this.cache[endpoint.networkName][assetId] = asset;
-    this.storage.setItem(`${endpoint.networkName}/${assetId}`, asset);
+    const assetFromIndexer = await this.fetchAssetFromIndexer(
+      endpoint.url,
+      assetId
+    );
+    if (!assetFromIndexer) return;
+
+    const isNftAsset = await isNft({
+      assetId,
+      contractId: assetFromIndexer.contractId,
+      provider,
+    });
+
+    const asset = {
+      ...assetFromIndexer,
+      isNft: isNftAsset,
+    };
+
+    this.cache[endpoint.chainId][assetId] = asset;
+    this.storage.setItem(`${endpoint.chainId}/${assetId}`, asset);
     return asset;
   }
 
@@ -90,7 +103,7 @@ export default class AssetsCache {
   }
 }
 
-class LocalDB {
+class IndexedAssetsDB {
   async getItem(key: string) {
     return db.transaction('r', db.indexedAssets, async () => {
       const asset = await db.indexedAssets.get({ key });
@@ -104,10 +117,3 @@ class LocalDB {
     });
   }
 }
-
-type Endpoint = {
-  chainId: number;
-  networkId: string;
-  networkName: string;
-  url: string;
-};

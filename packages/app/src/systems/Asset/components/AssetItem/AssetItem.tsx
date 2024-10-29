@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   CardList,
@@ -24,7 +25,7 @@ import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 import { AssetRemoveDialog } from '../AssetRemoveDialog';
 
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
-import type { AssetFuel, BNInput } from 'fuels';
+import type { BNInput } from 'fuels';
 import useFuelAsset from '../../hooks/useFuelAsset';
 import { AssetItemLoader } from './AssetItemLoader';
 
@@ -188,7 +189,12 @@ export const AssetItem: AssetItemComponent = ({
             ) : (
               ''
             )}
-            {(!name || asset.indexed) && (
+            {asset.isNft && (
+              <Badge variant="ghost" intent="primary" css={styles.assetNft}>
+                NFT
+              </Badge>
+            )}
+            {(!name || asset.indexed) && !asset.isNft && (
               <Button
                 size="xs"
                 intent="primary"
@@ -258,5 +264,10 @@ const styles = {
     '.fuel_Button:hover': {
       color: '$intentsBase11 !important',
     },
+  }),
+  assetNft: cssObj({
+    ml: '$2',
+    fontSize: '$sm',
+    lineHeight: 'normal',
   }),
 };

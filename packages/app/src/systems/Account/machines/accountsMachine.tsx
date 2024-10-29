@@ -6,8 +6,6 @@ import { store } from '~/store';
 import { CoreService, FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
-import { AssetService } from '~/systems/Asset';
-import AssetsCache from '~/systems/Asset/cache/AssetsCache';
 import { AccountService } from '../services/account';
 import type { AccountInputs } from '../services/account';
 
@@ -246,23 +244,6 @@ export const accountsMachine = createMachine(
             account: accountToFetch,
             providerUrl,
           });
-
-          for (const balance of accountWithBalance.balances) {
-            if (balance.asset?.name) continue;
-            const asset = await AssetsCache.getInstance().getAsset(
-              selectedNetwork.chainId,
-              selectedNetwork.id!,
-              balance.assetId
-            );
-            if (asset && balance.asset) {
-              balance.asset.icon = asset.icon;
-              balance.asset.name = asset.name;
-              balance.asset.symbol = asset.symbol;
-              balance.asset.decimals = asset.decimals;
-              balance.asset.suspicious = asset.suspicious;
-              balance.asset.indexed = true;
-            }
-          }
 
           return accountWithBalance;
         },

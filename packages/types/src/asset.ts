@@ -6,6 +6,7 @@ export type AssetData = Asset & {
   isCustom?: boolean;
   indexed?: boolean;
   suspicious?: boolean;
+  isNft?: boolean;
 };
 
 export type AssetAmount = AssetData & {
@@ -18,6 +19,7 @@ export type AssetFuelData = AssetFuel & {
   isCustom?: boolean;
   indexed?: boolean;
   suspicious?: boolean;
+  isNft?: boolean;
 };
 
 export type AssetFuelAmount = AssetFuelData & {
