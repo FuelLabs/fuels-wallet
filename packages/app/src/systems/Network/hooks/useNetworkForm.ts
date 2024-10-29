@@ -29,6 +29,9 @@ const schema = yup
       .optional(),
     chainId: yup
       .number()
+      .transform((value, originalValue) =>
+        originalValue === '' ? undefined : value
+      )
       .when('acceptRisk', (_acceptRisk: Array<boolean>, schema) => {
         const acceptRisk = !!_acceptRisk?.[0];
         return !acceptRisk
