@@ -26,6 +26,7 @@ export type NetworkFormProps = {
   onClickReview?: () => void;
   isValidUrl?: boolean;
   providerChainId?: number;
+  onClickChange?: () => void;
 };
 
 export function NetworkForm({
@@ -35,6 +36,7 @@ export function NetworkForm({
   onClickReview,
   isValidUrl,
   providerChainId,
+  onClickChange,
 }: NetworkFormProps) {
   const [isFirstShownTestConnectionBtn, setIsFirstShownTestConnectionBtn] =
     useState(false);
@@ -49,11 +51,6 @@ export function NetworkForm({
     [formState.isValid, formState.errors]
   );
   const showReview = !isEditing && name && chainId != null && isValid;
-
-  function onChangeUrl() {
-    form.setValue('name', '', { shouldValidate: true });
-    form.clearErrors();
-  }
 
   async function onClickCheckNetwork() {
     onClickReview?.();
@@ -72,7 +69,7 @@ export function NetworkForm({
           headerText="You're adding this network"
           name={name}
           chainId={chainId != null ? chainId : providerChainId}
-          onChangeUrl={onChangeUrl}
+          onChangeUrl={onClickChange}
           url={url}
         />
       )}

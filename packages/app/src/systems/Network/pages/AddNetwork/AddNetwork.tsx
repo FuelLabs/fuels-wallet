@@ -1,6 +1,6 @@
 import { Box, Button, Dialog, Focus, Icon } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useWatch } from 'react-hook-form';
 import { animations, styles } from '~/systems/Core';
 import type { NetworkFormValues } from '~/systems/Network';
@@ -16,6 +16,7 @@ const MotionStack = motion(Box.Stack);
 
 export function AddNetwork() {
   const isEditing = false;
+  const previousUrl = useRef<string | null>(null);
   const { handlers, isLoading } = useNetworks();
   const {
     chainInfo,
@@ -41,13 +42,18 @@ export function AddNetwork() {
     chainInfo && form.trigger('chainId');
   }, [form.trigger, chainInfo]);
 
+  const resetFormData = useCallback(() => {
+    form.setValue('name', undefined);
+    chainInfoHandlers.clearChainInfo();
+    form.clearErrors();
+  }, [form, chainInfoHandlers]);
+
   useEffect(() => {
-    if (url) {
-      form.clearErrors('chainId');
-      form.setValue('name', undefined);
-      chainInfoHandlers.clearChainInfo();
+    if (previousUrl.current == null || previousUrl.current !== url) {
+      previousUrl.current = url;
+      resetFormData();
     }
-  }, [url, form, chainInfoHandlers.clearChainInfo]);
+  }, [resetFormData, url]);
 
   useEffect(() => {
     if (isValidUrl && !isLoadingChainInfo && chainInfo) {
@@ -109,6 +115,7 @@ export function AddNetwork() {
             isEditing={isEditing}
             isLoading={isLoadingChainInfo}
             onClickReview={onClickReview}
+            onClickChange={resetFormData}
             isValidUrl={isValidUrl}
             providerChainId={chainInfo?.consensusParameters?.chainId?.toNumber()}
           />
