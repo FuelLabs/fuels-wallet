@@ -52,7 +52,11 @@ test.describe('Forward Eth', () => {
     await forwardEthInput.fill(forwardEthAmount);
 
     const forwardEthButton = getButtonByText(page, 'Forward ETH');
-    await page.waitForTimeout(2500);
+    await expect
+      .poll(() => forwardEthButton.isEnabled().catch(() => false), {
+        timeout: 15000,
+      })
+      .toBeTruthy();
     await forwardEthButton.click();
 
     const walletNotificationPage =
