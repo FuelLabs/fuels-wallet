@@ -76,7 +76,11 @@ test.describe('Forward Half Custom Asset', () => {
       page,
       'Forward Half Custom Asset'
     );
-    await page.waitForTimeout(2500);
+    await expect
+      .poll(() => forwardHalfCustomAssetButton.isEnabled().catch(() => false), {
+        timeout: 15000,
+      })
+      .toBeTruthy();
     await forwardHalfCustomAssetButton.click();
 
     const walletNotificationPage =
