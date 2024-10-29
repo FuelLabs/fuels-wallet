@@ -26,4 +26,5 @@ export const connect = async (
       { timeout: 15000 }
     )
     .toBeTruthy();
+  await page.waitForTimeout(3000);
 };
