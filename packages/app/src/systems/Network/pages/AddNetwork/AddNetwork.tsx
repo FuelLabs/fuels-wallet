@@ -33,7 +33,15 @@ export function AddNetwork() {
   const form = useNetworkForm({ context });
   const { isDirty, invalid } = form.getFieldState('url', form.formState);
   const isValidUrl = isDirty && !invalid;
+  const url = form.getValues('url');
   const formChainId = form.getValues('chainId');
+
+  useEffect(() => {
+    if (url) {
+      chainInfoHandlers.clearChainInfo();
+      form.clearErrors('chainId');
+    }
+  }, [url, form.clearErrors, chainInfoHandlers.clearChainInfo]);
 
   useEffect(() => {
     if (isValidUrl && !isLoadingChainInfo && chainInfo) {
@@ -46,13 +54,6 @@ export function AddNetwork() {
           chainInfo.consensusParameters?.chainId.toNumber()
         );
         return;
-      }
-
-      if (formChainId !== chainInfo.consensusParameters?.chainId.toNumber()) {
-        form.setError('chainId', {
-          type: 'manual',
-          message: 'Chain ID does not match the fetched value.',
-        });
       }
     }
   }, [chainInfo, isLoadingChainInfo, isValidUrl, form, formChainId]);
