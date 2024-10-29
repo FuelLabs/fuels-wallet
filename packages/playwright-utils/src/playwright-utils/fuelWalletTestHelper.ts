@@ -226,27 +226,27 @@ export class FuelWalletTestHelper {
     const networksButton = getByAriaLabel(this.walletPage, 'Selected Network');
     await networksButton.click();
 
-    if ((await this.walletPage.getByText(chainName).count()) === 0) {
-      const addNetworkButton = getByAriaLabel(this.walletPage, 'Add network');
-      await addNetworkButton.click();
+    const networkLocator = this.walletPage.getByText(chainName);
+    const hasNetwork = (await networkLocator.count()) > 0;
 
-      const urlInput = getByAriaLabel(this.walletPage, 'Network url');
-      await urlInput.fill(providerUrl);
-
-      await getByAriaLabel(this.walletPage, 'Test connection').click();
-
-      const addNewNetworkButton = getByAriaLabel(
-        this.walletPage,
-        'Add new network'
-      );
-      await addNewNetworkButton.click();
-    } else {
-      const closeNetworkButton = getByAriaLabel(
-        this.walletPage,
-        'Close dialog'
-      );
-      await closeNetworkButton.click();
+    if (hasNetwork) {
+      await networkLocator.click();
+      return;
     }
+
+    const addNetworkButton = getByAriaLabel(this.walletPage, 'Add network');
+    await addNetworkButton.click();
+
+    const urlInput = getByAriaLabel(this.walletPage, 'Network url');
+    await urlInput.fill(providerUrl);
+
+    await getByAriaLabel(this.walletPage, 'Test connection').click();
+
+    const addNewNetworkButton = getByAriaLabel(
+      this.walletPage,
+      'Add new network'
+    );
+    await addNewNetworkButton.click();
   }
 
   async switchNetwork(chainName: string) {

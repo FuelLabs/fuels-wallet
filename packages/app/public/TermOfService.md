@@ -1,4 +1,6 @@
-## Fuel Wallet Testnet Terms Of Use Agreement
+## Fuel Wallet Terms Of Use Agreement
+
+Last updated: October 16, 2024
 
 ## 1. The Fuel Wallet
 
