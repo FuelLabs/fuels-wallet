@@ -1,6 +1,7 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium, expect } from '@playwright/test';
 
+import { CHAIN_IDS } from 'fuels';
 import {
   getButtonByText,
   getByAriaLabel,
@@ -135,7 +136,191 @@ test.describe('Networks', () => {
     await expect(urlInput).toBeFocused();
     await urlInput.fill('https://testnet.fuel.network/v1/graphql');
     const chainIdInput = getInputByName(page, 'chainId');
-    await chainIdInput.fill('0');
+    await chainIdInput.fill(CHAIN_IDS.fuel.testnet.toString());
+    await hasText(page, /Test connection/i);
+    await getByAriaLabel(page, 'Test connection').click();
+    await expect
+      .poll(
+        async () =>
+          await hasText(page, /Fuel Sepolia Testnet/i)
+            .then(() => true)
+            .catch(() => false),
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeTruthy();
+    console.log('asd waiting for button to be enabled');
+    await expect
+      .poll(async () => await buttonCreate.isEnabled(), {
+        timeout: 15000,
+      })
+      .toBeTruthy();
+    console.log('asd button is enabled');
+    await buttonCreate.click();
+    // Wait for popup to close
+    await expect
+      .poll(
+        async () => {
+          return await hasText(page, /Add network/i).catch(() => false);
+        },
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeFalsy();
+    await expect
+      .poll(
+        async () => {
+          await reload(page);
+          return await hasText(page, /Fuel Sepolia Testnet/i).catch(
+            () => false
+          );
+        },
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeTruthy();
+  });
+
+  test('should be able to add a new network with wrong chainId then correct chainId', async () => {
+    await visit(page, '/wallet');
+    await getByAriaLabel(page, 'Selected Network').click();
+    await hasText(page, /Add new network/i);
+    await getByAriaLabel(page, 'Add network').click();
+    const buttonCreate = getButtonByText(page, /add/i);
+    await expect(buttonCreate).toBeDisabled();
+    const urlInput = getInputByName(page, 'url');
+    await expect(urlInput).toBeFocused();
+    await urlInput.fill('https://mainnet.fuel.network/v1/graphql');
+    const chainIdInput = getInputByName(page, 'chainId');
+    await chainIdInput.fill('999999');
+    await hasText(page, /Test connection/i);
+    await getByAriaLabel(page, 'Test connection').click();
+    await expect
+      .poll(
+        async () =>
+          await hasText(
+            page,
+            /Chain ID does not match the provider Chain ID./i
+          ).catch(() => false),
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeTruthy();
+    await urlInput.fill('https://testnet.fuel.network/v1/graphql');
+    await expect
+      .poll(
+        async () =>
+          await hasText(
+            page,
+            /Chain ID does not match the provider Chain ID./i
+          ).catch(() => false),
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeFalsy();
+    await chainIdInput.fill(CHAIN_IDS.fuel.testnet.toString());
+    await hasText(page, /Test connection/i);
+    await getByAriaLabel(page, 'Test connection').click();
+    await expect
+      .poll(
+        async () =>
+          await hasText(page, /Fuel Sepolia Testnet/i)
+            .then(() => true)
+            .catch(() => false),
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeTruthy();
+    console.log('asd waiting for button to be enabled');
+    await expect
+      .poll(async () => await buttonCreate.isEnabled(), {
+        timeout: 15000,
+      })
+      .toBeTruthy();
+    console.log('asd button is enabled');
+    await buttonCreate.click();
+    await expect
+      .poll(
+        async () => {
+          return await hasText(page, /Add network/i).catch(() => false);
+        },
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeFalsy();
+    // Wait for popup to close
+    await expect
+      .poll(
+        async () => {
+          await reload(page);
+          return await hasText(page, /Fuel Sepolia Testnet/i).catch(
+            () => false
+          );
+        },
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeTruthy();
+  });
+  test('should be able to change network before adding', async () => {
+    await visit(page, '/wallet');
+    await getByAriaLabel(page, 'Selected Network').click();
+    await hasText(page, /Add new network/i);
+    await getByAriaLabel(page, 'Add network').click();
+    const buttonCreate = getButtonByText(page, /add/i);
+    await expect(buttonCreate).toBeDisabled();
+    let urlInput = getInputByName(page, 'url');
+    await expect(urlInput).toBeFocused();
+    await urlInput.fill('');
+    await urlInput.fill('https://mainnet.fuel.network/v1/graphql');
+    let chainIdInput = getInputByName(page, 'chainId');
+    await chainIdInput.fill(CHAIN_IDS.fuel.mainnet.toString());
+    await hasText(page, /Test connection/i);
+    await getByAriaLabel(page, 'Test connection').click();
+    await expect
+      .poll(
+        async () =>
+          await hasText(page, /Ignition/i)
+            .then(() => true)
+            .catch(() => false),
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeTruthy();
+    console.log('asd waiting for button to be enabled');
+    await expect
+      .poll(async () => await buttonCreate.isEnabled(), {
+        timeout: 15000,
+      })
+      .toBeTruthy();
+    await getButtonByText(page, 'Change').last().click();
+    await expect
+      .poll(
+        async () =>
+          await hasText(page, /Ignition/i)
+            .then(() => true)
+            .catch(() => false),
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeFalsy();
+    urlInput = getInputByName(page, 'url');
+    await urlInput.focus();
+    await urlInput.fill('https://testnet.fuel.network/v1/graphql');
+    chainIdInput = getInputByName(page, 'chainId');
+    await chainIdInput.focus();
+    await chainIdInput.fill('');
+    await chainIdInput.fill(CHAIN_IDS.fuel.testnet.toString());
     await hasText(page, /Test connection/i);
     await getByAriaLabel(page, 'Test connection').click();
     await expect
