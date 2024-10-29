@@ -154,7 +154,7 @@ export class FuelWalletTestHelper {
         { timeout: 5000 }
       )
       .toBeTruthy();
-
+    await walletPage.waitForTimeout(2000);
     await menuButton!.click();
 
     const settingsButton = walletPage
