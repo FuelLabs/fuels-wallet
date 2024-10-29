@@ -109,7 +109,7 @@ export function NetworkForm({
             isRequired={!acceptRisk}
             isInvalid={Boolean(formState.errors?.chainId)}
             label="Chain ID"
-            tooltipContent="To enhance security of network identification, we ask you to inform the chainId manually."
+            tooltipContent="To enhance the security of network identification, we ask you to inform the chainId manually."
             render={({ field }) => (
               <MotionInput {...animations.slideInTop()}>
                 <Input.Field
