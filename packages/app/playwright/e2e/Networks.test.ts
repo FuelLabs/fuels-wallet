@@ -96,6 +96,34 @@ test.describe('Networks', () => {
     await expect(items.first()).toHaveAttribute('data-active', 'true');
   });
 
+  test('should NOT be able to add a new network with wrong chain ID', async () => {
+    await visit(page, '/wallet');
+    await getByAriaLabel(page, 'Selected Network').click();
+    await hasText(page, /Add new network/i);
+    await getByAriaLabel(page, 'Add network').click();
+    const buttonCreate = getButtonByText(page, /add/i);
+    await expect(buttonCreate).toBeDisabled();
+    const urlInput = getInputByName(page, 'url');
+    await expect(urlInput).toBeFocused();
+    await urlInput.fill('https://testnet.fuel.network/v1/graphql');
+    const chainIdInput = getInputByName(page, 'chainId');
+    await chainIdInput.fill('9999');
+    await hasText(page, /Test connection/i);
+    await getByAriaLabel(page, 'Test connection').click();
+    await expect
+      .poll(
+        async () =>
+          await hasText(
+            page,
+            /Chain ID does not match the provider Chain ID./i
+          ).catch(() => false),
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeTruthy();
+  });
+
   test('should be able to add a new network with a manual chain ID', async () => {
     await visit(page, '/wallet');
     await getByAriaLabel(page, 'Selected Network').click();
@@ -133,9 +161,7 @@ test.describe('Networks', () => {
     await expect
       .poll(
         async () => {
-          return await hasText(page, /Add network/i)
-            .then(() => true)
-            .catch(() => false);
+          return await hasText(page, /Add network/i).catch(() => false);
         },
         {
           timeout: 15000,
@@ -146,9 +172,9 @@ test.describe('Networks', () => {
       .poll(
         async () => {
           await reload(page);
-          return await hasText(page, /Fuel Sepolia Testnet/i)
-            .then(() => true)
-            .catch(() => false);
+          return await hasText(page, /Fuel Sepolia Testnet/i).catch(
+            () => false
+          );
         },
         {
           timeout: 15000,
