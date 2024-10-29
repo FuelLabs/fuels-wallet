@@ -110,6 +110,17 @@ test.describe('Networks', () => {
     const chainIdInput = getInputByName(page, 'chainId');
     await chainIdInput.fill('9999');
     await hasText(page, /Test connection/i);
+    await expect
+      .poll(
+        async () =>
+          await getByAriaLabel(page, 'Test connection')
+            .isEnabled()
+            .catch(() => false),
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeTruthy();
     await getByAriaLabel(page, 'Test connection').click();
     await expect
       .poll(
@@ -138,6 +149,17 @@ test.describe('Networks', () => {
     const chainIdInput = getInputByName(page, 'chainId');
     await chainIdInput.fill(CHAIN_IDS.fuel.testnet.toString());
     await hasText(page, /Test connection/i);
+    await expect
+      .poll(
+        async () =>
+          await getByAriaLabel(page, 'Test connection')
+            .isEnabled()
+            .catch(() => false),
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeTruthy();
     await getByAriaLabel(page, 'Test connection').click();
     await expect
       .poll(
@@ -197,6 +219,17 @@ test.describe('Networks', () => {
     const chainIdInput = getInputByName(page, 'chainId');
     await chainIdInput.fill('999999');
     await hasText(page, /Test connection/i);
+    await expect
+      .poll(
+        async () =>
+          await getByAriaLabel(page, 'Test connection')
+            .isEnabled()
+            .catch(() => false),
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeTruthy();
     await getByAriaLabel(page, 'Test connection').click();
     await expect
       .poll(
@@ -225,6 +258,17 @@ test.describe('Networks', () => {
       .toBeFalsy();
     await chainIdInput.fill(CHAIN_IDS.fuel.testnet.toString());
     await hasText(page, /Test connection/i);
+    await expect
+      .poll(
+        async () =>
+          await getByAriaLabel(page, 'Test connection')
+            .isEnabled()
+            .catch(() => false),
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeTruthy();
     await getByAriaLabel(page, 'Test connection').click();
     await expect
       .poll(
@@ -284,6 +328,17 @@ test.describe('Networks', () => {
     let chainIdInput = getInputByName(page, 'chainId');
     await chainIdInput.fill(CHAIN_IDS.fuel.mainnet.toString());
     await hasText(page, /Test connection/i);
+    await expect
+      .poll(
+        async () =>
+          await getByAriaLabel(page, 'Test connection')
+            .isEnabled()
+            .catch(() => false),
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeTruthy();
     await getByAriaLabel(page, 'Test connection').click();
     await expect
       .poll(
@@ -316,12 +371,25 @@ test.describe('Networks', () => {
       .toBeFalsy();
     urlInput = getInputByName(page, 'url');
     await urlInput.focus();
+    await urlInput.fill('');
     await urlInput.fill('https://testnet.fuel.network/v1/graphql');
     chainIdInput = getInputByName(page, 'chainId');
     await chainIdInput.focus();
     await chainIdInput.fill('');
     await chainIdInput.fill(CHAIN_IDS.fuel.testnet.toString());
+    await chainIdInput.blur();
     await hasText(page, /Test connection/i);
+    await expect
+      .poll(
+        async () =>
+          await getByAriaLabel(page, 'Test connection')
+            .isEnabled()
+            .catch(() => false),
+        {
+          timeout: 15000,
+        }
+      )
+      .toBeTruthy();
     await getByAriaLabel(page, 'Test connection').click();
     await expect
       .poll(
