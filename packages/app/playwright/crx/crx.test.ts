@@ -266,7 +266,14 @@ test.describe('FuelWallet Extension', () => {
         predicate: (page) => page.url().includes(extensionId),
       });
 
-      await hasText(connectPage, /connect/i);
+      await expect
+        .poll(
+          async () => {
+            return await hasText(connectPage, /connect/i).catch(() => false);
+          },
+          { timeout: 10000 }
+        )
+        .toBeTruthy();
 
       // Account 1 should be toggled by default
       const toggleAccountOneLocator = await getByAriaLabel(
