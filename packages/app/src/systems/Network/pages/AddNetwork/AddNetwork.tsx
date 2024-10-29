@@ -37,6 +37,10 @@ export function AddNetwork() {
   const formChainId = form.getValues('chainId');
 
   useEffect(() => {
+    chainInfo && form.trigger('chainId');
+  }, [form.trigger, chainInfo]);
+
+  useEffect(() => {
     if (url) {
       chainInfoHandlers.clearChainInfo();
       form.clearErrors('chainId');
