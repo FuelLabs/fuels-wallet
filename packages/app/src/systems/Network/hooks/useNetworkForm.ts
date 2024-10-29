@@ -43,13 +43,17 @@ const schema = yup
         'Chain ID does not match the provider Chain ID.',
         function (value) {
           const providerChainId = this.options.context?.providerChainId;
-          return !value || !providerChainId || value === providerChainId;
+          return (
+            value == null ||
+            providerChainId == null ||
+            value === providerChainId
+          );
         }
       )
       .test(
         'is-numbers-only',
         'Chain ID must contain only numbers',
-        (value) => !value || /^\d+$/.test(value.toString())
+        (value) => value == null || Number.isInteger(value)
       ),
     acceptRisk: yup.boolean().notRequired(),
   })
