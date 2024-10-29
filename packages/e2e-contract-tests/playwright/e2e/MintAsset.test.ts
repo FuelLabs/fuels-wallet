@@ -55,14 +55,7 @@ test.describe('Mint Assets', () => {
 
     const mintButton = getButtonByText(page, 'Mint', true);
     await expect
-      .poll(
-        () =>
-          mintButton
-            .isEnabled()
-            .then(() => true)
-            .catch(() => false),
-        { timeout: 15000 }
-      )
+      .poll(() => mintButton.isEnabled().catch(() => false), { timeout: 15000 })
       .toBeTruthy();
     await mintButton.click();
 
@@ -136,14 +129,7 @@ test.describe('Mint Assets', () => {
 
     const mintButton = getButtonByText(page, 'Mint Asset configuration');
     await expect
-      .poll(
-        () =>
-          mintButton
-            .isEnabled()
-            .then(() => true)
-            .catch(() => false),
-        { timeout: 15000 }
-      )
+      .poll(() => mintButton.isEnabled().catch(() => false), { timeout: 15000 })
       .toBeTruthy();
     await mintButton.click();
 

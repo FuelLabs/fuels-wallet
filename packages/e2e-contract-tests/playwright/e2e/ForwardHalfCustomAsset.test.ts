@@ -77,14 +77,9 @@ test.describe('Forward Half Custom Asset', () => {
       'Forward Half Custom Asset'
     );
     await expect
-      .poll(
-        () =>
-          forwardHalfCustomAssetButton
-            .isEnabled()
-            .then(() => true)
-            .catch(() => false),
-        { timeout: 15000 }
-      )
+      .poll(() => forwardHalfCustomAssetButton.isEnabled().catch(() => false), {
+        timeout: 15000,
+      })
       .toBeTruthy();
     await forwardHalfCustomAssetButton.click();
 

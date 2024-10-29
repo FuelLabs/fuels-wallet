@@ -63,14 +63,9 @@ test.describe('Forward and Mint Multicall', () => {
       'Deposit And Mint Multicall'
     );
     await expect
-      .poll(
-        () =>
-          forwardHalfAndMintButton
-            .isEnabled()
-            .then(() => true)
-            .catch(() => false),
-        { timeout: 15000 }
-      )
+      .poll(() => forwardHalfAndMintButton.isEnabled().catch(() => false), {
+        timeout: 15000,
+      })
       .toBeTruthy();
     await forwardHalfAndMintButton.click();
 

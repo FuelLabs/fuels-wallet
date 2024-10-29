@@ -53,14 +53,9 @@ test.describe('Forward Eth', () => {
 
     const forwardEthButton = getButtonByText(page, 'Forward ETH');
     await expect
-      .poll(
-        () =>
-          forwardEthButton
-            .isEnabled()
-            .then(() => true)
-            .catch(() => false),
-        { timeout: 15000 }
-      )
+      .poll(() => forwardEthButton.isEnabled().catch(() => false), {
+        timeout: 15000,
+      })
       .toBeTruthy();
     await forwardEthButton.click();
 
