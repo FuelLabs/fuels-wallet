@@ -54,7 +54,9 @@ test.describe('Mint Assets', () => {
     await mintInput.fill(mintAmount);
 
     const mintButton = getButtonByText(page, 'Mint', true);
-    await page.waitForTimeout(3000);
+    await expect
+      .poll(() => mintButton.isEnabled().catch(() => false), { timeout: 15000 })
+      .toBeTruthy();
     await mintButton.click();
 
     // test asset is correct
@@ -126,7 +128,9 @@ test.describe('Mint Assets', () => {
     await decimalsInput.fill(decimals);
 
     const mintButton = getButtonByText(page, 'Mint Asset configuration');
-    await page.waitForTimeout(3000);
+    await expect
+      .poll(() => mintButton.isEnabled().catch(() => false), { timeout: 15000 })
+      .toBeTruthy();
     await mintButton.click();
 
     // test asset is correct
