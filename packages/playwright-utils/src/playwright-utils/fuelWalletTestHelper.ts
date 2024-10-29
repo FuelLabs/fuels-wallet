@@ -1,4 +1,4 @@
-import type { BrowserContext } from '@playwright/test';
+import type { BrowserContext, Locator } from '@playwright/test';
 
 import { expect } from '../fixtures';
 import { FUEL_MNEMONIC, FUEL_WALLET_PASSWORD } from '../mocks';
@@ -143,8 +143,19 @@ export class FuelWalletTestHelper {
   ) {
     const walletPage = this.getWalletPage();
 
-    const menuButton = getByAriaLabel(walletPage, 'Menu', true);
-    await menuButton.click();
+    let menuButton: Locator;
+
+    await expect
+      .poll(
+        async () => {
+          menuButton = getByAriaLabel(walletPage, 'Menu', true);
+          return await menuButton.isVisible().catch(() => false);
+        },
+        { timeout: 5000 }
+      )
+      .toBeTruthy();
+
+    await menuButton!.click();
 
     const settingsButton = walletPage
       .getByRole('menuitem')
