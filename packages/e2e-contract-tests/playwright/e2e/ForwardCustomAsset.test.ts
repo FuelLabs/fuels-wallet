@@ -59,7 +59,6 @@ test.describe('Forward Custom Asset', () => {
     };
     const { waitForResult } = await contract.functions
       .mint(recipient, await getBaseAssetId(), bn(100_000_000_000))
-      .txParams({ gasLimit: 1_000_000 })
       .call();
 
     await waitForResult();
@@ -68,7 +67,7 @@ test.describe('Forward Custom Asset', () => {
     const formattedForwardCustomAssetAmount = '12,345';
     const forwardCustomAssetInput = page
       .getByLabel('Forward custom asset card')
-      .locator('input');
+      .getByRole('textbox');
     await forwardCustomAssetInput.fill(forwardCustomAssetAmount);
 
     const forwardCustomAssetButton = getButtonByText(
@@ -107,10 +106,9 @@ test.describe('Forward Custom Asset', () => {
     //   maxFee: fee.add(100),
     // });
 
-    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
-      { address: fuelWallet.address.toAddress(), isContract: false },
-      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
       walletNotificationPage
     );
 
