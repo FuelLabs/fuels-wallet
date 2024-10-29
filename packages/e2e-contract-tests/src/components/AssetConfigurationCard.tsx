@@ -3,6 +3,7 @@ import { bn } from 'fuels';
 import { useState } from 'react';
 
 import { mint } from '../contract_interactions';
+import { useAction } from '../hooks/useAction';
 
 export const AssetConfigurationCard = () => {
   const [assetData, setAssetData] = useState({
@@ -11,7 +12,28 @@ export const AssetConfigurationCard = () => {
     decimals: '',
   });
   const { account } = useAccount();
-  const wallet = useWallet(account);
+  const wallet = useWallet({ account });
+  const { disabled, execute, error } = useAction({
+    isValid:
+      !!wallet &&
+      !!assetData.amount &&
+      !!assetData.subId &&
+      !!assetData.decimals,
+    action: async () => {
+      if (
+        wallet.wallet &&
+        assetData.amount &&
+        assetData.subId &&
+        assetData.decimals
+      ) {
+        await mint({
+          wallet: wallet.wallet!,
+          amount: bn.parseUnits(assetData.amount, Number(assetData.decimals)),
+          subId: assetData.subId,
+        });
+      }
+    },
+  });
 
   return (
     <div>
@@ -47,23 +69,10 @@ export const AssetConfigurationCard = () => {
           }
         />
         <br />
-        <button
-          type="button"
-          onClick={async () => {
-            if (wallet.wallet) {
-              await mint({
-                wallet: wallet.wallet,
-                amount: bn.parseUnits(
-                  assetData.amount,
-                  Number(assetData.decimals)
-                ),
-                subId: assetData.subId,
-              });
-            }
-          }}
-        >
+        <button type="button" disabled={disabled} onClick={execute}>
           Mint Asset configuration
         </button>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <hr />
       </div>
     </div>
