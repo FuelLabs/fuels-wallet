@@ -13,7 +13,7 @@ import { ControlledField, animations } from '~/systems/Core';
 import { NetworkReviewCard } from '~/systems/Network';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import type { UseNetworkFormReturn } from '../../hooks';
 
 const MotionInput = motion(Input);
@@ -38,12 +38,12 @@ export function NetworkForm({
 }: NetworkFormProps) {
   const [isFirstShownTestConnectionBtn, setIsFirstShownTestConnectionBtn] =
     useState(false);
-  const { control, formState, getValues, watch } = form;
+  const { control, formState } = form;
 
-  const name = getValues('name');
-  const url = getValues('url');
-  const acceptRisk = watch('acceptRisk');
-  const chainId = getValues('chainId');
+  const name = useWatch({ control, name: 'name' });
+  const url = useWatch({ control, name: 'url' });
+  const acceptRisk = useWatch({ control, name: 'acceptRisk' });
+  const chainId = useWatch({ control, name: 'chainId' });
   const isValid = useMemo(
     () => formState.isValid && !Object.keys(formState.errors ?? {}).length,
     [formState.isValid, formState.errors]

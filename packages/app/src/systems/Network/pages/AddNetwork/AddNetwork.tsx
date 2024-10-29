@@ -1,6 +1,7 @@
 import { Box, Button, Dialog, Focus, Icon } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
+import { useWatch } from 'react-hook-form';
 import { animations, styles } from '~/systems/Core';
 import type { NetworkFormValues } from '~/systems/Network';
 import {
@@ -33,7 +34,7 @@ export function AddNetwork() {
   const form = useNetworkForm({ context });
   const { isDirty, invalid } = form.getFieldState('url', form.formState);
   const isValidUrl = isDirty && !invalid;
-  const url = form.getValues('url');
+  const url = useWatch({ control: form.control, name: 'url' });
   const formChainId = form.getValues('chainId');
 
   useEffect(() => {
@@ -42,10 +43,11 @@ export function AddNetwork() {
 
   useEffect(() => {
     if (url) {
-      chainInfoHandlers.clearChainInfo();
       form.clearErrors('chainId');
+      form.setValue('name', undefined);
+      chainInfoHandlers.clearChainInfo();
     }
-  }, [url, form.clearErrors, chainInfoHandlers.clearChainInfo]);
+  }, [url, form, chainInfoHandlers.clearChainInfo]);
 
   useEffect(() => {
     if (isValidUrl && !isLoadingChainInfo && chainInfo) {
