@@ -23,7 +23,7 @@ export const Networks = () => {
               <NetworkItem
                 key={network.id}
                 network={network}
-                onUpdate={isDefault ? undefined : handlers.goToUpdate}
+                onUpdate={handlers.goToUpdate}
                 onRemove={isDefault ? undefined : handlers.removeNetwork}
                 onPress={handlers.selectNetwork}
               />
