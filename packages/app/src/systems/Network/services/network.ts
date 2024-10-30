@@ -31,6 +31,10 @@ export type NetworkInputs = {
       explorerUrl?: string;
     };
   };
+  validateAddNetwork: {
+    url: string;
+    chainId: string;
+  };
   editNetwork: {
     id: string;
   };

@@ -18,6 +18,11 @@ const schema = yup
     url: yup
       .string()
       .test('is-url-valid', 'URL is not valid', isValidNetworkUrl)
+      .test('is-network-valid', 'Network is not valid', function (url) {
+        return (
+          !url || this.options.context?.chainInfoError !== 'Invalid network URL'
+        );
+      })
       .required('URL is required'),
     explorerUrl: yup
       .string()
@@ -28,25 +33,18 @@ const schema = yup
       )
       .optional(),
     chainId: yup
-      .number()
-      .transform((value, originalValue) =>
-        originalValue === '' ? undefined : value
+      .mixed<string | number>()
+      .transform((value) =>
+        value != null && value !== '' ? Number(value) : undefined
       )
-      .when('acceptRisk', (_acceptRisk: Array<boolean>, schema) => {
-        const acceptRisk = !!_acceptRisk?.[0];
-        return !acceptRisk
-          ? schema.required('Chain ID is required')
-          : schema.notRequired();
-      })
+      .required('Chain ID is required')
       .test(
         'chainId-match',
-        'Chain ID does not match the provider Chain ID.',
+        'Informed Chain ID does not match the network Chain ID.',
         function (value) {
-          const providerChainId = this.options.context?.providerChainId;
           return (
-            value == null ||
-            providerChainId == null ||
-            value === providerChainId
+            !value ||
+            this.options.context?.chainInfoError !== `Chain ID doesn't match`
           );
         }
       )
@@ -55,7 +53,6 @@ const schema = yup
         'Chain ID must contain only numbers',
         (value) => value == null || Number.isInteger(value)
       ),
-    acceptRisk: yup.boolean().notRequired(),
   })
   .required();
 
@@ -64,7 +61,6 @@ const DEFAULT_VALUES = {
   url: '',
   explorerUrl: '',
   chainId: undefined,
-  acceptRisk: false,
 };
 
 export type UseNetworkFormReturn = ReturnType<typeof useNetworkForm>;
@@ -74,6 +70,7 @@ export type UseAddNetworkOpts = {
   context?: {
     providerChainId?: number;
     isEditing?: boolean;
+    chainInfoError?: string;
   };
 };
 
@@ -82,6 +79,9 @@ export function useNetworkForm({ defaultValues, context }: UseAddNetworkOpts) {
     resolver: yupResolver<NetworkFormValues>(schema),
     reValidateMode: 'onChange',
     mode: 'all',
+    resetOptions: {
+      keepValues: true,
+    },
     defaultValues: defaultValues || DEFAULT_VALUES,
     context,
   });

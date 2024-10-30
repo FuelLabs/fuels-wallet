@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Card, Text } from '@fuel-ui/react';
+import { Card, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { animations } from '~/systems/Core';
 
@@ -8,7 +8,6 @@ const MotionCard = motion(Card);
 export type NetworkReviewCardProps = {
   headerText: string;
   name: string;
-  onChangeUrl?: () => void;
   chainId?: number | string;
   url: string;
 };
@@ -16,7 +15,6 @@ export type NetworkReviewCardProps = {
 export function NetworkReviewCard({
   headerText,
   name,
-  onChangeUrl,
   chainId,
   url,
 }: NetworkReviewCardProps) {
@@ -24,11 +22,6 @@ export function NetworkReviewCard({
     <MotionCard {...animations.slideInTop()}>
       <Card.Header space="compact" css={styles.header}>
         <Text>{headerText}</Text>
-        {onChangeUrl && (
-          <Button size="xs" variant="outlined" onPress={onChangeUrl}>
-            Change
-          </Button>
-        )}
       </Card.Header>
       <Card.Body css={styles.cardContentSection}>
         <Text as="h2">{name}</Text>

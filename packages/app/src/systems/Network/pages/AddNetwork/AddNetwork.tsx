@@ -1,101 +1,75 @@
 import { Box, Button, Dialog, Focus, Icon } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 import { animations, styles } from '~/systems/Core';
 import type { NetworkFormValues } from '~/systems/Network';
-import {
-  NetworkForm,
-  useChainInfo,
-  useNetworkForm,
-  useNetworks,
-} from '~/systems/Network';
+import { NetworkForm, useNetworkForm, useNetworks } from '~/systems/Network';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 const MotionStack = motion(Box.Stack);
 
 export function AddNetwork() {
   const isEditing = false;
-  const previousUrl = useRef<string | null>(null);
-  const { handlers, isLoading } = useNetworks();
   const {
-    chainInfo,
-    error: chainInfoError,
-    isLoading: isLoadingChainInfo,
-    handlers: chainInfoHandlers,
-  } = useChainInfo();
+    handlers,
+    isLoading,
+    isReviewingAddNetwork,
+    chainInfoToAdd,
+    isLoadingChainInfo,
+    chainInfoError,
+  } = useNetworks();
 
   const context = useMemo(
     () => ({
-      providerChainId: chainInfo?.consensusParameters?.chainId?.toNumber(),
+      providerChainId: chainInfoToAdd?.consensusParameters?.chainId?.toNumber(),
+      chainInfoError,
     }),
-    [chainInfo?.consensusParameters?.chainId]
+    [chainInfoToAdd?.consensusParameters?.chainId, chainInfoError]
   );
 
   const form = useNetworkForm({ context });
-  const { isDirty, invalid } = form.getFieldState('url', form.formState);
-  const isValidUrl = isDirty && !invalid;
   const url = useWatch({ control: form.control, name: 'url' });
-  const formChainId = form.getValues('chainId');
+  const chainId = useWatch({ control: form.control, name: 'chainId' });
+  const isValid =
+    form.formState.isDirty &&
+    form.formState.isValid &&
+    !Object.keys(form.formState.errors ?? {}).length;
 
   useEffect(() => {
-    chainInfo && form.trigger('chainId');
-  }, [form.trigger, chainInfo]);
-
-  const resetFormData = useCallback(() => {
-    form.setValue('name', undefined);
-    chainInfoHandlers.clearChainInfo();
-    form.clearErrors();
-  }, [form, chainInfoHandlers]);
-
-  useEffect(() => {
-    if (previousUrl.current == null || previousUrl.current !== url) {
-      previousUrl.current = url;
-      resetFormData();
+    if (chainId != null && url) {
+      handlers.clearChainInfo();
     }
-  }, [resetFormData, url]);
-
-  useEffect(() => {
-    if (isValidUrl && !isLoadingChainInfo && chainInfo) {
-      form.setValue('name', chainInfo.name, { shouldValidate: true });
-
-      // @TODO: When form.getValues('acceptRisk') is implemented add it to the if statement
-      if (formChainId == null) {
-        form.setValue(
-          'chainId',
-          chainInfo.consensusParameters?.chainId.toNumber()
-        );
-        return;
-      }
-    }
-  }, [chainInfo, isLoadingChainInfo, isValidUrl, form, formChainId]);
+  }, [url, chainId, handlers.clearChainInfo]);
 
   useEffect(() => {
     if (chainInfoError) {
-      form.setError('url', {
-        type: 'manual',
-        message: 'Invalid network or Chain ID mismatch.',
-      });
+      form.trigger('url');
+      form.trigger('chainId');
     }
   }, [chainInfoError, form]);
 
   function onSubmit(data: NetworkFormValues) {
-    if (!data.name || data.chainId == null || !data.url) {
+    if (data.chainId == null || !data.url) {
       throw new Error('Missing required fields');
     }
 
-    handlers.addNetwork({
-      data: {
-        name: data.name,
-        url: data.url,
-        chainId: data.chainId,
-      },
+    if (!isValid) return;
+    handlers.validateAddNetwork({
+      url: data.url,
+      chainId: data.chainId.toString(),
     });
   }
 
-  function onClickReview() {
-    if (!isValidUrl) return;
-    chainInfoHandlers.fetchChainInfo(form.getValues('url'));
+  function onAddNetwork() {
+    const name = chainInfoToAdd?.name || '';
+    handlers.addNetwork({
+      data: {
+        chainId: Number(chainId),
+        name,
+        url,
+      },
+    });
   }
 
   return (
@@ -114,10 +88,9 @@ export function AddNetwork() {
             form={form}
             isEditing={isEditing}
             isLoading={isLoadingChainInfo}
-            onClickReview={onClickReview}
-            onClickChange={resetFormData}
-            isValidUrl={isValidUrl}
-            providerChainId={chainInfo?.consensusParameters?.chainId?.toNumber()}
+            isValid={isValid}
+            isReviewing={isReviewingAddNetwork}
+            chainName={chainInfoToAdd?.name}
           />
         </Focus.Scope>
       </Dialog.Description>
@@ -126,9 +99,9 @@ export function AddNetwork() {
           Cancel
         </Button>
         <Button
-          type="submit"
+          onPress={onAddNetwork}
           intent="primary"
-          isDisabled={!form.formState.isValid || !chainInfo}
+          isDisabled={!isReviewingAddNetwork}
           isLoading={isLoading}
           leftIcon={<Icon icon="Plus" />}
           aria-label="Add new network"

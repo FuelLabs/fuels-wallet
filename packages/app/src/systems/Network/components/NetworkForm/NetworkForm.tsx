@@ -12,8 +12,8 @@ import { motion } from 'framer-motion';
 import { ControlledField, animations } from '~/systems/Core';
 import { NetworkReviewCard } from '~/systems/Network';
 
-import { useEffect, useMemo, useState } from 'react';
-import { Controller, useWatch } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { useWatch } from 'react-hook-form';
 import type { UseNetworkFormReturn } from '../../hooks';
 
 const MotionInput = motion(Input);
@@ -24,56 +24,44 @@ export type NetworkFormProps = {
   isEditing: boolean;
   isLoading?: boolean;
   onClickReview?: () => void;
-  isValidUrl?: boolean;
+  isValid?: boolean;
   providerChainId?: number;
-  onClickChange?: () => void;
+  isReviewing?: boolean;
+  chainName?: string;
 };
 
 export function NetworkForm({
   form,
   isEditing,
   isLoading,
-  onClickReview,
-  isValidUrl,
-  providerChainId,
-  onClickChange,
+  isValid,
+  isReviewing,
+  chainName,
 }: NetworkFormProps) {
   const [isFirstShownTestConnectionBtn, setIsFirstShownTestConnectionBtn] =
     useState(false);
   const { control, formState } = form;
 
-  const name = useWatch({ control, name: 'name' });
   const url = useWatch({ control, name: 'url' });
-  const acceptRisk = useWatch({ control, name: 'acceptRisk' });
   const chainId = useWatch({ control, name: 'chainId' });
-  const isValid = useMemo(
-    () => formState.isValid && !Object.keys(formState.errors ?? {}).length,
-    [formState.isValid, formState.errors]
-  );
-  const showReview = !isEditing && name && chainId != null && isValid;
-
-  async function onClickCheckNetwork() {
-    onClickReview?.();
-  }
 
   useEffect(() => {
-    if (isValidUrl) {
+    if (isValid && chainId) {
       setIsFirstShownTestConnectionBtn(true);
     }
-  }, [isValidUrl]);
+  }, [isValid, chainId]);
 
   return (
     <Box.Stack css={{ width: '100%' }} gap="$4">
-      {showReview && (
+      {isReviewing && (
         <NetworkReviewCard
           headerText="You're adding this network"
-          name={name}
-          chainId={chainId != null ? chainId : providerChainId}
-          onChangeUrl={onClickChange}
+          name={chainName || ''}
+          chainId={chainId}
           url={url}
         />
       )}
-      {!showReview && (
+      {!isReviewing && (
         <>
           <ControlledField
             control={control}
@@ -97,16 +85,17 @@ export function NetworkForm({
               </MotionInput>
             )}
           />
-
           <ControlledField
             control={control}
             name="chainId"
             css={styles.chainId}
-            isDisabled={!!isEditing || !!isLoading || !!acceptRisk}
-            isRequired={!acceptRisk}
+            isDisabled={!!isEditing || !!isLoading}
             isInvalid={Boolean(formState.errors?.chainId)}
-            label="Chain ID"
-            tooltipContent="To enhance the security of network identification, we ask you to inform the chainId manually."
+            label={
+              <HelperIcon message="To enhance the security of network identification, we ask you to inform the chainId manually.">
+                Chain ID
+              </HelperIcon>
+            }
             render={({ field }) => (
               <MotionInput {...animations.slideInTop()}>
                 <Input.Field
@@ -118,50 +107,16 @@ export function NetworkForm({
               </MotionInput>
             )}
           />
-          {!acceptRisk && !!formState.errors?.chainId && (
+          {!!formState.errors?.chainId && (
             <Form.ErrorMessage aria-label="Error message">
               {formState.errors?.chainId?.message}
             </Form.ErrorMessage>
           )}
-
-          {/* @TODO: Enable code bellow if users complain about not being able to use networks' chain id straight away.*/}
-          {/* {!isEditing && (
-            <Box css={{ display: 'flex', flexDirection: 'row', gap: '1rem' }}>
-              <Controller
-                control={control}
-                name="acceptRisk"
-                render={({ field: { onChange, value } }) => (
-                  <Checkbox
-                    id="acceptRisk"
-                    checked={!!value}
-                    onCheckedChange={(checked) => onChange(checked as boolean)}
-                    css={{
-                      alignSelf: 'flex-start',
-                      alignItems: 'flex-start',
-                      display: 'flex',
-                      marginTop: '$2',
-                    }}
-                  />
-                )}
-              />
-              <Form.Label
-                htmlFor="acceptRisk"
-                css={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  fontSize: '$sm',
-                }}
-              >
-                Accept risks and fetch Chain ID from the network URL
-              </Form.Label>
-            </Box>
-          )} */}
-
           {!isEditing && isFirstShownTestConnectionBtn && (
             <MotionButton
               {...animations.slideInTop()}
-              isDisabled={!isValidUrl || !isValid}
-              onPress={onClickCheckNetwork}
+              isDisabled={!isValid}
+              type="submit"
               intent="primary"
               isLoading={isLoading}
               aria-label="Test connection"
@@ -221,6 +176,7 @@ const styles = {
     },
   }),
   chainId: cssObj({
+    mb: '$2',
     'input[aria-disabled="true"]': {
       opacity: 0.5,
     },
