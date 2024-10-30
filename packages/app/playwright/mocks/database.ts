@@ -8,6 +8,7 @@ import type { Page } from '@playwright/test';
 import type { Asset, AssetFuel, WalletManagerAccount } from 'fuels';
 import {
   Address,
+  CHAIN_IDS,
   Mnemonic,
   TESTNET_NETWORK_URL,
   WalletManager,
@@ -126,8 +127,9 @@ export const ALT_ASSET = {
   ],
 };
 
-export const FUEL_NETWORK = {
-  testnet: TESTNET_NETWORK_URL,
+export const FUEL_LOCAL_NETWORK = {
+  url: 'http://localhost:4000/v1/graphql',
+  chainId: CHAIN_IDS.fuel.testnet,
 };
 
 export async function getAccount(page: Page) {
