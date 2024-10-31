@@ -368,8 +368,11 @@ test.describe('FuelWallet Extension', () => {
       }
 
       await testSelectNetwork(NETWORK_TESTNET);
+      await popupPage.waitForTimeout(2000);
       await testSelectNetwork(NETWORK_DEVNET);
+      await popupPage.waitForTimeout(2000);
       await testSelectNetwork(NETWORK_IGNITION);
+      await popupPage.waitForTimeout(2000);
     });
 
     await test.step('window.fuel.selectNetwork() for adding a network', async () => {
