@@ -6,6 +6,7 @@ import { shortAddress } from '../utils';
 
 import { getButtonByText } from './button';
 import { getByAriaLabel } from './locator';
+import { hasText } from './text';
 
 export class FuelWalletTestHelper {
   private context;
@@ -266,6 +267,19 @@ export class FuelWalletTestHelper {
 
     const addNetworkButton = getByAriaLabel(this.walletPage, 'Add network');
     await addNetworkButton.click();
+
+    await expect
+      .poll(
+        () =>
+          hasText(this.walletPage, 'Cancel')
+            .then(() => true)
+            .catch(() => false),
+        { timeout: 3000 }
+      )
+      .toBeTruthy();
+
+    console.log('asd adding Network providerUrl: ', providerUrl);
+    console.log('asd adding Network providerUrl: ', chainId.toString());
 
     const urlInput = getByAriaLabel(this.walletPage, 'Network url');
     await urlInput.fill(providerUrl);
