@@ -227,6 +227,12 @@ export class AssetService {
     });
   }
 
+  static async getAssetById(assetId: string) {
+    return db.transaction('r', db.assets, async () => {
+      return db.assets.get({ assetId });
+    });
+  }
+
   static async clearAssets() {
     return db.transaction('rw', db.assets, async () => {
       return db.assets.clear();
