@@ -1,4 +1,8 @@
-import { getButtonByText, hasText } from '@fuels/playwright-utils';
+import {
+  expectButtonToBeEnabled,
+  getButtonByText,
+  hasText,
+} from '@fuels/playwright-utils';
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
@@ -53,11 +57,7 @@ test.describe('Deposit Half ETH', () => {
 
     const depositHalfButton = getButtonByText(page, 'Deposit Half ETH', true);
 
-    await expect
-      .poll(() => depositHalfButton.isEnabled().catch(() => false), {
-        timeout: 15000,
-      })
-      .toBeTruthy();
+    expectButtonToBeEnabled(depositHalfButton);
     await depositHalfButton.click();
 
     const walletNotificationPage =
