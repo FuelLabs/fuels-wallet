@@ -25,14 +25,25 @@ export class FuelWalletTestHelper {
     this.walletPage = walletPage;
   }
 
-  static async walletSetup(
-    context: BrowserContext,
-    fuelExtensionId: string,
-    fuelProviderUrl: string,
-    chainName: string,
-    mnemonic: string = FUEL_MNEMONIC,
-    password: string = FUEL_WALLET_PASSWORD
-  ) {
+  static async walletSetup({
+    context,
+    fuelExtensionId,
+    fuelProvider,
+    chainName,
+    mnemonic = FUEL_MNEMONIC,
+    password = FUEL_WALLET_PASSWORD,
+  }: {
+    context: BrowserContext;
+    fuelExtensionId: string;
+    fuelProvider: {
+      url: string;
+      chainId: number;
+    };
+    chainName: string;
+    mnemonic: string;
+    password?: string;
+  }) {
+    const { url, chainId } = fuelProvider;
     let signupPage = await context.newPage();
     await signupPage.goto(`chrome-extension://${fuelExtensionId}/popup.html`);
     signupPage = await context.waitForEvent('page', {
@@ -75,7 +86,11 @@ export class FuelWalletTestHelper {
 
     const fuelWalletTestHelper = new FuelWalletTestHelper(context);
 
-    await fuelWalletTestHelper.addNetwork(chainName, fuelProviderUrl);
+    await fuelWalletTestHelper.addNetwork({
+      chainName,
+      providerUrl: url,
+      chainId,
+    });
 
     return fuelWalletTestHelper;
   }
@@ -233,7 +248,11 @@ export class FuelWalletTestHelper {
     await accountButton.click();
   }
 
-  async addNetwork(chainName: string, providerUrl: string) {
+  async addNetwork({
+    chainName,
+    providerUrl,
+    chainId,
+  }: { chainName: string; providerUrl: string; chainId: number }) {
     const networksButton = getByAriaLabel(this.walletPage, 'Selected Network');
     await networksButton.click();
 
@@ -250,6 +269,8 @@ export class FuelWalletTestHelper {
 
     const urlInput = getByAriaLabel(this.walletPage, 'Network url');
     await urlInput.fill(providerUrl);
+    const chainIdLocator = getByAriaLabel(this.walletPage, 'Chain ID');
+    await chainIdLocator.fill(chainId.toString());
 
     await getByAriaLabel(this.walletPage, 'Test connection').click();
 

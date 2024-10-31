@@ -51,13 +51,16 @@ export const testSetup = async ({
   );
   await txResponse.waitForResult();
 
-  const fuelWalletTestHelper = await FuelWalletTestHelper.walletSetup(
+  const fuelWalletTestHelper = await FuelWalletTestHelper.walletSetup({
     context,
-    extensionId,
-    fuelProvider.url,
+    fuelExtensionId: extensionId,
+    fuelProvider: {
+      url: fuelProvider.url,
+      chainId: fuelProvider.getChainId(),
+    },
     chainName,
-    randomMnemonic
-  );
+    mnemonic: randomMnemonic,
+  });
 
   await page.goto('/');
   await page.bringToFront();
