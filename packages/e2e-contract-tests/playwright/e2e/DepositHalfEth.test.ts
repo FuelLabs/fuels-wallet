@@ -13,7 +13,6 @@ import { test, useLocalCRX } from './test';
 import {
   checkAddresses,
   checkAriaLabelsContainsText,
-  checkFee,
   connect,
   waitSuccessTransaction,
 } from './utils';
@@ -93,11 +92,6 @@ test.describe('Deposit Half ETH', () => {
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    // const fee = bn.parseUnits('0.000002616');
-    // await checkFee(walletNotificationPage, {
-    //   minFee: fee.sub(100),
-    //   maxFee: fee.add(100),
-    // });
 
     // test to and from addresses
     await checkAddresses(

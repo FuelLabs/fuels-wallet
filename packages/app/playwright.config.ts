@@ -30,6 +30,7 @@ export const playwrightConfig: PlaywrightTestConfig = {
     headless: false,
     trace: 'on-first-retry',
     actionTimeout: 5000,
+    screenshot: 'only-on-failure',
   },
   // ignore lock test because it takes too long and it will be tested in a separate config
   testIgnore: [join(__dirname, './playwright/crx/lock.test.ts')],

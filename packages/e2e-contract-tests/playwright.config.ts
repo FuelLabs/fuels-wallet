@@ -24,6 +24,7 @@ const config: PlaywrightTestConfig = defineConfig({
     baseURL: `http://localhost:${process.env.PORT}`,
     permissions: ['clipboard-read', 'clipboard-write'],
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
   },
   projects: [
     {
