@@ -46,14 +46,14 @@ export class FuelWalletTestHelper {
   }) {
     const { url, chainId } = fuelProvider;
     const popupNotSignedUpPage = await context.newPage();
+    const signupPageAsync = context.waitForEvent('page', {
+      predicate: (page) => page.url().includes('sign-up'),
+    });
     await popupNotSignedUpPage.goto(
       `chrome-extension://${fuelExtensionId}/popup.html`
     );
-    await popupNotSignedUpPage.waitForTimeout(2000);
+    const signupPage = await signupPageAsync;
     await popupNotSignedUpPage.close();
-    const signupPage = await context.waitForEvent('page', {
-      predicate: (page) => page.url().includes('sign-up'),
-    });
     expect(signupPage.url()).toContain('sign-up');
 
     const importSeedPhraseButton = signupPage
