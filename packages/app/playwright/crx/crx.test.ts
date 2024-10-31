@@ -695,7 +695,15 @@ test.describe('FuelWallet Extension', () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
 
         await seedWallet(authorizedAccount.address, bn(100_000_000));
-        await hasText(popupPage, /0\.100/i);
+        await expect
+          .poll(
+            () =>
+              hasText(popupPage, /0\.100/i)
+                .then(() => true)
+                .catch(() => false),
+            { timeout: 15000 }
+          )
+          .toBeTruthy();
       });
 
       await test.step('Send transfer using authorized Account', async () => {

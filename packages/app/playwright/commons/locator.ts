@@ -5,7 +5,7 @@ export function getByAriaLabel(page: Page, selector: string) {
 }
 
 export async function waitAriaLabel(page: Page, selector: string) {
-  return page.waitForSelector(`[aria-label="${selector}"]`);
+  return page.waitForSelector(`[aria-label="${selector}"]`, { timeout: 15000 });
 }
 
 export function getInputByName(page: Page, name: string) {

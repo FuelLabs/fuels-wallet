@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 
 import { getByAriaLabel, hasText, visit, waitAriaLabel } from '../../commons';
 import type { MockData } from '../../mocks';
@@ -27,8 +27,16 @@ export async function switchAccount(popupPage: Page, name: string) {
 
   await getByAriaLabel(popupPage, 'Accounts').click();
 
-  await popupPage.waitForTimeout(5000);
-  await hasText(popupPage, name);
+  await expect
+    .poll(
+      () =>
+        hasText(popupPage, name)
+          .then(() => true)
+          .catch(() => false),
+      { timeout: 15000 }
+    )
+    .toBeTruthy();
+
   // Add position to click on the element and not on copy button
   await getByAriaLabel(popupPage, name).click({
     position: {
@@ -36,7 +44,7 @@ export async function switchAccount(popupPage: Page, name: string) {
       y: 10,
     },
   });
-  await popupPage.waitForTimeout(2000);
+
   await waitAriaLabel(popupPage, `${name} selected`);
 
   // Return account to be used on tests
