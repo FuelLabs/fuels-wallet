@@ -1,6 +1,7 @@
 import { cssObj, cx } from '@fuel-ui/css';
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   Dropdown,
@@ -107,7 +108,7 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
         {(items || []).map((item) => {
           const assetId = item.assetId?.toString();
           const itemAsset = items?.find((a) => a.assetId === assetId);
-          const { name, symbol, icon } = itemAsset || {};
+          const { name, symbol, icon, isNft } = itemAsset || {};
 
           return (
             <Dropdown.MenuItem
@@ -122,6 +123,15 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
               <Box className="asset-info">
                 <Text as="span" className="asset-name">
                   {name || 'Unknown'}
+                  {isNft && (
+                    <Badge
+                      variant="ghost"
+                      intent="primary"
+                      css={styles.assetNft}
+                    >
+                      NFT
+                    </Badge>
+                  )}
                 </Text>
                 <Text as="span" className="asset-symbol">
                   {symbol || shortAddress(assetId)}
@@ -229,5 +239,10 @@ const styles = {
   }),
   dropdownRoot: cssObj({
     zIndex: '1 !important',
+  }),
+  assetNft: cssObj({
+    ml: '$2',
+    fontSize: '$sm',
+    lineHeight: 'normal',
   }),
 };

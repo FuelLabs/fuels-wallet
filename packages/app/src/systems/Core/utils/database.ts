@@ -24,6 +24,7 @@ export class FuelDB extends Dexie {
   connections!: Table<Connection, string>;
   transactionsCursors!: Table<TransactionCursor, string>;
   assets!: Table<AssetData, string>;
+  indexedAssets!: Table<AssetData & { key: string }, string>;
   abis!: Table<AbiTable, string>;
   errors!: Table<StoredFuelWalletError, string>;
   integrityCheckInterval?: NodeJS.Timeout;
@@ -91,6 +92,7 @@ export class FuelDB extends Dexie {
       this.connections.clear(),
       this.transactionsCursors.clear(),
       this.assets.clear(),
+      this.indexedAssets.clear(),
       this.abis.clear(),
       this.errors.clear(),
     ]);
