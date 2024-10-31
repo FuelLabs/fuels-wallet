@@ -278,9 +278,6 @@ export class FuelWalletTestHelper {
       )
       .toBeTruthy();
 
-    console.log('asd adding Network providerUrl: ', providerUrl);
-    console.log('asd adding Network providerUrl: ', chainId.toString());
-
     const urlInput = getByAriaLabel(this.walletPage, 'Network url');
     await urlInput.fill(providerUrl);
     const chainIdLocator = getByAriaLabel(this.walletPage, 'Chain ID');

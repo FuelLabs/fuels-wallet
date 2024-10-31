@@ -27,7 +27,6 @@ export const playwrightConfig: PlaywrightTestConfig = {
   use: {
     baseURL: `http://localhost:${PORT}/`,
     permissions: ['clipboard-read', 'clipboard-write'],
-    headless: false,
     trace: 'on-first-retry',
     actionTimeout: 5000,
     screenshot: 'only-on-failure',
