@@ -4,7 +4,7 @@ import { expect } from '../fixtures';
 import { FUEL_MNEMONIC, FUEL_WALLET_PASSWORD } from '../mocks';
 import { shortAddress } from '../utils';
 
-import { getButtonByText } from './button';
+import { expectButtonToBeEnabled, getButtonByText } from './button';
 import { getByAriaLabel } from './locator';
 import { hasText } from './text';
 
@@ -268,32 +268,23 @@ export class FuelWalletTestHelper {
     const addNetworkButton = getByAriaLabel(this.walletPage, 'Add network');
     await addNetworkButton.click();
 
-    await expect
-      .poll(
-        () =>
-          hasText(this.walletPage, 'Cancel')
-            .then(() => true)
-            .catch(() => false),
-        { timeout: 3000 }
-      )
-      .toBeTruthy();
-
     const urlInput = getByAriaLabel(this.walletPage, 'Network url');
     await urlInput.fill(providerUrl);
     const chainIdLocator = getByAriaLabel(this.walletPage, 'Chain ID');
     await chainIdLocator.fill(chainId.toString());
 
-    await getByAriaLabel(this.walletPage, 'Test connection').click();
+    const testConnectionButton = getByAriaLabel(
+      this.walletPage,
+      'Test connection'
+    );
+    await expectButtonToBeEnabled(testConnectionButton);
+    await testConnectionButton.click();
 
     const addNewNetworkButton = getByAriaLabel(
       this.walletPage,
       'Add new network'
     );
-    await expect
-      .poll(async () => await addNewNetworkButton.isEnabled(), {
-        timeout: 7000,
-      })
-      .toBeTruthy();
+    await expectButtonToBeEnabled(addNewNetworkButton);
     await addNewNetworkButton.click();
   }
 
