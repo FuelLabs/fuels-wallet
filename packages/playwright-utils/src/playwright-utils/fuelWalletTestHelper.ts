@@ -274,12 +274,15 @@ export class FuelWalletTestHelper {
 
     await getByAriaLabel(this.walletPage, 'Test connection').click();
 
-    await this.walletPage.waitForTimeout(3000);
-
     const addNewNetworkButton = getByAriaLabel(
       this.walletPage,
       'Add new network'
     );
+    await expect
+      .poll(async () => await addNewNetworkButton.isEnabled(), {
+        timeout: 7000,
+      })
+      .toBeTruthy();
     await addNewNetworkButton.click();
   }
 
