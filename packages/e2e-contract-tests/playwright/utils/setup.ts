@@ -55,7 +55,6 @@ export const testSetup = async ({
   );
   await txResponse.waitForResult();
 
-  await page.pause();
   const fuelWalletTestHelper = await FuelWalletTestHelper.walletSetup({
     context,
     fuelExtensionId: extensionId,

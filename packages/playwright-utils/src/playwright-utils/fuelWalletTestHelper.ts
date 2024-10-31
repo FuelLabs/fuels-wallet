@@ -85,11 +85,9 @@ export class FuelWalletTestHelper {
       .getByText('Wallet created successfully')
       .waitFor({ state: 'visible', timeout: 9000 });
 
-    await signupPage.pause();
     await signupPage.goto(
       `chrome-extension://${fuelExtensionId}/popup.html#/wallet`
     );
-    await signupPage.pause();
 
     const fuelWalletTestHelper = new FuelWalletTestHelper(context);
 
