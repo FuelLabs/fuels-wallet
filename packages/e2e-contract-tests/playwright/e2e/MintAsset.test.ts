@@ -1,7 +1,11 @@
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
-import { getButtonByText, hasText } from '@fuels/playwright-utils';
+import {
+  expectButtonToBeEnabled,
+  getButtonByText,
+  hasText,
+} from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
-import { bn, toBech32 } from 'fuels';
+import { bn } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
 
 import '../../load.envs.js';
@@ -17,7 +21,6 @@ import { test, useLocalCRX } from './test';
 import {
   checkAddresses,
   checkAriaLabelsContainsText,
-  checkFee,
   connect,
   waitSuccessTransaction,
 } from './utils';
@@ -54,9 +57,7 @@ test.describe('Mint Assets', () => {
     await mintInput.fill(mintAmount);
 
     const mintButton = getButtonByText(page, 'Mint', true);
-    await expect
-      .poll(() => mintButton.isEnabled().catch(() => false), { timeout: 15000 })
-      .toBeTruthy();
+    await expectButtonToBeEnabled(mintButton);
     await mintButton.click();
 
     // test asset is correct
@@ -71,11 +72,6 @@ test.describe('Mint Assets', () => {
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    // const fee = bn.parseUnits('0.00000013');
-    // await checkFee(walletNotificationPage, {
-    //   minFee: fee.sub(100),
-    //   maxFee: fee.add(100),
-    // });
 
     await checkAddresses(
       { address: fuelWallet.address.toString(), isContract: false },
@@ -128,9 +124,8 @@ test.describe('Mint Assets', () => {
     await decimalsInput.fill(decimals);
 
     const mintButton = getButtonByText(page, 'Mint Asset configuration');
-    await expect
-      .poll(() => mintButton.isEnabled().catch(() => false), { timeout: 15000 })
-      .toBeTruthy();
+
+    await expectButtonToBeEnabled(mintButton);
     await mintButton.click();
 
     // test asset is correct
@@ -146,6 +141,11 @@ test.describe('Mint Assets', () => {
     // Test if sender name is defined (not unknown)
     checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
 
+    // scroll to bottom of page to ensure all text is visible
+    await walletNotificationPage.evaluate(() =>
+      window.scrollTo(0, document.body.scrollHeight)
+    );
+
     await hasText(walletNotificationPage, name);
     await hasText(walletNotificationPage, shortAddress(assetId), 0, 10000);
     // test mint amount is correct
@@ -153,11 +153,6 @@ test.describe('Mint Assets', () => {
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    // const fee = bn.parseUnits('0.000000133');
-    // await checkFee(walletNotificationPage, {
-    //   minFee: fee.sub(100),
-    //   maxFee: fee.add(100),
-    // });
 
     // test to and from addresses
     await checkAddresses(

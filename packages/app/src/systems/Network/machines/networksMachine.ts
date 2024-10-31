@@ -9,19 +9,22 @@ import { store } from '~/store';
 import type { FetchResponse, Maybe } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
 
-import { createProvider } from '@fuel-wallet/connections';
+import type { ChainInfo } from 'fuels';
 import { type NetworkInputs, NetworkService } from '../services';
 
 type MachineContext = {
   networks?: NetworkData[];
   network?: Maybe<NetworkData>;
   error?: unknown;
+  chainInfoToAdd?: ChainInfo;
+  chainInfoError?: string;
 };
 
 export type AddNetworkInput = {
   data: {
     name: string;
     url: string;
+    chainId: number;
   };
 };
 
@@ -48,6 +51,8 @@ type MachineServices = {
 
 type MachineEvents =
   | { type: 'ADD_NETWORK'; input: AddNetworkInput }
+  | { type: 'VALIDATE_ADD_NETWORK'; input: NetworkInputs['validateAddNetwork'] }
+  | { type: 'CLEAR_CHAIN_INFO'; input?: null }
   | { type: 'EDIT_NETWORK'; input: NetworkInputs['editNetwork'] }
   | { type: 'UPDATE_NETWORK'; input: NetworkInputs['updateNetwork'] }
   | { type: 'REMOVE_NETWORK'; input: NetworkInputs['removeNetwork'] }
@@ -84,8 +89,11 @@ export const networksMachine = createMachine(
       },
       idle: {
         on: {
-          ADD_NETWORK: {
-            target: 'addingNetwork',
+          VALIDATE_ADD_NETWORK: {
+            target: 'validatingAddNetwork',
+          },
+          CLEAR_CHAIN_INFO: {
+            actions: ['clearChainInfoToAdd', 'clearChainError'],
           },
           EDIT_NETWORK: {
             target: 'fetchingNetworks',
@@ -101,8 +109,36 @@ export const networksMachine = createMachine(
           },
         },
       },
+      validatingAddNetwork: {
+        tags: ['loadingChainInfo'],
+        invoke: {
+          src: 'validateAddNetwork',
+          data: {
+            input: (_: MachineContext, ev: MachineEvents) => ev.input,
+          },
+          onDone: [
+            {
+              target: 'idle',
+              cond: FetchMachine.hasError,
+              actions: ['assignChainInfoError'],
+            },
+            {
+              target: 'waitingAddNetwork',
+              actions: ['assignChainInfo'],
+            },
+          ],
+        },
+      },
+      waitingAddNetwork: {
+        tags: ['reviewingAddNetwork'],
+        on: {
+          ADD_NETWORK: {
+            target: 'addingNetwork',
+          },
+        },
+      },
       addingNetwork: {
-        tags: ['loading'],
+        tags: ['reviewingAddNetwork', 'loading'],
         invoke: {
           src: 'addNetwork',
           data: {
@@ -285,6 +321,23 @@ export const networksMachine = createMachine(
       notifyUpdateAccounts: () => {
         store.updateAccounts();
       },
+      assignChainInfo: assign({
+        chainInfoToAdd: (_, ev) => {
+          return ev.data as ChainInfo;
+        },
+      }),
+      assignChainInfoError: assign({
+        chainInfoError: (_, ev) => {
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          return (ev.data as any)?.error?.message || '';
+        },
+      }),
+      clearChainInfoToAdd: assign({
+        chainInfoToAdd: undefined,
+      }),
+      clearChainError: assign({
+        chainInfoError: undefined,
+      }),
     },
     services: {
       fetchNetworks: FetchMachine.create<never, NetworkData[]>({
@@ -292,6 +345,37 @@ export const networksMachine = createMachine(
         async fetch() {
           const networks = await NetworkService.getNetworks();
           return networks;
+        },
+      }),
+      validateAddNetwork: FetchMachine.create<
+        NetworkInputs['validateAddNetwork'],
+        ChainInfo
+      >({
+        maxAttempts: 1,
+        showError: false,
+        async fetch({ input }) {
+          if (!input?.url) {
+            throw new Error('Inputs not provided');
+          }
+
+          let chainInfoToAdd: ChainInfo | undefined;
+          try {
+            chainInfoToAdd = await NetworkService.getChainInfo({
+              providerUrl: input.url,
+            });
+          } catch (_) {
+            throw new Error('Invalid network URL');
+          }
+
+          if (
+            !chainInfoToAdd ||
+            input.chainId !==
+              chainInfoToAdd.consensusParameters.chainId.toString(10)
+          ) {
+            throw new Error(`Chain ID doesn't match`);
+          }
+
+          return chainInfoToAdd;
         },
       }),
       addNetwork: FetchMachine.create<AddNetworkInput, NetworkData>({
@@ -303,8 +387,7 @@ export const networksMachine = createMachine(
           await NetworkService.validateNetworkExists(input.data);
           await NetworkService.validateNetworkVersion(input.data);
 
-          const provider = await createProvider(input.data.url);
-          const chainId = provider.getChainId();
+          const chainId = input.data?.chainId;
 
           const createdNetwork = await NetworkService.addNetwork({
             data: {

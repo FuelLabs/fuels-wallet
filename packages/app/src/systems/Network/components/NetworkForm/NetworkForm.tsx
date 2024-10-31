@@ -1,10 +1,19 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, HelperIcon, Input, Spinner } from '@fuel-ui/react';
+import {
+  Box,
+  Button,
+  Checkbox,
+  Form,
+  HelperIcon,
+  Input,
+  Tooltip,
+} from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { ControlledField, animations } from '~/systems/Core';
 import { NetworkReviewCard } from '~/systems/Network';
 
 import { useEffect, useState } from 'react';
+import { useWatch } from 'react-hook-form';
 import type { UseNetworkFormReturn } from '../../hooks';
 
 const MotionInput = motion(Input);
@@ -15,51 +24,44 @@ export type NetworkFormProps = {
   isEditing: boolean;
   isLoading?: boolean;
   onClickReview?: () => void;
-  isValidUrl?: boolean;
+  isValid?: boolean;
+  providerChainId?: number;
+  isReviewing?: boolean;
+  chainName?: string;
 };
 
 export function NetworkForm({
   form,
   isEditing,
   isLoading,
-  onClickReview,
-  isValidUrl,
+  isValid,
+  isReviewing,
+  chainName,
 }: NetworkFormProps) {
-  const [isFirstClickedReview, setIsFirstClickedReview] = useState(false);
   const [isFirstShownTestConnectionBtn, setIsFirstShownTestConnectionBtn] =
     useState(false);
-  const { control, formState, getValues } = form;
+  const { control, formState } = form;
 
-  const name = getValues('name');
-  const url = getValues('url');
-  const showReview = !isEditing && name;
-
-  function onChangeUrl() {
-    form.setValue('name', '', { shouldValidate: true });
-  }
-
-  function onClickCheckNetwork() {
-    setIsFirstClickedReview(true);
-    onClickReview?.();
-  }
+  const url = useWatch({ control, name: 'url' });
+  const chainId = useWatch({ control, name: 'chainId' });
 
   useEffect(() => {
-    if (isValidUrl) {
+    if (isValid && chainId) {
       setIsFirstShownTestConnectionBtn(true);
     }
-  }, [isValidUrl]);
+  }, [isValid, chainId]);
 
   return (
     <Box.Stack css={{ width: '100%' }} gap="$4">
-      {showReview && (
+      {isReviewing && (
         <NetworkReviewCard
           headerText="You're adding this network"
-          name={name}
-          onChangeUrl={onChangeUrl}
+          name={chainName || ''}
+          chainId={chainId}
           url={url}
         />
       )}
-      {!showReview && (
+      {!isReviewing && (
         <>
           <ControlledField
             control={control}
@@ -73,23 +75,48 @@ export function NetworkForm({
                 URL
               </HelperIcon>
             }
-            hideError={!isFirstClickedReview}
             render={({ field }) => (
               <MotionInput {...animations.slideInTop()}>
                 <Input.Field
-                  {...field}
-                  id="search-network-url"
                   aria-label="Network URL"
                   placeholder="https://node.fuel.network/graphql"
+                  {...field}
                 />
               </MotionInput>
             )}
           />
+          <ControlledField
+            control={control}
+            name="chainId"
+            css={styles.chainId}
+            isDisabled={!!isEditing || !!isLoading}
+            isInvalid={Boolean(formState.errors?.chainId)}
+            label={
+              <HelperIcon message="To enhance the security of network identification, we ask you to inform the chainId manually.">
+                Chain ID
+              </HelperIcon>
+            }
+            render={({ field }) => (
+              <MotionInput {...animations.slideInTop()}>
+                <Input.Field
+                  {...field}
+                  id="network-chain-id"
+                  aria-label="Chain ID"
+                  placeholder="Enter Chain ID"
+                />
+              </MotionInput>
+            )}
+          />
+          {!!formState.errors?.chainId && (
+            <Form.ErrorMessage aria-label="Error message">
+              {formState.errors?.chainId?.message}
+            </Form.ErrorMessage>
+          )}
           {!isEditing && isFirstShownTestConnectionBtn && (
             <MotionButton
               {...animations.slideInTop()}
-              isDisabled={!isValidUrl}
-              onPress={onClickCheckNetwork}
+              isDisabled={!isValid}
+              type="submit"
               intent="primary"
               isLoading={isLoading}
               aria-label="Test connection"
@@ -99,6 +126,7 @@ export function NetworkForm({
           )}
         </>
       )}
+
       {isEditing && (
         <>
           <ControlledField
@@ -143,6 +171,12 @@ export function NetworkForm({
 
 const styles = {
   url: cssObj({
+    'input[aria-disabled="true"]': {
+      opacity: 0.5,
+    },
+  }),
+  chainId: cssObj({
+    mb: '$2',
     'input[aria-disabled="true"]': {
       opacity: 0.5,
     },

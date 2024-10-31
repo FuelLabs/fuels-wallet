@@ -31,6 +31,10 @@ export type NetworkInputs = {
       explorerUrl?: string;
     };
   };
+  validateAddNetwork: {
+    url: string;
+    chainId: string;
+  };
   editNetwork: {
     id: string;
   };
@@ -50,7 +54,7 @@ export type NetworkInputs = {
   getChainInfo: {
     providerUrl: string;
   };
-  validateNetworkSelect: SelectNetworkArguments;
+  validateNetworkSelect: Pick<NetworkData, 'chainId' | 'url'>;
   validateNetworkExists: {
     name: string;
     url: string;

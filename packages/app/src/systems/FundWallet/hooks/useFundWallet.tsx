@@ -15,8 +15,8 @@ export function useFundWallet() {
       (n) => n.url === selectedNetwork?.url
     );
     return {
-      bridgeUrl: network?.bridgeUrl ?? null,
-      faucetUrl: network?.faucetUrl ?? null,
+      bridgeUrl: (network?.bridgeUrl || selectedNetwork?.bridgeUrl) ?? null,
+      faucetUrl: (network?.faucetUrl || selectedNetwork?.faucetUrl) ?? null,
     };
   }, [selectedNetwork]);
 

@@ -1,8 +1,12 @@
-import { getButtonByText, hasText } from '@fuels/playwright-utils';
+import {
+  expectButtonToBeEnabled,
+  getButtonByText,
+  hasText,
+} from '@fuels/playwright-utils';
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
-import { bn, toBech32 } from 'fuels';
+import { bn } from 'fuels';
 
 import '../../load.envs.js';
 import { getBaseAssetId, shortAddress } from '../../src/utils';
@@ -13,7 +17,6 @@ import { test, useLocalCRX } from './test';
 import {
   checkAddresses,
   checkAriaLabelsContainsText,
-  checkFee,
   connect,
   waitSuccessTransaction,
 } from './utils';
@@ -53,12 +56,7 @@ test.describe('Deposit Half ETH', () => {
     await depositHalfInput.fill(depositAmount);
 
     const depositHalfButton = getButtonByText(page, 'Deposit Half ETH', true);
-
-    await expect
-      .poll(() => depositHalfButton.isEnabled().catch(() => false), {
-        timeout: 15000,
-      })
-      .toBeTruthy();
+    await expectButtonToBeEnabled(depositHalfButton);
     await depositHalfButton.click();
 
     const walletNotificationPage =
@@ -93,11 +91,6 @@ test.describe('Deposit Half ETH', () => {
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    // const fee = bn.parseUnits('0.000002616');
-    // await checkFee(walletNotificationPage, {
-    //   minFee: fee.sub(100),
-    //   maxFee: fee.add(100),
-    // });
 
     // test to and from addresses
     await checkAddresses(

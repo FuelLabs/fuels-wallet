@@ -9,7 +9,7 @@
     "build:crx": "./scripts/build.sh --app=crx",
     "build:storybook": "./scripts/build.sh --app=storybook",
     "dev": "vite",
-    "dev:crx": "vite --config vite.crx.config.ts",
+    "dev:crx": "vite --config vite.crx.config.ts --mode $NODE_ENV",
     "dev:storybook": "storybook dev -p 6006",
     "preview": "vite preview",
     "test": "jest --verbose",
@@ -57,7 +57,7 @@
     "tai64": "1.0.0",
     "vite-plugin-markdown": "2.2.0",
     "xstate": "4.38.2",
-    "yup": "1.3.2"
+    "yup": "1.4.0"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "1.0.14",

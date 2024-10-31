@@ -84,6 +84,7 @@ export const chainInfoMachine = createMachine(
       }),
       clearChainInfo: assign({
         chainInfo: undefined,
+        error: undefined,
       }),
       assignError: assign({
         error: (_, ev) => (ev.data.error as Error).message,

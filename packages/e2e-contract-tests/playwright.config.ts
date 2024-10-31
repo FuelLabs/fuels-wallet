@@ -5,9 +5,13 @@ import {
 } from '@playwright/test';
 import './load.envs';
 
+const IS_CI = process.env.CI;
+
 const config: PlaywrightTestConfig = defineConfig({
   testDir: './playwright',
-  retries: 0,
+  outputDir: './playwright-results/',
+  retries: 1,
+  maxFailures: IS_CI ? 1 : undefined,
   workers: 1,
   timeout: 60_000,
   reporter: [['html', { printSteps: true }]],
@@ -21,6 +25,7 @@ const config: PlaywrightTestConfig = defineConfig({
     baseURL: `http://localhost:${process.env.PORT}`,
     permissions: ['clipboard-read', 'clipboard-write'],
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
   },
   projects: [
     {

@@ -40,10 +40,10 @@ export type MessageInputs = {
     contractId: string;
   };
   selectNetwork: {
-    network: SelectNetworkArguments;
+    network: NetworkData;
   };
   addNetwork: {
-    network: Pick<NetworkData, 'url' | 'name'>;
+    network: NetworkData;
   };
 };
 
