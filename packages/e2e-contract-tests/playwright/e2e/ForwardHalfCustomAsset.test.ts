@@ -1,5 +1,9 @@
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
-import { getButtonByText, hasText } from '@fuels/playwright-utils';
+import {
+  expectButtonToBeEnabled,
+  getButtonByText,
+  hasText,
+} from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
 import { bn } from 'fuels';
@@ -76,11 +80,7 @@ test.describe('Forward Half Custom Asset', () => {
       page,
       'Forward Half Custom Asset'
     );
-    await expect
-      .poll(() => forwardHalfCustomAssetButton.isEnabled().catch(() => false), {
-        timeout: 15000,
-      })
-      .toBeTruthy();
+    await expectButtonToBeEnabled(forwardHalfCustomAssetButton);
     await forwardHalfCustomAssetButton.click();
 
     const walletNotificationPage =
@@ -113,11 +113,6 @@ test.describe('Forward Half Custom Asset', () => {
 
     // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    // const fee = bn.parseUnits('0.000002748');
-    // await checkFee(walletNotificationPage, {
-    //   minFee: fee.sub(100),
-    //   maxFee: fee.add(100),
-    // });
 
     // test to and from addresses
     await checkAddresses(

@@ -1,5 +1,9 @@
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
-import { getButtonByText, hasText } from '@fuels/playwright-utils';
+import {
+  expectButtonToBeEnabled,
+  getButtonByText,
+  hasText,
+} from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import { bn } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
@@ -13,7 +17,6 @@ import { test, useLocalCRX } from './test';
 import {
   checkAddresses,
   checkAriaLabelsContainsText,
-  checkFee,
   connect,
   waitSuccessTransaction,
 } from './utils';
@@ -52,11 +55,7 @@ test.describe('Forward Eth', () => {
     await forwardEthInput.fill(forwardEthAmount);
 
     const forwardEthButton = getButtonByText(page, 'Forward ETH');
-    await expect
-      .poll(() => forwardEthButton.isEnabled().catch(() => false), {
-        timeout: 15000,
-      })
-      .toBeTruthy();
+    await expectButtonToBeEnabled(forwardEthButton);
     await forwardEthButton.click();
 
     const walletNotificationPage =
@@ -82,11 +81,6 @@ test.describe('Forward Eth', () => {
 
     // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    // const fee = bn.parseUnits('0.000002139');
-    // await checkFee(walletNotificationPage, {
-    //   minFee: fee.sub(100),
-    //   maxFee: fee.add(100),
-    // });
 
     // test to and from addresses
     await checkAddresses(

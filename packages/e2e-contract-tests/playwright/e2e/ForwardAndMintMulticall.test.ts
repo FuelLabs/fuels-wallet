@@ -1,4 +1,8 @@
-import { getButtonByText, hasText } from '@fuels/playwright-utils';
+import {
+  expectButtonToBeEnabled,
+  getButtonByText,
+  hasText,
+} from '@fuels/playwright-utils';
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import { bn } from 'fuels';
@@ -17,7 +21,6 @@ import { test, useLocalCRX } from './test';
 import {
   checkAddresses,
   checkAriaLabelsContainsText,
-  checkFee,
   connect,
   waitSuccessTransaction,
 } from './utils';
@@ -62,11 +65,7 @@ test.describe('Forward and Mint Multicall', () => {
       page,
       'Deposit And Mint Multicall'
     );
-    await expect
-      .poll(() => forwardHalfAndMintButton.isEnabled().catch(() => false), {
-        timeout: 15000,
-      })
-      .toBeTruthy();
+    await expectButtonToBeEnabled(forwardHalfAndMintButton);
     await forwardHalfAndMintButton.click();
 
     const walletNotificationPage =
@@ -98,11 +97,6 @@ test.describe('Forward and Mint Multicall', () => {
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    // const fee = bn.parseUnits('0.000004886');
-    // await checkFee(walletNotificationPage, {
-    //   minFee: fee.sub(100),
-    //   maxFee: fee.add(100),
-    // });
 
     await checkAddresses(
       { address: fuelWallet.address.toString(), isContract: false },

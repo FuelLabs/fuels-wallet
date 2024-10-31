@@ -1,5 +1,9 @@
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
-import { getButtonByText, hasText } from '@fuels/playwright-utils';
+import {
+  expectButtonToBeEnabled,
+  getButtonByText,
+  hasText,
+} from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import { bn } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
@@ -17,7 +21,6 @@ import { test, useLocalCRX } from './test';
 import {
   checkAddresses,
   checkAriaLabelsContainsText,
-  checkFee,
   connect,
   waitSuccessTransaction,
 } from './utils';
@@ -54,9 +57,7 @@ test.describe('Mint Assets', () => {
     await mintInput.fill(mintAmount);
 
     const mintButton = getButtonByText(page, 'Mint', true);
-    await expect
-      .poll(() => mintButton.isEnabled().catch(() => false), { timeout: 15000 })
-      .toBeTruthy();
+    await expectButtonToBeEnabled(mintButton);
     await mintButton.click();
 
     // test asset is correct
@@ -71,11 +72,6 @@ test.describe('Mint Assets', () => {
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    // const fee = bn.parseUnits('0.00000013');
-    // await checkFee(walletNotificationPage, {
-    //   minFee: fee.sub(100),
-    //   maxFee: fee.add(100),
-    // });
 
     await checkAddresses(
       { address: fuelWallet.address.toString(), isContract: false },

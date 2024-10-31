@@ -56,8 +56,7 @@ test.describe('Deposit Half ETH', () => {
     await depositHalfInput.fill(depositAmount);
 
     const depositHalfButton = getButtonByText(page, 'Deposit Half ETH', true);
-
-    expectButtonToBeEnabled(depositHalfButton);
+    await expectButtonToBeEnabled(depositHalfButton);
     await depositHalfButton.click();
 
     const walletNotificationPage =

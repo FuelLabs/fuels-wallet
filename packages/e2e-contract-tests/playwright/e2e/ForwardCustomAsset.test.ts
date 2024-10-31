@@ -1,4 +1,8 @@
-import { getButtonByText, hasText } from '@fuels/playwright-utils';
+import {
+  expectButtonToBeEnabled,
+  getButtonByText,
+  hasText,
+} from '@fuels/playwright-utils';
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
@@ -19,7 +23,6 @@ import { test, useLocalCRX } from './test';
 import {
   checkAddresses,
   checkAriaLabelsContainsText,
-  checkFee,
   connect,
   waitSuccessTransaction,
 } from './utils';
@@ -74,6 +77,7 @@ test.describe('Forward Custom Asset', () => {
       page,
       'Forward Custom Asset'
     );
+    await expectButtonToBeEnabled(forwardCustomAssetButton);
     await forwardCustomAssetButton.click();
 
     const walletNotificationPage =
@@ -100,11 +104,6 @@ test.describe('Forward Custom Asset', () => {
 
     // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    // const fee = bn.parseUnits('0.000002358');
-    // await checkFee(walletNotificationPage, {
-    //   minFee: fee.sub(100),
-    //   maxFee: fee.add(100),
-    // });
 
     await checkAddresses(
       { address: fuelWallet.address.toString(), isContract: false },

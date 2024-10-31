@@ -1,5 +1,9 @@
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
-import { getButtonByText, hasText } from '@fuels/playwright-utils';
+import {
+  expectButtonToBeEnabled,
+  getButtonByText,
+  hasText,
+} from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import { bn } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
@@ -65,11 +69,7 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
       page,
       'Forward Half And External Mint'
     );
-    await expect
-      .poll(() => forwardHalfAndMintButton.isEnabled().catch(() => false), {
-        timeout: 15000,
-      })
-      .toBeTruthy();
+    await expectButtonToBeEnabled(forwardHalfAndMintButton);
     await forwardHalfAndMintButton.click();
 
     const walletNotificationPage =
