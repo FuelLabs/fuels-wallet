@@ -32,6 +32,7 @@ export const DEFAULT_NETWORKS: Array<NetworkData> = [
     isSelected: true,
     name: 'Local',
     url: VITE_FUEL_PROVIDER_URL,
+    faucetUrl: 'http://localhost:4040',
   },
   {
     id: '2',
