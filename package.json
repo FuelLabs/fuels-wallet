@@ -24,7 +24,7 @@
     "build:all": "turbo run build:all",
     "build:docs": "turbo run build:docs",
     "build:web": "turbo run build:web",
-    "build:crx": "turbo run build:crx",
+    "build:crx": "turbo run build:crx --concurrency=100%",
     "build:app": "turbo run build:app",
     "build:libs": "turbo run build",
     "changeset": "changeset",
