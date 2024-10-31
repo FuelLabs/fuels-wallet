@@ -2,7 +2,7 @@ import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import { getButtonByText, hasText } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
-import { bn, toBech32 } from 'fuels';
+import { bn } from 'fuels';
 
 import '../../load.envs';
 import type { IdentityInput } from '../../src/contracts/contracts/CustomAssetAbi';
