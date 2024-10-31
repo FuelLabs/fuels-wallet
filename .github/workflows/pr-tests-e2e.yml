@@ -11,7 +11,6 @@ concurrency:
 
 jobs:
   tests-e2e:
-    name: E2E Tests
     timeout-minutes: 20
     runs-on: buildjet-8vcpu-ubuntu-2204
     steps:

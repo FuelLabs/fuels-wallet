@@ -11,7 +11,6 @@ concurrency:
 
 jobs:
   tests-jest:
-    name: JEST Tests
     runs-on: buildjet-8vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
