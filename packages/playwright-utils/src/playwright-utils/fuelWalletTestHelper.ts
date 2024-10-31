@@ -45,9 +45,13 @@ export class FuelWalletTestHelper {
     password?: string;
   }) {
     const { url, chainId } = fuelProvider;
-    let signupPage = await context.newPage();
-    await signupPage.goto(`chrome-extension://${fuelExtensionId}/popup.html`);
-    signupPage = await context.waitForEvent('page', {
+    const popupNotSignedUpPage = await context.newPage();
+    await popupNotSignedUpPage.goto(
+      `chrome-extension://${fuelExtensionId}/popup.html`
+    );
+    await popupNotSignedUpPage.waitForTimeout(2000);
+    await popupNotSignedUpPage.close();
+    const signupPage = await context.waitForEvent('page', {
       predicate: (page) => page.url().includes('sign-up'),
     });
     expect(signupPage.url()).toContain('sign-up');
@@ -81,9 +85,11 @@ export class FuelWalletTestHelper {
       .getByText('Wallet created successfully')
       .waitFor({ state: 'visible', timeout: 9000 });
 
+    await signupPage.pause();
     await signupPage.goto(
       `chrome-extension://${fuelExtensionId}/popup.html#/wallet`
     );
+    await signupPage.pause();
 
     const fuelWalletTestHelper = new FuelWalletTestHelper(context);
 

@@ -28,7 +28,12 @@ export const testSetup = async ({
   extensionId: string;
   amountToFund: BNInput;
 }) => {
+  const pages = context.pages();
+  for (const p of pages) {
+    if (p !== page) await p.close();
+  }
   const fuelProvider = await Provider.create(VITE_FUEL_PROVIDER_URL!);
+  const chainName = fuelProvider.getChain().name;
   const masterWallet = Wallet.fromMnemonic(VITE_MASTER_WALLET_MNEMONIC!);
   masterWallet.connect(fuelProvider);
 
@@ -44,13 +49,13 @@ export const testSetup = async ({
   const randomMnemonic = Mnemonic.generate();
   const fuelWallet = Wallet.fromMnemonic(randomMnemonic);
   fuelWallet.connect(fuelProvider);
-  const chainName = (await fuelProvider.fetchChain()).name;
   const txResponse = await masterWallet.transfer(
     fuelWallet.address,
     bn(amountToFund)
   );
   await txResponse.waitForResult();
 
+  await page.pause();
   const fuelWalletTestHelper = await FuelWalletTestHelper.walletSetup({
     context,
     fuelExtensionId: extensionId,
