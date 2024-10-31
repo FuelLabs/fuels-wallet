@@ -278,7 +278,10 @@ export class FuelWalletTestHelper {
       'Test connection'
     );
     await expectButtonToBeEnabled(testConnectionButton);
-    await testConnectionButton.click();
+    await testConnectionButton.click({
+      delay: 1000,
+    });
+    await hasText(this.walletPage, `You're adding this network`);
 
     const addNewNetworkButton = getByAriaLabel(
       this.walletPage,
