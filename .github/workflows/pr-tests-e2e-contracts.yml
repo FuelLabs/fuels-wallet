@@ -1,4 +1,4 @@
-name: Tests - E2E Contracts
+name: Tests E2E - Contracts
 
 on:
   pull_request:
