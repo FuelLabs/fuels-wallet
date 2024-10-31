@@ -1,0 +1,50 @@
+name: Tests Unit
+
+on:
+  pull_request:
+    branches: [main, master, sdk-v2]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests-jest:
+    name: Test
+    runs-on: buildjet-8vcpu-ubuntu-2204
+    steps:
+      - uses: actions/checkout@v3
+      - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 20.11.0
+          pnpm-version: 9.5.0
+      - uses: FuelLabs/github-actions/setups/docker@master
+        with:
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Start Test Node
+        run: pnpm node:up
+      
+      - name: Generate .env
+        run: cp packages/app/.env.example packages/app/.env
+
+      # Unit tests running with JEST
+      - name: Find PR number
+        uses: jwalton/gh-find-current-pr@v1
+        id: findPr
+
+      - name: Build libs
+        run: |
+          pnpm build:libs
+
+      - name: Run Jest Tests
+        run: |
+          pnpm test:ci
+        timeout-minutes: 10
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
+      - name: Stop Test Node
+        run: pnpm node:clean

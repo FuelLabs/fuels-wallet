@@ -1,12 +1,5 @@
 import type { NetworkData } from '@fuel-wallet/types';
 import { CHAIN_IDS } from 'fuels';
-import {
-  IS_DEVELOPMENT,
-  IS_TEST,
-  VITE_EXPLORER_URL,
-  VITE_FUEL_FAUCET_URL,
-  VITE_FUEL_PROVIDER_URL,
-} from './config';
 
 export const DEFAULT_NETWORKS: Array<
   NetworkData & { faucetUrl?: string; bridgeUrl?: string; hidden?: boolean }
@@ -37,17 +30,3 @@ export const DEFAULT_NETWORKS: Array<
     isSelected: false,
   },
 ];
-
-if (
-  (IS_DEVELOPMENT || IS_TEST) &&
-  !DEFAULT_NETWORKS.find((n) => n.url === VITE_FUEL_PROVIDER_URL)
-) {
-  DEFAULT_NETWORKS.push({
-    name: 'Local network',
-    url: VITE_FUEL_PROVIDER_URL,
-    chainId: CHAIN_IDS.fuel.testnet,
-    explorerUrl: VITE_EXPLORER_URL,
-    faucetUrl: VITE_FUEL_FAUCET_URL,
-    isSelected: false,
-  });
-}

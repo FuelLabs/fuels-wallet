@@ -6,6 +6,7 @@ import type {
   CoinAsset,
 } from '@fuel-wallet/types';
 import { Address, type Provider, bn } from 'fuels';
+import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { AssetService } from '~/systems/Asset/services';
 import { getFuelAssetByAssetId } from '~/systems/Asset/utils';
 import type { Maybe } from '~/systems/Core/types';
@@ -109,16 +110,34 @@ export class AccountService {
       const nextBalancesWithAssets = await balances.reduce(
         async (acc, balance) => {
           const prev = await acc;
-          const asset = await getFuelAssetByAssetId({
-            assets,
-            assetId: balance.assetId,
-          });
+          const asset = {
+            fuel: await getFuelAssetByAssetId({
+              assets,
+              assetId: balance.assetId,
+            }),
+          };
+          try {
+            const assetCached = await AssetsCache.getInstance().getAsset({
+              chainId: provider.getChainId(),
+              assetId: balance.assetId,
+              provider,
+            });
+
+            if (assetCached && asset.fuel) {
+              asset.fuel = {
+                ...asset.fuel,
+                ...assetCached,
+                indexed: true,
+              };
+            }
+          } catch (_) {}
+
           return [
             ...prev,
             {
               ...balance,
               amount: balance.amount,
-              asset,
+              asset: asset.fuel,
             },
           ];
         },

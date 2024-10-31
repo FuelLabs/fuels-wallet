@@ -1,0 +1,55 @@
+name: Tests E2E - Contracts
+
+on:
+  pull_request:
+    branches: [main, master, sdk-v2]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests-e2e-contracts:
+    name: Test
+    runs-on: buildjet-8vcpu-ubuntu-2204
+    steps:
+      - uses: actions/checkout@v3
+      - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 20.11.0
+          pnpm-version: 9.5.0
+      - uses: FuelLabs/github-actions/setups/docker@master
+        with:
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: ./.github/actions/setup-rust
+
+      - name: Run PNPM install
+        id: pnpm-cache
+        run:
+          pnpm recursive install --frozen-lockfile
+
+      - name: Start Test Node
+        run: pnpm node:up
+
+      - name: Generate .env app
+        run: cp packages/app/.env.example packages/app/.env
+
+      - name: Build & Deploy Contracts
+        run: pnpm deploy:contracts
+        working-directory: ./packages/e2e-contract-tests
+
+      - name: Run E2E Contract Tests - Local
+        uses: ./.github/actions/e2e-tests-contracts
+        with:
+          providerUrl: "http://localhost:4000/v1/graphql"
+          masterMnemonic: ${{ secrets.VITE_MASTER_WALLET_MNEMONIC }}
+          genesisSecret: "0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-e2e-contract-tests-report
+          path: packages/e2e-contract-tests/playwright-results
+          retention-days: 30

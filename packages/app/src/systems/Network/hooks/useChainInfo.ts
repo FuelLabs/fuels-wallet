@@ -25,6 +25,13 @@ export function useChainInfo(providerUrl?: string) {
     []
   );
 
+  const clearChainInfo = useCallback(
+    debounce(() => {
+      send('CLEAR_CHAIN_INFO');
+    }, 750),
+    []
+  );
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (providerUrl) {
@@ -34,5 +41,10 @@ export function useChainInfo(providerUrl?: string) {
     }
   }, [providerUrl]);
 
-  return { chainInfo, error, isLoading, handlers: { fetchChainInfo } };
+  return {
+    chainInfo,
+    error,
+    isLoading,
+    handlers: { fetchChainInfo, clearChainInfo },
+  };
 }

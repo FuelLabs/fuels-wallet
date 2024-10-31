@@ -11,7 +11,7 @@ export default {
 };
 
 export const Usage = () => {
-  const form = useNetworkForm();
+  const form = useNetworkForm({});
   return (
     <Box css={{ width: 320 }}>
       <NetworkForm form={form} isEditing={false} />

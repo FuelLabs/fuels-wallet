@@ -6,26 +6,53 @@ import type { Maybe } from '~/systems/Core';
 
 import { isValidNetworkUrl } from '../utils';
 
-export type NetworkFormValues = {
-  name: string;
-  url: string;
-  explorerUrl?: string;
-};
+export type NetworkFormValues = yup.InferType<typeof schema>;
 
 const schema = yup
   .object({
-    name: yup.string().required('Name is required'),
+    name: yup
+      .string()
+      .test('is-required', 'Name is required', function (value) {
+        return !this.options?.context?.isEditing || !!value;
+      }),
     url: yup
       .string()
       .test('is-url-valid', 'URL is not valid', isValidNetworkUrl)
+      .test('is-network-valid', 'Network is not valid', function (url) {
+        return (
+          !url || this.options.context?.chainInfoError !== 'Invalid network URL'
+        );
+      })
       .required('URL is required'),
     explorerUrl: yup
       .string()
-      .test('is-url-valid', 'Explorer URL is not valid', (url) => {
-        if (!url) return true;
-        return isValidNetworkUrl(url);
-      })
+      .test(
+        'is-url-valid',
+        'Explorer URL is not valid',
+        (url) => !url || isValidNetworkUrl(url)
+      )
       .optional(),
+    chainId: yup
+      .mixed<string | number>()
+      .transform((value) =>
+        value != null && value !== '' ? Number(value) : undefined
+      )
+      .required('Chain ID is required')
+      .test(
+        'chainId-match',
+        'Informed Chain ID does not match the network Chain ID.',
+        function (value) {
+          return (
+            !value ||
+            this.options.context?.chainInfoError !== `Chain ID doesn't match`
+          );
+        }
+      )
+      .test(
+        'is-numbers-only',
+        'Chain ID must contain only numbers',
+        (value) => value == null || Number.isInteger(value)
+      ),
   })
   .required();
 
@@ -33,26 +60,37 @@ const DEFAULT_VALUES = {
   name: '',
   url: '',
   explorerUrl: '',
+  chainId: undefined,
 };
 
 export type UseNetworkFormReturn = ReturnType<typeof useNetworkForm>;
 
 export type UseAddNetworkOpts = {
   defaultValues?: Maybe<NetworkFormValues>;
+  context?: {
+    providerChainId?: number;
+    isEditing?: boolean;
+    chainInfoError?: string;
+  };
 };
 
-export function useNetworkForm(opts: UseAddNetworkOpts = {}) {
+export function useNetworkForm({ defaultValues, context }: UseAddNetworkOpts) {
   const form = useForm<NetworkFormValues>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver<NetworkFormValues>(schema),
     reValidateMode: 'onChange',
-    mode: 'onChange',
-    defaultValues: opts.defaultValues || DEFAULT_VALUES,
+    mode: 'all',
+    resetOptions: {
+      keepValues: true,
+    },
+    defaultValues: defaultValues || DEFAULT_VALUES,
+    context,
   });
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    opts.defaultValues && form.reset(opts.defaultValues);
-  }, [opts.defaultValues?.name, opts.defaultValues?.url]);
+    if (defaultValues) {
+      form.reset(defaultValues);
+    }
+  }, [defaultValues, form]);
 
   return form;
 }

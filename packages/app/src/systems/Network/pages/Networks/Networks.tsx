@@ -1,7 +1,8 @@
 import * as css from '@fuel-ui/css';
-import { Button, Dialog, Icon } from '@fuel-ui/react';
+import { Button, CardList, Dialog, Icon } from '@fuel-ui/react';
+import { DEFAULT_NETWORKS } from '~/networks';
 import { coreStyles } from '~/systems/Core/styles';
-import { NetworkList, useNetworks } from '~/systems/Network';
+import { NetworkItem, useNetworks } from '~/systems/Network';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export const Networks = () => {
@@ -13,12 +14,22 @@ export const Networks = () => {
         Networks
       </OverlayDialogTopbar>
       <Dialog.Description as="div" css={styles.description}>
-        <NetworkList
-          networks={networks}
-          onUpdate={handlers.goToUpdate}
-          onPress={handlers.selectNetwork}
-          {...(networks?.length > 1 && { onRemove: handlers.removeNetwork })}
-        />
+        <CardList gap="$4" isClickable>
+          {networks.map((network) => {
+            const isDefault = !!DEFAULT_NETWORKS.find(
+              (n) => n.url === network?.url
+            );
+            return (
+              <NetworkItem
+                key={network.id}
+                network={network}
+                onUpdate={handlers.goToUpdate}
+                onRemove={isDefault ? undefined : handlers.removeNetwork}
+                onPress={handlers.selectNetwork}
+              />
+            );
+          })}
+        </CardList>
       </Dialog.Description>
       <Dialog.Footer>
         <Button

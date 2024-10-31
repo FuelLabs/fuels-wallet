@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Focus, Text } from '@fuel-ui/react';
 import { isB256 } from 'fuels';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Layout } from '~/systems/Core';
 
 import { AssetItem } from '../../components';
@@ -13,6 +13,7 @@ import useFuelAsset from '../../hooks/useFuelAsset';
 
 export function UpsertAsset() {
   const navigate = useNavigate();
+  const { state } = useLocation();
   const params = useParams<{ name: string; assetId: string }>();
   const name = params.name;
 
@@ -22,11 +23,11 @@ export function UpsertAsset() {
   const { handlers, isLoading } = useAssets();
   const form = useAssetForm({
     defaultValues: {
-      name: '',
-      symbol: '',
+      name: state?.name || '',
+      symbol: state?.symbol || '',
       icon: '',
       ...asset,
-      decimals: fuelAsset?.decimals || 0,
+      decimals: state?.decimals || fuelAsset?.decimals || 0,
       assetId: fuelAsset?.assetId || params.assetId || '',
     },
   });
