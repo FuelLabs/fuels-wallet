@@ -35,7 +35,6 @@ export const BalanceAssets = ({
   function toggle() {
     setShowUnknown((s) => !s);
   }
-
   return (
     <CardList>
       {balancesToShow.map((balance) => (
