@@ -15,16 +15,6 @@ runs:
   using: 'composite'
   steps:
 
-
-    - name: Build Application
-      shell: bash
-      run: pnpm build:all
-      env:
-        ## increase node.js m memory limit for building
-        ## with sourcemaps
-        NODE_OPTIONS: "--max-old-space-size=4096"
-        NODE_ENV: test
-
     # E2E tests running with Playwright
     - name: Install Playwright Browsers
       shell: bash
