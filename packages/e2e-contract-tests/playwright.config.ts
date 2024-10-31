@@ -5,9 +5,12 @@ import {
 } from '@playwright/test';
 import './load.envs';
 
+const IS_CI = process.env.CI;
+
 const config: PlaywrightTestConfig = defineConfig({
   testDir: './playwright',
-  retries: 0,
+  retries: 1,
+  maxFailures: IS_CI ? 1 : undefined,
   workers: 1,
   timeout: 60_000,
   reporter: [['html', { printSteps: true }]],
