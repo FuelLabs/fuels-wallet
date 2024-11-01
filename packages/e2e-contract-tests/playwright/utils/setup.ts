@@ -59,8 +59,8 @@ export const testSetup = async ({
     bn(amountToFund)
   );
   await txResponse.waitForResult();
+  console.log('asd Success sending funds');
 
-  await page.pause();
   const fuelWalletTestHelper = await FuelWalletTestHelper.walletSetup({
     context,
     fuelExtensionId: extensionId,
