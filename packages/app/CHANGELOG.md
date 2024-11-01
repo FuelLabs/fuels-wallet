@@ -1,5 +1,18 @@
 # fuels-wallet
 
+## 0.41.0
+
+### Minor Changes
+
+- [#1629](https://github.com/FuelLabs/fuels-wallet/pull/1629) [`8a20dded`](https://github.com/FuelLabs/fuels-wallet/commit/8a20ddedbebe2c49c985d414766f2307e275db8b) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - added SRC20 custom assets name, symbol and decimal resolve from indexer
+
+### Patch Changes
+
+- [#1635](https://github.com/FuelLabs/fuels-wallet/pull/1635) [`448d6db2`](https://github.com/FuelLabs/fuels-wallet/commit/448d6db2f7ecf8dd53fd90c755b821aa1e4d0619) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Require chainId on add network
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.41.0
+
 ## 0.40.1
 
 ### Patch Changes
