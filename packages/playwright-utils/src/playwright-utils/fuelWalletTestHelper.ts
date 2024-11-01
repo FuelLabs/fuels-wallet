@@ -174,8 +174,7 @@ export class FuelWalletTestHelper {
         { timeout: 5000 }
       )
       .toBeTruthy();
-    await walletPage.waitForTimeout(2000);
-    await menuButton!.click();
+    await menuButton!.click({ delay: 2000 });
 
     const settingsButton = walletPage
       .getByRole('menuitem')
