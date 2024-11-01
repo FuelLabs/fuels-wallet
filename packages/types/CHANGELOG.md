@@ -1,5 +1,11 @@
 # @fuel-wallet/types
 
+## 0.41.0
+
+### Minor Changes
+
+- [#1629](https://github.com/FuelLabs/fuels-wallet/pull/1629) [`8a20dded`](https://github.com/FuelLabs/fuels-wallet/commit/8a20ddedbebe2c49c985d414766f2307e275db8b) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - added SRC20 custom assets name, symbol and decimal resolve from indexer
+
 ## 0.40.1
 
 ## 0.40.0
