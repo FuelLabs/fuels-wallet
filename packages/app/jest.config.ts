@@ -2,7 +2,7 @@ import baseDefaultConfig from '@fuel-ui/test-utils/config';
 import type { JestConfigWithTsJest } from 'ts-jest';
 import { defaultsESM as tsjPreset } from 'ts-jest/presets';
 
-import { getPublicEnvs } from './load.envs';
+import { getPublicEnvs } from './load.envs.cts';
 import pkg from './package.json';
 
 const { globals, preset, ...baseConfig } = baseDefaultConfig;

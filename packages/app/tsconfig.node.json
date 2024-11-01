@@ -5,10 +5,11 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "outDir": "dist-crx"
   },
   "include": [
-    "load.envs.js",
+    "load.envs.cts",
     "./src/exports.ts",
     "env.d.ts",
     "playwright/**/*.ts",

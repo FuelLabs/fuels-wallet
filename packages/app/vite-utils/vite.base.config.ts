@@ -5,8 +5,7 @@ import cleanPlugin from 'vite-plugin-clean';
 import { Mode, plugin as viteMdPlugin } from 'vite-plugin-markdown';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-import '../load.envs.js';
-import { fixCRXBuildPlugin } from './fix-build-crx.plugin.js';
+import '../load.envs.cts';
 
 const linkDeps = process.env.LINK_DEPS?.trim().split(' ').filter(Boolean) || [];
 
@@ -33,7 +32,7 @@ export function resolveLinkDeps() {
 const baseConfig: UserConfig = {
   base: process.env.BASE_URL || '/',
   build: {
-    target: 'es2020',
+    target: 'esnext',
     sourcemap: true,
     outDir: process.env.APP_DIST || 'dist',
     rollupOptions: {
@@ -47,12 +46,12 @@ const baseConfig: UserConfig = {
     port: Number(process.env.PORT),
     strictPort: true,
     watch: {
-      ignored: ['**/playwright-html/**'], // Ignore changes in any 'playwright' folder
+      ignored: ['**/playwright*/**'], // Ignore changes in any 'playwright' folder
     },
   },
   optimizeDeps: {
     esbuildOptions: {
-      target: 'es2020',
+      target: 'esnext',
       supported: {
         bigint: true,
       },
@@ -77,14 +76,6 @@ const baseConfig: UserConfig = {
   ...(Boolean(process.env.CI) && {
     logLevel: 'silent',
   }),
-  /**
-   * Need because of this issue:
-   * https://github.com/vitejs/vite/issues/1973
-   * Avoid "process is not defined" when compiling in Cypress side
-   */
-  define: {
-    'process.env': {},
-  },
   ...resolveLinkDeps(),
   /**
    * Need because of this issue:
