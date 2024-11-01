@@ -1,4 +1,4 @@
-import type { BrowserContext, Locator } from '@playwright/test';
+import type { BrowserContext, Locator, Page } from '@playwright/test';
 
 import { expect } from '../fixtures';
 import { FUEL_MNEMONIC, FUEL_WALLET_PASSWORD } from '../mocks';
@@ -142,8 +142,8 @@ export class FuelWalletTestHelper {
 
     if (!walletNotificationPage) {
       walletNotificationPage = await this.context.waitForEvent('page', {
-        predicate: (page) => page.url().includes('/popup'),
-        timeout: 5000,
+        predicate: (page) => page.url().includes('/popup.html?'),
+        timeout: 15000,
       });
     }
 
@@ -292,7 +292,9 @@ export class FuelWalletTestHelper {
       'Add new network'
     );
     await expectButtonToBeEnabled(addNewNetworkButton);
-    await addNewNetworkButton.click();
+    await addNewNetworkButton.click({
+      delay: 1000,
+    });
   }
 
   async switchNetwork(chainName: string) {

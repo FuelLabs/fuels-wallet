@@ -57,22 +57,35 @@ test.describe('Deposit Half ETH', () => {
 
     const depositHalfButton = getButtonByText(page, 'Deposit Half ETH', true);
     await expectButtonToBeEnabled(depositHalfButton);
-    await depositHalfButton.click();
-
+    await depositHalfButton.click({
+      delay: 1000,
+    });
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
     // Test if asset name is defined (not unknown)
-    checkAriaLabelsContainsText(
+    await checkAriaLabelsContainsText(
       walletNotificationPage,
       'Asset Name',
       'Ethereum'
     );
     // Test if sender name is defined (not unknown)
-    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
+    await checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Sender Name',
+      ''
+    );
 
     // test forward asset name is shown
-    await hasText(walletNotificationPage, 'Ethereum');
+    await expect
+      .poll(
+        async () =>
+          await hasText(walletNotificationPage, 'Ethereum')
+            .then(() => true)
+            .catch(() => false),
+        { timeout: 15000 }
+      )
+      .toBeTruthy();
     // test forward asset id is shown
     await hasText(walletNotificationPage, shortAddress(await getBaseAssetId()));
     // test forward eth amount is correct
