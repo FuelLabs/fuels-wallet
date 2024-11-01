@@ -13,7 +13,7 @@ jobs:
   tests-e2e-crx-lock:
     name: Test
     runs-on: buildjet-8vcpu-ubuntu-2204
-    timeout-minutes: 5
+    timeout-minutes: 7
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
@@ -54,6 +54,3 @@ jobs:
           name: playwright-app-crx-lock-report
           path: packages/app/playwright-results
           retention-days: 30
-
-      - name: Stop Test Node
-        run: pnpm node:clean

@@ -53,8 +53,8 @@ export class FuelWalletTestHelper {
       `chrome-extension://${fuelExtensionId}/popup.html`
     );
     const signupPage = await signupPageAsync;
-    await popupNotSignedUpPage.close();
     expect(signupPage.url()).toContain('sign-up');
+    await popupNotSignedUpPage.close();
 
     const importSeedPhraseButton = signupPage
       .locator('h3')
