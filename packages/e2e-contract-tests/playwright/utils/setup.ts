@@ -49,6 +49,11 @@ export const testSetup = async ({
   const randomMnemonic = Mnemonic.generate();
   const fuelWallet = Wallet.fromMnemonic(randomMnemonic);
   fuelWallet.connect(fuelProvider);
+  console.log(
+    `asd Master wallet sending funds(${bn(
+      amountToFund
+    ).format()} ETH) to test wallet address`
+  );
   const txResponse = await masterWallet.transfer(
     fuelWallet.address,
     bn(amountToFund)

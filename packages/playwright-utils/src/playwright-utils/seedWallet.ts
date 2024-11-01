@@ -13,7 +13,7 @@ export async function seedWallet(
   const genesisWallet = Wallet.fromPrivateKey(genesisSecret!, fuelProvider);
   const parameters: TxParamsType = { gasLimit: bn(100_000), ...options };
   console.log(
-    `asd Seeding Master wallet (${amount.format()} ETH) from SECRET wallet`,
+    `asd SECRET wallet sending funds(${amount.format()} ETH) to Master wallet`,
     genesisWallet.address.toString()
   );
 
