@@ -16,11 +16,24 @@ export async function seedWallet(
     `asd Seeding Master wallet (${amount.format()} ETH) from SECRET wallet`,
     genesisWallet.address.toString()
   );
-  const response = await genesisWallet.transfer(
+
+  const transferPromise = genesisWallet.transfer(
     Address.fromString(address),
     amount,
     baseAssetId,
     parameters
   );
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    setTimeout(
+      () =>
+        reject(
+          new Error('Funding Master wallet did not complete after 10 seconds')
+        ),
+      10000
+    );
+  });
+
+  const response = await Promise.race([transferPromise, timeoutPromise]);
   await response.wait();
 }
