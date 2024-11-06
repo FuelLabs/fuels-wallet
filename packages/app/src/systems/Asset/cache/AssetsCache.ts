@@ -45,7 +45,8 @@ export class AssetsCache {
         timeout,
       ]);
       if (response instanceof Response) {
-        return response.json();
+        const jsonResponse = await response.json();
+        return jsonResponse;
       }
     } catch (_e: unknown) {}
   }
@@ -78,6 +79,7 @@ export class AssetsCache {
       endpoint.url,
       assetId
     );
+    console.log('asd assetFromIndexer', assetFromIndexer);
     if (!assetFromIndexer) return;
 
     const asset = {
