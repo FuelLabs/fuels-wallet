@@ -225,11 +225,11 @@ importers:
         specifier: 1.11.10
         version: 1.11.10
       dexie:
-        specifier: 3.2.7
-        version: 3.2.7
+        specifier: 4.0.8
+        version: 4.0.8
       dexie-observable:
         specifier: 4.0.1-beta.13
-        version: 4.0.1-beta.13(dexie@3.2.7)
+        version: 4.0.1-beta.13(dexie@4.0.8)
       events:
         specifier: 3.3.0
         version: 3.3.0
@@ -717,7 +717,7 @@ importers:
     dependencies:
       dexie-observable:
         specifier: 4.0.1-beta.13
-        version: 4.0.1-beta.13(dexie@3.2.7)
+        version: 4.0.1-beta.13(dexie@4.0.8)
     devDependencies:
       fuels:
         specifier: 0.96.1
@@ -7793,9 +7793,8 @@ packages:
     peerDependencies:
       dexie: ^3.0.2 || ^4.0.1-alpha.5
 
-  dexie@3.2.7:
-    resolution: {integrity: sha512-2a+BXvVhY5op+smDRLxeBAivE7YcYaneXJ1la3HOkUfX9zKkE/AJ8CNgjiXbtXepFyFmJNGSbmjOwqbT749r/w==}
-    engines: {node: '>=6.0'}
+  dexie@4.0.8:
+    resolution: {integrity: sha512-1G6cJevS17KMDK847V3OHvK2zei899GwpDiqfEXHP1ASvme6eWJmAp9AU4s1son2TeGkWmC0g3y8ezOBPnalgQ==}
 
   diff-sequences@28.1.1:
     resolution: {integrity: sha512-FU0iFaH/E23a+a718l8Qa/19bF9p06kgE0KipMOMadwa3SjnaElKzPaUC0vnibs6/B/9ni97s61mcejk8W1fQw==}
@@ -26377,11 +26376,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  dexie-observable@4.0.1-beta.13(dexie@3.2.7):
+  dexie-observable@4.0.1-beta.13(dexie@4.0.8):
     dependencies:
-      dexie: 3.2.7
+      dexie: 4.0.8
 
-  dexie@3.2.7: {}
+  dexie@4.0.8: {}
 
   diff-sequences@28.1.1: {}
 
