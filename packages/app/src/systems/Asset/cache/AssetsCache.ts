@@ -1,7 +1,7 @@
 import type { AssetData } from '@fuel-wallet/types';
 import type { Asset, Provider } from 'fuels';
 import { db } from '~/systems/Core/utils/database';
-import { isNft } from '../utils/isNft';
+import { fetchNftData } from '../utils/nft';
 
 type Endpoint = {
   chainId: number;
@@ -61,39 +61,48 @@ export class AssetsCache {
     const endpoint = this.getIndexerEndpoint(chainId);
     if (!endpoint) return;
     // try to get from memory cache first
-    this.cache[endpoint.chainId] = this.cache[endpoint.chainId] || {};
-    if (this.cache[endpoint.chainId][assetId]) {
-      return this.cache[endpoint.chainId][assetId];
+    this.cache[chainId] = this.cache[chainId] || {};
+    const assetFromCache = this.cache[chainId][assetId];
+    if (assetFromCache?.name) {
+      return assetFromCache;
     }
+
     // get from indexed db if not in memory
-    const savedAsset = await this.storage.getItem(
-      `${endpoint.chainId}/${assetId}`
-    );
-    if (savedAsset) {
-      this.cache[endpoint.chainId][assetId] = savedAsset;
-      return savedAsset;
+    const assetFromDb = await this.storage.getItem(`${chainId}/${assetId}`);
+    if (assetFromDb?.name) {
+      this.cache[chainId][assetId] = assetFromDb;
+      return assetFromDb;
     }
+
     const assetFromIndexer = await this.fetchAssetFromIndexer(
       endpoint.url,
       assetId
     );
     if (!assetFromIndexer) return;
 
-    const isNftAsset = await isNft({
-      assetId,
-      contractId: assetFromIndexer.contractId,
-      provider,
-    });
-
     const asset = {
       ...assetFromIndexer,
-      isNft: isNftAsset,
+      isNft: false,
     };
 
-    this.cache[endpoint.chainId][assetId] = asset;
-    this.storage.setItem(`${endpoint.chainId}/${assetId}`, asset);
+    if (assetFromIndexer.contractId) {
+      const nftData = await fetchNftData({
+        assetId,
+        contractId: assetFromIndexer.contractId,
+        provider,
+      });
+      Object.assign(asset, nftData);
+    }
+
+    this.cache[chainId][assetId] = asset;
+    this.storage.setItem(`${chainId}/${assetId}`, asset);
     return asset;
   }
+  asset = {
+    name: '',
+    symbol: '',
+    metadata: {},
+  };
 
   static getInstance() {
     if (!AssetsCache.instance) {
