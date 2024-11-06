@@ -26,6 +26,7 @@
     "@fuel-ui/test-utils": "0.17.0",
     "@fuel-wallet/connections": "workspace:*",
     "@fuels/local-storage": "0.20.0",
+    "@fuels/playwright-utils": "workspace:*",
     "@fuels/react-xstore": "0.20.0",
     "@hookform/resolvers": "3.9.0",
     "@react-aria/utils": "3.21.0",
