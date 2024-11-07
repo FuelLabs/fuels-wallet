@@ -1,3 +1,4 @@
+import type { AssetFuelData } from '@fuel-wallet/types';
 import {
   type Asset,
   type AssetFuel,
@@ -67,4 +68,8 @@ export const getFuelAssetByAssetId = async (input: {
     ...unknown,
     assetId: input.assetId,
   };
+};
+
+export const isUnknownAsset = (asset: AssetFuelData) => {
+  return !asset.name && !asset.verified && !asset.isCustom && !asset.isNft;
 };

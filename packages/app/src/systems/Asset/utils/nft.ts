@@ -1,6 +1,6 @@
 import { Contract, type Provider } from 'fuels';
 
-export const isNft = async ({
+export const fetchNftData = async ({
   assetId,
   contractId,
   provider,
@@ -11,16 +11,22 @@ export const isNft = async ({
     .multiCall([
       contract.functions.total_supply({ bits: assetId }),
       contract.functions.decimals({ bits: assetId }),
+      contract.functions.name({ bits: assetId }),
+      contract.functions.symbol({ bits: assetId }),
     ])
     .dryRun();
 
-  const [total_supply, decimals] = result.value;
+  const [total_supply, decimals, name, symbol] = result.value;
 
-  /*
-    according to sway standards this is how you recognize an NFT:
-    https://docs.fuel.network/docs/sway-standards/src-20-native-asset/#non-fungible-asset-restrictions
-  */
-  return total_supply.toNumber() === 1 && !decimals;
+  return {
+    /*
+      according to sway standards this is how you recognize an NFT:
+      https://docs.fuel.network/docs/sway-standards/src-20-native-asset/#non-fungible-asset-restrictions
+    */
+    isNft: total_supply.toNumber() === 1 && !decimals,
+    name: name as string,
+    symbol: symbol as string,
+  };
 };
 
 const SRC_20_ABI = {

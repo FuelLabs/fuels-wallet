@@ -36,6 +36,7 @@ export type AssetItemProps = {
   showActions?: boolean;
   onRemove?: (assetId: string) => void;
   onEdit?: (assetId: string) => void;
+  shouldShowAddAssetBtn?: boolean;
 };
 
 type AssetItemComponent = FC<AssetItemProps> & {
@@ -49,6 +50,7 @@ export const AssetItem: AssetItemComponent = ({
   showActions,
   onRemove,
   onEdit,
+  shouldShowAddAssetBtn,
 }) => {
   const navigate = useNavigate();
   const { visibility } = useBalanceVisibility();
@@ -194,7 +196,7 @@ export const AssetItem: AssetItemComponent = ({
                 NFT
               </Badge>
             )}
-            {(!name || asset.indexed) && !asset.isNft && (
+            {shouldShowAddAssetBtn && (
               <Button
                 size="xs"
                 intent="primary"
