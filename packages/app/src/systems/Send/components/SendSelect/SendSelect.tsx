@@ -33,6 +33,7 @@ export function SendSelect({
   errorMessage,
   warningMessage,
   provider,
+  nameSystem,
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
   const isAmountFocused = useRef<boolean>(false);
@@ -125,6 +126,7 @@ export function SendSelect({
               name="address"
               control={form.control}
               warning={warningMessage}
+              // helperText={nameSystem.resolver ?? nameSystem.name}
               isInvalid={
                 Boolean(form.formState.errors?.address) &&
                 !form.formState.isValidating
@@ -133,10 +135,12 @@ export function SendSelect({
                 <Input size="sm">
                   <Input.Field
                     {...field}
+                    value={nameSystem.resolver ?? field.value}
                     id="search-address"
                     aria-label="Address Input"
                     placeholder="Enter a fuel address"
                   />
+                  <Input.AddonRight>{nameSystem.name}</Input.AddonRight>
                 </Input>
               )}
             />

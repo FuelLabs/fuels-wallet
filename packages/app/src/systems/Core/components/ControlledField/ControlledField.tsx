@@ -31,6 +31,7 @@ export type ControlledFieldProps = Omit<ControllerProps<any>, 'render'> & {
   hideError?: boolean;
   warning?: string;
   tooltipContent?: string;
+  helperText?: string;
 };
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -50,6 +51,7 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
       hideError,
       warning,
       tooltipContent,
+      helperText,
     },
     ref
   ) => {
@@ -100,6 +102,17 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
                 <Form.ErrorMessage aria-label="Error message">
                   {props.fieldState.error.message}
                 </Form.ErrorMessage>
+              )}
+              {!!helperText && !props.fieldState.error && (
+                <Form.HelperText
+                  aria-label="Error message"
+                  css={{
+                    fontSize: '14px',
+                    lineHeight: '18px',
+                  }}
+                >
+                  {helperText}
+                </Form.HelperText>
               )}
               {!!warning && !props.fieldState.error && (
                 <Form.HelperText
