@@ -126,7 +126,6 @@ export function SendSelect({
               name="address"
               control={form.control}
               warning={warningMessage}
-              // helperText={nameSystem.resolver ?? nameSystem.name}
               isInvalid={
                 Boolean(form.formState.errors?.address) &&
                 !form.formState.isValidating
