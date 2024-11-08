@@ -12,6 +12,12 @@ export function networkEvents(store: Store) {
         input,
       });
     },
+    validateAddNetwork(input: NetworkInputs['validateAddNetwork']) {
+      store.send(Services.networks, {
+        type: 'VALIDATE_ADD_NETWORK',
+        input,
+      });
+    },
     editNetwork(input: NetworkInputs['editNetwork']) {
       store.send(Services.networks, {
         type: 'EDIT_NETWORK',
@@ -23,6 +29,9 @@ export function networkEvents(store: Store) {
         type: 'UPDATE_NETWORK',
         input,
       });
+    },
+    clearChainInfo() {
+      store.send(Services.networks, { type: 'CLEAR_CHAIN_INFO' });
     },
     removeNetwork(network: NetworkData) {
       store.send(Services.networks, {

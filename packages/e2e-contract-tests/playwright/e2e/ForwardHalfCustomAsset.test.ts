@@ -1,8 +1,12 @@
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
-import { getButtonByText, hasText } from '@fuels/playwright-utils';
+import {
+  expectButtonToBeEnabled,
+  getButtonByText,
+  hasText,
+} from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
-import { bn, toBech32 } from 'fuels';
+import { bn } from 'fuels';
 
 import '../../load.envs';
 import type { IdentityInput } from '../../src/contracts/contracts/CustomAssetAbi';
@@ -38,7 +42,7 @@ test.describe('Forward Half Custom Asset', () => {
       context,
       page,
       extensionId,
-      amountToFund: bn.parseUnits(forwardCustomAssetAmount, 1).mul(2),
+      amountToFund: bn.parseUnits('0.001'),
     }));
   });
 
@@ -63,21 +67,20 @@ test.describe('Forward Half Custom Asset', () => {
     const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
     const { waitForResult } = await contract.functions
       .mint(recipient, await getBaseAssetId(), bn(100_000_000_000))
-      .txParams({ gasLimit: 1_000_000 })
       .call();
 
     await waitForResult();
 
     const forwardHalfCustomAssetInput = page
       .getByLabel('Forward half custom asset card')
-      .locator('input');
+      .getByRole('textbox');
     await forwardHalfCustomAssetInput.fill(forwardCustomAssetAmount);
 
     const forwardHalfCustomAssetButton = getButtonByText(
       page,
       'Forward Half Custom Asset'
     );
-    await page.waitForTimeout(2500);
+    await expectButtonToBeEnabled(forwardHalfCustomAssetButton);
     await forwardHalfCustomAssetButton.click();
 
     const walletNotificationPage =
@@ -110,22 +113,16 @@ test.describe('Forward Half Custom Asset', () => {
 
     // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    // const fee = bn.parseUnits('0.000002748');
-    // await checkFee(walletNotificationPage, {
-    //   minFee: fee.sub(100),
-    //   maxFee: fee.add(100),
-    // });
 
     // test to and from addresses
-    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
-      { address: fuelWallet.address.toAddress(), isContract: false },
-      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
       walletNotificationPage
     );
     await checkAddresses(
-      { address: fuelContractId, isContract: true },
-      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
       walletNotificationPage
     );
 

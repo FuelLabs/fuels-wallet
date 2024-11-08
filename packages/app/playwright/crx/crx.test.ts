@@ -1,4 +1,4 @@
-import type { Account as WalletAccount } from '@fuel-wallet/types';
+import type { NetworkData, Account as WalletAccount } from '@fuel-wallet/types';
 import { type Locator, type Page, expect } from '@playwright/test';
 
 import {
@@ -18,7 +18,7 @@ import {
   CUSTOM_ASSET_INPUT_2,
   CUSTOM_ASSET_INPUT_3,
   CUSTOM_ASSET_INPUT_4,
-  FUEL_NETWORK,
+  FUEL_LOCAL_NETWORK,
   PRIVATE_KEY,
   mockData,
 } from '../mocks';
@@ -26,6 +26,7 @@ import {
 import {
   Address,
   type Asset,
+  CHAIN_IDS,
   type NetworkFuel,
   Provider,
   Signer,
@@ -42,6 +43,39 @@ import {
   waitAccountPage,
   waitWalletToLoad,
 } from './utils';
+
+export const NETWORK_IGNITION = {
+  id: '1',
+  name: 'Ignition',
+  url: 'https://mainnet.fuel.network/v1/graphql',
+  chainId: CHAIN_IDS.fuel.mainnet,
+  explorerUrl: 'https://app.fuel.network',
+  bridgeUrl: 'https://app.fuel.network/bridge',
+  isSelected: true,
+};
+export const NETWORK_TESTNET = {
+  id: '2',
+  name: 'Fuel Sepolia Testnet',
+  url: 'https://testnet.fuel.network/v1/graphql',
+  chainId: CHAIN_IDS.fuel.testnet,
+  explorerUrl: 'https://app-testnet.fuel.network',
+  faucetUrl: 'https://faucet-testnet.fuel.network/',
+  bridgeUrl: 'https://app-testnet.fuel.network/bridge',
+  isSelected: false,
+};
+export const NETWORK_DEVNET = {
+  id: '3',
+  name: 'Fuel Sepolia Devnet',
+  url: 'https://devnet.fuel.network/v1/graphql',
+  chainId: CHAIN_IDS.fuel.devnet,
+  explorerUrl: 'https://app-devnet.fuel.network',
+  faucetUrl: 'https://faucet-devnet.fuel.network/',
+  isSelected: false,
+};
+
+export const DEFAULT_NETWORKS: Array<
+  NetworkData & { faucetUrl?: string; bridgeUrl?: string; hidden?: boolean }
+> = [NETWORK_IGNITION, NETWORK_TESTNET, NETWORK_DEVNET];
 
 const WALLET_PASSWORD = 'Qwe123456$';
 
@@ -186,12 +220,12 @@ test.describe('FuelWallet Extension', () => {
       return page;
     });
 
-    await test.step('Should select local network', async () => {
+    await test.step('Should mock initial data', async () => {
       const page = await context.newPage();
-      await mockData(page);
+      await mockData(page, 1, DEFAULT_NETWORKS);
+      await popupPage.reload();
       await waitWalletToLoad(popupPage);
-      await getByAriaLabel(popupPage, 'Selected Network').click();
-      await getElementByText(popupPage, 'Local network').click();
+      await page.close();
     });
 
     await test.step('Add more accounts', async () => {
@@ -266,7 +300,14 @@ test.describe('FuelWallet Extension', () => {
         predicate: (page) => page.url().includes(extensionId),
       });
 
-      await hasText(connectPage, /connect/i);
+      await expect
+        .poll(
+          async () => {
+            return await hasText(connectPage, /connect/i).catch(() => false);
+          },
+          { timeout: 10000 }
+        )
+        .toBeTruthy();
 
       // Account 1 should be toggled by default
       const toggleAccountOneLocator = await getByAriaLabel(
@@ -306,6 +347,109 @@ test.describe('FuelWallet Extension', () => {
 
     await test.step('window.fuel.connect()', async () => {
       await connectAccounts();
+    });
+
+    await test.step('window.fuel.selectNetwork() for selecting a network', async () => {
+      async function testSelectNetwork(network: NetworkData) {
+        const selectingNetwork = blankPage.evaluate(
+          async ([network]) => {
+            return window.fuel.selectNetwork(network);
+          },
+          [network]
+        );
+        const selectNetworkPage = await context.waitForEvent('page', {
+          predicate: (page) => page.url().includes(extensionId),
+        });
+        await hasText(selectNetworkPage, 'Switching To');
+        await hasText(selectNetworkPage, network.name);
+
+        await getButtonByText(selectNetworkPage, /switch network/i).click();
+        await expect(selectingNetwork).resolves.toBeDefined();
+      }
+
+      await testSelectNetwork(NETWORK_TESTNET);
+      await popupPage.waitForTimeout(2000);
+      await testSelectNetwork(NETWORK_DEVNET);
+      await popupPage.waitForTimeout(2000);
+      await testSelectNetwork(NETWORK_IGNITION);
+      await popupPage.waitForTimeout(2000);
+    });
+
+    await test.step('window.fuel.selectNetwork() for adding a network', async () => {
+      async function addLocalNetwork() {
+        const selectingNetwork = blankPage.evaluate(
+          async ([network]) => {
+            return window.fuel.selectNetwork(network);
+          },
+          [FUEL_LOCAL_NETWORK]
+        );
+
+        const selectNetworkPage = await context.waitForEvent('page', {
+          predicate: (page) => page.url().includes(extensionId),
+        });
+
+        await hasText(selectNetworkPage, 'Review the Network to be added:');
+        await hasText(selectNetworkPage, 'Local network');
+        await getButtonByText(selectNetworkPage, /add network/i).click();
+        await expect(selectingNetwork).resolves.toBeDefined();
+        await popupPage.reload();
+        await waitWalletToLoad(popupPage);
+      }
+
+      const initialNetworkAmount = 3;
+      const networkSelectorBeforeAdd = getByAriaLabel(
+        popupPage,
+        'Selected Network'
+      );
+      await networkSelectorBeforeAdd.click();
+
+      // Check initial amount of networks
+      const itemBeforeAdd = popupPage.locator('[aria-label*=fuel_network]');
+      const networkItemsCountBeforeAdd = await itemBeforeAdd.count();
+      expect(networkItemsCountBeforeAdd).toEqual(initialNetworkAmount);
+
+      await addLocalNetwork();
+
+      const networkSelectorAfterAdd = getByAriaLabel(
+        popupPage,
+        'Selected Network'
+      );
+      await networkSelectorAfterAdd.click();
+
+      const itemAfterAdd = popupPage.locator('[aria-label*=fuel_network]');
+      const networkItemsCountAfterAdd = await itemAfterAdd.count();
+      expect(networkItemsCountAfterAdd).toEqual(initialNetworkAmount + 1);
+
+      // Remove network so we can test adding it again
+      let testnetNetwork: Locator;
+      for (let i = 0; i < networkItemsCountAfterAdd; i += 1) {
+        const text = await itemAfterAdd.nth(i).innerText();
+        if (text.includes('Local')) {
+          testnetNetwork = itemAfterAdd.nth(i);
+        }
+      }
+      await testnetNetwork.getByLabel(/Remove/).click();
+      await hasText(popupPage, /Are you sure/i);
+      await getButtonByText(popupPage, /confirm/i).click();
+      const itemsAfterRemove = popupPage.locator('[aria-label*=fuel_network]');
+      await expect(itemsAfterRemove).toHaveCount(initialNetworkAmount);
+
+      // Add network
+      await addLocalNetwork();
+
+      // Check initial amount of networks
+      const networkSelectorAfterFinished = getByAriaLabel(
+        popupPage,
+        'Selected Network'
+      );
+      await networkSelectorAfterFinished.click();
+
+      const itemsAfterAdd = popupPage.locator('[aria-label*=fuel_network]');
+      await expect(itemsAfterAdd).toHaveCount(initialNetworkAmount + 1);
+
+      // // Check if added network is selected
+      await expect(networkSelectorAfterFinished).toHaveText(/Local/);
+      await getByAriaLabel(popupPage, 'Close dialog').click();
     });
 
     await test.step('window.fuel.disconnect()', async () => {
@@ -397,9 +541,6 @@ test.describe('FuelWallet Extension', () => {
 
       await test.step('Changing to not connected wallet should keep Account 1 as connected', async () => {
         await switchAccount(popupPage, 'Account 2');
-
-        // delay to avoid the page to get the wrong currentAccount
-        await delay(2000);
 
         const currentAccountPromise = await blankPage.evaluate(async () => {
           return window.fuel.currentAccount();
@@ -705,65 +846,6 @@ test.describe('FuelWallet Extension', () => {
           } as any,
         ])
       ).rejects.toThrow();
-    });
-
-    await test.step('window.fuel.addNetwork()', async () => {
-      function addNetwork(network: string) {
-        return blankPage.evaluate(
-          async ([network]) => {
-            return window.fuel.addNetwork(network);
-          },
-          [network]
-        );
-      }
-
-      async function testAddNetwork() {
-        const addingNetwork = addNetwork(FUEL_NETWORK.testnet);
-
-        const addNetworkPage = await context.waitForEvent('page', {
-          predicate: (page) => page.url().includes(extensionId),
-        });
-
-        await hasText(addNetworkPage, 'Review the Network to be added:');
-        await getButtonByText(addNetworkPage, /add network/i).click();
-        await expect(addingNetwork).resolves.toBeDefined();
-        await popupPage.reload();
-      }
-
-      const initialNetworkAmount = 4;
-      let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      await networkSelector.click();
-
-      // Check initial amount of networks
-      const itemsAfterRemove = popupPage.locator('[aria-label*=fuel_network]');
-      const networkItemsCount = await itemsAfterRemove.count();
-      expect(networkItemsCount).toEqual(initialNetworkAmount);
-
-      // Remove network so we can test adding it again
-      let testnetNetwork: Locator;
-      for (let i = 0; i < networkItemsCount; i += 1) {
-        const text = await itemsAfterRemove.nth(i).innerText();
-        if (text.includes('Fuel Sepolia Testnet')) {
-          testnetNetwork = itemsAfterRemove.nth(i);
-        }
-      }
-      await testnetNetwork.getByLabel(/Remove/).click();
-      await hasText(popupPage, /Are you sure/i);
-      await getButtonByText(popupPage, /confirm/i).click();
-      await expect(itemsAfterRemove).toHaveCount(initialNetworkAmount - 1);
-
-      // Add network
-      await testAddNetwork();
-
-      // Check initial amount of networks
-      await networkSelector.click();
-      const itemsAfterAdd = popupPage.locator('[aria-label*=fuel_network]');
-      await expect(itemsAfterAdd).toHaveCount(initialNetworkAmount);
-
-      // Check if added network is selected
-      networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      await expect(networkSelector).toHaveText(/Fuel Sepolia Testnet/);
-      await getByAriaLabel(popupPage, 'Close dialog').click();
     });
 
     await test.step('window.fuel.on("currentAccount") to a connected account', async () => {

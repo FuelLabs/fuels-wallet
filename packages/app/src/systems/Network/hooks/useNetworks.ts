@@ -24,6 +24,18 @@ const selectors = {
       (id && state.context?.networks?.find((n) => n.id === id)) || undefined
     );
   },
+  reviewingAddNetwork: (state: NetworksMachineState) => {
+    return state.hasTag('reviewingAddNetwork');
+  },
+  chainInfoToAdd: (state: NetworksMachineState) => {
+    return state.context?.chainInfoToAdd;
+  },
+  loadingChainInfo: (state: NetworksMachineState) => {
+    return state.hasTag('loadingChainInfo');
+  },
+  chainInfoError: (state: NetworksMachineState) => {
+    return state.context?.chainInfoError;
+  },
 };
 
 export function useNetworks() {
@@ -33,6 +45,14 @@ export function useNetworks() {
   const networks = store.useSelector(Services.networks, selectors.networks);
   const network = store.useSelector(Services.networks, selectors.network);
   const isLoading = store.useSelector(Services.networks, selectors.isLoading);
+  const isLoadingChainInfo = store.useSelector(
+    Services.networks,
+    selectors.loadingChainInfo
+  );
+  const isReviewingAddNetwork = store.useSelector(
+    Services.networks,
+    selectors.reviewingAddNetwork
+  );
   const editingNetwork = store.useSelector(
     Services.networks,
     useMemo(
@@ -43,6 +63,14 @@ export function useNetworks() {
   const selectedNetworkState = store.useSelector(
     Services.networks,
     selectors.selectedNetwork
+  );
+  const chainInfoToAdd = store.useSelector(
+    Services.networks,
+    selectors.chainInfoToAdd
+  );
+  const chainInfoError = store.useSelector(
+    Services.networks,
+    selectors.chainInfoError
   );
 
   const selectedNetwork = useMemo(() => {
@@ -89,17 +117,23 @@ export function useNetworks() {
     handlers: {
       closeDialog,
       goToUpdate,
+      validateAddNetwork: store.validateAddNetwork,
       addNetwork: store.addNetwork,
       openNetworks: store.openNetworksList,
       openNetworksAdd: store.openNetworksAdd,
       removeNetwork: store.removeNetwork,
       selectNetwork: store.selectNetwork,
       updateNetwork: store.updateNetwork,
+      clearChainInfo: store.clearChainInfo,
     },
     isLoading,
+    isLoadingChainInfo,
+    isReviewingAddNetwork,
+    chainInfoToAdd,
     selectedNetwork,
     editingNetwork,
     network,
     networks,
+    chainInfoError,
   };
 }

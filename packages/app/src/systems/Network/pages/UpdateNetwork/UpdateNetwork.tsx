@@ -12,7 +12,15 @@ export function UpdateNetwork() {
   });
 
   function onSubmit(data: NetworkFormValues) {
-    handlers.updateNetwork({ id: editingNetwork?.id as string, data });
+    if (!data.chainId == null) return;
+
+    handlers.updateNetwork({
+      id: editingNetwork?.id as string,
+      data: {
+        ...data,
+        chainId: Number(data.chainId),
+      },
+    });
   }
 
   return (

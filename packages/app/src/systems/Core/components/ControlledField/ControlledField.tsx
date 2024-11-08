@@ -1,5 +1,5 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
-import { Form } from '@fuel-ui/react';
+import { Form, Tooltip } from '@fuel-ui/react';
 import { mergeRefs } from '@react-aria/utils';
 import type { ReactElement, ReactNode } from 'react';
 import { forwardRef, useId } from 'react';
@@ -30,6 +30,7 @@ export type ControlledFieldProps = Omit<ControllerProps<any>, 'render'> & {
   render: (props: RenderProps) => ReactElement;
   hideError?: boolean;
   warning?: string;
+  tooltipContent?: string;
 };
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -48,6 +49,7 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
       isReadOnly,
       hideError,
       warning,
+      tooltipContent,
     },
     ref
   ) => {
@@ -68,7 +70,13 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
           return (
             <Form.Control {...controlProps}>
               {label && labelSide === 'left' && (
-                <Form.Label htmlFor={id}>{label}</Form.Label>
+                <Tooltip
+                  content={tooltipContent}
+                  as="div"
+                  className="fuel_tooltip--container"
+                >
+                  <Form.Label htmlFor={id}>{label}</Form.Label>
+                </Tooltip>
               )}
               {render({
                 ...props,
@@ -80,7 +88,13 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
                 },
               })}
               {label && labelSide === 'right' && (
-                <Form.Label htmlFor={id}>{label}</Form.Label>
+                <Tooltip
+                  content={tooltipContent}
+                  as="div"
+                  className="fuel_tooltip--container"
+                >
+                  <Form.Label htmlFor={id}>{label}</Form.Label>
+                </Tooltip>
               )}
               {!hideError && props.fieldState.error && (
                 <Form.ErrorMessage aria-label="Error message">

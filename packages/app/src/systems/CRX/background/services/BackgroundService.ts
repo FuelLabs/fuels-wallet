@@ -458,7 +458,7 @@ export class BackgroundService {
   ): Promise<boolean> {
     await NetworkService.validateNetworkExists(input.network);
     const { isSelected, network } = await NetworkService.validateNetworkSelect({
-      chainId: undefined,
+      chainId: input.network.chainId,
       url: input.network.url,
     });
     if (isSelected) {

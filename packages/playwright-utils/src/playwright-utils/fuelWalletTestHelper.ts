@@ -1,11 +1,12 @@
-import type { BrowserContext } from '@playwright/test';
+import type { BrowserContext, Locator } from '@playwright/test';
 
 import { expect } from '../fixtures';
 import { FUEL_MNEMONIC, FUEL_WALLET_PASSWORD } from '../mocks';
 import { shortAddress } from '../utils';
 
-import { getButtonByText } from './button';
+import { expectButtonToBeEnabled, getButtonByText } from './button';
 import { getByAriaLabel } from './locator';
+import { hasText } from './text';
 
 export class FuelWalletTestHelper {
   private context;
@@ -25,20 +26,34 @@ export class FuelWalletTestHelper {
     this.walletPage = walletPage;
   }
 
-  static async walletSetup(
-    context: BrowserContext,
-    fuelExtensionId: string,
-    fuelProviderUrl: string,
-    chainName: string,
-    mnemonic: string = FUEL_MNEMONIC,
-    password: string = FUEL_WALLET_PASSWORD
-  ) {
-    let signupPage = await context.newPage();
-    await signupPage.goto(`chrome-extension://${fuelExtensionId}/popup.html`);
-    signupPage = await context.waitForEvent('page', {
+  static async walletSetup({
+    context,
+    fuelExtensionId,
+    fuelProvider,
+    chainName,
+    mnemonic = FUEL_MNEMONIC,
+    password = FUEL_WALLET_PASSWORD,
+  }: {
+    context: BrowserContext;
+    fuelExtensionId: string;
+    fuelProvider: {
+      url: string;
+      chainId: number;
+    };
+    chainName: string;
+    mnemonic: string;
+    password?: string;
+  }) {
+    const { url, chainId } = fuelProvider;
+    const popupNotSignedUpPage = await context.newPage();
+    await popupNotSignedUpPage.goto(
+      `chrome-extension://${fuelExtensionId}/popup.html`
+    );
+    const signupPage = await context.waitForEvent('page', {
       predicate: (page) => page.url().includes('sign-up'),
     });
     expect(signupPage.url()).toContain('sign-up');
+    await popupNotSignedUpPage.close();
 
     const importSeedPhraseButton = signupPage
       .locator('h3')
@@ -75,7 +90,11 @@ export class FuelWalletTestHelper {
 
     const fuelWalletTestHelper = new FuelWalletTestHelper(context);
 
-    await fuelWalletTestHelper.addNetwork(chainName, fuelProviderUrl);
+    await fuelWalletTestHelper.addNetwork({
+      chainName,
+      providerUrl: url,
+      chainId,
+    });
 
     return fuelWalletTestHelper;
   }
@@ -150,8 +169,19 @@ export class FuelWalletTestHelper {
   ) {
     const walletPage = this.getWalletPage();
 
-    const menuButton = getByAriaLabel(walletPage, 'Menu', true);
-    await menuButton.click();
+    let menuButton: Locator;
+
+    await expect
+      .poll(
+        async () => {
+          menuButton = getByAriaLabel(walletPage, 'Menu', true);
+          return await menuButton.isVisible().catch(() => false);
+        },
+        { timeout: 5000 }
+      )
+      .toBeTruthy();
+    await walletPage.waitForTimeout(2000);
+    await menuButton!.click();
 
     const settingsButton = walletPage
       .getByRole('menuitem')
@@ -229,31 +259,46 @@ export class FuelWalletTestHelper {
     await accountButton.click();
   }
 
-  async addNetwork(chainName: string, providerUrl: string) {
+  async addNetwork({
+    chainName,
+    providerUrl,
+    chainId,
+  }: { chainName: string; providerUrl: string; chainId: number }) {
     const networksButton = getByAriaLabel(this.walletPage, 'Selected Network');
     await networksButton.click();
 
-    if ((await this.walletPage.getByText(chainName).count()) === 0) {
-      const addNetworkButton = getByAriaLabel(this.walletPage, 'Add network');
-      await addNetworkButton.click();
+    const networkLocator = this.walletPage.getByText(chainName);
+    const hasNetwork = (await networkLocator.count()) > 0;
 
-      const urlInput = getByAriaLabel(this.walletPage, 'Network url');
-      await urlInput.fill(providerUrl);
-
-      await getByAriaLabel(this.walletPage, 'Test connection').click();
-
-      const addNewNetworkButton = getByAriaLabel(
-        this.walletPage,
-        'Add new network'
-      );
-      await addNewNetworkButton.click();
-    } else {
-      const closeNetworkButton = getByAriaLabel(
-        this.walletPage,
-        'Close dialog'
-      );
-      await closeNetworkButton.click();
+    if (hasNetwork) {
+      await networkLocator.click();
+      return;
     }
+
+    const addNetworkButton = getByAriaLabel(this.walletPage, 'Add network');
+    await addNetworkButton.click();
+
+    const urlInput = getByAriaLabel(this.walletPage, 'Network url');
+    await urlInput.fill(providerUrl);
+    const chainIdLocator = getByAriaLabel(this.walletPage, 'Chain ID');
+    await chainIdLocator.fill(chainId.toString());
+
+    const testConnectionButton = getByAriaLabel(
+      this.walletPage,
+      'Test connection'
+    );
+    await expectButtonToBeEnabled(testConnectionButton);
+    await testConnectionButton.click({
+      delay: 1000,
+    });
+    await hasText(this.walletPage, `You're adding this network`);
+
+    const addNewNetworkButton = getByAriaLabel(
+      this.walletPage,
+      'Add new network'
+    );
+    await expectButtonToBeEnabled(addNewNetworkButton);
+    await addNewNetworkButton.click();
   }
 
   async switchNetwork(chainName: string) {

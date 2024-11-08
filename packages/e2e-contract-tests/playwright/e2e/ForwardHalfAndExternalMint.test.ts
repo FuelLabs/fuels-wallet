@@ -1,7 +1,11 @@
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
-import { getButtonByText, hasText } from '@fuels/playwright-utils';
+import {
+  expectButtonToBeEnabled,
+  getButtonByText,
+  hasText,
+} from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
-import { bn, toBech32 } from 'fuels';
+import { bn } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
 
 import '../../load.envs.js';
@@ -65,7 +69,7 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
       page,
       'Forward Half And External Mint'
     );
-    await page.waitForTimeout(2500);
+    await expectButtonToBeEnabled(forwardHalfAndMintButton);
     await forwardHalfAndMintButton.click();
 
     const walletNotificationPage =
@@ -117,22 +121,21 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
     //   maxFee: fee.add(100),
     // });
 
-    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
-      { address: fuelWallet.address.toAddress(), isContract: false },
-      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
       walletNotificationPage
     );
     await checkAddresses(
-      { address: fuelWallet.address.toAddress(), isContract: false },
-      { address: toBech32(EXTERNAL_CONTRACT_ID), isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: EXTERNAL_CONTRACT_ID, isContract: true },
       walletNotificationPage,
       1,
       1
     );
     await checkAddresses(
-      { address: fuelContractId, isContract: true },
-      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
       walletNotificationPage
     );
 

@@ -28,9 +28,16 @@ export const testSetup = async ({
   extensionId: string;
   amountToFund: BNInput;
 }) => {
+  const pages = context.pages();
+  for (const p of pages) {
+    if (p !== page) await p.close();
+  }
   const fuelProvider = await Provider.create(VITE_FUEL_PROVIDER_URL!);
+  const chainName = fuelProvider.getChain().name;
   const masterWallet = Wallet.fromMnemonic(VITE_MASTER_WALLET_MNEMONIC!);
   masterWallet.connect(fuelProvider);
+
+  console.log('asd Master wallet address:', masterWallet.address.toString());
   if (VITE_WALLET_SECRET) {
     await seedWallet(
       masterWallet.address.toString(),
@@ -42,20 +49,28 @@ export const testSetup = async ({
   const randomMnemonic = Mnemonic.generate();
   const fuelWallet = Wallet.fromMnemonic(randomMnemonic);
   fuelWallet.connect(fuelProvider);
-  const chainName = (await fuelProvider.fetchChain()).name;
+  console.log(
+    `asd Master wallet sending funds(${bn(
+      amountToFund
+    ).format()} ETH) to test wallet address`
+  );
   const txResponse = await masterWallet.transfer(
     fuelWallet.address,
     bn(amountToFund)
   );
   await txResponse.waitForResult();
+  console.log('asd Success sending funds');
 
-  const fuelWalletTestHelper = await FuelWalletTestHelper.walletSetup(
+  const fuelWalletTestHelper = await FuelWalletTestHelper.walletSetup({
     context,
-    extensionId,
-    fuelProvider.url,
+    fuelExtensionId: extensionId,
+    fuelProvider: {
+      url: fuelProvider.url,
+      chainId: fuelProvider.getChainId(),
+    },
     chainName,
-    randomMnemonic
-  );
+    mnemonic: randomMnemonic,
+  });
 
   await page.goto('/');
   await page.bringToFront();
@@ -90,7 +105,7 @@ export const transferMaxBalance = async ({
         );
         await txResponse.waitForResult();
         console.log(
-          `----- Success sending ${amountToSend?.format()} back to ${toWallet.address.toB256()}`
+          `asd Success sending ${amountToSend?.format()} back to ${toWallet.address.toB256()}`
         );
       }
     } catch (e) {

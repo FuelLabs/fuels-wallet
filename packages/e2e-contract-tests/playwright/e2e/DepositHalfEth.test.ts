@@ -1,8 +1,12 @@
-import { getButtonByText, hasText } from '@fuels/playwright-utils';
+import {
+  expectButtonToBeEnabled,
+  getButtonByText,
+  hasText,
+} from '@fuels/playwright-utils';
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
-import { bn, toBech32 } from 'fuels';
+import { bn } from 'fuels';
 
 import '../../load.envs.js';
 import { getBaseAssetId, shortAddress } from '../../src/utils';
@@ -13,7 +17,6 @@ import { test, useLocalCRX } from './test';
 import {
   checkAddresses,
   checkAriaLabelsContainsText,
-  checkFee,
   connect,
   waitSuccessTransaction,
 } from './utils';
@@ -49,12 +52,11 @@ test.describe('Deposit Half ETH', () => {
 
     const depositHalfInput = page
       .getByLabel('Deposit half eth card')
-      .locator('input');
+      .getByRole('textbox');
     await depositHalfInput.fill(depositAmount);
 
     const depositHalfButton = getButtonByText(page, 'Deposit Half ETH', true);
-
-    await page.waitForTimeout(3000);
+    await expectButtonToBeEnabled(depositHalfButton);
     await depositHalfButton.click();
 
     const walletNotificationPage =
@@ -89,22 +91,16 @@ test.describe('Deposit Half ETH', () => {
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    // const fee = bn.parseUnits('0.000002616');
-    // await checkFee(walletNotificationPage, {
-    //   minFee: fee.sub(100),
-    //   maxFee: fee.add(100),
-    // });
 
     // test to and from addresses
-    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
-      { address: fuelWallet.address.toAddress(), isContract: false },
-      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
       walletNotificationPage
     );
     await checkAddresses(
-      { address: fuelContractId, isContract: true },
-      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
       walletNotificationPage
     );
 

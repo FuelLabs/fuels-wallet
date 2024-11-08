@@ -1,55 +1,75 @@
 import { Box, Button, Dialog, Focus, Icon } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useWatch } from 'react-hook-form';
 import { animations, styles } from '~/systems/Core';
 import type { NetworkFormValues } from '~/systems/Network';
-import {
-  NetworkForm,
-  useChainInfo,
-  useNetworkForm,
-  useNetworks,
-} from '~/systems/Network';
+import { NetworkForm, useNetworkForm, useNetworks } from '~/systems/Network';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-const MotionStack = motion<any>(Box.Stack);
+const MotionStack = motion(Box.Stack);
 
 export function AddNetwork() {
-  const form = useNetworkForm();
-  const { isDirty, invalid } = form.getFieldState('url', form.formState);
-  const isValidUrl = isDirty && !invalid;
-  const { handlers, isLoading } = useNetworks();
+  const isEditing = false;
   const {
-    chainInfo,
-    error: chainInfoError,
-    isLoading: isLoadingChainInfo,
-    handlers: chainInfoHandlers,
-  } = useChainInfo();
+    handlers,
+    isLoading,
+    isReviewingAddNetwork,
+    chainInfoToAdd,
+    isLoadingChainInfo,
+    chainInfoError,
+  } = useNetworks();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  const context = useMemo(
+    () => ({
+      providerChainId: chainInfoToAdd?.consensusParameters?.chainId?.toNumber(),
+      chainInfoError,
+    }),
+    [chainInfoToAdd?.consensusParameters?.chainId, chainInfoError]
+  );
+
+  const form = useNetworkForm({ context });
+  const url = useWatch({ control: form.control, name: 'url' });
+  const chainId = useWatch({ control: form.control, name: 'chainId' });
+  const isValid =
+    form.formState.isDirty &&
+    form.formState.isValid &&
+    !Object.keys(form.formState.errors ?? {}).length;
+
   useEffect(() => {
-    if (isValidUrl && !isLoadingChainInfo && chainInfo) {
-      form.setValue('name', chainInfo.name, { shouldValidate: true });
+    if (chainId != null && url) {
+      handlers.clearChainInfo();
     }
-  }, [chainInfo, isLoadingChainInfo, isValidUrl]);
+  }, [url, chainId, handlers.clearChainInfo]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (chainInfoError) {
-      form.setError('url', {
-        type: 'manual',
-        message: 'Invalid network',
-      });
+      form.trigger('url');
+      form.trigger('chainId');
     }
-  }, [chainInfoError]);
+  }, [chainInfoError, form]);
 
   function onSubmit(data: NetworkFormValues) {
-    handlers.addNetwork({ data });
+    if (data.chainId == null || !data.url) {
+      throw new Error('Missing required fields');
+    }
+
+    if (!isValid) return;
+    handlers.validateAddNetwork({
+      url: data.url,
+      chainId: data.chainId.toString(),
+    });
   }
 
-  function onClickReview() {
-    if (!isValidUrl) return;
-    chainInfoHandlers.fetchChainInfo(form.getValues('url'));
+  function onAddNetwork() {
+    const name = chainInfoToAdd?.name || '';
+    handlers.addNetwork({
+      data: {
+        chainId: Number(chainId),
+        name,
+        url,
+      },
+    });
   }
 
   return (
@@ -58,7 +78,6 @@ export function AddNetwork() {
       as="form"
       gap="$4"
       onSubmit={form.handleSubmit(onSubmit)}
-      autoComplete="off"
     >
       <OverlayDialogTopbar onClose={handlers.closeDialog}>
         Add Network
@@ -67,10 +86,11 @@ export function AddNetwork() {
         <Focus.Scope autoFocus>
           <NetworkForm
             form={form}
-            isEditing={false}
+            isEditing={isEditing}
             isLoading={isLoadingChainInfo}
-            onClickReview={onClickReview}
-            isValidUrl={isValidUrl}
+            isValid={isValid}
+            isReviewing={isReviewingAddNetwork}
+            chainName={chainInfoToAdd?.name}
           />
         </Focus.Scope>
       </Dialog.Description>
@@ -79,11 +99,11 @@ export function AddNetwork() {
           Cancel
         </Button>
         <Button
-          type="submit"
+          onPress={onAddNetwork}
           intent="primary"
-          isDisabled={!form.formState.isValid}
+          isDisabled={!isReviewingAddNetwork}
           isLoading={isLoading}
-          leftIcon={Icon.is('Plus')}
+          leftIcon={<Icon icon="Plus" />}
           aria-label="Add new network"
         >
           Add

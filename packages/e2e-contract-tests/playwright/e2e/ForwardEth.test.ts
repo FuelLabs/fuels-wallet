@@ -1,7 +1,11 @@
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
-import { getButtonByText, hasText } from '@fuels/playwright-utils';
+import {
+  expectButtonToBeEnabled,
+  getButtonByText,
+  hasText,
+} from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
-import { bn, toBech32 } from 'fuels';
+import { bn } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
 
 import '../../load.envs';
@@ -13,7 +17,6 @@ import { test, useLocalCRX } from './test';
 import {
   checkAddresses,
   checkAriaLabelsContainsText,
-  checkFee,
   connect,
   waitSuccessTransaction,
 } from './utils';
@@ -48,11 +51,11 @@ test.describe('Forward Eth', () => {
 
     const forwardEthInput = page
       .getByLabel('Forward eth card')
-      .locator('input');
+      .getByRole('textbox');
     await forwardEthInput.fill(forwardEthAmount);
 
     const forwardEthButton = getButtonByText(page, 'Forward ETH');
-    await page.waitForTimeout(2500);
+    await expectButtonToBeEnabled(forwardEthButton);
     await forwardEthButton.click();
 
     const walletNotificationPage =
@@ -78,17 +81,11 @@ test.describe('Forward Eth', () => {
 
     // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    // const fee = bn.parseUnits('0.000002139');
-    // await checkFee(walletNotificationPage, {
-    //   minFee: fee.sub(100),
-    //   maxFee: fee.add(100),
-    // });
 
     // test to and from addresses
-    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
-      { address: fuelWallet.address.toAddress(), isContract: false },
-      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
       walletNotificationPage
     );
 

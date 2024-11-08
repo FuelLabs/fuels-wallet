@@ -1,8 +1,12 @@
-import { getButtonByText, hasText } from '@fuels/playwright-utils';
+import {
+  expectButtonToBeEnabled,
+  getButtonByText,
+  hasText,
+} from '@fuels/playwright-utils';
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
-import { bn, toBech32 } from 'fuels';
+import { bn } from 'fuels';
 
 import '../../load.envs';
 import { CustomAsset } from '../../src/contracts/contracts';
@@ -19,7 +23,6 @@ import { test, useLocalCRX } from './test';
 import {
   checkAddresses,
   checkAriaLabelsContainsText,
-  checkFee,
   connect,
   waitSuccessTransaction,
 } from './utils';
@@ -59,7 +62,6 @@ test.describe('Forward Custom Asset', () => {
     };
     const { waitForResult } = await contract.functions
       .mint(recipient, await getBaseAssetId(), bn(100_000_000_000))
-      .txParams({ gasLimit: 1_000_000 })
       .call();
 
     await waitForResult();
@@ -68,13 +70,14 @@ test.describe('Forward Custom Asset', () => {
     const formattedForwardCustomAssetAmount = '12,345';
     const forwardCustomAssetInput = page
       .getByLabel('Forward custom asset card')
-      .locator('input');
+      .getByRole('textbox');
     await forwardCustomAssetInput.fill(forwardCustomAssetAmount);
 
     const forwardCustomAssetButton = getButtonByText(
       page,
       'Forward Custom Asset'
     );
+    await expectButtonToBeEnabled(forwardCustomAssetButton);
     await forwardCustomAssetButton.click();
 
     const walletNotificationPage =
@@ -101,16 +104,10 @@ test.describe('Forward Custom Asset', () => {
 
     // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    // const fee = bn.parseUnits('0.000002358');
-    // await checkFee(walletNotificationPage, {
-    //   minFee: fee.sub(100),
-    //   maxFee: fee.add(100),
-    // });
 
-    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
-      { address: fuelWallet.address.toAddress(), isContract: false },
-      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
       walletNotificationPage
     );
 
