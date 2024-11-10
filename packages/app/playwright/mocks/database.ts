@@ -15,6 +15,7 @@ import {
   encrypt,
 } from 'fuels';
 
+import { expect } from '@fuels/playwright-utils';
 import { getByAriaLabel } from '../commons/locator';
 import { hasText } from '../commons/text';
 import { reload, visit } from '../commons/visit';
@@ -231,20 +232,18 @@ export async function mockData(
     accounts.map((account) => account.address)
   );
 
-  await new Promise((resolve) => setTimeout(resolve, 300));
-
-  await page.evaluate(
-    ([accounts, networks, connections, assets, vault, password]: [
-      Array<WalletAccount>,
-      Array<NetworkData>,
-      Array<Connection>,
-      Array<AssetData>,
-      SerializedVault,
-      string,
-    ]) => {
-      return new Promise((resolve, reject) => {
-        (async function main() {
-          try {
+  expect.poll(
+    async () => {
+      return await page
+        .evaluate(
+          async ([accounts, networks, connections, assets, vault, password]: [
+            Array<WalletAccount>,
+            Array<NetworkData>,
+            Array<Connection>,
+            Array<AssetData>,
+            SerializedVault,
+            string,
+          ]) => {
             const fuelDB = window.fuelDB;
             await fuelDB.errors.clear();
             await fuelDB.vaults.clear();
@@ -256,17 +255,16 @@ export async function mockData(
             await fuelDB.connections.clear();
             await fuelDB.connections.bulkAdd(connections);
             await fuelDB.assets.bulkAdd(assets);
-            resolve(await fuelDB.networks.toArray());
-          } catch (err: unknown) {
-            reject(err);
-          }
-          localStorage.setItem('fuel_isLogged', JSON.stringify(true));
-          localStorage.setItem('password', password);
-        })();
-      });
+            localStorage.setItem('fuel_isLogged', JSON.stringify(true));
+            localStorage.setItem('password', password);
+          },
+          [accounts, networks, connections, [ALT_ASSET], vault, WALLET_PASSWORD]
+        )
+        .then(() => true)
+        .catch(() => false);
     },
-    [accounts, networks, connections, [ALT_ASSET], vault, WALLET_PASSWORD]
-  );
+    { timeout: 15000 }
+  ).toBeTruthy;
   await reload(page);
 
   const accountsWithPkey = accounts.map((acc) => ({
