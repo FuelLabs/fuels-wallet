@@ -170,12 +170,7 @@ export const unlockMachine = createMachine(
           if (!input || !input?.password) {
             throw new Error('Password is required to unlock wallet');
           }
-          try {
-            await VaultService.unlock(input);
-            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          } catch (err: any) {
-            toast.error(err?.message || 'Invalid credentials.');
-          }
+          await VaultService.unlock(input);
         },
       }),
       lock: FetchMachine.create<void, void>({

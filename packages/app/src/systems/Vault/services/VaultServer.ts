@@ -1,5 +1,6 @@
 // biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import EventEmitter from 'events';
+import { toast } from '@fuel-ui/react';
 import { createProvider } from '@fuel-wallet/connections';
 import { Address, WalletManager, transactionRequestify } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
@@ -126,7 +127,15 @@ export class VaultServer extends EventEmitter {
   }
 
   async unlock({ password }: VaultInputs['unlock']): Promise<void> {
-    await this.manager.unlock(password);
+    try {
+      await this.manager.unlock(password);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message || 'Invalid credentials.');
+      } else {
+        toast.error('Invalid credentials.');
+      }
+    }
   }
 
   async lock(): Promise<void> {
