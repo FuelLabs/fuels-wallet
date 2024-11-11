@@ -873,20 +873,19 @@ test.describe('FuelWallet Extension', () => {
       // delay to avoid the page to listen the event from above swithAccount wrong event
       await delay(1000);
 
-      const onChangeAccountPromise = blankPage.evaluate(() => {
+      // Watch for result
+      const currentAccountEventResult = blankPage.evaluate(() => {
         return new Promise((resolve) => {
           window.fuel.on(window.fuel.events.currentAccount, (account) => {
             resolve(account);
           });
         });
       });
-
       // Switch to account 1
       const currentAccount = await switchAccount(popupPage, 'Account 1');
 
       // Check result
-      const currentAccountEventResult = await onChangeAccountPromise;
-      expect(currentAccountEventResult).toEqual(currentAccount.address);
+      expect(await currentAccountEventResult).toEqual(currentAccount.address);
     });
 
     await test.step('window.fuel.on("currentAccount") should be null when not connected', async () => {
