@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BNInput } from 'fuels';
 import { Address, type Provider, bn, isB256 } from 'fuels';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -13,8 +13,8 @@ import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachi
 import type { TxInputs } from '~/systems/Transaction/services';
 
 import { isValidDomain } from '@bako-id/sdk';
+import { useNameSystemResolver } from '~/systems/NameSystem';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
-import { useNameSystem } from '~/systems/Send/hooks/useNameSystem';
 import { formatGasLimit } from '~/systems/Transaction';
 import { sendMachine } from '../machines/sendMachine';
 import type { SendMachineState } from '../machines/sendMachine';
@@ -265,7 +265,7 @@ export function useSend() {
   const txRequest = useTransactionRequest();
   const { account } = useAccounts();
   const provider = useProvider();
-  const nameSystem = useNameSystem(provider);
+  const nameSystem = useNameSystemResolver();
 
   const service = useInterpret(() =>
     sendMachine.withConfig({

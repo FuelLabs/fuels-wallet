@@ -5,6 +5,7 @@ import { Address, AddressType, ChainName, isB256, isBech32 } from 'fuels';
 import type { FC } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 
+import { useNameResolver } from '~/systems/NameSystem';
 import { TxRecipientCardLoader } from './TxRecipientCardLoader';
 
 export type TxRecipientCardProps = {
@@ -26,6 +27,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   const fuelAddress = isValidAddress
     ? Address.fromString(address).toString()
     : '';
+  const nameResolver = useNameResolver(fuelAddress);
   const isContract = recipient?.type === AddressType.contract;
   const isEthChain = recipient?.chain === ChainName.ethereum;
   const isNetwork = address === 'Network';
@@ -83,7 +85,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
                 isNetwork ? 'Address' : 'Name'
               }`}
             >
-              {isNetwork ? address : name}
+              {isNetwork ? address : nameResolver ?? name}
             </Heading>
             {!isNetwork && (
               <FuelAddress

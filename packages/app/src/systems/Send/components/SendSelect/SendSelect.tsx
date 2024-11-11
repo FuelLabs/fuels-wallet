@@ -139,7 +139,11 @@ export function SendSelect({
                     aria-label="Address Input"
                     placeholder="Enter a fuel address"
                   />
-                  <Input.AddonRight>{nameSystem.name}</Input.AddonRight>
+                  {nameSystem.name && (
+                    <Input.AddonRight>
+                      <Text>{nameSystem.name}</Text>
+                    </Input.AddonRight>
+                  )}
                 </Input>
               )}
             />
