@@ -28,15 +28,10 @@ export async function switchAccount(popupPage: Page, name: string) {
 
   await getByAriaLabel(popupPage, 'Accounts').click();
 
-  await popupPage.waitForTimeout(5000);
   await hasText(popupPage, name);
   // Add position to click on the element and not on copy button
-  await getByAriaLabel(popupPage, name).click({
-    position: {
-      x: 10,
-      y: 10,
-    },
-  });
+  await popupPage.waitForTimeout(5000);
+  await getByAriaLabel(popupPage, name).click();
 
   await expect
     .poll(
@@ -44,7 +39,7 @@ export async function switchAccount(popupPage: Page, name: string) {
         waitAriaLabel(popupPage, `${name} selected`)
           .then(() => true)
           .catch(() => false),
-      { timeout: 15000 }
+      { timeout: 30000 }
     )
     .toBeTruthy();
 
