@@ -481,21 +481,14 @@ test.describe('FuelWallet Extension', () => {
         .toBeTruthy();
     });
 
-    await test.step('window.fuel.isConnected on disconnection', async () => {
-      const getConnectionStatus = () =>
-        blankPage.evaluate(() => {
-          return window.fuel.isConnected();
+    await test.step('window.fuel.on("connection") disconnection', async () => {
+      const onDeleteConnection = blankPage.evaluate(() => {
+        return new Promise((resolve) => {
+          window.fuel.on(window.fuel.events.connection, (isConnected) => {
+            resolve(isConnected);
+          });
         });
-
-      // await blankPage.pause();
-      const onDeleteConnection = expect
-        .poll(
-          async () => {
-            return getConnectionStatus();
-          },
-          { timeout: 15000 }
-        )
-        .toBeFalsy();
+      });
 
       // Disconnect accounts from inside the `Connected Apps` page
       await getByAriaLabel(popupPage, 'Menu').click();
@@ -504,7 +497,8 @@ test.describe('FuelWallet Extension', () => {
       await getByAriaLabel(popupPage, 'Delete').click();
       await getButtonByText(popupPage, 'Confirm').click();
 
-      await onDeleteConnection;
+      const isConnectedResult = await onDeleteConnection;
+      expect(isConnectedResult).toBeFalsy();
 
       await getByAriaLabel(popupPage, 'Menu').click();
       (await hasText(popupPage, 'Wallet')).click();
