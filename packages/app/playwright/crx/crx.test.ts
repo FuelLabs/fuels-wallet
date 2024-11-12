@@ -689,7 +689,15 @@ test.describe('FuelWallet Extension', () => {
         });
 
         // Approve transaction
-        await hasText(approveTransactionPage, /0\.0000001.ETH/i);
+        await expect
+          .poll(
+            () =>
+              hasText(approveTransactionPage, /0\.0000001.ETH/i)
+                .then(() => true)
+                .catch(() => false),
+            { timeout: 15000 }
+          )
+          .toBeTruthy();
         await waitAriaLabel(
           approveTransactionPage,
           senderAccount.address.toString()
