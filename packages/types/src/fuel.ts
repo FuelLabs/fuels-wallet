@@ -21,7 +21,7 @@ export interface ICreateChange<T = unknown, Y = unknown> {
   source?: string;
 }
 
-export interface IUpdateChange<T = unknown, Y = unknown, _Z = unknown> {
+export interface IUpdateChange<T = unknown, Y = unknown> {
   type: DatabaseChangeType.Update;
   table: string;
   key: T;

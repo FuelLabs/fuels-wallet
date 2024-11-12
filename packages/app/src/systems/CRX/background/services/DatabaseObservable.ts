@@ -15,12 +15,12 @@ type EventName<Tables extends readonly string[]> =
   `${Tables[number]}:${Action}`;
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-type Listener<T extends EventName<any>> = T extends `${string}:create`
-  ? (event: ICreateChange) => void
+type Listener<T extends EventName<any>, D> = T extends `${string}:create`
+  ? (event: ICreateChange<T, D>) => void
   : T extends `${string}:update`
-    ? (event: IUpdateChange) => void
+    ? (event: IUpdateChange<T, D>) => void
     : T extends `${string}:delete`
-      ? (event: IDeleteChange) => void
+      ? (event: IDeleteChange<T, D>) => void
       : never;
 
 export class DatabaseObservable<
@@ -54,7 +54,10 @@ export class DatabaseObservable<
     }
   }
 
-  on<T extends EventName<Tables>>(eventName: T, listener: Listener<T>): this {
+  on<T extends EventName<Tables>, D>(
+    eventName: T,
+    listener: Listener<T, D>
+  ): this {
     return super.on(eventName, listener);
   }
 
