@@ -9,7 +9,7 @@ import type {
   Vault,
 } from '@fuel-wallet/types';
 import Dexie, { type DbEvents, type PromiseExtended, type Table } from 'dexie';
-
+import 'dexie-observable';
 import type { TransactionCursor } from '~/systems/Transaction';
 import { applyDbVersioning } from './databaseVersioning';
 

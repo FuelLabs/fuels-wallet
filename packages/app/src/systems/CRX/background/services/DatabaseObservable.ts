@@ -1,85 +1,66 @@
 // biome-ignore lint/style/useNodejsImportProtocol: <explanation>
-import { EventEmitter } from 'events';
-import {
+import EventEmitter from 'events';
+import type {
   DatabaseChangeType,
-  type ICreateChange,
-  type IDeleteChange,
-  type IUpdateChange,
+  ICreateChange,
+  IDeleteChange,
+  IUpdateChange,
 } from '@fuel-wallet/types';
-import type { Dexie, IndexableType, Transaction } from 'dexie';
+import type { IDatabaseChange } from 'dexie-observable/api';
 import { db } from '~/systems/Core/utils/database';
 
-export class DatabaseObservable<
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  TableNames extends Array<string> = any[],
-> extends EventEmitter {
-  constructor() {
-    super();
-    // Bind methods to ensure correct `this` context
-    this.onCreating = this.onCreating.bind(this);
-    this.onUpdating = this.onUpdating.bind(this);
-    this.onDeleting = this.onDeleting.bind(this);
+type Action = 'create' | 'update' | 'delete';
 
+type EventName<Tables extends readonly string[]> =
+  `${Tables[number]}:${Action}`;
+
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+type Listener<T extends EventName<any>> = T extends `${string}:create`
+  ? (event: ICreateChange) => void
+  : T extends `${string}:update`
+    ? (event: IUpdateChange) => void
+    : T extends `${string}:delete`
+      ? (event: IDeleteChange) => void
+      : never;
+
+export class DatabaseObservable<
+  Tables extends readonly string[],
+> extends EventEmitter {
+  private tables: Tables;
+
+  constructor(tables: Tables) {
+    super();
+    this.tables = tables;
+    this.onChanges = this.onChanges.bind(this);
     this.setupListeners();
   }
 
-  setupListeners() {
-    for (const table of Object.keys(db._allTables)) {
-      db.table(table).hook(
-        'creating',
-        this.onCreating(table as TableNames[number])
-      );
-      db.table(table)
-        .hook('updating')
-        .subscribe(this.onUpdating(table as TableNames[number]));
-      db.table(table).hook('deleting', this.onDeleting(table));
+  onChanges(changes: Array<IDatabaseChange>) {
+    for (const change of changes) {
+      if (!this.tables.includes(change.table)) continue;
+      switch (change.type) {
+        case 1:
+          super.emit(`${change.table}:create` as EventName<Tables>, change);
+          break;
+        case 2:
+          super.emit(`${change.table}:update` as EventName<Tables>, change);
+          break;
+        case 3:
+          super.emit(`${change.table}:delete` as EventName<Tables>, change);
+          break;
+        default:
+          break;
+      }
     }
   }
 
-  onCreating(table: TableNames[number]) {
-    return (primKey: unknown, obj: unknown, _transaction: Transaction) => {
-      const change: ICreateChange = {
-        type: DatabaseChangeType.Create,
-        table,
-        key: primKey,
-        obj,
-      };
-      this.emit(`${table}:create`, change);
-    };
+  on<T extends EventName<Tables>>(eventName: T, listener: Listener<T>): this {
+    return super.on(eventName, listener);
   }
 
-  onUpdating(table: TableNames[number]) {
-    return (
-      mods: unknown,
-      primKey: TableNames[number],
-      obj: unknown,
-      _transaction: Transaction
-    ) => {
-      const change: IUpdateChange<TableNames[number]> = {
-        type: DatabaseChangeType.Update,
-        table,
-        key: primKey as TableNames[number],
-        mods,
-        obj,
-      };
-      this.emit(`${table}:update`, change);
-    };
-  }
-
-  onDeleting(table: TableNames[number]) {
-    return (
-      primKey: IndexableType,
-      obj: unknown,
-      _transaction: Transaction
-    ) => {
-      const change: IDeleteChange<TableNames[number]> = {
-        type: DatabaseChangeType.Delete,
-        table,
-        key: primKey as TableNames[number],
-        oldObj: obj,
-      };
-      this.emit(`${table}:delete`, change);
-    };
+  setupListeners() {
+    db.on('changes', this.onChanges);
+    db.open();
   }
 
   destroy() {

@@ -19,7 +19,11 @@ export class DatabaseEvents {
 
   constructor(communicationProtocol: CommunicationProtocol) {
     this.communicationProtocol = communicationProtocol;
-    this.databaseObservable = new DatabaseObservable();
+    this.databaseObservable = new DatabaseObservable([
+      'networks',
+      'accounts',
+      'connections',
+    ]);
     this.setupApplicationWatcher();
   }
 

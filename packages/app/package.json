@@ -39,6 +39,7 @@
     "cross-fetch": "4.0.0",
     "dayjs": "1.11.10",
     "dexie": "4.0.9",
+    "dexie-observable": "4.0.1-beta.13",
     "events": "3.3.0",
     "fake-indexeddb": "4.0.2",
     "framer-motion": "10.16.4",
