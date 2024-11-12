@@ -318,4 +318,51 @@ test.describe('SendTransaction', () => {
     // Wait for transaction to be confirmed
     await hasText(page, 'success');
   });
+
+  test('Send transaction to a name', async () => {
+    await visit(page, '/send');
+
+    // Check submit button is disable by default
+    await page.waitForSelector('[aria-disabled="true"]');
+
+    // Select asset
+    await getButtonByText(page, 'Select one asset').click();
+    await page.getByText('Ethereum').click();
+
+    // Fill address
+    await getInputByName(page, 'address').fill('@fuel');
+    await page.waitForTimeout(500);
+
+    const nameAddress = await getInputByName(page, 'address').inputValue();
+    expect(nameAddress).toBe(
+      '0xb0B75fCdCf8749aa85Ed2D09512e69505143C741997Ba41B5BDB64f2e312e354'
+    );
+
+    // Focus on input and wait, to avoid flakiness
+    await getInputByName(page, 'amount').focus();
+    await page.waitForTimeout(500);
+
+    // Fill amount
+    await getByAriaLabel(page, 'Max').click();
+
+    // Get calculated fee
+    await hasText(page, /(.*)ETH/);
+
+    // Fee values change
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    const maxAmountAfterFee = await getInputByName(page, 'amount').inputValue();
+
+    // Submit transaction
+    await getButtonByText(page, 'Review').click();
+    await hasText(page, /(.*)@fuel/);
+
+    // Approve transaction
+    await hasText(page, `${maxAmountAfterFee} ETH`);
+    await getButtonByText(page, 'Approve').click();
+    await hasText(page, `${maxAmountAfterFee} ETH`);
+
+    // Wait for transaction to be confirmed
+    await hasText(page, 'success');
+  });
 });
