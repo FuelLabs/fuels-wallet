@@ -143,6 +143,7 @@ const schemaFactory = (provider?: Provider) =>
             const assetCached = await AssetsCache.getInstance().getAsset({
               chainId: provider.getChainId(),
               assetId: value,
+              dbAssets: [],
               provider,
             });
 
