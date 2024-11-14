@@ -69,8 +69,10 @@ export class AssetsCache {
     console.log('asd assetFromIndexer', assetFromIndexer);
     if (!assetFromIndexer) return;
 
+    const { isNFT, ...rest } = assetFromIndexer;
     const asset = {
-      ...assetFromIndexer,
+      ...rest,
+      isNft: !!isNFT,
     };
 
     if (assetFromIndexer.contractId) {
