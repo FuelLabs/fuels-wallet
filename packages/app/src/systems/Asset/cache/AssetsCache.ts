@@ -150,6 +150,7 @@ export class AssetsCache {
       ...rest,
       metadata,
       fetchedAt: now,
+      name,
     };
     if (asset.name != null) {
       asset.indexed = true;
