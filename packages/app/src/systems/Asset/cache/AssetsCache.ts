@@ -9,8 +9,13 @@ type Endpoint = {
   url: string;
 };
 
+const TEN_MINUTES = 10 * 60 * 1000;
 export class AssetsCache {
-  private cache: { [chainId: number]: { [assetId: string]: Asset } };
+  private cache: {
+    [chainId: number]: {
+      [assetId: string]: Asset & { fetchedAt?: number };
+    };
+  };
   private static instance: AssetsCache;
   private endpoints: Endpoint[] = [
     {
@@ -84,7 +89,11 @@ export class AssetsCache {
     chainId,
     assetId,
     dbAssets,
-  }: { chainId: number; assetId: string; dbAssets: AssetData[] }) {
+  }: {
+    chainId: number;
+    assetId: string;
+    dbAssets: AssetData[];
+  }) {
     if (chainId == null || !assetId) {
       return;
     }
@@ -92,14 +101,24 @@ export class AssetsCache {
     if (!endpoint) return;
     // try to get from memory cache first
     this.cache[chainId] = this.cache[chainId] || {};
-    const assetFromCache = this.cache?.[chainId]?.[assetId];
-    if (assetFromCache?.name !== undefined) {
-      return assetFromCache;
+    const cachedEntry = this.cache[chainId][assetId];
+    const now = Date.now();
+
+    if (
+      cachedEntry?.name !== undefined &&
+      cachedEntry.fetchedAt &&
+      now - cachedEntry.fetchedAt < TEN_MINUTES
+    ) {
+      return cachedEntry;
     }
 
     // get from indexed db if not in memory
     const assetFromDb = await this.storage.getItem(`${chainId}/${assetId}`);
-    if (assetFromDb?.name) {
+    if (
+      assetFromDb?.name &&
+      assetFromDb.fetchedAt &&
+      now - assetFromDb.fetchedAt < TEN_MINUTES
+    ) {
       this.cache[chainId][assetId] = assetFromDb;
       return assetFromDb;
     }
@@ -128,12 +147,12 @@ export class AssetsCache {
       isNft: !!isNFT,
       ...rest,
       ...metadata,
+      fetchedAt: now,
     };
     if (asset.name != null) {
       asset.indexed = true;
     } else {
       // @TODO: Remove once we have a proper caching pattern/mechanism
-
       asset.name = '';
     }
 
