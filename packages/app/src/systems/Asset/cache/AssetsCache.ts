@@ -28,6 +28,12 @@ export class AssetsCache {
     this.storage = new IndexedAssetsDB();
   }
 
+  asset = {
+    name: '',
+    symbol: '',
+    metadata: {},
+  };
+
   private getIndexerEndpoint(chainId: number) {
     return this.endpoints.find(
       (endpoint: Endpoint) => endpoint.chainId === chainId
@@ -79,12 +85,12 @@ export class AssetsCache {
       endpoint.url,
       assetId
     );
+
     console.log('asd assetFromIndexer', assetFromIndexer);
     if (!assetFromIndexer) return;
 
     const asset = {
       ...assetFromIndexer,
-      isNft: false,
     };
 
     if (assetFromIndexer.contractId) {
@@ -92,19 +98,16 @@ export class AssetsCache {
         assetId,
         contractId: assetFromIndexer.contractId,
         provider,
-      });
-      Object.assign(asset, nftData);
+      }).catch(() => undefined);
+      if (nftData?.name) {
+        Object.assign(asset, nftData);
+      }
     }
 
     this.cache[chainId][assetId] = asset;
     this.storage.setItem(`${chainId}/${assetId}`, asset);
     return asset;
   }
-  asset = {
-    name: '',
-    symbol: '',
-    metadata: {},
-  };
 
   static getInstance() {
     if (!AssetsCache.instance) {

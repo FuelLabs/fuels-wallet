@@ -16,14 +16,9 @@ export const fetchNftData = async ({
     ])
     .dryRun();
 
-  const [total_supply, decimals, name, symbol] = result.value;
+  const [_total_supply, _decimals, name, symbol] = result.value;
 
   return {
-    /*
-      according to sway standards this is how you recognize an NFT:
-      https://docs.fuel.network/docs/sway-standards/src-20-native-asset/#non-fungible-asset-restrictions
-    */
-    isNft: total_supply.toNumber() === 1 && !decimals,
     name: name as string,
     symbol: symbol as string,
   };
