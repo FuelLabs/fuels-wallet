@@ -146,7 +146,7 @@ export class AssetsCache {
       ...dbAsset,
       isNft: !!isNFT,
       ...rest,
-      ...metadata,
+      metadata,
       fetchedAt: now,
     };
     if (asset.name != null) {
