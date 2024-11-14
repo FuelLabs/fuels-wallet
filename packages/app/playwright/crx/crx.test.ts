@@ -468,8 +468,20 @@ test.describe('FuelWallet Extension', () => {
       // we need to reconnect the accounts to continue the tests
       await connectAccounts();
     });
+    await test.step('wait for initial connection', async () => {
+      await expect
+        .poll(
+          async () => {
+            return blankPage.evaluate(async () => {
+              return window.fuel.isConnected();
+            });
+          },
+          { timeout: 5000 }
+        )
+        .toBeTruthy();
+    });
 
-    await test.step('window.fuel.on("connection")', async () => {
+    await test.step('window.fuel.on("connection") disconnection', async () => {
       const onDeleteConnection = blankPage.evaluate(() => {
         return new Promise((resolve) => {
           window.fuel.on(window.fuel.events.connection, (isConnected) => {
@@ -677,7 +689,15 @@ test.describe('FuelWallet Extension', () => {
         });
 
         // Approve transaction
-        await hasText(approveTransactionPage, /0\.0000001.ETH/i);
+        await expect
+          .poll(
+            () =>
+              hasText(approveTransactionPage, /0\.0000001.ETH/i)
+                .then(() => true)
+                .catch(() => false),
+            { timeout: 15000 }
+          )
+          .toBeTruthy();
         await waitAriaLabel(
           approveTransactionPage,
           senderAccount.address.toString()
@@ -855,20 +875,19 @@ test.describe('FuelWallet Extension', () => {
       // delay to avoid the page to listen the event from above swithAccount wrong event
       await delay(1000);
 
-      const onChangeAccountPromise = blankPage.evaluate(() => {
+      // Watch for result
+      const currentAccountEventResult = blankPage.evaluate(() => {
         return new Promise((resolve) => {
           window.fuel.on(window.fuel.events.currentAccount, (account) => {
             resolve(account);
           });
         });
       });
-
       // Switch to account 1
       const currentAccount = await switchAccount(popupPage, 'Account 1');
 
       // Check result
-      const currentAccountEventResult = await onChangeAccountPromise;
-      expect(currentAccountEventResult).toEqual(currentAccount.address);
+      expect(await currentAccountEventResult).toEqual(currentAccount.address);
     });
 
     await test.step('window.fuel.on("currentAccount") should be null when not connected', async () => {
