@@ -144,7 +144,7 @@ const schemaFactory = (provider?: Provider) =>
               chainId: provider.getChainId(),
               assetId: value,
               dbAssets: [],
-              provider,
+              save: false,
             });
 
             if (assetCached) {

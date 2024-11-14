@@ -89,10 +89,12 @@ export class AssetsCache {
     chainId,
     assetId,
     dbAssets,
+    save = true,
   }: {
     chainId: number;
     assetId: string;
     dbAssets: AssetData[];
+    save?: boolean;
   }) {
     if (chainId == null || !assetId) {
       return;
@@ -156,8 +158,10 @@ export class AssetsCache {
       asset.name = '';
     }
 
-    this.cache[chainId][assetId] = asset;
-    this.storage.setItem(`${chainId}/${assetId}`, asset);
+    if (save) {
+      this.cache[chainId][assetId] = asset;
+      this.storage.setItem(`${chainId}/${assetId}`, asset);
+    }
     return asset;
   }
 
