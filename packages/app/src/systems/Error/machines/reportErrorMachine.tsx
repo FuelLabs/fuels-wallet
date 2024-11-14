@@ -80,7 +80,7 @@ export const reportErrorMachine = createMachine(
               sendBack('CHECK_FOR_ERRORS');
             };
 
-            db.errors.hook('creating', handleDBChange);
+            db.errors.hook('creating').subscribe(handleDBChange);
             return () => {
               abort = true;
               db.errors.hook('creating').unsubscribe(handleDBChange);
