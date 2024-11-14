@@ -158,7 +158,7 @@ export class AssetsCache {
       asset.name = '';
     }
 
-    if (save) {
+    if (save && assetFromIndexer) {
       this.cache[chainId][assetId] = asset;
       this.storage.setItem(`${chainId}/${assetId}`, asset);
     }
