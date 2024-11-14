@@ -9,7 +9,6 @@ type Endpoint = {
 };
 
 export class AssetsCache {
-  private cache: { [chainId: number]: { [assetId: string]: Asset } };
   private static instance: AssetsCache;
   private endpoints: Endpoint[] = [
     {
@@ -21,12 +20,6 @@ export class AssetsCache {
       url: 'https://explorer-indexer-testnet.fuel.network',
     },
   ];
-  private storage: IndexedAssetsDB;
-
-  private constructor() {
-    this.cache = {};
-    this.storage = new IndexedAssetsDB();
-  }
 
   asset = {
     name: '',
@@ -67,19 +60,6 @@ export class AssetsCache {
     }
     const endpoint = this.getIndexerEndpoint(chainId);
     if (!endpoint) return;
-    // try to get from memory cache first
-    this.cache[chainId] = this.cache[chainId] || {};
-    const assetFromCache = this.cache[chainId][assetId];
-    if (assetFromCache?.name) {
-      return assetFromCache;
-    }
-
-    // get from indexed db if not in memory
-    const assetFromDb = await this.storage.getItem(`${chainId}/${assetId}`);
-    if (assetFromDb?.name) {
-      this.cache[chainId][assetId] = assetFromDb;
-      return assetFromDb;
-    }
 
     const assetFromIndexer = await this.fetchAssetFromIndexer(
       endpoint.url,
@@ -104,8 +84,6 @@ export class AssetsCache {
       }
     }
 
-    this.cache[chainId][assetId] = asset;
-    this.storage.setItem(`${chainId}/${assetId}`, asset);
     return asset;
   }
 
@@ -114,20 +92,5 @@ export class AssetsCache {
       AssetsCache.instance = new AssetsCache();
     }
     return AssetsCache.instance;
-  }
-}
-
-class IndexedAssetsDB {
-  async getItem(key: string) {
-    return db.transaction('r', db.indexedAssets, async () => {
-      const asset = await db.indexedAssets.get({ key });
-      return asset;
-    });
-  }
-
-  async setItem(key: string, data: AssetData) {
-    await db.transaction('rw', db.indexedAssets, async () => {
-      await db.indexedAssets.put({ key, ...data });
-    });
   }
 }
