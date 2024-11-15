@@ -1,5 +1,29 @@
 # fuels-wallet
 
+## 0.42.0
+
+### Minor Changes
+
+- [#1655](https://github.com/FuelLabs/fuels-wallet/pull/1655) [`4e3be5dc`](https://github.com/FuelLabs/fuels-wallet/commit/4e3be5dc04b7f0214d2a368994df5f886dccdce2) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Support SRC-7, 9 nft asset data.
+
+### Patch Changes
+
+- [#1655](https://github.com/FuelLabs/fuels-wallet/pull/1655) [`4e3be5dc`](https://github.com/FuelLabs/fuels-wallet/commit/4e3be5dc04b7f0214d2a368994df5f886dccdce2) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fetch and display NFT data directly from indexer.
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed IndexDB randomly rejecting TXs and or failing to open
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Remove manual reload of wallet on integrity check fail
+
+- [#1655](https://github.com/FuelLabs/fuels-wallet/pull/1655) [`4e3be5dc`](https://github.com/FuelLabs/fuels-wallet/commit/4e3be5dc04b7f0214d2a368994df5f886dccdce2) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixes intermittent long loading state on the wallet
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Upgrade Dexie to V4
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed error where Dexie would allow insertion of entries with duplicate primary keys/ids.
+
+- Updated dependencies [[`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21)]:
+  - @fuels/playwright-utils@0.42.0
+  - @fuel-wallet/connections@0.42.0
+
 ## 0.41.1
 
 ### Patch Changes
