@@ -1,15 +1,24 @@
 import type { AssetData } from '@fuel-wallet/types';
-import type { Asset, Provider } from 'fuels';
+import type { Asset, AssetFuel, Provider } from 'fuels';
+import { AssetService } from '~/systems/Asset/services';
+import { getFuelAssetByAssetId } from '~/systems/Asset/utils';
 import { db } from '~/systems/Core/utils/database';
-import { fetchNftData } from '../utils/nft';
 
 type Endpoint = {
   chainId: number;
   url: string;
 };
 
+const FIVE_MINUTES = 5 * 60 * 1000;
 export class AssetsCache {
-  private cache: { [chainId: number]: { [assetId: string]: Asset } };
+  private cache: {
+    [chainId: number]: {
+      [assetId: string]: Asset & { fetchedAt?: number };
+    };
+  };
+  private dbAssetsCache: {
+    [chainId: number]: Array<AssetData>;
+  };
   private static instance: AssetsCache;
   private endpoints: Endpoint[] = [
     {
@@ -25,13 +34,42 @@ export class AssetsCache {
 
   private constructor() {
     this.cache = {};
+    this.dbAssetsCache = {};
     this.storage = new IndexedAssetsDB();
   }
+
+  asset = {
+    name: '',
+    symbol: '',
+    metadata: {},
+  };
 
   private getIndexerEndpoint(chainId: number) {
     return this.endpoints.find(
       (endpoint: Endpoint) => endpoint.chainId === chainId
     );
+  }
+
+  static async fetchAllAssets(chainId: number, assetsIds: string[]) {
+    const instance = AssetsCache.getInstance();
+    const assetData = new Map<string, AssetFuel>();
+    const dbAssets = await AssetService.getAssets();
+    const promises = [];
+    for (const assetId of assetsIds) {
+      promises.push(
+        instance
+          .getAsset({ chainId, assetId, dbAssets })
+          .then((asset) => {
+            assetData.set(assetId, asset);
+          })
+          .catch((e) => {
+            console.error('Error fetching asset from indexer', e);
+            assetData.set(assetId, { name: '' } as AssetFuel);
+          })
+      );
+    }
+    await Promise.all(promises);
+    return assetData;
   }
 
   private async fetchAssetFromIndexer(url: string, assetId: string) {
@@ -51,11 +89,23 @@ export class AssetsCache {
     } catch (_e: unknown) {}
   }
 
+  assetIsValid(asset: AssetData) {
+    return (
+      asset.name != null && 'fetchedAt' in asset && asset.fetchedAt != null
+    );
+  }
+
   async getAsset({
     chainId,
     assetId,
-    provider,
-  }: { chainId: number; assetId: string; provider: Provider }) {
+    dbAssets,
+    save = true,
+  }: {
+    chainId: number;
+    assetId: string;
+    dbAssets: AssetData[];
+    save?: boolean;
+  }) {
     if (chainId == null || !assetId) {
       return;
     }
@@ -63,48 +113,80 @@ export class AssetsCache {
     if (!endpoint) return;
     // try to get from memory cache first
     this.cache[chainId] = this.cache[chainId] || {};
-    const assetFromCache = this.cache[chainId][assetId];
-    if (assetFromCache?.name) {
-      return assetFromCache;
+    const cachedEntry = this.cache[chainId][assetId];
+    const now = Date.now();
+
+    if (dbAssets?.length) {
+      this.dbAssetsCache[chainId] = dbAssets;
+    }
+
+    if (
+      cachedEntry?.name !== undefined &&
+      cachedEntry.fetchedAt &&
+      now - cachedEntry.fetchedAt < FIVE_MINUTES
+    ) {
+      return cachedEntry;
     }
 
     // get from indexed db if not in memory
     const assetFromDb = await this.storage.getItem(`${chainId}/${assetId}`);
-    if (assetFromDb?.name) {
+    if (
+      assetFromDb?.name &&
+      assetFromDb.fetchedAt &&
+      now - assetFromDb.fetchedAt < FIVE_MINUTES
+    ) {
       this.cache[chainId][assetId] = assetFromDb;
       return assetFromDb;
     }
 
+    const dbAsset = await getFuelAssetByAssetId({
+      assets: dbAssets.length ? dbAssets : this.dbAssetsCache[chainId],
+      assetId: assetId,
+      chainId,
+    }).catch((e) => {
+      console.error('Error fetching asset from db', e);
+      return undefined;
+    });
     const assetFromIndexer = await this.fetchAssetFromIndexer(
       endpoint.url,
       assetId
-    );
-    console.log('asd assetFromIndexer', assetFromIndexer);
-    if (!assetFromIndexer) return;
+    ).catch((e) => {
+      console.error('Error fetching asset from indexer', e);
+      return undefined;
+    });
 
+    console.log('asd assetFromIndexer', assetFromIndexer);
+
+    const {
+      isNFT,
+      metadata,
+      name: indexerAssetName,
+      symbol: indexerAssetSymbol,
+      ...rest
+    } = assetFromIndexer ?? {};
     const asset = {
-      ...assetFromIndexer,
-      isNft: false,
+      ...dbAsset,
+      isNft: !!isNFT,
+      ...rest,
+      metadata,
+      fetchedAt: now,
+      name: indexerAssetName || dbAsset?.name,
+      symbol: indexerAssetSymbol || dbAsset?.symbol,
     };
 
-    if (assetFromIndexer.contractId) {
-      const nftData = await fetchNftData({
-        assetId,
-        contractId: assetFromIndexer.contractId,
-        provider,
-      });
-      Object.assign(asset, nftData);
+    if (asset.name != null) {
+      asset.indexed = true;
+    } else {
+      // @TODO: Remove once we have a proper caching pattern/mechanism
+      asset.name = '';
     }
 
-    this.cache[chainId][assetId] = asset;
-    this.storage.setItem(`${chainId}/${assetId}`, asset);
+    if (save) {
+      this.cache[chainId][assetId] = asset;
+      this.storage.setItem(`${chainId}/${assetId}`, asset);
+    }
     return asset;
   }
-  asset = {
-    name: '',
-    symbol: '',
-    metadata: {},
-  };
 
   static getInstance() {
     if (!AssetsCache.instance) {

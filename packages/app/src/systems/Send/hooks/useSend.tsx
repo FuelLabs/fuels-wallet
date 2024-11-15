@@ -143,10 +143,14 @@ const schemaFactory = (provider?: Provider) =>
             const assetCached = await AssetsCache.getInstance().getAsset({
               chainId: provider.getChainId(),
               assetId: value,
-              provider,
+              dbAssets: [],
+              save: false,
             });
 
-            if (assetCached) {
+            if (
+              assetCached &&
+              !AssetsCache.getInstance().assetIsValid(assetCached)
+            ) {
               return ctx.createError({
                 message: `You can't send to Asset address`,
               });
