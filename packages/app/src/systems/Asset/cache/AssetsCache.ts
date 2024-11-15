@@ -16,6 +16,9 @@ export class AssetsCache {
       [assetId: string]: Asset & { fetchedAt?: number };
     };
   };
+  private dbAssetsCache: {
+    [chainId: number]: Array<AssetData>;
+  };
   private static instance: AssetsCache;
   private endpoints: Endpoint[] = [
     {
@@ -31,6 +34,7 @@ export class AssetsCache {
 
   private constructor() {
     this.cache = {};
+    this.dbAssetsCache = {};
     this.storage = new IndexedAssetsDB();
   }
 
@@ -112,6 +116,10 @@ export class AssetsCache {
     const cachedEntry = this.cache[chainId][assetId];
     const now = Date.now();
 
+    if (dbAssets?.length) {
+      this.dbAssetsCache[chainId] = dbAssets;
+    }
+
     if (
       cachedEntry?.name !== undefined &&
       cachedEntry.fetchedAt &&
@@ -132,7 +140,7 @@ export class AssetsCache {
     }
 
     const dbAsset = await getFuelAssetByAssetId({
-      assets: dbAssets,
+      assets: dbAssets.length ? dbAssets : this.dbAssetsCache[chainId],
       assetId: assetId,
       chainId,
     }).catch((e) => {
