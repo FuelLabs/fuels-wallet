@@ -157,15 +157,23 @@ export class AssetsCache {
 
     console.log('asd assetFromIndexer', assetFromIndexer);
 
-    const { isNFT, metadata, name, ...rest } = assetFromIndexer ?? {};
+    const {
+      isNFT,
+      metadata,
+      name: indexerAssetName,
+      symbol: indexerAssetSymbol,
+      ...rest
+    } = assetFromIndexer ?? {};
     const asset = {
       ...dbAsset,
       isNft: !!isNFT,
       ...rest,
       metadata,
       fetchedAt: now,
-      name,
+      name: indexerAssetName || dbAsset?.name,
+      symbol: indexerAssetSymbol || dbAsset?.symbol,
     };
+
     if (asset.name != null) {
       asset.indexed = true;
     } else {
