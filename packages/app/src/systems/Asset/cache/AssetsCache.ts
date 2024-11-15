@@ -9,7 +9,7 @@ type Endpoint = {
   url: string;
 };
 
-const TEN_MINUTES = 10 * 60 * 1000;
+const FIVE_MINUTES = 5 * 60 * 1000;
 export class AssetsCache {
   private cache: {
     [chainId: number]: {
@@ -123,7 +123,7 @@ export class AssetsCache {
     if (
       cachedEntry?.name !== undefined &&
       cachedEntry.fetchedAt &&
-      now - cachedEntry.fetchedAt < TEN_MINUTES
+      now - cachedEntry.fetchedAt < FIVE_MINUTES
     ) {
       return cachedEntry;
     }
@@ -133,7 +133,7 @@ export class AssetsCache {
     if (
       assetFromDb?.name &&
       assetFromDb.fetchedAt &&
-      now - assetFromDb.fetchedAt < TEN_MINUTES
+      now - assetFromDb.fetchedAt < FIVE_MINUTES
     ) {
       this.cache[chainId][assetId] = assetFromDb;
       return assetFromDb;
