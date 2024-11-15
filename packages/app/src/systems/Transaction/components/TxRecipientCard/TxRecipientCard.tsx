@@ -85,7 +85,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
                 isNetwork ? 'Address' : 'Name'
               }`}
             >
-              {isNetwork ? address : nameResolver ?? name}
+              {isNetwork ? address : isReceiver ? nameResolver ?? name : name}
             </Heading>
             {!isNetwork && (
               <FuelAddress

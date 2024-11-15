@@ -19,7 +19,7 @@
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
-    "@bako-id/sdk": "link:/Users/luisburigo/Documents/dev/infinity/bako/bako-id/packages/sdk",
+    "@bako-id/sdk": "0.0.14",
     "@fontsource/source-code-pro": "5.0.13",
     "@fuel-ui/css": "0.23.3",
     "@fuel-ui/icons": "0.23.3",

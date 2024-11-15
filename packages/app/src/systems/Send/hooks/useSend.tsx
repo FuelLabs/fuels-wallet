@@ -284,7 +284,6 @@ export function useSend() {
             maxGasLimit,
           } = ctx;
 
-          console.log(providerUrl, transactionRequest, address);
           if (!providerUrl || !transactionRequest || !address) {
             throw new Error('Params are required');
           }

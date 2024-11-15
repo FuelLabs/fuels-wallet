@@ -171,8 +171,8 @@ importers:
   packages/app:
     dependencies:
       '@bako-id/sdk':
-        specifier: link:/Users/luisburigo/Documents/dev/infinity/bako/bako-id/packages/sdk
-        version: link:../../../../bako/bako-id/packages/sdk
+        specifier: 0.0.14
+        version: 0.0.14(fuels@0.96.1)
       '@fontsource/source-code-pro':
         specifier: 5.0.13
         version: 5.0.13
@@ -2000,6 +2000,11 @@ packages:
     resolution: {integrity: sha512-Z/yiTPj+lDVnF7lWeKCIJzaIkI0vYO87dMpZ4bg4TDrFe4XXLFWL1TbXU27gBP3QccxV9mZICCrnjnYlJjXHOA==}
     engines: {node: '>=6.9.0'}
 
+  '@bako-id/sdk@0.0.14':
+    resolution: {integrity: sha512-Vhvw3INJ6Tt0ZozxPphsKBEZUN4c/0AEEhcQWswR+o2JPx/LhnTk3UNlMViVgZYnMSJQkL5XfMTwcnEHiQ3lpA==}
+    peerDependencies:
+      fuels: 0.96.1
+
   '@base2/pretty-print-object@1.0.1':
     resolution: {integrity: sha512-4iri8i1AqYHJE2DstZYkyEprg6Pq6sKx3xn5FpySk9sNhH7qN2LLlHJCfDTZRILNwQNPD7mATWM0TBui7uC1pA==}
 
@@ -2744,6 +2749,10 @@ packages:
     resolution: {integrity: sha512-OrAZPZtm8HQouzip621/ci47PeTS06QegGdz7MeN6wK4yeCbJmlRQ1WE9S3iclb3p+VLF0RtbecEbHQfsNgsnA==}
     engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
 
+  '@fuel-ts/errors@0.90.0':
+    resolution: {integrity: sha512-iKYCS4cgWHV40Kr0c2+4kboUtebz9Vi8DHld6QWdeTh2khjhptZf7LrhgTh3gepAEaMF48x4F+3LZNd4Ia3wmg==}
+    engines: {node: ^18.18.2 || ^20.0.0}
+
   '@fuel-ts/errors@0.96.1':
     resolution: {integrity: sha512-Xtso5v4a3UUvnMaOSDhMRlkb9LxLyCyC/1/RY7fZZ035ttscy6dNMuiD/iSptJ5pHklJ5R4rCPdOL5EKpgOaMA==}
     engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
@@ -2779,6 +2788,11 @@ packages:
   '@fuel-ts/utils@0.96.1':
     resolution: {integrity: sha512-XXZNEUPf7qtKpVO3ak2CSroBYEKh1Gne1zlmVSNUoVPqQvglcu0I2pu/QmVnZBN4m3yVSyHUoWR2Kbo8/Dh7sA==}
     engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
+
+  '@fuel-ts/versions@0.90.0':
+    resolution: {integrity: sha512-oXXDleRAK1MLHuhveyfAUNQkHG9bISHtuvAGbjHYtaUVjI/k0o9ii9HLjlvRnFvc7G57CzIsnm6wSnoPaYBfhg==}
+    engines: {node: ^18.18.2 || ^20.0.0}
+    hasBin: true
 
   '@fuel-ts/versions@0.96.1':
     resolution: {integrity: sha512-C//ZT7U68Gksz9PzUJVzdzUARK7mfXf3MsF5ZqZaMegkE2tCy+twjy8PBdeVserY0uX6mEHRJyZJwcspk34ixg==}
@@ -16955,6 +16969,12 @@ snapshots:
       '@babel/helper-string-parser': 7.25.9
       '@babel/helper-validator-identifier': 7.25.9
 
+  '@bako-id/sdk@0.0.14(fuels@0.96.1)':
+    dependencies:
+      '@fuel-ts/errors': 0.90.0
+      fuels: 0.96.1
+      tai64: 1.0.0
+
   '@base2/pretty-print-object@1.0.1': {}
 
   '@bcoe/v8-coverage@0.2.3': {}
@@ -17741,6 +17761,10 @@ snapshots:
       '@fuel-ts/utils': 0.96.1
       '@noble/hashes': 1.5.0
 
+  '@fuel-ts/errors@0.90.0':
+    dependencies:
+      '@fuel-ts/versions': 0.90.0
+
   '@fuel-ts/errors@0.96.1':
     dependencies:
       '@fuel-ts/versions': 0.96.1
@@ -17811,6 +17835,11 @@ snapshots:
       '@fuel-ts/math': 0.96.1
       '@fuel-ts/versions': 0.96.1
       fflate: 0.8.2
+
+  '@fuel-ts/versions@0.90.0':
+    dependencies:
+      chalk: 4.1.2
+      cli-table: 0.3.11
 
   '@fuel-ts/versions@0.96.1':
     dependencies:
