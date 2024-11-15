@@ -85,6 +85,12 @@ export class AssetsCache {
     } catch (_e: unknown) {}
   }
 
+  assetIsValid(asset: AssetData) {
+    return (
+      asset.name != null && 'fetchedAt' in asset && asset.fetchedAt != null
+    );
+  }
+
   async getAsset({
     chainId,
     assetId,
