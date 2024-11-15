@@ -1,6 +1,7 @@
 import { Button, CardList } from '@fuel-ui/react';
 import type { CoinAsset } from '@fuel-wallet/types';
 import { useMemo, useState } from 'react';
+import { isUnknownAsset } from '~/systems/Asset';
 import { AssetItem, AssetList } from '~/systems/Asset/components';
 import type { AssetListEmptyProps } from '~/systems/Asset/components/AssetList/AssetListEmpty';
 
@@ -21,7 +22,10 @@ export const BalanceAssets = ({
 }: BalanceAssetListProp) => {
   const [showUnknown, setShowUnknown] = useState(false);
   const unknownLength = useMemo(
-    () => balances?.filter((balance) => !balance.asset?.name).length,
+    () =>
+      balances?.filter(
+        (balance) => balance.asset && isUnknownAsset(balance.asset)
+      ).length,
     [balances]
   );
 
@@ -29,7 +33,8 @@ export const BalanceAssets = ({
   const isEmpty = !balances || !balances.length;
   if (isEmpty) return <AssetList.Empty {...emptyProps} />;
   const balancesToShow = balances.filter(
-    (balance) => showUnknown || balance.asset?.name
+    (balance) =>
+      showUnknown || (balance.asset && !isUnknownAsset(balance.asset))
   );
 
   function toggle() {
@@ -37,15 +42,22 @@ export const BalanceAssets = ({
   }
   return (
     <CardList>
-      {balancesToShow.map((balance) => (
-        <AssetItem
-          key={balance.asset?.name}
-          fuelAsset={balance.asset}
-          amount={balance.amount}
-          onRemove={onRemove}
-          onEdit={onEdit}
-        />
-      ))}
+      {balancesToShow.map((balance) => {
+        if (!balance.asset) return null;
+
+        const shouldShowAddAssetBtn = isUnknownAsset(balance.asset);
+
+        return (
+          <AssetItem
+            key={balance.asset?.name}
+            fuelAsset={balance.asset}
+            amount={balance.amount}
+            onRemove={onRemove}
+            onEdit={onEdit}
+            shouldShowAddAssetBtn={shouldShowAddAssetBtn}
+          />
+        );
+      })}
       {!!(!isLoading && unknownLength) && (
         <Button size="xs" variant="link" onPress={toggle}>
           {showUnknown ? 'Hide' : 'Show'} unknown assets ({unknownLength})

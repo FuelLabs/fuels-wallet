@@ -15,6 +15,7 @@ import {
   encrypt,
 } from 'fuels';
 
+import { expect } from '@fuels/playwright-utils';
 import { getByAriaLabel } from '../commons/locator';
 import { hasText } from '../commons/text';
 import { reload, visit } from '../commons/visit';
@@ -231,42 +232,62 @@ export async function mockData(
     accounts.map((account) => account.address)
   );
 
-  await new Promise((resolve) => setTimeout(resolve, 300));
+  await expect
+    .poll(
+      async () => {
+        return await page
+          .evaluate(
+            async ([accounts, networks, connections, assets, vault, password]: [
+              Array<WalletAccount>,
+              Array<NetworkData>,
+              Array<Connection>,
+              Array<AssetData>,
+              SerializedVault,
+              string,
+            ]) => {
+              const fuelDB = window.fuelDB;
+              await fuelDB.errors.clear();
+              await fuelDB.vaults.clear();
+              await fuelDB.vaults.add(vault);
+              await fuelDB.accounts.clear();
+              await fuelDB.accounts.bulkAdd(accounts);
+              await fuelDB.networks.clear();
+              await fuelDB.networks.bulkAdd(networks);
+              await fuelDB.connections.clear();
+              await fuelDB.connections.bulkAdd(connections);
+              const assetsArray = await fuelDB.assets.toArray();
+              if (assetsArray.length === 0) {
+                await fuelDB.assets.bulkAdd(assets);
+              } else {
+                for (const asset of assets) {
+                  if (
+                    !assetsArray.find(
+                      (a) => JSON.stringify(a) === JSON.stringify(asset)
+                    )
+                  ) {
+                    await fuelDB.assets.add(asset);
+                  }
+                }
+              }
+              localStorage.setItem('fuel_isLogged', JSON.stringify(true));
+              localStorage.setItem('password', password);
+            },
+            [
+              accounts,
+              networks,
+              connections,
+              [ALT_ASSET],
+              vault,
+              WALLET_PASSWORD,
+            ]
+          )
+          .then(() => true)
+          .catch(() => false);
+      },
+      { timeout: 15000 }
+    )
+    .toBeTruthy();
 
-  await page.evaluate(
-    ([accounts, networks, connections, assets, vault, password]: [
-      Array<WalletAccount>,
-      Array<NetworkData>,
-      Array<Connection>,
-      Array<AssetData>,
-      SerializedVault,
-      string,
-    ]) => {
-      return new Promise((resolve, reject) => {
-        (async function main() {
-          try {
-            const fuelDB = window.fuelDB;
-            await fuelDB.errors.clear();
-            await fuelDB.vaults.clear();
-            await fuelDB.vaults.add(vault);
-            await fuelDB.accounts.clear();
-            await fuelDB.accounts.bulkAdd(accounts);
-            await fuelDB.networks.clear();
-            await fuelDB.networks.bulkAdd(networks);
-            await fuelDB.connections.clear();
-            await fuelDB.connections.bulkAdd(connections);
-            await fuelDB.assets.bulkAdd(assets);
-            resolve(await fuelDB.networks.toArray());
-          } catch (err: unknown) {
-            reject(err);
-          }
-          localStorage.setItem('fuel_isLogged', JSON.stringify(true));
-          localStorage.setItem('password', password);
-        })();
-      });
-    },
-    [accounts, networks, connections, [ALT_ASSET], vault, WALLET_PASSWORD]
-  );
   await reload(page);
 
   const accountsWithPkey = accounts.map((acc) => ({

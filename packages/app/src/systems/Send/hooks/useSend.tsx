@@ -13,6 +13,7 @@ import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachi
 import type { TxInputs } from '~/systems/Transaction/services';
 
 import { isValidDomain } from '@bako-id/sdk';
+import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { useNameSystemResolver } from '~/systems/NameSystem';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { formatGasLimit } from '~/systems/Transaction';
@@ -150,6 +151,23 @@ const schemaFactory = (provider?: Provider) =>
                 message: `You can't send to ${accountType} address`,
               });
             }
+
+            const assetCached = await AssetsCache.getInstance().getAsset({
+              chainId: provider.getChainId(),
+              assetId: value,
+              dbAssets: [],
+              save: false,
+            });
+
+            if (
+              assetCached &&
+              !AssetsCache.getInstance().assetIsValid(assetCached)
+            ) {
+              return ctx.createError({
+                message: `You can't send to Asset address`,
+              });
+            }
+
             return true;
           } catch (error) {
             console.error(error);

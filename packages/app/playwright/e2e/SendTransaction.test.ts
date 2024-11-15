@@ -1,14 +1,8 @@
 import type { Account } from '@fuel-wallet/types';
+import { expectButtonToBeEnabled } from '@fuels/playwright-utils';
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium, expect } from '@playwright/test';
-import {
-  type Bech32Address,
-  Provider,
-  Wallet,
-  bn,
-  fromBech32,
-  toB256,
-} from 'fuels';
+import { Provider, Wallet, bn } from 'fuels';
 
 import {
   getButtonByText,
@@ -62,7 +56,13 @@ test.describe('SendTransaction', () => {
     await getInputByName(page, 'amount').fill('0.001');
 
     // Submit transaction
-    await getButtonByText(page, 'Review').click();
+
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await page.waitForTimeout(5000);
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
 
     await getButtonByText(page, 'Approve').click();
     await hasText(page, '0.001 ETH');
@@ -92,7 +92,13 @@ test.describe('SendTransaction', () => {
     await getInputByName(page, 'amount').fill('0.001');
 
     // Submit transaction
-    await getButtonByText(page, 'Review').click();
+    // make sure the button is enabled
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await page.waitForTimeout(5000);
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
 
     // Approve transaction
     await hasText(page, '0.001 ETH');
@@ -131,7 +137,13 @@ test.describe('SendTransaction', () => {
     await hasText(page, 'Balance: 1,000,000.000');
 
     // Submit transaction
-    await getButtonByText(page, 'Review').click();
+
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await page.waitForTimeout(5000);
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
 
     // Approve transaction
     await hasText(page, `0.01 ${ALT_ASSET.symbol}`);
@@ -163,7 +175,12 @@ test.describe('SendTransaction', () => {
     await page.waitForSelector('button:has-text("Review")');
     await page.waitForTimeout(1000);
 
-    await getButtonByText(page, 'Review').click();
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await page.waitForTimeout(5000);
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
 
     await hasText(page, '0.001 ETH');
 
@@ -200,7 +217,12 @@ test.describe('SendTransaction', () => {
     await page.waitForSelector('button:has-text("Review")');
     await page.waitForTimeout(1000);
 
-    await getButtonByText(page, 'Review').click();
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await page.waitForTimeout(5000);
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
 
     await hasText(page, '0.001 ETH');
 
@@ -241,7 +263,12 @@ test.describe('SendTransaction', () => {
     await page.waitForSelector('button:has-text("Review")');
     await page.waitForTimeout(1000);
 
-    await getButtonByText(page, 'Review').click();
+    const btnLocatorBeforeApprv = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocatorBeforeApprv);
+    await page.waitForTimeout(5000);
+    await expectButtonToBeEnabled(btnLocatorBeforeApprv);
+    await btnLocatorBeforeApprv.click();
 
     // Waiting button change to Approve in order to get updated fee amount
     await page.waitForSelector('button:has-text("Approve")');
@@ -258,7 +285,12 @@ test.describe('SendTransaction', () => {
     await page.waitForSelector('button:has-text("Review")');
     await page.waitForTimeout(1000);
 
-    await getButtonByText(page, 'Review').click();
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await page.waitForTimeout(5000);
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
 
     // Waiting button change to Approve in order to get updated fee amount
     await page.waitForSelector('button:has-text("Approve")');
@@ -308,7 +340,13 @@ test.describe('SendTransaction', () => {
     const maxAmountAfterFee = await getInputByName(page, 'amount').inputValue();
 
     // Submit transaction
-    await getButtonByText(page, 'Review').click();
+
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await page.waitForTimeout(5000);
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
 
     // Approve transaction
     await hasText(page, `${maxAmountAfterFee} ETH`);

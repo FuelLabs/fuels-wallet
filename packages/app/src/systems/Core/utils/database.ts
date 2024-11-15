@@ -1,4 +1,3 @@
-import { createUUID } from '@fuel-wallet/connections';
 import type {
   AbiTable,
   Account,
@@ -9,8 +8,7 @@ import type {
   StoredFuelWalletError,
   Vault,
 } from '@fuel-wallet/types';
-import type { DbEvents, PromiseExtended, Table } from 'dexie';
-import Dexie from 'dexie';
+import Dexie, { type DbEvents, type PromiseExtended, type Table } from 'dexie';
 import 'dexie-observable';
 import type { TransactionCursor } from '~/systems/Transaction';
 import { applyDbVersioning } from './databaseVersioning';
@@ -24,7 +22,10 @@ export class FuelDB extends Dexie {
   connections!: Table<Connection, string>;
   transactionsCursors!: Table<TransactionCursor, string>;
   assets!: Table<AssetData, string>;
-  indexedAssets!: Table<AssetData & { key: string }, string>;
+  indexedAssets!: Table<
+    AssetData & { key: string; fetchedAt?: number },
+    string
+  >;
   abis!: Table<AbiTable, string>;
   errors!: Table<StoredFuelWalletError, string>;
   integrityCheckInterval?: NodeJS.Timeout;
@@ -55,13 +56,14 @@ export class FuelDB extends Dexie {
     }
   }
 
-  async close(safeClose = false) {
-    if (!this.alwaysOpen || safeClose || this.restartAttempts > 3) {
+  async close(opts: { disableAutoOpen?: boolean } = {}) {
+    const { disableAutoOpen = false } = opts;
+    if (!this.alwaysOpen || disableAutoOpen || this.restartAttempts > 3) {
       this.restartAttempts = 0;
-      return super.close();
+      return;
     }
     this.restartAttempts += 1;
-    await this.open().catch(() => this.close());
+    await this.open().catch(() => this.close(opts));
   }
 
   async restart(eventName: FailureEvents) {
@@ -71,7 +73,7 @@ export class FuelDB extends Dexie {
     if (eventName === 'close') {
       clearInterval(this.integrityCheckInterval);
     } else {
-      this.close(true);
+      this.close({ disableAutoOpen: true });
     }
 
     this.open();
