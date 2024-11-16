@@ -1,5 +1,11 @@
 # @fuel-wallet/connections
 
+## 0.42.0
+
+### Patch Changes
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Upgrade Dexie to V4
+
 ## 0.41.1
 
 ## 0.41.0
