@@ -161,7 +161,7 @@ const schemaFactory = (provider?: Provider) =>
 
             if (
               assetCached &&
-              !AssetsCache.getInstance().assetIsValid(assetCached)
+              AssetsCache.getInstance().assetIsValid(assetCached)
             ) {
               return ctx.createError({
                 message: `You can't send to Asset address`,

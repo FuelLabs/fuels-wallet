@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.42.1
+
+### Patch Changes
+
+- [#1657](https://github.com/FuelLabs/fuels-wallet/pull/1657) [`2e3fa771`](https://github.com/FuelLabs/fuels-wallet/commit/2e3fa7712050ff5ebb8c136543dde4b027da3cc1) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: hotfix for not allowing send to ANY asset address
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.42.1
+  - @fuels/playwright-utils@0.42.1
+
 ## 0.42.0
 
 ### Minor Changes
