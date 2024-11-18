@@ -139,14 +139,6 @@ export class AssetsCache {
       return assetFromDb;
     }
 
-    const dbAsset = await getFuelAssetByAssetId({
-      assets: dbAssets.length ? dbAssets : this.dbAssetsCache[chainId],
-      assetId: assetId,
-      chainId,
-    }).catch((e) => {
-      console.error('Error fetching asset from db', e);
-      return undefined;
-    });
     const assetFromIndexer = await this.fetchAssetFromIndexer(
       endpoint.url,
       assetId
@@ -155,7 +147,16 @@ export class AssetsCache {
       return undefined;
     });
 
-    console.log('asd assetFromIndexer', assetFromIndexer);
+    if (!assetFromIndexer) return;
+
+    const dbAsset = await getFuelAssetByAssetId({
+      assets: dbAssets.length ? dbAssets : this.dbAssetsCache[chainId],
+      assetId: assetId,
+      chainId,
+    }).catch((e) => {
+      console.error('Error fetching asset from db', e);
+      return undefined;
+    });
 
     const {
       isNFT,

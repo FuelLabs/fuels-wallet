@@ -37,6 +37,7 @@ export type AssetItemProps = {
   onRemove?: (assetId: string) => void;
   onEdit?: (assetId: string) => void;
   shouldShowAddAssetBtn?: boolean;
+  shouldShowCopyAssetAddress?: boolean;
 };
 
 type AssetItemComponent = FC<AssetItemProps> & {
@@ -51,6 +52,7 @@ export const AssetItem: AssetItemComponent = ({
   onRemove,
   onEdit,
   shouldShowAddAssetBtn,
+  shouldShowCopyAssetAddress,
 }) => {
   const navigate = useNavigate();
   const { visibility } = useBalanceVisibility();
@@ -73,6 +75,22 @@ export const AssetItem: AssetItemComponent = ({
   if (!asset) return null;
 
   const { assetId, name, symbol, icon, decimals, isCustom } = asset;
+
+  function getLeftEl() {
+    if (assetId && shouldShowCopyAssetAddress) {
+      return (
+        <Copyable
+          value={assetId}
+          tooltipMessage="Copy asset address"
+          css={styles.assetIdCopy}
+          iconProps={{
+            icon: Icon.is('Copy'),
+            'aria-label': 'Copy asset address',
+          }}
+        />
+      );
+    }
+  }
 
   function getRightEl() {
     if (showActions) {
@@ -197,6 +215,7 @@ export const AssetItem: AssetItemComponent = ({
           {symbol ? (
             <>
               <Text css={styles.assetSymbol}>{symbol}</Text>
+              {getLeftEl()}
             </>
           ) : (
             <Copyable value={assetId || ''} css={styles.unknownAssetId}>
