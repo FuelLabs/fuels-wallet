@@ -191,7 +191,7 @@ export class AssetsCache {
       asset.name = '';
     }
 
-    if (save && this.assetIsValid(asset)) {
+    if (save) {
       this.cache[chainId][assetId] = asset;
       this.storage.setItem(assetDbKeyFactory(chainId, assetId), asset);
     }
