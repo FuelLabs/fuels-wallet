@@ -120,7 +120,6 @@ test.describe('SendTransaction', () => {
 
     // Select asset
     await getButtonByText(page, 'Select one asset').click();
-    await page.pause();
     await page.getByText(ALT_ASSET.name).click();
 
     // Fill address

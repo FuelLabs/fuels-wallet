@@ -139,22 +139,19 @@ export class AssetsCache {
       return assetFromDb;
     }
 
-    const assetFromIndexer = await this.fetchAssetFromIndexer(
-      endpoint.url,
-      assetId
-    ).catch((e) => {
-      console.error('Error fetching asset from indexer', e);
-      return undefined;
-    });
-
-    if (!assetFromIndexer) return;
-
     const dbAsset = await getFuelAssetByAssetId({
       assets: dbAssets.length ? dbAssets : this.dbAssetsCache[chainId],
       assetId: assetId,
       chainId,
     }).catch((e) => {
       console.error('Error fetching asset from db', e);
+      return undefined;
+    });
+    const assetFromIndexer = await this.fetchAssetFromIndexer(
+      endpoint.url,
+      assetId
+    ).catch((e) => {
+      console.error('Error fetching asset from indexer', e);
       return undefined;
     });
 
