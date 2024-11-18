@@ -12,9 +12,7 @@ import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
 
-import { getAssetFuelCurrentChain } from '~/systems/Asset';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
-import { AssetService } from '~/systems/Asset/services/assets';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { formatGasLimit } from '~/systems/Transaction';
 import { sendMachine } from '../machines/sendMachine';
@@ -139,24 +137,6 @@ const schemaFactory = (provider?: Provider) =>
             if (accountType !== 'Account') {
               return ctx.createError({
                 message: `You can't send to ${accountType} address`,
-              });
-            }
-
-            const assets = await AssetService.getAssets();
-            const fuelAssets = await Promise.all(
-              assets.map(async (asset) => {
-                return getAssetFuelCurrentChain({
-                  asset,
-                  chainId: provider.getChainId(),
-                });
-              })
-            );
-            const assetInDb = fuelAssets.find(
-              (asset) => asset?.assetId === value
-            );
-            if (assetInDb) {
-              return ctx.createError({
-                message: `You can't send to Asset address`,
               });
             }
 
