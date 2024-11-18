@@ -26,6 +26,7 @@ export async function switchAccount(popupPage: Page, name: string) {
     return account;
   }
 
+  await popupPage.waitForTimeout(2000);
   await getByAriaLabel(popupPage, 'Accounts').click();
 
   await hasText(popupPage, name);

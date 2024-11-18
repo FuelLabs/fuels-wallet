@@ -356,4 +356,14 @@ test.describe('SendTransaction', () => {
     // Wait for transaction to be confirmed
     await hasText(page, 'success');
   });
+
+  test('Send transaction to an asset address should fail', async () => {
+    const assetAddress = provider.getBaseAssetId();
+    await visit(page, '/send');
+    await getInputByName(page, 'address').fill(assetAddress);
+    await getInputByName(page, 'amount').fill('0.001');
+    await expect(
+      page.getByText("You can't send to Asset address")
+    ).toBeVisible();
+  });
 });

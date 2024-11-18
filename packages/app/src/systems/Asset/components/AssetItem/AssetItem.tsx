@@ -37,6 +37,7 @@ export type AssetItemProps = {
   onRemove?: (assetId: string) => void;
   onEdit?: (assetId: string) => void;
   shouldShowAddAssetBtn?: boolean;
+  shouldShowCopyAssetAddress?: boolean;
 };
 
 type AssetItemComponent = FC<AssetItemProps> & {
@@ -51,6 +52,7 @@ export const AssetItem: AssetItemComponent = ({
   onRemove,
   onEdit,
   shouldShowAddAssetBtn,
+  shouldShowCopyAssetAddress,
 }) => {
   const navigate = useNavigate();
   const { visibility } = useBalanceVisibility();
@@ -75,7 +77,7 @@ export const AssetItem: AssetItemComponent = ({
   const { assetId, name, symbol, icon, decimals, isCustom } = asset;
 
   function getLeftEl() {
-    if (assetId) {
+    if (assetId && shouldShowCopyAssetAddress) {
       return (
         <Copyable
           value={assetId}
