@@ -1,8 +1,8 @@
 import type { AssetData } from '@fuel-wallet/types';
-import type { Asset, AssetFuel, Provider } from 'fuels';
+import type { AssetFuel } from 'fuels';
 import { AssetService } from '~/systems/Asset/services';
 import { getFuelAssetByAssetId } from '~/systems/Asset/utils';
-import { db } from '~/systems/Core/utils/database';
+import { type FuelCachedAsset, db } from '~/systems/Core/utils/database';
 
 type Endpoint = {
   chainId: number;
@@ -13,7 +13,7 @@ const FIVE_MINUTES = 5 * 60 * 1000;
 export class AssetsCache {
   private cache: {
     [chainId: number]: {
-      [assetId: string]: Asset & { fetchedAt?: number };
+      [assetId: string]: FuelCachedAsset;
     };
   };
   private dbAssetsCache: {
@@ -105,7 +105,7 @@ export class AssetsCache {
     assetId: string;
     dbAssets: AssetData[];
     save?: boolean;
-  }) {
+  }): Promise<FuelCachedAsset | undefined> {
     if (chainId == null || !assetId) {
       return;
     }
@@ -162,7 +162,7 @@ export class AssetsCache {
       symbol: indexerAssetSymbol,
       ...rest
     } = assetFromIndexer ?? {};
-    const asset = {
+    const asset: FuelCachedAsset = {
       ...dbAsset,
       isNft: !!isNFT,
       ...rest,
@@ -202,7 +202,7 @@ class IndexedAssetsDB {
     });
   }
 
-  async setItem(key: string, data: AssetData) {
+  async setItem(key: string, data: FuelCachedAsset) {
     await db.transaction('rw', db.indexedAssets, async () => {
       await db.indexedAssets.put({ key, ...data });
     });

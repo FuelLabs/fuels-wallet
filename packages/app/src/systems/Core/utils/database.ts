@@ -10,10 +10,13 @@ import type {
 } from '@fuel-wallet/types';
 import Dexie, { type DbEvents, type PromiseExtended, type Table } from 'dexie';
 import 'dexie-observable';
+import type { AssetFuel } from 'fuels';
 import type { TransactionCursor } from '~/systems/Transaction';
 import { applyDbVersioning } from './databaseVersioning';
 
 type FailureEvents = Extract<keyof DbEvents, 'close' | 'blocked'>;
+export type FuelCachedAsset = AssetData &
+  AssetFuel & { key: string; fetchedAt?: number };
 
 export class FuelDB extends Dexie {
   vaults!: Table<Vault, string>;
@@ -22,10 +25,7 @@ export class FuelDB extends Dexie {
   connections!: Table<Connection, string>;
   transactionsCursors!: Table<TransactionCursor, string>;
   assets!: Table<AssetData, string>;
-  indexedAssets!: Table<
-    AssetData & { key: string; fetchedAt?: number },
-    string
-  >;
+  indexedAssets!: Table<FuelCachedAsset, string>;
   abis!: Table<AbiTable, string>;
   errors!: Table<StoredFuelWalletError, string>;
   integrityCheckInterval?: NodeJS.Timeout;
