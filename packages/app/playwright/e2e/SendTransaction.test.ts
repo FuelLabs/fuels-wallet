@@ -108,7 +108,6 @@ test.describe('SendTransaction', () => {
     await hasText(page, 'success');
   });
 
-  // @TODO: re-enable after we fix who assets cache logic
   test('Send transaction in other Asset', async () => {
     const receiverWallet = Wallet.generate({
       provider,
