@@ -10,6 +10,9 @@ type Endpoint = {
 };
 
 const FIVE_MINUTES = 5 * 60 * 1000;
+export const assetDbKeyFactory = (chainId: number, assetId: string) =>
+  `${chainId}/asset/${assetId}`;
+
 export class AssetsCache {
   private cache: {
     [chainId: number]: {
@@ -60,7 +63,7 @@ export class AssetsCache {
         instance
           .getAsset({ chainId, assetId, dbAssets })
           .then((asset) => {
-            assetData.set(assetId, asset);
+            asset && assetData.set(assetId, asset);
           })
           .catch((e) => {
             console.error('Error fetching asset from indexer', e);
@@ -89,9 +92,16 @@ export class AssetsCache {
     } catch (_e: unknown) {}
   }
 
-  assetIsValid(asset: AssetData) {
+  assetIsValid(asset: FuelCachedAsset) {
+    const isNftAsset = asset.isNft && !asset.decimals;
+    // Non-NFT assets (not account addresses)
+    const isNonNftAsset = !asset.isNft && !!asset.decimals;
+    const isZeroDecimalAsset = !asset.isNft && !asset.decimals && asset.symbol;
     return (
-      asset.name != null && 'fetchedAt' in asset && asset.fetchedAt != null
+      asset.name != null &&
+      'fetchedAt' in asset &&
+      asset.fetchedAt != null &&
+      (isNftAsset || isNonNftAsset || isZeroDecimalAsset)
     );
   }
 
@@ -129,14 +139,16 @@ export class AssetsCache {
     }
 
     // get from indexed db if not in memory
-    const assetFromDb = await this.storage.getItem(`${chainId}/${assetId}`);
+    const assetFromDb = await this.storage.getItem(
+      assetDbKeyFactory(chainId, assetId)
+    );
     if (
       assetFromDb?.name &&
       assetFromDb.fetchedAt &&
       now - assetFromDb.fetchedAt < FIVE_MINUTES
     ) {
       this.cache[chainId][assetId] = assetFromDb;
-      return assetFromDb;
+      return assetFromDb as FuelCachedAsset;
     }
 
     const dbAsset = await getFuelAssetByAssetId({
@@ -179,9 +191,9 @@ export class AssetsCache {
       asset.name = '';
     }
 
-    if (save) {
+    if (save && this.assetIsValid(asset)) {
       this.cache[chainId][assetId] = asset;
-      this.storage.setItem(`${chainId}/${assetId}`, asset);
+      this.storage.setItem(assetDbKeyFactory(chainId, assetId), asset);
     }
     return asset;
   }
@@ -204,7 +216,7 @@ class IndexedAssetsDB {
 
   async setItem(key: string, data: FuelCachedAsset) {
     await db.transaction('rw', db.indexedAssets, async () => {
-      await db.indexedAssets.put({ key, ...data });
+      await db.indexedAssets.put({ ...data, key });
     });
   }
 }
