@@ -74,22 +74,6 @@ export const AssetItem: AssetItemComponent = ({
 
   const { assetId, name, symbol, icon, decimals, isCustom } = asset;
 
-  function getLeftEl() {
-    if (assetId) {
-      return (
-        <Copyable
-          value={assetId}
-          tooltipMessage="Copy asset address"
-          css={styles.assetIdCopy}
-          iconProps={{
-            icon: Icon.is('Copy'),
-            'aria-label': 'Copy asset address',
-          }}
-        />
-      );
-    }
-  }
-
   function getRightEl() {
     if (showActions) {
       return (
@@ -213,7 +197,6 @@ export const AssetItem: AssetItemComponent = ({
           {symbol ? (
             <>
               <Text css={styles.assetSymbol}>{symbol}</Text>
-              {getLeftEl()}
             </>
           ) : (
             <Copyable value={assetId || ''} css={styles.unknownAssetId}>
