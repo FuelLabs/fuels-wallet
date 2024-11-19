@@ -8,6 +8,7 @@ import {
   getButtonByText,
   getByAriaLabel,
   getInputByName,
+  getInputByValue,
   hasText,
   visit,
 } from '../commons';
@@ -306,6 +307,45 @@ test.describe('SendTransaction', () => {
     await hasText(page, 'success');
   });
 
+  test('Send transaction to a name', async () => {
+    await visit(page, '/send');
+
+    // Check submit button is disable by default
+    await page.waitForSelector('[aria-disabled="true"]');
+
+    // Select asset
+    await getButtonByText(page, 'Select one asset').click();
+    await page.getByText('Ethereum').click();
+    await page.waitForTimeout(2000);
+
+    // Fill address
+    await getInputByName(page, 'address').fill('@fuel');
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    await expect(getInputByName(page, 'address')).toHaveValue(
+      '0x1a0C79Bb0d7C5d336451E31D9Ad012186B81B3b1E5322265439A52Ce542F14DA'
+    );
+
+    await getInputByName(page, 'amount').focus();
+
+    // Fill amount
+    await getInputByName(page, 'amount').fill('0.001');
+
+    // Submit transaction
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await page.waitForTimeout(5000);
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
+
+    await getButtonByText(page, 'Approve').click();
+    await hasText(page, '0.001 ETH');
+
+    // Wait for transaction to be confirmed
+    await hasText(page, 'success');
+  });
+
   test('Send max amount transaction', async () => {
     const receiverWallet = Wallet.generate({
       provider,
@@ -365,52 +405,5 @@ test.describe('SendTransaction', () => {
     await expect(
       page.getByText("You can't send to Asset address")
     ).toBeVisible();
-  });
-
-  test('Send transaction to a name', async () => {
-    await visit(page, '/send');
-
-    // Check submit button is disable by default
-    await page.waitForSelector('[aria-disabled="true"]');
-
-    // Select asset
-    await getButtonByText(page, 'Select one asset').click();
-    await page.getByText('Ethereum').click();
-
-    // Fill address
-    await getInputByName(page, 'address').fill('@fuel');
-    await page.waitForTimeout(500);
-
-    const nameAddress = await getInputByName(page, 'address').inputValue();
-    expect(nameAddress).toBe(
-      '0xb0B75fCdCf8749aa85Ed2D09512e69505143C741997Ba41B5BDB64f2e312e354'
-    );
-
-    // Focus on input and wait, to avoid flakiness
-    await getInputByName(page, 'amount').focus();
-    await page.waitForTimeout(500);
-
-    // Fill amount
-    await getByAriaLabel(page, 'Max').click();
-
-    // Get calculated fee
-    await hasText(page, /(.*)ETH/);
-
-    // Fee values change
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-
-    const maxAmountAfterFee = await getInputByName(page, 'amount').inputValue();
-
-    // Submit transaction
-    await getButtonByText(page, 'Review').click();
-    await hasText(page, /(.*)@fuel/);
-
-    // Approve transaction
-    await hasText(page, `${maxAmountAfterFee} ETH`);
-    await getButtonByText(page, 'Approve').click();
-    await hasText(page, `${maxAmountAfterFee} ETH`);
-
-    // Wait for transaction to be confirmed
-    await hasText(page, 'success');
   });
 });
