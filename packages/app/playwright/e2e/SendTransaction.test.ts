@@ -319,12 +319,10 @@ test.describe('SendTransaction', () => {
     await page.waitForTimeout(2000);
 
     // Fill address
-    await getInputByName(page, 'address').fill('@fuel');
+    await getInputByName(page, 'address').fill('@bakoid');
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    await expect(getInputByName(page, 'address')).toHaveValue(
-      '0x1a0C79Bb0d7C5d336451E31D9Ad012186B81B3b1E5322265439A52Ce542F14DA'
-    );
+    await hasText(page, '0x89297d82...6bbe387D2D6975C7D3');
 
     await getInputByName(page, 'amount').focus();
 

@@ -44,6 +44,17 @@ export function SendPage() {
     setWarningMessage(undefined);
   }, [address]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const isName = nameSystemHandlers.isName(address);
+    if (isName && nameSystem.resolver.isSuccess && !nameSystem.resolver.value) {
+      form.setError('address', {
+        type: 'manual',
+        message: 'No resolver for domain provided',
+      });
+    }
+  }, [address, nameSystem.resolver.value]);
+
   return (
     <FormProvider {...form}>
       <form

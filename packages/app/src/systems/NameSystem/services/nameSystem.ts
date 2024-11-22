@@ -1,37 +1,56 @@
-import { OffChainSync } from '@bako-id/sdk';
-import { Address, type Provider } from 'fuels';
+import { BakoIDClient } from '@bako-id/sdk';
+import type { QueryClient } from '@tanstack/react-query';
+import type { Provider } from 'fuels';
+import { NS_QUERY_KEYS } from '~/systems/NameSystem/utils/queryKeys';
 
-type ChainId = number;
+type QueryData = string | null;
 
 export class NameSystemService {
-  private constructor(private offChainSync: OffChainSync) {}
+  private provider: Provider;
+  private queryClient: QueryClient;
+  private client: BakoIDClient;
 
-  private static instances: { [key: ChainId]: OffChainSync } = {};
-
-  static async connect(provider: Provider) {
-    const chainId = provider.getChainId();
-    let instance = NameSystemService.instances[chainId];
-
-    if (!instance) {
-      instance = await OffChainSync.create(provider);
-      NameSystemService.instances[chainId] = instance;
-    }
-
-    return new NameSystemService(instance);
+  constructor(provider: Provider, queryClient: QueryClient) {
+    this.provider = provider;
+    this.client = new BakoIDClient(provider);
+    this.queryClient = queryClient;
   }
 
-  name(address: string) {
-    const addressInstance = Address.fromString(address);
-    let name = this.offChainSync.getDomain(addressInstance.toB256());
-
-    if (!name) {
-      name = this.offChainSync.getDomain(addressInstance.toString());
-    }
-
-    return name ? `@${name}` : undefined;
+  static profileURI(provider: Provider, name: string) {
+    const client = new BakoIDClient(provider);
+    return client.profile(name);
   }
 
-  resolver(name: string) {
-    return this.offChainSync.getResolver(name);
+  async name(address: string) {
+    const queryKey = NS_QUERY_KEYS.address(address, this.provider.url);
+    const queryData = this.queryClient.getQueryData<QueryData>(queryKey);
+
+    if (typeof queryData !== 'undefined') {
+      return { name: queryData, address };
+    }
+
+    let name = await this.client.name(address);
+    name = name ? `@${name}` : null;
+    this.queryClient.setQueryData(queryKey, name);
+    return {
+      name,
+      address,
+    };
+  }
+
+  async resolver(name: string) {
+    const queryKey = NS_QUERY_KEYS.name(name, this.provider.url);
+    const queryData = this.queryClient.getQueryData<QueryData>(queryKey);
+
+    if (typeof queryData !== 'undefined') {
+      return { name, address: queryData };
+    }
+
+    const resolver = await this.client.resolver(name);
+    this.queryClient.setQueryData(queryKey, resolver);
+    return {
+      name,
+      address: resolver,
+    };
   }
 }

@@ -14,7 +14,7 @@ import type { TxInputs } from '~/systems/Transaction/services';
 
 import { isValidDomain } from '@bako-id/sdk';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
-import { useNameSystemResolver } from '~/systems/NameSystem';
+import { useNameSystem } from '~/systems/NameSystem';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { formatGasLimit } from '~/systems/Transaction';
 import { sendMachine } from '../machines/sendMachine';
@@ -283,7 +283,7 @@ export function useSend() {
   const txRequest = useTransactionRequest();
   const { account } = useAccounts();
   const provider = useProvider();
-  const nameSystem = useNameSystemResolver();
+  const nameSystem = useNameSystem();
 
   const service = useInterpret(() =>
     sendMachine.withConfig({
@@ -309,7 +309,7 @@ export function useSend() {
           txRequest.handlers.request({
             providerUrl,
             transactionRequest,
-            address: nameSystem.resolver ?? address,
+            address: nameSystem.resolver.value ?? address,
             fees: {
               baseFee,
               regularTip,
@@ -403,7 +403,7 @@ export function useSend() {
         const { address, asset, amount, fees } = data;
 
         const input: TxInputs['createTransfer'] = {
-          to: nameSystem.resolver ?? address,
+          to: nameSystem.resolver.value ?? address,
           assetId: asset,
           amount,
           tip: fees.tip.amount,

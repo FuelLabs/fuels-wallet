@@ -27,7 +27,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   const fuelAddress = isValidAddress
     ? Address.fromString(address).toString()
     : '';
-  const nameResolver = useNameResolver(fuelAddress);
+  const { name: nameResolver } = useNameResolver(fuelAddress);
   const isContract = recipient?.type === AddressType.contract;
   const isEthChain = recipient?.chain === ChainName.ethereum;
   const isNetwork = address === 'Network';

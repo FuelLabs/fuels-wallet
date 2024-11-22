@@ -19,7 +19,7 @@
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
-    "@bako-id/sdk": "0.0.15",
+    "@bako-id/sdk": "0.0.16",
     "@fontsource/source-code-pro": "5.0.13",
     "@fuel-ui/css": "0.23.3",
     "@fuel-ui/icons": "0.23.3",
@@ -34,7 +34,7 @@
     "@sentry/react": "8.33.1",
     "@storybook/addon-viewport": "7.4.6",
     "@storybook/jest": "0.2.3",
-    "@tanstack/react-query": "5.28.4",
+    "@tanstack/react-query": "5.61.0",
     "@xstate/react": "3.2.2",
     "compare-versions": "6.1.0",
     "cross-fetch": "4.0.0",
@@ -84,7 +84,7 @@
     "@storybook/react-webpack5": "7.4.6",
     "@storybook/testing-library": "0.2.2",
     "@storybook/theming": "7.4.6",
-    "@tanstack/react-query-devtools": "5.28.4",
+    "@tanstack/react-query-devtools": "5.61.0",
     "@testing-library/react": "14.0.0",
     "@types/chrome": "0.0.246",
     "@types/lodash.debounce": "4.0.7",
