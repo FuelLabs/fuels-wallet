@@ -26,7 +26,7 @@ import {
 
 import { useController, useWatch } from 'react-hook-form';
 import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
-import { NameSystemBox } from '~/systems/NameSystem';
+import { NameSystemBox, NameSystemWrapper } from '~/systems/NameSystem';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
 import type { UseSendReturn } from '../../hooks';
 
@@ -139,53 +139,60 @@ export function SendSelect({
             To
           </Text>
           <Box css={styles.addressRow}>
-            <NameSystemBox
-              onClear={clearAddress}
+            <NameSystemWrapper
               isVisible={Boolean(
                 nameSystem.resolver.value && nameSystem.name.value
               )}
-              name={nameSystem.name.value}
-              resolver={nameSystem.resolver.value}
-              link={nameSystem.profileURI}
-            >
-              <ControlledField
-                isRequired
-                name="address"
-                control={form.control}
-                isInvalid={
-                  Boolean(form.formState.errors?.address) &&
-                  !form.formState.isValidating
-                }
-                render={({ field }) => (
-                  <Input size="sm" isDisabled={nameSystem.isLoading}>
-                    <Input.Field
-                      {...field}
-                      value={nameSystem.resolver.value ?? field.value}
-                      id="search-address"
-                      aria-label="Address Input"
-                      placeholder="Enter a fuel address"
-                    />
-                    {nameSystem.isLoading && (
-                      <Input.ElementRight
-                        css={{ mr: '$1' }}
-                        element={<Spinner size={15} />}
+              element={
+                <NameSystemBox
+                  onClear={clearAddress}
+                  name={nameSystem.name.value}
+                  resolver={nameSystem.resolver.value}
+                  link={nameSystem.profileURI}
+                />
+              }
+              input={
+                <ControlledField
+                  isRequired
+                  name="address"
+                  control={form.control}
+                  isInvalid={
+                    Boolean(form.formState.errors?.address) &&
+                    !form.formState.isValidating
+                  }
+                  render={({ field }) => (
+                    <Input size="sm" isDisabled={nameSystem.isLoading}>
+                      <Input.Field
+                        {...field}
+                        value={nameSystem.resolver.value ?? field.value}
+                        id="search-address"
+                        aria-label="Address Input"
+                        placeholder="Enter a fuel address"
                       />
-                    )}
-                  </Input>
-                )}
-              />
-            </NameSystemBox>
-            <Form.HelperText
-              aria-label="Error message"
-              css={{
-                mt: '$3',
-                fontSize: '14px',
-                lineHeight: '18px',
-                color: '$intentsWarning8',
-              }}
-            >
-              {warningMessage}
-            </Form.HelperText>
+                      {nameSystem.isLoading && (
+                        <Input.ElementRight
+                          css={{ mr: '$1' }}
+                          element={<Spinner size={15} />}
+                        />
+                      )}
+                    </Input>
+                  )}
+                />
+              }
+            />
+            {warningMessage && !form.formState.errors?.address && (
+              <Form.HelperText
+                aria-label="Error message"
+                css={{
+                  mt: '$3',
+                  fontSize: '14px',
+                  lineHeight: '18px',
+                  color: '$intentsWarning8',
+                }}
+              >
+                {warningMessage}
+              </Form.HelperText>
+            )}
           </Box>
         </Box.Flex>
         <Box.Stack gap="$3">
