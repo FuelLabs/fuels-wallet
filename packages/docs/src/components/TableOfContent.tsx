@@ -25,6 +25,33 @@ export function TableOfContent() {
     }
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const observerOptions = {
+      root: null, 
+      rootMargin: "0px",
+      threshold: 0.6,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setCurrentHash(`#${entry.target.id}`);
+        }
+      });
+    }, observerOptions);
+
+    const sections = headings.map((heading) =>
+      document.getElementById(heading.id)
+    );
+    sections.forEach((section) => section && observer.observe(section));
+
+    return () => {
+      sections.forEach((section) => section && observer.unobserve(section));
+    };
+  }, [headings]);
+
   return (
     <Box css={styles.queries}>
       <Box css={styles.root}>
