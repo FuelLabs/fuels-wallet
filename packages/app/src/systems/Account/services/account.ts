@@ -186,6 +186,26 @@ export class AccountService {
     });
   }
 
+  static setCurrentAccountToFalse() {
+    return db.transaction('rw', db.accounts, async () => {
+      await db.accounts
+        .filter((account) => !!account.isCurrent)
+        .modify({ isCurrent: false });
+    });
+  }
+
+  static setCurrentAccountToDefault() {
+    console.log('recovering default');
+    return db.transaction('rw', db.accounts, async () => {
+      const [firstAccount] = await db.accounts.toArray();
+      if (firstAccount) {
+        await db.accounts
+          .filter((account) => account.address === firstAccount.address)
+          .modify({ isCurrent: true });
+      }
+    });
+  }
+
   static setCurrentAccount(input: AccountInputs['setCurrentAccount']) {
     return db.transaction('rw', db.accounts, async () => {
       await db.accounts
