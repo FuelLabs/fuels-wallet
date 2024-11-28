@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.42.2
+
+### Patch Changes
+
+- [#1667](https://github.com/FuelLabs/fuels-wallet/pull/1667) [`45de3e1f`](https://github.com/FuelLabs/fuels-wallet/commit/45de3e1f1fa5bd8638c39622f49f6a64a2e74d1d) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - fix wallet reset when fetch account returns undefined
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.42.2
+  - @fuels/playwright-utils@0.42.2
+
 ## 0.42.1
 
 ### Patch Changes
