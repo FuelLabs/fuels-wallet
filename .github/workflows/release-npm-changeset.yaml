@@ -24,7 +24,7 @@ jobs:
           # workaround to ensure force pushes to changeset branch use REPO_TOKEN owner's account
           # see https://github.com/changesets/action/issues/70
           persist-credentials: false
-      - uses: FuelLabs/github-actions/setups/node@master
+      - uses: FuelLabs/github-actions/setups/node@58bcd91
         with:
           node-version: 20.11.0
           pnpm-version: 9.5.0
