@@ -65,3 +65,5 @@ Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/
 ## 📜 License
 
 This repo is licensed under the `Apache-2.0` license. See [`LICENSE`](./LICENSE) for more information.
+
+
