@@ -50,7 +50,7 @@ const fetchAccount = {
       },
       {
         target: 'idle',
-        actions: ['assignAccount', 'setIsUnlogged'],
+        actions: ['assignAccount'],
       },
     ],
     onError: [
@@ -106,7 +106,7 @@ export const accountsMachine = createMachine(
             },
             {
               target: 'idle',
-              actions: ['assignAccounts', 'setIsUnlogged'],
+              actions: ['assignAccounts'],
             },
           ],
           onError: [
@@ -211,9 +211,6 @@ export const accountsMachine = createMachine(
       setIsLogged: () => {
         Storage.setItem(IS_LOGGED_KEY, true);
       },
-      setIsUnlogged: () => {
-        Storage.removeItem(IS_LOGGED_KEY);
-      },
       notifyUpdateAccounts: () => {
         store.updateAccounts();
       },
@@ -232,7 +229,11 @@ export const accountsMachine = createMachine(
         showError: true,
         maxAttempts: 1,
         async fetch() {
-          const accountToFetch = await AccountService.getCurrentAccount();
+          let accountToFetch = await AccountService.getCurrentAccount();
+          if (!accountToFetch) {
+            await AccountService.setCurrentAccountToDefault();
+            accountToFetch = await AccountService.getCurrentAccount();
+          }
           if (!accountToFetch) return undefined;
           const selectedNetwork = await NetworkService.getSelectedNetwork();
           if (!selectedNetwork) {
