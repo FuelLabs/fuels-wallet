@@ -18,7 +18,7 @@ jobs:
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
-      - uses: FuelLabs/github-actions/setups/node@58bcd91
+      - uses: FuelLabs/github-actions/setups/node/action.yaml@58bcd91
         with:
           node-version: 20.11.0
           pnpm-version: 9.5.0
