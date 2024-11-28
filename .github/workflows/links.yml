@@ -5,7 +5,7 @@ on:
 
 jobs:
     check-links:
-        uses: FuelLabs/github-actions/.github/workflows/next-links.yml@master
+        uses: FuelLabs/github-actions/.github/workflows/next-links.yml@4b7c2da
         with:
           status: ${{ github.event.deployment_status.state }}
           preview-url: ${{ github.event.deployment_status.environment_url }}

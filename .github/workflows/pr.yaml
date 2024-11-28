@@ -45,7 +45,7 @@ jobs:
           fetch-depth: 0
 
       - name: CI Setup
-        uses: FuelLabs/github-actions/setups/node@master
+        uses: FuelLabs/github-actions/setups/node@58bcd91d7246e40938e1971be0b0fe35b253dff0
         with:
           node-version: 20.11.0
           pnpm-version: 9.5.0
@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: FuelLabs/github-actions/setups/node@master
+      - uses: FuelLabs/github-actions/setups/node@58bcd91d7246e40938e1971be0b0fe35b253dff0
         with:
           node-version: 20.11.0
           pnpm-version: 9.5.0
@@ -87,7 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: FuelLabs/github-actions/setups/node@master
+      - uses: FuelLabs/github-actions/setups/node@58bcd91d7246e40938e1971be0b0fe35b253dff0
         with:
           node-version: 20.11.0
           pnpm-version: 9.5.0
@@ -105,7 +105,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup Node
-        uses: FuelLabs/github-actions/setups/node@master
+        uses: FuelLabs/github-actions/setups/node@58bcd91d7246e40938e1971be0b0fe35b253dff0
         with:
           node-version: 20.11.0
           pnpm-version: 9.5.0
