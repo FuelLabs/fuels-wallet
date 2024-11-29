@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.42.3
+
+### Patch Changes
+
+- [#1672](https://github.com/FuelLabs/fuels-wallet/pull/1672) [`e187dc50`](https://github.com/FuelLabs/fuels-wallet/commit/e187dc50a03fd0e42b7ab85a792b97b9fb23a021) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: change title/button text of Approve transaction screen
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.42.3
+  - @fuels/playwright-utils@0.42.3
+
 ## 0.42.2
 
 ### Patch Changes
