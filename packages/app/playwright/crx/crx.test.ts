@@ -704,7 +704,7 @@ test.describe('FuelWallet Extension', () => {
         );
 
         await hasAriaLabel(approveTransactionPage, 'Confirm Transaction');
-        await getButtonByText(approveTransactionPage, /Approve/i).click();
+        await getButtonByText(approveTransactionPage, /Submit/i).click();
 
         await expect(transferStatus).resolves.toBe('success');
         const balance = await receiverWallet.getBalance();
