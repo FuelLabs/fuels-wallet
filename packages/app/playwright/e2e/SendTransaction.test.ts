@@ -271,7 +271,7 @@ test.describe('SendTransaction', () => {
     await btnLocatorBeforeApprv.click();
 
     // Waiting button change to Approve in order to get updated fee amount
-    await page.waitForSelector('button:has-text("Approve")');
+    await page.waitForSelector('button:has-text("Submit")');
     await page.waitForTimeout(1000);
 
     // Going back to select other fee value
@@ -293,7 +293,7 @@ test.describe('SendTransaction', () => {
     await btnLocator.click();
 
     // Waiting button change to Approve in order to get updated fee amount
-    await page.waitForSelector('button:has-text("Approve")');
+    await page.waitForSelector('button:has-text("Submit")');
     await page.waitForTimeout(1000);
 
     await hasText(page, '0.001 ETH');
