@@ -64,7 +64,7 @@ test.describe('SendTransaction', () => {
     await expectButtonToBeEnabled(btnLocator);
     await btnLocator.click();
 
-    await getButtonByText(page, 'Approve').click();
+    await getButtonByText(page, 'Submit').click();
     await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
@@ -102,7 +102,7 @@ test.describe('SendTransaction', () => {
 
     // Approve transaction
     await hasText(page, '0.001 ETH');
-    await getButtonByText(page, 'Approve').click();
+    await getButtonByText(page, 'Submit').click();
 
     // Wait for transaction to be confirmed
     await hasText(page, 'success');
@@ -147,7 +147,7 @@ test.describe('SendTransaction', () => {
 
     // Approve transaction
     await hasText(page, `0.01 ${ALT_ASSET.symbol}`);
-    await getButtonByText(page, 'Approve').click();
+    await getButtonByText(page, 'Submit').click();
 
     // Wait for transaction to be confirmed
     await hasText(page, 'success');
@@ -184,7 +184,7 @@ test.describe('SendTransaction', () => {
 
     await hasText(page, '0.001 ETH');
 
-    await getButtonByText(page, 'Approve').click();
+    await getButtonByText(page, 'Submit').click();
     await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
@@ -226,7 +226,7 @@ test.describe('SendTransaction', () => {
 
     await hasText(page, '0.001 ETH');
 
-    await getButtonByText(page, 'Approve').click();
+    await getButtonByText(page, 'Submit').click();
     await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
@@ -299,7 +299,7 @@ test.describe('SendTransaction', () => {
     await hasText(page, '0.001 ETH');
 
     await page.waitForTimeout(1000);
-    await getButtonByText(page, 'Approve').click();
+    await getButtonByText(page, 'Submit').click();
     await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
@@ -350,7 +350,7 @@ test.describe('SendTransaction', () => {
 
     // Approve transaction
     await hasText(page, `${maxAmountAfterFee} ETH`);
-    await getButtonByText(page, 'Approve').click();
+    await getButtonByText(page, 'Submit').click();
     await hasText(page, `${maxAmountAfterFee} ETH`);
 
     // Wait for transaction to be confirmed
