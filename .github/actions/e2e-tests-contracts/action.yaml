@@ -29,9 +29,9 @@ runs:
     - name: Install Playwright Browsers
       shell: bash
       run: npx playwright install --with-deps chromium
-    - name: Install Playwright Browsers
-      shell: bash
-      run: npx playwright install --with-deps chrome-beta
+    # - name: Install Playwright Browsers
+    #   shell: bash
+    #   run: npx playwright install --with-deps chrome-beta
 
     - name: Run E2E Contract Tests
       shell: bash
