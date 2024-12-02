@@ -40,7 +40,11 @@ jobs:
 
       # E2E tests running with Playwright
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium chrome-beta
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chrome-beta
+      
 
       - name: Run E2E Tests
         run: xvfb-run --auto-servernum -- pnpm test:e2e
