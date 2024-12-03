@@ -126,7 +126,11 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
           {shortAddress(assetId)}
         </Text>
       </Copyable>
-      <Box.Flex ref={containerRef} css={styles.amountContainer}>
+      <Box.Flex
+        ref={containerRef}
+        aria-label="amount-container"
+        css={styles.amountContainer}
+      >
         <Tooltip
           content={formatted}
           delayDuration={0}
