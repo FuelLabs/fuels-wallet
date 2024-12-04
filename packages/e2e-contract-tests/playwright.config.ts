@@ -10,7 +10,7 @@ const IS_CI = process.env.CI;
 const config: PlaywrightTestConfig = defineConfig({
   testDir: './playwright',
   outputDir: './playwright-results/',
-  retries: 3,
+  retries: 1,
   maxFailures: IS_CI ? 1 : undefined,
   workers: 1,
   timeout: 60_000,
