@@ -1,8 +1,7 @@
-import { cx } from '@fuel-ui/css';
-import { Avatar, Box, Copyable, Grid, Text } from '@fuel-ui/react';
+import { Avatar, Box, Copyable, Grid, Text, Tooltip } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
-import type { FC } from 'react';
+import { type FC, useEffect, useRef, useState } from 'react';
 import { formatAmount, shortAddress } from '~/systems/Core';
 import type { InsufficientInputAmountError } from '~/systems/Transaction';
 
@@ -83,7 +82,6 @@ type AssetsAmountItemProps = {
 };
 
 const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
-  const assetAmountClass = cx('asset_amount');
   const {
     name = '',
     symbol,
@@ -92,8 +90,27 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
     decimals,
     amount,
   } = assetAmount || {};
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
+
+  const formatted = formatAmount({
+    amount,
+    options: { units: decimals || 0, precision: decimals || 0 },
+  });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (containerRef.current) {
+      const amountElement = containerRef.current.querySelector('.amount-value');
+      if (amountElement) {
+        setIsTruncated(amountElement.scrollWidth > amountElement.clientWidth);
+      }
+    }
+  }, [formatted]);
+
   return (
-    <Grid key={assetId} css={styles.root} className={assetAmountClass}>
+    <Grid key={assetId} css={styles.root}>
       <Box.Flex css={styles.asset}>
         {icon ? (
           <Avatar name={name} src={icon} />
@@ -109,12 +126,23 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
           {shortAddress(assetId)}
         </Text>
       </Copyable>
-      <Box.Flex css={styles.amount}>
-        {formatAmount({
-          amount,
-          options: { units: decimals || 0, precision: decimals || 0 },
-        })}{' '}
-        {symbol}
+      <Box.Flex
+        ref={containerRef}
+        aria-label="amount-container"
+        css={styles.amountContainer}
+      >
+        <Tooltip
+          content={formatted}
+          delayDuration={0}
+          open={isTruncated ? undefined : false}
+        >
+          <Text as="span" css={styles.amountValue} className="amount-value">
+            {formatted}
+          </Text>
+        </Tooltip>
+        <Text as="span" css={styles.amountSymbol}>
+          {symbol}
+        </Text>
       </Box.Flex>
     </Grid>
   );
