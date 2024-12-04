@@ -59,4 +59,8 @@ export const styles = {
     fontSize: '$sm',
     fontWeight: '$normal',
   }),
+  assetNft: cssObj({
+    fontSize: '$sm',
+    lineHeight: 'normal',
+  }),
 };

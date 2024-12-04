@@ -1,5 +1,4 @@
-import { cx } from '@fuel-ui/css';
-import { Avatar, Box, Copyable, Grid, Text } from '@fuel-ui/react';
+import { Avatar, Badge, Box, Copyable, Grid, Text } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import type { FC } from 'react';
@@ -83,7 +82,6 @@ type AssetsAmountItemProps = {
 };
 
 const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
-  const assetAmountClass = cx('asset_amount');
   const {
     name = '',
     symbol,
@@ -91,9 +89,11 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
     assetId,
     decimals,
     amount,
+    isNft,
   } = assetAmount || {};
+
   return (
-    <Grid key={assetId} css={styles.root} className={assetAmountClass}>
+    <Grid key={assetId} css={styles.root}>
       <Box.Flex css={styles.asset}>
         {icon ? (
           <Avatar name={name} src={icon} />
@@ -103,6 +103,11 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
         <Text as="span" aria-label="Asset Name">
           {name || 'Unknown'}
         </Text>
+        {isNft && (
+          <Badge variant="ghost" intent="primary" css={styles.assetNft}>
+            NFT
+          </Badge>
+        )}
       </Box.Flex>
       <Copyable value={assetId} css={styles.address}>
         <Text fontSize="xs" css={{ mt: '$1' }}>
