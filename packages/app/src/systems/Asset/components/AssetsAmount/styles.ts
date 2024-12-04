@@ -46,14 +46,25 @@ export const styles = {
     color: '$intentsBase9',
     fontSize: '$sm',
   }),
-  amount: cssObj({
+  amountContainer: cssObj({
+    columnGap: '$1',
     justifyContent: 'flex-end',
+    alignItems: 'center',
+    flexWrap: 'nowrap',
     gridRow: '1 / 3',
     gridColumn: '2 / 3',
+    minWidth: '0',
     textAlign: 'right',
     fontSize: '$sm',
     color: '$intentsBase12',
-    alignItems: 'center',
+  }),
+  amountValue: cssObj({
+    display: 'inline-block',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  }),
+  amountSymbol: cssObj({
+    flexShrink: 0,
   }),
   title: cssObj({
     fontSize: '$sm',

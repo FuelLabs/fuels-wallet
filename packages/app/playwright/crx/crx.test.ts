@@ -691,10 +691,14 @@ test.describe('FuelWallet Extension', () => {
         // Approve transaction
         await expect
           .poll(
-            () =>
-              hasText(approveTransactionPage, /0\.0000001.ETH/i)
-                .then(() => true)
-                .catch(() => false),
+            async () => {
+              const element = await waitAriaLabel(
+                approveTransactionPage,
+                'amount-container'
+              );
+              const content = await element.textContent();
+              return /0\.0000001\s*ETH/i.test(content);
+            },
             { timeout: 15000 }
           )
           .toBeTruthy();
