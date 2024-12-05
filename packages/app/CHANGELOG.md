@@ -1,5 +1,69 @@
 # fuels-wallet
 
+## 0.42.3
+
+### Patch Changes
+
+- [#1672](https://github.com/FuelLabs/fuels-wallet/pull/1672) [`e187dc50`](https://github.com/FuelLabs/fuels-wallet/commit/e187dc50a03fd0e42b7ab85a792b97b9fb23a021) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: change title/button text of Approve transaction screen
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.42.3
+  - @fuels/playwright-utils@0.42.3
+
+## 0.42.2
+
+### Patch Changes
+
+- [#1667](https://github.com/FuelLabs/fuels-wallet/pull/1667) [`45de3e1f`](https://github.com/FuelLabs/fuels-wallet/commit/45de3e1f1fa5bd8638c39622f49f6a64a2e74d1d) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - fix wallet reset when fetch account returns undefined
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.42.2
+  - @fuels/playwright-utils@0.42.2
+
+## 0.42.1
+
+### Patch Changes
+
+- [#1657](https://github.com/FuelLabs/fuels-wallet/pull/1657) [`2e3fa771`](https://github.com/FuelLabs/fuels-wallet/commit/2e3fa7712050ff5ebb8c136543dde4b027da3cc1) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: hotfix for not allowing send to ANY asset address
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.42.1
+  - @fuels/playwright-utils@0.42.1
+
+## 0.42.0
+
+### Minor Changes
+
+- [#1655](https://github.com/FuelLabs/fuels-wallet/pull/1655) [`4e3be5dc`](https://github.com/FuelLabs/fuels-wallet/commit/4e3be5dc04b7f0214d2a368994df5f886dccdce2) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Support SRC-7, 9 nft asset data.
+
+### Patch Changes
+
+- [#1655](https://github.com/FuelLabs/fuels-wallet/pull/1655) [`4e3be5dc`](https://github.com/FuelLabs/fuels-wallet/commit/4e3be5dc04b7f0214d2a368994df5f886dccdce2) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fetch and display NFT data directly from indexer.
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed IndexDB randomly rejecting TXs and or failing to open
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Remove manual reload of wallet on integrity check fail
+
+- [#1655](https://github.com/FuelLabs/fuels-wallet/pull/1655) [`4e3be5dc`](https://github.com/FuelLabs/fuels-wallet/commit/4e3be5dc04b7f0214d2a368994df5f886dccdce2) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixes intermittent long loading state on the wallet
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Upgrade Dexie to V4
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed error where Dexie would allow insertion of entries with duplicate primary keys/ids.
+
+- Updated dependencies [[`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21)]:
+  - @fuels/playwright-utils@0.42.0
+  - @fuel-wallet/connections@0.42.0
+
+## 0.41.1
+
+### Patch Changes
+
+- [#1648](https://github.com/FuelLabs/fuels-wallet/pull/1648) [`e63d6eba`](https://github.com/FuelLabs/fuels-wallet/commit/e63d6ebaecf68340e2b0cd690056cea2bd317b29) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: improve nft support + dont allow sending funds to assetId address
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.41.1
+  - @fuels/playwright-utils@0.41.1
+
 ## 0.41.0
 
 ### Minor Changes

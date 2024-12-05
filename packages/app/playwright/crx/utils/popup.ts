@@ -1,5 +1,6 @@
 import { type Page, expect } from '@playwright/test';
 
+import { expect } from '@fuels/playwright-utils';
 import { getByAriaLabel, hasText, visit, waitAriaLabel } from '../../commons';
 import type { MockData } from '../../mocks';
 
@@ -25,6 +26,7 @@ export async function switchAccount(popupPage: Page, name: string) {
     return account;
   }
 
+  await popupPage.waitForTimeout(2000);
   await getByAriaLabel(popupPage, 'Accounts').click();
 
   await expect

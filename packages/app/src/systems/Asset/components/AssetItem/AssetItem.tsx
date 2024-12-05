@@ -36,6 +36,8 @@ export type AssetItemProps = {
   showActions?: boolean;
   onRemove?: (assetId: string) => void;
   onEdit?: (assetId: string) => void;
+  shouldShowAddAssetBtn?: boolean;
+  shouldShowCopyAssetAddress?: boolean;
 };
 
 type AssetItemComponent = FC<AssetItemProps> & {
@@ -49,6 +51,8 @@ export const AssetItem: AssetItemComponent = ({
   showActions,
   onRemove,
   onEdit,
+  shouldShowAddAssetBtn,
+  shouldShowCopyAssetAddress,
 }) => {
   const navigate = useNavigate();
   const { visibility } = useBalanceVisibility();
@@ -73,7 +77,7 @@ export const AssetItem: AssetItemComponent = ({
   const { assetId, name, symbol, icon, decimals, isCustom } = asset;
 
   function getLeftEl() {
-    if (assetId) {
+    if (assetId && shouldShowCopyAssetAddress) {
       return (
         <Copyable
           value={assetId}
@@ -194,7 +198,7 @@ export const AssetItem: AssetItemComponent = ({
                 NFT
               </Badge>
             )}
-            {(!name || asset.indexed) && !asset.isNft && (
+            {shouldShowAddAssetBtn && (
               <Button
                 size="xs"
                 intent="primary"
