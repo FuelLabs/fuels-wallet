@@ -4,7 +4,6 @@ import {
   MessageTypes,
 } from '@fuel-wallet/types';
 import type { CommunicationEventArg, Connection } from '@fuel-wallet/types';
-import {} from '@fuel-wallet/types';
 import { Address, type Network } from 'fuels';
 import type {
   JSONRPCParams,
