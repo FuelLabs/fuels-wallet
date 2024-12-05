@@ -8,7 +8,13 @@ import type {
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
 import { ConnectionService } from '~/systems/DApp/services';
 
-import { FuelConnectorEventTypes } from 'fuels';
+import {
+  type AccountEvent,
+  type AccountsEvent,
+  type ConnectionEvent,
+  FuelConnectorEventTypes,
+  type NetworkEvent,
+} from 'fuels';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { DatabaseObservable } from './DatabaseObservable';
 
@@ -51,16 +57,17 @@ export class DatabaseEvents {
         const connections = await ConnectionService.getConnections();
         const origins = connections.map((connection) => connection.origin);
 
+        const result: NetworkEvent['data'] = {
+          chainId: updateEvent.obj.chainId,
+          url: updateEvent.obj.url,
+        };
+
         this.communicationProtocol.broadcast(
           origins,
           this.createEvents([
             {
               event: FuelConnectorEventTypes.currentNetwork,
-              params: [
-                {
-                  url: updateEvent.obj.url,
-                },
-              ],
+              params: [result],
             },
           ])
         );
@@ -88,24 +95,26 @@ export class DatabaseEvents {
 
         // Notify all connections that the current account is connected
         // by sending the current account address
+        const result: AccountEvent['data'] = updateEvent.obj.address;
         this.communicationProtocol.broadcast(
           addressConnectedOrigins,
           this.createEvents([
             {
               event: FuelConnectorEventTypes.currentAccount,
-              params: [updateEvent.obj.address],
+              params: [result],
             },
           ])
         );
         // Nofity all connections that the current account is not connected
         // by sending a null value
         if (hasUnconnectedOrigins) {
+          const result: AccountEvent['data'] = null;
           this.communicationProtocol.broadcast(
             addressNotConnectedOrigins,
             this.createEvents([
               {
                 event: FuelConnectorEventTypes.currentAccount,
-                params: [null],
+                params: [result],
               },
             ])
           );
@@ -117,32 +126,37 @@ export class DatabaseEvents {
       'connections:update',
       async (updateEvent) => {
         const updatedConnection = updateEvent.obj;
+        const result: AccountsEvent['data'] = updatedConnection.accounts;
 
         this.communicationProtocol.broadcast(
           updatedConnection.origin,
           this.createEvents([
             {
               event: FuelConnectorEventTypes.accounts,
-              params: [updatedConnection.accounts],
+              params: [result],
             },
           ])
         );
       }
     );
 
-    this.databaseObservable.on('connections:delete', async (deleteEvent) => {
-      const deletedConnection = deleteEvent.oldObj as Connection;
+    this.databaseObservable.on<'connections:delete', Connection>(
+      'connections:delete',
+      async (deleteEvent) => {
+        const deletedConnection = deleteEvent.oldObj;
+        const result: ConnectionEvent['data'] = false;
 
-      this.communicationProtocol.broadcast(
-        deletedConnection.origin,
-        this.createEvents([
-          {
-            event: FuelConnectorEventTypes.connection,
-            params: [false],
-          },
-        ])
-      );
-    });
+        this.communicationProtocol.broadcast(
+          deletedConnection.origin,
+          this.createEvents([
+            {
+              event: FuelConnectorEventTypes.connection,
+              params: [result],
+            },
+          ])
+        );
+      }
+    );
   }
 
   stop() {
