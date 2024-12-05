@@ -14,7 +14,8 @@ const CHECKSUM_MESSAGE =
 
 export function SendPage() {
   const send = useSend();
-  const { handlers, txRequest, status, form, readyToSend } = send;
+  const { handlers, txRequest, status, form, readyToSend, nameSystem } = send;
+  const { handlers: nameSystemHandlers } = nameSystem;
   const [warningMessage, setWarningMessage] = useState<string | undefined>(
     undefined
   );
@@ -23,9 +24,18 @@ export function SendPage() {
     name: 'address',
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    nameSystemHandlers.clear();
+
     if (address) {
+      if (nameSystemHandlers.isName(address)) {
+        nameSystemHandlers.getResolver(address);
+        return;
+      }
+
       if (isB256(address)) {
+        nameSystemHandlers.getName(address);
         const isValid = Address.isChecksumValid(address);
         setWarningMessage(isValid ? undefined : CHECKSUM_MESSAGE);
         return;
@@ -33,6 +43,17 @@ export function SendPage() {
     }
     setWarningMessage(undefined);
   }, [address]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const isName = nameSystemHandlers.isName(address);
+    if (isName && nameSystem.resolver.isSuccess && !nameSystem.resolver.value) {
+      form.setError('address', {
+        type: 'manual',
+        message: 'No resolver for domain provided',
+      });
+    }
+  }, [address, nameSystem.resolver.value]);
 
   return (
     <FormProvider {...form}>

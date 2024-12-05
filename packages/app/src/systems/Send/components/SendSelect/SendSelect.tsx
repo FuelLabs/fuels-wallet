@@ -1,8 +1,19 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Form, Input, Text } from '@fuel-ui/react';
+import {
+  Alert,
+  Box,
+  Card,
+  Form,
+  Icon,
+  IconButton,
+  Input,
+  Link,
+  Spinner,
+  Text,
+} from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { type BN, bn } from 'fuels';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import {
   ControlledField,
@@ -10,10 +21,12 @@ import {
   MotionFlex,
   MotionStack,
   animations,
+  shortAddress,
 } from '~/systems/Core';
 
 import { useController, useWatch } from 'react-hook-form';
 import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
+import { NameSystemBox, NameSystemWrapper } from '~/systems/NameSystem';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
 import type { UseSendReturn } from '../../hooks';
 
@@ -33,6 +46,7 @@ export function SendSelect({
   errorMessage,
   warningMessage,
   provider,
+  nameSystem,
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
   const isAmountFocused = useRef<boolean>(false);
@@ -90,6 +104,11 @@ export function SendSelect({
     ...b.asset,
   }));
 
+  const clearAddress = useCallback(() => {
+    form.setValue('address', '');
+    nameSystem.handlers.clear();
+  }, [form, nameSystem.handlers]);
+
   return (
     <MotionContent {...animations.slideInTop()}>
       <Box.Stack gap="$3">
@@ -120,26 +139,60 @@ export function SendSelect({
             To
           </Text>
           <Box css={styles.addressRow}>
-            <ControlledField
-              isRequired
-              name="address"
-              control={form.control}
-              warning={warningMessage}
-              isInvalid={
-                Boolean(form.formState.errors?.address) &&
-                !form.formState.isValidating
-              }
-              render={({ field }) => (
-                <Input size="sm">
-                  <Input.Field
-                    {...field}
-                    id="search-address"
-                    aria-label="Address Input"
-                    placeholder="Enter a fuel address"
-                  />
-                </Input>
+            <NameSystemWrapper
+              isVisible={Boolean(
+                nameSystem.resolver.value && nameSystem.name.value
               )}
+              element={
+                <NameSystemBox
+                  onClear={clearAddress}
+                  name={nameSystem.name.value}
+                  resolver={nameSystem.resolver.value}
+                  link={nameSystem.profileURI}
+                />
+              }
+              input={
+                <ControlledField
+                  isRequired
+                  name="address"
+                  control={form.control}
+                  isInvalid={
+                    Boolean(form.formState.errors?.address) &&
+                    !form.formState.isValidating
+                  }
+                  render={({ field }) => (
+                    <Input size="sm" isDisabled={nameSystem.isLoading}>
+                      <Input.Field
+                        {...field}
+                        value={nameSystem.resolver.value ?? field.value}
+                        id="search-address"
+                        aria-label="Address Input"
+                        placeholder="Enter a fuel address"
+                      />
+                      {nameSystem.isLoading && (
+                        <Input.ElementRight
+                          css={{ mr: '$1' }}
+                          element={<Spinner size={15} />}
+                        />
+                      )}
+                    </Input>
+                  )}
+                />
+              }
             />
+            {warningMessage && !form.formState.errors?.address && (
+              <Form.HelperText
+                aria-label="Error message"
+                css={{
+                  mt: '$3',
+                  fontSize: '14px',
+                  lineHeight: '18px',
+                  color: '$intentsWarning8',
+                }}
+              >
+                {warningMessage}
+              </Form.HelperText>
+            )}
           </Box>
         </Box.Flex>
         <Box.Stack gap="$3">
@@ -242,6 +295,22 @@ const styles = {
     '.error-msg': {
       fontSize: '$sm',
       color: '$intentsError9',
+    },
+  }),
+  addressBox: cssObj({
+    display: 'flex',
+    justifyContent: 'center',
+    px: '$3 !important',
+    py: '$1 !important',
+    flexDirection: 'column',
+    position: 'relative',
+
+    '.fuel_Link': {
+      fontSize: '$sm',
+    },
+    '.fuel_Button': {
+      position: 'absolute',
+      right: '-$1',
     },
   }),
   alert: cssObj({

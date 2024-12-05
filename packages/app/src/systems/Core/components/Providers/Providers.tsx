@@ -11,6 +11,7 @@ import { StoreProvider } from '~/store';
 
 import icons from '/icons/sprite.svg';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '~/systems/Error';
 
 type ProvidersProps = {
@@ -50,13 +51,23 @@ setFuelThemes({
   },
 });
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnMount: false,
+    },
+  },
+});
+
 export function Providers({ children }: ProvidersProps) {
   return (
     <ThemeProvider>
       <ErrorBoundary>
         <StoreProvider>
-          {globalCss(customStyles)()}
-          {children}
+          <QueryClientProvider client={queryClient}>
+            {globalCss(customStyles)()}
+            {children}
+          </QueryClientProvider>
         </StoreProvider>
       </ErrorBoundary>
     </ThemeProvider>

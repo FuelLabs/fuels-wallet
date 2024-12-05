@@ -1,8 +1,14 @@
 import { isB256 } from 'fuels';
 
-export function shortAddress(address = '') {
+export function shortAddress(
+  address = '',
+  options: { left: number; right: number } = {
+    left: 6,
+    right: 4,
+  }
+) {
   return address.length > 10
-    ? `${address.slice(0, 6)}...${address.slice(-4)}`
+    ? `${address.slice(0, options.left)}...${address.slice(-options.right)}`
     : address;
 }
 

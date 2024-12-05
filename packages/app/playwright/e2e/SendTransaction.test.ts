@@ -8,6 +8,7 @@ import {
   getButtonByText,
   getByAriaLabel,
   getInputByName,
+  getInputByValue,
   hasText,
   visit,
 } from '../commons';
@@ -300,6 +301,43 @@ test.describe('SendTransaction', () => {
 
     await page.waitForTimeout(1000);
     await getButtonByText(page, 'Submit').click();
+    await hasText(page, '0.001 ETH');
+
+    // Wait for transaction to be confirmed
+    await hasText(page, 'success');
+  });
+
+  test('Send transaction to a name', async () => {
+    await visit(page, '/send');
+
+    // Check submit button is disable by default
+    await page.waitForSelector('[aria-disabled="true"]');
+
+    // Select asset
+    await getButtonByText(page, 'Select one asset').click();
+    await page.getByText('Ethereum').click();
+    await page.waitForTimeout(2000);
+
+    // Fill address
+    await getInputByName(page, 'address').fill('@bakoid');
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    await hasText(page, '0x89297d82...6bbe387D2D6975C7D3');
+
+    await getInputByName(page, 'amount').focus();
+
+    // Fill amount
+    await getInputByName(page, 'amount').fill('0.001');
+
+    // Submit transaction
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await page.waitForTimeout(5000);
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
+
+    await getButtonByText(page, 'Approve').click();
     await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
