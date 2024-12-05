@@ -8,6 +8,7 @@ import type {
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
 import { ConnectionService } from '~/systems/DApp/services';
 
+import { FuelConnectorEventTypes } from 'fuels';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { DatabaseObservable } from './DatabaseObservable';
 
@@ -54,7 +55,7 @@ export class DatabaseEvents {
           origins,
           this.createEvents([
             {
-              event: 'currentNetwork',
+              event: FuelConnectorEventTypes.currentNetwork,
               params: [
                 {
                   url: updateEvent.obj.url,
@@ -91,7 +92,7 @@ export class DatabaseEvents {
           addressConnectedOrigins,
           this.createEvents([
             {
-              event: 'currentAccount',
+              event: FuelConnectorEventTypes.currentAccount,
               params: [updateEvent.obj.address],
             },
           ])
@@ -103,7 +104,7 @@ export class DatabaseEvents {
             addressNotConnectedOrigins,
             this.createEvents([
               {
-                event: 'currentAccount',
+                event: FuelConnectorEventTypes.currentAccount,
                 params: [null],
               },
             ])
@@ -112,14 +113,31 @@ export class DatabaseEvents {
       }
     );
 
-    this.databaseObservable.on('connections:delete', async (updateEvent) => {
-      const deletedConnection = updateEvent.oldObj as Connection;
+    this.databaseObservable.on<'connections:update', Connection>(
+      'connections:update',
+      async (updateEvent) => {
+        const updatedConnection = updateEvent.obj;
+
+        this.communicationProtocol.broadcast(
+          updatedConnection.origin,
+          this.createEvents([
+            {
+              event: FuelConnectorEventTypes.accounts,
+              params: [updatedConnection.accounts],
+            },
+          ])
+        );
+      }
+    );
+
+    this.databaseObservable.on('connections:delete', async (deleteEvent) => {
+      const deletedConnection = deleteEvent.oldObj as Connection;
 
       this.communicationProtocol.broadcast(
         deletedConnection.origin,
         this.createEvents([
           {
-            event: 'connection',
+            event: FuelConnectorEventTypes.connection,
             params: [false],
           },
         ])
