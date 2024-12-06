@@ -102,7 +102,6 @@ export class VaultService extends VaultServer {
   }
 
   static start(communicationProtocol: CommunicationProtocol) {
-    console.log('start VaultService');
     return new VaultService(communicationProtocol);
   }
 
