@@ -28,11 +28,21 @@ runs:
     # E2E tests running with Playwright
     - name: Install Playwright Browsers
       shell: bash
-      run: npx playwright install --with-deps chrome-beta
+      run: npx playwright install --with-deps chrome chrome-beta
 
-    - name: Run E2E Contract Tests
+    - name: Run E2E Contract Tests (Chrome Stable - Required)
       shell: bash
-      run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts
+      run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts --project=chrome
+      env:
+        PORT: 5173
+        VITE_FUEL_PROVIDER_URL: ${{ inputs.providerUrl }}
+        VITE_MASTER_WALLET_MNEMONIC: ${{ inputs.masterMnemonic }}
+        VITE_WALLET_SECRET: ${{ inputs.genesisSecret }}
+
+    - name: Run E2E Contract Tests (Chrome Beta - Non-blocking)
+      shell: bash
+      continue-on-error: true
+      run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts --project=chrome-beta
       env:
         PORT: 5173
         VITE_FUEL_PROVIDER_URL: ${{ inputs.providerUrl }}
