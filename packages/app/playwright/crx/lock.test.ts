@@ -12,10 +12,10 @@ import { WALLET_PASSWORD } from '../mocks';
 import { test } from './utils';
 
 // Increase timeout for this test
-// The timeout is set for 2 minutes
+// The timeout is set for 6 minutes
 // because some tests like reconnect
 // can take up to 1 minute before it's reconnected
-test.setTimeout(180_000);
+test.setTimeout(360_000);
 
 test.describe('Lock FuelWallet after inactivity', () => {
   test('should lock the wallet after 1 minute of inactivity (config in .env file)', async ({
@@ -107,10 +107,18 @@ test.describe('Lock FuelWallet after inactivity', () => {
       return page;
     });
 
-    await test.step('Auto lock fuel wallet', async () => {
+    await test.step('Verify wallet stays unlocked while open', async () => {
       await getByAriaLabel(popupPage, 'Accounts').click();
       await popupPage.waitForTimeout(65_000);
-      await hasText(popupPage, 'Unlock your wallet to continue');
+      await hasText(popupPage, /Assets/i);
+    });
+
+    await test.step('Resume auto-lock timer after closing wallet', async () => {
+      await popupPage.close();
+      const page = await context.newPage();
+      await page.waitForTimeout(65_000);
+      await page.goto(`chrome-extension://${extensionId}/popup.html`);
+      await hasText(page, 'Unlock your wallet to continue');
     });
   });
 });
