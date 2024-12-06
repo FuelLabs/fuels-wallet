@@ -31,6 +31,7 @@ export class VaultService extends VaultServer {
     this.emitLockEvent = this.emitLockEvent.bind(this);
 
     this.communicationProtocol = communicationProtocol;
+
     this.autoUnlock();
     this.setupListeners();
   }
@@ -55,25 +56,29 @@ export class VaultService extends VaultServer {
     this.emitLockEvent();
   }
 
-  async isLocked(): Promise<boolean> {
-    const isWalletLocked = await super.isLocked();
-    if (!isWalletLocked) {
-      const timer = await getTimer();
-      if (timer) {
-        // Reset the timer for wallet auto lock
-        resetTimer();
-      }
-    }
-    return isWalletLocked;
-  }
-
   private startAutoLockTimer() {
     this.stopAutoLockTimer(); // Clear any existing interval
 
     this.autoLockInterval = setInterval(async () => {
       const timer = await getTimer();
+
       if (timer === 0) return;
-      if (timer < Date.now()) {
+
+      // Get all current Wallet PopUp instances that are using VaultService
+      const origins = Array.from(
+        this.communicationProtocol.ports.values()
+      ).filter((p) => p.name === VAULT_SCRIPT_NAME);
+
+      // If we're using the wallet, let's reset the auto lock
+      const isVaultInUse = origins.length > 0;
+      if (isVaultInUse) {
+        await resetTimer();
+        return;
+      }
+
+      // Otherwise, we can check if the autolock time is expired
+      const isExpired = timer < Date.now();
+      if (isExpired) {
         clearSession();
         this.lock();
       }
