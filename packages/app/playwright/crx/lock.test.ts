@@ -113,7 +113,7 @@ test.describe('Lock FuelWallet after inactivity', () => {
       await hasText(popupPage, /Assets/i);
     });
 
-    await test.step('Auto-lock wallet after closing', async () => {
+    await test.step('Resume auto-lock timer after closing wallet', async () => {
       await popupPage.close();
       const page = await context.newPage();
       await page.waitForTimeout(65_000);
