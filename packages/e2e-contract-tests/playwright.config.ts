@@ -10,8 +10,7 @@ const IS_CI = process.env.CI;
 const config: PlaywrightTestConfig = defineConfig({
   testDir: './playwright',
   outputDir: './playwright-results/',
-  retries: 1,
-  maxFailures: IS_CI ? 1 : undefined,
+  retries: IS_CI ? 1 : 0,
   workers: 1,
   timeout: 60_000,
   reporter: [['html', { printSteps: true }]],
@@ -30,7 +29,16 @@ const config: PlaywrightTestConfig = defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chromium'],
+      },
+    },
+    {
+      name: 'chrome-beta',
+      use: {
+        channel: 'chrome-beta',
+        ...devices['Desktop Chrome'],
+      },
     },
   ],
 });
