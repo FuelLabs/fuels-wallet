@@ -115,8 +115,8 @@ test.describe('Lock FuelWallet after inactivity', () => {
 
     await test.step('Auto-lock wallet after closing', async () => {
       await popupPage.close();
-      await popupPage.waitForTimeout(65_000);
       const page = await context.newPage();
+      await page.waitForTimeout(65_000);
       await page.goto(`chrome-extension://${extensionId}/popup.html`);
       await hasText(page, 'Unlock your wallet to continue');
     });
