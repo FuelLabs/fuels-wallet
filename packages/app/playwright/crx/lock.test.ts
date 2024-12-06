@@ -107,10 +107,18 @@ test.describe('Lock FuelWallet after inactivity', () => {
       return page;
     });
 
-    await test.step('Auto lock fuel wallet', async () => {
+    await test.step('Verify wallet stays unlocked while open', async () => {
       await getByAriaLabel(popupPage, 'Accounts').click();
       await popupPage.waitForTimeout(65_000);
-      await hasText(popupPage, 'Unlock your wallet to continue');
+      await hasText(popupPage, /Assets/i);
+    });
+
+    await test.step('Auto-lock wallet after closing', async () => {
+      await popupPage.close();
+      await popupPage.waitForTimeout(65_000);
+      const page = await context.newPage();
+      await page.goto(`chrome-extension://${extensionId}/popup.html`);
+      await hasText(page, 'Unlock your wallet to continue');
     });
   });
 });
