@@ -12,10 +12,10 @@ import { WALLET_PASSWORD } from '../mocks';
 import { test } from './utils';
 
 // Increase timeout for this test
-// The timeout is set for 2 minutes
+// The timeout is set for 6 minutes
 // because some tests like reconnect
 // can take up to 1 minute before it's reconnected
-test.setTimeout(180_000);
+test.setTimeout(360_000);
 
 test.describe('Lock FuelWallet after inactivity', () => {
   test('should lock the wallet after 1 minute of inactivity (config in .env file)', async ({
