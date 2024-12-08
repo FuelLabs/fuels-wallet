@@ -8,49 +8,77 @@ export function TableOfContent() {
   const { headings } = doc;
 
   const [currentHash, setCurrentHash] = useState<string>("");
+  const [userClicked, setUserClicked] = useState<boolean>(false);
 
+  // Update the current hash based on window.location.hash on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
       setCurrentHash(window.location.hash);
-
-      const handleHashChange = () => {
-        setCurrentHash(window.location.hash);
-      };
-
-      window.addEventListener("hashchange", handleHashChange);
-
-      return () => {
-        window.removeEventListener("hashchange", handleHashChange);
-      };
     }
   }, []);
 
+  // Track hash changes when a user clicks on a link
+  const handleClick = (hash: string) => {
+    setUserClicked(true); // Indicate that the change is user-initiated
+    setCurrentHash(hash); // Update the current hash
+    setTimeout(() => setUserClicked(false), 1000); // Reset after a short delay
+  };
+
+  // Scroll observer for automatic highlighting during scrolling
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const observerOptions = {
-      root: null, 
+      root: null, // Use the viewport
       rootMargin: "0px",
-      threshold: 0.6,
+      threshold: Array.from({ length: 11 }, (_, i) => i / 10), // Threshold from 0.0 to 1.0
     };
+
+    const sectionVisibility = new Map();
 
     const observer = new IntersectionObserver((entries) => {
+      if (userClicked) return; // Skip if the user clicked a link recently
+
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setCurrentHash(`#${entry.target.id}`);
+        sectionVisibility.set(entry.target.id, entry.intersectionRatio);
+      });
+
+      // Find the section with the highest visibility ratio
+      let mostVisibleId = "";
+      let maxVisibility = 0;
+      sectionVisibility.forEach((visibility, id) => {
+        if (visibility > maxVisibility) {
+          mostVisibleId = id;
+          maxVisibility = visibility;
         }
       });
+
+      if (mostVisibleId) {
+        setCurrentHash(`#${mostVisibleId}`);
+      }
     }, observerOptions);
 
-    const sections = headings.map((heading) =>
+    // Flatten main headings and subheadings into a single list
+    const allSections: any = [];
+    headings.forEach((heading) => {
+      allSections.push(heading);
+      if (heading.children) {
+        allSections.push(...heading.children);
+      }
+    });
+
+    const sections = allSections.map((heading: any) =>
       document.getElementById(heading.id)
     );
-    sections.forEach((section) => section && observer.observe(section));
+
+    sections.forEach((section: any) => section && observer.observe(section));
 
     return () => {
-      sections.forEach((section) => section && observer.unobserve(section));
+      sections.forEach(
+        (section: any) => section && observer.unobserve(section)
+      );
     };
-  }, [headings]);
+  }, [headings, userClicked]);
 
   return (
     <Box css={styles.queries}>
@@ -61,6 +89,7 @@ export function TableOfContent() {
             <List.Item key={heading.title}>
               <a
                 href={`#${heading.id}`}
+                onClick={() => handleClick(`#${heading.id}`)} // Handle click events
                 style={
                   currentHash === `#${heading.id}`
                     ? { color: "white", fontWeight: "bold" }
@@ -75,6 +104,7 @@ export function TableOfContent() {
                     <List.Item key={subHeading.title}>
                       <a
                         href={`#${subHeading.id}`}
+                        onClick={() => handleClick(`#${subHeading.id}`)} // Handle click events
                         style={
                           currentHash === `#${subHeading.id}`
                             ? { color: "white", fontWeight: "bold" }
