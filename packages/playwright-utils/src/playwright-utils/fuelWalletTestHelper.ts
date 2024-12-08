@@ -1,4 +1,4 @@
-import type { BrowserContext, Locator } from '@playwright/test';
+import type { BrowserContext, Locator, Page } from '@playwright/test';
 
 import { expect } from '../fixtures';
 import { FUEL_MNEMONIC, FUEL_WALLET_PASSWORD } from '../mocks';
@@ -46,12 +46,13 @@ export class FuelWalletTestHelper {
   }) {
     const { url, chainId } = fuelProvider;
     const popupNotSignedUpPage = await context.newPage();
+    const signupPageAsync = context.waitForEvent('page', {
+      predicate: (page) => page.url().includes('sign-up'),
+    });
     await popupNotSignedUpPage.goto(
       `chrome-extension://${fuelExtensionId}/popup.html`
     );
-    const signupPage = await context.waitForEvent('page', {
-      predicate: (page) => page.url().includes('sign-up'),
-    });
+    const signupPage = await signupPageAsync;
     expect(signupPage.url()).toContain('sign-up');
     await popupNotSignedUpPage.close();
 
@@ -141,8 +142,8 @@ export class FuelWalletTestHelper {
 
     if (!walletNotificationPage) {
       walletNotificationPage = await this.context.waitForEvent('page', {
-        predicate: (page) => page.url().includes('/popup'),
-        timeout: 5000,
+        predicate: (page) => page.url().includes('/popup.html?'),
+        timeout: 15000,
       });
     }
 
@@ -173,8 +174,7 @@ export class FuelWalletTestHelper {
         { timeout: 5000 }
       )
       .toBeTruthy();
-    await walletPage.waitForTimeout(2000);
-    await menuButton!.click();
+    await menuButton!.click({ delay: 2000 });
 
     const settingsButton = walletPage
       .getByRole('menuitem')
@@ -291,7 +291,9 @@ export class FuelWalletTestHelper {
       'Add new network'
     );
     await expectButtonToBeEnabled(addNewNetworkButton);
-    await addNewNetworkButton.click();
+    await addNewNetworkButton.click({
+      delay: 1000,
+    });
   }
 
   async switchNetwork(chainName: string) {

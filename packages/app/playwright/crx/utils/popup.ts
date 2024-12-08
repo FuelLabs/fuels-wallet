@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 
 import { expect } from '@fuels/playwright-utils';
 import { getByAriaLabel, hasText, visit, waitAriaLabel } from '../../commons';
@@ -29,20 +29,25 @@ export async function switchAccount(popupPage: Page, name: string) {
   await popupPage.waitForTimeout(2000);
   await getByAriaLabel(popupPage, 'Accounts').click();
 
-  await hasText(popupPage, name);
-  // Add position to click on the element and not on copy button
-  await popupPage.waitForTimeout(5000);
-  await getByAriaLabel(popupPage, name).click();
-
   await expect
     .poll(
       () =>
-        waitAriaLabel(popupPage, `${name} selected`)
+        hasText(popupPage, name)
           .then(() => true)
           .catch(() => false),
-      { timeout: 30000 }
+      { timeout: 15000 }
     )
     .toBeTruthy();
+
+  // Add position to click on the element and not on copy button
+  await getByAriaLabel(popupPage, name).click({
+    position: {
+      x: 10,
+      y: 10,
+    },
+  });
+
+  await waitAriaLabel(popupPage, `${name} selected`);
 
   // Return account to be used on tests
   account = await getAccountByName(popupPage, name);

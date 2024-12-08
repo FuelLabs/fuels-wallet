@@ -58,7 +58,9 @@ test.describe('Mint Assets', () => {
 
     const mintButton = getButtonByText(page, 'Mint', true);
     await expectButtonToBeEnabled(mintButton);
-    await mintButton.click();
+    await mintButton.click({
+      delay: 1000,
+    });
 
     // test asset is correct
     const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
@@ -126,7 +128,9 @@ test.describe('Mint Assets', () => {
     const mintButton = getButtonByText(page, 'Mint Asset configuration');
 
     await expectButtonToBeEnabled(mintButton);
-    await mintButton.click();
+    await mintButton.click({
+      delay: 1000,
+    });
 
     // test asset is correct
     const walletNotificationPage =
