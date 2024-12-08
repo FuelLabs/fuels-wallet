@@ -1,4 +1,12 @@
-import { Avatar, Box, Copyable, Grid, Text, Tooltip } from '@fuel-ui/react';
+import {
+  Avatar,
+  Badge,
+  Box,
+  Copyable,
+  Grid,
+  Text,
+  Tooltip,
+} from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import { type FC, useEffect, useRef, useState } from 'react';
@@ -89,6 +97,7 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
     assetId,
     decimals,
     amount,
+    isNft,
   } = assetAmount || {};
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -120,6 +129,11 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
         <Text as="span" aria-label="Asset Name">
           {name || 'Unknown'}
         </Text>
+        {isNft && (
+          <Badge variant="ghost" intent="primary" css={styles.assetNft}>
+            NFT
+          </Badge>
+        )}
       </Box.Flex>
       <Copyable value={assetId} css={styles.address}>
         <Text fontSize="xs" css={{ mt: '$1' }}>
