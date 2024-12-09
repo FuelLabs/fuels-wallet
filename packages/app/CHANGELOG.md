@@ -1,5 +1,29 @@
 # fuels-wallet
 
+## 0.43.0
+
+### Minor Changes
+
+- [#1690](https://github.com/FuelLabs/fuels-wallet/pull/1690) [`ae328042`](https://github.com/FuelLabs/fuels-wallet/commit/ae32804241da0ea017a768a6b9bef90e6d7015f6) Thanks [@helciofranco](https://github.com/helciofranco)! - Allow pasting passwords in the "Confirm Password" step during wallet creation.
+
+- [#1681](https://github.com/FuelLabs/fuels-wallet/pull/1681) [`6121fab6`](https://github.com/FuelLabs/fuels-wallet/commit/6121fab6af755256edddff189aa43c27ca7c5efa) Thanks [@helciofranco](https://github.com/helciofranco)! - Show asset name, decimals and NFT badge when approving a transaction.
+
+### Patch Changes
+
+- [#1680](https://github.com/FuelLabs/fuels-wallet/pull/1680) [`21eb5cd8`](https://github.com/FuelLabs/fuels-wallet/commit/21eb5cd8699002d7d46c57432f6c9e3cfa89ea03) Thanks [@helciofranco](https://github.com/helciofranco)! - Fixed amount display for large values when reviewing a transaction request.
+
+- [#1684](https://github.com/FuelLabs/fuels-wallet/pull/1684) [`882f3ea3`](https://github.com/FuelLabs/fuels-wallet/commit/882f3ea36ae4167e4b8c563e2c3734b01dbf0c17) Thanks [@helciofranco](https://github.com/helciofranco)! - Fire event to dApps when editing connections on the Fuel Wallet.
+
+- [#1683](https://github.com/FuelLabs/fuels-wallet/pull/1683) [`a7e6e48b`](https://github.com/FuelLabs/fuels-wallet/commit/a7e6e48bb0eec410b38a262486a3f2860466a738) Thanks [@helciofranco](https://github.com/helciofranco)! - Fix feedback when user has insufficient ETH to cover fees.
+
+- [#1685](https://github.com/FuelLabs/fuels-wallet/pull/1685) [`771962b6`](https://github.com/FuelLabs/fuels-wallet/commit/771962b6d1c41a3985523524e17961d625e85c3b) Thanks [@helciofranco](https://github.com/helciofranco)! - Reset auto-lock timer if the Wallet is opened.
+
+- [#1683](https://github.com/FuelLabs/fuels-wallet/pull/1683) [`a7e6e48b`](https://github.com/FuelLabs/fuels-wallet/commit/a7e6e48bb0eec410b38a262486a3f2860466a738) Thanks [@helciofranco](https://github.com/helciofranco)! - Fix large amounts breaking the UI on the homescreen.
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.43.0
+  - @fuels/playwright-utils@0.43.0
+
 ## 0.42.3
 
 ### Patch Changes
