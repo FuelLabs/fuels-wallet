@@ -1,6 +1,10 @@
 // biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import { join } from 'path';
-import { type PlaywrightTestConfig, defineConfig } from '@playwright/test';
+import {
+  type PlaywrightTestConfig,
+  defineConfig,
+  devices,
+} from '@playwright/test';
 import './load.envs';
 
 const PORT = process.env.PORT;
@@ -13,7 +17,7 @@ export const playwrightConfig: PlaywrightTestConfig = {
   testDir: join(__dirname, './playwright/'),
   outputDir: join(__dirname, './playwright-results/'),
   // stop on first failure
-  maxFailures: IS_CI ? 1 : undefined,
+  maxFailures: IS_CI ? 2 : undefined,
   reporter: [
     ['list', { printSteps: true }],
     ['html', { outputFolder: join(__dirname, './playwright-html/') }],
@@ -34,6 +38,21 @@ export const playwrightConfig: PlaywrightTestConfig = {
   },
   // ignore lock test because it takes too long and it will be tested in a separate config
   testIgnore: [join(__dirname, './playwright/crx/lock.test.ts')],
+  projects: [
+    {
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chromium'],
+      },
+    },
+    {
+      name: 'chrome-beta',
+      use: {
+        channel: 'chrome-beta',
+        ...devices['Desktop Chrome'],
+      },
+    },
+  ],
 };
 
 export default defineConfig(playwrightConfig);
