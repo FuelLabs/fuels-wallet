@@ -12,7 +12,9 @@ import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
 
+import { isValidDomain } from '@bako-id/sdk';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
+import { useNameSystem } from '~/systems/NameSystem';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { formatGasLimit } from '~/systems/Transaction';
 import { sendMachine } from '../machines/sendMachine';
@@ -126,6 +128,16 @@ const schemaFactory = (provider?: Provider) =>
             if (!provider) {
               return true;
             }
+
+            if (value.startsWith('@')) {
+              if (value.length >= 2 && !isValidDomain(value)) {
+                return ctx.createError({
+                  message: 'Invalid domain',
+                });
+              }
+              return true;
+            }
+
             if (!isB256(value)) {
               return ctx.createError({
                 message: 'Address is not a valid',
@@ -271,6 +283,7 @@ export function useSend() {
   const txRequest = useTransactionRequest();
   const { account } = useAccounts();
   const provider = useProvider();
+  const nameSystem = useNameSystem();
 
   const service = useInterpret(() =>
     sendMachine.withConfig({
@@ -288,6 +301,7 @@ export function useSend() {
             fastTip,
             maxGasLimit,
           } = ctx;
+
           if (!providerUrl || !transactionRequest || !address) {
             throw new Error('Params are required');
           }
@@ -295,7 +309,7 @@ export function useSend() {
           txRequest.handlers.request({
             providerUrl,
             transactionRequest,
-            address,
+            address: nameSystem.resolver.value ?? address,
             fees: {
               baseFee,
               regularTip,
@@ -389,7 +403,7 @@ export function useSend() {
         const { address, asset, amount, fees } = data;
 
         const input: TxInputs['createTransfer'] = {
-          to: address,
+          to: nameSystem.resolver.value ?? address,
           assetId: asset,
           amount,
           tip: fees.tip.amount,
@@ -408,6 +422,7 @@ export function useSend() {
     form.trigger,
     form.handleSubmit,
     service.send,
+    nameSystem.resolver,
   ]);
 
   return {
@@ -421,6 +436,7 @@ export function useSend() {
     readyToSend,
     account,
     txRequest,
+    nameSystem,
     assetIdSelected,
     balances: account?.balances,
     balanceAssetSelected,
