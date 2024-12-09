@@ -3,6 +3,7 @@
   "version": "0.43.0",
   "license": "Apache-2.0",
   "main": "src/index.ts",
+  "type": "module",
   "publishConfig": {
     "access": "public",
     "main": "./dist/index.js",
