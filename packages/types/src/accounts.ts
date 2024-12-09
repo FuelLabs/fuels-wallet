@@ -1,5 +1,6 @@
-import type { AssetFuel, BN } from 'fuels';
+import type { BN } from 'fuels';
 
+import type { AssetFuelData } from './asset';
 import type { Coin } from './coin';
 
 export type Vault = {
@@ -8,7 +9,7 @@ export type Vault = {
 };
 
 export interface CoinAsset extends Coin {
-  asset?: AssetFuel & {
+  asset?: AssetFuelData & {
     indexed?: boolean;
     suspicious?: boolean;
     isNft?: boolean;

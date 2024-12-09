@@ -7,7 +7,7 @@ const IS_CI = process.env.CI;
 
 export const playwrightConfig: PlaywrightTestConfig = {
   workers: 1,
-  retries: 1,
+  retries: IS_CI ? 1 : 0,
   testMatch: 'playwright/**/*.test.ts',
   testDir: 'playwright/',
   outputDir: 'playwright-results/',
@@ -29,6 +29,7 @@ export const playwrightConfig: PlaywrightTestConfig = {
     trace: 'on-first-retry',
     actionTimeout: 5000,
     screenshot: 'only-on-failure',
+    headless: false,
   },
   // ignore lock test because it takes too long and it will be tested in a separate config
   testIgnore: ['playwright/crx/lock.test.ts'],

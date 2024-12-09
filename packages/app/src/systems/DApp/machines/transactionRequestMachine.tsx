@@ -1,12 +1,5 @@
-import { createProvider } from '@fuel-wallet/connections';
 import type { Account } from '@fuel-wallet/types';
-import {
-  type BN,
-  type TransactionRequest,
-  type TransactionSummary,
-  bn,
-  getTransactionSummary,
-} from 'fuels';
+import type { BN, TransactionRequest, TransactionSummary } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { AccountService } from '~/systems/Account';

@@ -1,7 +1,7 @@
 {
   "name": "fuels-wallet",
   "private": true,
-  "version": "0.40.1",
+  "version": "0.43.0",
   "type": "module",
   "database": "23",
   "scripts": {
@@ -27,6 +27,7 @@
     "@fuel-ui/test-utils": "0.17.0",
     "@fuel-wallet/connections": "workspace:*",
     "@fuels/local-storage": "0.20.0",
+    "@fuels/playwright-utils": "workspace:*",
     "@fuels/react-xstore": "0.20.0",
     "@hookform/resolvers": "3.9.0",
     "@react-aria/utils": "3.21.0",
@@ -38,7 +39,7 @@
     "compare-versions": "6.1.0",
     "cross-fetch": "4.0.0",
     "dayjs": "1.11.10",
-    "dexie": "3.2.7",
+    "dexie": "4.0.9",
     "dexie-observable": "4.0.1-beta.13",
     "events": "3.3.0",
     "fake-indexeddb": "4.0.2",

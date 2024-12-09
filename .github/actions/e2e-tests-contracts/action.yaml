@@ -10,6 +10,9 @@ inputs:
   genesisSecret:
     description: Secret of genesis to fund the master wallet
     required: false
+  browser:
+    description: Browser to run tests on (chromium or chrome-beta)
+    required: true
 
 runs:
   using: 'composite'
@@ -26,13 +29,13 @@ runs:
         NODE_ENV: test
 
     # E2E tests running with Playwright
-    - name: Install Playwright Browsers
+    - name: Install Playwright Browsers (${{ inputs.browser }})
       shell: bash
-      run: npx playwright install --with-deps chromium
+      run: npx playwright install --with-deps ${{ inputs.browser }}
 
     - name: Run E2E Contract Tests
       shell: bash
-      run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts
+      run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts --project=${{ inputs.browser }}
       env:
         PORT: 5173
         VITE_FUEL_PROVIDER_URL: ${{ inputs.providerUrl }}
@@ -42,7 +45,7 @@ runs:
     - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: playwright-report
+        name: playwright-report-${{ inputs.browser }}
         path: |
           packages/app/playwright-report/
           packages/app/playwright-html/

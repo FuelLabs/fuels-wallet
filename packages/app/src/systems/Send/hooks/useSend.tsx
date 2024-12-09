@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BNInput } from 'fuels';
 import { Address, type Provider, bn, isB256 } from 'fuels';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -12,6 +12,7 @@ import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
 
+import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { formatGasLimit } from '~/systems/Transaction';
 import { sendMachine } from '../machines/sendMachine';
@@ -138,6 +139,23 @@ const schemaFactory = (provider?: Provider) =>
                 message: `You can't send to ${accountType} address`,
               });
             }
+
+            const assetCached = await AssetsCache.getInstance().getAsset({
+              chainId: provider.getChainId(),
+              assetId: value,
+              dbAssets: [],
+              save: false,
+            });
+
+            if (
+              assetCached &&
+              AssetsCache.getInstance().assetIsValid(assetCached)
+            ) {
+              return ctx.createError({
+                message: `You can't send to Asset address`,
+              });
+            }
+
             return true;
           } catch (error) {
             console.error(error);

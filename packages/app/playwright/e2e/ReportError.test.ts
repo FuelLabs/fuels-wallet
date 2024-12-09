@@ -25,6 +25,12 @@ test.describe('ReportError', () => {
     });
   }
 
+  test.beforeEach(async () => {
+    await page.evaluate(async () => {
+      await window.fuelDB.errors.clear();
+    });
+  });
+
   test('should show Error page when there is a unhandled js error in React', async () => {
     await visit(page, '/');
     await page.evaluate(() => {
@@ -50,7 +56,6 @@ test.describe('ReportError', () => {
   test('should show Review Error in menu when there is a error in the database', async () => {
     await visit(page, '/');
     await page.evaluate(async () => {
-      await window.fuelDB.errors.clear();
       await window.fuelDB.errors.add({
         id: '12345',
         error: {
@@ -77,7 +82,6 @@ test.describe('ReportError', () => {
   test('should be able to ignore a error', async () => {
     await visit(page, '/');
     await page.evaluate(async () => {
-      await window.fuelDB.errors.clear();
       await window.fuelDB.errors.add({
         id: '12345',
         error: {
@@ -109,7 +113,6 @@ test.describe('ReportError', () => {
   test('should be able to dismiss all errors', async () => {
     await visit(page, '/');
     await page.evaluate(async () => {
-      await window.fuelDB.errors.clear();
       await window.fuelDB.errors.add({
         id: '12345',
         error: {
@@ -144,7 +147,6 @@ test.describe('ReportError', () => {
   test('should hide when the single error is dismissed', async () => {
     await visit(page, '/');
     await page.evaluate(async () => {
-      await window.fuelDB.errors.clear();
       await window.fuelDB.errors.add({
         id: '12345',
         error: {
@@ -176,7 +178,6 @@ test.describe('ReportError', () => {
   test('should detect and capture global errors', async () => {
     await visit(page, '/');
     await page.evaluate(async () => {
-      await window.fuelDB.errors.clear();
       console.error(new Error('Test Error'));
     });
     await reload(page);
@@ -191,7 +192,6 @@ test.describe('ReportError', () => {
   test('should deduplicate errors', async () => {
     await visit(page, '/');
     await page.evaluate(async () => {
-      await window.fuelDB.errors.clear();
       await window.fuelDB.errors.add({
         id: '12345',
         error: {
@@ -208,7 +208,7 @@ test.describe('ReportError', () => {
         },
       });
       await window.fuelDB.errors.add({
-        id: '12345',
+        id: '123456',
         error: {
           name: 'React error',
           message: 'Test Error',

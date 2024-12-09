@@ -13,14 +13,27 @@ export async function seedWallet(
   const genesisWallet = Wallet.fromPrivateKey(genesisSecret!, fuelProvider);
   const parameters: TxParamsType = { gasLimit: bn(100_000), ...options };
   console.log(
-    `asd Seeding Master wallet (${amount.format()} ETH) from SECRET wallet`,
+    `asd SECRET wallet sending funds(${amount.format()} ETH) to Master wallet`,
     genesisWallet.address.toString()
   );
-  const response = await genesisWallet.transfer(
+
+  const transferPromise = genesisWallet.transfer(
     Address.fromString(address),
     amount,
     baseAssetId,
     parameters
   );
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    setTimeout(
+      () =>
+        reject(
+          new Error('Funding Master wallet did not complete after 10 seconds')
+        ),
+      10000
+    );
+  });
+
+  const response = await Promise.race([transferPromise, timeoutPromise]);
   await response.wait();
 }

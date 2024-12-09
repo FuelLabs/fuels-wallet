@@ -104,40 +104,22 @@ export class AccountService {
     try {
       const provider = await createProvider(providerUrl!);
       const balances = await getBalances(provider, account.publicKey);
-
-      const assets = await AssetService.getAssets();
+      const balanceAssets = await AssetsCache.fetchAllAssets(
+        provider.getChainId(),
+        balances.map((balance) => balance.assetId)
+      );
       // includes "asset" prop in balance, centralizing the complexity here instead of in rest of UI
       const nextBalancesWithAssets = await balances.reduce(
         async (acc, balance) => {
           const prev = await acc;
-          const asset = {
-            fuel: await getFuelAssetByAssetId({
-              assets,
-              assetId: balance.assetId,
-            }),
-          };
-          try {
-            const assetCached = await AssetsCache.getInstance().getAsset({
-              chainId: provider.getChainId(),
-              assetId: balance.assetId,
-              provider,
-            });
-
-            if (assetCached && asset.fuel) {
-              asset.fuel = {
-                ...asset.fuel,
-                ...assetCached,
-                indexed: true,
-              };
-            }
-          } catch (_) {}
+          const cachedAsset = balanceAssets.get(balance.assetId);
 
           return [
             ...prev,
             {
               ...balance,
               amount: balance.amount,
-              asset: asset.fuel,
+              asset: cachedAsset,
             },
           ];
         },
@@ -201,6 +183,26 @@ export class AccountService {
   static getCurrentAccount() {
     return db.transaction('r', db.accounts, async () => {
       return (await db.accounts.toArray()).find((account) => account.isCurrent);
+    });
+  }
+
+  static setCurrentAccountToFalse() {
+    return db.transaction('rw', db.accounts, async () => {
+      await db.accounts
+        .filter((account) => !!account.isCurrent)
+        .modify({ isCurrent: false });
+    });
+  }
+
+  static setCurrentAccountToDefault() {
+    console.log('recovering default');
+    return db.transaction('rw', db.accounts, async () => {
+      const [firstAccount] = await db.accounts.toArray();
+      if (firstAccount) {
+        await db.accounts
+          .filter((account) => account.address === firstAccount.address)
+          .modify({ isCurrent: true });
+      }
     });
   }
 

@@ -42,7 +42,7 @@ test.describe('Forward Half Custom Asset', () => {
       context,
       page,
       extensionId,
-      amountToFund: bn.parseUnits(forwardCustomAssetAmount, 1).mul(2),
+      amountToFund: bn.parseUnits('0.001'),
     }));
   });
 
