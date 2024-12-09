@@ -33,9 +33,10 @@ export const ForwardCustomAssetCard = () => {
     <div>
       <p>Forward Custom Asset</p>
       <div aria-label="forward custom asset card">
-        <label>Amount</label>
+        <label htmlFor="amount-input">Amount</label>
         <br />
         <input
+          id="amount-input"
           onChange={(event) => setAmount(event.target.value)}
           value={amount}
         />

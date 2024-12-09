@@ -1,5 +1,5 @@
 import { useInterpret, useSelector } from '@xstate/react';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import type { TransactionMachineState } from '../machines';
 import { TRANSACTION_ERRORS, transactionMachine } from '../machines';
@@ -70,15 +70,18 @@ export function useTxResult({
     txResult?.isTypeMint,
   ]);
 
-  function getTransaction(input: TxInputs['fetch']) {
-    send('GET_TRANSACTION', { input });
-  }
+  const getTransaction = useCallback(
+    (input: TxInputs['fetch']) => {
+      send('GET_TRANSACTION', { input });
+    },
+    [send]
+  );
 
   useEffect(() => {
     if (txIdInput && (providerUrl || !waitProviderUrl)) {
       getTransaction({ txId: txIdInput, providerUrl });
     }
-  }, [txIdInput, providerUrl, waitProviderUrl]);
+  }, [txIdInput, providerUrl, waitProviderUrl, getTransaction]);
 
   return {
     handlers: {

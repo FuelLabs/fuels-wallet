@@ -27,9 +27,10 @@ export const MintAssetCard = () => {
     <div>
       <p>Mint Custom Asset</p>
       <div aria-label="Mint asset card">
-        <label>Amount</label>
+        <label htmlFor="amount-input">Amount</label>
         <br />
         <input
+          id="amount-input"
           onChange={(event) => {
             setAmount(event.target.value);
           }}

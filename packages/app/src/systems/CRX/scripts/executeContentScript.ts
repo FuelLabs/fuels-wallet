@@ -41,6 +41,7 @@ function injectContentScript(tabId: number) {
       injectImmediately: true,
     })
     .catch((err) => {
+      // Process is not defined ?
       if (process.env?.NODE_ENV === 'development') {
         console.warn(err);
       }

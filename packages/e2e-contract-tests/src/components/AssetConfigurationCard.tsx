@@ -39,9 +39,10 @@ export const AssetConfigurationCard = () => {
     <div>
       <p>Asset Configuration</p>
       <div>
-        <label>Amount</label>
+        <label htmlFor="amount-input">Amount</label>
         <br />
         <input
+          id="amount-input"
           aria-label="Asset config amount"
           value={assetData.amount}
           onChange={(event) =>
@@ -49,9 +50,10 @@ export const AssetConfigurationCard = () => {
           }
         />
         <br />
-        <label>Asset SubId</label>
+        <label htmlFor="subid-input">Asset SubId</label>
         <br />
         <input
+          id="subid-input"
           aria-label="Asset config subid"
           value={assetData.subId}
           onChange={(event) =>
@@ -59,9 +61,10 @@ export const AssetConfigurationCard = () => {
           }
         />
         <br />
-        <label>Asset Decimals</label>
+        <label htmlFor="decimals-input">Asset Decimals</label>
         <br />
         <input
+          id="decimals-input"
           aria-label="Asset config decimals"
           value={assetData.decimals}
           onChange={(event) =>
