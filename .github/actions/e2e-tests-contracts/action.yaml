@@ -33,6 +33,13 @@ runs:
       shell: bash
       run: npx playwright install --with-deps ${{ inputs.browser }}
 
+    - name: Log to console all inputs
+      run: |
+        echo "providerUrl: ${{ inputs.providerUrl }}"
+        echo "masterMnemonic: ${{ inputs.masterMnemonic }}"
+        echo "genesisSecret: ${{ inputs.genesisSecret }}"
+        echo "browser: ${{ inputs.browser }}"
+
     - name: Run E2E Contract Tests
       shell: bash
       run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts --project=${{ inputs.browser }}
