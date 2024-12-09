@@ -25,7 +25,7 @@
   "javascript": {
     "formatter": {
       "quoteStyle": "single",
-      "trailingComma": "es5"
+      "trailingCommas": "es5"
     }
   },
   "json": {
@@ -50,6 +50,7 @@
       "**/dist-crx",
       "**/contracts/**",
       "**/playwright-report",
+      "**/vite-*.d.ts",
       "pnpm-lock.yaml"
     ]
   }
