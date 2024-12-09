@@ -2,28 +2,34 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": [".env", ".env.production"],
   "globalEnv": ["NODE_ENV", "CRX_OUT", "CRX_NAME"],
-  "pipeline": {
+  "tasks": {
     "ts:check": {
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": [],
       "outputs": ["./**/*.typegen.ts"]
     },
     "build": {
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["ts:check"],
       "outputs": ["dist/**"]
     },
     "build:docs": {
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
     "build:crx": {
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["ts:check"],
       "outputs": ["dist-crx*/**", "dist/fuel-wallet*.zip"]
     },
     "build:web": {
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
     "build:app": {
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["build:web", "build:crx"],
       "outputs": ["dist/**", "dist-crx/**"]
     },
@@ -32,13 +38,16 @@
       "outputs": ["dist/**"]
     },
     "build:preview": {
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["^build"],
       "outputs": ["./dist/"]
     },
     "test": {
+      "cache": false,
       "dependsOn": []
     },
     "test:e2e": {
+      "cache": false,
       "dependsOn": []
     },
     "dev": {
