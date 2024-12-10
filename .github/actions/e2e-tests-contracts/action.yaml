@@ -13,6 +13,7 @@ inputs:
   browser:
     description: Browser to run tests on (chromium or chrome-beta)
     required: false
+    default: chromium
 
 runs:
   using: 'composite'
@@ -35,7 +36,7 @@ runs:
         npx playwright install --with-deps chromium chrome-beta --force
 
     - name: Install Playwright Browsers (${{ inputs.browser }})
-      if: inputs.browser != ''
+      if: inputs.browser != '' && inputs.browser != 'chromium'
       shell: bash
       run: npx playwright install --with-deps ${{ inputs.browser }}
 
