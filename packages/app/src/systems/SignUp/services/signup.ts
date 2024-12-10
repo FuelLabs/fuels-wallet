@@ -37,7 +37,7 @@ export class SignUpService {
       secret: getPhraseFromValue(data.mnemonic),
     });
 
-    // Register the first account retuned from the vault
+    // Register the first account returned from the vault
     const name = await AccountService.generateAccountName();
     return AccountService.addAccount({
       data: {
