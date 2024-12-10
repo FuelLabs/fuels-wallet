@@ -2,6 +2,7 @@
   "name": "fuels-wallet",
   "private": true,
   "version": "0.43.0",
+  "type": "module",
   "database": "23",
   "scripts": {
     "build:all": "run-s build:web build:crx build:storybook",
@@ -9,7 +10,7 @@
     "build:crx": "./scripts/build.sh --app=crx",
     "build:storybook": "./scripts/build.sh --app=storybook",
     "dev": "vite",
-    "dev:crx": "vite --config vite.crx.config.ts --mode $NODE_ENV",
+    "dev:crx": "vite --config vite.crx.config.ts --mode ${NODE_ENV:-development}",
     "dev:storybook": "storybook dev -p 6006",
     "preview": "vite preview",
     "test": "jest --verbose",
@@ -61,7 +62,7 @@
     "yup": "1.4.0"
   },
   "devDependencies": {
-    "@crxjs/vite-plugin": "1.0.14",
+    "@crxjs/vite-plugin": "2.0.0-beta.28",
     "@fuel-wallet/types": "workspace:*",
     "@fuels/connectors": "0.35.1",
     "@playwright/test": "1.46.1",
@@ -103,10 +104,10 @@
     "ts-jest-mock-import-meta": "1.1.0",
     "tsconfig-paths-webpack-plugin": "4.1.0",
     "typescript": "5.2.2",
-    "vite": "4.5.5",
+    "vite": "6.0.3",
     "vite-plugin-clean": "1.0.0",
-    "vite-plugin-static-copy": "0.17.0",
-    "vite-tsconfig-paths": "4.2.1",
+    "vite-plugin-static-copy": "2.2.0",
+    "vite-tsconfig-paths": "5.1.4",
     "whatwg-fetch": "3.6.20"
   },
   "msw": {

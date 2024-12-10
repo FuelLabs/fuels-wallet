@@ -12,7 +12,8 @@ inputs:
     required: false
   browser:
     description: Browser to run tests on (chromium or chrome-beta)
-    required: true
+    required: false
+    default: chromium
 
 runs:
   using: 'composite'
@@ -29,7 +30,13 @@ runs:
         NODE_ENV: test
 
     # E2E tests running with Playwright
+    - name: Install Playwright Browsers
+      shell: bash
+      run: |
+        npx playwright install --with-deps chromium chrome-beta --force
+
     - name: Install Playwright Browsers (${{ inputs.browser }})
+      if: inputs.browser != '' && inputs.browser != 'chromium'
       shell: bash
       run: npx playwright install --with-deps chrome-beta chromium
 
