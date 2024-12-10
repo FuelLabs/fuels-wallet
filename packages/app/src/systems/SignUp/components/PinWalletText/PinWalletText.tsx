@@ -5,9 +5,9 @@ export function PinWalletText() {
   return (
     <Box.Stack css={styles.root}>
       <Text>Click the extension button in the browser menu.</Text>
-      <Image src="/public/pin-img1.svg?url" />
+      <Image src="/pin-img1.svg?url" />
       <Text>Find Fuel Wallet in the list and click pin.</Text>
-      <Image src="/public/pin-img2.svg?url" />
+      <Image src="/pin-img2.svg?url" />
     </Box.Stack>
   );
 }

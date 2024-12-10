@@ -13,7 +13,6 @@ const APP_VERSION_POSTFIX = process.env.APP_VERSION_POSTFIX || '';
 export default defineConfig({
   ...baseConfig,
   base: '/',
-  publicDir: 'public',
   build: {
     ...baseConfig.build,
     outDir: OUT_DIR,
