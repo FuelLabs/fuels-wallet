@@ -41,7 +41,7 @@ function injectContentScript(tabId: number) {
       files: [fileName],
       injectImmediately: true,
     })
-    .catch((err) =>
+    .catch((err) => {
       if (env === 'development') {
         console.warn(err);
       }
