@@ -218,7 +218,7 @@ export const signUpMachine = createMachine(
           mnemonic: getWordsFromValue(ev.data.words),
         }),
       }),
-      // Passowrd
+      // Password
       assignPassword: assign({
         data: (ctx, ev) => ({
           ...ctx.data,
