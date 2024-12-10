@@ -50,7 +50,6 @@ export const playwrightConfig: PlaywrightTestConfig = {
         channel: 'chrome-beta',
         ...devices['Desktop Chrome'],
       },
-      retries: IS_CI ? 4 : 0,
     },
   ],
   testIgnore: ['playwright/crx/lock.test.ts'],
