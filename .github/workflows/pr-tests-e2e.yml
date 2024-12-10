@@ -12,7 +12,7 @@ concurrency:
 jobs:
   tests-e2e:
     name: Test (Chrome Stable)
-    timeout-minutes: 20
+    timeout-minutes: 15
     runs-on: buildjet-8vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
@@ -65,7 +65,7 @@ jobs:
 
   tests-e2e-beta:
     name: Test (Chrome Beta)
-    timeout-minutes: 20
+    timeout-minutes: 15
     runs-on: buildjet-8vcpu-ubuntu-2204
     continue-on-error: true
     steps:
