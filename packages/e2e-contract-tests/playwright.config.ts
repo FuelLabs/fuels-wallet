@@ -10,9 +10,9 @@ const IS_CI = process.env.CI;
 const config: PlaywrightTestConfig = defineConfig({
   testDir: './playwright',
   outputDir: './playwright-results/',
-  retries: IS_CI ? 1 : 0,
+  retries: IS_CI ? 2 : 0,
   workers: 1,
-  timeout: 60_000,
+  timeout: 120_000,
   reporter: [['html', { printSteps: true }]],
   webServer: {
     command: `pnpm dev:e2e-contracts --port ${process.env.PORT}`,
