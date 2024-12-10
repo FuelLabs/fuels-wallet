@@ -45,4 +45,3 @@ jobs:
         with:
           providerUrl: "https://testnet.fuel.network/v1/graphql"
           masterMnemonic: ${{ inputs.masterMnemonic || secrets.VITE_MASTER_WALLET_MNEMONIC }}
-          browser: 'chrome-beta'
