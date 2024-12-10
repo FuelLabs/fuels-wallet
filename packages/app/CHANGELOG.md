@@ -1,5 +1,19 @@
 # fuels-wallet
 
+## 0.43.1
+
+### Patch Changes
+
+- [#1639](https://github.com/FuelLabs/fuels-wallet/pull/1639) [`b0b5f2f5`](https://github.com/FuelLabs/fuels-wallet/commit/b0b5f2f529fe0c9844fa35d41c8f18d0978ca151) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed wallet not loading correctly in local environment on Chrome 130+
+
+- [#1696](https://github.com/FuelLabs/fuels-wallet/pull/1696) [`8b68c21e`](https://github.com/FuelLabs/fuels-wallet/commit/8b68c21e39e7b5b0fbb9791c7d306d536a6d37ad) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fix exception when injecting content in the hello page
+
+- [#1694](https://github.com/FuelLabs/fuels-wallet/pull/1694) [`cfcf2209`](https://github.com/FuelLabs/fuels-wallet/commit/cfcf220966cafc9bf7cd8861f0421a7560315365) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: update 'dev:crx' script to use default env
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.43.1
+  - @fuels/playwright-utils@0.43.1
+
 ## 0.43.0
 
 ### Minor Changes
