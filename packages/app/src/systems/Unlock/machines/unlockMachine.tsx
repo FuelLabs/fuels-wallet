@@ -85,7 +85,7 @@ export const unlockMachine = createMachine(
           ],
         },
       },
-      reseting: {
+      resetting: {
         invoke: {
           src: 'resetWallet',
           onDone: [
