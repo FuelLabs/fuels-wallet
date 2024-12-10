@@ -1,6 +1,6 @@
 import { useInterpret, useSelector } from '@xstate/react';
 import type { Address } from 'fuels';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import type { TransactionHistoryMachineState } from '../machines';
 import { transactionHistoryMachine } from '../machines';
@@ -35,9 +35,12 @@ export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
   const transactionHistory = useSelector(service, selectors.transactionHistory);
   const hasNextPage = useSelector(service, selectors.hasNextPage);
 
-  function getTransactionHistory(input: TxInputs['getTransactionHistory']) {
-    send('GET_TRANSACTION_HISTORY', { input });
-  }
+  const getTransactionHistory = useCallback(
+    (input: TxInputs['getTransactionHistory']) => {
+      send('GET_TRANSACTION_HISTORY', { input });
+    },
+    [send]
+  );
 
   function fetchNextPage() {
     send('FETCH_NEXT_PAGE');
@@ -47,7 +50,7 @@ export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
     if (address) {
       getTransactionHistory({ address: address.toString() });
     }
-  }, [address]);
+  }, [address, getTransactionHistory]);
 
   return {
     fetchNextPage,
