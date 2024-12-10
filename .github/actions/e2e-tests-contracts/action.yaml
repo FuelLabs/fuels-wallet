@@ -29,7 +29,7 @@ runs:
         NODE_OPTIONS: "--max-old-space-size=4096"
         NODE_ENV: test
 
-    - uses: ../setup-playwright
+    - uses: ./.github/actions/setup-playwright
       with:
         browser: ${{ inputs.browser }}
 
