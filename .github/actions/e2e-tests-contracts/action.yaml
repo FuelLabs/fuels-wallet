@@ -29,13 +29,10 @@ runs:
         NODE_ENV: test
 
     # E2E tests running with Playwright
-    - name: Install Playwright Browsers Chromium
+    - name: Install Playwright Browsers
       shell: bash
-      run: npx playwright install --with-deps chromium
-
-    - name: Install Playwright Browsers Chrome Beta
-      shell: bash
-      run: npx playwright install --with-deps chrome-beta
+      run: |
+        npx playwright install --with-deps chromium chrome-beta --force
 
     - name: Install Playwright Browsers (${{ inputs.browser }})
       if: inputs.browser != ''
