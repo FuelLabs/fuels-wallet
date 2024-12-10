@@ -10,7 +10,7 @@
     "build:crx": "./scripts/build.sh --app=crx",
     "build:storybook": "./scripts/build.sh --app=storybook",
     "dev": "vite",
-    "dev:crx": "vite --config vite.crx.config.ts --mode $NODE_ENV",
+    "dev:crx": "vite --config vite.crx.config.ts --mode ${NODE_ENV:-development}",
     "dev:storybook": "storybook dev -p 6006",
     "preview": "vite preview",
     "test": "jest --verbose",
