@@ -28,5 +28,6 @@ runs:
 
     - name: Install Playwright Browsers
       shell: bash
+      continue-on-error: true
       run: |
-        pnpm playwright install --with-deps ${{ inputs.browser }} --force
+        pnpm playwright install --with-deps ${{ inputs.browser }}
