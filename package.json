@@ -38,7 +38,7 @@
     "dev:docs": "./scripts/dev.sh --docs",
     "dev:crx": "./scripts/dev.sh --crx",
     "dev:e2e-contracts": "./scripts/dev.sh --e2e-contracts-test",
-    "lint:check": "biome check --apply-unsafe .",
+    "lint:check": "biome check --write --unsafe .",
     "lint:ci": "biome lint --max-diagnostics=1000 --diagnostic-level=error .",
     "format": "biome format --write .",
     "node:up": "make -C ./docker up",
@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.2",
-    "@biomejs/biome": "1.6.2",
+    "@biomejs/biome": "1.9.4",
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.2",
     "@fuels/ts-config": "0.20.0",

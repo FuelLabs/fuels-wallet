@@ -66,16 +66,13 @@ jobs:
         run: sudo apt-get install jq
       - run: |
           pnpm audit --prod --json | jq '
-            def has_fix: 
-              .advisories | to_entries | map(.value.patched_versions != "<0.0.0") | any;
-            if has_fix then
-              1
-            else
-              0
-            end
-          ' > audit_result.txt
-          if [ "$(cat audit_result.txt)" -eq "1" ]; then
-            echo "Actionable vulnerabilities found"
+            .advisories | to_entries | 
+            map(select(.value.patched_versions != "<0.0.0" and .value.severity == "critical") | {package: .value.module_name, vulnerable: .value.vulnerable_versions, fixed_in: .value.patched_versions}) 
+          ' > audit_fix_packages.json
+          if [ "$(jq 'length' audit_fix_packages.json)" -gt "0" ]; then
+            echo "Actionable vulnerabilities found in the following packages:"
+            jq -r '.[] | "\u001b[1m\(.package)\u001b[0m vulnerable in \u001b[31m\(.vulnerable)\u001b[0m fixed in \u001b[32m\(.fixed_in)\u001b[0m"' audit_fix_packages.json | while read -r line; do echo -e "$line"; done
+            echo "Please run \`pnpm --prod --fix\`"
             exit 1
           else
             echo "No actionable vulnerabilities"

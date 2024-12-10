@@ -13,7 +13,7 @@ jobs:
   tests-e2e-contracts:
     name: Test (Chrome Stable)
     runs-on: buildjet-8vcpu-ubuntu-2204
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: FuelLabs/github-actions/setups/node@master
@@ -58,7 +58,7 @@ jobs:
   tests-e2e-contracts-beta:
     name: Test (Chrome Beta)
     runs-on: buildjet-8vcpu-ubuntu-2204
-    timeout-minutes: 20
+    timeout-minutes: 15
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
