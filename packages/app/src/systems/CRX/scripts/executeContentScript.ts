@@ -34,15 +34,15 @@ export async function executeContentScript() {
 }
 
 function injectContentScript(tabId: number) {
+  const env = process.env?.NODE_ENV;
   chrome.scripting
     .executeScript({
       target: { tabId: tabId, allFrames: true },
       files: [fileName],
       injectImmediately: true,
     })
-    .catch((err) => {
-      // Process is not defined ?
-      if (process.env?.NODE_ENV === 'development') {
+    .catch((err) =>
+      if (env === 'development') {
         console.warn(err);
       }
     });
