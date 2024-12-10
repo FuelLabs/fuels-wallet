@@ -39,8 +39,6 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
 
       - uses: ./.github/actions/setup-playwright
-        with:
-          browser: 'chromium'
 
       - name: Run E2E Tests
         run: xvfb-run --auto-servernum -- pnpm test:e2e:crx-lock
