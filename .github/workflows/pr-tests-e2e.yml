@@ -38,6 +38,11 @@ jobs:
           ## with sourcemaps
           NODE_OPTIONS: "--max-old-space-size=4096"
 
+      - name: Install Playwright Browsers
+        shell: bash
+        run: |
+          pnpm playwright install --with-deps chromium chrome-beta --force
+
       # E2E tests running with Playwright
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
