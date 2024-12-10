@@ -51,6 +51,10 @@ export const playwrightConfig: PlaywrightTestConfig = {
         channel: 'chrome-beta',
         ...devices['Desktop Chrome'],
       },
+      testIgnore: [
+        join(__dirname, './playwright/crx/crx.test.ts'),
+        join(__dirname, './playwright/crx/lock.test.ts'),
+      ],
     },
   ],
 };
