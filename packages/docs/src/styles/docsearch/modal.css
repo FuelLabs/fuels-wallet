@@ -143,8 +143,10 @@
 }
 .DocSearch-Dropdown {
   max-height: calc(
-    var(--docsearch-modal-height) - var(--docsearch-searchbox-height) -
-      var(--docsearch-spacing) - var(--docsearch-footer-height)
+    var(--docsearch-modal-height) -
+    var(--docsearch-searchbox-height) -
+    var(--docsearch-spacing) -
+    var(--docsearch-footer-height)
   );
   min-height: var(--docsearch-spacing);
   overflow-y: auto;
@@ -265,10 +267,10 @@
   stroke-width: var(--docsearch-icon-stroke-width);
   width: 24px;
 }
-.DocSearch-Hit[aria-selected='true'] a {
+.DocSearch-Hit[aria-selected="true"] a {
   background-color: var(--docsearch-highlight-color);
 }
-.DocSearch-Hit[aria-selected='true'] mark {
+.DocSearch-Hit[aria-selected="true"] mark {
   text-decoration: underline;
 }
 .DocSearch-Hit-Container {
@@ -314,7 +316,7 @@
 svg.DocSearch-Hit-Select-Icon {
   display: none;
 }
-.DocSearch-Hit[aria-selected='true'] .DocSearch-Hit-Select-Icon {
+.DocSearch-Hit[aria-selected="true"] .DocSearch-Hit-Select-Icon {
   display: block;
 }
 .DocSearch-Hit-action-button:focus,
@@ -353,13 +355,13 @@ svg.DocSearch-Hit-Select-Icon {
   color: var(--docsearch-muted-color);
   font-size: 0.75em;
 }
-.DocSearch-Hit[aria-selected='true'] .DocSearch-Hit-action,
-.DocSearch-Hit[aria-selected='true'] .DocSearch-Hit-icon,
-.DocSearch-Hit[aria-selected='true'] .DocSearch-Hit-path,
-.DocSearch-Hit[aria-selected='true'] .DocSearch-Hit-text,
-.DocSearch-Hit[aria-selected='true'] .DocSearch-Hit-title,
-.DocSearch-Hit[aria-selected='true'] .DocSearch-Hit-Tree,
-.DocSearch-Hit[aria-selected='true'] mark {
+.DocSearch-Hit[aria-selected="true"] .DocSearch-Hit-action,
+.DocSearch-Hit[aria-selected="true"] .DocSearch-Hit-icon,
+.DocSearch-Hit[aria-selected="true"] .DocSearch-Hit-path,
+.DocSearch-Hit[aria-selected="true"] .DocSearch-Hit-text,
+.DocSearch-Hit[aria-selected="true"] .DocSearch-Hit-title,
+.DocSearch-Hit[aria-selected="true"] .DocSearch-Hit-Tree,
+.DocSearch-Hit[aria-selected="true"] mark {
   color: var(--docsearch-hit-active-color) !important;
 }
 @media screen and (prefers-reduced-motion: reduce) {
@@ -393,7 +395,7 @@ svg.DocSearch-Hit-Select-Icon {
 }
 .DocSearch-NoResults-Prefill-List li {
   list-style-position: inside;
-  list-style-type: '» ';
+  list-style-type: "» ";
 }
 .DocSearch-Prefill {
   appearance: none;
@@ -492,8 +494,11 @@ svg.DocSearch-Hit-Select-Icon {
   }
   .DocSearch-Dropdown {
     max-height: calc(
-      var(--docsearch-vh, 1vh) * 100 - var(--docsearch-searchbox-height) -
-        var(--docsearch-spacing) - var(--docsearch-footer-height)
+      var(--docsearch-vh, 1vh) *
+      100 -
+      var(--docsearch-searchbox-height) -
+      var(--docsearch-spacing) -
+      var(--docsearch-footer-height)
     );
   }
   .DocSearch-Cancel {

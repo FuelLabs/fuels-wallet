@@ -30,17 +30,19 @@ export const ForwardHalfAndExternalMintCard = () => {
     <div>
       <p>Forward Half and External Mint</p>
       <div aria-label="forward half and external mint card">
-        <label>Forward Amount</label>
+        <label htmlFor="forward-amount-input">Forward Amount</label>
         <br />
         <input
+          id="forward-amount-input"
           aria-label="Forward amount external mint"
           onChange={(event) => setForwardAmount(event.target.value)}
           value={forwardAmount}
         />
         <br />
-        <label>Mint Amount</label>
+        <label htmlFor="mint-amount-input">Mint Amount</label>
         <br />
         <input
+          id="mint-amount-input"
           aria-label="Mint amount external mint"
           onChange={(event) => setMintAmount(event.target.value)}
           value={mintAmount}

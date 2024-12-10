@@ -21,10 +21,7 @@ h5,
 h6 {
   font-weight: 600;
   letter-spacing: -0.04em;
-  font-feature-settings:
-    'pnum' on,
-    'onum' on,
-    'ss04' on;
+  font-feature-settings: "pnum" on, "onum" on, "ss04" on;
 }
 
 *:focus-visible:not(input) {
@@ -48,8 +45,8 @@ tr > td {
 
 pre span,
 code {
-  font-family: 'PxGrotesk Mono', Menlo, Monaco, Consolas, 'Liberation Mono',
-    'Courier New', monospace;
+  font-family: "PxGrotesk Mono", Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   letter-spacing: -0.04em;
 }
 

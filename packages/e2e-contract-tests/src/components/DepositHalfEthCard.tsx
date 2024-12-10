@@ -28,9 +28,10 @@ export const DepositHalfEthCard = () => {
     <div>
       <p>Deposit Half Eth</p>
       <div aria-label="Deposit half eth card">
-        <label>Amount</label>
+        <label htmlFor="amount-input">Amount</label>
         <br />
         <input
+          id="amount-input"
           onChange={(event) => {
             setAmount(event.target.value);
           }}

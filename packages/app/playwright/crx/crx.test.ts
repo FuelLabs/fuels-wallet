@@ -44,7 +44,7 @@ import {
   waitWalletToLoad,
 } from './utils';
 
-export const NETWORK_IGNITION = {
+const NETWORK_IGNITION = {
   id: '1',
   name: 'Ignition',
   url: 'https://mainnet.fuel.network/v1/graphql',
@@ -53,7 +53,7 @@ export const NETWORK_IGNITION = {
   bridgeUrl: 'https://app.fuel.network/bridge',
   isSelected: true,
 };
-export const NETWORK_TESTNET = {
+const NETWORK_TESTNET = {
   id: '2',
   name: 'Fuel Sepolia Testnet',
   url: 'https://testnet.fuel.network/v1/graphql',
@@ -63,7 +63,7 @@ export const NETWORK_TESTNET = {
   bridgeUrl: 'https://app-testnet.fuel.network/bridge',
   isSelected: false,
 };
-export const NETWORK_DEVNET = {
+const NETWORK_DEVNET = {
   id: '3',
   name: 'Fuel Sepolia Devnet',
   url: 'https://devnet.fuel.network/v1/graphql',
@@ -73,7 +73,7 @@ export const NETWORK_DEVNET = {
   isSelected: false,
 };
 
-export const DEFAULT_NETWORKS: Array<
+const DEFAULT_NETWORKS: Array<
   NetworkData & { faucetUrl?: string; bridgeUrl?: string; hidden?: boolean }
 > = [NETWORK_IGNITION, NETWORK_TESTNET, NETWORK_DEVNET];
 
