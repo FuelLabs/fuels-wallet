@@ -29,24 +29,9 @@ runs:
         NODE_OPTIONS: "--max-old-space-size=4096"
         NODE_ENV: test
 
-    - name: Cache Playwright browsers
-      uses: actions/cache@v3
+    - uses: ./.github/actions/setup-playwright
       with:
-        path: ~/.cache/ms-playwright
-        key: ${{ runner.os }}-playwright-${{ inputs.browser }}
-        restore-keys: |
-          ${{ runner.os }}-playwright-
-
-    # E2E tests running with Playwright
-    - name: Install Playwright Browsers
-      shell: bash
-      run: |
-        pnpm playwright install --with-deps chromium chrome-beta --force
-
-    - name: Install Playwright Browsers (${{ inputs.browser }})
-      if: inputs.browser != '' && inputs.browser != 'chromium'
-      shell: bash
-      run: npx playwright install --with-deps ${{ inputs.browser }}
+        browser: ${{ inputs.browser }}
 
     - name: Run E2E Contract Tests
       shell: bash

@@ -1,0 +1,33 @@
+name: 'E2E Contract Tests'
+
+inputs:
+  providerUrl:
+    description: Provider URL (e.g., https://testnet.fuel.network/v1/graphql)
+    required: true
+  masterMnemonic:
+    description: Mnemonic of the master wallet that will fund the tests
+    required: true
+  genesisSecret:
+    description: Secret of genesis to fund the master wallet
+    required: false
+  browser:
+    description: Browser to run tests on (chromium, chrome-beta, or both)
+    required: false
+    default: chromium
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Cache Playwright browsers
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ inputs.browser }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-
+
+    - name: Install Playwright Browsers
+      shell: bash
+      continue-on-error: true
+      run: |
+        pnpm playwright install --with-deps ${{ inputs.browser }}
