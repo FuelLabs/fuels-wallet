@@ -12,8 +12,8 @@ import Dexie, { type DbEvents, type PromiseExtended, type Table } from 'dexie';
 import 'dexie-observable';
 import type { AssetFuel } from 'fuels';
 import type { TransactionCursor } from '~/systems/Transaction';
-import { applyDbVersioning } from './databaseVersioning';
 import { chromeStorage } from '../services/chromeStorage';
+import { applyDbVersioning } from './databaseVersioning';
 
 type FailureEvents = Extract<keyof DbEvents, 'close' | 'blocked'>;
 export type FuelCachedAsset = AssetData &
@@ -55,7 +55,7 @@ export class FuelDB extends Dexie {
         // @TODO: this is a temporary solution to avoid the storage accounts of being wrong and
         // users losing funds in case of no backup
         // if has account, save to chrome storage
-        if (!!accounts.length) {
+        if (accounts.length) {
           for (const account of accounts) {
             await chromeStorage.accounts.set({
               key: account.address,
@@ -63,7 +63,7 @@ export class FuelDB extends Dexie {
             });
           }
         }
-        if (!!vaults.length) {
+        if (vaults.length) {
           for (const vault of vaults) {
             await chromeStorage.vaults.set({
               key: vault.key,
@@ -71,7 +71,7 @@ export class FuelDB extends Dexie {
             });
           }
         }
-        if (!!networks.length) {
+        if (networks.length) {
           for (const network of networks) {
             await chromeStorage.networks.set({
               key: network.id || '',

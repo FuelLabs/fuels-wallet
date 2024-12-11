@@ -14,7 +14,7 @@ export class IndexedDBStorage implements StorageAbstract {
   }
 
   async setItem(key: string, data: string) {
-    await chromeStorage.vaults.set({ key, data: { data } });
+    await chromeStorage.vaults.set({ key, data: { key, data } });
     await db.transaction('rw', db.vaults, db.accounts, async () => {
       await db.vaults.put({ key, data });
     });

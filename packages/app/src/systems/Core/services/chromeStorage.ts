@@ -1,4 +1,11 @@
-export class ChromeStorageTable {
+import type { Account, NetworkData, Vault } from '@fuel-wallet/types';
+
+interface ChromeStorageRow<T> {
+  key: string;
+  data: T;
+}
+
+export class ChromeStorageTable<T> {
   constructor(private readonly tableName: string) {
     this.tableName = tableName;
   }
@@ -24,33 +31,26 @@ export class ChromeStorageTable {
     };
   }
 
-  async getAll() {
+  async getAll(): Promise<ChromeStorageRow<T>[]> {
     const rowsMap = (await chrome?.storage?.local?.get(this.tableName)) || {};
-    const rows = rowsMap[this.tableName] || [];
-    return rows.map((row: any) => row.data);
+    const rows: ChromeStorageRow<T>[] = rowsMap[this.tableName] || [];
+    return rows;
   }
 
-
-  async set({ key, data }: { key: string; data: any }) {
+  async set({ key, data }: ChromeStorageRow<T>) {
     const { index, rows } = await this.get({ key });
 
     // update
     if (index !== -1) {
       rows[index] = {
         key,
-        data: {
-          key,
-          ...data,
-        },
+        data,
       };
     } else {
       // create
       rows.push({
         key,
-        data: {
-          key,
-          ...data,
-        },
+        data,
       });
     }
 
@@ -78,7 +78,7 @@ export class ChromeStorageTable {
 }
 
 export const chromeStorage = {
-  accounts: new ChromeStorageTable('accounts'),
-  networks: new ChromeStorageTable('networks'),
-  vaults: new ChromeStorageTable('vaults'),
+  accounts: new ChromeStorageTable<Account>('accounts'),
+  networks: new ChromeStorageTable<NetworkData>('networks'),
+  vaults: new ChromeStorageTable<Vault>('vaults'),
 };

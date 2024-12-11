@@ -262,8 +262,11 @@ export class AccountService {
             console.log('recovering accounts', backupAccounts);
             for (const account of backupAccounts) {
               // in case of recovery, the first account will be the current
-              if (account.key && account.address) {
-                await db.accounts.add({ ...account, isCurrent: isCurrentFlag });
+              if (account.key && account.data.address) {
+                await db.accounts.add({
+                  ...account.data,
+                  isCurrent: isCurrentFlag,
+                });
                 isCurrentFlag = false;
               }
             }
@@ -272,15 +275,15 @@ export class AccountService {
             console.log('recovering vaults', backupVaults);
             for (const vault of backupVaults) {
               if (vault.key && vault.data) {
-                await db.vaults.add(vault);
+                await db.vaults.add(vault.data);
               }
             }
           }
           if (needsNetworkRecovery) {
             console.log('recovering networks', backupNetworks);
             for (const network of backupNetworks) {
-              if (network.key && network.id) {
-                await db.networks.add(network);
+              if (network.key && network.data.id) {
+                await db.networks.add(network.data);
               }
             }
           }
