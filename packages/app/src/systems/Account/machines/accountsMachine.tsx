@@ -11,13 +11,17 @@ import type { AccountInputs } from '../services/account';
 
 type MachineContext = {
   accounts?: Account[];
+  needsRecovery?: boolean;
   account?: AccountWithBalance;
   error?: unknown;
 };
 
 type MachineServices = {
   fetchAccounts: {
-    data: Account[];
+    data: {
+      accounts: Account[];
+      needsRecovery: boolean;
+    };
   };
   fetchAccount: {
     data: AccountWithBalance;
@@ -76,6 +80,11 @@ export const accountsMachine = createMachine(
             {
               target: 'recoveringWallet',
               actions: ['assignAccounts', 'setIsLogged'],
+              cond: 'hasAccountsOrNeedsRecovery',
+            },
+            {
+              target: 'idle',
+              actions: ['assignAccounts'],
             },
           ],
           onError: [
@@ -189,7 +198,8 @@ export const accountsMachine = createMachine(
     },
     actions: {
       assignAccounts: assign({
-        accounts: (_, ev) => ev.data,
+        accounts: (_, ev) => ev.data.accounts,
+        needsRecovery: (_, ev) => ev.data.needsRecovery,
       }),
       assignAccount: assign({
         account: (_, ev) => ev.data,
@@ -212,10 +222,19 @@ export const accountsMachine = createMachine(
       },
     },
     services: {
-      fetchAccounts: FetchMachine.create<never, Account[]>({
+      fetchAccounts: FetchMachine.create<
+        never,
+        { accounts: Account[]; needsRecovery: boolean }
+      >({
         showError: true,
         async fetch() {
-          return AccountService.getAccounts();
+          const accounts = await AccountService.getAccounts();
+          const { needsRecovery } = await AccountService.fetchRecoveryState();
+
+          return {
+            accounts,
+            needsRecovery,
+          };
         },
       }),
       recoverWallet: FetchMachine.create<never, void>({
@@ -276,6 +295,15 @@ export const accountsMachine = createMachine(
       },
       hasAccount: (ctx, ev) => {
         return Boolean(ev?.data || ctx?.account);
+      },
+      hasAccountsOrNeedsRecovery: (ctx, ev) => {
+        const hasAccounts = Boolean(
+          (ev.data.accounts || ctx?.accounts || []).length
+        );
+        const needsRecovery = Boolean(
+          ev.data.needsRecovery || ctx?.needsRecovery
+        );
+        return hasAccounts || needsRecovery;
       },
     },
   }

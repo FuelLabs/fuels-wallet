@@ -121,6 +121,9 @@ export class FuelDB extends Dexie {
 
   async clear() {
     await Promise.all([
+      chromeStorage.accounts.clear(),
+      chromeStorage.networks.clear(),
+      chromeStorage.vaults.clear(),
       this.vaults.clear(),
       this.accounts.clear(),
       this.networks.clear(),
