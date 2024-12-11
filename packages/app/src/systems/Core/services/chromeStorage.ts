@@ -5,7 +5,7 @@ interface ChromeStorageRow<T> {
   data: T;
 }
 
-export class ChromeStorageTable<T> {
+class ChromeStorageTable<T> {
   constructor(private readonly tableName: string) {
     this.tableName = tableName;
   }
