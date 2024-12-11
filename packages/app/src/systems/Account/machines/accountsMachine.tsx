@@ -83,7 +83,7 @@ export const accountsMachine = createMachine(
               cond: 'hasAccountsOrNeedsRecovery',
             },
             {
-              target: 'idle',
+              target: 'fetchingAccount',
               actions: ['assignAccounts'],
             },
           ],
@@ -118,11 +118,6 @@ export const accountsMachine = createMachine(
               cond: FetchMachine.hasError,
               actions: 'assignError',
               target: 'failed',
-            },
-            {
-              target: 'idle',
-              actions: ['assignAccount'],
-              cond: 'hasAccount',
             },
             {
               target: 'idle',

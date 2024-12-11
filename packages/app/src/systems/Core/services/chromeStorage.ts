@@ -81,4 +81,7 @@ export const chromeStorage = {
   accounts: new ChromeStorageTable<Account>('accounts'),
   networks: new ChromeStorageTable<NetworkData>('networks'),
   vaults: new ChromeStorageTable<Vault>('vaults'),
+  clear: () => {
+    chrome?.storage?.local?.clear();
+  }
 };
