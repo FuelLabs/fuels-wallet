@@ -53,12 +53,7 @@ const config: JestConfigWithTsJest = {
     require.resolve('@fuel-ui/test-utils/setup'),
     './jest.setup.ts',
   ],
-  setupFiles: [
-    // Mocking IndexedDB
-    'fake-indexeddb/auto',
-    // Mocking chrome.storage.local resources
-    'jest-webextension-mock',
-  ],
+  setupFiles: ['fake-indexeddb/auto'],
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
   injectGlobals: true,
   moduleNameMapper: {
