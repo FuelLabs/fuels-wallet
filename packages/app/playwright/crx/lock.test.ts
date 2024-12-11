@@ -98,9 +98,7 @@ test.describe('Lock FuelWallet after inactivity', () => {
       /** Account created */
       await hasText(page, /Wallet created successfully/i, 0, 15000);
 
-      for (const page of pages) {
-        await page.close();
-      }
+      await page.close();
     });
 
     const popupPage = await test.step('Open wallet', async () => {
@@ -114,13 +112,17 @@ test.describe('Lock FuelWallet after inactivity', () => {
       await getByAriaLabel(popupPage, 'Accounts').click();
       await popupPage.waitForTimeout(65_000);
       await hasText(popupPage, /Assets/i);
+
+      const pages = context.pages();
+      const walletPages = pages.filter((page) => {
+        return page.url().includes('chrome-extension://');
+      });
+      for (const page of walletPages) {
+        await page.close();
+      }
     });
 
     await test.step('Resume auto-lock timer after closing wallet', async () => {
-      const pages = context.pages();
-      for (const page of pages) {
-        await page.close();
-      }
       const page = await context.newPage();
       await page.waitForTimeout(65_000);
       await page.goto(`chrome-extension://${extensionId}/popup.html`);
