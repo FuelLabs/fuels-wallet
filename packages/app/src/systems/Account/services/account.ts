@@ -263,18 +263,21 @@ export class AccountService {
         backupAccounts,
         backupNetworks,
       };
-      try {
-        // try getting data from indexedDB (outside of dexie) to check if it's also corrupted
-        const testNoDexieDbData = await getTestNoDexieDbData();
-        dataToLog.testNoDexieDbData = testNoDexieDbData;
-      } catch (_) {}
 
-      Sentry.captureException(
-        'Disaster on DB. Start recovering accounts / vaults / networks',
-        {
-          extra: dataToLog,
-        }
-      );
+      (async () => {
+        try {
+          // try getting data from indexedDB (outside of dexie) to check if it's also corrupted
+          const testNoDexieDbData = await getTestNoDexieDbData();
+          dataToLog.testNoDexieDbData = testNoDexieDbData;
+        } catch (_) {}
+
+        Sentry.captureException(
+          'Disaster on DB. Start recovering accounts / vaults / networks',
+          {
+            extra: dataToLog,
+          }
+        );
+      })();
 
       await db.transaction(
         'rw',
@@ -284,6 +287,7 @@ export class AccountService {
         async () => {
           if (needsAccRecovery) {
             let isCurrentFlag = true;
+            console.log('recovering accounts', backupAccounts);
             for (const account of backupAccounts) {
               // in case of recovery, the first account will be the current
               if (account.key && account.data.address) {
@@ -296,6 +300,7 @@ export class AccountService {
             }
           }
           if (needsVaultRecovery) {
+            console.log('recovering vaults', backupVaults);
             for (const vault of backupVaults) {
               if (vault.key && vault.data) {
                 await db.vaults.add(vault.data);
@@ -303,6 +308,7 @@ export class AccountService {
             }
           }
           if (needsNetworkRecovery) {
+            console.log('recovering networks', backupNetworks);
             for (const network of backupNetworks) {
               if (network.key && network.data.id) {
                 await db.networks.add(network.data);
