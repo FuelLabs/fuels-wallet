@@ -33,26 +33,28 @@ jest.mock('react-dom/test-utils', () => {
 // Replace chromeStorage
 jest.mock('./src/systems/Core/services/chromeStorage', () => {
   return {
-    accounts: {
-      get: jest.fn(),
-      getAll: jest.fn(),
-      set: jest.fn(),
-      remove: jest.fn(),
-      clear: jest.fn(),
-    },
-    networks: {
-      get: jest.fn(),
-      getAll: jest.fn(),
-      set: jest.fn(),
-      remove: jest.fn(),
-      clear: jest.fn(),
-    },
-    vaults: {
-      get: jest.fn(),
-      getAll: jest.fn(),
-      set: jest.fn(),
-      remove: jest.fn(),
-      clear: jest.fn(),
+    chromeStorage: {
+      accounts: {
+        get: jest.fn(),
+        getAll: jest.fn(),
+        set: jest.fn(),
+        remove: jest.fn(),
+        clear: jest.fn(),
+      },
+      networks: {
+        get: jest.fn(),
+        getAll: jest.fn(),
+        set: jest.fn(),
+        remove: jest.fn(),
+        clear: jest.fn(),
+      },
+      vaults: {
+        get: jest.fn(),
+        getAll: jest.fn(),
+        set: jest.fn(),
+        remove: jest.fn(),
+        clear: jest.fn(),
+      },
     },
   };
 });
