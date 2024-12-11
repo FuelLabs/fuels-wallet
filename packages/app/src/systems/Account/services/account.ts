@@ -240,7 +240,7 @@ export class AccountService {
       };
       try {
         // try getting data from indexedDB (outside of dexie) to check if it's also corrupted
-        const testNoDexieDbData = await getTestNoDexieDbData;
+        const testNoDexieDbData = await getTestNoDexieDbData();
         dataToLog.testNoDexieDbData = testNoDexieDbData;
       } catch (_) {}
 

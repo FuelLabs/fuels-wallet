@@ -209,10 +209,6 @@ export class VaultServer extends EventEmitter {
   async reload() {
     chrome.runtime.reload();
   }
-
-  async resetAndReload() {
-    return this.reload();
-  }
 }
 
 export type VaultMethods = {
