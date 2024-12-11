@@ -1,4 +1,3 @@
-import { chromeStackLineParser } from '@sentry/react';
 import type { StorageAbstract } from 'fuels';
 import { chromeStorage } from '~/systems/Core/services/chromeStorage';
 import { db } from '~/systems/Core/utils/database';

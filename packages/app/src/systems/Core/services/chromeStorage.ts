@@ -4,7 +4,7 @@ export class ChromeStorageTable {
   }
 
   async get({ key }: { key: string }) {
-    const rowsMap = (await chrome.storage.local.get(this.tableName)) || {};
+    const rowsMap = (await chrome?.storage?.local?.get(this.tableName)) || {};
     const rows = rowsMap[this.tableName] || [];
 
     let foundIndex = -1;
@@ -25,7 +25,7 @@ export class ChromeStorageTable {
   }
 
   async getAll() {
-    const rowsMap = (await chrome.storage.local.get(this.tableName)) || {};
+    const rowsMap = (await chrome?.storage?.local?.get(this.tableName)) || {};
     const rows = rowsMap[this.tableName] || [];
     return rows.map((row: any) => row.data);
   }
@@ -54,7 +54,7 @@ export class ChromeStorageTable {
       });
     }
 
-    await chrome.storage.local.set({
+    await chrome?.storage?.local?.set({
       [this.tableName]: rows,
     });
   }
@@ -64,14 +64,14 @@ export class ChromeStorageTable {
 
     if (index !== -1) {
       rows.splice(index, 1);
-      await chrome.storage.local.set({
+      await chrome?.storage?.local?.set({
         [this.tableName]: rows,
       });
     }
   }
 
   async clear() {
-    await chrome.storage.local.set({
+    await chrome?.storage?.local?.set({
       [this.tableName]: [],
     });
   }
