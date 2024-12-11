@@ -18,6 +18,18 @@ import { test } from './utils';
 test.setTimeout(360_000);
 
 test.describe('Lock FuelWallet after inactivity', () => {
+  test('If user opens popup it should force open a sign-up page', async ({
+    context,
+    extensionId,
+  }) => {
+    const popupPage = await context.newPage();
+    await popupPage.goto(`chrome-extension://${extensionId}/popup.html`);
+    const page = await context.waitForEvent('page', {
+      predicate: (page) => page.url().includes('sign-up'),
+    });
+    expect(page.url()).toContain('sign-up');
+  });
+
   test('should lock the wallet after 1 minute of inactivity (config in .env file)', async ({
     context,
     baseURL,
@@ -50,19 +62,7 @@ test.describe('Lock FuelWallet after inactivity', () => {
 
     await test.step('Create wallet', async () => {
       const pages = context.pages();
-      let page = pages.find((page) => page.url().includes('sign-up'));
-
-      if (!page) {
-        page = await context.waitForEvent('page', {
-          predicate: (page) => page.url().includes('sign-up'),
-          timeout: 10000, // Adjust timeout as needed
-        });
-      }
-
-      if (!page) {
-        throw new Error('Sign-up page did not open');
-      }
-
+      const [page] = pages.filter((page) => page.url().includes('sign-up'));
       await reload(page);
       await getElementByText(page, /Create new wallet/i).click();
 
