@@ -232,6 +232,9 @@ export const applyDbVersioning = (db: Dexie) => {
     abis: '&contractId',
     errors: '&id',
   });
+
+  // DB VERSION 28
+  // add fetchedAt column to indexedAssets table
   db.version(28).stores({
     vaults: 'key',
     accounts: '&address, &name',
@@ -243,4 +246,33 @@ export const applyDbVersioning = (db: Dexie) => {
     abis: '&contractId',
     errors: '&id',
   });
+
+  // DB VERSION 29
+  // add table outside of dexie to test if it will be cleaned
+  db.version(29)
+    .stores({
+      vaults: 'key',
+      accounts: '&address, &name',
+      networks: '&id, &url, &name, chainId',
+      connections: 'origin',
+      transactionsCursors: '++id, address, size, providerUrl, endCursor',
+      assets: '&name, &symbol',
+      indexedAssets: 'key, fetchedAt',
+      abis: '&contractId',
+      errors: '&id',
+    })
+    .upgrade(async (_) => {
+      // add table outside of dexie to test if it will be corrupted also with dexie FuelDB
+      const request = await window.indexedDB.open('TestDatabase', 1);
+      request.onupgradeneeded = (event) => {
+        const db = (event.target as IDBRequest)?.result;
+        db.createObjectStore('myTable', { keyPath: 'id' });
+      };
+      request.onsuccess = (event: Event) => {
+        const db = (event.target as IDBRequest).result as IDBDatabase;
+        const tx = db.transaction('myTable', 'readwrite');
+        const store = tx.objectStore('myTable');
+        store.add({ id: 1, name: 'John' });
+      };
+    });
 };
