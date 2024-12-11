@@ -13,6 +13,7 @@ import 'dexie-observable';
 import type { AssetFuel } from 'fuels';
 import type { TransactionCursor } from '~/systems/Transaction';
 import { applyDbVersioning } from './databaseVersioning';
+import { chromeStorage } from '../services/chromeStorage';
 
 type FailureEvents = Extract<keyof DbEvents, 'close' | 'blocked'>;
 export type FuelCachedAsset = AssetData &
@@ -45,8 +46,40 @@ export class FuelDB extends Dexie {
 
   open(): PromiseExtended<Dexie> {
     try {
-      return super.open().then((res) => {
+      return super.open().then(async (res) => {
         this.restartAttempts = 0;
+        const accounts = await this.accounts.toArray();
+        const vaults = await this.vaults.toArray();
+        const networks = await this.networks.toArray();
+
+        // @TODO: this is a temporary solution to avoid the storage accounts of being wrong and
+        // users losing funds in case of no backup
+        // if has account, save to chrome storage
+        if (!!accounts.length) {
+          for (const account of accounts) {
+            await chromeStorage.accounts.set({
+              key: account.address,
+              data: account,
+            });
+          }
+        }
+        if (!!vaults.length) {
+          for (const vault of vaults) {
+            await chromeStorage.vaults.set({
+              key: vault.key,
+              data: vault,
+            });
+          }
+        }
+        if (!!networks.length) {
+          for (const network of networks) {
+            await chromeStorage.networks.set({
+              key: network.id || '',
+              data: network,
+            });
+          }
+        }
+
         return res;
       });
     } catch (err) {

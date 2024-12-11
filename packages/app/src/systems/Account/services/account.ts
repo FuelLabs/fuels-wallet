@@ -5,10 +5,12 @@ import type {
   AccountWithBalance,
   CoinAsset,
 } from '@fuel-wallet/types';
+import * as Sentry from '@sentry/react';
 import { Address, type Provider, bn } from 'fuels';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { AssetService } from '~/systems/Asset/services';
 import { getFuelAssetByAssetId } from '~/systems/Asset/utils';
+import { chromeStorage } from '~/systems/Core/services/chromeStorage';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
 import { getUniqueString } from '~/systems/Core/utils/string';
@@ -101,6 +103,7 @@ export class AccountService {
     }
 
     const { account, providerUrl } = input;
+
     try {
       const provider = await createProvider(providerUrl!);
       const balances = await getBalances(provider, account.publicKey);
@@ -194,7 +197,7 @@ export class AccountService {
     });
   }
 
-  static setCurrentAccountToDefault() {
+  static async setCurrentAccountToDefault() {
     console.log('recovering default');
     return db.transaction('rw', db.accounts, async () => {
       const [firstAccount] = await db.accounts.toArray();
@@ -204,6 +207,62 @@ export class AccountService {
           .modify({ isCurrent: true });
       }
     });
+  }
+
+  static async recoverWallet() {
+    const backupAccounts = await chromeStorage.accounts.getAll();
+    const allAccounts = await db.accounts.toArray();
+    const backupVaults = await chromeStorage.vaults.getAll();
+    const allVaults = await db.vaults.toArray();
+    const backupNetworks = await chromeStorage.networks.getAll();
+    const allNetworks = await db.networks.toArray();
+
+    // if there is no accounts, means the user lost it. try recovering it
+    const needsAccRecovery = allAccounts?.length === 0 && backupAccounts?.length > 0;
+    const needsVaultRecovery = allVaults?.length === 0 && backupVaults?.length > 0;
+    const needsNetworkRecovery = allNetworks?.length === 0 && backupNetworks?.length > 0;
+    const needsRecovery = needsAccRecovery || needsVaultRecovery || needsNetworkRecovery;
+
+    // throw new Error('Cancel Recovery');
+    if (needsRecovery) {
+      console.log('start recovering accounts / vaults / networks', backupAccounts, backupVaults, backupNetworks);
+      Sentry.captureException('Disaster on DB. Start recovering accounts / vaults / networks', {
+        extra: {
+          backupAccounts,
+          backupNetworks
+        },
+      });
+
+      await db.transaction('rw', db.accounts, db.vaults, db.networks,async () => {
+        if (needsAccRecovery) {
+          let isCurrentFlag = true;
+          console.log('recovering accounts', backupAccounts);
+          for (const account of backupAccounts) {
+            // in case of recovery, the first account will be the current
+            if (account.key && account.address) {
+              await db.accounts.add({ ...account, isCurrent: isCurrentFlag });
+              isCurrentFlag = false;
+            }
+          }
+        }
+        if (needsVaultRecovery) {
+          console.log('recovering vaults', backupVaults);
+          for (const vault of backupVaults) {
+            if (vault.key && vault.data) {
+              await db.vaults.add(vault);
+            }
+          }
+        }
+        if (needsNetworkRecovery) {
+          console.log('recovering networks', backupNetworks);
+          for (const network of backupNetworks) {
+            if (network.key && network.id) {
+              await db.networks.add(network);
+            }
+          }
+        }
+      });
+    }
   }
 
   static setCurrentAccount(input: AccountInputs['setCurrentAccount']) {

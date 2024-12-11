@@ -46,7 +46,7 @@ const selectors = {
 
 const listenerAccountFetcher = () => {
   store.send(Services.accounts, {
-    type: 'REFRESH_ACCOUNT',
+    type: 'REFRESH_ACCOUNTS',
   });
 };
 

@@ -25,6 +25,7 @@ export const FuelAddress = ({
   css,
 }: AddressProps) => {
   const account = useMemo<string>(() => {
+    if (!address) return '';
     if (isContract) return Address.fromDynamicInput(address).toB256();
     return Address.fromDynamicInput(address).toString();
   }, [isContract, address]);
