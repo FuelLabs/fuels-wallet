@@ -38,9 +38,7 @@ jobs:
           ## with sourcemaps
           NODE_OPTIONS: "--max-old-space-size=4096"
 
-      # E2E tests running with Playwright
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
+      - uses: ./.github/actions/setup-playwright
 
       - name: Run E2E Tests
         run: xvfb-run --auto-servernum -- pnpm test:e2e:crx-lock

@@ -38,7 +38,7 @@
     "dev:docs": "./scripts/dev.sh --docs",
     "dev:crx": "./scripts/dev.sh --crx",
     "dev:e2e-contracts": "./scripts/dev.sh --e2e-contracts-test",
-    "lint:check": "biome check --apply-unsafe .",
+    "lint:check": "biome check --write --unsafe .",
     "lint:ci": "biome lint --max-diagnostics=1000 --diagnostic-level=error .",
     "format": "biome format --write .",
     "node:up": "make -C ./docker up",
@@ -50,7 +50,8 @@
     "test:ci": "turbo run test --parallel -- --ci --testLocationInResults --json --coverage",
     "test:clear": "pnpm -r exec jest --clearCache",
     "test:coverage": "turbo run test --parallel -- --coverage",
-    "test:e2e": "NODE_ENV=test pnpm build:crx && playwright test --config=packages/app/playwright.config.ts",
+    "test:e2e": "NODE_ENV=test pnpm build:crx && playwright test --config=packages/app/playwright.config.ts --project=chromium",
+    "test:e2e:beta": "NODE_ENV=test pnpm build:crx && playwright test --config=packages/app/playwright.config.ts --project=chrome-beta",
     "test:e2e:crx-lock": "NODE_ENV=test pnpm build:crx && playwright test --config=packages/app/playwright.crx-lock.config.ts",
     "test:e2e:contracts": "NODE_ENV=test pnpm build:crx && pnpm --filter=@fuel-wallet/e2e-contract-tests test:e2e",
     "test:appfile": "pnpm --filter=fuels-wallet test --",
@@ -64,7 +65,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.2",
-    "@biomejs/biome": "1.6.2",
+    "@biomejs/biome": "1.9.4",
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.2",
     "@fuels/ts-config": "0.20.0",
@@ -125,7 +126,8 @@
       "fuels": "0.96.1",
       "secp256k1@=5.0.0": ">=5.0.1",
       "elliptic@<6.6.0": ">=6.6.0",
-      "cross-spawn@<7.0.5": ">=7.0.5"
+      "cross-spawn@<7.0.5": ">=7.0.5",
+      "nanoid@<3.3.8": "3.3.8"
     }
   }
 }

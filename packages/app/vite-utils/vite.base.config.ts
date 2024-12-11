@@ -45,6 +45,9 @@ const baseConfig: UserConfig = {
   server: {
     port: Number(process.env.PORT),
     strictPort: true,
+    // proxy: {
+    //   '/public': 'http://localhost:3000',
+    // }
     watch: {
       ignored: ['**/playwright*/**'], // Ignore changes in any 'playwright' folder
     },
