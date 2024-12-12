@@ -14,7 +14,7 @@ test.describe('Check assets', () => {
       await page.getByText('I Agree to the Terms Of Use').click();
       await page.getByRole('button', { name: 'Next: Seed Phrase' }).click();
       const mnemonic = process.env.READONLY_TESTNET_ASSETS_VIEW;
-
+      console.log(`Importing wallet with mnemonic: ${mnemonic}`);
       const words = mnemonic.split(' ');
       for (const [index, word] of words.entries()) {
         console.log(`Filling word ${index + 1}: ${word}`);
