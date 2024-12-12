@@ -179,7 +179,7 @@ export const assetsMachine = createMachine(
         toast.success('Asset added successfully');
       },
       notifyUpdateAccounts: () => {
-        store.updateAccounts();
+        store.refreshAccounts({ skipLoading: true });
       },
     },
     services: {

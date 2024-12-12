@@ -115,7 +115,7 @@ export const selectNetworkRequestMachine = createMachine(
         store.refreshNetworks();
       },
       notifyUpdateAccounts: () => {
-        store.updateAccounts();
+        store.refreshAccounts();
       },
     },
     services: {

@@ -1,5 +1,41 @@
 # fuels-wallet
 
+## 0.44.0
+
+### Minor Changes
+
+- [#1700](https://github.com/FuelLabs/fuels-wallet/pull/1700) [`be181de6`](https://github.com/FuelLabs/fuels-wallet/commit/be181de610d15f18efa977e183d449ae3f871c54) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: implemented recoverWallet method and in case of disaster recover it
+
+- [#1700](https://github.com/FuelLabs/fuels-wallet/pull/1700) [`be181de6`](https://github.com/FuelLabs/fuels-wallet/commit/be181de610d15f18efa977e183d449ae3f871c54) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: synchronize db with chrome storage
+
+- [#1700](https://github.com/FuelLabs/fuels-wallet/pull/1700) [`be181de6`](https://github.com/FuelLabs/fuels-wallet/commit/be181de610d15f18efa977e183d449ae3f871c54) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: create new database and table (outside of react) to identify if only dexiedb database is breaking
+
+- [#1700](https://github.com/FuelLabs/fuels-wallet/pull/1700) [`be181de6`](https://github.com/FuelLabs/fuels-wallet/commit/be181de610d15f18efa977e183d449ae3f871c54) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: report to sentry when there's a recover happening
+
+### Patch Changes
+
+- [#1695](https://github.com/FuelLabs/fuels-wallet/pull/1695) [`89454569`](https://github.com/FuelLabs/fuels-wallet/commit/8945456956dcf4117d1ca0f01ab91c504bb1095e) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed setup page not finding some local assets
+
+- [#1691](https://github.com/FuelLabs/fuels-wallet/pull/1691) [`33f3d77a`](https://github.com/FuelLabs/fuels-wallet/commit/33f3d77ac8b5bf53be33963e1df3e1a03450b731) Thanks [@nelitow](https://github.com/nelitow)! - ### Changed
+
+  Updated nanoid to the latest versions for better performance and security.
+
+- [#1692](https://github.com/FuelLabs/fuels-wallet/pull/1692) [`473067c9`](https://github.com/FuelLabs/fuels-wallet/commit/473067c9c3c442b3f51f28c10b99edd1827f1cad) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Updated Biome to 1.9.4 and fixed lint errors.
+
+- [#1639](https://github.com/FuelLabs/fuels-wallet/pull/1639) [`b0b5f2f5`](https://github.com/FuelLabs/fuels-wallet/commit/b0b5f2f529fe0c9844fa35d41c8f18d0978ca151) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed wallet not loading correctly in local environment on Chrome 130+
+
+- [#1704](https://github.com/FuelLabs/fuels-wallet/pull/1704) [`55606980`](https://github.com/FuelLabs/fuels-wallet/commit/55606980a9204d6f21fbb8c290b9b1c6ba2e7dcf) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: reduce reported data to sentry
+
+- [#1696](https://github.com/FuelLabs/fuels-wallet/pull/1696) [`8b68c21e`](https://github.com/FuelLabs/fuels-wallet/commit/8b68c21e39e7b5b0fbb9791c7d306d536a6d37ad) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fix exception when injecting content in the hello page
+
+- [#1695](https://github.com/FuelLabs/fuels-wallet/pull/1695) [`89454569`](https://github.com/FuelLabs/fuels-wallet/commit/8945456956dcf4117d1ca0f01ab91c504bb1095e) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Upgrade Vite to V6 major
+
+- [#1694](https://github.com/FuelLabs/fuels-wallet/pull/1694) [`cfcf2209`](https://github.com/FuelLabs/fuels-wallet/commit/cfcf220966cafc9bf7cd8861f0421a7560315365) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: update 'dev:crx' script to use default env
+
+- Updated dependencies [[`473067c9`](https://github.com/FuelLabs/fuels-wallet/commit/473067c9c3c442b3f51f28c10b99edd1827f1cad), [`55606980`](https://github.com/FuelLabs/fuels-wallet/commit/55606980a9204d6f21fbb8c290b9b1c6ba2e7dcf)]:
+  - @fuels/playwright-utils@0.44.0
+  - @fuel-wallet/connections@0.44.0
+
 ## 0.43.0
 
 ### Minor Changes

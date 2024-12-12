@@ -43,7 +43,7 @@ export function Home() {
             </Box>
             <Box.Stack css={styles.assetsList}>
               <BalanceAssets
-                balances={account?.balances || []}
+                balances={account?.balances}
                 isLoading={isLoading}
               />
             </Box.Stack>

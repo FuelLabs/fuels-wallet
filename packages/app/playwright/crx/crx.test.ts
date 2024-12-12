@@ -1,5 +1,5 @@
 import type { NetworkData, Account as WalletAccount } from '@fuel-wallet/types';
-import { type Locator, type Page, expect } from '@playwright/test';
+import { type Locator, expect } from '@playwright/test';
 
 import {
   delay,
@@ -10,7 +10,6 @@ import {
   hasText,
   reload,
   seedWallet,
-  visit,
   waitAriaLabel,
 } from '../commons';
 import {

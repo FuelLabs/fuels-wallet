@@ -1,11 +1,8 @@
-import { join } from 'node:path';
-// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import {
   type PlaywrightTestConfig,
   defineConfig,
   devices,
 } from '@playwright/test';
-import './load.envs';
 import './load.envs.cts';
 
 const PORT = process.env.PORT;

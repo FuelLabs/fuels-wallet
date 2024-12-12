@@ -232,6 +232,9 @@ export const applyDbVersioning = (db: Dexie) => {
     abis: '&contractId',
     errors: '&id',
   });
+
+  // DB VERSION 28
+  // add fetchedAt column to indexedAssets table
   db.version(28).stores({
     vaults: 'key',
     accounts: '&address, &name',
