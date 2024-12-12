@@ -4,9 +4,7 @@
   "version": "0.43.0",
   "type": "module",
   "database": "23",
-  "scripts": {
-    "dev:crx": "pnpm --workspace-root dev:crx"
-  },
+  "scripts": {},
   "dependencies": {},
   "devDependencies": {
     "@playwright/test": "1.46.1"
