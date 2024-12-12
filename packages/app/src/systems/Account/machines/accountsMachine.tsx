@@ -318,7 +318,6 @@ export const accountsMachine = createMachine(
         return hasAccounts || needsRecovery;
       },
       shouldSkipLoading: (_, ev) => {
-        console.log(`asd ev`, ev);
         return !!ev.input?.skipLoading;
       },
     },
