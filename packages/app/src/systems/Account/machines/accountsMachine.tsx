@@ -11,13 +11,17 @@ import type { AccountInputs } from '../services/account';
 
 type MachineContext = {
   accounts?: Account[];
+  needsRecovery?: boolean;
   account?: AccountWithBalance;
   error?: unknown;
 };
 
 type MachineServices = {
   fetchAccounts: {
-    data: Account[];
+    data: {
+      accounts: Account[];
+      needsRecovery: boolean;
+    };
   };
   fetchAccount: {
     data: AccountWithBalance;
@@ -28,9 +32,7 @@ type MachineServices = {
 };
 
 export type AccountsMachineEvents =
-  | { type: 'REFRESH_ACCOUNT'; input?: null }
-  | { type: 'REFRESH_ACCOUNTS'; input?: null }
-  | { type: 'RELOAD_BALANCE'; input?: null }
+  | { type: 'REFRESH_ACCOUNTS'; input?: { skipLoading?: boolean } }
   | { type: 'SET_CURRENT_ACCOUNT'; input: AccountInputs['setCurrentAccount'] }
   // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
   | { type: 'LOGOUT'; input?: void }
@@ -39,26 +41,69 @@ export type AccountsMachineEvents =
       input: AccountInputs['updateAccount'];
     };
 
-const fetchAccount = {
-  invoke: {
-    src: 'fetchAccount',
-    onDone: [
-      {
-        target: 'idle',
-        actions: ['assignAccount'],
-        cond: 'hasAccount',
+const fetchingAccountsState = 
+{
+  initial: 'fetchingAccounts',
+  states: {
+    fetchingAccounts: {
+      invoke: {
+        src: 'fetchAccounts',
+        onDone: [
+        {
+          target: 'recoveringWallet',
+          actions: ['assignAccounts', 'setIsLogged'],
+          cond: 'hasAccountsOrNeedsRecovery',
+        },
+        {
+          target: 'fetchingAccount',
+          actions: ['assignAccounts'],
+        },
+      ],
+      onError: [
+        {
+          actions: 'assignError',
+          target: '#(machine).failed',
+        },
+      ],
+    },
+    },
+    recoveringWallet: {
+      invoke: {
+        src: 'recoverWallet',
+        onDone: [
+          {
+            actions: 'assignError',
+            target: '#(machine).failed',
+            cond: FetchMachine.hasError,
+          },
+          {
+            target: 'fetchingAccount',
+          },
+        ],
       },
-      {
-        target: 'idle',
-        actions: ['assignAccount'],
+    },
+    fetchingAccount: {
+      invoke: {
+        src: 'fetchAccount',
+        onDone: [
+          {
+            cond: FetchMachine.hasError,
+            actions: 'assignError',
+            target: '#(machine).failed',
+          },
+          {
+            target: '#(machine).idle',
+            actions: ['assignAccount'],
+          },
+        ],
+        onError: [
+          {
+            actions: 'assignError',
+            target: '#(machine).failed',
+          },
+        ],
       },
-    ],
-    onError: [
-      {
-        actions: 'assignError',
-        target: 'failed',
-      },
-    ],
+    },
   },
 };
 
@@ -89,44 +134,17 @@ export const accountsMachine = createMachine(
            * Update accounts every 5 seconds
            */
           TIMEOUT: {
-            target: 'refreshAccount',
+            target: 'refreshingAccounts',
             cond: 'isLoggedIn',
           },
         },
       },
       fetchingAccounts: {
         tags: ['loading'],
-        invoke: {
-          src: 'fetchAccounts',
-          onDone: [
-            {
-              target: 'fetchingAccount',
-              actions: ['assignAccounts', 'setIsLogged'],
-              cond: 'hasAccounts',
-            },
-            {
-              target: 'idle',
-              actions: ['assignAccounts'],
-            },
-          ],
-          onError: [
-            {
-              actions: 'assignError',
-              target: 'failed',
-            },
-          ],
-        },
+        ...fetchingAccountsState,
       },
-      fetchingAccount: {
-        tags: ['loading'],
-        ...fetchAccount,
-      },
-      refreshAccount: {
-        ...fetchAccount,
-      },
-      reloadingBalance: {
-        tags: ['loading'],
-        ...fetchAccount,
+      refreshingAccounts: {
+        ...fetchingAccountsState,
       },
       settingCurrentAccount: {
         invoke: {
@@ -177,16 +195,15 @@ export const accountsMachine = createMachine(
       LOGOUT: {
         target: 'loggingout',
       },
-      REFRESH_ACCOUNTS: {
-        target: 'fetchingAccounts',
-      },
-      REFRESH_ACCOUNT: {
-        target: 'refreshAccount',
-      },
-      RELOAD_BALANCE: {
-        target: 'reloadingBalance',
-        actions: ['notifyUpdateAccounts'],
-      },
+      REFRESH_ACCOUNTS: [
+        {
+          cond: 'shouldSkipLoading',
+          target: 'refreshingAccounts',
+        },
+        {
+          target: 'fetchingAccounts',
+        }
+      ],
     },
   },
   {
@@ -196,7 +213,8 @@ export const accountsMachine = createMachine(
     },
     actions: {
       assignAccounts: assign({
-        accounts: (_, ev) => ev.data,
+        accounts: (_, ev) => ev.data.accounts,
+        needsRecovery: (_, ev) => ev.data.needsRecovery,
       }),
       assignAccount: assign({
         account: (_, ev) => ev.data,
@@ -212,17 +230,31 @@ export const accountsMachine = createMachine(
         Storage.setItem(IS_LOGGED_KEY, true);
       },
       notifyUpdateAccounts: () => {
-        store.updateAccounts();
+        store.refreshAccounts();
       },
       redirectToHome: () => {
         store.closeOverlay();
-      },
+      }
     },
     services: {
-      fetchAccounts: FetchMachine.create<never, Account[]>({
+      fetchAccounts: FetchMachine.create<
+        never,
+        { accounts: Account[]; needsRecovery: boolean }
+      >({
         showError: true,
         async fetch() {
-          return AccountService.getAccounts();
+          const accounts = await AccountService.getAccounts();
+          const { needsRecovery } = await AccountService.fetchRecoveryState();
+
+          return {
+            accounts,
+            needsRecovery,
+          };
+        },
+      }),
+      recoverWallet: FetchMachine.create<never, void>({
+        async fetch() {
+          await AccountService.recoverWallet();
         },
       }),
       fetchAccount: FetchMachine.create<never, AccountWithBalance | undefined>({
@@ -235,10 +267,9 @@ export const accountsMachine = createMachine(
             accountToFetch = await AccountService.getCurrentAccount();
           }
           if (!accountToFetch) return undefined;
+
           const selectedNetwork = await NetworkService.getSelectedNetwork();
-          if (!selectedNetwork) {
-            throw new Error('No selected network');
-          }
+          if (!selectedNetwork) return undefined;
 
           const providerUrl = selectedNetwork.url;
           const accountWithBalance = await AccountService.fetchBalance({
@@ -277,11 +308,17 @@ export const accountsMachine = createMachine(
       isLoggedIn: () => {
         return !!Storage.getItem(IS_LOGGED_KEY);
       },
-      hasAccount: (ctx, ev) => {
-        return Boolean(ev?.data || ctx?.account);
+      hasAccountsOrNeedsRecovery: (ctx, ev) => {
+        const hasAccounts = Boolean(
+          (ev.data.accounts || ctx?.accounts || []).length
+        );
+        const needsRecovery = Boolean(
+          ev.data.needsRecovery || ctx?.needsRecovery
+        );
+        return hasAccounts || needsRecovery;
       },
-      hasAccounts: (ctx, ev) => {
-        return Boolean((ev.data || ctx?.accounts || []).length);
+      shouldSkipLoading: (_, ev) => {
+        return !!ev.input?.skipLoading;
       },
     },
   }

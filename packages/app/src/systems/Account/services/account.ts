@@ -5,13 +5,14 @@ import type {
   AccountWithBalance,
   CoinAsset,
 } from '@fuel-wallet/types';
+import * as Sentry from '@sentry/react';
 import { Address, type Provider, bn } from 'fuels';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
-import { AssetService } from '~/systems/Asset/services';
-import { getFuelAssetByAssetId } from '~/systems/Asset/utils';
+import { chromeStorage } from '~/systems/Core/services/chromeStorage';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
 import { getUniqueString } from '~/systems/Core/utils/string';
+import { getTestNoDexieDbData } from '../utils/getTestNoDexieDbData';
 
 export type AccountInputs = {
   addAccount: {
@@ -101,6 +102,7 @@ export class AccountService {
     }
 
     const { account, providerUrl } = input;
+
     try {
       const provider = await createProvider(providerUrl!);
       const balances = await getBalances(provider, account.publicKey);
@@ -194,8 +196,7 @@ export class AccountService {
     });
   }
 
-  static setCurrentAccountToDefault() {
-    console.log('recovering default');
+  static async setCurrentAccountToDefault() {
     return db.transaction('rw', db.accounts, async () => {
       const [firstAccount] = await db.accounts.toArray();
       if (firstAccount) {
@@ -204,6 +205,119 @@ export class AccountService {
           .modify({ isCurrent: true });
       }
     });
+  }
+
+  static async fetchRecoveryState() {
+    const [
+      backupAccounts,
+      allAccounts,
+      backupVaults,
+      allVaults,
+      backupNetworks,
+      allNetworks,
+    ] = await Promise.all([
+      chromeStorage.accounts.getAll(),
+      db.accounts.toArray(),
+      chromeStorage.vaults.getAll(),
+      db.vaults.toArray(),
+      chromeStorage.networks.getAll(),
+      db.networks.toArray(),
+    ]);
+
+    // if there is no accounts, means the user lost it. try recovering it
+    const needsAccRecovery =
+      allAccounts?.length === 0 && backupAccounts?.length > 0;
+    const needsVaultRecovery =
+      allVaults?.length === 0 && backupVaults?.length > 0;
+    const needsNetworkRecovery =
+      allNetworks?.length === 0 && backupNetworks?.length > 0;
+    const needsRecovery =
+      needsAccRecovery || needsVaultRecovery || needsNetworkRecovery;
+
+    return {
+      backupAccounts,
+      backupVaults,
+      backupNetworks,
+      needsRecovery,
+      needsAccRecovery,
+      needsVaultRecovery,
+      needsNetworkRecovery,
+    };
+  }
+
+  static async recoverWallet() {
+    const {
+      backupAccounts,
+      backupVaults,
+      backupNetworks,
+      needsRecovery,
+      needsAccRecovery,
+      needsVaultRecovery,
+      needsNetworkRecovery,
+    } = await AccountService.fetchRecoveryState();
+
+    if (needsRecovery) {
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      const dataToLog: any = {
+        backupAccounts: JSON.stringify(backupAccounts),
+        backupNetworks: JSON.stringify(backupNetworks),
+      };
+
+      (async () => {
+        try {
+          // try getting data from indexedDB (outside of dexie) to check if it's also corrupted
+          const testNoDexieDbData = await getTestNoDexieDbData();
+          dataToLog.testNoDexieDbData = testNoDexieDbData;
+        } catch (_) {}
+
+        Sentry.captureException(
+          'Disaster on DB. Start recovering accounts / vaults / networks',
+          {
+            extra: dataToLog,
+            tags: { manual: true },
+          }
+        );
+      })();
+
+      await db.transaction(
+        'rw',
+        db.accounts,
+        db.vaults,
+        db.networks,
+        async () => {
+          if (needsAccRecovery) {
+            let isCurrentFlag = true;
+            console.log('recovering accounts', backupAccounts);
+            for (const account of backupAccounts) {
+              // in case of recovery, the first account will be the current
+              if (account.key && account.data.address) {
+                await db.accounts.add({
+                  ...account.data,
+                  isCurrent: isCurrentFlag,
+                });
+                isCurrentFlag = false;
+              }
+            }
+          }
+          if (needsVaultRecovery) {
+            console.log('recovering vaults', backupVaults);
+            for (const vault of backupVaults) {
+              if (vault.key && vault.data) {
+                await db.vaults.add(vault.data);
+              }
+            }
+          }
+          if (needsNetworkRecovery) {
+            console.log('recovering networks', backupNetworks);
+            for (const network of backupNetworks) {
+              if (network.key && network.data.id) {
+                await db.networks.add(network.data);
+              }
+            }
+          }
+        }
+      );
+    }
   }
 
   static setCurrentAccount(input: AccountInputs['setCurrentAccount']) {

@@ -29,7 +29,7 @@ export const BalanceAssets = ({
     [balances]
   );
 
-  if (isLoading) return <AssetList.Loading items={4} />;
+  if (isLoading || !balances) return <AssetList.Loading items={4} />;
   const isEmpty = !balances || !balances.length;
   if (isEmpty) return <AssetList.Empty {...emptyProps} />;
   const balancesToShow = balances.filter(
@@ -40,6 +40,7 @@ export const BalanceAssets = ({
   function toggle() {
     setShowUnknown((s) => !s);
   }
+
   return (
     <CardList>
       {balancesToShow.map((balance) => {
@@ -49,7 +50,7 @@ export const BalanceAssets = ({
 
         return (
           <AssetItem
-            key={balance.asset?.name}
+            key={balance.assetId + balance.asset?.name}
             fuelAsset={balance.asset}
             amount={balance.amount}
             onRemove={onRemove}

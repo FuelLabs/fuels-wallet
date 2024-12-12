@@ -34,7 +34,10 @@ export async function executeContentScript() {
 }
 
 function injectContentScript(tabId: number) {
-  const env = process.env?.NODE_ENV;
+  let env: string | undefined = undefined;
+  if (typeof process !== 'undefined') {
+    env = process?.env?.NODE_ENV;
+  }
   chrome.scripting
     .executeScript({
       target: { tabId: tabId, allFrames: true },

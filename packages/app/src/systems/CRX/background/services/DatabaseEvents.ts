@@ -17,6 +17,7 @@ import {
 } from 'fuels';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { DatabaseObservable } from './DatabaseObservable';
+import { chromeStorage } from '~/systems/Core/services/chromeStorage';
 
 export class DatabaseEvents {
   readonly databaseObservable: DatabaseObservable<
@@ -73,6 +74,34 @@ export class DatabaseEvents {
         );
       }
     );
+
+    // -- START Events for sync db with chrome storage 
+    this.databaseObservable.on<'accounts:create', Account>(
+      'accounts:create',
+      async (event) => {
+        const currentAccount = event.obj;
+        if (currentAccount) {
+          await chromeStorage.accounts.set({
+            key: currentAccount.address,
+            data: currentAccount,
+          });
+        }
+      }
+    );
+    this.databaseObservable.on<'accounts:update', Account>(
+      'accounts:update',
+      async (event) => {
+        const currentAccount = event.obj;
+
+        if (currentAccount) {
+          await chromeStorage.accounts.set({
+            key: currentAccount.address,
+            data: currentAccount,
+          });
+        }
+      }
+    );
+    // -- END Events for sync db with chrome storage 
 
     this.databaseObservable.on<'accounts:update', Account>(
       'accounts:update',
