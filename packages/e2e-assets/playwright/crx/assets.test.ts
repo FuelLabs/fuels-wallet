@@ -31,6 +31,7 @@ test.describe('Check assets', () => {
       //   console.log(`Filled word ${index + 1}`);
       // }
 
+      await page.waitForTimeout(1000);
       await page.getByRole('button', { name: 'Paste seed phrase' }).click();
 
       await page.getByRole('button', { name: 'Next: Your password' }).click();
