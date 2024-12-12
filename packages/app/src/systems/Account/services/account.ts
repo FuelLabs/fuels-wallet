@@ -260,8 +260,8 @@ export class AccountService {
     if (needsRecovery) {
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       const dataToLog: any = {
-        backupAccounts,
-        backupNetworks,
+        backupAccounts: JSON.stringify(backupAccounts),
+        backupNetworks: JSON.stringify(backupNetworks),
       };
 
       (async () => {
