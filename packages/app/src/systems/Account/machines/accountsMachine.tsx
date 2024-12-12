@@ -32,7 +32,7 @@ type MachineServices = {
 };
 
 export type AccountsMachineEvents =
-  | { type: 'REFRESH_ACCOUNTS'; input?: null }
+  | { type: 'REFRESH_ACCOUNTS'; input?: { skipLoading?: boolean } }
   | { type: 'SET_CURRENT_ACCOUNT'; input: AccountInputs['setCurrentAccount'] }
   // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
   | { type: 'LOGOUT'; input?: void }
@@ -40,6 +40,72 @@ export type AccountsMachineEvents =
       type: 'TOGGLE_HIDE_ACCOUNT';
       input: AccountInputs['updateAccount'];
     };
+
+const fetchingAccountsState = 
+{
+  initial: 'fetchingAccounts',
+  states: {
+    fetchingAccounts: {
+      invoke: {
+        src: 'fetchAccounts',
+        onDone: [
+        {
+          target: 'recoveringWallet',
+          actions: ['assignAccounts', 'setIsLogged'],
+          cond: 'hasAccountsOrNeedsRecovery',
+        },
+        {
+          target: 'fetchingAccount',
+          actions: ['assignAccounts'],
+        },
+      ],
+      onError: [
+        {
+          actions: 'assignError',
+          target: '#(machine).failed',
+        },
+      ],
+    },
+    },
+    recoveringWallet: {
+      invoke: {
+        src: 'recoverWallet',
+        onDone: [
+          {
+            actions: 'assignError',
+            target: '#(machine).failed',
+            cond: FetchMachine.hasError,
+          },
+          {
+            target: 'fetchingAccount',
+          },
+        ],
+      },
+    },
+    fetchingAccount: {
+      invoke: {
+        src: 'fetchAccount',
+        onDone: [
+          {
+            cond: FetchMachine.hasError,
+            actions: 'assignError',
+            target: '#(machine).failed',
+          },
+          {
+            target: '#(machine).idle',
+            actions: ['assignAccount'],
+          },
+        ],
+        onError: [
+          {
+            actions: 'assignError',
+            target: '#(machine).failed',
+          },
+        ],
+      },
+    },
+  },
+};
 
 export const accountsMachine = createMachine(
   {
@@ -68,69 +134,17 @@ export const accountsMachine = createMachine(
            * Update accounts every 5 seconds
            */
           TIMEOUT: {
-            target: 'fetchingAccounts',
+            target: 'refreshingAccounts',
             cond: 'isLoggedIn',
           },
         },
       },
       fetchingAccounts: {
-        invoke: {
-          src: 'fetchAccounts',
-          onDone: [
-            {
-              target: 'recoveringWallet',
-              actions: ['assignAccounts', 'setIsLogged'],
-              cond: 'hasAccountsOrNeedsRecovery',
-            },
-            {
-              target: 'fetchingAccount',
-              actions: ['assignAccounts'],
-            },
-          ],
-          onError: [
-            {
-              actions: 'assignError',
-              target: 'failed',
-            },
-          ],
-        },
+        tags: ['loading'],
+        ...fetchingAccountsState,
       },
-      recoveringWallet: {
-        invoke: {
-          src: 'recoverWallet',
-          onDone: [
-            {
-              actions: 'assignError',
-              target: 'failed',
-              cond: FetchMachine.hasError,
-            },
-            {
-              target: 'fetchingAccount',
-            },
-          ],
-        },
-      },
-      fetchingAccount: {
-        invoke: {
-          src: 'fetchAccount',
-          onDone: [
-            {
-              cond: FetchMachine.hasError,
-              actions: 'assignError',
-              target: 'failed',
-            },
-            {
-              target: 'idle',
-              actions: ['assignAccount'],
-            },
-          ],
-          onError: [
-            {
-              actions: 'assignError',
-              target: 'failed',
-            },
-          ],
-        },
+      refreshingAccounts: {
+        ...fetchingAccountsState,
       },
       settingCurrentAccount: {
         invoke: {
@@ -181,9 +195,15 @@ export const accountsMachine = createMachine(
       LOGOUT: {
         target: 'loggingout',
       },
-      REFRESH_ACCOUNTS: {
-        target: 'fetchingAccounts',
-      },
+      REFRESH_ACCOUNTS: [
+        {
+          cond: 'shouldSkipLoading',
+          target: 'refreshingAccounts',
+        },
+        {
+          target: 'fetchingAccounts',
+        }
+      ],
     },
   },
   {
@@ -210,11 +230,11 @@ export const accountsMachine = createMachine(
         Storage.setItem(IS_LOGGED_KEY, true);
       },
       notifyUpdateAccounts: () => {
-        store.updateAccounts();
+        store.refreshAccounts();
       },
       redirectToHome: () => {
         store.closeOverlay();
-      },
+      }
     },
     services: {
       fetchAccounts: FetchMachine.create<
@@ -288,9 +308,6 @@ export const accountsMachine = createMachine(
       isLoggedIn: () => {
         return !!Storage.getItem(IS_LOGGED_KEY);
       },
-      hasAccount: (ctx, ev) => {
-        return Boolean(ev?.data || ctx?.account);
-      },
       hasAccountsOrNeedsRecovery: (ctx, ev) => {
         const hasAccounts = Boolean(
           (ev.data.accounts || ctx?.accounts || []).length
@@ -299,6 +316,10 @@ export const accountsMachine = createMachine(
           ev.data.needsRecovery || ctx?.needsRecovery
         );
         return hasAccounts || needsRecovery;
+      },
+      shouldSkipLoading: (_, ev) => {
+        console.log(`asd ev`, ev);
+        return !!ev.input?.skipLoading;
       },
     },
   }

@@ -275,6 +275,7 @@ export class AccountService {
           'Disaster on DB. Start recovering accounts / vaults / networks',
           {
             extra: dataToLog,
+            tags: { manual: true },
           }
         );
       })();

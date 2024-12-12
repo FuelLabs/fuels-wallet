@@ -319,7 +319,7 @@ export const networksMachine = createMachine(
         },
       }),
       notifyUpdateAccounts: () => {
-        store.updateAccounts();
+        store.refreshAccounts();
       },
       assignChainInfo: assign({
         chainInfoToAdd: (_, ev) => {

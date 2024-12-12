@@ -11,7 +11,6 @@ export const getTestNoDexieDbData = () =>
         const request = store.getAll();
         request.onsuccess = (event: Event) => {
           const data = (event.target as IDBRequest).result;
-          console.log('Data retrieved successfully:', data);
           resolve(data);
         };
       };

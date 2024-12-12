@@ -44,41 +44,74 @@ export class FuelDB extends Dexie {
     this.on('close', () => this.restart('close'));
   }
 
+  async createParallelDb() {
+    // add table outside of dexie to test if it will be corrupted also with dexie FuelDB
+    if (typeof window !== "undefined") {
+      const request = await window.indexedDB.open('TestDatabase', 2);
+      request.onupgradeneeded = (event) => {
+        const db = (event.target as IDBRequest)?.result;
+        db.createObjectStore('myTable', { keyPath: 'id' });
+      };
+      request.onsuccess = (event: Event) => {
+        const db = (event.target as IDBRequest).result as IDBDatabase;
+        const tx = db.transaction('myTable', 'readwrite');
+        const store = tx.objectStore('myTable');
+        
+        const countRequest = store.count();
+        countRequest.onsuccess = () => {
+          if (countRequest.result === 0) {
+            store.add({ id: 1, name: 'John' });
+          }
+        };
+      };
+    }
+  }
+
+  async syncDbToChromeStorage() {
+    const accounts = await this.accounts.toArray();
+    const vaults = await this.vaults.toArray();
+    const networks = await this.networks.toArray();
+
+    // @TODO: this is a temporary solution to avoid the storage accounts of being wrong and
+    // users losing funds in case of no backup
+    // if has account, save to chrome storage
+    if (accounts.length) {
+      for (const account of accounts) {
+        await chromeStorage.accounts.set({
+          key: account.address,
+          data: account,
+        });
+      }
+    }
+    if (vaults.length) {
+      for (const vault of vaults) {
+        await chromeStorage.vaults.set({
+          key: vault.key,
+          data: vault,
+        });
+      }
+    }
+    if (networks.length) {
+      for (const network of networks) {
+        await chromeStorage.networks.set({
+          key: network.id || '',
+          data: network,
+        });
+      }
+    }
+  }
+
   open(): PromiseExtended<Dexie> {
     try {
       return super.open().then(async (res) => {
         this.restartAttempts = 0;
-        const accounts = await this.accounts.toArray();
-        const vaults = await this.vaults.toArray();
-        const networks = await this.networks.toArray();
+        try {
+          (() => this.createParallelDb())();
+        } catch(_){}
 
-        // @TODO: this is a temporary solution to avoid the storage accounts of being wrong and
-        // users losing funds in case of no backup
-        // if has account, save to chrome storage
-        if (accounts.length) {
-          for (const account of accounts) {
-            await chromeStorage.accounts.set({
-              key: account.address,
-              data: account,
-            });
-          }
-        }
-        if (vaults.length) {
-          for (const vault of vaults) {
-            await chromeStorage.vaults.set({
-              key: vault.key,
-              data: vault,
-            });
-          }
-        }
-        if (networks.length) {
-          for (const network of networks) {
-            await chromeStorage.networks.set({
-              key: network.id || '',
-              data: network,
-            });
-          }
-        }
+        try {
+          (() => this.syncDbToChromeStorage())();
+        } catch(_){}
 
         return res;
       });
