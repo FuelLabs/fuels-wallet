@@ -45,6 +45,7 @@ jobs:
         timeout-minutes: 15
         env:
           NODE_ENV: test
+          READONLY_TESTNET_ASSETS_VIEW: ${{ secrets.READONLY_TESTNET_ASSETS_VIEW }}
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -94,6 +95,7 @@ jobs:
         timeout-minutes: 15
         env:
           NODE_ENV: test
+          READONLY_TESTNET_ASSETS_VIEW: ${{ secrets.READONLY_TESTNET_ASSETS_VIEW }}
 
       - uses: actions/upload-artifact@v4
         if: always()
