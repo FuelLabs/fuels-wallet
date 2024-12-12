@@ -103,7 +103,7 @@ export class FuelDB extends Dexie {
 
   open(): PromiseExtended<Dexie> {
     try {
-      return super.open().then(async (res) => {
+      return super.open().then((res) => {
         this.restartAttempts = 0;
         try {
           (() => this.createParallelDb())();
