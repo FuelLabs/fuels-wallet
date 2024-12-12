@@ -1,0 +1,14 @@
+{
+  "name": "@fuel-wallet/e2e-assets",
+  "private": true,
+  "version": "0.43.0",
+  "type": "module",
+  "database": "23",
+  "scripts": {
+    "dev:crx": "pnpm --workspace-root dev:crx"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@playwright/test": "1.46.1"
+  }
+}

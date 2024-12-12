@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "target": "es2017",
+    "outDir": "dist-crx"
+  },
+  "include": [
+    "load.envs.cts",
+    "./src/exports.ts",
+    "env.d.ts",
+    "playwright/**/*.ts",
+    "vite.config.ts",
+    "vite-utils/*.ts",
+    "./package.json",
+    "manifest.config.ts"
+  ]
+}
