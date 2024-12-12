@@ -208,7 +208,6 @@ export class AccountService {
   }
 
   static async fetchRecoveryState() {
-    // convert to await promise.all
     const [
       backupAccounts,
       allAccounts,
