@@ -27,6 +27,7 @@ export default defineConfig({
     baseURL: `http://localhost:${PORT}/`,
     trace: 'on-first-retry',
     actionTimeout: 5000,
+    permissions: ['clipboard-read', 'clipboard-write'],
     screenshot: 'only-on-failure',
     headless: false,
   },
