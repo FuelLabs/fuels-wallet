@@ -34,7 +34,7 @@ export async function executeContentScript() {
 }
 
 function injectContentScript(tabId: number) {
-  let env = undefined;
+  let env: string | undefined = undefined;
   if (typeof process !== 'undefined') {
     env = process?.env?.NODE_ENV;
   }
