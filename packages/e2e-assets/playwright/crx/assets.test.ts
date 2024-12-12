@@ -13,13 +13,13 @@ test.describe('Check assets', () => {
 
       const words = mnemonic.split(' ');
       for (const [index, word] of words.entries()) {
-        await page
-          .locator('div')
-          .filter({
-            hasText: new RegExp(`^${index + 1}$`),
-          })
-          .getByLabel('Type your text')
-          .fill(word);
+        const locator = page.locator('div').filter({
+          hasText: new RegExp(`^${index + 1}$`),
+        });
+        console.log(`Filling word ${index + 1}: ${word}`);
+        const input = locator.getByLabel('Type your text');
+        await input.fill(word);
+        console.log(`Filled word ${index + 1}`);
       }
 
       await page.getByRole('button', { name: 'Next: Your password' }).click();
