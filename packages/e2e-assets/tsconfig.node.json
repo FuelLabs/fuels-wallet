@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "target": "es2017",
+    "outDir": "dist-crx"
+  },
+  "include": [
+    "load.envs.cts",
+    "env.d.ts",
+    "playwright/**/*.ts",
+    "./package.json"
+  ]
+}
