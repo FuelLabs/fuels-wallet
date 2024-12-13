@@ -1,5 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Dialog } from '@fuel-ui/react';
+import { Avatar, Box, Button, Dialog } from '@fuel-ui/react';
+import { OperationName } from 'fuels';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAssets } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
@@ -7,6 +9,7 @@ import { coreStyles } from '~/systems/Core/styles';
 import { useTransactionRequest } from '~/systems/DApp';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 import { TxContent } from '~/systems/Transaction';
+import { getContractInfo } from '../../utils/getContractInfo';
 
 export const TxApprove = () => {
   const ctx = useTransactionRequest();
@@ -15,6 +18,21 @@ export const TxApprove = () => {
   const isSuccess = ctx.status('success');
   const isLoading =
     ctx.status('loading') || ctx.status('sending') || isLoadingAssets;
+  const [contractInfo, setContractInfo] = useState<{
+    name: string;
+    image: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (ctx.txSummarySimulated?.operations?.length) {
+      const contractOp = ctx.txSummarySimulated.operations.find(
+        (op) => op.name === OperationName.contractCall
+      );
+      if (contractOp?.to?.address) {
+        getContractInfo(contractOp.to.address).then(setContractInfo);
+      }
+    }
+  }, [ctx.txSummarySimulated?.operations]);
 
   const goToWallet = () => {
     ctx.handlers.closeDialog();
@@ -26,7 +44,14 @@ export const TxApprove = () => {
       <OverlayDialogTopbar
         onClose={isSuccess ? goToWallet : ctx.handlers.closeDialog}
       >
-        {ctx.title}
+        <Box.Flex css={styles.contractHeader}>
+          <Avatar
+            size="sm"
+            src={contractInfo?.image}
+            name={contractInfo?.name || 'Unknown Contract'}
+          />
+          <span>{contractInfo?.name || ctx.title}</span>
+        </Box.Flex>
       </OverlayDialogTopbar>
       <Dialog.Description as="div" css={styles.description}>
         {!ctx.txSummarySimulated && <TxContent.Loader />}
@@ -93,5 +118,15 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '$4',
+  }),
+  contractHeader: cssObj({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '$2',
+
+    '& span': {
+      fontSize: '$sm',
+      fontWeight: '$medium',
+    },
   }),
 };

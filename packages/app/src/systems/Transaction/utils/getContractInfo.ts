@@ -21,33 +21,33 @@ interface Project {
 }
 
 const PROJECTS_URL = 'https://fuellabs.github.io/fuel-ecosystem/projects.json';
-const projectsCache: Project[] | null = null;
+let projectsCache: Project[] | undefined;
 
 export async function getContractInfo(
   contractId: string
 ): Promise<ContractInfo | null> {
   try {
-    if (!projectsCache) {
+    if (projectsCache === undefined) {
       const response = await fetch(PROJECTS_URL);
-      const projects = (await response.json()) as Project[];
+      projectsCache = (await response.json()) as Project[];
+    }
 
-      for (const project of projects) {
-        const contracts = [
-          ...(project.contracts?.mainnet || []),
-          ...(project.contracts?.sepolia || []),
-        ];
+    for (const project of projectsCache) {
+      const contracts = [
+        ...(project.contracts?.mainnet || []),
+        ...(project.contracts?.sepolia || []),
+      ];
 
-        const matchingContract = contracts.find(
-          (contract) => contract.id.toLowerCase() === contractId.toLowerCase()
-        );
+      const matchingContract = contracts.find(
+        (contract) => contract.id.toLowerCase() === contractId.toLowerCase()
+      );
 
-        if (matchingContract) {
-          return {
-            name: matchingContract.name,
-            image: `https://raw.githubusercontent.com/FuelLabs/fuel-ecosystem/main/packages/registry/public/logos/${project.image}.png`,
-            description: matchingContract.description || project.description,
-          };
-        }
+      if (matchingContract) {
+        return {
+          name: matchingContract.name,
+          image: `https://raw.githubusercontent.com/FuelLabs/fuel-ecosystem/main/packages/registry/public/logos/${project.image}.png`,
+          description: matchingContract.description || project.description,
+        };
       }
     }
     return null;
