@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 const IS_CI = process.env.CI;
 
 export default defineConfig({
-  workers: 1,
+  workers: 2,
   retries: IS_CI ? 1 : 0,
   testMatch: 'playwright/**/*.test.ts',
   testDir: 'playwright/',
