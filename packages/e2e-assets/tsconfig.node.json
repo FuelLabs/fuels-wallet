@@ -11,12 +11,8 @@
   },
   "include": [
     "load.envs.cts",
-    "./src/exports.ts",
     "env.d.ts",
     "playwright/**/*.ts",
-    "vite.config.ts",
-    "vite-utils/*.ts",
-    "./package.json",
-    "manifest.config.ts"
+    "./package.json"
   ]
 }

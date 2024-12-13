@@ -1,7 +1,4 @@
-// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
-import { join } from 'path';
-import { defineConfig, devices } from '@playwright/test';
-// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import { defineConfig } from '@playwright/test';
 import './load.envs.cts';
 const PORT = process.env.PORT || 3000;
 const IS_CI = process.env.CI;

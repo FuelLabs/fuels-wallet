@@ -1,11 +1,8 @@
 {
   "name": "@fuel-wallet/e2e-assets",
   "private": true,
-  "version": "0.43.0",
+  "version": "0.1.0",
   "type": "module",
-  "database": "23",
-  "scripts": {},
-  "dependencies": {},
   "devDependencies": {
     "@playwright/test": "1.46.1"
   }
