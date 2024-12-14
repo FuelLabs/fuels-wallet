@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box } from '@fuel-ui/react';
+import { Box, toast } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { BalanceWidget, useAccounts } from '~/systems/Account';
 import { Layout, Pages, scrollable } from '~/systems/Core';
@@ -20,6 +20,10 @@ export function Home() {
   const goToReceive = () => {
     navigate(Pages.receive());
   };
+  
+  useEffect(()=>{
+    toast.success("account updated successfully")
+  },[account?.address,account?.balanceSymbol])
 
   return (
     <Layout title="Home" isHome>
