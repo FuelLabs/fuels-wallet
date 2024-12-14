@@ -28,8 +28,6 @@ export class IndexedDBStorage implements StorageAbstract {
   }
 
   async clear() {
-    await chromeStorage.vaults.clear();
-    await chromeStorage.accounts.clear();
     await db.transaction('rw', db.vaults, db.accounts, async () => {
       await db.vaults.clear();
       await db.accounts.clear();
