@@ -261,7 +261,9 @@ export class AccountService {
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         const dataToLog: any = {};
         try {
-          dataToLog.backupAccounts = JSON.stringify(backupAccounts?.map((account) => account?.data?.address) || []);
+          dataToLog.backupAccounts = JSON.stringify(
+            backupAccounts?.map((account) => account?.data?.address) || []
+          );
           dataToLog.backupNetworks = JSON.stringify(backupNetworks || []);
           // try getting data from indexedDB (outside of dexie) to check if it's also corrupted
           const testNoDexieDbData = await getTestNoDexieDbData();
