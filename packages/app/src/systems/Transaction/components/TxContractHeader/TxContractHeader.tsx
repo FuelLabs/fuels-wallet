@@ -2,8 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box } from '@fuel-ui/react';
 import { AddressType, OperationName } from 'fuels';
 import type { Operation } from 'fuels';
-import { useEffect, useState } from 'react';
-import { getContractInfo } from '../../utils/getContractInfo';
+import { useContractInfo } from '../../hooks/useContractInfo';
 
 type Props = {
   operations?: Operation[];
@@ -11,35 +10,14 @@ type Props = {
 };
 
 export function TxContractHeader({ operations, title }: Props) {
-  const [contractInfo, setContractInfo] = useState<{
-    name: string;
-    image: string;
-  } | null>(null);
+  const contractOp = operations?.find((op) => {
+    const isContractType = op.to?.type === AddressType.contract;
+    const isContractCall = op.name === OperationName.contractCall;
+    const isContractCreated = op.name === OperationName.contractCreated;
+    return isContractType || isContractCall || isContractCreated;
+  });
 
-  useEffect(() => {
-    async function fetchContractInfo() {
-      if (!operations?.length) return;
-
-      // Log operations for debugging
-      console.log('Operations:', operations);
-
-      const contractOp = operations.find((op) => {
-        const isContractType = op.to?.type === AddressType.contract;
-        const isContractCall = op.name === OperationName.contractCall;
-        const isContractCreated = op.name === OperationName.contractCreated;
-
-        return isContractType || isContractCall || isContractCreated;
-      });
-
-      if (contractOp?.to?.address) {
-        const info = await getContractInfo(contractOp.to.address);
-        console.log('Contract info:', info); // Debug log
-        if (info) setContractInfo(info);
-      }
-    }
-
-    fetchContractInfo();
-  }, [operations]);
+  const { contractInfo } = useContractInfo(contractOp?.to?.address);
 
   const displayName = contractInfo?.name || title || 'Transaction';
   const displayImage = contractInfo?.image;

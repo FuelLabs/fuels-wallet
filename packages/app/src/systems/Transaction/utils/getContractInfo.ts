@@ -1,4 +1,4 @@
-interface ContractInfo {
+export interface ContractInfo {
   name: string;
   image: string;
   description: string;
@@ -27,8 +27,13 @@ export async function getContractInfo(
   contractId: string
 ): Promise<ContractInfo | null> {
   try {
+    console.log('Fetching contract info for:', contractId);
+
     if (projectsCache === undefined) {
       const response = await fetch(PROJECTS_URL);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch projects: ${response.statusText}`);
+      }
       projectsCache = (await response.json()) as Project[];
     }
 
@@ -43,6 +48,7 @@ export async function getContractInfo(
       );
 
       if (matchingContract) {
+        console.log('Found contract:', matchingContract);
         return {
           name: matchingContract.name,
           image: `https://raw.githubusercontent.com/FuelLabs/fuel-ecosystem/main/packages/registry/public/logos/${project.image}.png`,
@@ -50,6 +56,8 @@ export async function getContractInfo(
         };
       }
     }
+
+    console.log('No contract info found for:', contractId);
     return null;
   } catch (error) {
     console.error('Error fetching contract info:', error);
