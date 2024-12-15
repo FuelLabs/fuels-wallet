@@ -3,7 +3,9 @@ import { Avatar, Box, Card, Heading, Icon, Text } from '@fuel-ui/react';
 import type { OperationTransactionAddress } from 'fuels';
 import { Address, AddressType, ChainName, isB256, isBech32 } from 'fuels';
 import type { FC } from 'react';
+import { useEffect, useState } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
+import { getContractInfo } from '../../utils/getContractInfo';
 
 import { TxRecipientCardLoader } from './TxRecipientCardLoader';
 
@@ -21,6 +23,23 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   isReceiver,
 }) => {
   const { accounts } = useAccounts();
+  const [contractInfo, setContractInfo] = useState<{
+    name: string;
+    image?: string;
+  } | null>(null);
+
+  useEffect(() => {
+    async function loadContractInfo() {
+      if (recipient?.type === AddressType.contract && recipient.address) {
+        const info = await getContractInfo(recipient.address);
+        if (info) {
+          setContractInfo(info);
+        }
+      }
+    }
+    loadContractInfo();
+  }, [recipient?.address, recipient?.type]);
+
   const address = recipient?.address || '';
   const isValidAddress = isB256(address) || isBech32(address);
   const fuelAddress = isValidAddress
@@ -30,7 +49,9 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   const isEthChain = recipient?.chain === ChainName.ethereum;
   const isNetwork = address === 'Network';
   const name =
-    accounts?.find((a) => a.address === fuelAddress)?.name || 'unknown';
+    contractInfo?.name ||
+    accounts?.find((a) => a.address === fuelAddress)?.name ||
+    (isContract ? 'Contract' : 'Account');
 
   return (
     <Card
@@ -72,7 +93,17 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
           )}
           {isContract && !isNetwork && (
             <Box css={styles.iconWrapper}>
-              <Icon icon={Icon.is('Code')} size={20} />
+              {contractInfo?.image ? (
+                <img
+                  src={contractInfo.image}
+                  alt={contractInfo.name}
+                  width={56}
+                  height={56}
+                  style={{ borderRadius: '50%' }}
+                />
+              ) : (
+                <Icon icon={Icon.is('Code')} size={20} />
+              )}
             </Box>
           )}
           <Box.Flex css={styles.info}>
