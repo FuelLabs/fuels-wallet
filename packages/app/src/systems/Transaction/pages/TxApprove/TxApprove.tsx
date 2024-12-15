@@ -9,6 +9,7 @@ import { coreStyles } from '~/systems/Core/styles';
 import { useTransactionRequest } from '~/systems/DApp';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 import { TxContent } from '~/systems/Transaction';
+import { TxContractHeader } from '../../components/TxContractHeader/TxContractHeader';
 import { getContractInfo } from '../../utils/getContractInfo';
 
 export const TxApprove = () => {
@@ -18,7 +19,7 @@ export const TxApprove = () => {
   const isSuccess = ctx.status('success');
   const isLoading =
     ctx.status('loading') || ctx.status('sending') || isLoadingAssets;
-  const [contractInfo, setContractInfo] = useState<{
+  const [_contractInfo, setContractInfo] = useState<{
     name: string;
     image: string;
   } | null>(null);
@@ -44,14 +45,10 @@ export const TxApprove = () => {
       <OverlayDialogTopbar
         onClose={isSuccess ? goToWallet : ctx.handlers.closeDialog}
       >
-        <Box.Flex css={styles.contractHeader}>
-          <Avatar
-            size="sm"
-            src={contractInfo?.image}
-            name={contractInfo?.name || 'Unknown Contract'}
-          />
-          <span>{contractInfo?.name || ctx.title}</span>
-        </Box.Flex>
+        <TxContractHeader
+          operations={ctx.txSummarySimulated?.operations}
+          title={ctx.title}
+        />
       </OverlayDialogTopbar>
       <Dialog.Description as="div" css={styles.description}>
         {!ctx.txSummarySimulated && <TxContent.Loader />}
