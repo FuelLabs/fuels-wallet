@@ -1,15 +1,16 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Grid, Icon, toast } from '@fuel-ui/react';
-import { MNEMONIC_SIZES } from 'fuels';
-import type { ClipboardEvent } from 'react';
-import { useEffect, useState } from 'react';
+import { cssObj } from "@fuel-ui/css";
+import { Box, Button, Grid, Icon, toast } from "@fuel-ui/react";
+import { MNEMONIC_SIZES } from "fuels";
+import type { ClipboardEvent } from "react";
+import { useEffect, useState } from "react";
 
-import { MnemonicInput } from './MnemonicInput';
+import { MnemonicInput } from "./MnemonicInput";
+import React from "react";
 
 const WORDS = import.meta.env.VITE_MNEMONIC_WORDS;
 
 function fillArray(item: string[], format: number) {
-  return Array.from({ length: format }).map((_, idx) => item[idx] || '');
+  return Array.from({ length: format }).map((_, idx) => item[idx] || "");
 }
 
 function splitSeedPhrase(str: string) {
@@ -17,8 +18,8 @@ function splitSeedPhrase(str: string) {
 }
 
 function checkMoreThanOneWord(word: string) {
-  if (word.split(' ').length > 1) {
-    const first = word.split(' ')[0];
+  if (word.split(" ").length > 1) {
+    const first = word.split(" ")[0];
     const half = first.slice(0, first.length / 2);
     return `${half}${half}` === first ? half : first;
   }
@@ -26,7 +27,7 @@ function checkMoreThanOneWord(word: string) {
 }
 
 export type MnemonicProps = {
-  type: 'read' | 'write';
+  type: "read" | "write";
   value?: string[];
   onFilled?: (val: string[]) => void;
   onChange?: (val: string[]) => void;
@@ -58,9 +59,9 @@ export function Mnemonic({
   );
 
   async function handleCopy() {
-    const val = type === 'read' ? initialValue : value;
-    await navigator.clipboard.writeText(val.join(' '));
-    toast.success('Seed phrase copied to clipboard');
+    const val = type === "read" ? initialValue : value;
+    await navigator.clipboard.writeText(val.join(" "));
+    toast.success("Seed phrase copied to clipboard");
   }
 
   function handlePaste(words: string[]) {
@@ -73,7 +74,7 @@ export function Mnemonic({
   }
 
   function handlePasteInput(ev: ClipboardEvent<HTMLInputElement>, idx: number) {
-    const text = ev.clipboardData.getData('text/plain');
+    const text = ev.clipboardData.getData("text/plain");
     const words = splitSeedPhrase(text);
 
     // Only allow paste on the first input or
@@ -132,7 +133,7 @@ export function Mnemonic({
           </select>
         </Box.Flex>
       )}
-      {type === 'read' ? (
+      {type === "read" ? (
         <Grid css={styles.words}>
           {initialValue?.map((word, idx) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
@@ -162,7 +163,7 @@ export function Mnemonic({
         </Grid>
       )}
       <Box.Flex as="footer" css={styles.footer}>
-        {type === 'read' ? (
+        {type === "read" ? (
           <Button
             aria-label="Copy seed phrase"
             size="sm"
@@ -190,89 +191,89 @@ export function Mnemonic({
 
 const styles = {
   root: cssObj({
-    layer: 'layer-card',
-    borderRadius: '$default',
+    layer: "layer-card",
+    borderRadius: "$default",
   }),
   formatWrapper: cssObj({
-    p: '$3',
-    borderBottom: '1px solid $bodyBg',
-    gap: '$1',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    p: "$3",
+    borderBottom: "1px solid $bodyBg",
+    gap: "$1",
+    alignItems: "center",
+    justifyContent: "flex-end",
 
-    // TODO: should replace with a <Select> component in fuel-ui
+    // Dne: should replace with a <Select> component in fuel-ui
     select: {
-      backgroundColor: 'transparent',
-      color: '$intentsBase12',
-      border: 'none',
-      paddingRight: '$1',
-      fontSize: '$sm',
+      backgroundColor: "#1c1c1c",
+      color: "$intentsBase12",
+      border: "none",
+      paddingRight: "$1",
+      fontSize: "$sm",
 
-      '&:focus-visible': {
-        outline: 'none',
+      "&:focus-visible": {
+        outline: "none",
       },
     },
   }),
   words: cssObj({
-    px: '$3',
-    py: '$3',
-    gridTemplateColumns: 'repeat(3, 1fr)',
-    gridTemplateRows: 'repeat(4, 1fr)',
-    gridColumnGap: '$4',
-    gridRowGap: '$2',
+    px: "$3",
+    py: "$3",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gridTemplateRows: "repeat(4, 1fr)",
+    gridColumnGap: "$4",
+    gridRowGap: "$2",
   }),
   word: cssObj({
-    position: 'relative',
+    position: "relative",
     fontFamily: '"Source Code Pro", monospace',
-    fontSize: '$sm',
+    fontSize: "$sm",
 
-    '&::before': {
-      w: '14px',
-      textAlign: 'right',
-      display: 'inline-block',
-      content: 'attr(data-idx)',
-      color: '$intentsBase8',
-      mr: '$2',
+    "&::before": {
+      w: "14px",
+      textAlign: "right",
+      display: "inline-block",
+      content: "attr(data-idx)",
+      color: "$intentsBase8",
+      mr: "$2",
     },
   }),
   inputWrapper: cssObj({
-    boxSizing: 'border-box',
-    gridTemplateColumns: '14px 1fr',
-    gridColumnGap: '8px',
+    boxSizing: "border-box",
+    gridTemplateColumns: "14px 1fr",
+    gridColumnGap: "8px",
 
-    '&, input': {
+    "&, input": {
       fontFamily: '"Source Code Pro", monospace',
-      fontSize: '$sm',
+      fontSize: "$sm",
     },
     span: {
-      color: '$intentsBase8',
-      textAlign: 'right',
+      color: "$intentsBase8",
+      textAlign: "right",
     },
     input: {
       padding: 0,
-      width: '100%',
-      appearance: 'none',
-      border: 'none',
-      background: 'transparent',
-      borderBottom: '1px dashed $border',
-      color: '$intentsBase11',
+      width: "100%",
+      appearance: "none",
+      border: "none",
+      background: "transparent",
+      borderBottom: "1px dashed $border",
+      color: "$intentsBase11",
 
-      '&:focus': {
-        outline: 'none',
-        borderColor: '$intentsBase8',
+      "&:focus": {
+        outline: "none",
+        borderColor: "$intentsBase8",
       },
     },
   }),
   footer: cssObj({
-    px: '$3',
-    py: '$3',
-    boxSizing: 'border-box',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '$4',
+    px: "$3",
+    py: "$3",
+    boxSizing: "border-box",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "$4",
 
-    '.fuel_Button': {
-      px: '$8',
+    ".fuel_Button": {
+      px: "$8",
     },
   }),
 };
