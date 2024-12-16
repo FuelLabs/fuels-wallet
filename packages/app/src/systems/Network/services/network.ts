@@ -353,8 +353,12 @@ export class NetworkService {
       name,
       url,
     });
-    if (network) {
-      throw new Error('Network with Name or URL already exists');
+
+    if (network?.url === url) {
+      throw new Error('Network with URL already exists');
+    }
+    if (network?.name === name) {
+      throw new Error('Network with Name already exists');
     }
   }
 

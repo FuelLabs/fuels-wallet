@@ -40,10 +40,16 @@ export function NetworkForm({
 }: NetworkFormProps) {
   const [isFirstShownTestConnectionBtn, setIsFirstShownTestConnectionBtn] =
     useState(false);
-  const { control, formState } = form;
+  const { control, formState, setValue } = form;
 
   const url = useWatch({ control, name: 'url' });
   const chainId = useWatch({ control, name: 'chainId' });
+
+  useEffect(() => {
+    if (isReviewing && chainName) {
+      setValue('name', chainName);
+    }
+  }, [isReviewing, chainName, setValue]);
 
   useEffect(() => {
     if (isValid && chainId) {
@@ -54,12 +60,35 @@ export function NetworkForm({
   return (
     <Box.Stack css={{ width: '100%' }} gap="$4">
       {isReviewing && (
-        <NetworkReviewCard
-          headerText="You're adding this network"
-          name={chainName || ''}
-          chainId={chainId}
-          url={url}
-        />
+        <>
+          <NetworkReviewCard
+            headerText="You're adding this network"
+            name={chainName || ''}
+            chainId={chainId}
+            url={url}
+          />
+          <ControlledField
+            control={control}
+            name="name"
+            label={
+              <HelperIcon message="Customize the network name to avoid conflicts">
+                Network Name
+              </HelperIcon>
+            }
+            isRequired
+            isInvalid={Boolean(formState.errors?.name)}
+            render={({ field }) => (
+              <MotionInput {...animations.slideInTop()}>
+                <Input.Field
+                  {...field}
+                  id="network-name"
+                  aria-label="Network name"
+                  placeholder={chainName || 'Enter network name'}
+                />
+              </MotionInput>
+            )}
+          />
+        </>
       )}
       {!isReviewing && (
         <>
