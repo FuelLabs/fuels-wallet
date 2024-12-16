@@ -4,7 +4,7 @@ import './load.envs.cts';
 
 export default defineConfig({
   ...playwrightConfig,
-  testMatch: 'playwright/crx/assets.testnet.test.ts',
+  testMatch: 'playwright/crx/assets.test.ts',
   testIgnore: undefined,
   projects: [
     {
