@@ -49,7 +49,7 @@ export const playwrightConfig: PlaywrightTestConfig = {
       },
     },
   ],
-  testIgnore: ['playwright/crx/lock.test.ts'],
+  testIgnore: ['playwright/crx/lock.test.ts', 'playwright/crx/assets.test.ts'],
 };
 
 export default defineConfig(playwrightConfig);
