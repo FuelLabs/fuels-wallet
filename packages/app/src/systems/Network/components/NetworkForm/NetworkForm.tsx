@@ -44,6 +44,7 @@ export function NetworkForm({
 
   const url = useWatch({ control, name: 'url' });
   const chainId = useWatch({ control, name: 'chainId' });
+  const customName = useWatch({ control, name: 'name' });
 
   useEffect(() => {
     if (isReviewing && chainName) {
@@ -63,7 +64,7 @@ export function NetworkForm({
         <>
           <NetworkReviewCard
             headerText="You're adding this network"
-            name={chainName || ''}
+            name={customName || chainName || ''}
             chainId={chainId}
             url={url}
           />
@@ -88,6 +89,11 @@ export function NetworkForm({
               </MotionInput>
             )}
           />
+          {formState.errors?.name && (
+            <Form.ErrorMessage>
+              {formState.errors.name.message}
+            </Form.ErrorMessage>
+          )}
         </>
       )}
       {!isReviewing && (

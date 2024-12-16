@@ -62,15 +62,24 @@ export function AddNetwork() {
     });
   }
 
-  function onAddNetwork() {
+  async function onAddNetwork() {
     if (!name) return;
-    handlers.addNetwork({
-      data: {
-        chainId: Number(chainId),
-        name,
-        url,
-      },
-    });
+    try {
+      await handlers.addNetwork({
+        data: {
+          chainId: Number(chainId),
+          name,
+          url,
+        },
+      });
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('already exists')) {
+        form.setError('name', {
+          type: 'manual',
+          message: 'A network with this name already exists',
+        });
+      }
+    }
   }
 
   return (

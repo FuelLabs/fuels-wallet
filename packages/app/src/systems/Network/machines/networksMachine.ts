@@ -146,8 +146,11 @@ export const networksMachine = createMachine(
           },
           onDone: [
             {
-              target: 'idle',
+              target: 'waitingAddNetwork',
               cond: FetchMachine.hasError,
+              actions: assign({
+                error: (_, ev) => ev.data,
+              }),
             },
             {
               actions: [
