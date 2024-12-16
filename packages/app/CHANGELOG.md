@@ -1,5 +1,19 @@
 # fuels-wallet
 
+## 0.44.1
+
+### Patch Changes
+
+- [#1713](https://github.com/FuelLabs/fuels-wallet/pull/1713) [`ed5aaddc`](https://github.com/FuelLabs/fuels-wallet/commit/ed5aaddc225d5aa6817b0f637d1a979d5ef77095) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - refactor: accountMachine should not handle isLogged operations and should not have parallel states running
+
+- [#1713](https://github.com/FuelLabs/fuels-wallet/pull/1713) [`ed5aaddc`](https://github.com/FuelLabs/fuels-wallet/commit/ed5aaddc225d5aa6817b0f637d1a979d5ef77095) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - set isLogged when opening the db
+
+- [#1713](https://github.com/FuelLabs/fuels-wallet/pull/1713) [`ed5aaddc`](https://github.com/FuelLabs/fuels-wallet/commit/ed5aaddc225d5aa6817b0f637d1a979d5ef77095) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: cleaning now waits for localStorage
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.44.1
+  - @fuels/playwright-utils@0.44.1
+
 ## 0.44.0
 
 ### Minor Changes
