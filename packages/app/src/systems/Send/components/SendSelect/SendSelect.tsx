@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Form, Input, Text } from '@fuel-ui/react';
+import { Alert, Box, Form, HStack, Input, Text, VStack } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -204,6 +204,17 @@ export function SendSelect({
                 regularTip={regularTip}
                 fastTip={fastTip}
               />
+              <Text css={styles.title}>Network Status</Text>
+              <HStack gap="$3">
+                <VStack gap="$1">
+                  <Text>Base fee</Text>
+                  <Text fontSize="sm">0.01</Text>
+                </VStack>
+                <VStack gap="$1">
+                  <Text>Condition</Text>
+                  <Text fontSize="sm">Not Busy</Text>
+                </VStack>
+              </HStack>
             </MotionStack>
           )}
       </Box.Stack>
