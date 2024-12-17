@@ -1,0 +1,38 @@
+name: Tests E2E - Assets Testnet
+
+on:
+  pull_request:
+    branches: [main, master, sdk-v2]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests-e2e-assets:
+    name: Test
+    timeout-minutes: 10
+    runs-on: buildjet-8vcpu-ubuntu-2204
+    steps:
+      - uses: actions/checkout@v3
+      - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 20.11.0
+          pnpm-version: 9.5.0
+
+      - uses: ./.github/actions/setup-playwright
+
+      - name: Run E2E Tests - Assets Testnet
+        run: xvfb-run --auto-servernum -- pnpm test:e2e:assets
+        timeout-minutes: 15
+        env:
+          NODE_ENV: test
+          READONLY_TESTNET_ASSETS_VIEW: ${{secrets.READONLY_TESTNET_ASSETS_VIEW}}
+
+      - name: Upload Test Report
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-test-report
+          path: packages/e2e-assets/playwright-html

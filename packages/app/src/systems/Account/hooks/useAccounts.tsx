@@ -81,14 +81,6 @@ export function useAccounts() {
     return accountStatus === status;
   }
 
-  store.useUpdateMachineConfig(Services.accounts, {
-    actions: {
-      refreshApplication() {
-        window.location.reload();
-      },
-    },
-  });
-
   useEffect(() => {
     if (shouldListen.current) {
       shouldListen.current = false;

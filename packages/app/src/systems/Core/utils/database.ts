@@ -14,6 +14,9 @@ import type { AssetFuel } from 'fuels';
 import type { TransactionCursor } from '~/systems/Transaction';
 import { chromeStorage } from '../services/chromeStorage';
 import { applyDbVersioning } from './databaseVersioning';
+import { createParallelDb } from '~/systems/Core/utils/databaseNoDexie';
+import { IS_LOGGED_KEY } from '~/config';
+import { Storage } from '~/systems/Core/utils/storage';
 
 type FailureEvents = Extract<keyof DbEvents, 'close' | 'blocked'>;
 export type FuelCachedAsset = AssetData &
@@ -42,29 +45,6 @@ export class FuelDB extends Dexie {
   setupListeners() {
     this.on('blocked', () => this.restart('blocked'));
     this.on('close', () => this.restart('close'));
-  }
-
-  async createParallelDb() {
-    // add table outside of dexie to test if it will be corrupted also with dexie FuelDB
-    if (typeof window !== "undefined") {
-      const request = await window.indexedDB.open('TestDatabase', 2);
-      request.onupgradeneeded = (event) => {
-        const db = (event.target as IDBRequest)?.result;
-        db.createObjectStore('myTable', { keyPath: 'id' });
-      };
-      request.onsuccess = (event: Event) => {
-        const db = (event.target as IDBRequest).result as IDBDatabase;
-        const tx = db.transaction('myTable', 'readwrite');
-        const store = tx.objectStore('myTable');
-        
-        const countRequest = store.count();
-        countRequest.onsuccess = () => {
-          if (countRequest.result === 0) {
-            store.add({ id: 1, name: 'John' });
-          }
-        };
-      };
-    }
   }
 
   async syncDbToChromeStorage() {
@@ -106,12 +86,21 @@ export class FuelDB extends Dexie {
       return super.open().then((res) => {
         this.restartAttempts = 0;
         try {
-          (() => this.createParallelDb())();
-        } catch(_){}
+          (() => createParallelDb())();
+        } catch (_) {}
 
         try {
           (() => this.syncDbToChromeStorage())();
-        } catch(_){}
+        } catch (_) {}
+
+        try {
+          (async () => {
+            const accounts = await this.accounts.toArray();
+            if (accounts.length) {
+              Storage.setItem(IS_LOGGED_KEY, true);
+            }
+          })();
+        } catch (_) {}
 
         return res;
       });

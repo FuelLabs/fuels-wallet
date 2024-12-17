@@ -5,7 +5,6 @@ declare namespace NodeJS {
     readonly VITE_FUEL_PROVIDER_URL: string;
     readonly VITE_FUEL_FAUCET_URL: string;
     readonly VITE_MNEMONIC_WORDS: string;
-    readonly VITE_ADDR_OWNER: string;
     readonly VITE_CRX_NAME: string;
     readonly VITE_CRX_VERSION_API: string;
     readonly VITE_CRX_RELEASE: string;
