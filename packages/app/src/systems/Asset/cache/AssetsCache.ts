@@ -133,7 +133,9 @@ export class AssetsCache {
     if (
       cachedEntry?.name !== undefined &&
       cachedEntry.fetchedAt &&
-      now - cachedEntry.fetchedAt < FIVE_MINUTES
+      now - cachedEntry.fetchedAt < FIVE_MINUTES &&
+      !cachedEntry.isCustom &&
+      cachedEntry?.name !== ''
     ) {
       return cachedEntry;
     }
@@ -145,7 +147,8 @@ export class AssetsCache {
     if (
       assetFromDb?.name &&
       assetFromDb.fetchedAt &&
-      now - assetFromDb.fetchedAt < FIVE_MINUTES
+      now - assetFromDb.fetchedAt < FIVE_MINUTES &&
+      !assetFromDb.isCustom
     ) {
       this.cache[chainId][assetId] = assetFromDb;
       return assetFromDb as FuelCachedAsset;
