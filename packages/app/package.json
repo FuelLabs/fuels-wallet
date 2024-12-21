@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "@fontsource/source-code-pro": "5.0.13",
+    "@fuel-ts/math": "0.97.2",
+    "@fuel-ts/providers": "0.73.0",
     "@fuel-ui/css": "0.23.3",
     "@fuel-ui/icons": "0.23.3",
     "@fuel-ui/react": "0.23.3",
@@ -44,7 +46,7 @@
     "events": "3.3.0",
     "fake-indexeddb": "4.0.2",
     "framer-motion": "10.16.4",
-    "fuels": "0.96.1",
+    "fuels": "0.0.0-pr-3487-20241220190150",
     "json-edit-react": "1.13.3",
     "json-rpc-2.0": "1.7.0",
     "lodash.debounce": "4.0.8",
