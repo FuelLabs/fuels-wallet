@@ -186,13 +186,6 @@ export class TxService {
     tip: inputCustomTip,
     gasLimit: inputCustomGasLimit,
   }: TxInputs['simulateTransaction']) {
-    console.log('simulateTransaction', {
-      skipCustomFee,
-      inputTransactionRequest,
-      providerUrl,
-      inputCustomTip,
-      inputCustomGasLimit,
-    });
     const [provider, account] = await Promise.all([
       createProvider(providerUrl || ''),
       AccountService.getCurrentAccount(),
@@ -214,9 +207,6 @@ export class TxService {
       we'll work always based on the first inputted transactioRequest, then cloning it and manipulating
       then outputting a proposedTxRequest, which will be the one to go for approval
       */
-      // debugger;
-      // const xxx = await wallet.provider.dryRun(inputTransactionRequest);
-      // debugger;
 
       const proposedTxRequest = clone(inputTransactionRequest);
       if (!skipCustomFee) {
@@ -259,13 +249,11 @@ export class TxService {
         inputs: transaction.inputs,
       });
 
-      // debugger;
       const txSummary = await getTransactionSummaryFromRequest({
         provider,
         transactionRequest: proposedTxRequest,
         abiMap,
       });
-      // debugger;
 
       const baseFee = proposedTxRequest.maxFee.sub(
         proposedTxRequest.tip ?? bn(0)
