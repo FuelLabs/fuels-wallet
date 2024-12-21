@@ -93,6 +93,7 @@ export function TransactionRequest() {
               errors={errors.simulateTxErrors}
               isConfirm
               fees={fees}
+              skipCustomFee={txRequest.input.skipCustomFee}
             />
           )}
           {shouldShowTxExecuted && (
@@ -100,6 +101,7 @@ export function TransactionRequest() {
               showDetails
               tx={txSummaryExecuted}
               txStatus={executedStatus()}
+              skipCustomFee={txRequest.input.skipCustomFee}
               footer={
                 status('failed') && (
                   <Button

@@ -287,6 +287,7 @@ export function useSend() {
             regularTip,
             fastTip,
             maxGasLimit,
+            skipCustomFee,
           } = ctx;
           if (!providerUrl || !transactionRequest || !address) {
             throw new Error('Params are required');
@@ -302,7 +303,7 @@ export function useSend() {
               fastTip,
               maxGasLimit,
             },
-            skipCustomFee: true,
+            skipCustomFee,
           });
         },
       },

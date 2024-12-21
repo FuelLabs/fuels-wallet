@@ -97,6 +97,7 @@ export type TxContentInfoProps = {
     fastTip?: BN;
   };
   txRequest?: TransactionRequest;
+  skipCustomFee?: boolean;
 };
 
 function TxContentInfo({
@@ -109,6 +110,7 @@ function TxContentInfo({
   errors,
   fees,
   txRequest,
+  skipCustomFee,
 }: TxContentInfoProps) {
   const { getValues } = useFormContext<SendFormValues>();
 
@@ -116,6 +118,7 @@ function TxContentInfo({
   const hasErrors = Boolean(Object.keys(errors || {}).length);
   const isExecuted = !!tx?.id;
   const txRequestGasLimit = getGasLimitFromTxRequest(txRequest);
+  const shouldShowFees = !skipCustomFee && showDetails;
 
   const initialAdvanced = useMemo(() => {
     if (!fees?.regularTip || !fees?.fastTip) return false;
@@ -155,9 +158,9 @@ function TxContentInfo({
         status={status}
         isLoading={isLoading}
       />
-      {isLoading && !showDetails && <TxFee.Loader />}
-      {showDetails && !fees && <TxFee fee={tx?.fee} />}
-      {showDetails &&
+      {isLoading && !shouldShowFees && <TxFee.Loader />}
+      {shouldShowFees && !fees && <TxFee fee={tx?.fee} />}
+      {shouldShowFees &&
         fees?.baseFee &&
         txRequestGasLimit &&
         fees?.regularTip &&

@@ -37,6 +37,7 @@ export const TxApprove = () => {
             isLoading={isLoading}
             errors={ctx.errors.simulateTxErrors}
             isConfirm
+            skipCustomFee={ctx.input.skipCustomFee}
           />
         )}
         {ctx.shouldShowTxExecuted && (
@@ -44,6 +45,7 @@ export const TxApprove = () => {
             showDetails
             tx={ctx.txSummaryExecuted}
             txStatus={ctx.executedStatus()}
+            skipCustomFee={ctx.input.skipCustomFee}
             footer={
               ctx.status('failed') && (
                 <Button
