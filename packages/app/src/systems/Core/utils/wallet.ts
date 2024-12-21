@@ -64,10 +64,10 @@ export class WalletLockedCustom extends WalletLocked {
       await this.populateTransactionWitnessesSignature(transactionRequest);
 
     await this.simulateTransaction(txRequestToSend, {
-      estimateTxDependencies: params?.estimateTxDependencies ?? false,
+      estimateTxDependencies: false,
     });
     return this.provider.sendTransaction(txRequestToSend, {
-      estimateTxDependencies: params?.estimateTxDependencies ?? false,
+      estimateTxDependencies: false,
     });
   }
 }
