@@ -207,7 +207,6 @@ export class TxService {
       we'll work always based on the first inputted transactioRequest, then cloning it and manipulating
       then outputting a proposedTxRequest, which will be the one to go for approval
       */
-
       const proposedTxRequest = clone(inputTransactionRequest);
       if (!skipCustomFee) {
         // if the user has inputted a custom tip, we set it to the proposedTxRequest

@@ -1,6 +1,17 @@
-import type { TransactionRequestLike, TransactionResponse } from 'fuels';
+import type {
+  EstimateTransactionParams,
+  TransactionRequest,
+  TransactionRequestLike,
+  TransactionResponse,
+  // SendTransactionParams, This should come from fuels
+} from 'fuels';
 import { WalletLocked, hashMessage, transactionRequestify } from 'fuels';
 import { VaultService } from '~/systems/Vault';
+
+interface SendTransactionParams {
+  skipCustomFee?: boolean;
+  onBeforeSend?: (txRequest: TransactionRequest) => Promise<TransactionRequest>;
+}
 
 export class WalletLockedCustom extends WalletLocked {
   /**
@@ -39,17 +50,24 @@ export class WalletLockedCustom extends WalletLocked {
   }
 
   async sendTransaction(
-    transactionRequestLike: TransactionRequestLike
+    transactionRequestLike: TransactionRequestLike,
+    params?: EstimateTransactionParams & SendTransactionParams
   ): Promise<TransactionResponse> {
-    const transactionRequest = transactionRequestify(transactionRequestLike);
+    let transactionRequest = transactionRequestify(transactionRequestLike);
+
+    // Apply onBeforeSend hook if provided
+    if (params?.onBeforeSend) {
+      transactionRequest = await params.onBeforeSend(transactionRequest);
+    }
+
     const txRequestToSend =
       await this.populateTransactionWitnessesSignature(transactionRequest);
 
     await this.simulateTransaction(txRequestToSend, {
-      estimateTxDependencies: false,
+      estimateTxDependencies: params?.estimateTxDependencies ?? false,
     });
     return this.provider.sendTransaction(txRequestToSend, {
-      estimateTxDependencies: false,
+      estimateTxDependencies: params?.estimateTxDependencies ?? false,
     });
   }
 }
