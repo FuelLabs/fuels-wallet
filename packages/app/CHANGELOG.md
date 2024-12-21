@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.44.2
+
+### Patch Changes
+
+- [#1718](https://github.com/FuelLabs/fuels-wallet/pull/1718) [`7fcfee7d`](https://github.com/FuelLabs/fuels-wallet/commit/7fcfee7d8fb53259a8abd2f3843c951fcb03e865) Thanks [@nelitow](https://github.com/nelitow)! - Update E2E setup
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.44.2
+  - @fuels/playwright-utils@0.44.2
+
 ## 0.44.1
 
 ### Patch Changes
