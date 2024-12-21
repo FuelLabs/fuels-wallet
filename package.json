@@ -53,7 +53,7 @@
     "test:e2e": "NODE_ENV=test pnpm build:crx && playwright test --config=packages/app/playwright.config.ts --project=chromium",
     "test:e2e:beta": "NODE_ENV=test pnpm build:crx && playwright test --config=packages/app/playwright.config.ts --project=chrome-beta",
     "test:e2e:crx-lock": "NODE_ENV=test pnpm build:crx && playwright test --config=packages/app/playwright.crx-lock.config.ts",
-    "test:e2e:assets": "NODE_ENV=test pnpm playwright test --config=packages/e2e-assets/playwright.config.ts",
+    "test:e2e:assets": "NODE_ENV=test pnpm playwright test --config=packages/app/playwright.assets.config.ts",
     "test:e2e:contracts": "NODE_ENV=test pnpm build:crx && pnpm --filter=@fuel-wallet/e2e-contract-tests test:e2e",
     "test:appfile": "pnpm --filter=fuels-wallet test --",
     "ts:check": "turbo run ts:check",
