@@ -11,12 +11,12 @@ import type {
 import Dexie, { type DbEvents, type PromiseExtended, type Table } from 'dexie';
 import 'dexie-observable';
 import type { AssetFuel } from 'fuels';
+import { IS_LOGGED_KEY } from '~/config';
+import { createParallelDb } from '~/systems/Core/utils/databaseNoDexie';
+import { Storage } from '~/systems/Core/utils/storage';
 import type { TransactionCursor } from '~/systems/Transaction';
 import { chromeStorage } from '../services/chromeStorage';
 import { applyDbVersioning } from './databaseVersioning';
-import { createParallelDb } from '~/systems/Core/utils/databaseNoDexie';
-import { IS_LOGGED_KEY } from '~/config';
-import { Storage } from '~/systems/Core/utils/storage';
 
 type FailureEvents = Extract<keyof DbEvents, 'close' | 'blocked'>;
 export type FuelCachedAsset = AssetData &
@@ -95,9 +95,11 @@ export class FuelDB extends Dexie {
 
         try {
           (async () => {
-            const accounts = await this.accounts.toArray();
-            if (accounts.length) {
-              Storage.setItem(IS_LOGGED_KEY, true);
+            if (typeof window !== 'undefined' && window.localStorage) {
+              const accounts = await this.accounts.toArray();
+              if (accounts.length) {
+                Storage.setItem(IS_LOGGED_KEY, true);
+              }
             }
           })();
         } catch (_) {}
