@@ -15,4 +15,6 @@
   "typescript.suggest.paths": true,
   "typescript.suggest.enabled": true,
   "typescript.suggest.completeFunctionCalls": true,
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
