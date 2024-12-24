@@ -75,6 +75,13 @@ export const sidebarItems = (hasErrors: boolean): Array<MenuItemObj> =>
             path: Pages.settingsChangePassword(),
           },
           {
+            // added this object
+            key: 'set-lock-timeout',
+            icon: 'Clock',
+            label: 'Auto Lock',
+            path: Pages.settingsSetLockTimeout(),
+          },
+          {
             key: 'logout',
             icon: 'Logout',
             label: 'Logout',
