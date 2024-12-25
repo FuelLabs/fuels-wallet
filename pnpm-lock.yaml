@@ -60,8 +60,8 @@ importers:
         specifier: ^2.26.2
         version: 2.26.2
       '@fuels/ts-config':
-        specifier: 0.20.0
-        version: 0.20.0(typescript@5.2.2)
+        specifier: 0.26.0
+        version: 0.26.0(typescript@5.2.2)
       '@jest/types':
         specifier: 29.6.3
         version: 29.6.3
@@ -190,8 +190,8 @@ importers:
         specifier: workspace:*
         version: link:../connections
       '@fuels/local-storage':
-        specifier: 0.20.0
-        version: 0.20.0
+        specifier: 0.26.0
+        version: 0.26.0
       '@fuels/playwright-utils':
         specifier: workspace:*
         version: link:../playwright-utils
@@ -619,12 +619,6 @@ importers:
         specifier: 2.8.8
         version: 2.8.8
 
-  packages/e2e-assets:
-    devDependencies:
-      '@playwright/test':
-        specifier: 1.46.1
-        version: 1.46.1
-
   packages/e2e-contract-tests:
     dependencies:
       '@fuels/connectors':
@@ -705,11 +699,11 @@ importers:
         version: 0.5.12
     devDependencies:
       '@fuels/ts-config':
-        specifier: ^0.23.0
-        version: 0.23.0(typescript@5.2.2)
+        specifier: ^0.26.0
+        version: 0.26.0(typescript@5.2.2)
       '@fuels/tsup-config':
-        specifier: ^0.23.0
-        version: 0.23.0(tsup@7.2.0(@swc/core@1.3.92(@swc/helpers@0.5.11))(postcss@8.4.49)(ts-node@10.9.1(@swc/core@1.3.92(@swc/helpers@0.5.11))(@types/node@22.10.1)(typescript@5.2.2))(typescript@5.2.2))
+        specifier: ^0.26.0
+        version: 0.26.0(tsup@7.2.0(@swc/core@1.3.92(@swc/helpers@0.5.11))(postcss@8.4.49)(ts-node@10.9.1(@swc/core@1.3.92(@swc/helpers@0.5.11))(@types/node@22.10.1)(typescript@5.2.2))(typescript@5.2.2))
       '@playwright/test':
         specifier: 1.46.1
         version: 1.46.1
@@ -2686,6 +2680,9 @@ packages:
   '@fuels/local-storage@0.20.0':
     resolution: {integrity: sha512-zIV/wmsI+fDTlpsBxAlo2iXijOxELrpy9YJ/Ex+jaBjVCx2PhMPlZo6r/wyeafxe7P4Edjg+lGKRWGkxKnrYkg==}
 
+  '@fuels/local-storage@0.26.0':
+    resolution: {integrity: sha512-DvLfB0IDNlDrH32tdISCRICsPDnF2j29fJlFTRj7jDgkFXkSTGu/ornu78jv/LIE6dtvrM1YKXNc0aGBoNrTHw==}
+
   '@fuels/react-xstore@0.20.0':
     resolution: {integrity: sha512-DS65Q+xvOMMSqay2UQGpc1ZvYAXjwRY611G+Klf82nexs6Y8YXSLH4HS9dlpqxcOB2c3YO+iQMnoOuEWw/g5Zw==}
     peerDependencies:
@@ -2701,18 +2698,13 @@ packages:
       fuels: 0.96.1
       react: '>=18.0.0'
 
-  '@fuels/ts-config@0.20.0':
-    resolution: {integrity: sha512-wFPifVVz2z/YXuYJ/qLFRKIAVq98ZtrrX9TlcKuL5E4ar32VGLRFTtoujEwFVcWRWmdkxA9ulcCiV3fEojdqlQ==}
+  '@fuels/ts-config@0.26.0':
+    resolution: {integrity: sha512-fpxU1UQR9FXHw79+McQ8reczOjis2gjL+l62VAHqAqB5RePgLA7l/hMRJAuQZC3YFJKch1gMzlRXrn8GRmvCaQ==}
     peerDependencies:
       typescript: 5.2.2
 
-  '@fuels/ts-config@0.23.0':
-    resolution: {integrity: sha512-9wfQTBKZSuF+8mByCLOVK7vpT56+kxcuzVLUl1unYGAtm0vWJhX0OPjkM2G9H6ZeUG2EJXoZzY8GGqZNjRjv8A==}
-    peerDependencies:
-      typescript: 5.2.2
-
-  '@fuels/tsup-config@0.23.0':
-    resolution: {integrity: sha512-E7d3bnBQe0qemxgh6aBmHth6yCXA+KvgRFq2BcADaIIyNPtMg+FHNMii4bGULQ/JAB0y8yY6QFeDnzYj5uOi5g==}
+  '@fuels/tsup-config@0.26.0':
+    resolution: {integrity: sha512-i28BOWB2W+i4bH35OuX1oQe7GvDEjGWyt/7ntezAYHESaPDiuLwqs/jDjBaT4zoFOKX/5ooxPWOsAQGqUyGZ6A==}
     peerDependencies:
       tsup: ^7.2.0
 
@@ -6164,6 +6156,7 @@ packages:
 
   '@web3modal/core@5.0.0':
     resolution: {integrity: sha512-6pBWgwTn0B+YYpoe9ajrOKcvrdGtJuptLUIVOf/0b/01YFyAd3R7cqrAQE098AXZOEVhVZnpuFKuAWrZDo/z+g==}
+    deprecated: Web3Modal is now Reown AppKit. Please follow the upgrade guide at https://docs.reown.com/appkit/upgrade/from-w3m-to-reown
 
   '@web3modal/polyfills@5.0.0':
     resolution: {integrity: sha512-amEhs+xrsBRaj9MZ7Smycu+4TaggC+L3LARYZjGv1X8+HL5qlNIr1IBxc48+MtcW0SNu+lND2e//tO1GA9Drow==}
@@ -6195,9 +6188,11 @@ packages:
 
   '@web3modal/siwe@5.0.0':
     resolution: {integrity: sha512-pdr6vh2/LTwIq28zTIQaOaJdrp3550cGhM5PM1DrA70QyWbdysS6B+jAPYQWGoKnNidtg7XJq8R/3tFxr6o72g==}
+    deprecated: Web3Modal is now Reown AppKit. Please follow the upgrade guide at https://docs.reown.com/appkit/upgrade/from-w3m-to-reown
 
   '@web3modal/solana@5.0.0':
     resolution: {integrity: sha512-l/u1BPmsNsShrDLSSQ66GEiFDDz9//MH2KDgnpxpaqaTl0L7bKgwnClOjuyhpN+rKP2urxtCbIhMpr7wVKnDeQ==}
+    deprecated: Web3Modal is now Reown AppKit. Please follow the upgrade guide at https://docs.reown.com/appkit/upgrade/from-w3m-to-reown
     peerDependencies:
       react: '>=17'
       react-dom: '>=17'
@@ -6212,6 +6207,7 @@ packages:
 
   '@web3modal/ui@5.0.0':
     resolution: {integrity: sha512-QCcj7q+8NMdRPWMZ8GRvEDH5gjHH7tCysXHjYNTrAldHWFBlxpasYjSUYBpGyH//G92Ok1Qmo+sXSWZ6Y+1EMg==}
+    deprecated: Web3Modal is now Reown AppKit. Please follow the upgrade guide at https://docs.reown.com/appkit/upgrade/from-w3m-to-reown
 
   '@web3modal/wagmi@5.0.0':
     resolution: {integrity: sha512-AegPzmmArOpELk9N44/BzNHKE50Fp19nfDJ/eVq8fM/yqDSlq7Gj2D1sEeZuEeXQGxgoAKNOWOlKP6IoQ/+s6g==}
@@ -12284,6 +12280,7 @@ packages:
 
   sudo-prompt@9.2.1:
     resolution: {integrity: sha512-Mu7R0g4ig9TUuGSxJavny5Rv0egCEtpZRNMrZaYS1vxkiIxGiGUwoezU3LazIQ+KE04hTrTfNPgxU5gzi7F5Pw==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   superstruct@0.14.2:
     resolution: {integrity: sha512-nPewA6m9mR3d6k7WkZ8N8zpTWfenFH3q9pA2PkuiZxINr9DKB2+40wEQf0ixn8VaGuJ78AB6iWOtStI+/4FKZQ==}
@@ -18036,6 +18033,8 @@ snapshots:
 
   '@fuels/local-storage@0.20.0': {}
 
+  '@fuels/local-storage@0.26.0': {}
+
   '@fuels/react-xstore@0.20.0(@types/react@18.3.3)(@types/ws@8.5.12)(@xstate/react@3.2.2(@types/react@18.3.3)(react@18.3.1)(xstate@4.38.2))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(xstate@4.38.2)':
     dependencies:
       '@fuels/local-storage': 0.20.0
@@ -18064,17 +18063,13 @@ snapshots:
       - '@types/react-dom'
       - react-dom
 
-  '@fuels/ts-config@0.20.0(typescript@5.2.2)':
+  '@fuels/ts-config@0.26.0(typescript@5.2.2)':
     dependencies:
       typescript: 5.2.2
 
-  '@fuels/ts-config@0.23.0(typescript@5.2.2)':
+  '@fuels/tsup-config@0.26.0(tsup@7.2.0(@swc/core@1.3.92(@swc/helpers@0.5.11))(postcss@8.4.49)(ts-node@10.9.1(@swc/core@1.3.92(@swc/helpers@0.5.11))(@types/node@22.10.1)(typescript@5.2.2))(typescript@5.2.2))':
     dependencies:
-      typescript: 5.2.2
-
-  '@fuels/tsup-config@0.23.0(tsup@7.2.0(@swc/core@1.3.92(@swc/helpers@0.5.11))(postcss@8.4.49)(ts-node@10.9.1(@swc/core@1.3.92(@swc/helpers@0.5.11))(@types/node@22.10.1)(typescript@5.2.2))(typescript@5.2.2))':
-    dependencies:
-      dotenv: 16.3.1
+      dotenv: 16.4.5
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       tsup: 7.2.0(@swc/core@1.3.92(@swc/helpers@0.5.11))(postcss@8.4.49)(ts-node@10.9.1(@swc/core@1.3.92(@swc/helpers@0.5.11))(@types/node@22.10.1)(typescript@5.2.2))(typescript@5.2.2)
