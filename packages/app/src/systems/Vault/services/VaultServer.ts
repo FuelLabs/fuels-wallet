@@ -161,7 +161,10 @@ export class VaultServer extends EventEmitter {
   }: VaultInputs['signTransaction']): Promise<string> {
     const wallet = await this.manager.getWallet(Address.fromString(address));
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
+    // debugger;
     const provider = await networkProviders.providers[providerUrl];
+    console.log('asd provider', provider);
+    // debugger;
     wallet.connect(provider);
     const signature = await wallet.signTransaction(transactionRequest);
     return signature;
