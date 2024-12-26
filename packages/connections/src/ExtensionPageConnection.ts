@@ -50,7 +50,7 @@ export class ExtensionPageConnection extends BaseConnection {
   }
 
   onResponseSent() {
-    window.close();
+    // window.close();
   }
 
   ready() {

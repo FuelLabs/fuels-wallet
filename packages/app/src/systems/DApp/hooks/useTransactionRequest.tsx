@@ -142,6 +142,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   }
 
   function request(input: TxInputs['request']) {
+    console.log('request', input);
     service.send('START', { input });
   }
 

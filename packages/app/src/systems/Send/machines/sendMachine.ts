@@ -26,6 +26,7 @@ export type MachineContext = {
   maxGasLimit?: BN;
   input?: TxInputs['createTransfer'];
   error?: string;
+  skipCustomFee?: boolean;
 };
 
 type EstimateDefaultTipsReturn = {
@@ -43,6 +44,7 @@ type CreateTransactionReturn = {
   transactionRequest?: TransactionRequest;
   providerUrl: string;
   address: string;
+  skipCustomFee?: boolean;
 };
 
 type MachineServices = {
@@ -183,6 +185,7 @@ export const sendMachine = createMachine(
         address: ev.data.address,
         baseFee: ev.data.baseFee ?? ctx.baseFee,
         gasLimit: ev.data.gasLimit ?? ctx.gasLimit,
+        skipCustomFee: ev.data.skipCustomFee ?? ctx.skipCustomFee,
         error: undefined,
       })),
     },
