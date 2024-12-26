@@ -113,61 +113,61 @@ export const transactionRequestMachine = createMachine(
         on: {
           START: {
             actions: ['assignTxRequestData'],
-            target: 'estimatingInitialTips',
+            target: 'simulatingTransaction',
           },
         },
       },
-      estimatingInitialTips: {
-        tags: ['loading'],
-        invoke: {
-          src: 'estimateDefaultTips',
-          onDone: [
-            {
-              cond: FetchMachine.hasError,
-              target: 'failed',
-            },
-            {
-              actions: ['assignDefaultTips'],
-              target: 'estimatingGasLimit',
-            },
-          ],
-        },
-      },
-      estimatingGasLimit: {
-        invoke: {
-          src: 'estimateGasLimit',
-          onDone: [
-            {
-              cond: FetchMachine.hasError,
-              target: 'failed',
-            },
-            {
-              actions: ['assignGasLimit'],
-              target: 'fetchingAccount',
-            },
-          ],
-        },
-      },
-      fetchingAccount: {
-        entry: ['openDialog'],
-        tags: ['loading'],
-        invoke: {
-          src: 'fetchAccount',
-          data: {
-            input: (ctx: MachineContext) => ctx.input,
-          },
-          onDone: [
-            {
-              cond: FetchMachine.hasError,
-              target: 'failed',
-            },
-            {
-              actions: ['assignAccount'],
-              target: 'simulatingTransaction',
-            },
-          ],
-        },
-      },
+      // estimatingInitialTips: {
+      //   tags: ['loading'],
+      //   invoke: {
+      //     src: 'estimateDefaultTips',
+      //     onDone: [
+      //       {
+      //         cond: FetchMachine.hasError,
+      //         target: 'failed',
+      //       },
+      //       {
+      //         actions: ['assignDefaultTips'],
+      //         target: 'estimatingGasLimit',
+      //       },
+      //     ],
+      //   },
+      // },
+      // estimatingGasLimit: {
+      //   invoke: {
+      //     src: 'estimateGasLimit',
+      //     onDone: [
+      //       {
+      //         cond: FetchMachine.hasError,
+      //         target: 'failed',
+      //       },
+      //       {
+      //         actions: ['assignGasLimit'],
+      //         target: 'fetchingAccount',
+      //       },
+      //     ],
+      //   },
+      // },
+      // fetchingAccount: {
+      //   entry: ['openDialog'],
+      //   tags: ['loading'],
+      //   invoke: {
+      //     src: 'fetchAccount',
+      //     data: {
+      //       input: (ctx: MachineContext) => ctx.input,
+      //     },
+      //     onDone: [
+      //       {
+      //         cond: FetchMachine.hasError,
+      //         target: 'failed',
+      //       },
+      //       {
+      //         actions: ['assignAccount'],
+      //         target: 'simulatingTransaction',
+      //       },
+      //     ],
+      //   },
+      // },
       simulatingTransaction: {
         tags: ['loading'],
         invoke: {
@@ -270,25 +270,25 @@ export const transactionRequestMachine = createMachine(
     delays: { TIMEOUT: 1300 },
     actions: {
       reset: assign(() => ({})),
-      assignDefaultTips: assign((ctx, ev) => ({
-        fees: {
-          ...ctx.fees,
-          regularTip: ev.data.regularTip,
-          fastTip: ev.data.fastTip,
-        },
-      })),
-      assignGasLimit: assign((ctx, ev) => ({
-        fees: {
-          ...ctx.fees,
-          maxGasLimit: ev.data.maxGasLimit,
-        },
-      })),
-      assignAccount: assign({
-        input: (ctx, ev) => ({
-          ...ctx.input,
-          account: ev.data,
-        }),
-      }),
+      // assignDefaultTips: assign((ctx, ev) => ({
+      //   fees: {
+      //     ...ctx.fees,
+      //     regularTip: ev.data.regularTip,
+      //     fastTip: ev.data.fastTip,
+      //   },
+      // })),
+      // assignGasLimit: assign((ctx, ev) => ({
+      //   fees: {
+      //     ...ctx.fees,
+      //     maxGasLimit: ev.data.maxGasLimit,
+      //   },
+      // })),
+      // assignAccount: assign({
+      //   input: (ctx, ev) => ({
+      //     ...ctx.input,
+      //     account: ev.data,
+      //   }),
+      // }),
       assignTxRequestData: assign({
         input: (ctx, ev) => {
           const {
@@ -385,25 +385,25 @@ export const transactionRequestMachine = createMachine(
       }),
     },
     services: {
-      estimateDefaultTips: FetchMachine.create<
-        never,
-        EstimateDefaultTipsReturn
-      >({
-        showError: false,
-        maxAttempts: 1,
-        async fetch() {
-          const defaultTips = await TxService.estimateDefaultTips();
-          return defaultTips;
-        },
-      }),
-      estimateGasLimit: FetchMachine.create<never, EstimateGasLimitReturn>({
-        showError: false,
-        maxAttempts: 1,
-        async fetch() {
-          const gasLimit = await TxService.estimateGasLimit();
-          return gasLimit;
-        },
-      }),
+      // estimateDefaultTips: FetchMachine.create<
+      //   never,
+      //   EstimateDefaultTipsReturn
+      // >({
+      //   showError: false,
+      //   maxAttempts: 1,
+      //   async fetch() {
+      //     const defaultTips = await TxService.estimateDefaultTips();
+      //     return defaultTips;
+      //   },
+      // }),
+      // estimateGasLimit: FetchMachine.create<never, EstimateGasLimitReturn>({
+      //   showError: false,
+      //   maxAttempts: 1,
+      //   async fetch() {
+      //     const gasLimit = await TxService.estimateGasLimit();
+      //     return gasLimit;
+      //   },
+      // }),
       simulateTransaction: FetchMachine.create<
         TxInputs['simulateTransaction'],
         SimulateTransactionReturn
@@ -448,26 +448,26 @@ export const transactionRequestMachine = createMachine(
           };
         },
       }),
-      fetchAccount: FetchMachine.create<
-        { address: string; providerUrl: string },
-        Account
-      >({
-        showError: true,
-        async fetch({ input }) {
-          if (!input?.address || !input?.providerUrl) {
-            throw new Error('Invalid fetchAccount input');
-          }
-          const account = await AccountService.fetchAccount({
-            address: input.address,
-          });
-          const accountWithBalances = await AccountService.fetchBalance({
-            account,
-            providerUrl: input.providerUrl,
-          });
+      // fetchAccount: FetchMachine.create<
+      //   { address: string; providerUrl: string },
+      //   Account
+      // >({
+      //   showError: true,
+      //   async fetch({ input }) {
+      //     if (!input?.address || !input?.providerUrl) {
+      //       throw new Error('Invalid fetchAccount input');
+      //     }
+      //     const account = await AccountService.fetchAccount({
+      //       address: input.address,
+      //     });
+      //     const accountWithBalances = await AccountService.fetchBalance({
+      //       account,
+      //       providerUrl: input.providerUrl,
+      //     });
 
-          return accountWithBalances;
-        },
-      }),
+      //     return accountWithBalances;
+      //   },
+      // }),
     },
   }
 );

@@ -180,12 +180,13 @@ export class TxService {
   }
 
   static async simulateTransaction({
-    skipCustomFee,
+    skipCustomFee: _,
     transactionRequest: inputTransactionRequest,
     providerUrl,
     tip: inputCustomTip,
     gasLimit: inputCustomGasLimit,
   }: TxInputs['simulateTransaction']) {
+    const skipCustomFee = true;
     console.log('simulateTransaction', {
       skipCustomFee,
       inputTransactionRequest,
@@ -193,6 +194,7 @@ export class TxService {
       inputCustomTip,
       inputCustomGasLimit,
     });
+
     const [provider, account] = await Promise.all([
       createProvider(providerUrl || ''),
       AccountService.getCurrentAccount(),

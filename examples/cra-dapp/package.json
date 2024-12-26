@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@fuels/connectors": "0.35.1",
-    "@fuels/react": "0.39.0-pr-446-73",
+    "@fuels/react": "0.35.1",
     "@tanstack/react-query": "5.28.4",
     "fuels": "0.0.0-pr-3487-20241220190150",
     "react": "18.3.1",
