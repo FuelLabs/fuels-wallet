@@ -2,7 +2,7 @@ import { Provider } from 'fuels';
 import { NetworkService } from './network';
 
 export class NetworkProviders {
-  providers: Record<string, Provider> = {};
+  providers: Record<string, Promise<Provider>> = {};
   constructor() {
     this.populateProviders();
   }
@@ -11,7 +11,7 @@ export class NetworkProviders {
     const networks = await NetworkService.getNetworks();
     for (const network of networks) {
       try {
-        this.providers[network.url] = await Provider.create(network.url);
+        this.providers[network.url] = Provider.create(network.url);
       } catch (error) {
         console.error('Error creating provider', network.url, error);
       }
