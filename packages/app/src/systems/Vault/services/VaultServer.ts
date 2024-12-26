@@ -4,6 +4,7 @@ import { createProvider } from '@fuel-wallet/connections';
 import { Address, WalletManager, transactionRequestify } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
+import { networkProviders } from '~/systems/Network/services/networkProviders';
 
 export type VaultAccount = {
   address: string;
@@ -160,7 +161,7 @@ export class VaultServer extends EventEmitter {
   }: VaultInputs['signTransaction']): Promise<string> {
     const wallet = await this.manager.getWallet(Address.fromString(address));
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
-    const provider = await createProvider(providerUrl);
+    const provider = await networkProviders.providers[providerUrl];
     wallet.connect(provider);
     const signature = await wallet.signTransaction(transactionRequest);
     return signature;

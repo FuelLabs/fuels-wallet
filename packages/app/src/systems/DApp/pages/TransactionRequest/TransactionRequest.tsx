@@ -9,6 +9,8 @@ import { TxContent, getGasLimitFromTxRequest } from '~/systems/Transaction';
 import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 import { AutoSubmit } from './TransactionRequest.AutoSubmit';
+
+import { networkProviders } from '~/systems/Network/services/networkProviders';
 import {
   FormProvider,
   type TransactionRequestFormData,

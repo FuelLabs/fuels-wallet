@@ -38,33 +38,33 @@ const schema = yup
         tip: yup.object({
           amount: yup
             .mixed<BN>()
-            .test('min', 'Tip must be greater than or equal to 0', (value) => {
-              return value?.gte(0);
-            })
+            // .test('min', 'Tip must be greater than or equal to 0', (value) => {
+            //   return value?.gte(0);
+            // })
             .required('Tip is required'),
           text: yup.string().required('Tip is required'),
         }),
         gasLimit: yup.object({
           amount: yup
             .mixed<BN>()
-            .test({
-              name: 'max',
-              test: (value, ctx) => {
-                const { maxGasLimit } = ctx.options.context as SchemaOptions;
-                if (!maxGasLimit) return false;
+            // .test({
+            //   name: 'max',
+            //   test: (value, ctx) => {
+            //     const { maxGasLimit } = ctx.options.context as SchemaOptions;
+            //     if (!maxGasLimit) return false;
 
-                if (value?.lte(maxGasLimit)) {
-                  return true;
-                }
+            //     if (value?.lte(maxGasLimit)) {
+            //       return true;
+            //     }
 
-                return ctx.createError({
-                  path: 'fees.gasLimit',
-                  message: `Gas limit must be lower than or equal to ${formatGasLimit(
-                    maxGasLimit
-                  )}.`,
-                });
-              },
-            })
+            //     return ctx.createError({
+            //       path: 'fees.gasLimit',
+            //       message: `Gas limit must be lower than or equal to ${formatGasLimit(
+            //         maxGasLimit
+            //       )}.`,
+            //     });
+            //   },
+            // })
             .required('Gas limit is required'),
           text: yup.string().required('Gas limit is required'),
         }),
