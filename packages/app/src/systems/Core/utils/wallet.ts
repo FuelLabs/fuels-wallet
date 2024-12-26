@@ -45,7 +45,7 @@ export class WalletLockedCustom extends WalletLocked {
     const txRequestToSend =
       await this.populateTransactionWitnessesSignature(transactionRequest);
 
-    await this.simulateTransaction(txRequestToSend, {
+    await this.simulateTransaction(transactionRequestLike, {
       estimateTxDependencies: false,
     });
     return this.provider.sendTransaction(txRequestToSend, {
