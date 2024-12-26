@@ -17,6 +17,13 @@ export class NetworkProviders {
       }
     }
   }
+
+  async getProvider(url: string) {
+    if (!this.providers[url]) {
+      await this.populateProviders();
+    }
+    return this.providers[url];
+  }
 }
 
 export const networkProviders = new NetworkProviders();
