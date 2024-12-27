@@ -1,5 +1,5 @@
 async function initOPFS() {
-  const root = await navigator.storage.getDirectory();
+  const root = await navigator?.storage?.getDirectory();
   return root;
 }
 
@@ -13,8 +13,9 @@ export async function saveToOPFS(data: any) {
     return;
   }
 
-  console.log('saving data to opfs', data);
   const root = await initOPFS();
+  if (!root) return;
+  console.log('saving data to opfs', data);
   const fileHandle = await root.getFileHandle('backup.json', { create: true });
   const writable = await fileHandle.createWritable();
   await writable.write(JSON.stringify(data));
@@ -23,6 +24,7 @@ export async function saveToOPFS(data: any) {
 
 export async function readFromOPFS() {
   const root = await initOPFS();
+  if (!root) return;
   try {
     const fileHandle = await root.getFileHandle('backup.json');
     const file = await fileHandle.getFile();
