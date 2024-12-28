@@ -1,5 +1,21 @@
 # fuels-wallet
 
+## 0.45.0
+
+### Minor Changes
+
+- [#1741](https://github.com/FuelLabs/fuels-wallet/pull/1741) [`197d1758`](https://github.com/FuelLabs/fuels-wallet/commit/197d1758701392bf7ab9efc97fbed3ca8d9ac567) Thanks [@nelitow](https://github.com/nelitow)! - Update @fuels packages to implement localStorage fix.
+
+### Patch Changes
+
+- [#1718](https://github.com/FuelLabs/fuels-wallet/pull/1718) [`7fcfee7d`](https://github.com/FuelLabs/fuels-wallet/commit/7fcfee7d8fb53259a8abd2f3843c951fcb03e865) Thanks [@nelitow](https://github.com/nelitow)! - Update E2E setup
+
+- [#1742](https://github.com/FuelLabs/fuels-wallet/pull/1742) [`4bd6e86b`](https://github.com/FuelLabs/fuels-wallet/commit/4bd6e86b370d17692da72ff91c2b28cb64a21c2c) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: add OPFS backup
+
+- Updated dependencies [[`197d1758`](https://github.com/FuelLabs/fuels-wallet/commit/197d1758701392bf7ab9efc97fbed3ca8d9ac567)]:
+  - @fuels/playwright-utils@0.45.0
+  - @fuel-wallet/connections@0.45.0
+
 ## 0.44.1
 
 ### Patch Changes
