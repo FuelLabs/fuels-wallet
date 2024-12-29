@@ -17,6 +17,7 @@ import { applyDbVersioning } from './databaseVersioning';
 import { createParallelDb } from '~/systems/Core/utils/databaseNoDexie';
 import { IS_LOGGED_KEY } from '~/config';
 import { Storage } from '~/systems/Core/utils/storage';
+import { saveToOPFS } from './opfs';
 
 type FailureEvents = Extract<keyof DbEvents, 'close' | 'blocked'>;
 export type FuelCachedAsset = AssetData &
@@ -47,6 +48,18 @@ export class FuelDB extends Dexie {
     this.on('close', () => this.restart('close'));
   }
 
+  async syncDbToOPFS() {
+    const accounts = await this.accounts.toArray();
+    const vaults = await this.vaults.toArray();
+    const networks = await this.networks.toArray();
+    const backupData = {
+      accounts,
+      vaults,
+      networks,
+    };
+    await saveToOPFS(backupData);
+  }
+
   async syncDbToChromeStorage() {
     const accounts = await this.accounts.toArray();
     const vaults = await this.vaults.toArray();
@@ -55,23 +68,24 @@ export class FuelDB extends Dexie {
     // @TODO: this is a temporary solution to avoid the storage accounts of being wrong and
     // users losing funds in case of no backup
     // if has account, save to chrome storage
-    if (accounts.length) {
+    if (accounts.length && vaults.length && networks.length) {
+      console.log('saving data to chrome storage', {
+        accounts,
+        vaults,
+        networks,
+      });
       for (const account of accounts) {
         await chromeStorage.accounts.set({
           key: account.address,
           data: account,
         });
       }
-    }
-    if (vaults.length) {
       for (const vault of vaults) {
         await chromeStorage.vaults.set({
           key: vault.key,
           data: vault,
         });
       }
-    }
-    if (networks.length) {
       for (const network of networks) {
         await chromeStorage.networks.set({
           key: network.id || '',
@@ -91,6 +105,10 @@ export class FuelDB extends Dexie {
 
         try {
           (() => this.syncDbToChromeStorage())();
+        } catch (_) {}
+
+        try {
+          (() => this.syncDbToOPFS())();
         } catch (_) {}
 
         try {
