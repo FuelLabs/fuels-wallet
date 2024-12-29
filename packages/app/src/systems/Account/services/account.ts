@@ -13,6 +13,7 @@ import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
 import { getUniqueString } from '~/systems/Core/utils/string';
 import { getTestNoDexieDbData } from '../utils/getTestNoDexieDbData';
+import { readFromOPFS } from '~/systems/Core/utils/opfs';
 
 export type AccountInputs = {
   addAccount: {
@@ -215,6 +216,7 @@ export class AccountService {
       allVaults,
       backupNetworks,
       allNetworks,
+      opfsBackupData,
     ] = await Promise.all([
       chromeStorage.accounts.getAll(),
       db.accounts.toArray(),
@@ -222,61 +224,97 @@ export class AccountService {
       db.vaults.toArray(),
       chromeStorage.networks.getAll(),
       db.networks.toArray(),
+      readFromOPFS(),
     ]);
+
+    const chromeStorageBackupData = {
+      accounts: backupAccounts,
+      vaults: backupVaults,
+      networks: backupNetworks,
+    };
 
     // if there is no accounts, means the user lost it. try recovering it
     const needsAccRecovery =
-      allAccounts?.length === 0 && backupAccounts?.length > 0;
+      allAccounts?.length === 0 &&
+      (chromeStorageBackupData.accounts?.length > 0 ||
+        opfsBackupData?.accounts?.length > 0);
     const needsVaultRecovery =
-      allVaults?.length === 0 && backupVaults?.length > 0;
+      allVaults?.length === 0 &&
+      (chromeStorageBackupData.vaults?.length > 0 ||
+        opfsBackupData?.vaults?.length > 0);
     const needsNetworkRecovery =
-      allNetworks?.length === 0 && backupNetworks?.length > 0;
+      allNetworks?.length === 0 &&
+      (chromeStorageBackupData.networks?.length > 0 ||
+        opfsBackupData?.networks?.length > 0);
     const needsRecovery =
       needsAccRecovery || needsVaultRecovery || needsNetworkRecovery;
 
     return {
-      backupAccounts,
-      backupVaults,
-      backupNetworks,
       needsRecovery,
       needsAccRecovery,
       needsVaultRecovery,
       needsNetworkRecovery,
+      chromeStorageBackupData,
+      opfsBackupData,
     };
   }
 
   static async recoverWallet() {
-    const {
-      backupAccounts,
-      backupVaults,
-      backupNetworks,
-      needsRecovery,
-      needsAccRecovery,
-      needsVaultRecovery,
-      needsNetworkRecovery,
-    } = await AccountService.fetchRecoveryState();
+    const { chromeStorageBackupData, needsRecovery, opfsBackupData } =
+      await AccountService.fetchRecoveryState();
 
     if (needsRecovery) {
       (async () => {
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         const dataToLog: any = {};
         try {
-          dataToLog.backupAccounts = JSON.stringify(
-            backupAccounts?.map((account) => account?.data?.address) || []
-          );
-          dataToLog.backupNetworks = JSON.stringify(backupNetworks || []);
+          dataToLog.chromeStorageBackupData = {
+            ...chromeStorageBackupData,
+            accounts:
+              chromeStorageBackupData.accounts?.map(
+                (account) => account?.data?.address
+              ) || [],
+            vaults: chromeStorageBackupData.vaults?.length || 0,
+          };
           // try getting data from indexedDB (outside of dexie) to check if it's also corrupted
           const testNoDexieDbData = await getTestNoDexieDbData();
           dataToLog.testNoDexieDbData = testNoDexieDbData;
         } catch (_) {}
+        try {
+          dataToLog.ofpsBackupupData = {
+            ...opfsBackupData,
+            accounts:
+              opfsBackupData.accounts?.map(
+                // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                (account: any) => account?.address
+              ) || [],
+            vaults: opfsBackupData.vaults?.length || 0,
+          };
+        } catch (_) {}
 
-        Sentry.captureException(
-          'Disaster on DB. Start recovering accounts / vaults / networks',
-          {
-            extra: dataToLog,
-            tags: { manual: true },
-          }
-        );
+        const hasOPFSBackup =
+          !!opfsBackupData?.accounts?.length ||
+          !!opfsBackupData?.vaults?.length ||
+          !!opfsBackupData?.networks?.length;
+        const hasChromeStorageBackup =
+          !!chromeStorageBackupData.accounts?.length ||
+          !!chromeStorageBackupData.vaults?.length ||
+          !!chromeStorageBackupData.networks?.length;
+        let sentryMsg = 'DB is cleaned. ';
+        if (!hasOPFSBackup && !hasChromeStorageBackup) {
+          sentryMsg += 'No backup found. ';
+        }
+        if (hasOPFSBackup) {
+          sentryMsg += 'OPFS backup is found. Recovering...';
+        }
+        if (hasChromeStorageBackup) {
+          sentryMsg += 'Chrome Storage backup is found. Recovering...';
+        }
+
+        Sentry.captureException(sentryMsg, {
+          extra: dataToLog,
+          tags: { manual: true },
+        });
       })();
 
       await db.transaction(
@@ -285,35 +323,83 @@ export class AccountService {
         db.vaults,
         db.networks,
         async () => {
-          if (needsAccRecovery) {
-            let isCurrentFlag = true;
-            console.log('recovering accounts', backupAccounts);
-            for (const account of backupAccounts) {
+          console.log('opfsBackupData', opfsBackupData);
+          console.log('chromeStorageBackupData', chromeStorageBackupData);
+          // accounts recovery
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          async function recoverAccounts(accounts: any) {
+            await db.accounts.clear();
+            for (const account of accounts) {
               // in case of recovery, the first account will be the current
-              if (account.key && account.data.address) {
-                await db.accounts.add({
-                  ...account.data,
-                  isCurrent: isCurrentFlag,
-                });
-                isCurrentFlag = false;
+              if (account.address) {
+                await db.accounts.add(account);
               }
             }
           }
-          if (needsVaultRecovery) {
-            console.log('recovering vaults', backupVaults);
-            for (const vault of backupVaults) {
-              if (vault.key && vault.data) {
-                await db.vaults.add(vault.data);
+          // vaults recovery
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          async function recoverVaults(vaults: any) {
+            await db.vaults.clear();
+            for (const vault of vaults) {
+              if (vault.key) {
+                await db.vaults.add(vault);
               }
             }
           }
-          if (needsNetworkRecovery) {
-            console.log('recovering networks', backupNetworks);
-            for (const network of backupNetworks) {
-              if (network.key && network.data.id) {
-                await db.networks.add(network.data);
+          // networks recovery
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          async function recoverNetworks(networks: any) {
+            await db.networks.clear();
+            for (const network of networks) {
+              if (network.url) {
+                await db.networks.add(network);
               }
             }
+          }
+
+          if (opfsBackupData?.accounts?.length) {
+            console.log(
+              'recovering accounts from OPFS',
+              opfsBackupData.accounts
+            );
+            await recoverAccounts(opfsBackupData.accounts);
+          } else if (chromeStorageBackupData.accounts?.length) {
+            console.log(
+              'recovering accounts from Chrome Storage',
+              chromeStorageBackupData.accounts
+            );
+            await recoverAccounts(
+              chromeStorageBackupData.accounts?.map((account) => account.data)
+            );
+          }
+
+          if (opfsBackupData?.vaults?.length) {
+            console.log('recovering vaults from OPFS', opfsBackupData.vaults);
+            await recoverVaults(opfsBackupData.vaults);
+          } else if (chromeStorageBackupData.vaults?.length) {
+            console.log(
+              'recovering vaults from Chrome Storage',
+              chromeStorageBackupData.vaults
+            );
+            await recoverVaults(
+              chromeStorageBackupData.vaults?.map((vault) => vault.data)
+            );
+          }
+
+          if (opfsBackupData?.networks?.length) {
+            console.log(
+              'recovering networks from OPFS',
+              opfsBackupData.networks
+            );
+            await recoverNetworks(opfsBackupData.networks);
+          } else if (chromeStorageBackupData.networks?.length) {
+            console.log(
+              'recovering networks from Chrome Storage',
+              chromeStorageBackupData.networks
+            );
+            await recoverNetworks(
+              chromeStorageBackupData.networks?.map((network) => network.data)
+            );
           }
         }
       );
