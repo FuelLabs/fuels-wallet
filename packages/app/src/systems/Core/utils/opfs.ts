@@ -35,3 +35,10 @@ export async function readFromOPFS() {
     return {};
   }
 }
+
+// create a function to clean opfs
+export async function cleanOPFS() {
+  const root = await initOPFS();
+  if (!root) return;
+  await root.removeEntry('backup.json');
+}
