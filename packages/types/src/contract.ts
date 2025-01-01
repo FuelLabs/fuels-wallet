@@ -1,5 +1,5 @@
 export interface Contract {
-  chainId: string;
+  chainId: number;
   contractId: string;
   name: string;
   image: string;
