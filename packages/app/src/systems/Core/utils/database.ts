@@ -3,7 +3,6 @@ import type {
   Account,
   AssetData,
   Connection,
-  Contract,
   DatabaseRestartEvent,
   NetworkData,
   StoredFuelWalletError,
@@ -32,7 +31,6 @@ export class FuelDB extends Dexie {
   transactionsCursors!: Table<TransactionCursor, string>;
   assets!: Table<AssetData, string>;
   indexedAssets!: Table<FuelCachedAsset, string>;
-  contracts!: Table<Contract, string>;
   abis!: Table<AbiTable, string>;
   errors!: Table<StoredFuelWalletError, string>;
   integrityCheckInterval?: NodeJS.Timeout;
@@ -170,7 +168,6 @@ export class FuelDB extends Dexie {
       this.transactionsCursors.clear(),
       this.assets.clear(),
       this.indexedAssets.clear(),
-      this.contracts.clear(),
       this.abis.clear(),
       this.errors.clear(),
     ]);

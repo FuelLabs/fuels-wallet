@@ -246,19 +246,4 @@ export const applyDbVersioning = (db: Dexie) => {
     abis: '&contractId',
     errors: '&id',
   });
-
-  // DB VERSION 29
-  // add contracts column
-  db.version(29).stores({
-    vaults: 'key',
-    accounts: '&address, &name',
-    networks: '&id, &url, &name, chainId',
-    connections: 'origin',
-    transactionsCursors: '++id, address, size, providerUrl, endCursor',
-    assets: '&name, &symbol',
-    contracts: '++id, chainId, contractId, name, image',
-    indexedAssets: 'key, fetchedAt',
-    abis: '&contractId',
-    errors: '&id',
-  });
 };
