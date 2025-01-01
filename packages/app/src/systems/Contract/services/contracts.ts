@@ -11,7 +11,7 @@ export type ContractsInputs = {
 export class ContractService {
   static async getContracts() {
     return db.transaction('r', db.assets, async () => {
-      return db.assets.toArray();
+      return db.contracts.toArray();
     });
   }
 }
