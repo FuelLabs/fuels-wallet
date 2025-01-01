@@ -12,9 +12,7 @@ const selectors = {
   },
 };
 
-export const useContractMetadata = (
-  id: `0x${string}`
-): Contract | undefined => {
+export const useContractMetadata = (id: string): Contract | undefined => {
   const contract = store.useSelector(
     Services.contracts,
     selectors.contract(id)

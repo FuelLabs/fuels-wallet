@@ -1,5 +1,6 @@
 import type { Contract, EcosystemProject } from '@fuel-wallet/types';
 import { CHAIN_IDS } from 'fuels';
+import { getProjectImage } from '~/systems/Ecosystem/utils/getProjectImage';
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class ContractService {
@@ -16,7 +17,7 @@ export class ContractService {
           chainId: CHAIN_IDS.fuel.mainnet,
           contractId: contract.id,
           name: contract.name,
-          image: project.image ?? '', // @TODO: Add url with network explorerUrl
+          image: project.image ? getProjectImage(project.image) : '',
         };
       });
     });
