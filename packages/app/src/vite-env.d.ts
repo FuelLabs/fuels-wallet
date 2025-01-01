@@ -11,7 +11,7 @@ interface ImportMetaEnv {
   readonly VITE_AUTO_LOCK_IN_MINUTES: number;
   readonly VITE_SENTRY_DSN: string;
   readonly VITE_IGNORE_ERRORS: string;
-  readonly VITE_EXPLORER_URL: string;
+  readonly VITE_ECOSYSTEM_PROJECTS_URL: string;
 }
 
 interface ImportMeta {
