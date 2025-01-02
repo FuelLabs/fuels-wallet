@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Form, Input, Text } from '@fuel-ui/react';
+import { Alert, Box, Form, HStack, Input, Text, VStack } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -16,6 +16,7 @@ import { useController, useWatch } from 'react-hook-form';
 import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
 import type { UseSendReturn } from '../../hooks';
+import { NetworkStatus } from '../NetworkStatus';
 
 const MotionContent = motion(Layout.Content);
 
@@ -204,6 +205,7 @@ export function SendSelect({
                 regularTip={regularTip}
                 fastTip={fastTip}
               />
+              <NetworkStatus />
             </MotionStack>
           )}
       </Box.Stack>
