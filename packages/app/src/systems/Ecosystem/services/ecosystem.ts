@@ -4,10 +4,13 @@ import { ECOSYSTEM_PROJECTS_URL } from '~/config';
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class EcosystemService {
   static async fetchProjects() {
-    const data = (await (
-      await fetch(ECOSYSTEM_PROJECTS_URL)
-    ).json()) as Array<EcosystemProject>;
+    const res = await fetch(ECOSYSTEM_PROJECTS_URL);
 
-    return data;
+    if (res.ok) {
+      const data: EcosystemProject[] = await res.json();
+      return data;
+    }
+
+    return [];
   }
 }

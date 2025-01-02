@@ -44,7 +44,9 @@ export const contractsMachine = createMachine(
         },
       },
       failure: {
-        type: 'final',
+        after: {
+          10000: 'fetching',
+        },
       },
       success: {
         type: 'final',
@@ -64,7 +66,8 @@ export const contractsMachine = createMachine(
         null,
         MachineServices['fetchProjects']['data']
       >({
-        showError: true,
+        showError: false,
+        maxAttempts: 1,
         async fetch() {
           return EcosystemService.fetchProjects();
         },
