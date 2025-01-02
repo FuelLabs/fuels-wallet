@@ -9,12 +9,18 @@ import { chromeStorage } from './chromeStorage';
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class CoreService {
   static async clear() {
-    await chromeStorage.clear();
     await VaultService.clear();
     await db.clear();
-    Storage.clear();
     await clearParallelDb();
-    await cleanOPFS();
+    try {
+      // this ones can fail depending on environment
+      Storage.clear();
+      await chromeStorage.clear();
+      await cleanOPFS();
+    } catch (e) {
+      console.error(e);
+    }
+
     const reloadAfterCleanCompleted = () => {
       const isLogged = Storage.getItem(IS_LOGGED_KEY);
       if (!isLogged) {
@@ -23,6 +29,7 @@ export class CoreService {
       }
       setTimeout(() => reloadAfterCleanCompleted(), 50);
     };
+
     reloadAfterCleanCompleted();
   }
 }
