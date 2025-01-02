@@ -1,5 +1,19 @@
 # fuels-wallet
 
+## 0.46.0
+
+### Minor Changes
+
+- [#1749](https://github.com/FuelLabs/fuels-wallet/pull/1749) [`9cb81db2`](https://github.com/FuelLabs/fuels-wallet/commit/9cb81db28009f9879f31eefefe0e08f806bae5f2) Thanks [@helciofranco](https://github.com/helciofranco)! - Add contract logos and names to the transaction screen for better UX.
+
+### Patch Changes
+
+- [#1748](https://github.com/FuelLabs/fuels-wallet/pull/1748) [`cc953d4f`](https://github.com/FuelLabs/fuels-wallet/commit/cc953d4f62402895970140d243a3832a374aaa46) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: clean opfs when logging out
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.46.0
+  - @fuels/playwright-utils@0.46.0
+
 ## 0.45.0
 
 ### Minor Changes
