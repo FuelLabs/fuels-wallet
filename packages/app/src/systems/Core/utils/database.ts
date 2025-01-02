@@ -71,7 +71,7 @@ export class FuelDB extends Dexie {
     if (accounts.length && vaults.length && networks.length) {
       console.log('saving data to chrome storage', {
         accounts,
-        vaults,
+        vaults: vaults.length,
         networks,
       });
       for (const account of accounts) {
