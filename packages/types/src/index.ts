@@ -5,6 +5,8 @@ export * from './network';
 export * from './connection';
 export * from './fuel';
 export * from './constants';
+export * from './contract';
+export * from './ecosystem';
 export * from './abi';
 export * from './error';
 export * from './database';
