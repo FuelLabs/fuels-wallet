@@ -1,7 +1,7 @@
 {
   "name": "fuels-wallet",
   "private": true,
-  "version": "0.45.0",
+  "version": "0.46.0",
   "type": "module",
   "database": "23",
   "scripts": {

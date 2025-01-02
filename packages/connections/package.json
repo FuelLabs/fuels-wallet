@@ -2,7 +2,7 @@
   "name": "@fuel-wallet/connections",
   "private": true,
   "description": "Fuel Wallet Connections for CRX.",
-  "version": "0.45.0",
+  "version": "0.46.0",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
