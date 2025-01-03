@@ -1,5 +1,45 @@
 # fuels-wallet
 
+## 0.46.1
+
+### Patch Changes
+
+- [#1753](https://github.com/FuelLabs/fuels-wallet/pull/1753) [`22975202`](https://github.com/FuelLabs/fuels-wallet/commit/22975202ae37ca941f27df825bdea11905cf3ddb) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: remove comment
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.46.1
+  - @fuels/playwright-utils@0.46.1
+
+## 0.46.0
+
+### Minor Changes
+
+- [#1749](https://github.com/FuelLabs/fuels-wallet/pull/1749) [`9cb81db2`](https://github.com/FuelLabs/fuels-wallet/commit/9cb81db28009f9879f31eefefe0e08f806bae5f2) Thanks [@helciofranco](https://github.com/helciofranco)! - Add contract logos and names to the transaction screen for better UX.
+
+### Patch Changes
+
+- [#1748](https://github.com/FuelLabs/fuels-wallet/pull/1748) [`cc953d4f`](https://github.com/FuelLabs/fuels-wallet/commit/cc953d4f62402895970140d243a3832a374aaa46) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: clean opfs when logging out
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.46.0
+  - @fuels/playwright-utils@0.46.0
+
+## 0.45.0
+
+### Minor Changes
+
+- [#1741](https://github.com/FuelLabs/fuels-wallet/pull/1741) [`197d1758`](https://github.com/FuelLabs/fuels-wallet/commit/197d1758701392bf7ab9efc97fbed3ca8d9ac567) Thanks [@nelitow](https://github.com/nelitow)! - Update @fuels packages to implement localStorage fix.
+
+### Patch Changes
+
+- [#1718](https://github.com/FuelLabs/fuels-wallet/pull/1718) [`7fcfee7d`](https://github.com/FuelLabs/fuels-wallet/commit/7fcfee7d8fb53259a8abd2f3843c951fcb03e865) Thanks [@nelitow](https://github.com/nelitow)! - Update E2E setup
+
+- [#1742](https://github.com/FuelLabs/fuels-wallet/pull/1742) [`4bd6e86b`](https://github.com/FuelLabs/fuels-wallet/commit/4bd6e86b370d17692da72ff91c2b28cb64a21c2c) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: add OPFS backup
+
+- Updated dependencies [[`197d1758`](https://github.com/FuelLabs/fuels-wallet/commit/197d1758701392bf7ab9efc97fbed3ca8d9ac567)]:
+  - @fuels/playwright-utils@0.45.0
+  - @fuel-wallet/connections@0.45.0
+
 ## 0.44.1
 
 ### Patch Changes

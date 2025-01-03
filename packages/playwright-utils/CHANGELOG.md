@@ -1,5 +1,15 @@
 # @fuels/playwright-utils
 
+## 0.46.1
+
+## 0.46.0
+
+## 0.45.0
+
+### Minor Changes
+
+- [#1741](https://github.com/FuelLabs/fuels-wallet/pull/1741) [`197d1758`](https://github.com/FuelLabs/fuels-wallet/commit/197d1758701392bf7ab9efc97fbed3ca8d9ac567) Thanks [@nelitow](https://github.com/nelitow)! - Update @fuels packages to implement localStorage fix.
+
 ## 0.44.1
 
 ## 0.44.0

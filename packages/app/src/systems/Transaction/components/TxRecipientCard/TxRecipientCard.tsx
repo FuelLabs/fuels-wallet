@@ -1,11 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Card, Heading, Icon, Text } from '@fuel-ui/react';
+import { Avatar, Box, Card, Heading, Icon, Image, Text } from '@fuel-ui/react';
 import type { OperationTransactionAddress } from 'fuels';
 import { Address, AddressType, ChainName, isB256, isBech32 } from 'fuels';
-import type { FC } from 'react';
+import { type FC, useMemo } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 
+import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadata';
 import { TxRecipientCardLoader } from './TxRecipientCardLoader';
+import { TxRecipientContractLogo } from './TxRecipientContractLogo';
 
 export type TxRecipientCardProps = {
   recipient?: OperationTransactionAddress;
@@ -29,8 +31,16 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   const isContract = recipient?.type === AddressType.contract;
   const isEthChain = recipient?.chain === ChainName.ethereum;
   const isNetwork = address === 'Network';
-  const name =
-    accounts?.find((a) => a.address === fuelAddress)?.name || 'unknown';
+
+  const contract = useContractMetadata(address);
+
+  const name = useMemo<string>(() => {
+    if (isContract) {
+      return contract?.name || 'unknown';
+    }
+
+    return accounts?.find((a) => a.address === fuelAddress)?.name || 'unknown';
+  }, [isContract, contract, accounts, fuelAddress]);
 
   return (
     <Card
@@ -72,7 +82,11 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
           )}
           {isContract && !isNetwork && (
             <Box css={styles.iconWrapper}>
-              <Icon icon={Icon.is('Code')} size={20} />
+              <TxRecipientContractLogo
+                name={contract?.name}
+                image={contract?.image}
+                size={56}
+              />
             </Box>
           )}
           <Box.Flex css={styles.info}>
@@ -133,6 +147,7 @@ const styles = {
     alignItems: 'center',
     background: '$intentsBase3',
     borderRadius: '$full',
+    overflow: 'hidden',
   }),
   info: cssObj({
     flexDirection: 'column',
