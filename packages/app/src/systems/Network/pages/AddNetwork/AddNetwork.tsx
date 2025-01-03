@@ -31,6 +31,7 @@ export function AddNetwork() {
   const form = useNetworkForm({ context });
   const url = useWatch({ control: form.control, name: 'url' });
   const chainId = useWatch({ control: form.control, name: 'chainId' });
+  const name = useWatch({ control: form.control, name: 'name' });
   const isValid =
     form.formState.isDirty &&
     form.formState.isValid &&
@@ -61,15 +62,24 @@ export function AddNetwork() {
     });
   }
 
-  function onAddNetwork() {
-    const name = chainInfoToAdd?.name || '';
-    handlers.addNetwork({
-      data: {
-        chainId: Number(chainId),
-        name,
-        url,
-      },
-    });
+  async function onAddNetwork() {
+    if (!name) return;
+    try {
+      await handlers.addNetwork({
+        data: {
+          chainId: Number(chainId),
+          name,
+          url,
+        },
+      });
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('already exists')) {
+        form.setError('name', {
+          type: 'manual',
+          message: 'A network with this name already exists',
+        });
+      }
+    }
   }
 
   return (
@@ -101,7 +111,7 @@ export function AddNetwork() {
         <Button
           onPress={onAddNetwork}
           intent="primary"
-          isDisabled={!isReviewingAddNetwork}
+          isDisabled={!isReviewingAddNetwork || !name}
           isLoading={isLoading}
           leftIcon={<Icon icon="Plus" />}
           aria-label="Add new network"
