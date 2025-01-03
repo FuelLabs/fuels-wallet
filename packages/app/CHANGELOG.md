@@ -1,5 +1,17 @@
 # fuels-wallet
 
+## 0.47.0
+
+### Minor Changes
+
+- [#1710](https://github.com/FuelLabs/fuels-wallet/pull/1710) [`4c530078`](https://github.com/FuelLabs/fuels-wallet/commit/4c530078ca2d252e7f5f8db9ffb779c775e5122b) Thanks [@nelitow](https://github.com/nelitow)! - Improve handling of custom assets.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.47.0
+  - @fuels/playwright-utils@0.47.0
+
 ## 0.46.1
 
 ### Patch Changes
