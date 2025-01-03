@@ -12,8 +12,8 @@ concurrency:
 jobs:
   tests-e2e-assets:
     name: Test
-    timeout-minutes: 10
     runs-on: buildjet-8vcpu-ubuntu-2204
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
