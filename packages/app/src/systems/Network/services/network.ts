@@ -355,10 +355,10 @@ export class NetworkService {
     });
 
     if (network?.url === url) {
-      throw new Error('Network with URL already exists');
+      throw new Error('Network with same URL already exists');
     }
     if (network?.name === name) {
-      throw new Error('Network with Name already exists');
+      throw new Error('Network with same Name already exists');
     }
   }
 
