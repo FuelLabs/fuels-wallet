@@ -1,13 +1,22 @@
-import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Card, Heading, Icon, Image, Text } from '@fuel-ui/react';
-import type { OperationTransactionAddress } from 'fuels';
-import { Address, AddressType, ChainName, isB256, isBech32 } from 'fuels';
-import { type FC, useMemo } from 'react';
-import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
+import { cssObj } from "@fuel-ui/css";
+import {
+  Avatar,
+  Box,
+  Card,
+  Heading,
+  Icon,
+  Image,
+  Text,
+  Tooltip,
+} from "@fuel-ui/react";
+import type { OperationTransactionAddress } from "fuels";
+import { Address, AddressType, ChainName, isB256, isBech32 } from "fuels";
+import { type FC, useMemo, useRef, useEffect, useState } from "react";
+import { EthAddress, FuelAddress, useAccounts } from "~/systems/Account";
 
-import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadata';
-import { TxRecipientCardLoader } from './TxRecipientCardLoader';
-import { TxRecipientContractLogo } from './TxRecipientContractLogo';
+import { useContractMetadata } from "~/systems/Contract/hooks/useContractMetadata";
+import { TxRecipientCardLoader } from "./TxRecipientCardLoader";
+import { TxRecipientContractLogo } from "./TxRecipientContractLogo";
 
 export type TxRecipientCardProps = {
   recipient?: OperationTransactionAddress;
@@ -23,40 +32,49 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   isReceiver,
 }) => {
   const { accounts } = useAccounts();
-  const address = recipient?.address || '';
+  const address = recipient?.address || "";
   const isValidAddress = isB256(address) || isBech32(address);
   const fuelAddress = isValidAddress
     ? Address.fromString(address).toString()
-    : '';
+    : "";
   const isContract = recipient?.type === AddressType.contract;
   const isEthChain = recipient?.chain === ChainName.ethereum;
-  const isNetwork = address === 'Network';
+  const isNetwork = address === "Network";
 
   const contract = useContractMetadata(address);
+  const nameRef = useRef<HTMLHeadingElement>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
 
   const name = useMemo<string>(() => {
     if (isContract) {
-      return contract?.name || 'unknown';
+      return contract?.name || "unknown";
     }
 
-    return accounts?.find((a) => a.address === fuelAddress)?.name || 'unknown';
+    return accounts?.find((a) => a.address === fuelAddress)?.name || "unknown";
   }, [isContract, contract, accounts, fuelAddress]);
+
+  useEffect(() => {
+    if (nameRef.current) {
+      const element = nameRef.current;
+      setIsTruncated(element.scrollWidth > element.clientWidth);
+    }
+  }, [name]);
 
   return (
     <Card
       css={styles.root}
       className="TxRecipientCard"
       data-recipient={address}
-      data-type={isContract ? 'contract' : 'user'}
+      data-type={isContract ? "contract" : "user"}
     >
       <Text css={styles.from}>
-        {isReceiver ? 'To' : 'From'} {isContract && '(Contract)'}{' '}
-        {isEthChain && '(Ethereum)'}
+        {isReceiver ? "To" : "From"} {isContract && "(Contract)"}{" "}
+        {isEthChain && "(Ethereum)"}
       </Text>
       {isEthChain ? (
         <>
           <Box css={styles.iconWrapper}>
-            <Icon icon={Icon.is('CurrencyEthereum')} size={20} />
+            <Icon icon={Icon.is("CurrencyEthereum")} size={20} />
           </Box>
           <Box.Flex css={styles.info}>
             <Heading as="h6" css={styles.name}>
@@ -69,7 +87,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
         <>
           {isNetwork && (
             <Box css={styles.iconWrapper}>
-              <Icon icon={Icon.is('LayersLinked')} size={20} />
+              <Icon icon={Icon.is("LayersLinked")} size={20} />
             </Box>
           )}
           {!isContract && !isNetwork && (
@@ -90,15 +108,18 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
             </Box>
           )}
           <Box.Flex css={styles.info}>
-            <Heading
-              as="h6"
-              css={styles.name}
-              aria-label={`${isReceiver ? 'Recipient' : 'Sender'} ${
-                isNetwork ? 'Address' : 'Name'
-              }`}
-            >
-              {isNetwork ? address : name}
-            </Heading>
+            <Tooltip content={isTruncated ? name : null}>
+              <Heading
+                as="h6"
+                css={styles.name}
+                ref={nameRef}
+                aria-label={`${isReceiver ? "Recipient" : "Sender"} ${
+                  isNetwork ? "Address" : "Name"
+                }`}
+              >
+                {isNetwork ? address : name}
+              </Heading>
+            </Tooltip>
             {!isNetwork && (
               <FuelAddress
                 isContract={isContract}
@@ -116,50 +137,55 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
 const styles = {
   root: cssObj({
     flex: 1,
-    p: '$3',
-    display: 'inline-flex',
-    alignItems: 'center',
-    flexDirection: 'column',
-    gap: '$3',
+    p: "$3",
+    display: "inline-flex",
+    alignItems: "center",
+    flexDirection: "column",
+    gap: "$3",
 
-    '.fuel_copyable': {
-      color: '$intentsBase12',
-      fontSize: '$sm',
+    ".fuel_copyable": {
+      color: "$intentsBase12",
+      fontSize: "$sm",
     },
-    '.fuel_Avatar-generated': {
+    ".fuel_Avatar-generated": {
       width: 56,
       height: 56,
-      '& svg': {
+      "& svg": {
         width: 56,
         height: 56,
       },
     },
   }),
   from: cssObj({
-    fontSize: '$sm',
-    fontWeight: '$normal',
+    fontSize: "$sm",
+    fontWeight: "$normal",
   }),
   iconWrapper: cssObj({
     width: 56,
     height: 56,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    background: '$intentsBase3',
-    borderRadius: '$full',
-    overflow: 'hidden',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "$intentsBase3",
+    borderRadius: "$full",
+    overflow: "hidden",
   }),
   info: cssObj({
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '$1',
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "$1",
+    width: "100%",
   }),
   address: cssObj({
-    fontSize: '$sm',
+    fontSize: "$sm",
   }),
   name: cssObj({
-    margin: '0px 0px -5px',
-    textAlign: 'center',
+    margin: "0px 0px -5px",
+    textAlign: "center",
+    maxWidth: "100%",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
   }),
 };
 
