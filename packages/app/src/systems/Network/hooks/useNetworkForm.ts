@@ -1,3 +1,4 @@
+import type { NetworkData } from '@fuel-wallet/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,11 +13,13 @@ const schema = yup
   .object({
     name: yup
       .string()
+      .default('')
       .test('is-required', 'Name is required', function (value) {
         return !this.options?.context?.isEditing || !!value;
       }),
     url: yup
       .string()
+      .default('')
       .test('is-url-valid', 'URL is not valid', isValidNetworkUrl)
       .test('is-network-valid', 'Network is not valid', function (url) {
         return (
@@ -26,6 +29,7 @@ const schema = yup
       .required('URL is required'),
     explorerUrl: yup
       .string()
+      .default('')
       .test(
         'is-url-valid',
         'Explorer URL is not valid',
@@ -34,7 +38,7 @@ const schema = yup
       .optional(),
     chainId: yup
       .string()
-      .transform((value) => (value === null ? '' : String(value)))
+      .default('')
       .required('Chain ID is required')
       .test(
         'chainId-match',
@@ -58,7 +62,7 @@ const schema = yup
   })
   .required();
 
-const DEFAULT_VALUES = {
+const DEFAULT_VALUES: NetworkFormValues = {
   name: '',
   url: '',
   explorerUrl: '',
@@ -68,7 +72,7 @@ const DEFAULT_VALUES = {
 export type UseNetworkFormReturn = ReturnType<typeof useNetworkForm>;
 
 export type UseAddNetworkOpts = {
-  defaultValues?: Maybe<NetworkFormValues>;
+  defaultValues?: Maybe<Partial<NetworkData>>;
   context?: {
     providerChainId?: number;
     isEditing?: boolean;
@@ -84,13 +88,22 @@ export function useNetworkForm({ defaultValues, context }: UseAddNetworkOpts) {
     resetOptions: {
       keepValues: true,
     },
-    defaultValues: defaultValues || DEFAULT_VALUES,
+    defaultValues: defaultValues
+      ? {
+          ...DEFAULT_VALUES,
+          ...defaultValues,
+          chainId: defaultValues.chainId?.toString() || '',
+        }
+      : DEFAULT_VALUES,
     context,
   });
 
   useEffect(() => {
     if (defaultValues) {
-      form.reset(defaultValues);
+      form.reset({
+        ...defaultValues,
+        chainId: defaultValues.chainId?.toString() || '',
+      });
     }
   }, [defaultValues, form]);
 
