@@ -33,10 +33,8 @@ const schema = yup
       )
       .optional(),
     chainId: yup
-      .mixed<string | number>()
-      .transform((value) =>
-        value != null && value !== '' ? Number(value) : undefined
-      )
+      .string()
+      .transform((value) => (value === null ? '' : String(value)))
       .required('Chain ID is required')
       .test(
         'chainId-match',
@@ -51,7 +49,11 @@ const schema = yup
       .test(
         'is-numbers-only',
         'Chain ID must contain only numbers',
-        (value) => value == null || Number.isInteger(value)
+        (value) => {
+          if (!value) return true;
+          const num = Number(value);
+          return !Number.isNaN(num) && Number.isInteger(num);
+        }
       ),
   })
   .required();
@@ -60,7 +62,7 @@ const DEFAULT_VALUES = {
   name: '',
   url: '',
   explorerUrl: '',
-  chainId: undefined,
+  chainId: '',
 };
 
 export type UseNetworkFormReturn = ReturnType<typeof useNetworkForm>;
