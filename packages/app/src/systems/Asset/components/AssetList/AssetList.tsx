@@ -55,6 +55,7 @@ export const AssetList: AssetListComponent = ({
           showActions={showActions}
           onRemove={onRemove}
           onEdit={onEdit}
+          shouldShowCopyAssetAddress={true}
         />
       ))}
       {!!(!isLoading && unknownLength) && (

@@ -4,11 +4,8 @@ import { Services } from '~/store';
 
 export function accountEvents(store: Store) {
   return {
-    reloadBalance() {
-      store.send(Services.accounts, { type: 'RELOAD_BALANCE' });
-    },
-    updateAccounts() {
-      store.send(Services.accounts, { type: 'REFRESH_ACCOUNTS' });
+    refreshAccounts(input?: { skipLoading?: boolean }) {
+      store.send(Services.accounts, { type: 'REFRESH_ACCOUNTS', input });
     },
     setCurrentAccount(account: Account) {
       store.send(Services.accounts, {

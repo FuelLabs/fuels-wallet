@@ -12,12 +12,24 @@ import { WALLET_PASSWORD } from '../mocks';
 import { test } from './utils';
 
 // Increase timeout for this test
-// The timeout is set for 2 minutes
+// The timeout is set for 6 minutes
 // because some tests like reconnect
 // can take up to 1 minute before it's reconnected
-test.setTimeout(180_000);
+test.setTimeout(360_000);
 
 test.describe('Lock FuelWallet after inactivity', () => {
+  test('If user opens popup it should force open a sign-up page', async ({
+    context,
+    extensionId,
+  }) => {
+    const popupPage = await context.newPage();
+    await popupPage.goto(`chrome-extension://${extensionId}/popup.html`);
+    const page = await context.waitForEvent('page', {
+      predicate: (page) => page.url().includes('sign-up'),
+    });
+    expect(page.url()).toContain('sign-up');
+  });
+
   test('should lock the wallet after 1 minute of inactivity (config in .env file)', async ({
     context,
     baseURL,
@@ -50,19 +62,7 @@ test.describe('Lock FuelWallet after inactivity', () => {
 
     await test.step('Create wallet', async () => {
       const pages = context.pages();
-      let page = pages.find((page) => page.url().includes('sign-up'));
-
-      if (!page) {
-        page = await context.waitForEvent('page', {
-          predicate: (page) => page.url().includes('sign-up'),
-          timeout: 10000, // Adjust timeout as needed
-        });
-      }
-
-      if (!page) {
-        throw new Error('Sign-up page did not open');
-      }
-
+      const [page] = pages.filter((page) => page.url().includes('sign-up'));
       await reload(page);
       await getElementByText(page, /Create new wallet/i).click();
 
@@ -97,6 +97,7 @@ test.describe('Lock FuelWallet after inactivity', () => {
 
       /** Account created */
       await hasText(page, /Wallet created successfully/i, 0, 15000);
+
       await page.close();
     });
 
@@ -107,10 +108,25 @@ test.describe('Lock FuelWallet after inactivity', () => {
       return page;
     });
 
-    await test.step('Auto lock fuel wallet', async () => {
+    await test.step('Verify wallet stays unlocked while open', async () => {
       await getByAriaLabel(popupPage, 'Accounts').click();
       await popupPage.waitForTimeout(65_000);
-      await hasText(popupPage, 'Unlock your wallet to continue');
+      await hasText(popupPage, /Assets/i);
+
+      const pages = context.pages();
+      const walletPages = pages.filter((page) => {
+        return page.url().includes('chrome-extension://');
+      });
+      for (const page of walletPages) {
+        await page.close();
+      }
+    });
+
+    await test.step('Resume auto-lock timer after closing wallet', async () => {
+      const page = await context.newPage();
+      await page.waitForTimeout(65_000);
+      await page.goto(`chrome-extension://${extensionId}/popup.html`);
+      await hasText(page, 'Unlock your wallet to continue');
     });
   });
 });

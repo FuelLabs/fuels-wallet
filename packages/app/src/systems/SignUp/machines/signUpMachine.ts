@@ -228,7 +228,7 @@ export const signUpMachine = createMachine(
       // External actions
       sendAccountCreated: () => {
         Storage.setItem(IS_LOGGED_KEY, true);
-        store.updateAccounts();
+        store.refreshAccounts();
       },
       redirectToWalletCreated() {},
     },

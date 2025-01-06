@@ -1,36 +1,58 @@
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import type { OperationCoin } from 'fuels';
 import { useEffect, useState } from 'react';
-import { getFuelAssetByAssetId, useAssets } from '~/systems/Asset';
+import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
+import { useProvider } from '~/systems/Network/hooks/useProvider';
 
-export const useAssetsAmount = (params: {
+type UseAmountAmountParams = {
   operationsCoin?: OperationCoin[];
-}) => {
-  const { assets } = useAssets();
+};
+
+const isAssetFuelAmount = (
+  value: AssetFuelAmount | null
+): value is AssetFuelAmount => value !== null;
+
+export const useAssetsAmount = (params: UseAmountAmountParams) => {
+  const provider = useProvider();
   const [assetsAmount, setAssetsAmount] = useState<AssetFuelAmount[]>([]);
 
   useEffect(() => {
     const fetchAssetsAmount = async () => {
-      const assetsAmountAsync = await params.operationsCoin?.reduce(
-        async (acc, operationCoin) => {
-          const prev = await acc;
-          const assetAmount = await getFuelAssetByAssetId({
-            assets,
-            assetId: operationCoin.assetId,
-          });
+      try {
+        if (!params.operationsCoin || !provider) {
+          setAssetsAmount([]);
+          return;
+        }
 
-          if (!assetAmount) return prev;
+        const assetsCache = AssetsCache.getInstance();
 
-          return [...prev, { ...assetAmount, amount: operationCoin.amount }];
-        },
-        Promise.resolve([] as AssetFuelAmount[])
-      );
+        const assetsWithAmount: (AssetFuelAmount | null)[] = await Promise.all(
+          params.operationsCoin.map(async (operationCoin) => {
+            const assetCached = await assetsCache.getAsset({
+              chainId: provider.getChainId(),
+              assetId: operationCoin.assetId,
+              dbAssets: [],
+              save: false,
+            });
 
-      setAssetsAmount(assetsAmountAsync || []);
+            if (!assetCached) return null;
+
+            return {
+              ...assetCached,
+              amount: operationCoin.amount,
+            };
+          })
+        );
+
+        setAssetsAmount(assetsWithAmount.filter(isAssetFuelAmount));
+      } catch (error) {
+        console.error('Error fetching assets:', error);
+        setAssetsAmount([]);
+      }
     };
 
     fetchAssetsAmount();
-  }, [params.operationsCoin, assets]);
+  }, [provider, params.operationsCoin]);
 
   return assetsAmount;
 };

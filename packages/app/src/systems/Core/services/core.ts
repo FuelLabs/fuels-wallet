@@ -1,16 +1,35 @@
-import { toast } from '@fuel-ui/react';
+import { IS_LOGGED_KEY } from '~/config';
+import { clearParallelDb } from '~/systems/Core/utils/databaseNoDexie';
 import { VaultService } from '~/systems/Vault';
-import { delay } from '../utils';
 import { db } from '../utils/database';
+import { cleanOPFS } from '../utils/opfs';
 import { Storage } from '../utils/storage';
+import { chromeStorage } from './chromeStorage';
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class CoreService {
   static async clear() {
-    toast.success('Your wallet will be reset');
-    await delay(1500);
     await VaultService.clear();
     await db.clear();
-    await Storage.clear();
+    await clearParallelDb();
+    try {
+      // this ones can fail depending on environment
+      Storage.clear();
+      await chromeStorage.clear();
+      await cleanOPFS();
+    } catch (e) {
+      console.error(e);
+    }
+
+    const reloadAfterCleanCompleted = () => {
+      const isLogged = Storage.getItem(IS_LOGGED_KEY);
+      if (!isLogged) {
+        window.location.reload();
+        return;
+      }
+      setTimeout(() => reloadAfterCleanCompleted(), 50);
+    };
+
+    reloadAfterCleanCompleted();
   }
 }

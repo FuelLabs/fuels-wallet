@@ -130,7 +130,7 @@ export function TransactionRequest() {
               isLoading={isLoading || status('sending')}
               isDisabled={shouldDisableApproveBtn}
             >
-              Approve
+              Submit
             </Button>
           </Layout.BottomBar>
         )}

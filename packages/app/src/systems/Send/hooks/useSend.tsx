@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BNInput } from 'fuels';
 import { Address, type Provider, bn, isB256 } from 'fuels';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -143,10 +143,14 @@ const schemaFactory = (provider?: Provider) =>
             const assetCached = await AssetsCache.getInstance().getAsset({
               chainId: provider.getChainId(),
               assetId: value,
-              provider,
+              dbAssets: [],
+              save: false,
             });
 
-            if (assetCached) {
+            if (
+              assetCached &&
+              AssetsCache.getInstance().assetIsValid(assetCached)
+            ) {
               return ctx.createError({
                 message: `You can't send to Asset address`,
               });

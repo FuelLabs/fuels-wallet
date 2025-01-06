@@ -449,7 +449,16 @@ export class TxService {
         if (e instanceof FuelError) {
           const error = e.toObject();
 
+          // If the gas limit is too low, we cannot move forward
           if (error.code === ErrorCode.GAS_LIMIT_TOO_LOW) {
+            throw e;
+          }
+
+          // If this is the last attempt and we still don't have funds, we cannot move forward
+          if (
+            attempts === maxAttempts &&
+            error.code === ErrorCode.NOT_ENOUGH_FUNDS
+          ) {
             throw e;
           }
         }

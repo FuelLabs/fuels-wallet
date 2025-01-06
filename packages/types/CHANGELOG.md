@@ -1,5 +1,39 @@
 # @fuel-wallet/types
 
+## 0.46.1
+
+## 0.46.0
+
+### Minor Changes
+
+- [#1749](https://github.com/FuelLabs/fuels-wallet/pull/1749) [`9cb81db2`](https://github.com/FuelLabs/fuels-wallet/commit/9cb81db28009f9879f31eefefe0e08f806bae5f2) Thanks [@helciofranco](https://github.com/helciofranco)! - Add contract logos and names to the transaction screen for better UX.
+
+## 0.45.0
+
+## 0.44.1
+
+## 0.44.0
+
+## 0.43.0
+
+## 0.42.3
+
+## 0.42.2
+
+## 0.42.1
+
+## 0.42.0
+
+### Patch Changes
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Upgrade Dexie to V4
+
+## 0.41.1
+
+### Patch Changes
+
+- [#1648](https://github.com/FuelLabs/fuels-wallet/pull/1648) [`e63d6eba`](https://github.com/FuelLabs/fuels-wallet/commit/e63d6ebaecf68340e2b0cd690056cea2bd317b29) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: improve nft support + dont allow sending funds to assetId address
+
 ## 0.41.0
 
 ### Minor Changes

@@ -57,7 +57,7 @@ const selectors = {
     if (state.matches('txSuccess')) return 'Transaction sent';
     if (state.matches('txFailed')) return 'Transaction failed';
     if (state.matches('sendingTx')) return 'Sending transaction';
-    return 'Approve Transaction';
+    return 'Review Transaction';
   },
   origin: (state: TransactionRequestState) => state.context.input.origin,
   originTitle: (state: TransactionRequestState) => state.context.input.title,

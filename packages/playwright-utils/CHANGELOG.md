@@ -1,5 +1,41 @@
 # @fuels/playwright-utils
 
+## 0.46.1
+
+## 0.46.0
+
+## 0.45.0
+
+### Minor Changes
+
+- [#1741](https://github.com/FuelLabs/fuels-wallet/pull/1741) [`197d1758`](https://github.com/FuelLabs/fuels-wallet/commit/197d1758701392bf7ab9efc97fbed3ca8d9ac567) Thanks [@nelitow](https://github.com/nelitow)! - Update @fuels packages to implement localStorage fix.
+
+## 0.44.1
+
+## 0.44.0
+
+### Patch Changes
+
+- [#1692](https://github.com/FuelLabs/fuels-wallet/pull/1692) [`473067c9`](https://github.com/FuelLabs/fuels-wallet/commit/473067c9c3c442b3f51f28c10b99edd1827f1cad) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Updated Biome to 1.9.4 and fixed lint errors.
+
+- [#1704](https://github.com/FuelLabs/fuels-wallet/pull/1704) [`55606980`](https://github.com/FuelLabs/fuels-wallet/commit/55606980a9204d6f21fbb8c290b9b1c6ba2e7dcf) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: update wallet version
+
+## 0.43.0
+
+## 0.42.3
+
+## 0.42.2
+
+## 0.42.1
+
+## 0.42.0
+
+### Patch Changes
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Upgrade Dexie to V4
+
+## 0.41.1
+
 ## 0.41.0
 
 ## 0.40.1

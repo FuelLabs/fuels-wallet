@@ -14,19 +14,14 @@ import {
 } from '@fuel-ui/react';
 import { type FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  AmountVisibility,
-  Pages,
-  formatBalance,
-  shortAddress,
-} from '~/systems/Core';
-import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
+import { Pages, shortAddress } from '~/systems/Core';
 
 import { AssetRemoveDialog } from '../AssetRemoveDialog';
 
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
 import type { BNInput } from 'fuels';
 import useFuelAsset from '../../hooks/useFuelAsset';
+import { AssetItemAmount } from './AssetItemAmount';
 import { AssetItemLoader } from './AssetItemLoader';
 
 export type AssetItemProps = {
@@ -37,6 +32,7 @@ export type AssetItemProps = {
   onRemove?: (assetId: string) => void;
   onEdit?: (assetId: string) => void;
   shouldShowAddAssetBtn?: boolean;
+  shouldShowCopyAssetAddress?: boolean;
 };
 
 type AssetItemComponent = FC<AssetItemProps> & {
@@ -51,9 +47,9 @@ export const AssetItem: AssetItemComponent = ({
   onRemove,
   onEdit,
   shouldShowAddAssetBtn,
+  shouldShowCopyAssetAddress,
 }) => {
   const navigate = useNavigate();
-  const { visibility } = useBalanceVisibility();
 
   const fuelAssetFromInputAsset = useFuelAsset({ asset: inputAsset });
   const asset = useMemo(() => {
@@ -75,7 +71,7 @@ export const AssetItem: AssetItemComponent = ({
   const { assetId, name, symbol, icon, decimals, isCustom } = asset;
 
   function getLeftEl() {
-    if (assetId) {
+    if (assetId && shouldShowCopyAssetAddress) {
       return (
         <Copyable
           value={assetId}
@@ -121,25 +117,8 @@ export const AssetItem: AssetItemComponent = ({
     }
 
     if (amount) {
-      const { original, tooltip } = formatBalance(amount, decimals);
-
       return (
-        <Tooltip
-          content={original.display}
-          delayDuration={0}
-          open={visibility && tooltip ? undefined : false}
-        >
-          <Text
-            css={{ fontSize: '$sm', fontWeight: '$normal', textAlign: 'right' }}
-          >
-            <AmountVisibility
-              value={amount}
-              units={decimals}
-              visibility={visibility}
-            />{' '}
-            {symbol}
-          </Text>
-        </Tooltip>
+        <AssetItemAmount amount={amount} decimals={decimals} symbol={symbol} />
       );
     }
 

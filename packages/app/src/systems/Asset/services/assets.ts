@@ -81,19 +81,20 @@ export class AssetService {
 
     const { decimals, assetId, ...inputRest } = input.data;
     const currentNetwork = await NetworkService.getSelectedNetwork();
-    const newNetworks = currentAsset.networks.map((network) => {
-      if (
-        network.type === 'fuel' &&
-        network.chainId === currentNetwork?.chainId
-      ) {
-        return {
-          ...network,
-          assetId,
-          decimals,
-        };
-      }
-      return network;
-    });
+    const newNetworks: (NetworkFuel | NetworkEthereum)[] =
+      currentAsset.networks.map((network) => {
+        if (
+          network.type === 'fuel' &&
+          network.chainId === currentNetwork?.chainId
+        ) {
+          return {
+            ...network,
+            assetId,
+            decimals,
+          } as NetworkFuel;
+        }
+        return network as NetworkEthereum;
+      });
 
     const assetToUpdate = {
       ...currentAsset,

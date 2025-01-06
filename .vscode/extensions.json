@@ -1,7 +1,6 @@
 {
   "recommendations": [
     "FuelLabs.sway-vscode-plugin",
-    "statelyai.stately-vscode",
-    "firsttris.vscode-jest-runner"
+    "statelyai.stately-vscode"
   ]
 }

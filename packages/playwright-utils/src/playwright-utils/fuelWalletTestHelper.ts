@@ -129,7 +129,7 @@ export class FuelWalletTestHelper {
   async walletApprove() {
     const walletPage = await this.getWalletPopupPage();
 
-    const approveButton = getButtonByText(walletPage, 'Approve');
+    const approveButton = getButtonByText(walletPage, 'Submit');
     await approveButton.click();
   }
 

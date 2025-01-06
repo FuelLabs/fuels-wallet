@@ -11,13 +11,20 @@ import type { AccountInputs } from '../services/account';
 
 type MachineContext = {
   accounts?: Account[];
+  needsRecovery?: boolean;
   account?: AccountWithBalance;
   error?: unknown;
+  isFetchingAccounts?: boolean;
+  isLoggingOut?: boolean;
+  skipLoading?: boolean;
 };
 
 type MachineServices = {
   fetchAccounts: {
-    data: Account[];
+    data: {
+      accounts: Account[];
+      needsRecovery: boolean;
+    };
   };
   fetchAccount: {
     data: AccountWithBalance;
@@ -28,9 +35,7 @@ type MachineServices = {
 };
 
 export type AccountsMachineEvents =
-  | { type: 'REFRESH_ACCOUNT'; input?: null }
-  | { type: 'REFRESH_ACCOUNTS'; input?: null }
-  | { type: 'RELOAD_BALANCE'; input?: null }
+  | { type: 'REFRESH_ACCOUNTS'; input?: { skipLoading?: boolean } }
   | { type: 'SET_CURRENT_ACCOUNT'; input: AccountInputs['setCurrentAccount'] }
   // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
   | { type: 'LOGOUT'; input?: void }
@@ -39,26 +44,63 @@ export type AccountsMachineEvents =
       input: AccountInputs['updateAccount'];
     };
 
-const fetchAccount = {
-  invoke: {
-    src: 'fetchAccount',
-    onDone: [
-      {
-        target: 'idle',
-        actions: ['assignAccount'],
-        cond: 'hasAccount',
+const fetchingAccountsState = {
+  initial: 'fetchingAccounts',
+  entry: 'assignIsFetching',
+  exit: 'assignIsntFetching',
+  states: {
+    fetchingAccounts: {
+      invoke: {
+        src: 'fetchAccounts',
+        onDone: [
+          {
+            actions: 'assignError',
+            target: '#(machine).failed',
+            cond: FetchMachine.hasError,
+          },
+          {
+            target: 'recoveringWallet',
+            actions: ['assignAccounts'],
+            cond: 'hasAccountsOrNeedsRecovery',
+          },
+          {
+            target: 'fetchingAccount',
+            actions: ['assignAccounts'],
+          },
+        ],
       },
-      {
-        target: 'idle',
-        actions: ['assignAccount', 'setIsUnlogged'],
+    },
+    recoveringWallet: {
+      invoke: {
+        src: 'recoverWallet',
+        onDone: [
+          {
+            actions: 'assignError',
+            target: '#(machine).failed',
+            cond: FetchMachine.hasError,
+          },
+          {
+            target: 'fetchingAccount',
+          },
+        ],
       },
-    ],
-    onError: [
-      {
-        actions: 'assignError',
-        target: 'failed',
+    },
+    fetchingAccount: {
+      invoke: {
+        src: 'fetchAccount',
+        onDone: [
+          {
+            cond: FetchMachine.hasError,
+            actions: 'assignError',
+            target: '#(machine).failed',
+          },
+          {
+            target: '#(machine).idle',
+            actions: ['assignAccount', 'assignSkipLoadingTrue'],
+          },
+        ],
       },
-    ],
+    },
   },
 };
 
@@ -72,61 +114,36 @@ export const accountsMachine = createMachine(
     },
     predictableActionArguments: true,
     id: '(machine)',
-    initial: 'fetchingAccounts',
+    initial: 'checkStartFetching',
     states: {
       idle: {
-        on: {
-          SET_CURRENT_ACCOUNT: {
-            target: 'settingCurrentAccount',
+        after: {
+          TIMEOUT: {
+            target: 'checkStartFetching',
           },
-          TOGGLE_HIDE_ACCOUNT: {
-            actions: ['toggleHideAccount', 'notifyUpdateAccounts'],
+        },
+      },
+      checkStartFetching: {
+        always: [
+          {
+            cond: 'isLoggingOut',
             target: 'idle',
           },
-        },
-        after: {
-          /**
-           * Update accounts every 5 seconds
-           */
-          TIMEOUT: {
-            target: 'refreshAccount',
-            cond: 'isLoggedIn',
+          {
+            cond: 'shouldSkipLoading',
+            target: 'refreshingAccounts',
           },
-        },
+          {
+            target: 'fetchingAccounts',
+          },
+        ],
       },
       fetchingAccounts: {
         tags: ['loading'],
-        invoke: {
-          src: 'fetchAccounts',
-          onDone: [
-            {
-              target: 'fetchingAccount',
-              actions: ['assignAccounts', 'setIsLogged'],
-              cond: 'hasAccounts',
-            },
-            {
-              target: 'idle',
-              actions: ['assignAccounts', 'setIsUnlogged'],
-            },
-          ],
-          onError: [
-            {
-              actions: 'assignError',
-              target: 'failed',
-            },
-          ],
-        },
+        ...fetchingAccountsState,
       },
-      fetchingAccount: {
-        tags: ['loading'],
-        ...fetchAccount,
-      },
-      refreshAccount: {
-        ...fetchAccount,
-      },
-      reloadingBalance: {
-        tags: ['loading'],
-        ...fetchAccount,
+      refreshingAccounts: {
+        ...fetchingAccountsState,
       },
       settingCurrentAccount: {
         invoke: {
@@ -141,10 +158,31 @@ export const accountsMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['notifyUpdateAccounts', 'redirectToHome'],
-              target: 'fetchingAccounts',
+              actions: [
+                'notifyUpdateAccounts',
+                'redirectToHome',
+                'assignSkipLoadingFalse',
+              ],
+              target: 'checkStartFetching',
             },
           ],
+        },
+      },
+      checkLogout: {
+        // this state enters on a "lock" state where fetching will not be performed
+        // also it will wait til fetching is not happening anymore
+        tags: ['loading'],
+        entry: 'assignIsLoggingOut',
+        always: [
+          {
+            cond: 'isntFetchingAccounts',
+            target: 'loggingout',
+          },
+        ],
+        after: {
+          LOOP_TRY_LOGOUT: {
+            target: 'checkLogout',
+          },
         },
       },
       loggingout: {
@@ -158,45 +196,56 @@ export const accountsMachine = createMachine(
               target: 'failed',
             },
             {
-              actions: ['clearContext', 'refreshApplication'],
+              actions: ['clearContext'],
+              target: 'stopAll',
+            },
+          ],
+        },
+      },
+      stopAll: {
+        type: 'final',
+      },
+      failed: {
+        after: {
+          INTERVAL: [
+            {
+              target: 'checkStartFetching', // retry
+            },
+            {
               target: 'idle',
             },
           ],
         },
       },
-      failed: {
-        after: {
-          INTERVAL: {
-            target: 'fetchingAccounts', // retry
-            cond: 'isLoggedIn',
-          },
-        },
-      },
     },
     on: {
       LOGOUT: {
-        target: 'loggingout',
+        target: 'checkLogout',
       },
-      REFRESH_ACCOUNTS: {
-        target: 'fetchingAccounts',
+      SET_CURRENT_ACCOUNT: {
+        target: 'settingCurrentAccount',
       },
-      REFRESH_ACCOUNT: {
-        target: 'refreshAccount',
+      TOGGLE_HIDE_ACCOUNT: {
+        actions: ['toggleHideAccount', 'notifyUpdateAccounts'],
       },
-      RELOAD_BALANCE: {
-        target: 'reloadingBalance',
-        actions: ['notifyUpdateAccounts'],
-      },
+      REFRESH_ACCOUNTS: [
+        {
+          actions: ['assignSkipLoading'],
+          target: 'checkStartFetching',
+        },
+      ],
     },
   },
   {
     delays: {
       INTERVAL: 2000,
-      TIMEOUT: 5000,
+      TIMEOUT: 2000,
+      LOOP_TRY_LOGOUT: 100,
     },
     actions: {
       assignAccounts: assign({
-        accounts: (_, ev) => ev.data,
+        accounts: (_, ev) => ev.data.accounts,
+        needsRecovery: (_, ev) => ev.data.needsRecovery,
       }),
       assignAccount: assign({
         account: (_, ev) => ev.data,
@@ -208,36 +257,65 @@ export const accountsMachine = createMachine(
       toggleHideAccount: (_, ev) => {
         AccountService.updateAccount(ev.input);
       },
-      setIsLogged: () => {
-        Storage.setItem(IS_LOGGED_KEY, true);
-      },
-      setIsUnlogged: () => {
-        Storage.removeItem(IS_LOGGED_KEY);
-      },
       notifyUpdateAccounts: () => {
-        store.updateAccounts();
+        store.refreshAccounts();
       },
       redirectToHome: () => {
         store.closeOverlay();
       },
+      assignIsFetching: assign({
+        isFetchingAccounts: () => true,
+      }),
+      assignIsntFetching: assign({
+        isFetchingAccounts: () => false,
+      }),
+      assignIsLoggingOut: assign({
+        isLoggingOut: () => true,
+      }),
+      assignSkipLoading: assign({
+        skipLoading: (_, ev) => !!ev.input?.skipLoading,
+      }),
+      assignSkipLoadingTrue: assign({
+        skipLoading: () => true,
+      }),
+      assignSkipLoadingFalse: assign({
+        skipLoading: () => false,
+      }),
     },
     services: {
-      fetchAccounts: FetchMachine.create<never, Account[]>({
+      fetchAccounts: FetchMachine.create<
+        never,
+        { accounts: Account[]; needsRecovery: boolean }
+      >({
         showError: true,
         async fetch() {
-          return AccountService.getAccounts();
+          const accounts = await AccountService.getAccounts();
+          const { needsRecovery } = await AccountService.fetchRecoveryState();
+
+          return {
+            accounts,
+            needsRecovery,
+          };
+        },
+      }),
+      recoverWallet: FetchMachine.create<never, void>({
+        async fetch() {
+          await AccountService.recoverWallet();
         },
       }),
       fetchAccount: FetchMachine.create<never, AccountWithBalance | undefined>({
         showError: true,
         maxAttempts: 1,
         async fetch() {
-          const accountToFetch = await AccountService.getCurrentAccount();
-          if (!accountToFetch) return undefined;
-          const selectedNetwork = await NetworkService.getSelectedNetwork();
-          if (!selectedNetwork) {
-            throw new Error('No selected network');
+          let accountToFetch = await AccountService.getCurrentAccount();
+          if (!accountToFetch) {
+            await AccountService.setCurrentAccountToDefault();
+            accountToFetch = await AccountService.getCurrentAccount();
           }
+          if (!accountToFetch) return undefined;
+
+          const selectedNetwork = await NetworkService.getSelectedNetwork();
+          if (!selectedNetwork) return undefined;
 
           const providerUrl = selectedNetwork.url;
           const accountWithBalance = await AccountService.fetchBalance({
@@ -273,14 +351,23 @@ export const accountsMachine = createMachine(
       }),
     },
     guards: {
-      isLoggedIn: () => {
-        return !!Storage.getItem(IS_LOGGED_KEY);
+      hasAccountsOrNeedsRecovery: (ctx, ev) => {
+        const hasAccounts = Boolean(
+          (ev.data.accounts || ctx?.accounts || []).length
+        );
+        const needsRecovery = Boolean(
+          ev.data.needsRecovery || ctx?.needsRecovery
+        );
+        return hasAccounts || needsRecovery;
       },
-      hasAccount: (ctx, ev) => {
-        return Boolean(ev?.data || ctx?.account);
+      shouldSkipLoading: (ctx) => {
+        return !!ctx.skipLoading;
       },
-      hasAccounts: (ctx, ev) => {
-        return Boolean((ev.data || ctx?.accounts || []).length);
+      isLoggingOut: (ctx) => {
+        return !!ctx.isLoggingOut;
+      },
+      isntFetchingAccounts: (ctx) => {
+        return !ctx.isFetchingAccounts;
       },
     },
   }

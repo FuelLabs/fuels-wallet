@@ -55,33 +55,30 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
           }
         >
           <Box.Flex css={styles.input}>
-            {assetAmount && (
-              <>
-                {assetAmount.name ? (
-                  <>
-                    <Avatar
-                      name={assetAmount?.name}
-                      src={assetAmount?.icon}
-                      css={{ height: 18, width: 18 }}
-                    />
-                    <Text as="span" className="asset-name">
-                      {assetAmount?.name}
-                    </Text>
-                  </>
-                ) : (
-                  <>
-                    <Avatar.Generated
-                      hash={assetAmount.assetId || ''}
-                      css={{ height: 14, width: 14 }}
-                      size="xsm"
-                    />
-                    <Text as="span" className="asset-name">
-                      {shortAddress(assetAmount?.assetId)}
-                    </Text>
-                  </>
-                )}
-              </>
-            )}
+            {assetAmount &&
+              (assetAmount.name ? (
+                <>
+                  <Avatar
+                    name={assetAmount?.name}
+                    src={assetAmount?.icon}
+                    css={{ height: 18, width: 18 }}
+                  />
+                  <Text as="span" className="asset-name">
+                    {assetAmount?.name}
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <Avatar.Generated
+                    hash={assetAmount.assetId || ''}
+                    css={{ height: 14, width: 14 }}
+                    size="xsm"
+                  />
+                  <Text as="span" className="asset-name">
+                    {shortAddress(assetAmount?.assetId)}
+                  </Text>
+                </>
+              ))}
             {!assetAmount && (
               <Text as="span" css={styles.placeholder}>
                 Select one asset

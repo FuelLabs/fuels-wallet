@@ -1,6 +1,6 @@
 import { defineManifest } from '@crxjs/vite-plugin';
 
-import './load.envs.js';
+import './load.envs.cts';
 
 // When releasing a stable version we need to inform for the build
 // to use the white logo instead of the black one
