@@ -125,7 +125,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
                 isNetwork ? 'Address' : 'Name'
               }`}
             >
-              <Tooltip content={name} isOpen={isTruncated}>
+              <Tooltip content={name} open={isTruncated ? undefined : false}>
                 <div
                   ref={nameRef}
                   style={{
