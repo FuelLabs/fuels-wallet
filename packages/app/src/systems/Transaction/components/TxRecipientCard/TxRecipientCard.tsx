@@ -70,8 +70,6 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
     };
   }, [name]);
 
-  const truncatedName = name.length > 15 ? `${name.slice(0, 15)}...` : name;
-
   return (
     <Card
       css={styles.root}
@@ -134,10 +132,10 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
-                    maxWidth: '200px',
+                    maxWidth: '100px',
                   }}
                 >
-                  {truncatedName}
+                  {name}
                 </div>
               </Tooltip>
             </Heading>
