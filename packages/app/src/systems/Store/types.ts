@@ -2,6 +2,7 @@ import type { StoreClass } from '@fuels/react-xstore';
 
 import type { AccountsMachine } from '../Account';
 import type { AssetsMachine } from '../Asset';
+import type { ContractsMachine } from '../Contract/machines/contractsMachine';
 import type {
   AddAssetMachine,
   ConnectRequestMachine,
@@ -19,6 +20,7 @@ export enum Services {
   accounts = 'accounts',
   networks = 'networks',
   assets = 'assets',
+  contracts = 'contracts',
   overlay = 'overlay',
   unlock = 'unlock',
   txRequest = 'txRequest',
@@ -33,6 +35,7 @@ export type StoreMachines = {
   accounts: AccountsMachine;
   networks: NetworksMachine;
   assets: AssetsMachine;
+  contracts: ContractsMachine;
   overlay: OverlayMachine;
   unlock: UnlockMachine;
   txRequest: TransactionRequestMachine;

@@ -15,7 +15,10 @@ export async function saveToOPFS(data: any) {
 
   const root = await initOPFS();
   if (!root) return;
-  console.log('saving data to opfs', data);
+  console.log('saving data to opfs', {
+    ...data,
+    vaults: data.vaults.length,
+  });
   const fileHandle = await root.getFileHandle('backup.json', { create: true });
   const writable = await fileHandle.createWritable();
   await writable.write(JSON.stringify(data));
@@ -34,4 +37,11 @@ export async function readFromOPFS() {
     // Create empty backup file if it doesn't exist
     return {};
   }
+}
+
+// create a function to clean opfs
+export async function cleanOPFS() {
+  const root = await initOPFS();
+  if (!root) return;
+  await root.removeEntry('backup.json');
 }

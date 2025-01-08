@@ -11,12 +11,12 @@ import type {
 import Dexie, { type DbEvents, type PromiseExtended, type Table } from 'dexie';
 import 'dexie-observable';
 import type { AssetFuel } from 'fuels';
+import { IS_LOGGED_KEY } from '~/config';
+import { createParallelDb } from '~/systems/Core/utils/databaseNoDexie';
+import { Storage } from '~/systems/Core/utils/storage';
 import type { TransactionCursor } from '~/systems/Transaction';
 import { chromeStorage } from '../services/chromeStorage';
 import { applyDbVersioning } from './databaseVersioning';
-import { createParallelDb } from '~/systems/Core/utils/databaseNoDexie';
-import { IS_LOGGED_KEY } from '~/config';
-import { Storage } from '~/systems/Core/utils/storage';
 import { saveToOPFS } from './opfs';
 
 type FailureEvents = Extract<keyof DbEvents, 'close' | 'blocked'>;
@@ -71,7 +71,7 @@ export class FuelDB extends Dexie {
     if (accounts.length && vaults.length && networks.length) {
       console.log('saving data to chrome storage', {
         accounts,
-        vaults,
+        vaults: vaults.length,
         networks,
       });
       for (const account of accounts) {
