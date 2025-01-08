@@ -1,28 +1,27 @@
 import { cssObj } from '@fuel-ui/css';
-import { HStack, Text, VStack } from '@fuel-ui/react';
+import { Box, Text } from '@fuel-ui/react';
+import { useState } from 'react';
 import { MotionStack, animations } from '~/systems/Core';
 
 type NetworkStatusProps = {
   isVisible?: boolean;
 };
 
+type NetworkStatus = 'busy' | 'normal';
+
 export const NetworkStatus = ({ isVisible = false }: NetworkStatusProps) => {
+  const [status, _setStatus] = useState<NetworkStatus>('normal');
   return (
     <MotionStack
       {...animations.slideInRight()}
       style={{ visibility: isVisible ? 'visible' : 'hidden' }}
     >
-      <Text css={styles.title}>Network Status</Text>
-      <HStack gap="$3">
-        <VStack gap="$1">
-          <Text>Base fee</Text>
-          <Text fontSize="sm">0.01</Text>
-        </VStack>
-        <VStack gap="$1">
-          <Text>Condition</Text>
-          <Text fontSize="sm">Not Busy</Text>
-        </VStack>
-      </HStack>
+      <Box css={styles.bar}>
+        <Text css={styles.title}>Status:</Text>
+        <Box>
+          <Box css={status === 'normal' ? styles.normal : styles.busy} />
+        </Box>
+      </Box>
     </MotionStack>
   );
 };
@@ -31,7 +30,27 @@ const styles = {
   title: cssObj({
     pt: '$2',
     color: '$intentsBase12',
-    fontSize: '$md',
-    fontWeight: '$normal',
+    lineHeight: '$none',
+  }),
+  busy: cssObj({
+    width: '$3',
+    height: '$3',
+    backgroundColor: '$scalesRed9',
+    borderRadius: '$full',
+    alignItems: 'center',
+  }),
+  normal: cssObj({
+    width: '$3',
+    height: '$3',
+    backgroundColor: '$scalesGreen9',
+    borderRadius: '$full',
+    alignItems: 'center',
+  }),
+  bar: cssObj({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: '$2',
   }),
 };

@@ -195,9 +195,12 @@ export function SendSelect({
           regularTip &&
           fastTip && (
             <MotionStack {...animations.slideInTop()} gap="$3">
-              <Text as="span" css={styles.title}>
-                Fee (network)
-              </Text>
+              <HStack gap="$3" style={styles.feeBar}>
+                <Text as="span" css={styles.title}>
+                  Fee (network)
+                </Text>
+                <NetworkStatus isVisible />
+              </HStack>
               <TxFeeOptions
                 initialAdvanced={false}
                 baseFee={baseFee}
@@ -205,7 +208,6 @@ export function SendSelect({
                 regularTip={regularTip}
                 fastTip={fastTip}
               />
-              <NetworkStatus />
             </MotionStack>
           )}
       </Box.Stack>
@@ -245,6 +247,11 @@ const styles = {
       fontSize: '$sm',
       color: '$intentsError9',
     },
+  }),
+  feeBar: cssObj({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   }),
   alert: cssObj({
     fontSize: '$sm',
