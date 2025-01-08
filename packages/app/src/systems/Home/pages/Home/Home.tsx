@@ -1,12 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box } from '@fuel-ui/react';
+import { Box, Tabs } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { BalanceWidget, useAccounts } from '~/systems/Account';
 import { Layout, Pages, scrollable } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 import { BalanceAssets } from '~/systems/Account/components/BalanceAssets/BalanceAssets';
-import { AssetsTitle, HomeActions } from '../../components';
+import { HomeActions } from '../../components';
 
 export function Home() {
   const { visibility, setVisibility } = useBalanceVisibility();
@@ -37,17 +37,25 @@ export function Home() {
             sendAction={sendAction}
             isDisabled={isLoading}
           />
-          <Box.Stack css={styles.assets}>
-            <Box css={styles.assetsTitle}>
-              <AssetsTitle />
-            </Box>
-            <Box.Stack css={styles.assetsList}>
+          <Tabs defaultValue="assets" variant="link" css={styles.assets}>
+            <Tabs.List>
+              <Tabs.Trigger value="assets" aria-label="Assets">
+                Assets
+              </Tabs.Trigger>
+              <Tabs.Trigger value="nft" aria-label="NFT">
+                NFT
+              </Tabs.Trigger>
+            </Tabs.List>
+            <Tabs.Content value="assets" css={styles.assetsList}>
               <BalanceAssets
                 balances={account?.balances}
                 isLoading={isLoading}
               />
-            </Box.Stack>
-          </Box.Stack>
+            </Tabs.Content>
+            <Tabs.Content value="nft" css={styles.assetsList}>
+              NFTs here
+            </Tabs.Content>
+          </Tabs>
         </Box.Flex>
       </Layout.Content>
     </Layout>
@@ -60,15 +68,15 @@ const styles = {
     overflow: 'hidden',
   }),
   assets: cssObj({
-    gap: '$2',
     overflow: 'hidden',
-    flex: 1,
-  }),
-  assetsTitle: cssObj({
-    px: '$4',
+    paddingLeft: '$4',
+
+    '.fuel_TabsList': {
+      marginBottom: '$3',
+    },
   }),
   assetsList: cssObj({
-    padding: '$2 $0 $4 $4',
+    paddingBottom: '$4',
     ...scrollable(),
     overflowY: 'scroll !important',
   }),
