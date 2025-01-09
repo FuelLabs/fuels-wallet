@@ -54,7 +54,7 @@ export function Home() {
               />
             </Tabs.Content>
             <Tabs.Content value="nft" css={styles.assetsList}>
-              <BalanceNFTs />
+              <BalanceNFTs balances={account?.balances} />
             </Tabs.Content>
           </Tabs>
         </Box.Flex>

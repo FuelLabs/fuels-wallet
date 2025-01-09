@@ -1,38 +1,57 @@
 import { cssObj } from '@fuel-ui/css';
-import { Accordion, Badge, Box } from '@fuel-ui/react';
+import { Accordion, Badge, Box, Icon, Text, VStack } from '@fuel-ui/react';
+import type { CoinAsset } from '@fuel-wallet/types';
+import { useMemo } from 'react';
+import { shortAddress } from '~/systems/Core';
+import { groupNFTsByCollection } from './groupNFTsByCollection';
 
-export const BalanceNFTs = () => {
+interface BalanceNFTsProps {
+  balances: CoinAsset[] | undefined;
+}
+
+export const BalanceNFTs = ({ balances = [] }: BalanceNFTsProps) => {
+  const collections = useMemo(() => {
+    return groupNFTsByCollection(balances);
+  }, [balances]);
+
   return (
     <Box css={styles.root}>
       <Accordion type="multiple">
-        <Accordion.Item value="item-1">
-          <Accordion.Trigger>
-            <Badge variant="ghost" color="gray" as="span">
-              4
-            </Badge>
-            Collection name
-          </Accordion.Trigger>
-          <Accordion.Content>
-            <Box css={styles.grid}>
-              <img
-                src="https://ipfs.io/ipfs/bafybeicwudiwhs6zanzootxak3bzhxsnoagkglikrbjwucjl5c3y4xne6y/1666.png"
-                alt="NFT 1"
-              />
-              <img
-                src="https://ipfs.io/ipfs/bafybeicwudiwhs6zanzootxak3bzhxsnoagkglikrbjwucjl5c3y4xne6y/1666.png"
-                alt="NFT 2"
-              />
-              <img
-                src="https://ipfs.io/ipfs/bafybeicwudiwhs6zanzootxak3bzhxsnoagkglikrbjwucjl5c3y4xne6y/1666.png"
-                alt="NFT 3"
-              />
-              <img
-                src="https://ipfs.io/ipfs/bafybeicwudiwhs6zanzootxak3bzhxsnoagkglikrbjwucjl5c3y4xne6y/1666.png"
-                alt="NFT 4"
-              />
-            </Box>
-          </Accordion.Content>
-        </Accordion.Item>
+        {collections.map((collection) => {
+          return (
+            <Accordion.Item key={collection.name} value={collection.name}>
+              <Accordion.Trigger>
+                <Badge variant="ghost" color="gray" as="span">
+                  {collection.nfts.length}
+                </Badge>
+                {collection.name}
+              </Accordion.Trigger>
+              <Accordion.Content>
+                <Box css={styles.grid}>
+                  {collection.nfts.map((nft) => {
+                    return (
+                      <VStack key={nft.assetId} align="center" gap="$1">
+                        {nft.image ? (
+                          <img
+                            src={nft.image}
+                            alt={shortAddress(nft.assetId)}
+                          />
+                        ) : (
+                          <Box css={styles.noImage}>
+                            <Icon icon={Icon.is('FileOff')} />
+                          </Box>
+                        )}
+                        <Text fontSize="xs" css={styles.name}>
+                          {nft.name || shortAddress(nft.assetId)}
+                        </Text>
+                      </VStack>
+                    );
+                  })}
+                </Box>
+              </Accordion.Content>
+            </Accordion.Item>
+          );
+        })}
       </Accordion>
     </Box>
   );
@@ -46,7 +65,7 @@ const styles = {
       backgroundColor: 'transparent',
       color: '$intentsBase11',
       padding: '$0',
-      gap: '$1',
+      gap: '2px',
       flexDirection: 'row-reverse',
       justifyContent: 'flex-start',
     },
@@ -69,7 +88,7 @@ const styles = {
     },
     '.fuel_Accordion-content': {
       border: '0',
-      padding: '$0 $0 $2 $0',
+      padding: '$0 5px $2 20px',
     },
     '.fuel_Badge': {
       display: 'inline-block',
@@ -94,4 +113,23 @@ const styles = {
       backgroundColor: '$cardBg',
     },
   }),
+  noImage: cssObj({
+    width: '100%',
+    aspectRatio: '1 / 1',
+    borderRadius: '12px',
+    border: '1px solid $cardBorder',
+    backgroundColor: '$cardBg',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }),
+  name: cssObj({
+    textAlign: 'center',
+  }),
 };
+
+// <div className="relative rounded-[12px] w-[100%] aspect-square border border-[#7B7B7B]">
+//   <div className="absolute flex items-center justify-center flex-col top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-500 text-white p-4">
+//     <IconFileOff color="gray" size={36} />
+//   </div>
+// </div>;
