@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export function useCurrentTab() {
-  const [origin, setOrigin] = useState<string | undefined>();
+  const [url, setUrl] = useState<string | undefined>();
   const [faviconUrl, setFaviconUrl] = useState<string | undefined>();
 
   useEffect(() => {
@@ -10,12 +10,12 @@ export function useCurrentTab() {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const currentTab = tabs[0];
       setFaviconUrl(currentTab?.favIconUrl);
-      setOrigin(currentTab?.url);
+      setUrl(currentTab?.url);
     });
   }, []);
 
   return {
-    origin,
+    url,
     faviconUrl,
   };
 }
