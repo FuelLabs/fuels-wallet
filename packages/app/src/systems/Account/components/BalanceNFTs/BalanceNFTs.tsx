@@ -95,18 +95,3 @@ const styles = {
     },
   }),
 };
-
-/*
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  padding: 10px;
-
-  img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 12px;
-  object-fit: cover;
-  background-color: #e0e0e0;
-}
-  */
