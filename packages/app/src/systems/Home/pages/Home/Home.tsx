@@ -6,6 +6,7 @@ import { Layout, Pages, scrollable } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 import { BalanceAssets } from '~/systems/Account/components/BalanceAssets/BalanceAssets';
+import { BalanceNFTs } from '~/systems/Account/components/BalanceNFTs/BalanceNFTs';
 import { HomeActions } from '../../components';
 
 export function Home() {
@@ -53,7 +54,7 @@ export function Home() {
               />
             </Tabs.Content>
             <Tabs.Content value="nft" css={styles.assetsList}>
-              NFTs here
+              <BalanceNFTs />
             </Tabs.Content>
           </Tabs>
         </Box.Flex>
