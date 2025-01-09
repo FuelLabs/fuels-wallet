@@ -2,6 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Accordion, Badge, Box, Icon, Text, VStack } from '@fuel-ui/react';
 import type { CoinAsset } from '@fuel-wallet/types';
 import { useMemo } from 'react';
+import { AssetListEmpty } from '~/systems/Asset/components/AssetList/AssetListEmpty';
 import { shortAddress } from '~/systems/Core';
 import { groupNFTsByCollection } from './groupNFTsByCollection';
 
@@ -13,6 +14,16 @@ export const BalanceNFTs = ({ balances = [] }: BalanceNFTsProps) => {
   const collections = useMemo(() => {
     return groupNFTsByCollection(balances);
   }, [balances]);
+
+  if (collections.length === 0) {
+    return (
+      <AssetListEmpty
+        text="You don't have any NFTs"
+        supportText="To add NFTs, simply send them to your Fuel address."
+        hideFaucet
+      />
+    );
+  }
 
   return (
     <Box css={styles.root}>
@@ -41,6 +52,7 @@ export const BalanceNFTs = ({ balances = [] }: BalanceNFTsProps) => {
                             <Icon icon={Icon.is('FileOff')} />
                           </Box>
                         )}
+
                         <Text fontSize="xs" css={styles.name}>
                           {nft.name || shortAddress(nft.assetId)}
                         </Text>
@@ -127,9 +139,3 @@ const styles = {
     textAlign: 'center',
   }),
 };
-
-// <div className="relative rounded-[12px] w-[100%] aspect-square border border-[#7B7B7B]">
-//   <div className="absolute flex items-center justify-center flex-col top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-500 text-white p-4">
-//     <IconFileOff color="gray" size={36} />
-//   </div>
-// </div>;

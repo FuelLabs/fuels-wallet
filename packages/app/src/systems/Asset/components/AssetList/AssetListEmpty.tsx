@@ -5,11 +5,13 @@ import { useFundWallet } from '~/systems/FundWallet';
 export type AssetListEmptyProps = {
   text?: string;
   supportText?: string;
+  hideFaucet?: boolean;
 };
 
 export function AssetListEmpty({
   text = `You don't have any assets`,
   supportText = 'Start depositing some assets',
+  hideFaucet = false,
 }: AssetListEmptyProps) {
   const { open, hasFaucet, hasBridge } = useFundWallet();
   const showFund = hasFaucet || hasBridge;
@@ -19,7 +21,7 @@ export function AssetListEmpty({
       <Card.Body>
         {!!text && <Heading as="h5">{text}</Heading>}
         {!!supportText && <Text fontSize="sm">{supportText}</Text>}
-        {showFund && (
+        {showFund && !hideFaucet && (
           /**
            * TODO: need to add right faucet icon on @fuel-ui
            */
