@@ -9,20 +9,8 @@ export function useCurrentTab() {
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const currentTab = tabs[0];
-
-      if (currentTab?.url) {
-        const faviconUrl = currentTab.favIconUrl;
-        setFaviconUrl(faviconUrl);
-
-        try {
-          const url = new URL(currentTab.url);
-          const port = url.port ? `:${url.port}` : '';
-          const result = `${url.protocol}//${url.hostname}${port}`;
-          setOrigin(result);
-        } catch (_e) {
-          setOrigin(undefined);
-        }
-      }
+      setFaviconUrl(currentTab?.favIconUrl);
+      setOrigin(currentTab?.url);
     });
   }, []);
 
