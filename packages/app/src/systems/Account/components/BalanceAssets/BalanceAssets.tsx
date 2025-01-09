@@ -6,7 +6,7 @@ import { AssetItem, AssetList } from '~/systems/Asset/components';
 import type { AssetListEmptyProps } from '~/systems/Asset/components/AssetList/AssetListEmpty';
 
 export type BalanceAssetListProp = {
-  balances?: CoinAsset[];
+  balances: CoinAsset[] | undefined;
   isLoading?: boolean;
   onRemove?: (assetId: string) => void;
   onEdit?: (assetId: string) => void;
@@ -14,28 +14,33 @@ export type BalanceAssetListProp = {
 };
 
 export const BalanceAssets = ({
-  balances,
+  balances = [],
   isLoading,
   emptyProps = {},
   onRemove,
   onEdit,
 }: BalanceAssetListProp) => {
   const [showUnknown, setShowUnknown] = useState(false);
-  const unknownLength = useMemo(
-    () =>
-      balances?.filter(
-        (balance) => balance.asset && isUnknownAsset(balance.asset)
-      ).length,
-    [balances]
-  );
+
+  const unknownLength = useMemo<number>(() => {
+    return balances.filter(
+      (balance) => balance.asset && isUnknownAsset(balance.asset)
+    ).length;
+  }, [balances]);
+
+  const balancesToShow = useMemo<CoinAsset[]>(() => {
+    return balances.filter((balance) => {
+      const isNft = Boolean(balance.asset?.isNft);
+      return (
+        !isNft &&
+        (showUnknown || (balance.asset && !isUnknownAsset(balance.asset)))
+      );
+    });
+  }, [balances, showUnknown]);
 
   if (isLoading || !balances) return <AssetList.Loading items={4} />;
   const isEmpty = !balances || !balances.length;
   if (isEmpty) return <AssetList.Empty {...emptyProps} />;
-  const balancesToShow = balances.filter(
-    (balance) =>
-      showUnknown || (balance.asset && !isUnknownAsset(balance.asset))
-  );
 
   function toggle() {
     setShowUnknown((s) => !s);
