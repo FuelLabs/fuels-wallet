@@ -90,6 +90,7 @@ const selectors = {
 
 export function useConnections() {
   const [searchQuery, setSearchQuery] = useSearchParams();
+
   const service = useInterpret(() =>
     connectionsMachine
       .withContext({
@@ -128,17 +129,24 @@ export function useConnections() {
   function search(text: string) {
     service.send({ type: 'SEARCH', input: text });
   }
+
   function clearSearch() {
     service.send('CLEAR_SEARCH');
   }
+
   function editConnection(connection: Connection) {
     service.send({ type: 'EDIT_CONNECTION', input: connection });
   }
+
   function removeConnection(connection: Connection) {
     service.send({ type: 'REMOVE_CONNECTION', input: connection });
   }
+
   function cancel() {
-    if (screen === ConnectionScreen.edit) {
+    if (
+      screen === ConnectionScreen.edit &&
+      !searchQuery.get('forceBackPagination')
+    ) {
       service.send('CANCEL');
     } else {
       navigate(-1);
@@ -148,6 +156,7 @@ export function useConnections() {
   function isConnected(account: string) {
     return connectedAccounts.some((a) => a?.address === account);
   }
+
   function toggleAccount(account: string, isConnected?: boolean) {
     service.send({
       type: isConnected ? 'REMOVE_ACCOUNT' : 'ADD_ACCOUNT',

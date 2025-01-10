@@ -1,7 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Tooltip } from '@fuel-ui/react';
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCurrentTab } from '~/systems/CRX/hooks/useCurrentTab';
+import { Pages } from '~/systems/Core';
 import { useConnection } from '~/systems/DApp/hooks/useConnection';
 import { useCurrentAccount } from '../../hooks/useCurrentAccount';
 
@@ -12,6 +14,8 @@ enum ConnectionStatus {
 }
 
 export const QuickAccountConnect = () => {
+  const navigate = useNavigate();
+
   const { account } = useCurrentAccount();
   const { url, faviconUrl } = useCurrentTab();
   const { connection } = useConnection({ url });
@@ -46,7 +50,17 @@ export const QuickAccountConnect = () => {
 
   return (
     <Tooltip delayDuration={0} content={tooltip}>
-      <Box css={styles.root}>
+      <Box
+        css={styles.root}
+        onClick={() => {
+          navigate(
+            Pages.settingsConnectedApps(undefined, {
+              origin: connection?.origin,
+              forceBackPagination: true,
+            })
+          );
+        }}
+      >
         <Box css={styles.favicon}>
           {faviconUrl && <img src={faviconUrl} alt="favicon" />}
         </Box>
