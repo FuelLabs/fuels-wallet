@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, ContentLoader, Tooltip } from '@fuel-ui/react';
+import { Box, ContentLoader, Tooltip } from '@fuel-ui/react';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentTab } from '~/systems/CRX/hooks/useCurrentTab';
@@ -18,8 +18,8 @@ export const QuickAccountConnect = () => {
   const navigate = useNavigate();
 
   const { account } = useCurrentAccount();
-  const { url } = useCurrentTab();
-  const { connection } = useConnection({ url });
+  const { currentTab } = useCurrentTab();
+  const { connection } = useConnection({ url: currentTab?.url });
 
   const status = useMemo<ConnectionStatus>(() => {
     if (!account || !connection) {
@@ -57,7 +57,9 @@ export const QuickAccountConnect = () => {
     <Tooltip delayDuration={0} content={tooltip}>
       <Box
         css={styles.root}
+        data-has-connection={!!connection}
         onClick={() => {
+          if (!connection) return;
           navigate(
             Pages.settingsConnectedApps(undefined, {
               origin: connection?.origin,
@@ -68,8 +70,8 @@ export const QuickAccountConnect = () => {
       >
         <Box css={styles.favicon}>
           <DappAvatar
-            favIconUrl={connection?.favIconUrl}
-            title={connection?.title}
+            favIconUrl={connection?.favIconUrl || currentTab?.faviconUrl}
+            title={connection?.title || currentTab?.title}
           />
         </Box>
 
@@ -85,9 +87,15 @@ const styles = {
   root: cssObj({
     position: 'relative',
     display: 'inline-block',
-    cursor: 'pointer',
     width: 24,
     height: 24,
+
+    '&[data-has-connection="true"]': {
+      cursor: 'pointer',
+    },
+    '&[data-has-connection="false"]': {
+      cursor: 'default',
+    },
   }),
   favicon: cssObj({
     display: 'flex',
