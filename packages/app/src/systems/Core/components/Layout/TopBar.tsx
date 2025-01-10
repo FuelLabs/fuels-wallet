@@ -10,6 +10,7 @@ import { NetworkDropdown } from '~/systems/Network/components';
 import { useNetworks } from '~/systems/Network/hooks';
 import { useOverlay } from '~/systems/Overlay';
 
+import { QuickAccountConnect } from '~/systems/Account/components/QuickAccountConnect/QuickAccountConnect';
 import { useReportError } from '~/systems/Error';
 import { useLayoutContext } from './Layout';
 
@@ -60,6 +61,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
                 onPress={handlers.openNetworks}
               />
             )}
+            <QuickAccountConnect />
           </>
         )}
       </Box.Flex>
