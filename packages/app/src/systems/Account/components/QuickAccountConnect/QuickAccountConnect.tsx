@@ -1,11 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, ContentLoader, Tooltip } from '@fuel-ui/react';
+import { Avatar, Box, ContentLoader, Tooltip } from '@fuel-ui/react';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentTab } from '~/systems/CRX/hooks/useCurrentTab';
 import { Pages } from '~/systems/Core';
 import { useConnection } from '~/systems/DApp/hooks/useConnection';
 import { useCurrentAccount } from '../../hooks/useCurrentAccount';
+import { DappAvatar } from './DappAvatar';
 
 enum ConnectionStatus {
   CurrentAccount = 'CURRENT_ACCOUNT',
@@ -17,7 +18,7 @@ export const QuickAccountConnect = () => {
   const navigate = useNavigate();
 
   const { account } = useCurrentAccount();
-  const { url, faviconUrl } = useCurrentTab();
+  const { url } = useCurrentTab();
   const { connection } = useConnection({ url });
 
   const status = useMemo<ConnectionStatus>(() => {
@@ -44,10 +45,6 @@ export const QuickAccountConnect = () => {
     return 'No accounts connected';
   }, [status, account]);
 
-  if (!connection) {
-    return null;
-  }
-
   if (!account) {
     return (
       <ContentLoader width={22} height={22} viewBox="0 0 22 22">
@@ -70,7 +67,10 @@ export const QuickAccountConnect = () => {
         }}
       >
         <Box css={styles.favicon}>
-          {faviconUrl && <img src={faviconUrl} alt="favicon" />}
+          <DappAvatar
+            favIconUrl={connection?.favIconUrl}
+            title={connection?.title}
+          />
         </Box>
 
         <Box css={styles.badge} data-status={status}>
@@ -95,7 +95,8 @@ const styles = {
     justifyContent: 'center',
     boxSizing: 'border-box',
 
-    backgroundColor: '$cardBg',
+    fontSize: '$xs',
+    backgroundColor: '$intentsBase6',
     borderWidth: 1,
     borderStyle: 'solid',
     borderColor: 'transparent',
