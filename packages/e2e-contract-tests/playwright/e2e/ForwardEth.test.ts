@@ -61,6 +61,8 @@ test.describe('Forward Eth', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
+    await page.waitForTimeout(10000); // Wait for slow VM
+
     // Test if asset name is defined (not unknown)
     checkAriaLabelsContainsText(
       walletNotificationPage,
