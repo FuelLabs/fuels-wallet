@@ -72,6 +72,8 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
     await expectButtonToBeEnabled(forwardHalfAndMintButton);
     await forwardHalfAndMintButton.click();
 
+    await page.waitForTimeout(10000); // Wait for slow VM
+
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 

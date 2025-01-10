@@ -62,6 +62,8 @@ test.describe('Mint Assets', () => {
 
     // test asset is correct
     const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
+    await page.waitForTimeout(10000); // Wait for slow VM
+
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
     // short address function copied from app package

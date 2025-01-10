@@ -79,6 +79,7 @@ test.describe('Forward Custom Asset', () => {
     );
     await expectButtonToBeEnabled(forwardCustomAssetButton);
     await forwardCustomAssetButton.click();
+    await page.waitForTimeout(10000); // Wait for slow VM
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();

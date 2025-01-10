@@ -58,10 +58,10 @@ test.describe('Forward Eth', () => {
     await expectButtonToBeEnabled(forwardEthButton);
     await forwardEthButton.click();
 
+    await page.waitForTimeout(10000); // Wait for slow VM
+
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
-
-    await page.waitForTimeout(10000); // Wait for slow VM
 
     // Test if asset name is defined (not unknown)
     checkAriaLabelsContainsText(
