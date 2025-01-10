@@ -15,11 +15,12 @@ const parseUrl = (url: string): string | undefined => {
   }
 };
 
-export const useConnection = ({ url = '' }: UseConnectionProps) => {
+export const useConnection = ({ url }: UseConnectionProps) => {
   const [connection, setConnection] = useState<Connection | undefined>();
 
   useEffect(() => {
     const fetchConnection = async () => {
+      if (!url) return;
       const origin = parseUrl(url);
       const existingConnection = await ConnectionService.getConnection(origin);
       setConnection(existingConnection);
