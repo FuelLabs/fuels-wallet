@@ -59,7 +59,7 @@ jobs:
   tests-e2e-contracts-beta:
     name: Test (Chrome Beta)
     runs-on: buildjet-8vcpu-ubuntu-2204
-    timeout-minutes: 15
+    timeout-minutes: 20
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
