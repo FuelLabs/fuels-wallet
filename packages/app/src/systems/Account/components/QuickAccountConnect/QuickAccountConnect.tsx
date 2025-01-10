@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Tooltip } from '@fuel-ui/react';
+import { Box, ContentLoader, Tooltip } from '@fuel-ui/react';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentTab } from '~/systems/CRX/hooks/useCurrentTab';
@@ -44,8 +44,16 @@ export const QuickAccountConnect = () => {
     return 'No accounts connected';
   }, [status, account]);
 
-  if (!origin) {
+  if (!connection) {
     return null;
+  }
+
+  if (!account) {
+    return (
+      <ContentLoader width={22} height={22} viewBox="0 0 22 22">
+        <circle cx="11" cy="11" r="11" />
+      </ContentLoader>
+    );
   }
 
   return (
