@@ -1,4 +1,5 @@
 import { Icon } from '@fuel-ui/react';
+import { useState } from 'react';
 
 interface DappAvatarProps {
   favIconUrl: string | undefined;
@@ -6,8 +7,18 @@ interface DappAvatarProps {
 }
 
 export const DappAvatar = ({ favIconUrl, title }: DappAvatarProps) => {
-  if (favIconUrl) {
-    return <img src={favIconUrl} alt="favicon" />;
+  const [imageFallback, setImageFallback] = useState(false);
+
+  if (favIconUrl && !imageFallback) {
+    return (
+      <img
+        src={favIconUrl}
+        alt="favicon"
+        onError={() => {
+          setImageFallback(true);
+        }}
+      />
+    );
   }
 
   if (title) {
