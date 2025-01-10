@@ -5,6 +5,7 @@ import {
   hasText,
 } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import { bn } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
 
@@ -18,6 +19,7 @@ import {
   checkAddresses,
   checkAriaLabelsContainsText,
   connect,
+  waitForWalletNotification,
   waitSuccessTransaction,
 } from './utils';
 
@@ -76,10 +78,8 @@ test.describe('Forward Eth', () => {
     await page.waitForTimeout(10000);
     console.log('✅ VM wait complete');
 
-    console.log('🔍 Getting wallet notification page...');
     const walletNotificationPage =
-      await fuelWalletTestHelper.getWalletPopupPage();
-    console.log('✅ Wallet notification page ready');
+      await waitForWalletNotification(fuelWalletTestHelper);
 
     console.log('🔍 Checking asset details...');
     checkAriaLabelsContainsText(
