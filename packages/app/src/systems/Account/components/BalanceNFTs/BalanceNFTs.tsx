@@ -63,7 +63,7 @@ export const BalanceNFTs = ({ balances = [] }: BalanceNFTsProps) => {
 const styles = {
   root: cssObj({
     '.fuel_Accordion-trigger': {
-      fontSize: '$sm',
+      fontSize: '$base',
       fontWeight: '$semibold',
       backgroundColor: 'transparent',
       color: '$intentsBase11',
