@@ -86,7 +86,7 @@ const styles = {
     },
     '.fuel_Accordion-item': {
       backgroundColor: 'transparent',
-      borderBottom: '1px solid $cardBorder',
+      borderBottom: '1px solid $border',
       borderRadius: '$none',
     },
     '.fuel_Accordion-content': {
