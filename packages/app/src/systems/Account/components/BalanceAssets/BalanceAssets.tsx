@@ -6,7 +6,7 @@ import { AssetItem, AssetList } from '~/systems/Asset/components';
 import type { AssetListEmptyProps } from '~/systems/Asset/components/AssetList/AssetListEmpty';
 
 export type BalanceAssetListProp = {
-  balances: CoinAsset[] | undefined;
+  balances?: CoinAsset[];
   isLoading?: boolean;
   onRemove?: (assetId: string) => void;
   onEdit?: (assetId: string) => void;
