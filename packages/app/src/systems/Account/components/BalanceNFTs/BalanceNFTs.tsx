@@ -4,6 +4,7 @@ import type { CoinAsset } from '@fuel-wallet/types';
 import { useMemo } from 'react';
 import { AssetListEmpty } from '~/systems/Asset/components/AssetList/AssetListEmpty';
 import { shortAddress } from '~/systems/Core';
+import { NFTImage } from './NFTImage';
 import { groupNFTsByCollection } from './groupNFTsByCollection';
 
 interface BalanceNFTsProps {
@@ -42,17 +43,7 @@ export const BalanceNFTs = ({ balances = [] }: BalanceNFTsProps) => {
                   {collection.nfts.map((nft) => {
                     return (
                       <VStack key={nft.assetId} align="center" gap="$1">
-                        {nft.image ? (
-                          <img
-                            src={nft.image}
-                            alt={shortAddress(nft.assetId)}
-                          />
-                        ) : (
-                          <Box css={styles.noImage}>
-                            <Icon icon={Icon.is('FileOff')} />
-                          </Box>
-                        )}
-
+                        <NFTImage assetId={nft.assetId} image={nft.image} />
                         <Text fontSize="xs" css={styles.name}>
                           {nft.name || shortAddress(nft.assetId)}
                         </Text>
@@ -116,24 +107,6 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '10px',
-
-    img: {
-      width: '100%',
-      aspectRatio: '1 / 1',
-      borderRadius: '12px',
-      objectFit: 'cover',
-      backgroundColor: '$cardBg',
-    },
-  }),
-  noImage: cssObj({
-    width: '100%',
-    aspectRatio: '1 / 1',
-    borderRadius: '12px',
-    border: '1px solid $cardBorder',
-    backgroundColor: '$cardBg',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
   }),
   name: cssObj({
     textAlign: 'center',
