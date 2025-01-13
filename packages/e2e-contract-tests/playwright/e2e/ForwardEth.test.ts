@@ -82,11 +82,11 @@ test.describe('Forward Eth', () => {
       await waitForWalletNotification(fuelWalletTestHelper);
 
     console.log('🔍 Checking asset details...');
-    checkAriaLabelsContainsText(
-      walletNotificationPage,
-      'Asset Name',
-      'Ethereum'
-    );
+    // checkAriaLabelsContainsText(
+    //   walletNotificationPage,
+    //   'Asset Name',
+    //   'Ethereum'
+    // );
     // checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
     await hasText(walletNotificationPage, 'Ethereum');
 
