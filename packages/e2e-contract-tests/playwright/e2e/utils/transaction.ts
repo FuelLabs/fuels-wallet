@@ -26,30 +26,3 @@ export const waitSuccessTransaction = async (page: Page) => {
     )
     .toBeTruthy();
 };
-
-export async function waitForWalletNotification(
-  fuelWalletTestHelper: FuelWalletTestHelper
-): Promise<Page> {
-  console.log('🔍 Getting wallet notification page...');
-  let walletNotificationPage: Page | null = null;
-  await expect
-    .poll(
-      async () => {
-        try {
-          walletNotificationPage =
-            await fuelWalletTestHelper.getWalletPopupPage();
-          return true;
-        } catch {
-          return false;
-        }
-      },
-      { timeout: 30000, intervals: [5000] }
-    )
-    .toBeTruthy();
-
-  if (!walletNotificationPage) {
-    throw new Error('Failed to get wallet notification page');
-  }
-  console.log('✅ Wallet notification page ready');
-  return walletNotificationPage;
-}
