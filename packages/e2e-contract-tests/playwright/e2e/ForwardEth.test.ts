@@ -58,17 +58,20 @@ test.describe('Forward Eth', () => {
     await expectButtonToBeEnabled(forwardEthButton);
     await forwardEthButton.click();
 
-    await page.waitForTimeout(10000);
-
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
-    checkAriaLabelsContainsText(
+    await checkAriaLabelsContainsText(
       walletNotificationPage,
       'Asset Name',
       'Ethereum'
     );
-    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
+    // Test if sender name is defined (not unknown)
+    await checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Sender Name',
+      ''
+    );
     await hasText(walletNotificationPage, 'Ethereum');
 
     const baseAssetId = await getBaseAssetId();

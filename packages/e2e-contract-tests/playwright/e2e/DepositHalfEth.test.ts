@@ -64,13 +64,17 @@ test.describe('Deposit Half ETH', () => {
       await fuelWalletTestHelper.getWalletPopupPage();
 
     // Test if asset name is defined (not unknown)
-    checkAriaLabelsContainsText(
+    await checkAriaLabelsContainsText(
       walletNotificationPage,
       'Asset Name',
       'Ethereum'
     );
     // Test if sender name is defined (not unknown)
-    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
+    await checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Sender Name',
+      ''
+    );
 
     // test forward asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');
