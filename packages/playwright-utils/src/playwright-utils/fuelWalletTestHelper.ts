@@ -138,6 +138,7 @@ export class FuelWalletTestHelper {
       '🔍 Searching for existing wallet popup page in',
       this.context.pages().map((page) => page.url())
     );
+    console.log(`Timestamp: ${Date.now()}`);
     let walletNotificationPage = this.context.pages().find((page) => {
       const url = page.url();
       return url.includes('/popup.html?');
@@ -150,6 +151,16 @@ export class FuelWalletTestHelper {
           predicate: (page) => page.url().includes('/popup'),
           timeout: 30000,
         });
+        console.log(
+          '🔍 Searching for existing wallet popup page in',
+          this.context.pages().map((page) => page.url())
+        );
+        console.log(`Timestamp: ${Date.now()}`);
+        // If the popup is not found, try to find it in the pages again
+        walletNotificationPage = this.context.pages().find((page) => {
+          const url = page.url();
+          return url.includes('/popup.html?');
+        });
       } catch (error) {
         console.log(
           '🔍 No popup found in',
@@ -158,7 +169,10 @@ export class FuelWalletTestHelper {
         throw new Error('No popup found', { cause: error });
       }
     }
-
+    console.log(
+      '🔍 Returning popup page with URL:',
+      walletNotificationPage?.url()
+    );
     return walletNotificationPage;
   }
 
