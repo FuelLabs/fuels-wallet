@@ -138,7 +138,7 @@ export class FuelWalletTestHelper {
     let walletNotificationPage = this.context.pages().find((page) => {
       const url = page.url();
       console.log(`  Checking page URL: ${url}`);
-      return url.includes('/popup.html');
+      return url.includes('/popup.html?');
     });
 
     if (!walletNotificationPage) {
@@ -147,7 +147,7 @@ export class FuelWalletTestHelper {
         predicate: (page) => {
           const url = page.url();
           console.log(`  New page detected, URL: ${url}`);
-          return url.includes('/popup.html');
+          return url.includes('/popup');
         },
         timeout: 30000,
       });
@@ -160,9 +160,6 @@ export class FuelWalletTestHelper {
       console.error('❌ Wallet popup not found after timeout!');
       throw new Error('Wallet popup not found!');
     }
-
-    // Wait for the page to be ready
-    await walletNotificationPage.waitForLoadState('networkidle');
 
     console.log(
       `🎯 Returning popup page with URL: ${walletNotificationPage.url()}`
