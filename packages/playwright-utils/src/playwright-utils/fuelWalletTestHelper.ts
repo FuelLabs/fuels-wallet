@@ -1,4 +1,4 @@
-import type { BrowserContext, Locator } from '@playwright/test';
+import type { BrowserContext, Locator, Page } from '@playwright/test';
 
 import { expect } from '../fixtures';
 import { FUEL_MNEMONIC, FUEL_WALLET_PASSWORD } from '../mocks';
@@ -133,7 +133,7 @@ export class FuelWalletTestHelper {
     await approveButton.click();
   }
 
-  async getWalletPopupPage() {
+  async getWalletPopupPage(): Promise<Page> {
     console.log(
       '🔍 Searching for existing wallet popup page in',
       this.context.pages().map((page) => page.url())
@@ -169,10 +169,14 @@ export class FuelWalletTestHelper {
         throw new Error('No popup found', { cause: error });
       }
     }
+    if (!walletNotificationPage) {
+      throw new Error('No popup found');
+    }
     console.log(
       '🔍 Returning popup page with URL:',
       walletNotificationPage?.url()
     );
+
     return walletNotificationPage;
   }
 
