@@ -10,7 +10,7 @@ export async function checkAriaLabelsContainsText(
     'checkAriaLabelsContainsText',
     ariaLabel,
     text,
-    walletNotificationPage
+    walletNotificationPage.url()
   );
   return;
   // console.log(`Check if ${ariaLabel} with text ${text} is in the page`);
