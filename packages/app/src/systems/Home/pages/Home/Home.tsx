@@ -26,38 +26,33 @@ export function Home() {
     <Layout title="Home" isHome>
       <Layout.TopBar />
       <Layout.Content noBorder css={styles.content}>
-        <Box.Flex css={{ height: '100%', flexDirection: 'column' }}>
-          <BalanceWidget
-            visibility={visibility}
-            account={account}
-            isLoading={isLoading}
-            onChangeVisibility={setVisibility}
-          />
-          <HomeActions
-            receiveAction={goToReceive}
-            sendAction={sendAction}
-            isDisabled={isLoading}
-          />
-          <Tabs defaultValue="assets" variant="link" css={styles.assets}>
-            <Tabs.List>
-              <Tabs.Trigger value="assets" aria-label="Assets">
-                Assets
-              </Tabs.Trigger>
-              <Tabs.Trigger value="nft" aria-label="NFT">
-                NFT
-              </Tabs.Trigger>
-            </Tabs.List>
-            <Tabs.Content value="assets" css={styles.assetsList}>
-              <BalanceAssets
-                balances={account?.balances}
-                isLoading={isLoading}
-              />
-            </Tabs.Content>
-            <Tabs.Content value="nft" css={styles.assetsList}>
-              <BalanceNFTs balances={account?.balances} />
-            </Tabs.Content>
-          </Tabs>
-        </Box.Flex>
+        <BalanceWidget
+          visibility={visibility}
+          account={account}
+          isLoading={isLoading}
+          onChangeVisibility={setVisibility}
+        />
+        <HomeActions
+          receiveAction={goToReceive}
+          sendAction={sendAction}
+          isDisabled={isLoading}
+        />
+        <Tabs defaultValue="assets" variant="link" css={styles.assets}>
+          <Tabs.List>
+            <Tabs.Trigger value="assets" aria-label="Assets">
+              Assets
+            </Tabs.Trigger>
+            <Tabs.Trigger value="nft" aria-label="NFT">
+              NFT
+            </Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content value="assets" css={styles.assetsList}>
+            <BalanceAssets balances={account?.balances} isLoading={isLoading} />
+          </Tabs.Content>
+          <Tabs.Content value="nft" css={styles.assetsList}>
+            <BalanceNFTs balances={account?.balances} />
+          </Tabs.Content>
+        </Tabs>
       </Layout.Content>
     </Layout>
   );
@@ -65,11 +60,16 @@ export function Home() {
 
 const styles = {
   content: cssObj({
-    flex: 1,
     overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
   }),
   assets: cssObj({
     overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
     paddingLeft: '$4',
 
     '.fuel_TabsList': {
@@ -77,6 +77,7 @@ const styles = {
     },
   }),
   assetsList: cssObj({
+    flex: 1,
     paddingBottom: '$4',
     ...scrollable(),
     overflowY: 'scroll !important',
