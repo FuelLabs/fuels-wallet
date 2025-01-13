@@ -137,33 +137,17 @@ export class FuelWalletTestHelper {
     console.log('🔍 Searching for existing wallet popup page...');
     let walletNotificationPage = this.context.pages().find((page) => {
       const url = page.url();
-      console.log(`  Checking page URL: ${url}`);
       return url.includes('/popup.html?');
     });
 
     if (!walletNotificationPage) {
       console.log('⏳ No existing popup found, waiting for popup event...');
       walletNotificationPage = await this.context.waitForEvent('page', {
-        predicate: (page) => {
-          const url = page.url();
-          console.log(`  New page detected, URL: ${url}`);
-          return url.includes('/popup');
-        },
+        predicate: (page) => page.url().includes('/popup'),
         timeout: 30000,
       });
-      console.log('✅ Popup page event detected');
-    } else {
-      console.log('✅ Found existing popup page');
     }
 
-    if (!walletNotificationPage) {
-      console.error('❌ Wallet popup not found after timeout!');
-      throw new Error('Wallet popup not found!');
-    }
-
-    console.log(
-      `🎯 Returning popup page with URL: ${walletNotificationPage.url()}`
-    );
     return walletNotificationPage;
   }
 
