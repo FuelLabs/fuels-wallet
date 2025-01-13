@@ -74,13 +74,13 @@ test.describe('Forward Half ETH and Mint Custom Asset', () => {
       await fuelWalletTestHelper.getWalletPopupPage();
 
     // Test if asset name is defined (not unknown)
-    // checkAriaLabelsContainsText(
-    //   walletNotificationPage,
-    //   'Asset Name',
-    //   'Ethereum'
-    // );
+    checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Asset Name',
+      'Ethereum'
+    );
     // Test if sender name is defined (not unknown)
-    // checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
+    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
 
     // test forward asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');
