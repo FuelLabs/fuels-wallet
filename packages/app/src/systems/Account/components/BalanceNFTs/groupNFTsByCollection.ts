@@ -1,6 +1,6 @@
 import type { CoinAsset } from '@fuel-wallet/types';
 
-const UNKNOWN_COLLECTION_TITLE = 'Others';
+export const UNKNOWN_COLLECTION_TITLE = 'Others';
 
 interface NFT {
   assetId: string;

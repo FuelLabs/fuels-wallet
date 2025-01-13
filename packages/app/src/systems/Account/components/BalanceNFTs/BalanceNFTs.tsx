@@ -5,15 +5,26 @@ import { useMemo } from 'react';
 import { AssetListEmpty } from '~/systems/Asset/components/AssetList/AssetListEmpty';
 import { shortAddress } from '~/systems/Core';
 import { NFTImage } from './NFTImage';
-import { groupNFTsByCollection } from './groupNFTsByCollection';
+import {
+  UNKNOWN_COLLECTION_TITLE,
+  groupNFTsByCollection,
+} from './groupNFTsByCollection';
 
 interface BalanceNFTsProps {
   balances: CoinAsset[] | undefined;
 }
 
 export const BalanceNFTs = ({ balances = [] }: BalanceNFTsProps) => {
-  const collections = useMemo(() => {
-    return groupNFTsByCollection(balances);
+  const { collections, defaultValue } = useMemo(() => {
+    const collections = groupNFTsByCollection(balances);
+    const defaultValue = collections
+      .map((collection) => collection.name)
+      .filter((collection) => collection !== UNKNOWN_COLLECTION_TITLE);
+
+    return {
+      collections,
+      defaultValue,
+    };
   }, [balances]);
 
   if (collections.length === 0) {
@@ -28,7 +39,7 @@ export const BalanceNFTs = ({ balances = [] }: BalanceNFTsProps) => {
 
   return (
     <Box css={styles.root}>
-      <Accordion type="multiple">
+      <Accordion type="multiple" defaultValue={defaultValue}>
         {collections.map((collection) => {
           return (
             <Accordion.Item key={collection.name} value={collection.name}>
