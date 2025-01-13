@@ -102,9 +102,9 @@ const schemaFactory = (provider?: Provider) =>
             return false;
           }
 
+          const baseAssetId = await provider?.getBaseAssetId();
           const isSendingBaseAssetId =
-            asset &&
-            provider?.getBaseAssetId().toLowerCase() === asset.toLowerCase();
+            asset && baseAssetId?.toLowerCase() === asset.toLowerCase();
           if (isSendingBaseAssetId) {
             // It means "baseFee" is being calculated
             if (!baseFee) {
@@ -141,7 +141,7 @@ const schemaFactory = (provider?: Provider) =>
             }
 
             const assetCached = await AssetsCache.getInstance().getAsset({
-              chainId: provider.getChainId(),
+              chainId: await provider.getChainId(),
               assetId: value,
               dbAssets: [],
               save: false,

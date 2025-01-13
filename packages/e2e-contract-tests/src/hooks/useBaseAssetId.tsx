@@ -5,10 +5,10 @@ export function useBaseAssetId() {
   const [baseAssetId, setBaseAssetId] = useState<string>('');
 
   useEffect(() => {
-    Provider.create(import.meta.env.VITE_FUEL_PROVIDER_URL!)
-      .then((provider) => {
-        setBaseAssetId(provider.getBaseAssetId());
-      })
+    const provider = new Provider(import.meta.env.VITE_FUEL_PROVIDER_URL!);
+    provider
+      .getBaseAssetId()
+      .then((assetId) => setBaseAssetId(assetId))
       .catch((err) => {
         console.log('Failed to get base asset id', err);
       });

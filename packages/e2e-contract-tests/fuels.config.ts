@@ -9,7 +9,12 @@ export default createConfig({
   privateKey:
     '0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298',
   providerUrl: 'http://localhost:4000/v1/graphql',
-  onDeploy: (_, contracts) => {
+  onDeploy: (_, data) => {
+    const { contracts } = data;
+    if (!contracts) {
+      throw new Error('No contracts found');
+    }
+
     const contractIdsPath = join(__dirname, './src/contract-ids.json');
     let contractIds = {};
     if (existsSync(contractIdsPath)) {

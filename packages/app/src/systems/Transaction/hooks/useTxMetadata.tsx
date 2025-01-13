@@ -1,4 +1,4 @@
-import type { Bech32Address, Operation, TransactionSummary } from 'fuels';
+import type { B256Address, Operation, TransactionSummary } from 'fuels';
 import { Address, OperationName } from 'fuels';
 import { useMemo } from 'react';
 import { useAccounts } from '~/systems/Account';
@@ -14,10 +14,10 @@ type UseTxMetadataProps = {
 export function getAddress(address?: string) {
   if (!address) return '';
   if (address === 'Network') return address;
-  return Address.fromString(address).bech32Address;
+  return Address.fromString(address).b256Address;
 }
 
-export function getLabel(operation: Operation, address?: Bech32Address) {
+export function getLabel(operation: Operation, address?: B256Address) {
   const { name } = operation;
   const me = address ? Address.fromString(address).toHexString() : '';
 
@@ -39,7 +39,7 @@ export function useTxMetadata({
 
   // Avoid screen to break with empty operations
   const mainOperation = operations[0] || {};
-  const label = getLabel(mainOperation, account?.address as Bech32Address);
+  const label = getLabel(mainOperation, account?.address as B256Address);
   const timeFormattedRaw = time ? formatDate(time) : undefined;
   const timeFormatted = timeFormattedRaw?.replace(
     'a few seconds ago',
