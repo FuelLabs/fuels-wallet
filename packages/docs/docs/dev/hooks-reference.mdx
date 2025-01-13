@@ -24,7 +24,7 @@ Retrieves the fuel accounts and returns the addresses of the accounts `<string[]
 ```tsx
 const { accounts } = useAccounts();
 console.log(accounts);
-// [fuel1r20zhd..., fuel1qqluc9..., ...]
+// [0xb26627d..., 0xb10c223..., ...]
 ```
 
 [See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useAccounts.ts)
@@ -35,7 +35,7 @@ Fetches the balance `<BN | null>` of a specified address and asset ID. Additiona
 
 ```tsx
 const { balance } = useBalance({
-  address: 'fuel1r20zhd...',
+  address: '0xb26627d...',
   assetId: '0x000000000...',
 });
 

@@ -184,15 +184,15 @@ test.describe('Existing Accounts', () => {
   test('can add accounts using correct derivation path after importing from private key', async () => {
     // at this point 2 accounts have already been created
     const fuelAddress1 =
-      'fuel1kfnz04g7k8wjw22s03s3kk46wxr63he3v5v6kyrv76m7wzh7x9jqvqffua';
+      '0xb26627d51eb1dd2729507c611b5aba7187a8df316519ab106cf6b7e70afe3164';
     const fuelAddress2 =
-      'fuel1kyxzyv5z39fuxnr6k9ncxujxn4y07fu6pf73vslmemgpex325vrsytpqks';
+      '0xb10c2232828953c34c7ab1678372469d48ff279a0a7d1643fbced01c9a2aa307';
     const fuelAddress3 =
-      'fuel152720qgc5wthxu4g7a2g6s7xy9d8wjgtffl489k706xyd2fas0wqyv0vsw';
+      '0xa2bca78118a3977372a8f7548d43c6215a77490b4a7f5396de7e8c46a93d83dc';
     const fuelPrivKey =
       '0x7f802a2a277872af1204140bd2c77c2193309c366e3c71ff1c4c31cea0a53f38';
     const fuelAddPriv =
-      'fuel1szu0uagadwpgl0fuz2thrtzn7artghvhexg5d9at4t76nzeesqasrdmjxy';
+      '0x80b8fe751d6b828fbd3c129771ac53f746b45d97c9914697abaafda98b39803b';
 
     // import account from private key
     await createAccountFromPrivateKey(page, fuelPrivKey, 'Account 3');
