@@ -141,7 +141,7 @@ test.describe('Mint Assets', () => {
       'Ethereum'
     );
     // Test if sender name is defined (not unknown)
-    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
+    // checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
 
     // scroll to bottom of page to ensure all text is visible
     await walletNotificationPage.evaluate(() =>

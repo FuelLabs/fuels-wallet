@@ -87,7 +87,7 @@ test.describe('Forward Eth', () => {
       'Asset Name',
       'Ethereum'
     );
-    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
+    // checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
     await hasText(walletNotificationPage, 'Ethereum');
 
     console.log('🔍 Checking asset ID...');

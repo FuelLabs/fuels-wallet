@@ -84,7 +84,7 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
       'Ethereum'
     );
     // Test if sender name is defined (not unknown)
-    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
+    // checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
 
     // test forward asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');

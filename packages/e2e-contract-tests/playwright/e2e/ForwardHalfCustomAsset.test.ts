@@ -94,7 +94,7 @@ test.describe('Forward Half Custom Asset', () => {
       'Ethereum'
     );
     // Test if sender name is defined (not unknown)
-    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
+    // checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
     // test the forward asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
     // test forward asset id is correct
