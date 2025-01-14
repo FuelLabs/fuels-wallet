@@ -39,7 +39,6 @@ export const Providers = ({ children }: ProviderProps) => {
       >
         {children}
       </FuelProvider>
-      ∫
     </QueryClientProvider>
   );
 };
