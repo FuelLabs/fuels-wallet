@@ -11,9 +11,13 @@ concurrency:
 
 jobs:
   tests-e2e-contracts:
-    name: Test (Chrome Stable)
-    runs-on: buildjet-8vcpu-ubuntu-2204
-    timeout-minutes: 15
+    name: Test (Chrome Stable) [Shard ${{ matrix.shard }}]
+    runs-on: buildjet-8vcpu-ubuntu-2204	
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
       - uses: FuelLabs/github-actions/setups/node@master
@@ -40,7 +44,6 @@ jobs:
       - name: Build & Deploy Contracts
         run: pnpm deploy:contracts
         working-directory: ./packages/e2e-contract-tests
-
       - name: Run E2E Contract Tests
         uses: ./.github/actions/e2e-tests-contracts
         with:
@@ -48,19 +51,24 @@ jobs:
           masterMnemonic: ${{ secrets.VITE_MASTER_WALLET_MNEMONIC }}
           genesisSecret: "0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298"
           browser: 'chromium'
+          shard: ${{ matrix.shard }}/4
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-e2e-contract-tests-report
+          name: playwright-e2e-contract-tests-report-shard-${{ matrix.shard }}
           path: packages/e2e-contract-tests/playwright-results
           retention-days: 30
 
   tests-e2e-contracts-beta:
-    name: Test (Chrome Beta)
-    runs-on: buildjet-8vcpu-ubuntu-2204
-    timeout-minutes: 15
+    name: Test (Chrome Beta) [Shard ${{ matrix.shard }}]
+    runs-on: buildjet-8vcpu-ubuntu-2204	
+    timeout-minutes: 20
     continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
       - uses: FuelLabs/github-actions/setups/node@master
@@ -88,17 +96,19 @@ jobs:
       - name: Build & Deploy Contracts
         run: pnpm deploy:contracts
         working-directory: ./packages/e2e-contract-tests
+
       - uses: ./.github/actions/e2e-tests-contracts
         with:
           providerUrl: "http://localhost:4000/v1/graphql"
           masterMnemonic: ${{ secrets.VITE_MASTER_WALLET_MNEMONIC }}
           genesisSecret: "0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298"
           browser: 'chrome-beta'
+          shard: ${{ matrix.shard }}/4
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-e2e-contract-tests-report-beta
+          name: playwright-e2e-contract-tests-report-beta-shard-${{ matrix.shard }}
           path: packages/e2e-contract-tests/playwright-results
           retention-days: 30
 
