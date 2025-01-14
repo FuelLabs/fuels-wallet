@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 
 interface UseOriginProps {
   url: string | undefined;
@@ -23,5 +23,5 @@ const parseUrl = (url: string): Origin | undefined => {
 };
 
 export const useOrigin = ({ url }: UseOriginProps) => {
-  return useMemo(() => url ? parseUrl(url) : undefined, [url]);
+  return useMemo(() => (url ? parseUrl(url) : undefined), [url]);
 };
