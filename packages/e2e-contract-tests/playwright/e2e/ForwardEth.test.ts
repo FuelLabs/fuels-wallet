@@ -76,23 +76,25 @@ test.describe('Forward Eth', () => {
     );
     await hasText(walletNotificationPage, 'Ethereum');
 
+    // test asset id is correct
     const baseAssetId = await getBaseAssetId();
     await hasText(walletNotificationPage, shortAddress(baseAssetId));
 
+    // test forward eth amount is correct
     await hasText(walletNotificationPage, `${forwardEthAmount} ETH`);
     await hasText(walletNotificationPage, 'Fee (network)');
 
+    // test to and from addresses
     await checkAddresses(
       { address: fuelWallet.address.toString(), isContract: false },
       { address: MAIN_CONTRACT_ID, isContract: true },
       walletNotificationPage
     );
 
+    // Test approve
     const preDepositBalanceEth = await fuelWallet.getBalance();
-
     await fuelWalletTestHelper.walletApprove();
     await waitSuccessTransaction(page);
-
     const postDepositBalanceEth = await fuelWallet.getBalance();
 
     const difference = preDepositBalanceEth
