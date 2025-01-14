@@ -14,6 +14,10 @@ inputs:
     description: Browser to run tests on (chromium or chrome-beta)
     required: false
     default: chromium
+  shard:
+    description: Shard configuration for test parallelization (e.g. 1/4)
+    required: false
+    default: ''
 
 runs:
   using: 'composite'
@@ -35,7 +39,7 @@ runs:
 
     - name: Run E2E Contract Tests
       shell: bash
-      run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts --project=${{ inputs.browser }}
+      run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts --project=${{ inputs.browser }} ${{ inputs.shard != '' && format('--shard {0}', inputs.shard) || '' }}
       env:
         PORT: 5173
         VITE_FUEL_PROVIDER_URL: ${{ inputs.providerUrl }}

@@ -67,19 +67,25 @@ test.describe('Forward Half ETH and Mint Custom Asset', () => {
       'Forward Half And Mint'
     );
     await expectButtonToBeEnabled(forwardHalfAndMintButton);
+    await page.waitForTimeout(1000); // Wait for slow VM
     await forwardHalfAndMintButton.click();
+    await page.waitForTimeout(1000); // Wait for slow VM
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
     // Test if asset name is defined (not unknown)
-    checkAriaLabelsContainsText(
+    await checkAriaLabelsContainsText(
       walletNotificationPage,
       'Asset Name',
       'Ethereum'
     );
     // Test if sender name is defined (not unknown)
-    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
+    await checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Sender Name',
+      ''
+    );
 
     // test forward asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');
