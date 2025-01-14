@@ -37,7 +37,7 @@ export const testSetup = async ({
   const masterWallet = Wallet.fromMnemonic(VITE_MASTER_WALLET_MNEMONIC!);
   masterWallet.connect(fuelProvider);
 
-  console.log('Master wallet address:', masterWallet.address.toString());
+  console.log('asd Master wallet address:', masterWallet.address.toString());
   if (VITE_WALLET_SECRET) {
     await seedWallet(
       masterWallet.address.toString(),
@@ -50,7 +50,7 @@ export const testSetup = async ({
   const fuelWallet = Wallet.fromMnemonic(randomMnemonic);
   fuelWallet.connect(fuelProvider);
   console.log(
-    `Master wallet sending funds(${bn(
+    `asd Master wallet sending funds(${bn(
       amountToFund
     ).format()} ETH) to test wallet address`
   );
@@ -59,7 +59,7 @@ export const testSetup = async ({
     bn(amountToFund)
   );
   await txResponse.waitForResult();
-  console.log('Success sending funds');
+  console.log('asd Success sending funds');
 
   const fuelWalletTestHelper = await FuelWalletTestHelper.walletSetup({
     context,
@@ -105,7 +105,7 @@ export const transferMaxBalance = async ({
         );
         await txResponse.waitForResult();
         console.log(
-          `Success sending ${amountToSend?.format()} back to ${toWallet.address.toB256()}`
+          `asd Success sending ${amountToSend?.format()} back to ${toWallet.address.toB256()}`
         );
       }
     } catch (e) {
