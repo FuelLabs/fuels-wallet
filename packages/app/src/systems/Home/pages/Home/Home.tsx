@@ -6,6 +6,7 @@ import { Layout, Pages, scrollable } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 import { BalanceAssets } from '~/systems/Account/components/BalanceAssets/BalanceAssets';
+import { QuickAccountConnect } from '~/systems/Account/components/QuickAccountConnect/QuickAccountConnect';
 import { AssetsTitle, HomeActions } from '../../components';
 
 export function Home() {
@@ -25,6 +26,7 @@ export function Home() {
     <Layout title="Home" isHome>
       <Layout.TopBar />
       <Layout.Content noBorder css={styles.content}>
+        <QuickAccountConnect />
         <Box.Flex css={{ height: '100%', flexDirection: 'column' }}>
           <BalanceWidget
             visibility={visibility}
@@ -56,6 +58,7 @@ export function Home() {
 
 const styles = {
   content: cssObj({
+    position: 'relative',
     flex: 1,
     overflow: 'hidden',
   }),

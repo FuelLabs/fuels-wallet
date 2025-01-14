@@ -1,12 +1,20 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, ContentLoader, Tooltip } from '@fuel-ui/react';
-import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {
+  Alert,
+  Avatar,
+  Box,
+  Icon,
+  IconButton,
+  Text,
+  VStack,
+  toast,
+} from '@fuel-ui/react';
+import { useEffect, useMemo, useState } from 'react';
 import { useCurrentTab } from '~/systems/CRX/hooks/useCurrentTab';
-import { Pages } from '~/systems/Core';
 import { useConnection } from '~/systems/DApp/hooks/useConnection';
+import { useOrigin } from '~/systems/DApp/hooks/useOrigin';
+import { ConnectionService } from '~/systems/DApp/services';
 import { useCurrentAccount } from '../../hooks/useCurrentAccount';
-import { DappAvatar } from './DappAvatar';
 
 enum ConnectionStatus {
   CurrentAccount = 'CURRENT_ACCOUNT',
@@ -14,12 +22,19 @@ enum ConnectionStatus {
   NoAccounts = 'NO_ACCOUNTS',
 }
 
-export const QuickAccountConnect = () => {
-  const navigate = useNavigate();
+export const getDismissKey = (account: string, origin: string) => {
+  return `quick-account-connect-${account}-${origin}`;
+};
 
+export const QuickAccountConnect = () => {
   const { account } = useCurrentAccount();
   const { currentTab } = useCurrentTab();
-  const { connection } = useConnection({ url: currentTab?.url });
+  const origin = useOrigin({ url: currentTab?.url });
+  const { connection, fetchConnection } = useConnection({
+    origin: origin?.full,
+  });
+
+  const [dismissed, setDismissed] = useState(true);
 
   const status = useMemo<ConnectionStatus>(() => {
     if (!account || !connection) {
@@ -33,145 +48,97 @@ export const QuickAccountConnect = () => {
     return ConnectionStatus.OtherAccount;
   }, [account, connection]);
 
-  const tooltip = useMemo<string>(() => {
-    if (status === ConnectionStatus.CurrentAccount) {
-      return `${account?.name} connected`;
-    }
+  const onConnect = async () => {
+    if (!origin || !account) return;
+    await ConnectionService.addAccountTo({
+      origin: origin.full,
+      account: account.address,
+    });
+    await fetchConnection();
+    toast.success(`${account?.name} connected`);
+  };
 
-    if (status === ConnectionStatus.OtherAccount) {
-      return `${account?.name} not connected`;
-    }
+  const onDismiss = () => {
+    if (!origin || !account) return;
+    setDismissed(true);
+    localStorage.setItem(getDismissKey(account.address, origin.full), 'true');
+  };
 
-    return 'No accounts connected';
-  }, [status, account]);
-
-  if (!account) {
-    return (
-      <ContentLoader width={22} height={22} viewBox="0 0 22 22">
-        <circle cx="11" cy="11" r="11" />
-      </ContentLoader>
+  useEffect(() => {
+    if (!origin || !account) return;
+    const hasDismissed = localStorage.getItem(
+      getDismissKey(account.address, origin.full)
     );
-  }
+    setDismissed(!!hasDismissed);
+  }, [account, origin]);
 
   return (
-    <Tooltip delayDuration={0} content={tooltip}>
-      <Box
-        css={styles.root}
-        data-has-connection={!!connection}
-        onClick={() => {
-          if (!connection) return;
-          navigate(
-            Pages.settingsConnectedApps(undefined, {
-              origin: connection?.origin,
-              forceBackPagination: true,
-            })
-          );
-        }}
-      >
-        <Box css={styles.favicon}>
-          <DappAvatar
-            favIconUrl={connection?.favIconUrl || currentTab?.faviconUrl}
-            title={connection?.title || currentTab?.title}
+    <Box
+      css={styles.wrapper}
+      data-open={status === ConnectionStatus.OtherAccount && !dismissed}
+    >
+      <Alert status="info" css={styles.alert}>
+        <Alert.Description as="div">
+          <Avatar.Generated
+            size="sm"
+            hash={account?.address as string}
+            css={{ boxShadow: '$sm', flexShrink: 0 }}
           />
-        </Box>
 
-        <Box css={styles.badge} data-status={status}>
-          <Box css={styles.circle} data-status={status} />
-        </Box>
-      </Box>
-    </Tooltip>
+          <VStack gap="$1">
+            <span>
+              {account?.name || 'This account'} isn't connected to{' '}
+              {origin?.short || 'this app'}
+            </span>
+
+            <Text color="scalesBlue10" css={styles.cta} onClick={onConnect}>
+              Connect account
+            </Text>
+          </VStack>
+
+          <IconButton
+            icon={Icon.is('X')}
+            aria-label="Close"
+            variant="link"
+            onPress={onDismiss}
+          />
+        </Alert.Description>
+      </Alert>
+    </Box>
   );
 };
 
 const styles = {
-  root: cssObj({
-    position: 'relative',
-    display: 'inline-block',
-    width: 24,
-    height: 24,
+  wrapper: cssObj({
+    position: 'fixed',
+    paddingLeft: '$4',
+    paddingRight: '$4',
+    paddingBottom: '$4',
+    bottom: 0,
+    zIndex: '$2',
+    opacity: 0,
+    transition: 'opacity 0.2s ease-in-out',
+    pointerEvents: 'none',
 
-    '&[data-has-connection="true"]': {
+    '&[data-open="true"]': {
+      opacity: 1,
+      pointerEvents: 'auto',
+    },
+  }),
+  alert: cssObj({
+    '& .fuel_Alert-icon': {
+      display: 'none',
+    },
+    '& .fuel_Alert-description': {
+      display: 'flex',
+      gap: '$2',
+      alignItems: 'flex-start',
+    },
+  }),
+  cta: cssObj({
+    '&:hover': {
       cursor: 'pointer',
-    },
-    '&[data-has-connection="false"]': {
-      cursor: 'default',
-    },
-  }),
-  favicon: cssObj({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    boxSizing: 'border-box',
-
-    fontSize: '$xs',
-    backgroundColor: '$intentsBase6',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: 'transparent',
-
-    width: '100%',
-    height: '100%',
-    overflow: 'hidden',
-    borderRadius: '$full',
-
-    img: {
-      width: '100%',
-      objectFit: 'cover',
-    },
-  }),
-  badge: cssObj({
-    position: 'absolute',
-    zIndex: 1,
-
-    [`&[data-status="${ConnectionStatus.CurrentAccount}"]`]: {
-      bottom: -1,
-      right: -4,
-    },
-    [`&[data-status="${ConnectionStatus.OtherAccount}"]`]: {
-      bottom: 1,
-      right: -2,
-    },
-    [`&[data-status="${ConnectionStatus.NoAccounts}"]`]: {
-      bottom: -1,
-      right: -4,
-    },
-  }),
-  circle: cssObj({
-    boxSizing: 'border-box',
-    borderRadius: '$full',
-    borderStyle: 'solid',
-
-    [`&[data-status="${ConnectionStatus.CurrentAccount}"]`]: {
-      height: 12,
-      width: 12,
-      borderWidth: 3,
-      borderColor: '$bodyColor',
-      backgroundColor: '$intentsPrimary11',
-    },
-    [`&[data-status="${ConnectionStatus.OtherAccount}"]`]: {
-      width: 8,
-      height: 8,
-      backgroundColor: '$bodyColor',
-      borderWidth: 2,
-      borderColor: '$intentsPrimary11',
-    },
-    [`&[data-status="${ConnectionStatus.OtherAccount}"]:after`]: {
-      content: '',
-      position: 'absolute',
-      top: -2,
-      left: -2,
-      right: -2,
-      bottom: -2,
-      zIndex: -1,
-      borderRadius: '$full',
-      backgroundColor: '$bodyColor',
-    },
-    [`&[data-status="${ConnectionStatus.NoAccounts}"]`]: {
-      height: 12,
-      width: 12,
-      backgroundColor: '$intentsBase11',
-      borderWidth: 3,
-      borderColor: '$bodyColor',
+      textDecoration: 'underline',
     },
   }),
 };

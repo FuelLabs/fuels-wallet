@@ -1,35 +1,26 @@
 import type { Connection } from '@fuel-wallet/types';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ConnectionService } from '../services';
 
 interface UseConnectionProps {
-  url: string | undefined;
+  origin: string | undefined;
 }
 
-const parseUrl = (url: string): string | undefined => {
-  try {
-    const { protocol, hostname, port } = new URL(url);
-    return `${protocol}//${hostname}${port ? `:${port}` : ''}`;
-  } catch (_e) {
-    return undefined;
-  }
-};
-
-export const useConnection = ({ url }: UseConnectionProps) => {
+export const useConnection = ({ origin }: UseConnectionProps) => {
   const [connection, setConnection] = useState<Connection | undefined>();
 
-  useEffect(() => {
-    const fetchConnection = async () => {
-      if (!url) return;
-      const origin = parseUrl(url);
-      const existingConnection = await ConnectionService.getConnection(origin);
-      setConnection(existingConnection);
-    };
+  const fetchConnection = useCallback(async () => {
+    if (!origin) return;
+    const existingConnection = await ConnectionService.getConnection(origin);
+    setConnection(existingConnection);
+  }, [origin]);
 
+  useEffect(() => {
     fetchConnection();
-  }, [url]);
+  }, [fetchConnection]);
 
   return {
     connection,
+    fetchConnection,
   };
 };
