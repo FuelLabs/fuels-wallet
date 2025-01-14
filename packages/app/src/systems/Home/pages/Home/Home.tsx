@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Tabs } from '@fuel-ui/react';
+import { Tabs } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { BalanceWidget, useAccounts } from '~/systems/Account';
 import { Layout, Pages, scrollable } from '~/systems/Core';
