@@ -57,8 +57,9 @@ test.describe('Deposit Half ETH', () => {
 
     const depositHalfButton = getButtonByText(page, 'Deposit Half ETH', true);
     await expectButtonToBeEnabled(depositHalfButton);
+    await page.waitForTimeout(1000); // Wait for slow VM
     await depositHalfButton.click();
-    await page.waitForTimeout(10000); // Wait for slow VM
+    await page.waitForTimeout(1000); // Wait for slow VM
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();

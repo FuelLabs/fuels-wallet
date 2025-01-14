@@ -66,8 +66,9 @@ test.describe('Forward and Mint Multicall', () => {
       'Deposit And Mint Multicall'
     );
     await expectButtonToBeEnabled(forwardHalfAndMintButton);
+    await page.waitForTimeout(1000); // Wait for slow VM
     await forwardHalfAndMintButton.click();
-    await page.waitForTimeout(10000); // Wait for slow VM
+    await page.waitForTimeout(1000); // Wait for slow VM
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();

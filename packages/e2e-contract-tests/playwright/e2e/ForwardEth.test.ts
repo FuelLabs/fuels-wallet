@@ -56,7 +56,9 @@ test.describe('Forward Eth', () => {
 
     const forwardEthButton = getButtonByText(page, 'Forward ETH');
     await expectButtonToBeEnabled(forwardEthButton);
+    await page.waitForTimeout(1000); // Wait for slow VM
     await forwardEthButton.click();
+    await page.waitForTimeout(1000); // Wait for slow VM
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();

@@ -128,8 +128,9 @@ test.describe('Mint Assets', () => {
     const mintButton = getButtonByText(page, 'Mint Asset configuration');
 
     await expectButtonToBeEnabled(mintButton);
+    await page.waitForTimeout(1000); // Wait for slow VM
     await mintButton.click();
-
+    await page.waitForTimeout(1000); // Wait for slow VM
     // test asset is correct
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
