@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 
 export async function checkAriaLabelsContainsText(
   walletNotificationPage: Page,
@@ -9,10 +9,11 @@ export async function checkAriaLabelsContainsText(
   const count = await locator.count();
 
   for (let i = 0; i < count; i++) {
+    const innerHTML = await locator.nth(i).innerHTML();
     if (text === '') {
-      expect(locator.nth(i).innerHTML()).not.toBe('');
+      await expect(innerHTML).not.toBe('');
     } else {
-      expect((await locator.nth(i).innerHTML()).includes(text)).toBeTruthy();
+      await expect(innerHTML.includes(text)).toBeTruthy();
     }
   }
 }
