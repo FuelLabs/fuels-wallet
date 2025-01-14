@@ -25,7 +25,7 @@ export function Home() {
   return (
     <Layout title="Home" isHome>
       <Layout.TopBar />
-      <Layout.Content noBorder css={styles.content}>
+      <Layout.Content noBorder noScroll>
         <BalanceWidget
           visibility={visibility}
           account={account}
@@ -59,17 +59,7 @@ export function Home() {
 }
 
 const styles = {
-  content: cssObj({
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
-  }),
   assets: cssObj({
-    overflow: 'hidden',
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
     paddingLeft: '$4',
 
     '.fuel_TabsList': {
@@ -77,7 +67,7 @@ const styles = {
     },
   }),
   assetsList: cssObj({
-    flex: 1,
+    maxHeight: 230,
     paddingBottom: '$4',
     ...scrollable(),
     overflowY: 'scroll !important',
