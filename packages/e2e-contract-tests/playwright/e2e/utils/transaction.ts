@@ -1,4 +1,5 @@
 import { getByAriaLabel, hasText } from '@fuels/playwright-utils';
+import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 import type { BN } from 'fuels';
@@ -15,5 +16,13 @@ export const checkFee = async (
 };
 
 export const waitSuccessTransaction = async (page: Page) => {
-  await hasText(page, 'Transaction successful.', 0, 15000);
+  await expect
+    .poll(
+      () =>
+        hasText(page, 'Transaction successful.')
+          .then(() => true)
+          .catch(() => false),
+      { timeout: 15000 }
+    )
+    .toBeTruthy();
 };
