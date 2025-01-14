@@ -23,13 +23,5 @@ const parseUrl = (url: string): Origin | undefined => {
 };
 
 export const useOrigin = ({ url }: UseOriginProps) => {
-  const [origin, setOrigin] = useState<Origin | undefined>();
-
-  useEffect(() => {
-    if (!url) return;
-    const origin = parseUrl(url);
-    setOrigin(origin);
-  }, [url]);
-
-  return origin;
+  return useMemo(() => url ? parseUrl(url) : undefined, [url]);
 };
