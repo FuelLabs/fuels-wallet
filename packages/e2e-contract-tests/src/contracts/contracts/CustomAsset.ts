@@ -15,7 +15,7 @@ import type {
   Provider,
   Account,
   StorageSlot,
-  AbstractAddress,
+  Address,
   BigNumberish,
   BN,
   Bytes,
@@ -525,7 +525,7 @@ export class CustomAsset extends Contract {
 
 
   constructor(
-    id: string | AbstractAddress,
+    id: string | Address,
     accountOrProvider: Account | Provider,
   ) {
     super(id, abi, accountOrProvider);
