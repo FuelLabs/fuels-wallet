@@ -1,13 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Accordion,
-  Badge,
-  Box,
-  Copyable,
-  Icon,
-  Text,
-  VStack,
-} from '@fuel-ui/react';
+import { Accordion, Badge, Box, Copyable, VStack } from '@fuel-ui/react';
 import type { CoinAsset } from '@fuel-wallet/types';
 import { useMemo } from 'react';
 import { AssetListEmpty } from '~/systems/Asset/components/AssetList/AssetListEmpty';
@@ -61,12 +53,12 @@ export const BalanceNFTs = ({ balances = [] }: BalanceNFTsProps) => {
                 <Box css={styles.grid}>
                   {collection.nfts.map((nft) => {
                     return (
-                      <VStack key={nft.assetId} align="center" gap="$1">
+                      <div key={nft.assetId}>
                         <NFTImage assetId={nft.assetId} image={nft.image} />
                         <Copyable css={styles.name} value={nft.assetId}>
                           {nft.name || shortAddress(nft.assetId)}
                         </Copyable>
-                      </VStack>
+                      </div>
                     );
                   })}
                 </Box>
@@ -137,6 +129,7 @@ const styles = {
     gap: '$3',
   }),
   name: cssObj({
+    marginTop: '$1',
     gap: '$0',
     fontSize: '$xs',
     lineHeight: '$none',
