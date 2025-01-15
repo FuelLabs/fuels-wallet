@@ -1,4 +1,4 @@
-import type { BrowserContext, Locator } from '@playwright/test';
+import type { BrowserContext, Locator, Page } from '@playwright/test';
 
 import { expect } from '../fixtures';
 import { FUEL_MNEMONIC, FUEL_WALLET_PASSWORD } from '../mocks';
@@ -133,22 +133,47 @@ export class FuelWalletTestHelper {
     await approveButton.click();
   }
 
-  async getWalletPopupPage() {
+  async getWalletPopupPage(): Promise<Page> {
+    console.log(
+      '🔍 Searching for existing wallet popup page in',
+      this.context.pages().map((page) => page.url())
+    );
+    console.log(`Timestamp: ${Date.now()}`);
     let walletNotificationPage = this.context.pages().find((page) => {
       const url = page.url();
       return url.includes('/popup.html?');
     });
 
     if (!walletNotificationPage) {
+      console.log('⏳ No existing popup found, waiting for popup event...');
       walletNotificationPage = await this.context.waitForEvent('page', {
         predicate: (page) => page.url().includes('/popup'),
-        timeout: 5000,
+        timeout: 30000,
       });
+      console.log(
+        '🔍 Searching for existing wallet popup page in',
+        this.context.pages().map((page) => page.url())
+      );
+      console.log(`Timestamp: ${Date.now()}`);
+      // If the popup is not found, try to find it in the pages again
+      if (!walletNotificationPage) {
+        walletNotificationPage = this.context.pages().find((page) => {
+          const url = page.url();
+          return url.includes('/popup.html?');
+        });
+      }
     }
-
     if (!walletNotificationPage) {
-      throw new Error('Wallet popup not found!');
+      console.log(
+        '🔍 No popup found in',
+        this.context.pages().map((page) => page.url())
+      );
+      throw new Error('No popup found');
     }
+    console.log(
+      '🔍 Returning popup page with URL:',
+      walletNotificationPage?.url()
+    );
 
     return walletNotificationPage;
   }
