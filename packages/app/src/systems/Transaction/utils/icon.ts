@@ -6,9 +6,7 @@ import { getLabel } from '../hooks/useTxMetadata';
 const ICON_MAP = {
   [OperationName.transfer]: 'Upload',
   [OperationName.receive]: 'Download',
-  [OperationName.sent]: 'Upload',
-  [OperationName.mint]: 'ArrowRight',
-  [OperationName.predicatecall]: 'Wand',
+  [OperationName.contractCreated]: 'ArrowRight',
   [OperationName.contractCall]: 'ArrowsLeftRight',
 };
 
@@ -20,7 +18,7 @@ export const getTxIcon = (
   const label = operation ? getLabel(operation, address) : 'Unknown';
   if (!type || !ICON_MAP[type]) return 'ArrowRight';
   if (label.includes('Sent')) {
-    return ICON_MAP[OperationName.sent] as Icons;
+    return ICON_MAP[OperationName.transfer] as Icons;
   }
   if (label.includes('Received')) {
     return ICON_MAP[OperationName.receive] as Icons;

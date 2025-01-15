@@ -11,9 +11,9 @@ import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { chromeStorage } from '~/systems/Core/services/chromeStorage';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
+import { readFromOPFS } from '~/systems/Core/utils/opfs';
 import { getUniqueString } from '~/systems/Core/utils/string';
 import { getTestNoDexieDbData } from '../utils/getTestNoDexieDbData';
-import { readFromOPFS } from '~/systems/Core/utils/opfs';
 
 export type AccountInputs = {
   addAccount: {
@@ -108,7 +108,7 @@ export class AccountService {
       const provider = await createProvider(providerUrl!);
       const balances = await getBalances(provider, account.publicKey);
       const balanceAssets = await AssetsCache.fetchAllAssets(
-        provider.getChainId(),
+        await provider.getChainId(),
         balances.map((balance) => balance.assetId)
       );
       // includes "asset" prop in balance, centralizing the complexity here instead of in rest of UI
@@ -142,7 +142,7 @@ export class AccountService {
       });
 
       // includes eth balance info, centralizing the complexity here instead of in rest of UI
-      const baseAssetId = provider.getBaseAssetId();
+      const baseAssetId = await provider.getBaseAssetId();
       const ethAsset = balances.find(
         (balance) => balance.assetId === baseAssetId.toString()
       );
