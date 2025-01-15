@@ -75,11 +75,11 @@ const styles = {
   root: cssObj({
     '.fuel_Accordion-trigger': {
       fontSize: '$base',
-      fontWeight: '$semibold',
+      fontWeight: '$medium',
       backgroundColor: 'transparent',
       color: '$intentsBase11',
       padding: '$0',
-      gap: '2px',
+      gap: '$2',
       flexDirection: 'row-reverse',
       justifyContent: 'flex-start',
     },
@@ -99,16 +99,25 @@ const styles = {
       backgroundColor: 'transparent',
       borderBottom: '1px solid $border',
       borderRadius: '$none',
+
+      svg: {
+        width: '$3',
+        height: '$3',
+      },
     },
     '.fuel_Accordion-content': {
       border: '0',
       padding: '$0 5px $2 20px',
     },
     '.fuel_Badge': {
-      display: 'inline-block',
+      display: 'inline-flex',
+      justifyContent: 'center',
+      alignItems: 'center',
       fontWeight: '$normal',
       fontSize: '$xs',
-      padding: '$1',
+      padding: '$0',
+      height: '$5',
+      minWidth: '$5',
       pointerEvents: 'none',
       marginLeft: 'auto',
       lineHeight: 'normal',
