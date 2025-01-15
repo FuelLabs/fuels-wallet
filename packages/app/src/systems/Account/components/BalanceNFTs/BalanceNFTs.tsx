@@ -137,6 +137,7 @@ const styles = {
     gap: '$3',
   }),
   name: cssObj({
+    gap: '$0',
     fontSize: '$xs',
     lineHeight: '$none',
     textAlign: 'center',
