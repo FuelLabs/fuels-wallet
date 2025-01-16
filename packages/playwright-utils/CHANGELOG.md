@@ -1,5 +1,11 @@
 # @fuels/playwright-utils
 
+## 0.47.0
+
+### Minor Changes
+
+- [#1774](https://github.com/FuelLabs/fuels-wallet/pull/1774) [`dd77946d`](https://github.com/FuelLabs/fuels-wallet/commit/dd77946db95dc3668493643b8896f86e8956f891) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fuel SDK updated to 0.98.0, breaking changes (e.g. Provide.create, async provider calls, removal of AbstractAddress) are covered. Read [here](https://github.com/fuellabs/fuels-ts/releases/tag/v0.98.0) for more info.
+
 ## 0.46.1
 
 ## 0.46.0

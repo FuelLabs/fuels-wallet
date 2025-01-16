@@ -1,5 +1,23 @@
 # fuels-wallet
 
+## 0.47.0
+
+### Minor Changes
+
+- [#1710](https://github.com/FuelLabs/fuels-wallet/pull/1710) [`4c530078`](https://github.com/FuelLabs/fuels-wallet/commit/4c530078ca2d252e7f5f8db9ffb779c775e5122b) Thanks [@nelitow](https://github.com/nelitow)! - Improve handling of custom assets.
+
+- [#1774](https://github.com/FuelLabs/fuels-wallet/pull/1774) [`dd77946d`](https://github.com/FuelLabs/fuels-wallet/commit/dd77946db95dc3668493643b8896f86e8956f891) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fuel SDK updated to 0.98.0, breaking changes (e.g. Provide.create, async provider calls, removal of AbstractAddress) are covered. Read [here](https://github.com/fuellabs/fuels-ts/releases/tag/v0.98.0) for more info.
+
+### Patch Changes
+
+- [#1774](https://github.com/FuelLabs/fuels-wallet/pull/1774) [`dd77946d`](https://github.com/FuelLabs/fuels-wallet/commit/dd77946db95dc3668493643b8896f86e8956f891) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Gasless transactions are now supported via the `skipCustomFee` param
+
+- [#1725](https://github.com/FuelLabs/fuels-wallet/pull/1725) [`28628cbd`](https://github.com/FuelLabs/fuels-wallet/commit/28628cbda88d249c67a49fa0ed44fbf1d6e83267) Thanks [@nelitow](https://github.com/nelitow)! - Allow editing network name when adding.
+
+- Updated dependencies [[`dd77946d`](https://github.com/FuelLabs/fuels-wallet/commit/dd77946db95dc3668493643b8896f86e8956f891), [`dd77946d`](https://github.com/FuelLabs/fuels-wallet/commit/dd77946db95dc3668493643b8896f86e8956f891)]:
+  - @fuel-wallet/connections@0.47.0
+  - @fuels/playwright-utils@0.47.0
+
 ## 0.46.1
 
 ### Patch Changes
