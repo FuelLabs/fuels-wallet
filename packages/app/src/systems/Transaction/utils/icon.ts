@@ -6,7 +6,6 @@ import { getLabel } from '../hooks/useTxMetadata';
 const ICON_MAP = {
   [OperationName.transfer]: 'Upload',
   [OperationName.receive]: 'Download',
-  [OperationName.contractCreated]: 'ArrowRight',
   [OperationName.contractCall]: 'ArrowsLeftRight',
 };
 
