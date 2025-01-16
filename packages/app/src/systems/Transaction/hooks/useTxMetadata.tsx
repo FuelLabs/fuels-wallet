@@ -14,7 +14,7 @@ type UseTxMetadataProps = {
 export function getAddress(address?: string) {
   if (!address) return '';
   if (address === 'Network') return address;
-  return Address.fromString(address).bech32Address;
+  return Address.fromString(address).b256Address;
 }
 
 export function getLabel(operation: Operation, address?: Bech32Address) {

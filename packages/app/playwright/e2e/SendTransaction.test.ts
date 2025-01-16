@@ -27,7 +27,7 @@ test.describe('SendTransaction', () => {
     const { accounts } = await mockData(page);
     account = accounts[0];
     await seedWallet(account.address, bn(100_000_000));
-    provider = await Provider.create(process.env.VITE_FUEL_PROVIDER_URL);
+    provider = new Provider(process.env.VITE_FUEL_PROVIDER_URL);
   });
 
   test('Send transaction', async () => {
@@ -358,7 +358,7 @@ test.describe('SendTransaction', () => {
   });
 
   test('Send transaction to an asset address should fail', async () => {
-    const assetAddress = provider.getBaseAssetId();
+    const assetAddress = await provider.getBaseAssetId();
     await visit(page, '/send');
     await getInputByName(page, 'address').fill(assetAddress);
     await getInputByName(page, 'amount').fill('0.001');

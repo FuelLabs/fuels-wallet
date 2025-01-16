@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+  pull_request:
+      types: [opened, synchronize, reopened]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -50,12 +52,13 @@ jobs:
 
       - name: Create Release Pull Request or Publish to NPM
         id: changesets
-        uses: FuelLabs/changesets-action@v2.0.0
+        uses: FuelLabs/changesets-action@v3.0.0
         with:
-          publish: pnpm changeset publish --tag next
+          publish: pnpm changeset publish --tag pr-${{ env.BUILD_VERSION }}
           commit: "ci(changesets): versioning packages"
           title: "ci(changesets): versioning packages"
-          createGithubReleases: aggregate
+          # createGithubReleases: aggregate
+          createGithubReleases: false
           githubReleaseName: v${{ env.BUILD_VERSION }}
           githubTagName: v${{ env.BUILD_VERSION }}
         env:
@@ -71,7 +74,8 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Build Fuel Wallet Development
-        if: steps.changesets.outputs.published == 'true'
+        # if: steps.changesets.outputs.published == 'true'
+        if: false
         run: pnpm build:crx
         env:
           VITE_CRX_RELEASE: false
@@ -81,7 +85,8 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Upload Production artifacts to Sentry
-        if: steps.changesets.outputs.published == 'true'
+        # if: steps.changesets.outputs.published == 'true'
+        if: false
         run: |
           pnpm sentry-cli sourcemaps inject --release ${{ env.BUILD_VERSION }} ./dist-crx
           pnpm sentry-cli sourcemaps upload --release ${{ env.BUILD_VERSION }} ./dist-crx
