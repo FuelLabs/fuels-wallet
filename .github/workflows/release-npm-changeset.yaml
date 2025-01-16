@@ -52,15 +52,17 @@ jobs:
 
       - name: Create Release Pull Request or Publish to NPM
         id: changesets
-        uses: FuelLabs/changesets-action@v2.0.0
+        uses: FuelLabs/changesets-action@v3.0.0
         with:
           publish: pnpm changeset publish --tag pr-${{ env.BUILD_VERSION }}
           commit: "ci(changesets): versioning packages"
           title: "ci(changesets): versioning packages"
-          createGithubReleases: aggregate
+          # createGithubReleases: aggregate
+          createGithubReleases: false
           githubReleaseName: v${{ env.BUILD_VERSION }}
           githubTagName: v${{ env.BUILD_VERSION }}
         env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Build Fuel Wallet
