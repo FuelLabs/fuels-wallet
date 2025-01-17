@@ -3,7 +3,12 @@ import { Box, Card, Copyable, Icon, Text } from '@fuel-ui/react';
 import { Address, type TransactionSummary } from 'fuels';
 import { type FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Pages, shortAddress } from '~/systems/Core';
+import {
+  Pages,
+  safeConvertToB256,
+  safeDynamicAddress,
+  shortAddress,
+} from '~/systems/Core';
 
 import { useTxMetadata } from '../../hooks/useTxMetadata';
 import { TxIcon } from '../TxIcon';
@@ -37,7 +42,7 @@ export const ActivityItem: TxItemComponent = ({
   const address = useMemo(() => {
     if (!toOrFromAddress) return;
 
-    return Address.fromDynamicInput(toOrFromAddress);
+    return safeConvertToB256(toOrFromAddress);
   }, [toOrFromAddress]);
 
   return (
@@ -62,7 +67,7 @@ export const ActivityItem: TxItemComponent = ({
         <Box.Flex css={styles.row}>
           <Box.Flex css={styles.fromToTextWrapper}>
             <Text css={styles.label}>{toOrFromText}</Text>
-            <Text>{!!address && shortAddress(address.toB256())}</Text>
+            <Text>{!!address && shortAddress(address)}</Text>
           </Box.Flex>
           {timeFormatted && (
             <Box.Flex css={styles.item}>

@@ -15,7 +15,7 @@ import {
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
 } from 'fuels';
-import { WalletLockedCustom, db } from '~/systems/Core';
+import { WalletLockedCustom, db, safeDynamicAddress } from '~/systems/Core';
 
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
@@ -428,7 +428,7 @@ export class TxService {
         const targetAmount = amount.sub(attempts * AMOUNT_SUB_PER_TX_RETRY);
         const realAmount = targetAmount.gt(0) ? targetAmount : bn(1);
         const transactionRequest = await wallet.createTransfer(
-          Address.fromDynamicInput(to),
+          safeDynamicAddress(to),
           realAmount,
           assetId,
           {

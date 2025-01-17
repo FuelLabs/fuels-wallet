@@ -4,6 +4,7 @@ import { IS_CRX } from '~/config';
 import { DEFAULT_NETWORKS } from '~/networks';
 import { useAccounts } from '~/systems/Account';
 import { openTab } from '~/systems/CRX/utils';
+import { safeConvertToB256 } from '~/systems/Core';
 import { useNetworks } from '~/systems/Network';
 
 export function useFundWallet() {
@@ -24,7 +25,7 @@ export function useFundWallet() {
     let url: URL | null = null;
     if (faucetUrl) {
       if (!account || !account.address) return faucetUrl;
-      const address = Address.fromDynamicInput(account.address).toB256();
+      const address = safeConvertToB256(account.address);
       url = new URL(faucetUrl);
       url.searchParams.set('address', address);
     } else if (bridgeUrl) {

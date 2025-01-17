@@ -20,6 +20,7 @@ import { ConnectionService } from '~/systems/DApp/services';
 import { NetworkService } from '~/systems/Network/services';
 import { AbiService } from '~/systems/Settings/services';
 
+import { safeDynamicAddress } from '~/systems/Core';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { PopUpService } from './PopUpService';
 import type { MessageInputs } from './types';
@@ -316,7 +317,7 @@ export class BackgroundService {
 
     // We need to forward bech32 addresses to the popup, regardless if we receive a b256 here
     // our database is storing fuel addresses
-    const bech32Address = Address.fromDynamicInput(address).toString();
+    const bech32Address = safeDynamicAddress(address).toString();
 
     const signedMessage = await popupService.sendTransaction({
       address: bech32Address,
