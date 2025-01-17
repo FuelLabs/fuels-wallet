@@ -106,7 +106,7 @@ export class AccountService {
 
     try {
       const provider = await createProvider(providerUrl!);
-      const balances = await getBalances(provider, account.publicKey);
+      const balances = await getBalances(provider, account.address);
       const balanceAssets = await AssetsCache.fetchAllAssets(
         await provider.getChainId(),
         balances.map((balance) => balance.assetId)
@@ -467,8 +467,7 @@ export class AccountService {
 // Private methods
 // ----------------------------------------------------------------------------
 
-async function getBalances(provider: Provider, publicKey = '0x00') {
-  const address = Address.fromPublicKey(publicKey);
+async function getBalances(provider: Provider, address: string) {
   const { balances } = await provider.getBalances(address);
   return balances;
 }
