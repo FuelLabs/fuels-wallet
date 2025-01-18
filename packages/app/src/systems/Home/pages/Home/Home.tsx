@@ -8,7 +8,7 @@ import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 import { BalanceAssets } from '~/systems/Account/components/BalanceAssets/BalanceAssets';
 import { BalanceNFTs } from '~/systems/Account/components/BalanceNFTs/BalanceNFTs';
 import { QuickAccountConnect } from '~/systems/Account/components/QuickAccountConnect/QuickAccountConnect';
-import { AssetsTitle, HomeActions } from '../../components';
+import { HomeActions } from '../../components';
 
 export function Home() {
   const { visibility, setVisibility } = useBalanceVisibility();
