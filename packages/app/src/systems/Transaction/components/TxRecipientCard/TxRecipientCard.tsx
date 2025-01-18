@@ -6,6 +6,7 @@ import { type FC, useMemo } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 
 import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadata';
+import { safeDynamicAddress } from '~/systems/Core/utils/address';
 import { TxRecipientCardLoader } from './TxRecipientCardLoader';
 import { TxRecipientContractLogo } from './TxRecipientContractLogo';
 
@@ -26,7 +27,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   const address = recipient?.address || '';
   const isValidAddress = isB256(address);
   const fuelAddress = isValidAddress
-    ? Address.fromString(address).toString()
+    ? safeDynamicAddress(address).toString()
     : '';
   const isContract = recipient?.type === AddressType.contract;
   const isEthChain = recipient?.chain === ChainName.ethereum;

@@ -43,7 +43,7 @@ export function safeConvertToB256(address: string) {
   try {
     return Address.fromDynamicInput(
       isBech32(address) ? convertBech32ToEth(address) : address
-    ).toB256();
+    ).toString();
   } catch (error) {
     console.log(error);
     return address;

@@ -4,7 +4,7 @@ import {
   MessageTypes,
 } from '@fuel-wallet/types';
 import type { CommunicationEventArg, Connection } from '@fuel-wallet/types';
-import { Address, type Network } from 'fuels';
+import type { Network } from 'fuels';
 import type {
   JSONRPCParams,
   JSONRPCRequest,
@@ -20,7 +20,7 @@ import { ConnectionService } from '~/systems/DApp/services';
 import { NetworkService } from '~/systems/Network/services';
 import { AbiService } from '~/systems/Settings/services';
 
-import { safeDynamicAddress, toBech32 } from '~/systems/Core/utils/address';
+import { safeDynamicAddress } from '~/systems/Core/utils/address';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { PopUpService } from './PopUpService';
 import type { MessageInputs } from './types';
@@ -132,7 +132,7 @@ export class BackgroundService {
       throw new Error('connection not found');
     }
     const hasAccessToAddress = connection.accounts.includes(
-      Address.fromString(address || '0x00').toString()
+      safeDynamicAddress(address || '0x00').toString()
     );
     if (!hasAccessToAddress) {
       throw new Error('address is not authorized for this connection.');
@@ -315,12 +315,12 @@ export class BackgroundService {
       this.communicationProtocol
     );
 
-    // We need to forward bech32 addresses to the popup, regardless if we receive a b256 here
-    // our database is storing fuel addresses
-    const bech32Address = toBech32(safeDynamicAddress(address).toB256());
+    // We need to forward B256 addresses to the popup, regardless if we receive a b256 here
+    // our database is storing B256s
+    const b256Address = safeDynamicAddress(address).toString();
 
     const signedMessage = await popupService.sendTransaction({
-      address: bech32Address,
+      address: b256Address,
       provider,
       transaction,
       origin,
@@ -338,14 +338,14 @@ export class BackgroundService {
 
     const connectedAccounts = serverParams?.connection?.accounts || [];
     const hasAccessToAddress = connectedAccounts.includes(
-      Address.fromString(currentAccount?.address || '0x00').toString()
+      safeDynamicAddress(currentAccount?.address || '0x00').toString()
     );
 
     if (hasAccessToAddress) return currentAccount?.address;
 
     const accounts = await AccountService.getAccounts();
     const firstConnectedAccount = accounts?.find((acc) =>
-      connectedAccounts.includes(Address.fromString(acc.address).toString())
+      connectedAccounts.includes(safeDynamicAddress(acc.address).toString())
     );
     return firstConnectedAccount?.address;
   }

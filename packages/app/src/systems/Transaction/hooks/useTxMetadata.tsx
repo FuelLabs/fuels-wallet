@@ -3,6 +3,10 @@ import { Address, OperationName } from 'fuels';
 import { useMemo } from 'react';
 import { useAccounts } from '~/systems/Account';
 
+import {
+  safeConvertToB256,
+  safeDynamicAddress,
+} from '~/systems/Core/utils/address';
 import { OperationDirection } from '../types';
 import { formatDate, getOperationDirection } from '../utils';
 
@@ -14,12 +18,12 @@ type UseTxMetadataProps = {
 export function getAddress(address?: string) {
   if (!address) return '';
   if (address === 'Network') return address;
-  return Address.fromString(address).b256Address;
+  return safeConvertToB256(address);
 }
 
 export function getLabel(operation: Operation, address?: Bech32Address) {
   const { name } = operation;
-  const me = address ? Address.fromString(address).toHexString() : '';
+  const me = address ? safeDynamicAddress(address).toHexString() : '';
 
   if (name === OperationName.transfer && operation.from?.address === me) {
     return 'Sent asset';
