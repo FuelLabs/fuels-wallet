@@ -5,7 +5,7 @@ import { FuelAddress } from './FuelAddress';
 
 const accountAddressHex = '0xdafd6d127fe93b8938205bfee6cfd6833cacd95f';
 const accountAddressB256 =
-  '0x000000000000000000000000dafd6d127fe93b8938205bfee6cfd6833cacd95f';
+  '0x000000000000000000000000DaFD6D127fE93b8938205BfeE6cFd6833cAcD95F';
 const shorten = (address: string) =>
   `0x${address.slice(2, 6)}...${address.slice(-4)}`;
 const accountAddressBech32 =
