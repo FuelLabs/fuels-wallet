@@ -112,10 +112,10 @@ const styles = {
   wrapper: cssObj({
     position: 'fixed',
     paddingLeft: '$4',
-    paddingRight: '$4',
+    paddingRight: '15px',
     paddingBottom: '$4',
     bottom: 0,
-    zIndex: '$2',
+    zIndex: '$10',
     opacity: 0,
     transition: 'opacity 0.2s ease-in-out',
     pointerEvents: 'none',
