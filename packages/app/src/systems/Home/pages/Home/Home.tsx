@@ -6,9 +6,9 @@ import { Layout, Pages, scrollable } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 import { BalanceAssets } from '~/systems/Account/components/BalanceAssets/BalanceAssets';
+import { BalanceNFTs } from '~/systems/Account/components/BalanceNFTs/BalanceNFTs';
 import { QuickAccountConnect } from '~/systems/Account/components/QuickAccountConnect/QuickAccountConnect';
 import { AssetsTitle, HomeActions } from '../../components';
-import { BalanceNFTs } from '~/systems/Account/components/BalanceNFTs/BalanceNFTs';
 
 export function Home() {
   const { visibility, setVisibility } = useBalanceVisibility();
@@ -48,9 +48,7 @@ export function Home() {
               NFT
             </Tabs.Trigger>
           </Tabs.List>
-          <Tabs
-            
-            value="assets" css={styles.assetsList}>
+          <Tabs.Content value="assets" css={styles.assetsList}>
             <BalanceAssets balances={account?.balances} isLoading={isLoading} />
           </Tabs.Content>
           <Tabs.Content value="nft" css={styles.assetsList}>
