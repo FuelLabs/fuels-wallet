@@ -9,11 +9,12 @@ import {
   isB256,
 } from 'fuels';
 import { useMemo } from 'react';
+import { shortAddress } from '~/systems/Core';
 import {
+  isBech32,
   safeConvertToB256,
   safeDynamicAddress,
-  shortAddress,
-} from '~/systems/Core';
+} from '~/systems/Core/utils/address';
 import { useExplorerLink } from '../../hooks/useExplorerLink';
 
 export type AddressProps = {
@@ -25,15 +26,13 @@ export type AddressProps = {
 
 export const FuelAddress = ({
   address,
-  isContract,
   canOpenExplorer = false,
   css,
 }: AddressProps) => {
-  const account = useMemo<string>(() => {
-    if (!address) return '';
-    if (isContract) return safeConvertToB256(address);
-    return safeDynamicAddress(address).toString();
-  }, [isContract, address]);
+  const account = useMemo<string>(
+    () => (isB256(address) ? address : safeDynamicAddress(address).toB256()),
+    [address]
+  );
 
   const { openExplorer, href } = useExplorerLink(account);
 

@@ -3,12 +3,7 @@ import { Box, Card, Copyable, Icon, Text } from '@fuel-ui/react';
 import { Address, type TransactionSummary } from 'fuels';
 import { type FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Pages,
-  safeConvertToB256,
-  safeDynamicAddress,
-  shortAddress,
-} from '~/systems/Core';
+import { Pages, safeConvertToB256, shortAddress } from '~/systems/Core';
 
 import { useTxMetadata } from '../../hooks/useTxMetadata';
 import { TxIcon } from '../TxIcon';

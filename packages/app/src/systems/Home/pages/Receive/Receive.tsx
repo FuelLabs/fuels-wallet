@@ -9,7 +9,6 @@ import {
   safeConvertToB256,
 } from '~/systems/Core';
 
-import { Address } from 'fuels';
 import { ReceiverQRCode } from '../../components/QRCode';
 import { UserAddressCard } from '../../components/UserAddressCard';
 

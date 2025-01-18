@@ -4,8 +4,7 @@ import { TestWrapper } from '~/systems/Core';
 import { act } from 'react';
 import { UserAddressCard } from '.';
 
-const TEST_ACCOUNT =
-  'fuel1auahknz6mjuu0am034mlggh55f0tgp9j7fkzrc6xl48zuy5zv7vqa07n30';
+const TEST_ACCOUNT = 'fuelsequencer1mt7k6ynlayacjwpqt0lwdn7ksv72ek2lwt95nu';
 
 describe('UserAddressCard', () => {
   it('should show infos and copy the address', async () => {

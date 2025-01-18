@@ -27,7 +27,7 @@ export const MOCK_ACCOUNTS = [
   },
   {
     name: 'Account 4',
-    address: 'fuel10va6297tkerdcn5u8mxjm9emudsmkj85pq5x7t7stkmzmc4nvs3qvn99qz',
+    address: 'fuelsequencer1mt7k6ynlayacjwpqt0lwdn7ksv72ek2lwt95nu',
     publicKey: '0x00',
   },
 ];

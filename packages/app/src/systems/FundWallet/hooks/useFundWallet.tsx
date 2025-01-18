@@ -4,7 +4,7 @@ import { IS_CRX } from '~/config';
 import { DEFAULT_NETWORKS } from '~/networks';
 import { useAccounts } from '~/systems/Account';
 import { openTab } from '~/systems/CRX/utils';
-import { safeConvertToB256 } from '~/systems/Core';
+import { safeConvertToB256 } from '~/systems/Core/utils/address';
 import { useNetworks } from '~/systems/Network';
 
 export function useFundWallet() {
