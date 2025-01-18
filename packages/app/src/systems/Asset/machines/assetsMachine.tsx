@@ -185,8 +185,8 @@ export const assetsMachine = createMachine(
     services: {
       setListedAssets: FetchMachine.create<null, void>({
         showError: true,
-        fetch: async (_input, abortController) => {
-          await AssetService.setListedAssets(abortController);
+        fetch: async (_input) => {
+          await AssetService.setListedAssets();
         },
       }),
       fetchAssets: FetchMachine.create<
