@@ -4,7 +4,7 @@ import { TestWrapper } from '~/systems/Core/components/TestWrapper';
 import { ReceiverQRCode } from './QRCode';
 
 const TEST_ACCOUNT =
-  'fuel1auahknz6mjuu0am034mlggh55f0tgp9j7fkzrc6xl48zuy5zv7vqa07n30';
+  '0xef3b7b4c5adcb9c7f76f8d77f422f4a25eb404b2f26c21e346fd4e2e12826798';
 
 describe('QR Code Tests', () => {
   it('should show the qr code on screen', async () => {

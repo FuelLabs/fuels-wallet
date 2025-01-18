@@ -1,18 +1,13 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Box, Copyable, Icon, IconButton, Text } from '@fuel-ui/react';
-import {
-  Address,
-  type B256Address,
-  type Bech32Address,
-  type ChecksumAddress,
-} from 'fuels';
+import { Address, type B256Address, type ChecksumAddress } from 'fuels';
 import { useMemo } from 'react';
 import { shortAddress } from '~/systems/Core';
 import { useExplorerLink } from '../../hooks/useExplorerLink';
 
 export type AddressProps = {
-  address: ChecksumAddress | Bech32Address | B256Address;
+  address: ChecksumAddress | B256Address;
   canOpenExplorer?: boolean;
   css?: ThemeUtilsCSS;
   isContract?: boolean;

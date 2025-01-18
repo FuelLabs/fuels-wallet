@@ -108,7 +108,7 @@ export class AccountService {
       const provider = await createProvider(providerUrl!);
       const balances = await getBalances(provider, account.address);
       const balanceAssets = await AssetsCache.fetchAllAssets(
-        provider.getChainId(),
+        await provider.getChainId(),
         balances.map((balance) => balance.assetId)
       );
       // includes "asset" prop in balance, centralizing the complexity here instead of in rest of UI
@@ -142,7 +142,7 @@ export class AccountService {
       });
 
       // includes eth balance info, centralizing the complexity here instead of in rest of UI
-      const baseAssetId = provider.getBaseAssetId();
+      const baseAssetId = await provider.getBaseAssetId();
       const ethAsset = balances.find(
         (balance) => balance.assetId === baseAssetId.toString()
       );

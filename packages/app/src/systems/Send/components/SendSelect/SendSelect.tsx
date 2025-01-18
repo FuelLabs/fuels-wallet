@@ -2,7 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Alert, Box, Form, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { type BN, bn } from 'fuels';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import {
   ControlledField,
@@ -35,6 +35,7 @@ export function SendSelect({
   provider,
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
+  const [baseAssetId, setBaseAssetId] = useState<string | null>(null);
   const isAmountFocused = useRef<boolean>(false);
   const baseFeeRef = useRef<BN | null>(baseFee);
   const tipRef = useRef<BN>(tip);
@@ -49,17 +50,21 @@ export function SendSelect({
     name: 'asset',
   });
 
+  useEffect(() => {
+    provider
+      ?.getBaseAssetId()
+      .then((id) => setBaseAssetId(id))
+      .catch((e) => console.error(e));
+  }, [provider]);
+
   const decimals = useMemo(() => {
     const selectedAsset = balances?.find((a) => a.asset?.assetId === assetId);
     return selectedAsset?.asset?.decimals;
   }, [assetId, balances]);
 
   const isSendingBaseAssetId = useMemo(() => {
-    return (
-      assetId &&
-      provider?.getBaseAssetId().toLowerCase() === assetId.toLowerCase()
-    );
-  }, [provider, assetId]);
+    return assetId && baseAssetId?.toLowerCase() === assetId.toLowerCase();
+  }, [baseAssetId, assetId]);
 
   useEffect(() => {
     if (

@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Card, Heading, Icon, Image, Text } from '@fuel-ui/react';
 import type { OperationTransactionAddress } from 'fuels';
-import { Address, AddressType, ChainName, isB256, isBech32 } from 'fuels';
+import { Address, AddressType, ChainName, isB256 } from 'fuels';
 import { type FC, useMemo } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 
@@ -24,7 +24,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
 }) => {
   const { accounts } = useAccounts();
   const address = recipient?.address || '';
-  const isValidAddress = isB256(address) || isBech32(address);
+  const isValidAddress = isB256(address);
   const fuelAddress = isValidAddress
     ? Address.fromString(address).toString()
     : '';

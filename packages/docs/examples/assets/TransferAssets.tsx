@@ -28,9 +28,8 @@ export function TransferAssets() {
   }, [assetId, assets]);
 
   useEffect(() => {
-    Provider.create('http://localhost:4000/v1/graphql').then((provider) => {
-      setAssetId(provider.getBaseAssetId());
-    });
+    const provider = new Provider('http://localhost:4000/v1/graphql');
+    provider.getBaseAssetId().then(setAssetId);
   }, []);
 
   const [sendTransaction, sendingTransaction, errorSendingTransaction] =

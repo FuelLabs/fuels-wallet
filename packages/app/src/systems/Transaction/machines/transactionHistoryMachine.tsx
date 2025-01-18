@@ -1,5 +1,5 @@
 import type { TransactionResult } from 'fuels';
-import { isB256, isBech32 } from 'fuels';
+import { isB256 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { FetchMachine } from '~/systems/Core';
@@ -229,7 +229,7 @@ export const transactionHistoryMachine = createMachine(
   {
     guards: {
       isInvalidAddress: (_, ev) => {
-        return !isB256(ev.input?.address) && !isBech32(ev.input?.address);
+        return !isB256(ev.input?.address);
       },
       shouldFetchMoreAutomatically: (ctx, _ev) => {
         if (ctx.transactionHistory) {

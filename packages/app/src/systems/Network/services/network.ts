@@ -229,8 +229,8 @@ export class NetworkService {
 
       if (!networkByChainId || !networkByUrl) {
         const provider = await createProvider(url);
-        const providerName = provider.getChain().name;
-        const providerChainId = provider.getChainId();
+        const providerName = (await provider.getChain()).name;
+        const providerChainId = await provider.getChainId();
 
         if (providerChainId !== chainId) {
           throw new Error(
@@ -308,7 +308,7 @@ export class NetworkService {
 
       if (!networkByUrl) {
         const provider = await createProvider(url);
-        const providerName = provider.getChain().name;
+        const providerName = (await provider.getChain()).name;
         const providerChainId = await provider.getChainId();
 
         await NetworkService.validateNetworkVersion({
