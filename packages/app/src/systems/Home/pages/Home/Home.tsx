@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box } from '@fuel-ui/react';
+import { Tabs } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { BalanceWidget, useAccounts } from '~/systems/Account';
 import { Layout, Pages, scrollable } from '~/systems/Core';
@@ -8,6 +8,7 @@ import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 import { BalanceAssets } from '~/systems/Account/components/BalanceAssets/BalanceAssets';
 import { QuickAccountConnect } from '~/systems/Account/components/QuickAccountConnect/QuickAccountConnect';
 import { AssetsTitle, HomeActions } from '../../components';
+import { BalanceNFTs } from '~/systems/Account/components/BalanceNFTs/BalanceNFTs';
 
 export function Home() {
   const { visibility, setVisibility } = useBalanceVisibility();
@@ -25,53 +26,53 @@ export function Home() {
   return (
     <Layout title="Home" isHome>
       <Layout.TopBar />
-      <Layout.Content noBorder css={styles.content}>
+      <Layout.Content noBorder noScroll>
         <QuickAccountConnect />
-        <Box.Flex css={{ height: '100%', flexDirection: 'column' }}>
-          <BalanceWidget
-            visibility={visibility}
-            account={account}
-            isLoading={isLoading}
-            onChangeVisibility={setVisibility}
-          />
-          <HomeActions
-            receiveAction={goToReceive}
-            sendAction={sendAction}
-            isDisabled={isLoading}
-          />
-          <Box.Stack css={styles.assets}>
-            <Box css={styles.assetsTitle}>
-              <AssetsTitle />
-            </Box>
-            <Box.Stack css={styles.assetsList}>
-              <BalanceAssets
-                balances={account?.balances}
-                isLoading={isLoading}
-              />
-            </Box.Stack>
-          </Box.Stack>
-        </Box.Flex>
+        <BalanceWidget
+          visibility={visibility}
+          account={account}
+          isLoading={isLoading}
+          onChangeVisibility={setVisibility}
+        />
+        <HomeActions
+          receiveAction={goToReceive}
+          sendAction={sendAction}
+          isDisabled={isLoading}
+        />
+        <Tabs defaultValue="assets" variant="link" css={styles.assets}>
+          <Tabs.List>
+            <Tabs.Trigger value="assets" aria-label="Assets">
+              Assets
+            </Tabs.Trigger>
+            <Tabs.Trigger value="nft" aria-label="NFT">
+              NFT
+            </Tabs.Trigger>
+          </Tabs.List>
+          <Tabs
+            
+            value="assets" css={styles.assetsList}>
+            <BalanceAssets balances={account?.balances} isLoading={isLoading} />
+          </Tabs.Content>
+          <Tabs.Content value="nft" css={styles.assetsList}>
+            <BalanceNFTs balances={account?.balances} />
+          </Tabs.Content>
+        </Tabs>
       </Layout.Content>
     </Layout>
   );
 }
 
 const styles = {
-  content: cssObj({
-    position: 'relative',
-    flex: 1,
-    overflow: 'hidden',
-  }),
   assets: cssObj({
-    gap: '$2',
-    overflow: 'hidden',
-    flex: 1,
-  }),
-  assetsTitle: cssObj({
-    px: '$4',
+    paddingLeft: '$4',
+
+    '.fuel_TabsList': {
+      marginBottom: '$3',
+    },
   }),
   assetsList: cssObj({
-    padding: '$2 $0 $4 $4',
+    maxHeight: 230,
+    paddingBottom: '$4',
     ...scrollable(),
     overflowY: 'scroll !important',
   }),
