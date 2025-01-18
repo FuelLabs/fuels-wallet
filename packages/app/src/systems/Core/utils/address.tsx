@@ -1,5 +1,5 @@
-import { bech32 } from 'bech32';
-import { Address, isB256 } from 'fuels';
+import { bech32, bech32m } from 'bech32';
+import { Address, arrayify, hexlify, isB256 } from 'fuels';
 
 export function shortAddress(address = '') {
   return address.length > 10
@@ -33,6 +33,10 @@ export function isBech32(address: string): boolean {
   } catch {
     return false;
   }
+}
+
+export function toBech32(address: string) {
+  return bech32m.encode('fuel', bech32m.toWords(arrayify(hexlify(address))));
 }
 
 export function safeConvertToB256(address: string) {
