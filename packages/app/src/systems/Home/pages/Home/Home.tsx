@@ -7,6 +7,7 @@ import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 import { BalanceAssets } from '~/systems/Account/components/BalanceAssets/BalanceAssets';
 import { BalanceNFTs } from '~/systems/Account/components/BalanceNFTs/BalanceNFTs';
+import { QuickAccountConnect } from '~/systems/Account/components/QuickAccountConnect/QuickAccountConnect';
 import { HomeActions } from '../../components';
 
 export function Home() {
@@ -26,6 +27,7 @@ export function Home() {
     <Layout title="Home" isHome>
       <Layout.TopBar />
       <Layout.Content noBorder noScroll>
+        <QuickAccountConnect />
         <BalanceWidget
           visibility={visibility}
           account={account}
