@@ -38,6 +38,7 @@ export function SendSelect({
   const isAmountFocused = useRef<boolean>(false);
   const baseFeeRef = useRef<BN | null>(baseFee);
   const tipRef = useRef<BN>(tip);
+  const [baseAssetId, setBaseAssetId] = useState('');
 
   const { field: amount, fieldState: amountFieldState } = useController({
     control: form.control,
@@ -54,12 +55,20 @@ export function SendSelect({
     return selectedAsset?.asset?.decimals;
   }, [assetId, balances]);
 
+  useEffect(() => {
+    let abort = false;
+    provider?.getBaseAssetId().then((_assetId) => {
+      if (abort) return;
+      setBaseAssetId(_assetId);
+    });
+    return () => {
+      abort = true;
+    };
+  }, [provider]);
+
   const isSendingBaseAssetId = useMemo(() => {
-    return (
-      assetId &&
-      provider?.getBaseAssetId().toLowerCase() === assetId.toLowerCase()
-    );
-  }, [provider, assetId]);
+    return assetId && baseAssetId.toLowerCase() === assetId.toLowerCase();
+  }, [baseAssetId, assetId]);
 
   useEffect(() => {
     if (

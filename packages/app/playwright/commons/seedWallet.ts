@@ -12,13 +12,13 @@ export async function seedCurrentAccount(page: Page, amount: BN) {
 }
 
 export async function seedWallet(address: string, amount: BN) {
-  const provider = await Provider.create(VITE_FUEL_PROVIDER_URL);
+  const provider = new Provider(VITE_FUEL_PROVIDER_URL);
   const genesisWallet = Wallet.fromPrivateKey(GENESIS_SECRET, provider);
 
   const transfETH = await genesisWallet.transfer(
     Address.fromString(address),
     amount,
-    provider.getBaseAssetId()
+    await provider.getBaseAssetId()
   );
   await transfETH.wait();
 

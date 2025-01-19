@@ -8,8 +8,8 @@ export async function seedWallet(
   genesisSecret: string,
   options: TxParamsType = {}
 ) {
-  const fuelProvider = await Provider.create(fuelProviderUrl);
-  const baseAssetId = fuelProvider.getBaseAssetId();
+  const fuelProvider = new Provider(fuelProviderUrl);
+  const baseAssetId = await fuelProvider.getBaseAssetId();
   const genesisWallet = Wallet.fromPrivateKey(genesisSecret!, fuelProvider);
   const parameters: TxParamsType = { gasLimit: bn(100_000), ...options };
   console.log(

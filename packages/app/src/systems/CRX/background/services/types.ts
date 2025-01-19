@@ -20,6 +20,7 @@ export type MessageInputs = {
     favIconUrl?: string;
     provider: FuelProviderConfig;
     transaction: string;
+    skipCustomFee?: boolean;
   };
   addAssets: {
     assets: AssetData[];

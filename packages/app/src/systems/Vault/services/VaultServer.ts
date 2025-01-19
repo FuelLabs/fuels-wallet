@@ -158,7 +158,9 @@ export class VaultServer extends EventEmitter {
     address,
     providerUrl,
   }: VaultInputs['signTransaction']): Promise<string> {
-    const wallet = await this.manager.getWallet(Address.fromString(address));
+    const wallet = await this.manager.getWallet(
+      Address.fromDynamicInput(address)
+    );
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
     const provider = await createProvider(providerUrl);
     wallet.connect(provider);
@@ -170,7 +172,9 @@ export class VaultServer extends EventEmitter {
     message,
     address,
   }: VaultInputs['signMessage']): Promise<string> {
-    const wallet = await this.manager.getWallet(Address.fromString(address));
+    const wallet = await this.manager.getWallet(
+      Address.fromDynamicInput(address)
+    );
     const signature = wallet.signMessage(message);
     return signature;
   }

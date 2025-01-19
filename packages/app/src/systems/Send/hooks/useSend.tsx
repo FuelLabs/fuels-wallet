@@ -104,7 +104,8 @@ const schemaFactory = (provider?: Provider) =>
 
           const isSendingBaseAssetId =
             asset &&
-            provider?.getBaseAssetId().toLowerCase() === asset.toLowerCase();
+            (await provider?.getBaseAssetId())?.toLowerCase() ===
+              asset.toLowerCase();
           if (isSendingBaseAssetId) {
             // It means "baseFee" is being calculated
             if (!baseFee) {
@@ -131,9 +132,9 @@ const schemaFactory = (provider?: Provider) =>
                 message: 'Address is not a valid',
               });
             }
-            const standardizedAddress = Address.fromString(value).toString();
-            const accountType =
-              await provider?.getAddressType(standardizedAddress);
+            const accountType = await provider?.getAddressType(
+              Address.fromDynamicInput(value).toB256()
+            );
             if (accountType !== 'Account') {
               return ctx.createError({
                 message: `You can't send to ${accountType} address`,
@@ -141,7 +142,7 @@ const schemaFactory = (provider?: Provider) =>
             }
 
             const assetCached = await AssetsCache.getInstance().getAsset({
-              chainId: provider.getChainId(),
+              chainId: await provider.getChainId(),
               assetId: value,
               dbAssets: [],
               save: false,

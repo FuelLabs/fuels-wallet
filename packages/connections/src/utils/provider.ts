@@ -5,7 +5,7 @@ const providers: {
 } = {};
 
 export const getGasConfig = async (provider: Provider) => {
-  const chain = provider.getChain();
+  const chain = await provider.getChain();
   const gasPrice = await provider.getLatestGasPrice();
   const txParameters = chain.consensusParameters.txParameters;
   const feeParameters = chain.consensusParameters.feeParameters;
@@ -21,6 +21,6 @@ export const createProvider = async (url: string) => {
   if (providers[url]) {
     return providers[url];
   }
-  providers[url] = await Provider.create(url);
+  providers[url] = new Provider(url);
   return providers[url];
 };

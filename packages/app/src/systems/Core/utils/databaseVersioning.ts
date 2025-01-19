@@ -180,7 +180,7 @@ export const applyDbVersioning = (db: Dexie) => {
       const accounts = await accountsTable.toArray();
       const updatedAccounts = accounts.map((account) => ({
         ...account,
-        address: Address.fromString(account.address).toChecksum(),
+        address: Address.fromDynamicInput(account.address).toString(),
       }));
       await accountsTable.clear();
       await accountsTable.bulkAdd(updatedAccounts);
