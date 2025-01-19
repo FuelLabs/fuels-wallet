@@ -318,10 +318,7 @@ export class BackgroundService {
       this.communicationProtocol
     );
 
-    // We need to forward B256 addresses to the popup, regardless if we receive a b256 here
-    // our database is storing B256s
     const address = Address.fromDynamicInput(_address).toString();
-
     const signedMessage = await popupService.sendTransaction({
       address,
       provider,
