@@ -185,7 +185,7 @@ export const assetsMachine = createMachine(
     services: {
       setListedAssets: FetchMachine.create<null, void>({
         showError: true,
-        fetch: async (_input) => {
+        fetch: async () => {
           await AssetService.setListedAssets();
         },
       }),
