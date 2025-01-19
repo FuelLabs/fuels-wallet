@@ -7,7 +7,7 @@ import { shortAddress } from '~/systems/Core';
 import { useExplorerLink } from '../../hooks/useExplorerLink';
 
 export type AddressProps = {
-  address: ChecksumAddress | B256Address;
+  address: string;
   canOpenExplorer?: boolean;
   css?: ThemeUtilsCSS;
   isContract?: boolean;
