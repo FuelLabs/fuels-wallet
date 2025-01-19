@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useAccounts } from '~/systems/Account';
 import { Pages } from '~/systems/Core';
-import { safeDynamicAddress } from '~/systems/Core/utils/address';
 import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
@@ -133,9 +132,9 @@ const schemaFactory = (provider?: Provider) =>
                 message: 'Address is not a valid',
               });
             }
-            const standardizedAddress = safeDynamicAddress(value).toString();
-            const accountType =
-              await provider?.getAddressType(standardizedAddress);
+            const accountType = await provider?.getAddressType(
+              Address.fromDynamicInput(value).toB256()
+            );
             if (accountType !== 'Account') {
               return ctx.createError({
                 message: `You can't send to ${accountType} address`,

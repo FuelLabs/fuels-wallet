@@ -19,7 +19,6 @@ import {
 } from '../crx/utils';
 
 import { Address } from 'fuels';
-import { safeDynamicAddress } from '../crx/utils/address';
 import type { MockData } from '../mocks';
 import { WALLET_PASSWORD, mockData } from '../mocks';
 
@@ -67,7 +66,7 @@ test.describe('New Accounts', () => {
     await waitUrl(page, '/wallet');
     await hasText(page, /Assets/i);
     const address = data.accounts[1].address.toString();
-    await hasAriaLabel(page, safeDynamicAddress(address).toString());
+    await hasAriaLabel(page, Address.fromDynamicInput(address).toString());
   });
 
   test('should be able to edit account name', async () => {
@@ -235,15 +234,16 @@ test.describe('Existing Accounts', () => {
 
   test('can add accounts using correct derivation path after importing from private key', async () => {
     // at this point 2 accounts have already been created
-    const fuelAddress1 = 'fuelsequencer1mt7k6ynlayacjwpqt0lwdn7ksv72ek2lwt95nu';
+    const fuelAddress1 =
+      '0xb26627d51eb1dd2729507c611b5aba7187a8df316519ab106cf6b7e70afe3164';
     const fuelAddress2 =
-      'fuelsequencervaloper163rsv65t4893t2rz5rmda9sly7lgdlq2s2kqtn';
+      '0xb10c2232828953c34c7ab1678372469d48ff279a0a7d1643fbced01c9a2aa307';
     const fuelAddress3 =
-      'fuelsequencervaloper1vtfzrk6f4m6kxt6ehyqt9j5su5hvcz5qn0wwpn';
+      '0xa2bca78118a3977372a8f7548d43c6215a77490b4a7f5396de7e8c46a93d83dc';
     const fuelPrivKey =
       '0x7f802a2a277872af1204140bd2c77c2193309c366e3c71ff1c4c31cea0a53f38';
     const fuelAddPriv =
-      'fuelsequencervaloper163rsv65t4893t2rz5rmda9sly7lgdlq2s2kqtn';
+      '0x80b8fe751d6b828fbd3c129771ac53f746b45d97c9914697abaafda98b39803b';
 
     // import account from private key
     await createAccountFromPrivateKey(page, fuelPrivKey, 'Account 3');
@@ -277,12 +277,18 @@ test.describe('Existing Accounts', () => {
 
     // Checks
     // saved wal 1 add account 1 = wal 3 add account 1
-    expect(wal1Account1).toBe(safeDynamicAddress(fuelAddress1).toString());
+    expect(wal1Account1).toBe(
+      Address.fromDynamicInput(fuelAddress1).toString()
+    );
     // saved wal 1 add account 2 = wal 3 add account 2
-    expect(wal1Account2).toBe(safeDynamicAddress(fuelAddress2).toString());
+    expect(wal1Account2).toBe(
+      Address.fromDynamicInput(fuelAddress2).toString()
+    );
     // saved wal 2 add account = wal 3 add account 3
-    expect(wal1Account3).toBe(safeDynamicAddress(fuelAddPriv).toString());
+    expect(wal1Account3).toBe(Address.fromDynamicInput(fuelAddPriv).toString());
     // saved wal 1 add account 3 = wal 3 add account 4
-    expect(wal1Account4).toBe(safeDynamicAddress(fuelAddress3).toString());
+    expect(wal1Account4).toBe(
+      Address.fromDynamicInput(fuelAddress3).toString()
+    );
   });
 });

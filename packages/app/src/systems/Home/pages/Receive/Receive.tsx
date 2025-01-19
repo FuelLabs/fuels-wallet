@@ -1,13 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { useNavigate } from 'react-router-dom';
 import { useAccounts } from '~/systems/Account';
-import {
-  Layout,
-  MotionFlex,
-  Pages,
-  animations,
-  safeConvertToB256,
-} from '~/systems/Core';
+import { Layout, MotionFlex, Pages, animations } from '~/systems/Core';
 
 import { ReceiverQRCode } from '../../components/QRCode';
 import { UserAddressCard } from '../../components/UserAddressCard';
@@ -21,8 +15,8 @@ export function Receive() {
       <Layout.Content>
         {account?.address && (
           <MotionFlex {...animations.slideInTop()} css={styles.contentWrapper}>
-            <UserAddressCard address={safeConvertToB256(account?.address)} />
-            <ReceiverQRCode address={safeConvertToB256(account?.address)} />
+            <UserAddressCard address={account?.address} />
+            <ReceiverQRCode address={account?.address} />
           </MotionFlex>
         )}
       </Layout.Content>

@@ -4,7 +4,6 @@ import { createProvider } from '@fuel-wallet/connections';
 import { Address, WalletManager, transactionRequestify } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
-import { safeDynamicAddress } from '~/systems/Core/utils/address';
 
 export type VaultAccount = {
   address: string;
@@ -159,7 +158,9 @@ export class VaultServer extends EventEmitter {
     address,
     providerUrl,
   }: VaultInputs['signTransaction']): Promise<string> {
-    const wallet = await this.manager.getWallet(safeDynamicAddress(address));
+    const wallet = await this.manager.getWallet(
+      Address.fromDynamicInput(address)
+    );
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
     const provider = await createProvider(providerUrl);
     wallet.connect(provider);
@@ -171,7 +172,9 @@ export class VaultServer extends EventEmitter {
     message,
     address,
   }: VaultInputs['signMessage']): Promise<string> {
-    const wallet = await this.manager.getWallet(safeDynamicAddress(address));
+    const wallet = await this.manager.getWallet(
+      Address.fromDynamicInput(address)
+    );
     const signature = wallet.signMessage(message);
     return signature;
   }

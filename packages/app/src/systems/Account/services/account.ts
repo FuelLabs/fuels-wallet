@@ -10,7 +10,6 @@ import { Address, type Provider, bn } from 'fuels';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { chromeStorage } from '~/systems/Core/services/chromeStorage';
 import type { Maybe } from '~/systems/Core/types';
-import { safeDynamicAddress } from '~/systems/Core/utils/address';
 import { db } from '~/systems/Core/utils/database';
 import { readFromOPFS } from '~/systems/Core/utils/opfs';
 import { getUniqueString } from '~/systems/Core/utils/string';
@@ -82,7 +81,7 @@ export class AccountService {
     const { address } = input;
     const account = await db.transaction('r', db.accounts, async () => {
       return db.accounts.get({
-        address: safeDynamicAddress(address).toString(),
+        address: Address.fromDynamicInput(address).toString(),
       });
     });
 

@@ -1,7 +1,6 @@
 import type { Operation } from 'fuels';
 import { Address } from 'fuels';
 
-import { safeDynamicAddress } from '~/systems/Core/utils/address';
 import { OperationDirection } from '../types';
 
 export function getOperationDirection(operation: Operation, owner: string) {
@@ -11,9 +10,11 @@ export function getOperationDirection(operation: Operation, owner: string) {
     return OperationDirection.unknown;
   }
 
-  const ownerAddr = safeDynamicAddress(owner);
+  const ownerAddr = Address.fromDynamicInput(owner);
 
-  return ownerAddr.equals(safeDynamicAddress(operation?.to?.address ?? ''))
+  return ownerAddr.equals(
+    Address.fromDynamicInput(operation?.to?.address ?? '')
+  )
     ? OperationDirection.from
     : OperationDirection.to;
 }

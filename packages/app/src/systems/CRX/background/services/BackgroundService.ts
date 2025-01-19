@@ -20,7 +20,7 @@ import { ConnectionService } from '~/systems/DApp/services';
 import { NetworkService } from '~/systems/Network/services';
 import { AbiService } from '~/systems/Settings/services';
 
-import { safeDynamicAddress } from '~/systems/Core/utils/address';
+import { Address } from 'fuels';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { PopUpService } from './PopUpService';
 import type { MessageInputs } from './types';
@@ -131,8 +131,11 @@ export class BackgroundService {
     if (!connection) {
       throw new Error('connection not found');
     }
+    if (!address) {
+      throw new Error('address not foound');
+    }
     const hasAccessToAddress = connection.accounts.includes(
-      safeDynamicAddress(address || '0x00').toString()
+      Address.fromDynamicInput(address).toString()
     );
     if (!hasAccessToAddress) {
       throw new Error('address is not authorized for this connection.');
@@ -307,7 +310,7 @@ export class BackgroundService {
       );
     }
 
-    const { address, provider, transaction } = input;
+    const { address: _address, provider, transaction } = input;
 
     const popupService = await PopUpService.open(
       origin,
@@ -317,10 +320,10 @@ export class BackgroundService {
 
     // We need to forward B256 addresses to the popup, regardless if we receive a b256 here
     // our database is storing B256s
-    const b256Address = safeDynamicAddress(address).toString();
+    const address = Address.fromDynamicInput(_address).toString();
 
     const signedMessage = await popupService.sendTransaction({
-      address: b256Address,
+      address,
       provider,
       transaction,
       origin,
@@ -335,17 +338,24 @@ export class BackgroundService {
     const currentAccount = await AccountService.getCurrentAccount();
 
     await this.requireConnection(serverParams.connection);
+    // this condition is typefixing only. the currentAccount will always exist because of requireConnection above
+    if (!currentAccount) return;
 
-    const connectedAccounts = serverParams?.connection?.accounts || [];
+    const connectedAccounts =
+      serverParams?.connection?.accounts.map((acc) =>
+        Address.fromDynamicInput(acc).toString()
+      ) || [];
     const hasAccessToAddress = connectedAccounts.includes(
-      safeDynamicAddress(currentAccount?.address || '0x00').toString()
+      Address.fromDynamicInput(currentAccount.address).toString()
     );
 
     if (hasAccessToAddress) return currentAccount?.address;
 
     const accounts = await AccountService.getAccounts();
     const firstConnectedAccount = accounts?.find((acc) =>
-      connectedAccounts.includes(safeDynamicAddress(acc.address).toString())
+      connectedAccounts.includes(
+        Address.fromDynamicInput(acc.address).toString()
+      )
     );
     return firstConnectedAccount?.address;
   }
