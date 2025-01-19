@@ -414,11 +414,6 @@ export const transactionRequestMachine = createMachine(
             throw new Error('Invalid simulateTransaction input');
           }
 
-          // Enforce a minimum delay to show the loading state
-          // this creates a better experience for the user as the
-          // screen doesn't flash between states
-          await delay(600);
-
           const simulatedInfo = await TxService.simulateTransaction(input);
           return simulatedInfo;
         },
