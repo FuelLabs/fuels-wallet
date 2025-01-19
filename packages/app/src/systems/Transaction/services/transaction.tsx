@@ -204,6 +204,7 @@ export class TxService {
     const initialGasLimit = getGasLimitFromTxRequest(inputTransactionRequest);
 
     try {
+      let baseFee: BN | undefined;
       /*
       we'll work always based on the first inputted transactioRequest, then cloning it and manipulating
       then outputting a proposedTxRequest, which will be the one to go for approval
@@ -242,6 +243,8 @@ export class TxService {
             requiredQuantities: [],
           });
         }
+
+        baseFee = proposedTxRequest.maxFee.sub(proposedTxRequest.tip ?? bn(0));
       }
 
       const transaction = proposedTxRequest.toTransaction();
@@ -254,10 +257,6 @@ export class TxService {
         transactionRequest: proposedTxRequest,
         abiMap,
       });
-
-      const baseFee = proposedTxRequest.maxFee.sub(
-        proposedTxRequest.tip ?? bn(0)
-      );
 
       // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
       const feeAdaptedToSdkDiff = txSummary.fee.add(1);
