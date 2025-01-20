@@ -9,12 +9,6 @@ type TxOperationContentProps = {
 };
 
 export function TxOperationContent({ operation }: TxOperationContentProps) {
-  console.log('TxOperationContent:', {
-    operation,
-    type: operation.type,
-    metadata: operation.metadata,
-  });
-
   // Don't render content for contract calls - this is handled by the card
   if (operation.type === TxCategory.CONTRACTCALL) return null;
 
