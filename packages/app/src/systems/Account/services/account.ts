@@ -108,22 +108,22 @@ export class AccountService {
     try {
       const provider = await createProvider(providerUrl!);
       const balances = await getBalances(provider, account.address);
-      const convertRates: Record<string, number> = {};
+      const convertedRates: Record<string, number> = {};
       const chainId = await provider.getChainId();
 
+      const balanceAssets = AssetsCache.fetchAllAssets(
+        chainId,
+        balances.map((balance) => balance.assetId)
+      );
       const convertRatesPromise = balances.map((asset) => {
         return convertAsset(
           chainId,
           asset.assetId,
           asset.amount.toString()
         ).then((rate) => {
-          convertRates[asset.assetId] = rate;
+          convertedRates[asset.assetId] = rate;
         });
       });
-      const balanceAssets = AssetsCache.fetchAllAssets(
-        chainId,
-        balances.map((balance) => balance.assetId)
-      );
       await Promise.all([...convertRatesPromise, balanceAssets]);
       // includes "asset" prop in balance, centralizing the complexity here instead of in rest of UI
       const nextBalancesWithAssets = await balances.reduce(
@@ -137,7 +137,7 @@ export class AccountService {
               ...balance,
               amount: balance.amount,
               asset: cachedAsset,
-              convertedRate: convertRates[balance.assetId],
+              convertedRate: convertedRates[balance.assetId],
             },
           ];
         },
@@ -164,7 +164,7 @@ export class AccountService {
       const ethBalance = ethAsset?.amount;
       const accountAssets: AccountBalance = {
         balance: ethBalance ?? bn(0),
-        convertedRate: convertRates[baseAssetId.toString()],
+        convertedRate: convertedRates[baseAssetId.toString()],
         balanceSymbol: 'ETH',
         balances: nextBalancesWithAssets,
       };
