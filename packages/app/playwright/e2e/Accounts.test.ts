@@ -4,7 +4,6 @@ import test, { chromium, expect } from '@playwright/test';
 import {
   getButtonByText,
   getByAriaLabel,
-  getElementByText,
   getInputByName,
   hasAriaLabel,
   hasText,
@@ -44,14 +43,26 @@ test.describe('New Accounts', () => {
     await visit(page, '/wallet');
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
-    await hasText(page, data.accounts[0].name);
-    await hasText(page, data.accounts[1].name);
-    await getByAriaLabel(page, data.accounts[1].name).click({
-      position: {
-        x: 10,
-        y: 10,
-      },
-    });
+    await expect(
+      page.getByRole('heading', { name: data.accounts[0].name, exact: true })
+    ).toBeVisible();
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[1].name,
+        exact: true,
+      })
+    ).toBeVisible();
+    await page
+      .getByRole('heading', {
+        name: data.accounts[1].name,
+        exact: true,
+      })
+      .click({
+        position: {
+          x: 10,
+          y: 10,
+        },
+      });
     await waitUrl(page, '/wallet');
     await hasText(page, /Assets/i);
     const address = data.accounts[1].address.toString();
@@ -62,7 +73,12 @@ test.describe('New Accounts', () => {
     await visit(page, '/wallet');
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
-    await hasText(page, data.accounts[0].name);
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[0].name,
+        exact: true,
+      })
+    ).toBeVisible();
     await getByAriaLabel(
       page,
       `Account Actions ${data.accounts[0].name}`
@@ -82,7 +98,12 @@ test.describe('New Accounts', () => {
     await visit(page, '/wallet');
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
-    await hasText(page, data.accounts[0].name);
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[0].name,
+        exact: true,
+      })
+    ).toBeVisible();
     await getByAriaLabel(
       page,
       `Account Actions ${data.accounts[0].name}`
@@ -100,8 +121,18 @@ test.describe('New Accounts', () => {
     await visit(page, '/wallet');
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
-    await hasText(page, data.accounts[0].name);
-    await hasText(page, data.accounts[1].name);
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[0].name,
+        exact: true,
+      })
+    ).toBeVisible();
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[1].name,
+        exact: true,
+      })
+    ).toBeVisible();
     await getByAriaLabel(
       page,
       `Account Actions ${data.accounts[1].name}`
@@ -110,7 +141,12 @@ test.describe('New Accounts', () => {
     await hasText(page, 'Show hidden accounts');
     await page.getByText(data.accounts[1].name).isHidden();
     await getByAriaLabel(page, 'Toggle hidden accounts').click();
-    await hasText(page, data.accounts[1].name);
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[1].name,
+        exact: true,
+      })
+    ).toBeVisible();
     await getByAriaLabel(
       page,
       `Account Actions ${data.accounts[1].name}`
@@ -123,8 +159,18 @@ test.describe('New Accounts', () => {
     await visit(page, '/wallet');
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
-    await hasText(page, data.accounts[0].name);
-    await hasText(page, data.accounts[1].name);
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[0].name,
+        exact: true,
+      })
+    ).toBeVisible();
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[1].name,
+        exact: true,
+      })
+    ).toBeVisible();
     await getByAriaLabel(
       page,
       `Account Actions ${data.accounts[1].name}`
@@ -143,7 +189,12 @@ test.describe('New Accounts', () => {
     await visit(page, '/wallet');
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
-    await hasText(page, data.accounts[0].name);
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[0].name,
+        exact: true,
+      })
+    ).toBeVisible();
     await getByAriaLabel(
       page,
       `Account Actions ${data.accounts[0].name}`

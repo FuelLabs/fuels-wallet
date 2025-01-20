@@ -128,6 +128,7 @@ export function useConnections() {
   function search(text: string) {
     service.send({ type: 'SEARCH', input: text });
   }
+
   function clearSearch() {
     service.send('CLEAR_SEARCH');
   }
@@ -144,10 +145,10 @@ export function useConnections() {
       navigate(-1);
     }
   }
-
   function isConnected(account: string) {
     return connectedAccounts.some((a) => a?.address === account);
   }
+
   function toggleAccount(account: string, isConnected?: boolean) {
     service.send({
       type: isConnected ? 'REMOVE_ACCOUNT' : 'ADD_ACCOUNT',

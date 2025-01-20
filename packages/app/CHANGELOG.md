@@ -1,5 +1,39 @@
 # fuels-wallet
 
+## 0.47.1
+
+### Patch Changes
+
+- [#1760](https://github.com/FuelLabs/fuels-wallet/pull/1760) [`5399a354`](https://github.com/FuelLabs/fuels-wallet/commit/5399a3544f3203df689649e2d5bc4bd7a0ded988) Thanks [@Dhanraj30](https://github.com/Dhanraj30)! - Fixing display of long recipient names
+
+- [#1783](https://github.com/FuelLabs/fuels-wallet/pull/1783) [`5680b65b`](https://github.com/FuelLabs/fuels-wallet/commit/5680b65b8bf09c42eadc4a5342bdae905c577351) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: make send screen flows more stable by relying less on form changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.47.1
+  - @fuels/playwright-utils@0.47.1
+
+## 0.47.0
+
+### Minor Changes
+
+- [#1764](https://github.com/FuelLabs/fuels-wallet/pull/1764) [`d81ee482`](https://github.com/FuelLabs/fuels-wallet/commit/d81ee48208e5329144d87c5f84b9a37da7c2a036) Thanks [@helciofranco](https://github.com/helciofranco)! - Add current account connection status to the header
+
+- [#1762](https://github.com/FuelLabs/fuels-wallet/pull/1762) [`2460beef`](https://github.com/FuelLabs/fuels-wallet/commit/2460beef713767c8af178075e85630fba3468c52) Thanks [@helciofranco](https://github.com/helciofranco)! - Add a separate NFTs tab to the home screen.
+
+- [#1710](https://github.com/FuelLabs/fuels-wallet/pull/1710) [`4c530078`](https://github.com/FuelLabs/fuels-wallet/commit/4c530078ca2d252e7f5f8db9ffb779c775e5122b) Thanks [@nelitow](https://github.com/nelitow)! - Improve handling of custom assets.
+
+### Patch Changes
+
+- [#1778](https://github.com/FuelLabs/fuels-wallet/pull/1778) [`6ddb0014`](https://github.com/FuelLabs/fuels-wallet/commit/6ddb0014464f9e536c32b4b5eeedccaa93c6befb) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: review button entering on loading state after getting ready to approve
+
+- [#1725](https://github.com/FuelLabs/fuels-wallet/pull/1725) [`28628cbd`](https://github.com/FuelLabs/fuels-wallet/commit/28628cbda88d249c67a49fa0ed44fbf1d6e83267) Thanks [@nelitow](https://github.com/nelitow)! - Allow editing network name when adding.
+
+- [#1778](https://github.com/FuelLabs/fuels-wallet/pull/1778) [`6ddb0014`](https://github.com/FuelLabs/fuels-wallet/commit/6ddb0014464f9e536c32b4b5eeedccaa93c6befb) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: remove intentional longer loading states to avoid blinking.
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.47.0
+  - @fuels/playwright-utils@0.47.0
+
 ## 0.46.1
 
 ### Patch Changes

@@ -104,9 +104,6 @@ export const chainInfoMachine = createMachine(
             throw new Error('No chain URL');
           }
 
-          // Enforce a minimum delay to show the loading state
-          await delay(600);
-
           return NetworkService.getChainInfo(input);
         },
       }),

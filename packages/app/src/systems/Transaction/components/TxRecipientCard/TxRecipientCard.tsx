@@ -1,8 +1,17 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Card, Heading, Icon, Image, Text } from '@fuel-ui/react';
+import {
+  Avatar,
+  Box,
+  Card,
+  Heading,
+  Icon,
+  Image,
+  Text,
+  Tooltip,
+} from '@fuel-ui/react';
 import type { OperationTransactionAddress } from 'fuels';
 import { Address, AddressType, ChainName, isB256, isBech32 } from 'fuels';
-import { type FC, useMemo } from 'react';
+import { type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 
 import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadata';
@@ -33,6 +42,8 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   const isNetwork = address === 'Network';
 
   const contract = useContractMetadata(address);
+  const nameRef = useRef<HTMLHeadingElement>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
 
   const name = useMemo<string>(() => {
     if (isContract) {
@@ -41,6 +52,23 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
 
     return accounts?.find((a) => a.address === fuelAddress)?.name || 'unknown';
   }, [isContract, contract, accounts, fuelAddress]);
+
+  useEffect(() => {
+    const checkIfTruncated = () => {
+      if (nameRef.current) {
+        const isNameTruncated =
+          nameRef.current.offsetWidth < nameRef.current.scrollWidth;
+        setIsTruncated(isNameTruncated);
+      }
+    };
+
+    checkIfTruncated();
+    window.addEventListener('resize', checkIfTruncated);
+
+    return () => {
+      window.removeEventListener('resize', checkIfTruncated);
+    };
+  }, [name]);
 
   return (
     <Card
@@ -97,7 +125,19 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
                 isNetwork ? 'Address' : 'Name'
               }`}
             >
-              {isNetwork ? address : name}
+              <Tooltip content={name} open={isTruncated ? undefined : false}>
+                <div
+                  ref={nameRef}
+                  style={{
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    maxWidth: '100px',
+                  }}
+                >
+                  {name}
+                </div>
+              </Tooltip>
             </Heading>
             {!isNetwork && (
               <FuelAddress

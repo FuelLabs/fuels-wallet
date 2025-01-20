@@ -20,6 +20,7 @@ type TxFeeOptionsProps = {
   gasLimit: BN;
   regularTip: BN;
   fastTip: BN;
+  onRecalculate?: (tip: BN) => void;
 };
 
 export const TxFeeOptions = ({
@@ -28,6 +29,7 @@ export const TxFeeOptions = ({
   gasLimit: gasLimitInput,
   regularTip,
   fastTip,
+  onRecalculate,
 }: TxFeeOptionsProps) => {
   const { control, setValue, getValues } = useFormContext<SendFormValues>();
   const [isAdvanced, setIsAdvanced] = useState(initialAdvanced);
@@ -181,6 +183,7 @@ export const TxFeeOptions = ({
                     amount: option.tip,
                     text: formatTip(option.tip),
                   });
+                  onRecalculate?.(option.tip);
                 }}
               />
             ))}
