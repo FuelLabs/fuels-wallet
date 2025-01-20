@@ -52,7 +52,7 @@ export function Home() {
             <BalanceAssets balances={account?.balances} isLoading={isLoading} />
           </Tabs.Content>
           <Tabs.Content value="nft" css={styles.assetsList}>
-            <BalanceNFTs balances={account?.balances} />
+            <BalanceNFTs balances={account?.balances} isLoading={isLoading} />
           </Tabs.Content>
         </Tabs>
       </Layout.Content>

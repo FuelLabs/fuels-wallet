@@ -2,6 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Accordion, Badge, Box, Copyable, VStack } from '@fuel-ui/react';
 import type { CoinAsset } from '@fuel-wallet/types';
 import { useMemo } from 'react';
+import { AssetList } from '~/systems/Asset';
 import { AssetListEmpty } from '~/systems/Asset/components/AssetList/AssetListEmpty';
 import { shortAddress } from '~/systems/Core';
 import { NFTImage } from './NFTImage';
@@ -12,9 +13,10 @@ import {
 
 interface BalanceNFTsProps {
   balances: CoinAsset[] | undefined;
+  isLoading?: boolean;
 }
 
-export const BalanceNFTs = ({ balances = [] }: BalanceNFTsProps) => {
+export const BalanceNFTs = ({ balances = [], isLoading }: BalanceNFTsProps) => {
   const { collections, defaultValue } = useMemo(() => {
     const collections = groupNFTsByCollection(balances);
     const defaultValue = collections
@@ -26,6 +28,8 @@ export const BalanceNFTs = ({ balances = [] }: BalanceNFTsProps) => {
       defaultValue,
     };
   }, [balances]);
+
+  if (isLoading || !balances) return <AssetList.Loading items={4} />;
 
   if (collections.length === 0) {
     return (
