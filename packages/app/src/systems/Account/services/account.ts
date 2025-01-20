@@ -109,7 +109,7 @@ export class AccountService {
       const provider = await createProvider(providerUrl!);
       const balances = await getBalances(provider, account.address);
       const convertedRates: Record<string, number> = {};
-      const chainId = await provider.getChainId();
+      const chainId = provider.getChainId();
 
       const balanceAssets = AssetsCache.fetchAllAssets(
         chainId,
