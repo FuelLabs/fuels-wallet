@@ -4,7 +4,7 @@ import {
 } from '~/systems/Asset/constants';
 
 interface ConvertAssetResponse {
-  amount: `${number}`;
+  amount: `${string}`;
 }
 
 export async function convertAsset(
@@ -27,6 +27,9 @@ export async function convertAsset(
         amount,
       }),
     });
-    return response.json() as Promise<ConvertAssetResponse>;
+    const jsonResponse = (await response.json()) as ConvertAssetResponse;
+    // Fix a conversion error from the backend
+    if (jsonResponse.amount === '$0') return { amount: '$0.00' };
+    return jsonResponse;
   } catch (_) {}
 }
