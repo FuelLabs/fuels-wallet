@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from '@fuel-ui/react';
 import type { OperationTransactionAddress } from 'fuels';
-import { Address, AddressType, ChainName, isB256, isBech32 } from 'fuels';
+import { Address, AddressType, ChainName, isB256 } from 'fuels';
 import { type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 
