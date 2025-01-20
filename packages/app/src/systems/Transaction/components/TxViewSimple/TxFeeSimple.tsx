@@ -1,5 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Card, ContentLoader, Text } from '@fuel-ui/react';
+import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { AssetsAmount } from '~/systems/Asset';
 import type { SimplifiedFee } from '../../types';
 
@@ -11,36 +12,25 @@ type TxFeeSimpleProps = {
 export function TxFeeSimple({ fee, isLoading }: TxFeeSimpleProps) {
   if (isLoading) return <TxFeeSimple.Loader />;
 
-  const { total, network, tip } = fee;
+  const { network } = fee;
+
+  const fuelAmount: AssetFuelAmount = {
+    type: 'fuel',
+    chainId: 0,
+    decimals: 9,
+    assetId: '',
+    name: 'Fuel',
+    symbol: 'ETH',
+    amount: network,
+    icon: '',
+  };
 
   return (
     <Card css={styles.root}>
       <Box css={styles.content}>
         <Box css={styles.row}>
           <Text>Network Fee</Text>
-          <AssetsAmount
-            amounts={[{ amount: network }]}
-            showSymbol
-            showIcon={false}
-          />
-        </Box>
-        {tip && !tip.isZero() && (
-          <Box css={styles.row}>
-            <Text>Priority Fee</Text>
-            <AssetsAmount
-              amounts={[{ amount: tip }]}
-              showSymbol
-              showIcon={false}
-            />
-          </Box>
-        )}
-        <Box css={styles.total}>
-          <Text>Total Fee</Text>
-          <AssetsAmount
-            amounts={[{ amount: total }]}
-            showSymbol
-            showIcon={false}
-          />
+          <AssetsAmount amounts={[fuelAmount]} />
         </Box>
       </Box>
     </Card>
