@@ -10,6 +10,7 @@ import { UserAddressCard } from '../../components/UserAddressCard';
 export function Receive() {
   const navigate = useNavigate();
   const { account } = useAccounts();
+
   return (
     <Layout title="Receive">
       <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
@@ -17,10 +18,10 @@ export function Receive() {
         {account?.address && (
           <MotionFlex {...animations.slideInTop()} css={styles.contentWrapper}>
             <UserAddressCard
-              address={Address.fromDynamicInput(account?.address).toB256()}
+              address={Address.fromDynamicInput(account?.address).toChecksum()}
             />
             <ReceiverQRCode
-              address={Address.fromDynamicInput(account?.address).toB256()}
+              address={Address.fromDynamicInput(account?.address).toChecksum()}
             />
           </MotionFlex>
         )}
