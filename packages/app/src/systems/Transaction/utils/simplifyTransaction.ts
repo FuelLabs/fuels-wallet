@@ -98,8 +98,48 @@ export function transformOperations(
 export function groupSimilarOperations(
   operations: SimplifiedOperation[]
 ): SimplifiedOperation[] {
-  // Group by type and contract address (except for contract calls which group by type only)
-  const groups = operations.reduce(
+  const result: SimplifiedOperation[] = [];
+  const used = new Set<number>();
+
+  // First pass: detect swaps
+  for (let i = 0; i < operations.length; i++) {
+    if (used.has(i)) continue;
+
+    const current = operations[i];
+    if (current.type === TxCategory.SEND && i + 1 < operations.length) {
+      const next = operations[i + 1];
+      // Check if this is a swap:
+      // 1. Both operations are sends
+      // 2. The sender of the first is the receiver of the second
+      // 3. The receiver of the first is the sender of the second
+      if (
+        next.type === TxCategory.SEND &&
+        current.from === next.to &&
+        current.to === next.from
+      ) {
+        // Combine the two operations into one swap
+        result.push({
+          ...current,
+          metadata: {
+            isSwap: true,
+            receiveAmount: next.amount?.toString() || '0',
+            receiveAssetId: next.assetId || '',
+          } as SwapMetadata,
+        });
+        used.add(i);
+        used.add(i + 1);
+        continue;
+      }
+    }
+
+    if (!used.has(i)) {
+      result.push(current);
+      used.add(i);
+    }
+  }
+
+  // Second pass: group similar non-swap operations
+  const groups = result.reduce(
     (acc, op) => {
       const key =
         op.type === TxCategory.CONTRACTCALL
