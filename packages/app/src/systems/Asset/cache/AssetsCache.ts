@@ -5,7 +5,6 @@ import {
   DEFAULT_ASSET_ENDPOINT,
 } from '~/systems/Asset/constants';
 import { AssetService } from '~/systems/Asset/services';
-import type { AssetEndpoint } from '~/systems/Asset/types';
 import { getFuelAssetByAssetId } from '~/systems/Asset/utils';
 import { type FuelCachedAsset, db } from '~/systems/Core/utils/database';
 
