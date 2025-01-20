@@ -8,6 +8,7 @@ import type {
 import * as Sentry from '@sentry/react';
 import { Address, type Provider, bn } from 'fuels';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
+import { convertAsset } from '~/systems/Asset/services/convert-asset';
 import { chromeStorage } from '~/systems/Core/services/chromeStorage';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
@@ -107,15 +108,31 @@ export class AccountService {
     try {
       const provider = await createProvider(providerUrl!);
       const balances = await getBalances(provider, account.address);
-      const balanceAssets = await AssetsCache.fetchAllAssets(
-        provider.getChainId(),
+      const convertRates: Record<string, number> = {};
+      const chainId = await provider.getChainId();
+
+      const convertRatesPromise = balances.map((asset) => {
+        return convertAsset(
+          chainId,
+          asset.assetId,
+          asset.amount.toString()
+        ).then((rate) => {
+          convertRates[asset.assetId] = rate;
+        });
+      });
+      const balanceAssetsPromise = AssetsCache.fetchAllAssets(
+        chainId,
         balances.map((balance) => balance.assetId)
       );
+      const [balanceAssets] = await Promise.all([
+        ...convertRatesPromise,
+        balanceAssetsPromise,
+      ]);
       // includes "asset" prop in balance, centralizing the complexity here instead of in rest of UI
       const nextBalancesWithAssets = await balances.reduce(
         async (acc, balance) => {
           const prev = await acc;
-          const cachedAsset = balanceAssets.get(balance.assetId);
+          const cachedAsset = balanceAssets?.get(balance.assetId);
 
           return [
             ...prev,
@@ -123,6 +140,7 @@ export class AccountService {
               ...balance,
               amount: balance.amount,
               asset: cachedAsset,
+              convertedRate: convertRates[balance.assetId],
             },
           ];
         },
@@ -149,6 +167,7 @@ export class AccountService {
       const ethBalance = ethAsset?.amount;
       const accountAssets: AccountBalance = {
         balance: ethBalance ?? bn(0),
+        convertedRate: convertRates[baseAssetId.toString()],
         balanceSymbol: 'ETH',
         balances: nextBalancesWithAssets,
       };
@@ -164,6 +183,7 @@ export class AccountService {
         balance: bn(0),
         balanceSymbol: 'ETH',
         balances: [],
+        convertedRate: 0,
       };
       const result: AccountWithBalance = {
         ...account,

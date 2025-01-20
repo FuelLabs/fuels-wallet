@@ -1,6 +1,9 @@
 import type { AssetData } from '@fuel-wallet/types';
 import type { AssetFuel } from 'fuels';
-import { ASSET_ENDPOINTS } from '~/systems/Asset/constants';
+import {
+  ASSET_ENDPOINTS,
+  DEFAULT_ASSET_ENDPOINT,
+} from '~/systems/Asset/constants';
 import { AssetService } from '~/systems/Asset/services';
 import type { AssetEndpoint } from '~/systems/Asset/types';
 import { getFuelAssetByAssetId } from '~/systems/Asset/utils';
@@ -36,9 +39,7 @@ export class AssetsCache {
   };
 
   private getIndexerEndpoint(chainId: number) {
-    return ASSET_ENDPOINTS.find(
-      (endpoint: AssetEndpoint) => endpoint.chainId === chainId
-    );
+    return ASSET_ENDPOINTS[chainId.toString()] || DEFAULT_ASSET_ENDPOINT;
   }
 
   static async fetchAllAssets(chainId: number, assetsIds: string[]) {
