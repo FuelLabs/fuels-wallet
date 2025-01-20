@@ -63,9 +63,6 @@ export const AssetItem: AssetItemComponent = ({
     if (!inputFuelAsset && !inputAsset && !fuelAssetFromInputAsset)
       return undefined;
 
-    console.log('fsk inputFuelAsset', inputFuelAsset);
-    console.log('fsk fuelAssetFromInputAsset', fuelAssetFromInputAsset);
-    console.log('fsk inputAsset', inputAsset);
     return (
       inputFuelAsset ||
       fuelAssetFromInputAsset || {
