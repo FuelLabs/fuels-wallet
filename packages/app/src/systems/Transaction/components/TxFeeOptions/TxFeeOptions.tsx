@@ -20,7 +20,7 @@ type TxFeeOptionsProps = {
   gasLimit: BN;
   regularTip: BN;
   fastTip: BN;
-  onRecalculate: (tip: BN) => void;
+  onRecalculate?: (tip: BN) => void;
 };
 
 export const TxFeeOptions = ({
@@ -183,7 +183,7 @@ export const TxFeeOptions = ({
                     amount: option.tip,
                     text: formatTip(option.tip),
                   });
-                  onRecalculate(option.tip);
+                  onRecalculate?.(option.tip);
                 }}
               />
             ))}
