@@ -7,3 +7,5 @@ export * from './TxOperation';
 export * from './TxOperations';
 export * from './TxRecipientCard';
 export * from './TxStatusAlert';
+export * from './TxViewSimple';
+export * from './TxViewSimpleWrapper';
