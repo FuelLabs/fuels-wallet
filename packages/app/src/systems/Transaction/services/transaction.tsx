@@ -55,6 +55,8 @@ export type TxInputs = {
       regularTip?: BN;
       fastTip?: BN;
       maxGasLimit?: BN;
+      regularTipInUsd?: string;
+      fastTipInUsd?: string;
     };
   };
   send: {
@@ -378,11 +380,14 @@ export class TxService {
     const currentNetwork = await NetworkService.getSelectedNetwork();
     const provider = await createProvider(currentNetwork?.url || '');
 
-    const { regularTip, fastTip } = await getCurrentTips(provider);
+    const { regularTip, fastTip, regularTipInUsd, fastTipInUsd } =
+      await getCurrentTips(provider);
 
     return {
       regularTip: bn(regularTip),
       fastTip: bn(fastTip),
+      regularTipInUsd,
+      fastTipInUsd,
     };
   }
 

@@ -1,4 +1,4 @@
-import { Card, Text } from '@fuel-ui/react';
+import { Card, HStack, Text } from '@fuel-ui/react';
 import { type BN, DEFAULT_PRECISION } from 'fuels';
 import type { FC } from 'react';
 
@@ -10,6 +10,7 @@ export type TxFeeProps = {
   checked?: boolean;
   onChecked?: (checked: boolean) => void;
   title?: string;
+  tipInUsd?: string;
 };
 
 type TxFeeComponent = FC<TxFeeProps> & {
@@ -21,6 +22,7 @@ export const TxFee: TxFeeComponent = ({
   checked,
   onChecked,
   title,
+  tipInUsd,
 }: TxFeeProps) => {
   return (
     <Card
@@ -34,18 +36,29 @@ export const TxFee: TxFeeComponent = ({
       >
         {title || 'Fee (network)'}
       </Text>
-      <Text
-        color="intentsBase12"
-        css={styles.amount}
-        aria-label={`fee value:${title || 'Network'}`}
-      >
-        {fee
-          ? `${fee.format({
-              minPrecision: DEFAULT_PRECISION,
-              precision: DEFAULT_PRECISION,
-            })} ETH`
-          : '--'}
-      </Text>
+      <HStack gap="$1">
+        {tipInUsd && (
+          <Text
+            color="textSubtext"
+            css={styles.amount}
+            aria-label={`tip in usd:${title || 'Network'}`}
+          >
+            {tipInUsd.includes('$0.00') ? '<$0.00' : tipInUsd}
+          </Text>
+        )}
+        <Text
+          color="intentsBase12"
+          css={styles.amount}
+          aria-label={`fee value:${title || 'Network'}`}
+        >
+          {fee
+            ? `${fee.format({
+                minPrecision: DEFAULT_PRECISION,
+                precision: DEFAULT_PRECISION,
+              })} ETH`
+            : '--'}
+        </Text>
+      </HStack>
     </Card>
   );
 };

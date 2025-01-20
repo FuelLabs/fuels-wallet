@@ -39,7 +39,7 @@ export const AssetItemAmount = ({
   return (
     <Tooltip content={original.display} delayDuration={0} open={open}>
       <Box css={styles.root}>
-        <VStack gap="1">
+        <VStack gap="$1">
           <Text as="span" ref={amountRef} css={styles.amount}>
             <AmountVisibility
               value={amount}

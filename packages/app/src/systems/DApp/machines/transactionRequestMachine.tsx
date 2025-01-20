@@ -41,6 +41,8 @@ type MachineContext = {
     baseFee?: BN;
     regularTip?: BN;
     fastTip?: BN;
+    regularTipInUsd?: string;
+    fastTipInUsd?: string;
     maxGasLimit?: BN;
   };
   errors?: {
@@ -52,6 +54,8 @@ type MachineContext = {
 type EstimateDefaultTipsReturn = {
   regularTip: BN;
   fastTip: BN;
+  regularTipInUsd?: string;
+  fastTipInUsd?: string;
 };
 
 type EstimateGasLimitReturn = {

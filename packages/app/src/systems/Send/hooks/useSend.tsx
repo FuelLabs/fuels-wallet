@@ -40,6 +40,12 @@ const selectors = {
   fastTip(state: SendMachineState) {
     return state.context.fastTip;
   },
+  regularTipInUsd(state: SendMachineState) {
+    return state.context.regularTipInUsd;
+  },
+  fastTipInUsd(state: SendMachineState) {
+    return state.context.fastTipInUsd;
+  },
   readyToSend(state: SendMachineState) {
     return state.matches('readyToSend');
   },
@@ -290,6 +296,8 @@ export function useSend() {
             baseFee,
             regularTip,
             fastTip,
+            fastTipInUsd,
+            regularTipInUsd,
             maxGasLimit,
           } = ctx;
           if (!providerUrl || !transactionRequest || !address) {
@@ -305,6 +313,8 @@ export function useSend() {
               regularTip,
               fastTip,
               maxGasLimit,
+              regularTipInUsd,
+              fastTipInUsd,
             },
             skipCustomFee: true,
           });
@@ -346,6 +356,8 @@ export function useSend() {
 
   const regularTip = useSelector(service, selectors.regularTip);
   const fastTip = useSelector(service, selectors.fastTip);
+  const regularTipInUsd = useSelector(service, selectors.regularTipInUsd);
+  const fastTipInUsd = useSelector(service, selectors.fastTipInUsd);
   const sendStatusSelector = selectors.status(txRequest.txStatus);
   const sendStatus = useSelector(service, sendStatusSelector);
   const readyToSend = useSelector(service, selectors.readyToSend);
@@ -448,6 +460,8 @@ export function useSend() {
     tip,
     regularTip,
     fastTip,
+    regularTipInUsd,
+    fastTipInUsd,
     status,
     readyToSend,
     account,

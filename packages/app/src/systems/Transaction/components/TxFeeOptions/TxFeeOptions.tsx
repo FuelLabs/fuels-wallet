@@ -3,9 +3,11 @@ import { AnimatePresence } from 'framer-motion';
 import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
+import { convertAsset } from '~/systems/Asset/services/convert-asset';
 import { MotionFlex, MotionStack, animations } from '~/systems/Core';
 import { createAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import { isAmountAllowed } from '~/systems/Core/components/InputAmount/InputAmount.utils';
+import { useProvider } from '~/systems/Network/hooks/useProvider';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxFee } from '../TxFee';
 import {
@@ -20,6 +22,8 @@ type TxFeeOptionsProps = {
   gasLimit: BN;
   regularTip: BN;
   fastTip: BN;
+  regularTipInUsd: string | undefined;
+  fastTipInUsd: string | undefined;
   onRecalculate?: (tip: BN) => void;
 };
 
@@ -29,9 +33,15 @@ export const TxFeeOptions = ({
   gasLimit: gasLimitInput,
   regularTip,
   fastTip,
+  regularTipInUsd,
+  fastTipInUsd,
   onRecalculate,
 }: TxFeeOptionsProps) => {
+  const provider = useProvider();
   const { control, setValue, getValues } = useFormContext<SendFormValues>();
+  const [advancedFeeInUsd, setAdvancedFeeInUsd] = useState<string | undefined>(
+    undefined
+  );
   const [isAdvanced, setIsAdvanced] = useState(initialAdvanced);
   const previousGasLimit = useRef<BN>(gasLimitInput);
   const previousDefaultTip = useRef<BN>(regularTip);
@@ -48,10 +58,20 @@ export const TxFeeOptions = ({
 
   const options = useMemo(() => {
     return [
-      { name: 'Regular', fee: baseFee.add(regularTip), tip: regularTip },
-      { name: 'Fast', fee: baseFee.add(fastTip), tip: fastTip },
+      {
+        name: 'Regular',
+        fee: baseFee.add(regularTip),
+        tip: regularTip,
+        tipInUsd: regularTipInUsd,
+      },
+      {
+        name: 'Fast',
+        fee: baseFee.add(fastTip),
+        tip: fastTip,
+        tipInUsd: fastTipInUsd,
+      },
     ];
-  }, [baseFee, regularTip, fastTip]);
+  }, [baseFee, regularTip, fastTip, regularTipInUsd, fastTipInUsd]);
 
   const toggle = () => {
     setIsAdvanced((curr) => !curr);
@@ -83,6 +103,26 @@ export const TxFeeOptions = ({
     }
   }, [isAdvanced, setValue, getValues]);
 
+  const advancedFee = baseFee.add(tip.value.amount);
+  useEffect(() => {
+    const abort = false;
+    if (!isAdvanced) setAdvancedFeeInUsd(undefined);
+    async function loadAndStoreRate() {
+      if (advancedFee != null) {
+        const baseAssetId = await provider?.getBaseAssetId();
+        if (baseAssetId == null) return;
+        convertAsset(
+          await provider?.getChainId(),
+          baseAssetId,
+          advancedFee.toString()
+        )
+          .then((res) => !abort && setAdvancedFeeInUsd(res?.amount || '$0.00'))
+          .catch(() => !abort && setAdvancedFeeInUsd('$0.00'));
+      }
+    }
+    loadAndStoreRate();
+  }, [advancedFee, isAdvanced, provider]);
+
   return (
     <Box.Stack gap="$2">
       <AnimatePresence mode="popLayout">
@@ -90,8 +130,9 @@ export const TxFeeOptions = ({
           <MotionStack {...animations.slideInTop()} key="advanced" gap="$3">
             <TxFee
               title="Fee + Tip"
-              fee={baseFee.add(tip.value.amount)}
+              fee={advancedFee}
               checked
+              tipInUsd={advancedFeeInUsd}
             />
 
             <VStack gap="$1">
@@ -176,6 +217,7 @@ export const TxFeeOptions = ({
                 key={option.name}
                 fee={option.fee}
                 title={option.name}
+                tipInUsd={option.tipInUsd}
                 checked={option.tip.eq(tip.value.amount)}
                 onChecked={() => {
                   previousDefaultTip.current = option.tip;

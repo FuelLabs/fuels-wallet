@@ -1,5 +1,6 @@
 import type { BN, Provider } from 'fuels';
 import { PolicyType, bn } from 'fuels';
+import { convertAsset } from '~/systems/Asset/services/convert-asset';
 
 type CalculateTotalFeeParams = {
   gasPerByte: BN;
@@ -28,6 +29,8 @@ export async function calculateTotalFee({
 export async function getCurrentTips(provider: Provider) {
   const DEFAULT_REGULAR_TIP = 0;
   const DEFAULT_FAST_TIP = 1000;
+  const baseAssetId = await provider.getBaseAssetId();
+  const chainId = await provider.getChainId();
   const blockWithTransactions =
     await provider.getBlockWithTransactions('latest');
   if (!blockWithTransactions) {
@@ -57,5 +60,20 @@ export async function getCurrentTips(provider: Provider) {
   const fastTip =
     orderedTips[Math.floor(orderedTips.length * 0.8)] || DEFAULT_FAST_TIP;
 
-  return { regularTip, fastTip };
+  const regularTipInUsd = await convertAsset(
+    chainId,
+    baseAssetId,
+    bn(regularTip).toString()
+  )
+    .then((res) => res?.amount || '$0.00')
+    .catch(() => '$0.00');
+  const fastTipInUsd = await convertAsset(
+    chainId,
+    baseAssetId,
+    bn(fastTip).toString()
+  )
+    .then((res) => res?.amount || '$0.00')
+    .catch(() => '$0.00');
+
+  return { regularTip, fastTip, regularTipInUsd, fastTipInUsd };
 }
