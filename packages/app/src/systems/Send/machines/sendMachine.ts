@@ -131,7 +131,7 @@ export const sendMachine = createMachine(
             },
             {
               actions: ['assignTransactionData'],
-              target: 'waitingToAllowSending',
+              target: 'readyToSend',
             },
           ],
         },
@@ -146,20 +146,6 @@ export const sendMachine = createMachine(
         after: {
           1000: {
             target: 'creatingTx',
-          },
-        },
-      },
-      // @TODO: "waitingToAllowSending" only exists to allow the useEffect on useSend to trigger, avoiding an error where the review button was enabled and then in loading state right after
-      waitingToAllowSending: {
-        on: {
-          SET_INPUT: {
-            actions: ['assignInput'],
-            target: 'changingInput',
-          },
-        },
-        after: {
-          500: {
-            target: 'readyToSend',
           },
         },
       },
