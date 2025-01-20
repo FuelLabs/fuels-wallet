@@ -24,7 +24,7 @@ export type Account = {
 export type AccountBalance = {
   balance: BN;
   balanceSymbol: string;
-  convertedRate: number;
+  convertedRate: string | undefined;
   balances: CoinAsset[];
 };
 

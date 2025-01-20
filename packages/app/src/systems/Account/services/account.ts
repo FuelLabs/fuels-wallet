@@ -108,7 +108,7 @@ export class AccountService {
     try {
       const provider = await createProvider(providerUrl!);
       const balances = await getBalances(provider, account.address);
-      const convertedRates: Record<string, number> = {};
+      const convertedRates: Record<string, string | undefined> = {};
       const chainId = provider.getChainId();
 
       const balanceAssets = AssetsCache.fetchAllAssets(
@@ -118,7 +118,7 @@ export class AccountService {
       const convertRatesPromise = balances.map((asset) => {
         return convertAsset(chainId, asset.assetId, asset.amount.toString())
           .then((rate) => {
-            convertedRates[asset.assetId] = rate;
+            convertedRates[asset.assetId] = rate?.amount;
           })
           .catch(() => {});
       });
@@ -178,7 +178,7 @@ export class AccountService {
         balance: bn(0),
         balanceSymbol: 'ETH',
         balances: [],
-        convertedRate: 0,
+        convertedRate: '',
       };
       const result: AccountWithBalance = {
         ...account,

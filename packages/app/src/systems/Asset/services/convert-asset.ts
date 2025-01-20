@@ -3,6 +3,10 @@ import {
   DEFAULT_ASSET_ENDPOINT,
 } from '~/systems/Asset/constants';
 
+interface ConvertAssetResponse {
+  amount: `${number}`;
+}
+
 export async function convertAsset(
   chainId: number,
   assetId: string,
@@ -22,6 +26,6 @@ export async function convertAsset(
         amount,
       }),
     });
-    return response.json();
+    return response.json() as Promise<ConvertAssetResponse>;
   } catch (_) {}
 }
