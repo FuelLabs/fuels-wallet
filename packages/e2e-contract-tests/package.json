@@ -12,8 +12,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fuels/connectors": "0.35.1",
-    "@fuels/react": "0.35.1",
+    "@fuels/connectors": "0.39.0-pr-458-101889b",
+    "@fuels/react": "0.39.0-pr-458-101889b",
     "@tanstack/react-query": "5.28.4",
     "fuels": "0.98.0",
     "react": "18.3.1",
