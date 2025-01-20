@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Text, Tooltip } from '@fuel-ui/react';
+import { Box, Text, Tooltip, VStack } from '@fuel-ui/react';
 import type { BNInput } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AmountVisibility, formatBalance } from '~/systems/Core';
@@ -9,12 +9,14 @@ type AssetItemAmountProps = {
   amount: BNInput;
   decimals: number | undefined;
   symbol: string | undefined;
+  convertedRate: string | undefined;
 };
 
 export const AssetItemAmount = ({
   amount,
   decimals,
   symbol,
+  convertedRate,
 }: AssetItemAmountProps) => {
   const { visibility } = useBalanceVisibility();
   const { original, tooltip } = formatBalance(amount, decimals);
@@ -37,16 +39,25 @@ export const AssetItemAmount = ({
   return (
     <Tooltip content={original.display} delayDuration={0} open={open}>
       <Box css={styles.root}>
-        <Text as="span" ref={amountRef} css={styles.amount}>
-          <AmountVisibility
-            value={amount}
-            units={decimals}
-            visibility={visibility}
-          />
-        </Text>
-        <Text as="span" css={styles.symbol}>
-          {symbol}
-        </Text>
+        <VStack gap="1">
+          <Text as="span" ref={amountRef} css={styles.amount}>
+            <AmountVisibility
+              value={amount}
+              units={decimals}
+              visibility={visibility}
+            />
+            <Text as="span" css={styles.symbol}>
+              {symbol}
+            </Text>
+          </Text>
+          <Text
+            aria-hidden={visibility}
+            aria-label={`${symbol} conversion rate to USD`}
+            className="text-start text-sm"
+          >
+            {visibility ? (convertedRate ?? '$0.00') : '•••••'}
+          </Text>
+        </VStack>
       </Box>
     </Tooltip>
   );

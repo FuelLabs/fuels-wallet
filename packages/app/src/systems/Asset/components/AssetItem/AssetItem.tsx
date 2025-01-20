@@ -33,6 +33,7 @@ export type AssetItemProps = {
   onEdit?: (assetId: string) => void;
   shouldShowAddAssetBtn?: boolean;
   shouldShowCopyAssetAddress?: boolean;
+  convertedRate?: string;
 };
 
 type AssetItemComponent = FC<AssetItemProps> & {
@@ -48,6 +49,7 @@ export const AssetItem: AssetItemComponent = ({
   onEdit,
   shouldShowAddAssetBtn,
   shouldShowCopyAssetAddress,
+  convertedRate,
 }) => {
   const navigate = useNavigate();
 
@@ -56,6 +58,9 @@ export const AssetItem: AssetItemComponent = ({
     if (!inputFuelAsset && !inputAsset && !fuelAssetFromInputAsset)
       return undefined;
 
+    console.log('fsk inputFuelAsset', inputFuelAsset);
+    console.log('fsk fuelAssetFromInputAsset', fuelAssetFromInputAsset);
+    console.log('fsk inputAsset', inputAsset);
     return (
       inputFuelAsset ||
       fuelAssetFromInputAsset || {
@@ -118,7 +123,12 @@ export const AssetItem: AssetItemComponent = ({
 
     if (amount) {
       return (
-        <AssetItemAmount amount={amount} decimals={decimals} symbol={symbol} />
+        <AssetItemAmount
+          amount={amount}
+          decimals={decimals}
+          symbol={symbol}
+          convertedRate={convertedRate}
+        />
       );
     }
 
