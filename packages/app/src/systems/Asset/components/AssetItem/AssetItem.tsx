@@ -288,6 +288,7 @@ const styles = {
     '.fuel_Button': {
       px: '$1 !important',
       color: '$intentsBase8 !important',
+      height: 44,
     },
 
     '.fuel_Button:hover': {
