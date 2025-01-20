@@ -1,5 +1,17 @@
 # fuels-wallet
 
+## 0.47.1
+
+### Patch Changes
+
+- [#1760](https://github.com/FuelLabs/fuels-wallet/pull/1760) [`5399a354`](https://github.com/FuelLabs/fuels-wallet/commit/5399a3544f3203df689649e2d5bc4bd7a0ded988) Thanks [@Dhanraj30](https://github.com/Dhanraj30)! - Fixing display of long recipient names
+
+- [#1783](https://github.com/FuelLabs/fuels-wallet/pull/1783) [`5680b65b`](https://github.com/FuelLabs/fuels-wallet/commit/5680b65b8bf09c42eadc4a5342bdae905c577351) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: make send screen flows more stable by relying less on form changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.47.1
+  - @fuels/playwright-utils@0.47.1
+
 ## 0.47.0
 
 ### Minor Changes
