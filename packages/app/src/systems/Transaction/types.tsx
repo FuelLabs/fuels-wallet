@@ -59,12 +59,15 @@ export type ContractCallMetadata = {
   assetId?: string;
   isContractCallGroup?: boolean;
   operationCount?: number;
+  totalAmount?: BN;
 };
 
 export type SwapMetadata = {
   isSwap: boolean;
   receiveAmount: string;
   receiveAssetId: string;
+  totalAmount?: BN;
+  operationCount?: number;
 };
 
 export type SimplifiedOperation = {
