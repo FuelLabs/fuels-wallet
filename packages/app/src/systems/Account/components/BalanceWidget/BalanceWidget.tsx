@@ -7,6 +7,7 @@ import {
   Icon,
   Text,
   Tooltip,
+  VStack,
 } from '@fuel-ui/react';
 import type { AccountWithBalance } from '@fuel-wallet/types';
 import { type ReactNode, useMemo } from 'react';
@@ -100,27 +101,38 @@ export function BalanceWidget({
       bottom={
         <>
           <Text className="label">Balance</Text>
-          <Box.Flex>
-            <Tooltip
-              content={original.display}
-              delayDuration={0}
-              open={visibility && tooltip ? undefined : false}
-            >
-              <Text aria-hidden={visibility} data-account-name={account.name}>
-                {account.balanceSymbol || '$'}&nbsp;
-                <AmountVisibility
-                  value={account.balance}
-                  visibility={visibility}
-                  units={decimals}
-                />
+          <VStack>
+            <Box.Flex>
+              <Tooltip
+                content={original.display}
+                delayDuration={0}
+                open={visibility && tooltip ? undefined : false}
+              >
+                <Text aria-hidden={visibility} data-account-name={account.name}>
+                  {account.balanceSymbol || '$'}&nbsp;
+                  <AmountVisibility
+                    value={account.balance}
+                    visibility={visibility}
+                    units={decimals}
+                  />
+                </Text>
+              </Tooltip>
+              <VisibilityButton
+                aria-label={visibility ? 'Hide balance' : 'Show balance'}
+                visibility={visibility}
+                onChangeVisibility={onChangeVisibility}
+              />
+            </Box.Flex>
+            {!!visibility && (
+              <Text
+                aria-hidden={visibility}
+                aria-label={`${account.balanceSymbol} conversion rate to USD`}
+                className="text-start text-sm"
+              >
+                ${(account.convertedRate ?? 0)?.toFixed(2)}
               </Text>
-            </Tooltip>
-            <VisibilityButton
-              aria-label={visibility ? 'Hide balance' : 'Show balance'}
-              visibility={visibility}
-              onChangeVisibility={onChangeVisibility}
-            />
-          </Box.Flex>
+            )}
+          </VStack>
         </>
       }
     />
