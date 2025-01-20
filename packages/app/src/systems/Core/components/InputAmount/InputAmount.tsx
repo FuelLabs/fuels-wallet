@@ -5,6 +5,7 @@
  **/
 
 import { cssObj } from '@fuel-ui/css';
+import { VStack } from '@fuel-ui/react';
 import type { BN } from 'fuels';
 import { DEFAULT_DECIMAL_UNITS, bn, format } from 'fuels';
 import { useEffect, useState } from 'react';
@@ -81,6 +82,7 @@ export type InputAmountProps = Omit<InputProps, 'size'> & {
   units?: number;
   balancePrecision?: number;
   asset?: { name?: string; icon?: string; address?: string };
+  convertedRate?: string;
   assetTooltip?: string;
   hiddenMaxButton?: boolean;
   hiddenBalance?: boolean;
@@ -111,6 +113,7 @@ export const InputAmount: InputAmountComponent = ({
   inputProps,
   asset,
   assetTooltip,
+  convertedRate,
   onClickAsset,
   ...props
 }) => {
@@ -237,13 +240,24 @@ export const InputAmount: InputAmountComponent = ({
             content={formatAmount({ amount: balance, options: formatOpts })}
             sideOffset={-5}
           >
-            <Text
-              fontSize="sm"
-              aria-label={`Balance: ${formattedBalance}`}
-              color="textSubtext"
-            >
-              Balance: {formattedBalance}
-            </Text>
+            <VStack gap="0">
+              {!!convertedRate && (
+                <Text
+                  fontSize="sm"
+                  aria-label={`${asset?.name} value converted to USD`}
+                  color="textSubtext"
+                >
+                  {convertedRate}
+                </Text>
+              )}
+              <Text
+                fontSize="sm"
+                aria-label={`Balance: ${formattedBalance}`}
+                color="textSubtext"
+              >
+                Balance: {formattedBalance}
+              </Text>
+            </VStack>
           </Tooltip>
         )}
       </Box.Flex>

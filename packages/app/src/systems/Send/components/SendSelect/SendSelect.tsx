@@ -13,6 +13,7 @@ import {
 } from '~/systems/Core';
 
 import { useController, useWatch } from 'react-hook-form';
+import { convertAsset } from '~/systems/Asset/services/convert-asset';
 import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
 import type { UseSendReturn } from '../../hooks';
@@ -39,7 +40,9 @@ export function SendSelect({
   const isAmountFocused = useRef<boolean>(false);
   const baseFeeRef = useRef<BN | null>(baseFee);
   const tipRef = useRef<BN>(tip);
-
+  const [convertedRate, setConvertedRate] = useState<string | undefined>(
+    undefined
+  );
   const { field: amount, fieldState: amountFieldState } = useController({
     control: form.control,
     name: 'amount',
@@ -92,6 +95,31 @@ export function SendSelect({
     assetId: b.assetId,
     ...b.asset,
   }));
+
+  console.log('fsk assetSelectItems', assetSelectItems);
+
+  useEffect(() => {
+    let abort = false;
+    async function loadAndStoreRate() {
+      if (abort) return;
+      if (assetId != null) {
+        const chainId = await provider?.getChainId();
+        convertAsset(chainId, assetId, amount.value.toString())
+          .then((res) => {
+            if (abort) return;
+            setConvertedRate(res?.amount ?? '$0.00');
+          })
+          .catch(() => {
+            setConvertedRate('$0.00');
+          });
+      }
+    }
+    const timeout = setTimeout(loadAndStoreRate, 500);
+    return () => {
+      abort = true;
+      clearTimeout(timeout);
+    };
+  }, [assetId, provider, amount]);
 
   return (
     <MotionContent {...animations.slideInTop()}>
@@ -158,10 +186,12 @@ export function SendSelect({
               balance={balanceAssetSelected}
               value={amount.value}
               units={decimals}
+              convertedRate={convertedRate}
               onChange={(val) => {
                 if (isAmountFocused.current) {
                   setWatchMax(false);
                   amount.onChange(val);
+                  setConvertedRate(undefined);
                 }
               }}
               onClickMax={() => {
