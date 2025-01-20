@@ -12,7 +12,7 @@ export async function convertAsset(
     const endpoint =
       ASSET_ENDPOINTS[chainId.toString()] || DEFAULT_ASSET_ENDPOINT;
     if (!endpoint) return;
-    const response = await fetch(`${endpoint}/convert_rate`, {
+    const response = await fetch(`${endpoint.url}/convert_rate`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

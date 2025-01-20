@@ -116,13 +116,11 @@ export class AccountService {
         balances.map((balance) => balance.assetId)
       );
       const convertRatesPromise = balances.map((asset) => {
-        return convertAsset(
-          chainId,
-          asset.assetId,
-          asset.amount.toString()
-        ).then((rate) => {
-          convertedRates[asset.assetId] = rate;
-        });
+        return convertAsset(chainId, asset.assetId, asset.amount.toString())
+          .then((rate) => {
+            convertedRates[asset.assetId] = rate;
+          })
+          .catch(() => {});
       });
       await Promise.all([...convertRatesPromise, balanceAssets]);
       // includes "asset" prop in balance, centralizing the complexity here instead of in rest of UI
