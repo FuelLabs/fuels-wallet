@@ -12,7 +12,7 @@ import {
   Text,
   Tooltip,
 } from '@fuel-ui/react';
-import { type FC, useMemo } from 'react';
+import { type FC, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Pages, shortAddress } from '~/systems/Core';
 
@@ -20,6 +20,8 @@ import { AssetRemoveDialog } from '../AssetRemoveDialog';
 
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
 import type { BNInput } from 'fuels';
+import { convertAsset } from '~/systems/Asset/services/convert-asset';
+import { useProvider } from '~/systems/Network/hooks/useProvider';
 import useFuelAsset from '../../hooks/useFuelAsset';
 import { AssetItemAmount } from './AssetItemAmount';
 import { AssetItemLoader } from './AssetItemLoader';
@@ -52,6 +54,9 @@ export const AssetItem: AssetItemComponent = ({
   convertedRate,
 }) => {
   const navigate = useNavigate();
+  const provider = useProvider();
+  const [fallbackConvertedRate, setFallbackConvertedRate] =
+    useState<string>('$0.00');
 
   const fuelAssetFromInputAsset = useFuelAsset({ asset: inputAsset });
   const asset = useMemo(() => {
@@ -70,6 +75,39 @@ export const AssetItem: AssetItemComponent = ({
       }
     );
   }, [inputFuelAsset, inputAsset, fuelAssetFromInputAsset]);
+
+  useEffect(() => {
+    let abort = false;
+    async function loadAndStoreRate() {
+      if (abort) return;
+      if (
+        !convertedRate &&
+        !inputFuelAsset?.isNft &&
+        amount &&
+        inputFuelAsset?.assetId != null
+      ) {
+        const chainId = await provider?.getChainId();
+        convertAsset(chainId, inputFuelAsset?.assetId, amount.toString())
+          .then((res) => {
+            if (abort) return;
+            setFallbackConvertedRate(res?.amount ?? '$0.00');
+          })
+          .catch(() => {
+            setFallbackConvertedRate('$0.00');
+          });
+      }
+    }
+    loadAndStoreRate();
+    return () => {
+      abort = true;
+    };
+  }, [
+    convertedRate,
+    inputFuelAsset?.isNft,
+    inputFuelAsset?.assetId,
+    provider,
+    amount,
+  ]);
 
   if (!asset) return null;
 
@@ -127,7 +165,7 @@ export const AssetItem: AssetItemComponent = ({
           amount={amount}
           decimals={decimals}
           symbol={symbol}
-          convertedRate={convertedRate}
+          convertedRate={convertedRate || fallbackConvertedRate}
         />
       );
     }
