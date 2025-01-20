@@ -21,25 +21,13 @@ export type TxOperationCardProps = {
 };
 
 export function TxOperationCard({ operation, index }: TxOperationCardProps) {
-  const [openDrawer, setOpenDrawer] = useState<string | null>(null);
+  const [_openDrawer, setOpenDrawer] = useState<string | null>(null);
   const metadata = operation.metadata;
-  console.log('TxOperationCard:', {
-    operation,
-    metadata,
-    type: operation.type,
-    isContractCallMetadata: metadata ? isContractCallMetadata(metadata) : false,
-    operationCount:
-      metadata && isContractCallMetadata(metadata)
-        ? metadata.operationCount
-        : 0,
-  });
-
   const isGroup =
     isContractCallMetadata(metadata) &&
     metadata.operationCount &&
-    metadata.operationCount > 1;
-
-  console.log('isGroup:', isGroup);
+    metadata.operationCount > 1 &&
+    operation.groupId?.includes(operation.to);
   const key =
     operation.groupId ||
     `${operation.type}-${operation.from}-${operation.to}-${index}`;
@@ -62,43 +50,6 @@ export function TxOperationCard({ operation, index }: TxOperationCardProps) {
           {!isGroup && <TxOperationContent operation={operation} />}
         </Box.Stack>
       </Card>
-
-      {isGroup && (
-        <Drawer
-          isDismissable
-          size={300}
-          side="right"
-          isOpen={openDrawer === key}
-          onClose={() => setOpenDrawer(null)}
-        >
-          <Drawer.Content>
-            <Drawer.Body css={styles.drawer}>
-              <Box.Flex css={styles.drawerHeader}>
-                <Text as="span">Contract Calls</Text>
-                <IconButton
-                  size="sm"
-                  icon={Icon.is('X')}
-                  variant="link"
-                  aria-label="drawer_closeButton"
-                  onPress={() => setOpenDrawer(null)}
-                />
-              </Box.Flex>
-              <Box css={styles.drawerContent}>
-                {isContractCallMetadata(metadata) && metadata.functionName && (
-                  <Text fontSize="sm">Function: {metadata.functionName}</Text>
-                )}
-                <Text fontSize="sm">Contract: {operation.to}</Text>
-                {isContractCallMetadata(metadata) &&
-                  metadata.operationCount && (
-                    <Text fontSize="sm">
-                      Total Calls: {metadata.operationCount}
-                    </Text>
-                  )}
-              </Box>
-            </Drawer.Body>
-          </Drawer.Content>
-        </Drawer>
-      )}
     </Box>
   );
 }
