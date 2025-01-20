@@ -120,19 +120,16 @@ export class AccountService {
           convertRates[asset.assetId] = rate;
         });
       });
-      const balanceAssetsPromise = AssetsCache.fetchAllAssets(
+      const balanceAssets = AssetsCache.fetchAllAssets(
         chainId,
         balances.map((balance) => balance.assetId)
       );
-      const [balanceAssets] = await Promise.all([
-        ...convertRatesPromise,
-        balanceAssetsPromise,
-      ]);
+      await Promise.all([...convertRatesPromise, balanceAssets]);
       // includes "asset" prop in balance, centralizing the complexity here instead of in rest of UI
       const nextBalancesWithAssets = await balances.reduce(
         async (acc, balance) => {
           const prev = await acc;
-          const cachedAsset = balanceAssets?.get(balance.assetId);
+          const cachedAsset = (await balanceAssets)?.get(balance.assetId);
 
           return [
             ...prev,
