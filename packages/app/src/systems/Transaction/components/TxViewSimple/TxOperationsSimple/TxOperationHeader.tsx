@@ -5,6 +5,7 @@ import { useAccounts } from '~/systems/Account';
 import { shortAddress } from '~/systems/Core';
 import type { SimplifiedOperation } from '../../../types';
 import { TxCategory } from '../../../types';
+import { useEcosystemProject } from './useEcosystemProject';
 
 type TxOperationHeaderProps = {
   operation: SimplifiedOperation;
@@ -19,16 +20,29 @@ export function TxOperationHeader({ operation }: TxOperationHeaderProps) {
   const name =
     accounts?.find((a) => a.address === fuelAddress)?.name || 'unknown';
 
+  const isContract = operation.type === TxCategory.CONTRACTCALL;
+  const projectInfo = useEcosystemProject(
+    isContract ? operation.to : undefined
+  );
+
   return (
     <Box.Flex css={styles.line}>
       <Box css={styles.iconCol}>
-        <Avatar.Generated hash={operation.from} size={24} />
+        {projectInfo.image ? (
+          <Avatar
+            src={projectInfo.image}
+            size={24}
+            name={projectInfo.name || 'Contract'}
+          />
+        ) : (
+          <Avatar.Generated hash={operation.from} size={24} />
+        )}
       </Box>
       <Box.Flex gap="$2" css={styles.contentCol}>
         <Text as="span" fontSize="sm">
-          {name}
+          {isContract ? projectInfo.name || shortAddress(operation.to) : name}
         </Text>
-        {operation.type === TxCategory.CONTRACTCALL && (
+        {isContract && (
           <Box css={styles.badge}>
             <Text fontSize="sm" color="gray8">
               Contract
@@ -36,14 +50,18 @@ export function TxOperationHeader({ operation }: TxOperationHeaderProps) {
           </Box>
         )}
         <Text as="span" fontSize="sm" color="gray8">
-          {shortAddress(fuelAddress)}
+          {shortAddress(isContract ? operation.to : fuelAddress)}
         </Text>
         <IconButton
           size="xs"
           variant="link"
           icon="Copy"
           aria-label="Copy address"
-          onPress={() => navigator.clipboard.writeText(fuelAddress)}
+          onPress={() =>
+            navigator.clipboard.writeText(
+              isContract ? operation.to : fuelAddress
+            )
+          }
         />
       </Box.Flex>
     </Box.Flex>
