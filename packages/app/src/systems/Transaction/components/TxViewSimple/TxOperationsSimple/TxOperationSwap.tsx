@@ -1,9 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Icon, IconButton, Text } from '@fuel-ui/react';
-import { useAccounts } from '~/systems/Account';
+import { Avatar, Box, Icon, IconButton, Spinner, Text } from '@fuel-ui/react';
 import { formatAmount, shortAddress } from '~/systems/Core';
 import type { SimplifiedOperation } from '../../../types';
 import { useAssetSymbols } from './useAssetSymbols';
+import { useEcosystemProject } from './useEcosystemProject';
 import { isSwapMetadata } from './utils';
 
 type TxOperationSwapProps = {
@@ -11,8 +11,12 @@ type TxOperationSwapProps = {
 };
 
 export function TxOperationSwap({ operation }: TxOperationSwapProps) {
-  const { accounts } = useAccounts();
   const { assetSymbols } = useAssetSymbols([operation]);
+  const {
+    name: projectName,
+    image: projectImage,
+    isLoading,
+  } = useEcosystemProject(operation.to);
 
   if (!isSwapMetadata(operation.metadata)) return null;
 
@@ -20,12 +24,23 @@ export function TxOperationSwap({ operation }: TxOperationSwapProps) {
     <>
       <Box.Flex css={styles.line}>
         <Box css={styles.iconCol}>
-          <Avatar.Generated hash={operation.to} size={24} />
+          {isLoading ? (
+            <Spinner size={24} />
+          ) : projectImage ? (
+            <Avatar
+              src={projectImage}
+              size={24}
+              name={projectName || 'Contract'}
+            />
+          ) : (
+            <Avatar.Generated hash={operation.to} size={24} />
+          )}
         </Box>
         <Box.Flex gap="$2" css={styles.contentCol}>
           <Text as="span" fontSize="sm">
-            {accounts?.find((a) => a.address === operation.to)?.name ||
-              'unknown'}
+            {isLoading
+              ? 'Loading...'
+              : projectName || shortAddress(operation.to)}
           </Text>
           <Box css={styles.badge}>
             <Text fontSize="sm" color="gray8">
