@@ -141,10 +141,14 @@ export function groupSimilarOperations(
   // Second pass: group similar non-swap operations
   const groups = result.reduce(
     (acc, op) => {
-      const key =
-        op.type === TxCategory.CONTRACTCALL
-          ? op.type // Group all contract calls together
-          : `${op.type}-${op.to}`; // Other operations grouped by type and destination
+      let key: string;
+      if (op.type === TxCategory.CONTRACTCALL) {
+        key = `${op.type}-${op.to}`; // Group contract calls by their target contract
+      } else if (op.type === TxCategory.SEND && op.assetId) {
+        key = `${op.type}-${op.assetId}`; // Group transfers by asset ID
+      } else {
+        key = `${op.type}-${op.to}`; // Other operations grouped by type and destination
+      }
       if (!acc[key]) {
         acc[key] = [];
       }
@@ -158,18 +162,22 @@ export function groupSimilarOperations(
   return Object.values(groups).map((group) => {
     if (group.length === 1) return group[0];
 
+    const firstOp = group[0];
     // Combine similar operations
     return {
-      ...group[0],
-      groupId: `group-${group[0].type}${group[0].type !== TxCategory.CONTRACTCALL ? `-${group[0].to}` : ''}`,
+      ...firstOp,
+      groupId:
+        firstOp.type === TxCategory.SEND && firstOp.assetId
+          ? `group-${firstOp.type}-${firstOp.assetId}`
+          : `group-${firstOp.type}-${firstOp.to}`,
       metadata: {
-        ...group[0].metadata,
+        ...firstOp.metadata,
         operationCount: group.length,
         // Sum amounts if they exist and are the same asset
         totalAmount: group.every(
-          (op) => op.amount && op.assetId === group[0].assetId
+          (op) => op.amount && op.assetId === firstOp.assetId
         )
-          ? group.reduce((sum, op) => sum.add(op.amount!), group[0].amount!)
+          ? group.reduce((sum, op) => sum.add(op.amount!), firstOp.amount!)
           : undefined,
       },
     };
