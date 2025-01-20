@@ -50,6 +50,9 @@ const selectors = {
 
     return state.context.error;
   },
+  input(state: SendMachineState) {
+    return state.context.input;
+  },
   status(txStatus?: TxRequestStatus) {
     return useCallback(
       (state: SendMachineState) => {
@@ -102,9 +105,10 @@ const schemaFactory = (provider?: Provider) =>
             return false;
           }
 
+          const baseAssetId = await provider?.getBaseAssetId();
+
           const isSendingBaseAssetId =
-            asset &&
-            provider?.getBaseAssetId().toLowerCase() === asset.toLowerCase();
+            asset && baseAssetId?.toLowerCase() === asset.toLowerCase();
           if (isSendingBaseAssetId) {
             // It means "baseFee" is being calculated
             if (!baseFee) {
@@ -141,7 +145,7 @@ const schemaFactory = (provider?: Provider) =>
             }
 
             const assetCached = await AssetsCache.getInstance().getAsset({
-              chainId: provider.getChainId(),
+              chainId: await provider.getChainId(),
               assetId: value,
               dbAssets: [],
               save: false,
@@ -345,6 +349,7 @@ export function useSend() {
   const sendStatusSelector = selectors.status(txRequest.txStatus);
   const sendStatus = useSelector(service, sendStatusSelector);
   const readyToSend = useSelector(service, selectors.readyToSend);
+  const input = useSelector(service, selectors.input);
 
   const balanceAssetSelected = useMemo<BN>(() => {
     const asset = account?.balances?.find(
@@ -374,14 +379,19 @@ export function useSend() {
   function tryAgain() {
     txRequest.handlers.tryAgain();
   }
-
   useEffect(() => {
-    const { unsubscribe } = form.watch(() => {
+    const { unsubscribe } = form.watch((_data, { name: _, type }) => {
       const { address, asset, amount } = form.getValues();
       if (address) {
         form.trigger('address');
       }
       if (!address || !asset || amount == null || amount?.eq(0)) {
+        return;
+      }
+
+      // skip the form trigger if the user is not directly changing the form.
+      // this is to avoid the form being used to control start of flows, other than user typing.
+      if (type !== 'change') {
         return;
       }
 
@@ -410,6 +420,27 @@ export function useSend() {
     service.send,
   ]);
 
+  const recalculateFromTip = (tip: BN) => {
+    service.send('SET_INPUT', { input: { ...input, tip } });
+    form.trigger('amount');
+  };
+
+  const recalculateFromAmount = (amount: BN) => {
+    let previousInput = input;
+    if (!input) {
+      const { address, asset, fees } = form.getValues();
+      previousInput = {
+        to: address,
+        assetId: asset,
+        amount,
+        tip: fees.tip.amount,
+        gasLimit: fees.gasLimit.amount,
+      };
+    }
+    service.send('SET_INPUT', { input: { ...previousInput, amount } });
+    form.trigger('amount');
+  };
+
   return {
     form,
     baseFee,
@@ -431,6 +462,8 @@ export function useSend() {
       submit,
       goHome,
       tryAgain,
+      recalculateFromTip,
+      recalculateFromAmount,
     },
   };
 }

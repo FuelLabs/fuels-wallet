@@ -51,12 +51,21 @@ export function createAmount(text: string, units = 0) {
 
   let amount: BN | undefined;
   if (isZeroUnits) {
-    const textWithoutDecimals = textAmountFixed
-      .replaceAll(',', '')
-      .split('.')[0];
-    amount = bn(textWithoutDecimals);
+    const integerPart = textAmountFixed.replaceAll(',', '').split('.')?.[0];
+    amount = bn(integerPart);
   } else {
-    amount = bn.parseUnits(textAmountFixed.replaceAll(',', ''), units);
+    // get value after fraction, remove extra decimals
+    const textWithoutComma = textAmountFixed.replaceAll(',', '');
+    const textIntegerPart = textWithoutComma.split('.')[0];
+    const fractionWithoutExtraDecimals = textWithoutComma
+      .split('.')?.[1]
+      ?.slice(0, units);
+    const textWithoutExtraDecimals = textIntegerPart
+      ? `${textIntegerPart}${
+          fractionWithoutExtraDecimals ? `.${fractionWithoutExtraDecimals}` : ''
+        }`
+      : '';
+    amount = bn.parseUnits(textWithoutExtraDecimals, units);
   }
 
   return {

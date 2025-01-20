@@ -34,6 +34,8 @@ export function SendPage() {
     setWarningMessage(undefined);
   }, [address]);
 
+  const hasFormErrors = Object.keys(form.formState.errors).length > 0;
+
   return (
     <FormProvider {...form}>
       <form
@@ -58,7 +60,7 @@ export function SendPage() {
               <Button
                 type="submit"
                 intent="primary"
-                isDisabled={!readyToSend || !form.formState.isValid}
+                isDisabled={!readyToSend || hasFormErrors}
                 isLoading={status('loading') || status('loadingTx')}
               >
                 Review
