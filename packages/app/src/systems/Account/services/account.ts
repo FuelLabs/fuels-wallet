@@ -108,23 +108,23 @@ export class AccountService {
     try {
       const provider = await createProvider(providerUrl!);
       const balances = await getBalances(provider, account.address);
-      const convertedRates: Record<string, string | undefined> = {};
+      const assetsAmountsInUsd: Record<string, string | undefined> = {};
       const chainId = provider.getChainId();
 
       const balanceAssets = AssetsCache.fetchAllAssets(
         chainId,
         balances.map((balance) => balance.assetId)
       );
-      const convertRatesPromise = balances.map((asset) => {
+      const assetsAmountsUsdPromise = balances.map((asset) => {
         return convertAsset(
           chainId,
           asset.assetId,
           asset.amount.toString()
         ).then((rate) => {
-          convertedRates[asset.assetId] = rate?.amount;
+          assetsAmountsInUsd[asset.assetId] = rate?.amount;
         });
       });
-      await Promise.all([...convertRatesPromise, balanceAssets]);
+      await Promise.all([...assetsAmountsUsdPromise, balanceAssets]);
       // includes "asset" prop in balance, centralizing the complexity here instead of in rest of UI
       const nextBalancesWithAssets = await balances.reduce(
         async (acc, balance) => {
@@ -137,7 +137,7 @@ export class AccountService {
               ...balance,
               amount: balance.amount,
               asset: cachedAsset,
-              convertedRate: convertedRates[balance.assetId],
+              amountInUsd: assetsAmountsInUsd[balance.assetId],
             },
           ];
         },
@@ -164,7 +164,7 @@ export class AccountService {
       const ethBalance = ethAsset?.amount;
       const accountAssets: AccountBalance = {
         balance: ethBalance ?? bn(0),
-        convertedRate: convertedRates[baseAssetId.toString()],
+        amountInUsd: assetsAmountsInUsd[baseAssetId.toString()],
         balanceSymbol: 'ETH',
         balances: nextBalancesWithAssets,
       };
@@ -180,7 +180,7 @@ export class AccountService {
         balance: bn(0),
         balanceSymbol: 'ETH',
         balances: [],
-        convertedRate: '',
+        amountInUsd: '',
       };
       const result: AccountWithBalance = {
         ...account,

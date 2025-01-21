@@ -9,14 +9,14 @@ type AssetItemAmountProps = {
   amount: BNInput;
   decimals: number | undefined;
   symbol: string | undefined;
-  convertedRate: string | undefined;
+  amountInUsd: string | undefined;
 };
 
 export const AssetItemAmount = ({
   amount,
   decimals,
   symbol,
-  convertedRate,
+  amountInUsd,
 }: AssetItemAmountProps) => {
   const { visibility } = useBalanceVisibility();
   const { original, tooltip } = formatBalance(amount, decimals);
@@ -55,7 +55,7 @@ export const AssetItemAmount = ({
             aria-label={`${symbol} conversion rate to USD`}
             className="text-start text-sm"
           >
-            {visibility ? (convertedRate ?? '$0.00') : '•••••'}
+            {visibility ? (amountInUsd ?? '$0.00') : '•••••'}
           </Text>
         </VStack>
       </Box>

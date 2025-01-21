@@ -35,7 +35,7 @@ export type AssetItemProps = {
   onEdit?: (assetId: string) => void;
   shouldShowAddAssetBtn?: boolean;
   shouldShowCopyAssetAddress?: boolean;
-  convertedRate?: string;
+  amountInUsd?: string;
 };
 
 type AssetItemComponent = FC<AssetItemProps> & {
@@ -51,12 +51,11 @@ export const AssetItem: AssetItemComponent = ({
   onEdit,
   shouldShowAddAssetBtn,
   shouldShowCopyAssetAddress,
-  convertedRate,
+  amountInUsd,
 }) => {
   const navigate = useNavigate();
   const provider = useProvider();
-  const [fallbackConvertedRate, setFallbackConvertedRate] =
-    useState<string>('$0.00');
+  const [fallbackAmountInUsd, setAmountInUsd] = useState<string>('$0.00');
 
   const fuelAssetFromInputAsset = useFuelAsset({ asset: inputAsset });
   const asset = useMemo(() => {
@@ -78,7 +77,7 @@ export const AssetItem: AssetItemComponent = ({
     async function loadAndStoreRate() {
       if (abort) return;
       if (
-        !convertedRate &&
+        !amountInUsd &&
         !inputFuelAsset?.isNft &&
         amount &&
         inputFuelAsset?.assetId != null
@@ -87,7 +86,7 @@ export const AssetItem: AssetItemComponent = ({
         convertAsset(chainId, inputFuelAsset?.assetId, amount.toString()).then(
           (res) => {
             if (abort) return;
-            setFallbackConvertedRate(res?.amount ?? '$0.00');
+            setAmountInUsd(res?.amount ?? '$0.00');
           }
         );
       }
@@ -97,7 +96,7 @@ export const AssetItem: AssetItemComponent = ({
       abort = true;
     };
   }, [
-    convertedRate,
+    amountInUsd,
     inputFuelAsset?.isNft,
     inputFuelAsset?.assetId,
     provider,
@@ -160,7 +159,7 @@ export const AssetItem: AssetItemComponent = ({
           amount={amount}
           decimals={decimals}
           symbol={symbol}
-          convertedRate={convertedRate || fallbackConvertedRate}
+          amountInUsd={amountInUsd || fallbackAmountInUsd}
         />
       );
     }

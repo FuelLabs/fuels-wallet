@@ -128,7 +128,7 @@ export function BalanceWidget({
               aria-label={`${account.balanceSymbol} conversion rate to USD`}
               className="text-start text-sm"
             >
-              {visibility ? (account.convertedRate ?? '$0.00') : '•••••'}
+              {visibility ? (account.amountInUsd ?? '$0.00') : '•••••'}
             </Text>
           </VStack>
         </>

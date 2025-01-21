@@ -82,7 +82,7 @@ export type InputAmountProps = Omit<InputProps, 'size'> & {
   units?: number;
   balancePrecision?: number;
   asset?: { name?: string; icon?: string; address?: string };
-  convertedRate?: string;
+  amountInUsd?: string;
   assetTooltip?: string;
   hiddenMaxButton?: boolean;
   hiddenBalance?: boolean;
@@ -113,7 +113,7 @@ export const InputAmount: InputAmountComponent = ({
   inputProps,
   asset,
   assetTooltip,
-  convertedRate = '$0.00',
+  amountInUsd = '$0.00',
   onClickAsset,
   ...props
 }) => {
@@ -241,13 +241,13 @@ export const InputAmount: InputAmountComponent = ({
             sideOffset={-5}
           >
             <VStack gap="0">
-              {!!convertedRate && (
+              {!!amountInUsd && (
                 <Text
                   fontSize="sm"
                   aria-label={`${asset?.name} value converted to USD`}
                   color="textSubtext"
                 >
-                  {convertedRate}
+                  {amountInUsd}
                 </Text>
               )}
               <Text

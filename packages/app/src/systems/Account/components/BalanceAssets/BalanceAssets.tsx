@@ -57,7 +57,7 @@ export const BalanceAssets = ({
           <AssetItem
             key={balance.assetId + balance.asset?.name}
             fuelAsset={balance.asset}
-            convertedRate={balance.convertedRate}
+            amountInUsd={balance.amountInUsd}
             amount={balance.amount}
             onRemove={onRemove}
             onEdit={onEdit}

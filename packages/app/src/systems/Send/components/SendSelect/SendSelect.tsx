@@ -42,9 +42,7 @@ export function SendSelect({
   const isAmountFocused = useRef<boolean>(false);
   const baseFeeRef = useRef<BN | null>(baseFee);
   const tipRef = useRef<BN>(tip);
-  const [convertedRate, setConvertedRate] = useState<string | undefined>(
-    undefined
-  );
+  const [amountInUsd, setAmountInUsd] = useState<string | undefined>(undefined);
   const { field: amount, fieldState: amountFieldState } = useController({
     control: form.control,
     name: 'amount',
@@ -106,7 +104,7 @@ export function SendSelect({
         const chainId = await provider?.getChainId();
         convertAsset(chainId, assetId, amount.value.toString()).then((res) => {
           if (abort) return;
-          setConvertedRate(res?.amount ?? '$0.00');
+          setAmountInUsd(res?.amount ?? '$0.00');
         });
       }
     }
@@ -182,12 +180,12 @@ export function SendSelect({
               balance={balanceAssetSelected}
               value={amount.value}
               units={decimals}
-              convertedRate={convertedRate}
+              amountInUsd={amountInUsd}
               onChange={(val) => {
                 if (isAmountFocused.current) {
                   setWatchMax(false);
                   amount.onChange(val);
-                  setConvertedRate(undefined);
+                  setAmountInUsd(undefined);
                 }
               }}
               onClickMax={() => {

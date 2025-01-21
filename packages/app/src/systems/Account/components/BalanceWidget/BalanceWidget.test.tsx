@@ -16,7 +16,7 @@ const ACCOUNT: AccountWithBalance = {
   balance: bn(4999989994),
   balanceSymbol: 'ETH',
   balances: [],
-  convertedRate: '$16,167.22',
+  amountInUsd: '$16,167.22',
 };
 
 describe('BalanceWidget', () => {
