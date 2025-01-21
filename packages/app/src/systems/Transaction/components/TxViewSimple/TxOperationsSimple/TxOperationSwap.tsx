@@ -47,16 +47,6 @@ export function TxOperationSwap({ operation }: TxOperationSwapProps) {
               Contract
             </Text>
           </Box>
-          <Text as="span" fontSize="sm" color="gray8">
-            {shortAddress(operation.to)}
-          </Text>
-          <IconButton
-            size="xs"
-            variant="link"
-            icon="Copy"
-            aria-label="Copy address"
-            onPress={() => navigator.clipboard.writeText(operation.to)}
-          />
         </Box.Flex>
       </Box.Flex>
       <Box.Flex css={styles.line}>
