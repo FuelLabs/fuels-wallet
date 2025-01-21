@@ -26,50 +26,37 @@ export function TxFeeSimple({ fee, isLoading }: TxFeeSimpleProps) {
   };
 
   return (
-    <Card css={styles.root}>
-      <Box css={styles.content}>
-        <Box css={styles.row}>
-          <Text>Network Fee</Text>
-          <AssetsAmount amounts={[fuelAmount]} />
-        </Box>
-      </Box>
-    </Card>
+    <Box css={styles.content}>
+      <Box.Stack gap="$2">
+        <Text css={styles.title}>Network Fee</Text>
+        <AssetsAmount amounts={[fuelAmount]} />
+      </Box.Stack>
+    </Box>
   );
 }
 
 TxFeeSimple.Loader = function TxFeeSimpleLoader() {
   return (
-    <Card css={styles.root}>
+    <Box css={styles.content}>
       <ContentLoader width={300} height={80} viewBox="0 0 300 80">
         <rect x="20" y="20" rx="4" ry="4" width="100" height="16" />
         <rect x="180" y="20" rx="4" ry="4" width="100" height="16" />
         <rect x="20" y="44" rx="4" ry="4" width="100" height="16" />
         <rect x="180" y="44" rx="4" ry="4" width="100" height="16" />
       </ContentLoader>
-    </Card>
+    </Box>
   );
 };
 
 const styles = {
-  root: cssObj({
-    padding: '$3',
-  }),
   content: cssObj({
     display: 'flex',
     flexDirection: 'column',
     gap: '$3',
+    padding: '$3',
   }),
-  row: cssObj({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  }),
-  total: cssObj({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderTop: '1px solid $gray4',
-    paddingTop: '$3',
-    marginTop: '$2',
+  title: cssObj({
+    fontSize: '$sm',
+    fontWeight: '$medium',
   }),
 };
