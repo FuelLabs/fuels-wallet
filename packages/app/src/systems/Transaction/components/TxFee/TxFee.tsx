@@ -1,7 +1,9 @@
 import { Card, HStack, Text } from '@fuel-ui/react';
 import { type BN, DEFAULT_PRECISION } from 'fuels';
-import type { FC } from 'react';
+import { type FC, useEffect, useState } from 'react';
 
+import { convertAsset } from '~/systems/Asset/services/convert-asset';
+import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { TxFeeLoader } from './TxFeeLoader';
 import { styles } from './styles';
 
@@ -24,6 +26,29 @@ export const TxFee: TxFeeComponent = ({
   title,
   tipInUsd,
 }: TxFeeProps) => {
+  const [feeInUsdFallback, setFeeInUsdFallback] = useState<string>('$0.00');
+  const provider = useProvider();
+
+  useEffect(() => {
+    let abort = false;
+    async function loadAndStoreRate() {
+      const baseAssetId = await provider?.getBaseAssetId();
+      if (!fee || tipInUsd || !baseAssetId) return;
+
+      convertAsset(provider?.getChainId(), baseAssetId, fee.toString()).then(
+        (res) => {
+          !abort && setFeeInUsdFallback(res?.amount || '$0.00');
+        }
+      );
+    }
+    loadAndStoreRate();
+    return () => {
+      abort = true;
+    };
+  }, [fee, provider, tipInUsd]);
+
+  const tipConverted = tipInUsd || feeInUsdFallback;
+
   return (
     <Card
       css={styles.detailItem(!!checked, !!onChecked)}
@@ -37,13 +62,13 @@ export const TxFee: TxFeeComponent = ({
         {title || 'Fee (network)'}
       </Text>
       <HStack gap="$1">
-        {tipInUsd && (
+        {!!tipConverted && (
           <Text
             color="textSubtext"
             css={styles.amount}
             aria-label={`tip in usd:${title || 'Network'}`}
           >
-            {tipInUsd.includes('$0.00') ? '<$0.00' : tipInUsd}
+            {tipConverted.includes('$0.00') ? '<$0.00' : tipInUsd}
           </Text>
         )}
         <Text
