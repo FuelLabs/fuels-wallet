@@ -48,8 +48,8 @@ export const styles = {
   }),
   amountContainer: cssObj({
     columnGap: '$1',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
     flexWrap: 'nowrap',
     gridRow: '1 / 3',
     gridColumn: '2 / 3',
@@ -57,14 +57,22 @@ export const styles = {
     textAlign: 'right',
     fontSize: '$sm',
     color: '$intentsBase12',
+    flexDirection: 'column',
+    rowGap: '0',
   }),
   amountValue: cssObj({
     display: 'inline-block',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    textAlign: 'right',
+  }),
+  amountInUsd: cssObj({
+    fontSize: '$sm',
+    color: '$textSubtext',
   }),
   amountSymbol: cssObj({
     flexShrink: 0,
+    textAlign: 'right',
   }),
   title: cssObj({
     fontSize: '$sm',

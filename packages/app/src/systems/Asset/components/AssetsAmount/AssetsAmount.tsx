@@ -6,6 +6,7 @@ import {
   Grid,
   Text,
   Tooltip,
+  VStack,
 } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
@@ -13,6 +14,8 @@ import { type FC, useEffect, useRef, useState } from 'react';
 import { formatAmount, shortAddress } from '~/systems/Core';
 import type { InsufficientInputAmountError } from '~/systems/Transaction';
 
+import { convertAsset } from '~/systems/Asset/services/convert-asset';
+import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { AssetsAmountLoader } from './AssetsAmountLoader';
 import { styles } from './styles';
 
@@ -90,6 +93,8 @@ type AssetsAmountItemProps = {
 };
 
 const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
+  const [amountInUsd, setAmountInUsd] = useState<string>('$0.00');
+  const provider = useProvider();
   const {
     name = '',
     symbol,
@@ -118,6 +123,25 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
     }
   }, [formatted]);
 
+  useEffect(() => {
+    let abort = false;
+    async function loadAndStoreRate() {
+      if (amount != null && !isNft) {
+        const chainId = await provider?.getChainId();
+        const baseAssetId = await provider?.getBaseAssetId();
+        if (chainId == null) return;
+        if (baseAssetId == null) return;
+        if (abort) return;
+        const res = await convertAsset(chainId, assetId, amount.toString());
+        if (!abort) setAmountInUsd(res?.amount || '$0.00');
+      }
+    }
+    loadAndStoreRate();
+    return () => {
+      abort = true;
+    };
+  }, [amount, assetId, isNft, provider]);
+
   return (
     <Grid key={assetId} css={styles.root}>
       <Box.Flex css={styles.asset}>
@@ -140,6 +164,7 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
           {shortAddress(assetId)}
         </Text>
       </Copyable>
+
       <Box.Flex
         ref={containerRef}
         aria-label="amount-container"
@@ -152,10 +177,13 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
         >
           <Text as="span" css={styles.amountValue} className="amount-value">
             {formatted}
+            <Text as="span" css={styles.amountSymbol}>
+              {symbol}
+            </Text>
           </Text>
         </Tooltip>
-        <Text as="span" css={styles.amountSymbol}>
-          {symbol}
+        <Text as="span" css={styles.amountInUsd}>
+          {amountInUsd}
         </Text>
       </Box.Flex>
     </Grid>
