@@ -95,6 +95,8 @@ export type TxContentInfoProps = {
     baseFee?: BN;
     regularTip?: BN;
     fastTip?: BN;
+    regularTipInUsd?: string;
+    fastTipInUsd?: string;
   };
   txRequest?: TransactionRequest;
 };
@@ -170,6 +172,8 @@ function TxContentInfo({
               gasLimit={txRequestGasLimit}
               regularTip={fees.regularTip}
               fastTip={fees.fastTip}
+              regularTipInUsd={fees.regularTipInUsd}
+              fastTipInUsd={fees.fastTipInUsd}
             />
           </VStack>
         )}
