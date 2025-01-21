@@ -40,7 +40,12 @@ export const AssetItemAmount = ({
     <Tooltip content={original.display} delayDuration={0} open={open}>
       <Box css={styles.root}>
         <VStack gap="$1">
-          <Text as="span" ref={amountRef} css={styles.amount}>
+          <Text
+            as="span"
+            ref={amountRef}
+            css={styles.amount}
+            aria-label={`${symbol} token balance`}
+          >
             <AmountVisibility
               value={amount}
               units={decimals}
