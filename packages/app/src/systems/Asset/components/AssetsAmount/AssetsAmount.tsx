@@ -176,10 +176,7 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
           open={isTruncated ? undefined : false}
         >
           <Text as="span" css={styles.amountValue} className="amount-value">
-            {formatted}
-            <Text as="span" css={styles.amountSymbol}>
-              {symbol}
-            </Text>
+            {formatted}&nbsp;{symbol}
           </Text>
         </Tooltip>
         <Text as="span" css={styles.amountInUsd}>
