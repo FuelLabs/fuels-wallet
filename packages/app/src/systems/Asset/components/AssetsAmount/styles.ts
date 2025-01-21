@@ -69,6 +69,10 @@ export const styles = {
   amountInUsd: cssObj({
     fontSize: '$sm',
     color: '$textSubtext',
+    display: 'inline-block',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    textAlign: 'right',
   }),
   amountSymbol: cssObj({
     flexShrink: 0,
