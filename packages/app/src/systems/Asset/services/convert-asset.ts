@@ -31,5 +31,7 @@ export async function convertAsset(
     // Fix a conversion error from the backend
     if (jsonResponse.amount === '$0') return { amount: '$0.00' };
     return jsonResponse;
-  } catch (_) {}
+  } catch (_) {
+    return { amount: '$0.00' };
+  }
 }

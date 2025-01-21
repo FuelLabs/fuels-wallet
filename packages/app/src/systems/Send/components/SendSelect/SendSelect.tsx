@@ -104,14 +104,10 @@ export function SendSelect({
       if (abort) return;
       if (assetId != null) {
         const chainId = await provider?.getChainId();
-        convertAsset(chainId, assetId, amount.value.toString())
-          .then((res) => {
-            if (abort) return;
-            setConvertedRate(res?.amount ?? '$0.00');
-          })
-          .catch(() => {
-            setConvertedRate('$0.00');
-          });
+        convertAsset(chainId, assetId, amount.value.toString()).then((res) => {
+          if (abort) return;
+          setConvertedRate(res?.amount ?? '$0.00');
+        });
       }
     }
     const timeout = setTimeout(loadAndStoreRate, 500);

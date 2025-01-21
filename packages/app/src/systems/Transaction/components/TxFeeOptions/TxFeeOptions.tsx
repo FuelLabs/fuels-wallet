@@ -115,9 +115,7 @@ export const TxFeeOptions = ({
           await provider?.getChainId(),
           baseAssetId,
           advancedFee.toString()
-        )
-          .then((res) => !abort && setAdvancedFeeInUsd(res?.amount || '$0.00'))
-          .catch(() => !abort && setAdvancedFeeInUsd('$0.00'));
+        ).then((res) => !abort && setAdvancedFeeInUsd(res?.amount || '$0.00'));
       }
     }
     loadAndStoreRate();

@@ -64,16 +64,12 @@ export async function getCurrentTips(provider: Provider) {
     chainId,
     baseAssetId,
     bn(regularTip).toString()
-  )
-    .then((res) => res?.amount || '$0.00')
-    .catch(() => '$0.00');
+  ).then((res) => res?.amount || '$0.00');
   const fastTipInUsd = await convertAsset(
     chainId,
     baseAssetId,
     bn(fastTip).toString()
-  )
-    .then((res) => res?.amount || '$0.00')
-    .catch(() => '$0.00');
+  ).then((res) => res?.amount || '$0.00');
 
   return { regularTip, fastTip, regularTipInUsd, fastTipInUsd };
 }

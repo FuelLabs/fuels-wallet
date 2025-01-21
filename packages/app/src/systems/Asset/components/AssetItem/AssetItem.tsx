@@ -84,14 +84,12 @@ export const AssetItem: AssetItemComponent = ({
         inputFuelAsset?.assetId != null
       ) {
         const chainId = await provider?.getChainId();
-        convertAsset(chainId, inputFuelAsset?.assetId, amount.toString())
-          .then((res) => {
+        convertAsset(chainId, inputFuelAsset?.assetId, amount.toString()).then(
+          (res) => {
             if (abort) return;
             setFallbackConvertedRate(res?.amount ?? '$0.00');
-          })
-          .catch(() => {
-            setFallbackConvertedRate('$0.00');
-          });
+          }
+        );
       }
     }
     loadAndStoreRate();
