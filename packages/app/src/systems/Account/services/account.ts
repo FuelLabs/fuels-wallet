@@ -27,7 +27,7 @@ export type AccountInputs = {
   };
   fetchBalance: {
     providerUrl: string;
-    account?: Maybe<Account>;
+    address: string | undefined;
   };
   fetchAccount: {
     address: string;

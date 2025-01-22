@@ -452,13 +452,17 @@ export const transactionRequestMachine = createMachine(
           if (!input?.address || !input?.providerUrl) {
             throw new Error('Invalid fetchAccount input');
           }
-          const account = await AccountService.fetchAccount({
-            address: input.address,
-          });
-          const accountWithBalances = await AccountService.fetchBalance({
-            account,
-            providerUrl: input.providerUrl,
-          });
+          const [_, accountWithBalances] = await Promise.all([
+            AccountService.getCurrentAccount().then((res) => {
+              if (res?.address !== input.address) {
+                throw new Error('Current account does not match the address');
+              }
+            }),
+            AccountService.fetchBalance({
+              address: input.address,
+              providerUrl: input.providerUrl,
+            }),
+          ]);
 
           return accountWithBalances;
         },
