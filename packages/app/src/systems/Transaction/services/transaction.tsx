@@ -1,4 +1,4 @@
-import type { Account } from '@fuel-wallet/types';
+import type { Account, AccountWithBalance } from '@fuel-wallet/types';
 import type { TransactionRequest, WalletLocked } from 'fuels';
 import { clone } from 'ramda';
 
@@ -45,10 +45,11 @@ export type TxInputs = {
   request: {
     providerUrl: string;
     transactionRequest: TransactionRequest;
-    address?: string;
-    origin?: string;
+    address: string | undefined;
+    origin?: string | undefined;
     title?: string;
     favIconUrl?: string;
+    account: AccountWithBalance | undefined;
     skipCustomFee?: boolean;
     fees?: {
       baseFee?: BN;
@@ -58,7 +59,7 @@ export type TxInputs = {
     };
   };
   send: {
-    address: string;
+    account?: Account;
     transactionRequest: TransactionRequest;
     providerUrl?: string;
   };
@@ -152,7 +153,8 @@ export class TxService {
   }
 
   static async send({
-    address,
+    account,
+    // address: _address,
     transactionRequest,
     providerUrl = '',
   }: TxInputs['send']) {

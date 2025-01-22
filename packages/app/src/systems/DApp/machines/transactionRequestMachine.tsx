@@ -1,8 +1,7 @@
-import type { Account } from '@fuel-wallet/types';
+import type { Account, AccountWithBalance } from '@fuel-wallet/types';
 import type { BN, TransactionRequest, TransactionSummary } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-import { AccountService } from '~/systems/Account';
 import { FetchMachine, assignErrorMessage, delay } from '~/systems/Core';
 import type { GroupedErrors, VMApiError } from '~/systems/Transaction';
 import type { TxInputs } from '~/systems/Transaction/services';
@@ -23,11 +22,10 @@ type MachineContext = {
     origin?: string;
     title?: string;
     favIconUrl?: string;
-    address?: string;
     isOriginRequired?: boolean;
     providerUrl?: string;
     transactionRequest?: TransactionRequest;
-    account?: Account;
+    account?: AccountWithBalance;
     tip?: BN;
     gasLimit?: BN;
     skipCustomFee?: boolean;
@@ -77,9 +75,6 @@ type MachineServices = {
   };
   simulateTransaction: {
     data: SimulateTransactionReturn;
-  };
-  fetchAccount: {
-    data: Account;
   };
 };
 
@@ -143,32 +138,13 @@ export const transactionRequestMachine = createMachine(
             },
             {
               actions: ['assignGasLimit'],
-              target: 'fetchingAccount',
-            },
-          ],
-        },
-      },
-      fetchingAccount: {
-        entry: ['openDialog'],
-        tags: ['loading'],
-        invoke: {
-          src: 'fetchAccount',
-          data: {
-            input: (ctx: MachineContext) => ctx.input,
-          },
-          onDone: [
-            {
-              cond: FetchMachine.hasError,
-              target: 'failed',
-            },
-            {
-              actions: ['assignAccount'],
               target: 'simulatingTransaction',
             },
           ],
         },
       },
       simulatingTransaction: {
+        entry: ['openDialog'],
         tags: ['loading'],
         invoke: {
           src: 'simulateTransaction',
@@ -283,28 +259,25 @@ export const transactionRequestMachine = createMachine(
           maxGasLimit: ev.data.maxGasLimit,
         },
       })),
-      assignAccount: assign({
-        input: (ctx, ev) => ({
-          ...ctx.input,
-          account: ev.data,
-        }),
-      }),
       assignTxRequestData: assign({
         input: (ctx, ev) => {
           const {
             transactionRequest,
             origin,
-            address,
             providerUrl,
             title,
             favIconUrl,
             skipCustomFee,
+            account,
           } = ev.input || {};
 
           if (!providerUrl) {
             throw new Error('providerUrl is required');
           }
-          if (!address) {
+          if (!account) {
+            throw new Error('account is required');
+          }
+          if (!account.address) {
             throw new Error('address is required');
           }
           if (!transactionRequest) {
@@ -317,7 +290,7 @@ export const transactionRequestMachine = createMachine(
           return {
             transactionRequest,
             origin,
-            address,
+            account,
             providerUrl,
             title,
             favIconUrl,
@@ -427,7 +400,7 @@ export const transactionRequestMachine = createMachine(
         async fetch(params) {
           const { input } = params;
           if (
-            !input?.address ||
+            !input?.account ||
             !input?.transactionRequest ||
             !input?.providerUrl
           ) {
@@ -441,30 +414,6 @@ export const transactionRequestMachine = createMachine(
             // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
             fee: txSummary.fee.add(1),
           };
-        },
-      }),
-      fetchAccount: FetchMachine.create<
-        { address: string; providerUrl: string },
-        Account
-      >({
-        showError: true,
-        async fetch({ input }) {
-          if (!input?.address || !input?.providerUrl) {
-            throw new Error('Invalid fetchAccount input');
-          }
-          const [_, accountWithBalances] = await Promise.all([
-            AccountService.getCurrentAccount().then((res) => {
-              if (res?.address !== input.address) {
-                throw new Error('Current account does not match the address');
-              }
-            }),
-            AccountService.fetchBalance({
-              address: input.address,
-              providerUrl: input.providerUrl,
-            }),
-          ]);
-
-          return accountWithBalances;
         },
       }),
     },

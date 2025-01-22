@@ -12,6 +12,8 @@ import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
 
+import { Services } from '~/store';
+import { store } from '~/store';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { formatGasLimit } from '~/systems/Transaction';
@@ -273,8 +275,12 @@ const DEFAULT_VALUES: SendFormValues = {
 export function useSend() {
   const navigate = useNavigate();
   const txRequest = useTransactionRequest();
-  const { account } = useAccounts();
   const provider = useProvider();
+
+  const account = store.useSelector(
+    Services.accounts,
+    (state) => state.context.account
+  );
 
   const service = useInterpret(() =>
     sendMachine.withConfig({
@@ -299,6 +305,7 @@ export function useSend() {
           txRequest.handlers.request({
             providerUrl,
             transactionRequest,
+            account,
             address,
             fees: {
               baseFee,

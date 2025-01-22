@@ -21,12 +21,13 @@ export default {
 
 const Template: StoryFn<typeof TxApprove> = (_args, { loaded }) => {
   const txRequest = useTransactionRequest();
-  const { transactionRequest, network, address } = loaded || {};
+  const { transactionRequest, network, account, address } = loaded || {};
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     txRequest.handlers.request({
       address,
+      account,
       transactionRequest,
       providerUrl: network?.url,
     });
