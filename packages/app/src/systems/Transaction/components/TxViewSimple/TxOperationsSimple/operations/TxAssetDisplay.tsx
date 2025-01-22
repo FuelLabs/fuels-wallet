@@ -18,14 +18,14 @@ export function TxAssetDisplay({
   operationCount,
 }: TxAssetDisplayProps) {
   return (
-    <Box.Stack gap="$1" css={styles.root}>
+    <Box.Stack gap="$0" css={styles.root}>
       {label && (
         <Text css={{ color: '$blue9' }} fontSize="sm">
           {label}
         </Text>
       )}
       <Box.Flex css={styles.content}>
-        {showIcon && <Icon icon="Coins" size={16} />}
+        {showIcon && <Icon icon="Coins" size={14} />}
         <Text fontSize="sm">
           {formatAmount({
             amount,
@@ -51,7 +51,7 @@ const styles = {
   }),
   content: cssObj({
     display: 'flex',
-    gap: '$2',
+    gap: '$1',
     alignItems: 'center',
   }),
 };

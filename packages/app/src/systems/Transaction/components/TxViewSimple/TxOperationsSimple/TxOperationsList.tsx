@@ -22,12 +22,12 @@ export function TxOperationsList({ operations }: TxOperationsListProps) {
     });
   }, [operations]);
 
-  return <Box.Stack gap="$2">{renderedOperations}</Box.Stack>;
+  return <Box.Stack gap="$1">{renderedOperations}</Box.Stack>;
 }
 
 TxOperationsList.Loader = function TxOperationsListLoader() {
   return (
-    <Box.Stack gap="$2">
+    <Box.Stack gap="$1">
       {[1, 2].map((i) => (
         <Box
           key={i}

@@ -18,7 +18,7 @@ export function TxOperationTransfer({ operation }: TxOperationTransferProps) {
 
   return (
     <Box.Flex css={styles.root}>
-      <Box.Stack gap="$2" css={styles.contentCol}>
+      <Box.Stack gap="$1" css={styles.contentCol}>
         <TxAddressDisplay address={operation.from} />
         <TxAssetDisplay
           amount={amount}
@@ -35,8 +35,8 @@ const styles = {
   root: cssObj({
     display: 'flex',
     alignItems: 'flex-start',
-    gap: '$3',
-    padding: '$3',
+    gap: '$2',
+    padding: '$2',
     backgroundColor: '$cardBg',
     borderRadius: '$md',
   }),

@@ -27,14 +27,14 @@ export function TxAddressDisplay({
     <Box.Flex css={styles.root}>
       <Box css={styles.iconCol}>
         {isLoading ? (
-          <Spinner size={24} />
+          <Spinner size={20} />
         ) : image ? (
-          <Avatar src={image} size={24} name={name || 'Contract'} />
+          <Avatar src={image} size={20} name={name || 'Contract'} />
         ) : (
-          <Avatar.Generated hash={address} size={24} />
+          <Avatar.Generated hash={address} size={20} />
         )}
       </Box>
-      <Box.Flex gap="$2" css={styles.contentCol}>
+      <Box.Flex gap="$1" css={styles.contentCol}>
         <Text as="span" fontSize="sm">
           {isLoading
             ? 'Loading...'
@@ -62,14 +62,14 @@ export function TxAddressDisplay({
 const styles = {
   root: cssObj({
     display: 'flex',
-    alignItems: 'flex-start',
-    gap: '$3',
+    alignItems: 'center',
+    gap: '$1',
   }),
   iconCol: cssObj({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '24px',
+    width: '20px',
     flexShrink: 0,
   }),
   contentCol: cssObj({
@@ -77,7 +77,7 @@ const styles = {
     flex: 1,
   }),
   badge: cssObj({
-    padding: '$1 $2',
+    padding: '0 $1',
     backgroundColor: '$gray3',
     borderRadius: '$md',
   }),
