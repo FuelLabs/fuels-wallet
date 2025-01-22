@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Card, ContentLoader, Text } from '@fuel-ui/react';
+import { Box, ContentLoader, Text } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { AssetsAmount } from '~/systems/Asset';
 import type { SimplifiedFee } from '../../types';

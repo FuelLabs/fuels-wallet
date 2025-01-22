@@ -1,9 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
+import { useSimplifyTransaction } from '../../hooks/useSimplifyTransaction';
 import type { SimplifiedTransactionViewProps } from '../../types';
 import { TxFeeSimple } from './TxFeeSimple';
 import { TxHeaderSimple } from './TxHeaderSimple';
-import { TxOperationsSimple } from './TxOperationsSimple';
+import { TxOperationsList } from './TxOperationsSimple/TxOperationsList';
 
 export function TxViewSimple({
   transaction,
@@ -11,6 +12,10 @@ export function TxViewSimple({
   isLoading,
   footer,
 }: SimplifiedTransactionViewProps) {
+  const { simplifiedOperations } = useSimplifyTransaction(
+    transaction.operations
+  );
+
   return (
     <Box.Stack css={styles.root}>
       <TxHeaderSimple
@@ -19,10 +24,7 @@ export function TxViewSimple({
         isLoading={isLoading}
       />
       <Box css={styles.content}>
-        <TxOperationsSimple
-          operations={transaction.operations}
-          isLoading={isLoading}
-        />
+        <TxOperationsList operations={simplifiedOperations} />
         {showDetails && (
           <TxFeeSimple fee={transaction.fee} isLoading={isLoading} />
         )}
@@ -34,14 +36,14 @@ export function TxViewSimple({
 
 const styles = {
   root: cssObj({
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
   }),
   content: cssObj({
-    padding: '$1',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '$1',
+    flex: 1,
+    overflowY: 'auto',
+    padding: '$4',
   }),
 };
 
@@ -50,7 +52,7 @@ TxViewSimple.Loader = function TxViewSimpleLoader() {
   return (
     <Box.Stack gap="$4">
       <TxHeaderSimple.Loader />
-      <TxOperationsSimple.Loader />
+      <TxOperationsList.Loader />
       <TxFeeSimple.Loader />
     </Box.Stack>
   );

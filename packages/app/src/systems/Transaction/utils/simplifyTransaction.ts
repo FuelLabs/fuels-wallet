@@ -5,14 +5,8 @@ import {
   TransactionStatus,
   bn,
 } from 'fuels';
-import {
-  type ContractCallMetadata,
-  type SimplifiedFee,
-  type SimplifiedOperation,
-  type SimplifiedTransaction,
-  type SwapMetadata,
-  TxCategory,
-} from '../types';
+import { type SimplifiedOperation, TxCategory } from '../types';
+import type { SimplifiedFee, SimplifiedTransaction } from '../types.tsx';
 
 // Type for transaction request with optional origin properties
 type TransactionRequestWithOrigin = TransactionRequest & {
@@ -40,6 +34,7 @@ function transformOperation(
   currentAccount?: string
 ): SimplifiedOperation {
   const { name, from, to, assetsSent = [], calls = [] } = operation;
+  const type = getOperationType(operation);
 
   // Determine if this operation is from the current account
   const isFromCurrentAccount = currentAccount
@@ -50,7 +45,8 @@ function transformOperation(
   if (name === OperationName.contractCall && calls.length > 0) {
     const call = calls[0] as OperationFunctionCall; // Take first call for now, we'll group them later
     return {
-      type: TxCategory.CONTRACTCALL,
+      type,
+      groupId: `${type}-${to?.address}`,
       from: from?.address || '',
       to: to?.address || '',
       isFromCurrentAccount,
@@ -68,7 +64,8 @@ function transformOperation(
   if (assetsSent.length > 0) {
     const asset = assetsSent[0]; // Take first asset for now, we'll group them later
     return {
-      type: TxCategory.SEND,
+      type,
+      groupId: `${type}-${asset.assetId}`,
       from: from?.address || '',
       to: to?.address || '',
       amount: asset.amount ? bn(asset.amount) : undefined,
@@ -79,7 +76,8 @@ function transformOperation(
 
   // Default case
   return {
-    type: getOperationType(operation),
+    type,
+    groupId: `${type}-${to?.address}`,
     from: from?.address || '',
     to: to?.address || '',
     isFromCurrentAccount,
@@ -211,26 +209,23 @@ export function simplifyTransaction(
   currentAccount?: string
 ): SimplifiedTransaction {
   // Transform operations
+  console.log('summary', summary);
+
   const operations = transformOperations(summary, currentAccount);
 
   // Group similar operations
   const groupedOperations = groupSimilarOperations(operations);
 
-  // Sort operations (current account's operations first)
-  const sortedOperations = groupedOperations.sort((a, b) => {
-    if (a.isFromCurrentAccount && !b.isFromCurrentAccount) return -1;
-    if (!a.isFromCurrentAccount && b.isFromCurrentAccount) return 1;
-    return 0;
-  });
+  // TODO Sort operations (current account's operations first)
 
   // Get origin info from the request context if available
   const requestWithOrigin = request as TransactionRequestWithOrigin;
   const origin = requestWithOrigin?.origin;
   const favicon = requestWithOrigin?.favIconUrl;
 
-  return {
+  const simplifiedTransaction: SimplifiedTransaction = {
     id: summary.id,
-    operations: sortedOperations,
+    operations: groupedOperations,
     status: deriveStatus(summary),
     timestamp: summary.time ? new Date(summary.time) : undefined,
     fee: simplifyFee(summary, request),
@@ -246,4 +241,8 @@ export function simplifyTransaction(
       request,
     },
   };
+
+  console.log('simplifiedTransaction', simplifiedTransaction);
+
+  return simplifiedTransaction;
 }

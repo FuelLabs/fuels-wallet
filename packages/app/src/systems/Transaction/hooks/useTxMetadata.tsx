@@ -3,7 +3,7 @@ import { Address, OperationName } from 'fuels';
 import { useMemo } from 'react';
 import { useAccounts } from '~/systems/Account';
 
-import { OperationDirection } from '../types';
+import { OperationDirection } from '../types.tsx';
 import { formatDate, getOperationDirection } from '../utils';
 
 type UseTxMetadataProps = {
