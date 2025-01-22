@@ -5,7 +5,12 @@ import {
   TransactionStatus,
   bn,
 } from 'fuels';
-import { type SimplifiedOperation, TxCategory } from '../types';
+import type {
+  ContractCallMetadata,
+  SimplifiedOperation,
+  SwapMetadata,
+} from '../types';
+import { TxCategory } from '../types';
 import type { SimplifiedFee, SimplifiedTransaction } from '../types.tsx';
 
 // Type for transaction request with optional origin properties
@@ -19,7 +24,7 @@ function getOperationType(operation: Operation): TxCategory {
 
   switch (name) {
     case OperationName.transfer:
-      return TxCategory.SEND;
+      return operation.to ? TxCategory.SEND : TxCategory.RECEIVE;
     case OperationName.contractCall:
       return TxCategory.CONTRACTCALL;
     case OperationName.script:
@@ -43,26 +48,28 @@ function transformOperation(
 
   // For contract calls, use the contract information
   if (name === OperationName.contractCall && calls.length > 0) {
-    const call = calls[0] as OperationFunctionCall; // Take first call for now, we'll group them later
+    const call = calls[0] as OperationFunctionCall;
+    const metadata: ContractCallMetadata = {
+      contractId: to?.address,
+      functionName: call.functionName,
+      functionData: call,
+      amount: call.amount ? bn(call.amount) : undefined,
+      assetId: call.assetId,
+    };
+
     return {
       type,
       groupId: `${type}-${to?.address}`,
       from: from?.address || '',
       to: to?.address || '',
       isFromCurrentAccount,
-      metadata: {
-        contractId: to?.address,
-        functionName: call.functionName,
-        functionData: call,
-        amount: call.amount ? bn(call.amount) : undefined,
-        assetId: call.assetId,
-      },
+      metadata,
     };
   }
 
   // For transfers, use the asset information
   if (assetsSent.length > 0) {
-    const asset = assetsSent[0]; // Take first asset for now, we'll group them later
+    const asset = assetsSent[0];
     return {
       type,
       groupId: `${type}-${asset.assetId}`,
@@ -96,57 +103,21 @@ export function transformOperations(
 export function groupSimilarOperations(
   operations: SimplifiedOperation[]
 ): SimplifiedOperation[] {
-  const result: SimplifiedOperation[] = [];
-  const used = new Set<number>();
-
-  // First pass: detect swaps
-  for (let i = 0; i < operations.length; i++) {
-    if (used.has(i)) continue;
-
-    const current = operations[i];
-    if (current.type === TxCategory.SEND && i + 1 < operations.length) {
-      const next = operations[i + 1];
-      // Check if this is a swap:
-      // 1. Both operations are sends
-      // 2. The sender of the first is the receiver of the second
-      // 3. The receiver of the first is the sender of the second
-      if (
-        next.type === TxCategory.SEND &&
-        current.from === next.to &&
-        current.to === next.from
-      ) {
-        // Combine the two operations into one swap
-        result.push({
-          ...current,
-          metadata: {
-            isSwap: true,
-            receiveAmount: next.amount?.toString() || '0',
-            receiveAssetId: next.assetId || '',
-          } as SwapMetadata,
-        });
-        used.add(i);
-        used.add(i + 1);
-        continue;
-      }
-    }
-
-    if (!used.has(i)) {
-      result.push(current);
-      used.add(i);
-    }
-  }
-
-  // Second pass: group similar non-swap operations
-  const groups = result.reduce(
+  // Group operations by type, asset, and destination
+  const groups = operations.reduce(
     (acc, op) => {
       let key: string;
       if (op.type === TxCategory.CONTRACTCALL) {
         key = `${op.type}-${op.to}`; // Group contract calls by their target contract
-      } else if (op.type === TxCategory.SEND && op.assetId) {
-        key = `${op.type}-${op.assetId}`; // Group transfers by asset ID
+      } else if (
+        (op.type === TxCategory.SEND || op.type === TxCategory.RECEIVE) &&
+        op.assetId
+      ) {
+        key = `${op.type}-${op.assetId}-${op.to}`; // Group transfers by type, asset ID, and destination
       } else {
         key = `${op.type}-${op.to}`; // Other operations grouped by type and destination
       }
+
       if (!acc[key]) {
         acc[key] = [];
       }
@@ -161,21 +132,33 @@ export function groupSimilarOperations(
     if (group.length === 1) return group[0];
 
     const firstOp = group[0];
-    // Combine similar operations
+    const metadata = firstOp.metadata as ContractCallMetadata;
+
+    // For contract calls, mark as a group
+    if (firstOp.type === TxCategory.CONTRACTCALL) {
+      return {
+        ...firstOp,
+        metadata: {
+          ...metadata,
+          isContractCallGroup: true,
+          operationCount: group.length,
+          totalAmount: group.reduce((sum, op) => {
+            const opMetadata = op.metadata as ContractCallMetadata;
+            return opMetadata?.amount ? sum.add(opMetadata.amount) : sum;
+          }, bn(0)),
+        },
+      };
+    }
+
+    // For transfers, sum the amounts if they're the same asset
     return {
       ...firstOp,
-      groupId:
-        firstOp.type === TxCategory.SEND && firstOp.assetId
-          ? `group-${firstOp.type}-${firstOp.assetId}`
-          : `group-${firstOp.type}-${firstOp.to}`,
       metadata: {
-        ...firstOp.metadata,
         operationCount: group.length,
-        // Sum amounts if they exist and are the same asset
         totalAmount: group.every(
           (op) => op.amount && op.assetId === firstOp.assetId
         )
-          ? group.reduce((sum, op) => sum.add(op.amount!), firstOp.amount!)
+          ? group.reduce((sum, op) => sum.add(op.amount!), bn(0))
           : undefined,
       },
     };

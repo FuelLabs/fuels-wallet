@@ -1,6 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
-import { useSimplifyTransaction } from '../../hooks/useSimplifyTransaction';
 import type { SimplifiedTransactionViewProps } from '../../types';
 import { TxFeeSimple } from './TxFeeSimple';
 import { TxHeaderSimple } from './TxHeaderSimple';
@@ -12,10 +11,6 @@ export function TxViewSimple({
   isLoading,
   footer,
 }: SimplifiedTransactionViewProps) {
-  const { simplifiedOperations } = useSimplifyTransaction(
-    transaction.operations
-  );
-
   return (
     <Box.Stack css={styles.root}>
       <TxHeaderSimple
@@ -24,7 +19,7 @@ export function TxViewSimple({
         isLoading={isLoading}
       />
       <Box css={styles.content}>
-        <TxOperationsList operations={simplifiedOperations} />
+        <TxOperationsList operations={transaction.operations} />
         {showDetails && (
           <TxFeeSimple fee={transaction.fee} isLoading={isLoading} />
         )}

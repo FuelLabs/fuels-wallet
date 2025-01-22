@@ -1,9 +1,8 @@
 import { Box } from '@fuel-ui/react';
+import { useMemo } from 'react';
 import type { SimplifiedOperation } from '../../../types';
 import { TxCategory } from '../../../types';
-import { TxOperationContractAsset } from './operations/TxOperationContractAsset';
-import { TxOperationExternalCalls } from './operations/TxOperationExternalCalls';
-import { TxOperationGroupedCalls } from './operations/TxOperationGroupedCalls';
+import { TxOperationContract } from './operations/TxOperationContract';
 import { TxOperationTransfer } from './operations/TxOperationTransfer';
 
 type TxOperationsListProps = {
@@ -11,61 +10,21 @@ type TxOperationsListProps = {
 };
 
 export function TxOperationsList({ operations }: TxOperationsListProps) {
-  console.log('TxOperationsList operations:', operations); // Debug log
-  return (
-    <Box.Stack gap="$2">
-      {operations.map((operation) => {
-        // If it's a transfer operation
-        if (operation.type === TxCategory.SEND) {
-          return (
-            <TxOperationTransfer
-              key={operation.groupId}
-              operation={operation}
-            />
-          );
-        }
+  const renderedOperations = useMemo(() => {
+    return operations.map((operation) => {
+      const key = `${operation.type}-${operation.groupId}-${operation.to}`;
 
-        // If it's a contract call with asset transfer
-        if (operation.type === TxCategory.CONTRACTCALL && operation.amount) {
-          return (
-            <TxOperationContractAsset
-              key={operation.groupId}
-              operation={operation}
-            />
-          );
-        }
+      if (operation.type === TxCategory.SEND) {
+        return <TxOperationTransfer key={key} operation={operation} />;
+      }
 
-        // If it's a grouped contract call
-        if (
-          operation.type === TxCategory.CONTRACTCALL &&
-          operation.metadata?.operationCount &&
-          operation.metadata.operationCount > 1
-        ) {
-          return (
-            <TxOperationGroupedCalls
-              key={operation.groupId}
-              operation={operation}
-            />
-          );
-        }
+      return <TxOperationContract key={key} operation={operation} />;
+    });
+  }, [operations]);
 
-        // If it's an external contract call
-        if (operation.type === TxCategory.CONTRACTCALL) {
-          return (
-            <TxOperationExternalCalls
-              key={operation.groupId}
-              operation={operation}
-            />
-          );
-        }
-
-        return null;
-      })}
-    </Box.Stack>
-  );
+  return <Box.Stack gap="$2">{renderedOperations}</Box.Stack>;
 }
 
-// Add loader component
 TxOperationsList.Loader = function TxOperationsListLoader() {
   return (
     <Box.Stack gap="$2">
