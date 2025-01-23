@@ -1,9 +1,7 @@
 import { Box } from '@fuel-ui/react';
 import { useMemo } from 'react';
 import type { SimplifiedOperation } from '../../../types';
-import { TxCategory } from '../../../types';
-import { TxOperationContract } from './operations/TxOperationContract';
-import { TxOperationTransfer } from './operations/TxOperationTransfer';
+import { TxOperation } from './operations/TxOperation';
 
 type TxOperationsListProps = {
   operations: SimplifiedOperation[];
@@ -14,12 +12,7 @@ export function TxOperationsList({ operations }: TxOperationsListProps) {
     return operations.map((operation, index) => {
       console.log('Rendering operation:', operation);
       const key = `${operation.type}-${operation.from}-${operation.to}-${index}`;
-
-      if (operation.type === TxCategory.SEND) {
-        return <TxOperationTransfer key={key} operation={operation} />;
-      }
-
-      return <TxOperationContract key={key} operation={operation} />;
+      return <TxOperation key={key} operation={operation} />;
     });
   }, [operations]);
 

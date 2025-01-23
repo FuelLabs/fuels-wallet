@@ -39,7 +39,7 @@ export function TxOperationDrawer({
                 Function: {operation.metadata.functionName}
               </Text>
             )}
-            <Text fontSize="sm">Contract: {operation.to}</Text>
+            <Text fontSize="sm">{operation.to}</Text>
             {operation.metadata?.operationCount && (
               <Text fontSize="sm">
                 Total Calls: {operation.metadata.operationCount}
