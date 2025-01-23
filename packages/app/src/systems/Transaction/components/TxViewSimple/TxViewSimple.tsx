@@ -11,13 +11,10 @@ export function TxViewSimple({
   isLoading,
   footer,
 }: SimplifiedTransactionViewProps) {
+  console.log('Rapid fire', transaction);
   return (
     <Box.Stack css={styles.root}>
-      <TxHeaderSimple
-        status={transaction.status}
-        origin={transaction.origin}
-        isLoading={isLoading}
-      />
+      <TxHeaderSimple origin={transaction.origin} isLoading={isLoading} />
       <Box css={styles.content}>
         <TxOperationsList operations={transaction.operations} />
         {showDetails && (

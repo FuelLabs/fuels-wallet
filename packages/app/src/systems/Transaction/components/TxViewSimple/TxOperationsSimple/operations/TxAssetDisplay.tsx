@@ -1,45 +1,33 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Icon, Text } from '@fuel-ui/react';
-import { formatAmount, shortAddress } from '~/systems/Core';
+import { Box } from '@fuel-ui/react';
+import { TxAssetAmount } from './TxAssetAmount';
 
 type TxAssetDisplayProps = {
   amount: string;
   assetId?: string;
   label?: string;
-  showIcon?: boolean;
   operationCount?: number;
+  showLabel?: boolean;
 };
 
 export function TxAssetDisplay({
   amount,
   assetId,
   label,
-  showIcon = true,
   operationCount,
+  showLabel,
 }: TxAssetDisplayProps) {
   return (
     <Box.Stack gap="$0" css={styles.root}>
-      {label && (
-        <Text css={{ color: '$blue9' }} fontSize="sm">
-          {label}
-        </Text>
+      <TxAssetAmount
+        amount={amount}
+        assetId={assetId}
+        label={label}
+        showLabel={showLabel}
+      />
+      {operationCount && operationCount > 1 && (
+        <Box css={styles.count}>x{operationCount}</Box>
       )}
-      <Box.Flex css={styles.content}>
-        {showIcon && <Icon icon="Coins" size={14} />}
-        <Text fontSize="sm">
-          {formatAmount({
-            amount,
-            options: { units: 9 }, // Default to 9 decimals
-          })}{' '}
-          {assetId ? shortAddress(assetId) : 'Unknown Asset'}
-          {operationCount && operationCount > 1 ? (
-            <Text as="span" color="gray8">
-              {' '}
-              x{operationCount}
-            </Text>
-          ) : null}
-        </Text>
-      </Box.Flex>
     </Box.Stack>
   );
 }
@@ -49,9 +37,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
   }),
-  content: cssObj({
-    display: 'flex',
-    gap: '$1',
-    alignItems: 'center',
+  count: cssObj({
+    color: '$gray8',
+    fontSize: '$xs',
+    marginLeft: '$1',
   }),
 };

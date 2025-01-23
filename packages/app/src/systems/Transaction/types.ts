@@ -8,6 +8,7 @@ import type {
   OutputContract,
   OutputContractCreated,
   Receipt,
+  ReceiptType,
   TransactionRequest,
   TransactionRequestInput,
   TransactionRequestLike,
@@ -59,6 +60,8 @@ export type ContractCallMetadata = {
   amount?: BN;
   assetId?: string;
   operationCount?: number;
+  depth?: number;
+  receiptType?: ReceiptType;
 };
 
 export type SwapMetadata = {

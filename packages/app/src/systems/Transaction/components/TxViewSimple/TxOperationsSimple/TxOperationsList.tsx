@@ -11,8 +11,9 @@ type TxOperationsListProps = {
 
 export function TxOperationsList({ operations }: TxOperationsListProps) {
   const renderedOperations = useMemo(() => {
-    return operations.map((operation) => {
-      const key = `${operation.type}-${operation.groupId}-${operation.to}`;
+    return operations.map((operation, index) => {
+      console.log('Rendering operation:', operation);
+      const key = `${operation.type}-${operation.from}-${operation.to}-${index}`;
 
       if (operation.type === TxCategory.SEND) {
         return <TxOperationTransfer key={key} operation={operation} />;

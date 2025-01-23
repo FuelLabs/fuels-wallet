@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, IconButton, Spinner, Text } from '@fuel-ui/react';
+import { Avatar, Box, IconButton, Text } from '@fuel-ui/react';
 import { useAccounts } from '~/systems/Account';
 import { shortAddress } from '~/systems/Core';
 
@@ -7,16 +7,16 @@ type TxAddressDisplayProps = {
   address: string;
   name?: string;
   image?: string;
-  isLoading?: boolean;
   isContract?: boolean;
+  label?: string;
 };
 
 export function TxAddressDisplay({
   address,
   name,
   image,
-  isLoading,
   isContract,
+  label,
 }: TxAddressDisplayProps) {
   const { accounts } = useAccounts();
   const account = accounts?.find(
@@ -26,19 +26,20 @@ export function TxAddressDisplay({
   return (
     <Box.Flex css={styles.root}>
       <Box css={styles.iconCol}>
-        {isLoading ? (
-          <Spinner size={20} />
-        ) : image ? (
+        {image ? (
           <Avatar src={image} size={20} name={name || 'Contract'} />
         ) : (
           <Avatar.Generated hash={address} size={20} />
         )}
       </Box>
       <Box.Flex gap="$1" css={styles.contentCol}>
+        {label && (
+          <Text fontSize="sm" color="gray8">
+            {label}:
+          </Text>
+        )}
         <Text as="span" fontSize="sm">
-          {isLoading
-            ? 'Loading...'
-            : account?.name || name || shortAddress(address)}
+          {account?.name || name || shortAddress(address)}
         </Text>
         {isContract && (
           <Box css={styles.badge}>

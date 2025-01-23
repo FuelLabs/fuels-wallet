@@ -1,72 +1,40 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Icon, Text } from '@fuel-ui/react';
+import { Box, Text } from '@fuel-ui/react';
 import type { SimplifiedOperation } from '../../../../types';
-import { useEcosystemProject } from '../useEcosystemProject';
 import { TxAddressDisplay } from './TxAddressDisplay';
 import { TxAssetDisplay } from './TxAssetDisplay';
+import { TxOperationNesting } from './TxOperationNesting';
 
 type TxOperationContractProps = {
   operation: SimplifiedOperation;
 };
 
 export function TxOperationContract({ operation }: TxOperationContractProps) {
-  const {
-    name: projectName,
-    image: projectImage,
-    isLoading,
-  } = useEcosystemProject(operation.to);
-
   const metadata = operation.metadata;
-  const hasAsset = Boolean(operation.amount);
-  const isGrouped = metadata?.operationCount && metadata.operationCount > 1;
-  const amount = (metadata?.totalAmount || operation.amount || '0').toString();
-  const depth = operation.depth || 0;
+  const amount = metadata?.amount;
+  const assetId = metadata?.assetId;
+  const hasAsset = Boolean(amount && assetId);
+  const depth = metadata?.depth || 0;
 
   return (
     <Box.Flex css={styles.root}>
-      <Box css={styles.depthIndicator(depth)} />
+      <TxOperationNesting depth={depth} />
       <Box.Stack gap="$1" css={styles.contentCol}>
-        {operation.isRoot && (
-          <Text fontSize="xs" color="gray8" css={styles.rootTag}>
-            root
+        <Box.Flex css={styles.header}>
+          <Text fontSize="xs" css={styles.typeLabel}>
+            Contract Call
           </Text>
-        )}
-        <TxAddressDisplay
-          address={operation.to}
-          name={projectName}
-          image={projectImage}
-          isLoading={isLoading}
-          isContract
-        />
-        {isGrouped && (
-          <Alert status="info" css={styles.alert} hideIcon>
-            <Alert.Description>
-              This contract call occurs {metadata.operationCount} times
-            </Alert.Description>
-          </Alert>
-        )}
-        <Box.Flex css={styles.line}>
-          <Box css={styles.iconCol}>
-            <Icon
-              icon={hasAsset ? 'ArrowDown' : 'Code'}
-              css={{ color: hasAsset ? '$blue9' : '$gray8' }}
-              size={16}
-            />
-          </Box>
-          {hasAsset ? (
-            <TxAssetDisplay
-              amount={amount}
-              assetId={operation.assetId}
-              label="Sends token"
-              showIcon={false}
-              operationCount={metadata?.operationCount}
-            />
-          ) : (
-            <Text css={{ color: '$gray8' }} fontSize="sm">
-              Contract interaction
-            </Text>
-          )}
         </Box.Flex>
+        <TxAddressDisplay address={operation.from} label="From" />
+        <TxAddressDisplay address={operation.to} label="Contract" isContract />
+        {hasAsset && amount && assetId && (
+          <Box.Stack gap="$0">
+            <TxAssetDisplay amount={amount.toString()} assetId={assetId} />
+          </Box.Stack>
+        )}
+        {metadata?.functionName && (
+          <Box css={styles.functionName}>Function: {metadata.functionName}</Box>
+        )}
       </Box.Stack>
     </Box.Flex>
   );
@@ -80,40 +48,28 @@ const styles = {
     padding: '$2',
     backgroundColor: '$cardBg',
     borderRadius: '$md',
-  }),
-  iconCol: cssObj({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '24px',
-    flexShrink: 0,
+    width: '100%',
+    minWidth: 0, // Prevent flex items from overflowing
   }),
   contentCol: cssObj({
     display: 'flex',
     flex: 1,
+    minWidth: 0, // Allow content to shrink if needed
   }),
-  line: cssObj({
+  header: cssObj({
     display: 'flex',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     gap: '$2',
   }),
-  alert: cssObj({
+  typeLabel: cssObj({
+    color: '$gray8',
     backgroundColor: '$gray3',
-    border: 'none',
-    padding: '$1',
+    padding: '$1 $2',
+    borderRadius: '$md',
+    fontWeight: '$normal',
   }),
-  rootTag: cssObj({
-    backgroundColor: '$gray3',
-    padding: '0 $1',
-    borderRadius: '$xs',
-    alignSelf: 'flex-start',
+  functionName: cssObj({
+    fontSize: '$sm',
+    color: '$gray8',
   }),
-  depthIndicator: (depth: number) =>
-    cssObj({
-      width: depth ? '2px' : '0',
-      minWidth: depth ? '2px' : '0',
-      backgroundColor: '$gray4',
-      marginLeft: `${depth * 8}px`,
-      alignSelf: 'stretch',
-    }),
 };

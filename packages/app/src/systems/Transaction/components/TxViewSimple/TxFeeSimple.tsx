@@ -1,8 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, ContentLoader, Text } from '@fuel-ui/react';
-import type { AssetFuelAmount } from '@fuel-wallet/types';
-import { AssetsAmount } from '~/systems/Asset';
 import type { SimplifiedFee } from '../../types';
+import { TxAssetAmount } from './TxOperationsSimple/operations/TxAssetAmount';
 
 type TxFeeSimpleProps = {
   fee: SimplifiedFee;
@@ -12,24 +11,11 @@ type TxFeeSimpleProps = {
 export function TxFeeSimple({ fee, isLoading }: TxFeeSimpleProps) {
   if (isLoading) return <TxFeeSimple.Loader />;
 
-  const { network } = fee;
-
-  const fuelAmount: AssetFuelAmount = {
-    type: 'fuel',
-    chainId: 0,
-    decimals: 9,
-    assetId: '',
-    name: 'Fuel',
-    symbol: 'ETH',
-    amount: network,
-    icon: '',
-  };
-
   return (
     <Box css={styles.content}>
       <Box.Stack gap="$2">
         <Text css={styles.title}>Network Fee</Text>
-        <AssetsAmount amounts={[fuelAmount]} />
+        <TxAssetAmount amount={fee.network.toString()} showAssetId={false} />
       </Box.Stack>
     </Box>
   );
