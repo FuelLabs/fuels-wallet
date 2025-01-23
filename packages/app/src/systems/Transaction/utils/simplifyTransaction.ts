@@ -2,18 +2,15 @@ import type { Operation, TransactionRequest, TransactionSummary } from 'fuels';
 import {
   type OperationFunctionCall,
   OperationName,
+  ReceiptType,
+  type TransactionResultReceipt,
   TransactionStatus,
   bn,
 } from 'fuels';
-import type {
-  ContractCallMetadata,
-  SimplifiedOperation,
-  SwapMetadata,
-} from '../types';
+import type { ContractCallMetadata, SimplifiedOperation } from '../types';
 import { TxCategory } from '../types';
 import type { SimplifiedFee, SimplifiedTransaction } from '../types.tsx';
 
-// Type for transaction request with optional origin properties
 type TransactionRequestWithOrigin = TransactionRequest & {
   origin?: string;
   favIconUrl?: string;
@@ -34,19 +31,45 @@ function getOperationType(operation: Operation): TxCategory {
   }
 }
 
+function isRootOperation(_operation: Operation): boolean {
+  return false;
+}
+
+function getReceiptDepth(
+  receipt: TransactionResultReceipt,
+  allReceipts: TransactionResultReceipt[]
+): number {
+  // For now, use a simple depth calculation based on receipt order
+  // We can enhance this later when we have better receipt hierarchy info
+  const index = allReceipts.findIndex((r) => r === receipt);
+  return index > 0 ? 1 : 0;
+}
+
 function transformOperation(
   operation: Operation,
-  currentAccount?: string
+  currentAccount?: string,
+  allReceipts: TransactionResultReceipt[] = []
 ): SimplifiedOperation {
-  const { name, from, to, assetsSent = [], calls = [] } = operation;
+  const {
+    name,
+    from,
+    to,
+    assetsSent = [],
+    calls = [],
+    receipts = [],
+  } = operation;
   const type = getOperationType(operation);
+  const isRoot = isRootOperation(operation);
 
-  // Determine if this operation is from the current account
+  // Calculate depth based on receipts
+  const depth = receipts.length
+    ? Math.min(...receipts.map((r) => getReceiptDepth(r, allReceipts)))
+    : 0;
+
   const isFromCurrentAccount = currentAccount
     ? from?.address === currentAccount
     : false;
 
-  // For contract calls, use the contract information
   if (name === OperationName.contractCall && calls.length > 0) {
     const call = calls[0] as OperationFunctionCall;
     const metadata: ContractCallMetadata = {
@@ -55,6 +78,9 @@ function transformOperation(
       functionData: call,
       amount: call.amount ? bn(call.amount) : undefined,
       assetId: call.assetId,
+      isRoot,
+      receipts,
+      depth,
     };
 
     return {
@@ -63,11 +89,12 @@ function transformOperation(
       from: from?.address || '',
       to: to?.address || '',
       isFromCurrentAccount,
+      isRoot,
+      depth,
       metadata,
     };
   }
 
-  // For transfers, use the asset information
   if (assetsSent.length > 0) {
     const asset = assetsSent[0];
     return {
@@ -78,16 +105,27 @@ function transformOperation(
       amount: asset.amount ? bn(asset.amount) : undefined,
       assetId: asset.assetId,
       isFromCurrentAccount,
+      isRoot,
+      depth,
+      metadata: {
+        receipts,
+        depth,
+      },
     };
   }
 
-  // Default case
   return {
     type,
     groupId: `${type}-${to?.address}`,
     from: from?.address || '',
     to: to?.address || '',
     isFromCurrentAccount,
+    isRoot,
+    depth,
+    metadata: {
+      receipts,
+      depth,
+    },
   };
 }
 
@@ -97,27 +135,70 @@ export function transformOperations(
 ): SimplifiedOperation[] {
   if (!summary.operations) return [];
 
-  return summary.operations.map((op) => transformOperation(op, currentAccount));
+  // Get all receipts from all operations for depth calculation
+  const allReceipts = summary.operations.flatMap((op) => op.receipts || []);
+
+  // Transform all operations but only keep ones relevant to current account
+  const operations = summary.operations
+    .filter((op) => {
+      if (!currentAccount) return true;
+      const currentAccountLower = currentAccount.toLowerCase();
+
+      // Check operation addresses
+      const opTo = op.to?.address?.toLowerCase();
+      const opFrom = op.from?.address?.toLowerCase();
+      const isOperationRelevant =
+        opTo === currentAccountLower || opFrom === currentAccountLower;
+
+      // Check receipt addresses
+      const hasRelevantReceipt = op.receipts?.some((receipt) => {
+        // Only check transfer receipts for now as they have from/to fields
+        if (
+          receipt.type === ReceiptType.Transfer ||
+          receipt.type === ReceiptType.TransferOut
+        ) {
+          const transfer = receipt as { to?: string; from?: string };
+          return (
+            transfer.to?.toLowerCase() === currentAccountLower ||
+            transfer.from?.toLowerCase() === currentAccountLower
+          );
+        }
+        return false;
+      });
+
+      // Show operation if either the operation itself or any of its receipts involve the current account
+      return isOperationRelevant || hasRelevantReceipt;
+    })
+    .map((op) => {
+      const transformed = transformOperation(op, currentAccount, allReceipts);
+      console.log('Operation:', {
+        type: op.name,
+        receipts: op.receipts?.map((r) => r.type),
+        isRoot: transformed.isRoot,
+        depth: transformed.depth,
+        from: op.from?.address,
+        to: op.to?.address,
+        receiptTypes: op.receipts?.map((r) => r.type),
+      });
+      return transformed;
+    });
+
+  // Sort operations by depth
+  return operations.sort((a, b) => (a.depth || 0) - (b.depth || 0));
+}
+
+function getGroupKey(op: SimplifiedOperation): string {
+  const base = `${op.type}-${op.to}`;
+  if (op.type === TxCategory.CONTRACTCALL) return base;
+  return op.assetId ? `${base}-${op.assetId}` : base;
 }
 
 export function groupSimilarOperations(
   operations: SimplifiedOperation[]
 ): SimplifiedOperation[] {
-  // Group operations by type, asset, and destination
   const groups = operations.reduce(
     (acc, op) => {
-      let key: string;
-      if (op.type === TxCategory.CONTRACTCALL) {
-        key = `${op.type}-${op.to}`; // Group contract calls by their target contract
-      } else if (
-        (op.type === TxCategory.SEND || op.type === TxCategory.RECEIVE) &&
-        op.assetId
-      ) {
-        key = `${op.type}-${op.assetId}-${op.to}`; // Group transfers by type, asset ID, and destination
-      } else {
-        key = `${op.type}-${op.to}`; // Other operations grouped by type and destination
-      }
-
+      const key = getGroupKey(op);
       if (!acc[key]) {
         acc[key] = [];
       }
@@ -127,14 +208,12 @@ export function groupSimilarOperations(
     {} as Record<string, SimplifiedOperation[]>
   );
 
-  // Combine operations in each group
   return Object.values(groups).map((group) => {
     if (group.length === 1) return group[0];
 
     const firstOp = group[0];
     const metadata = firstOp.metadata as ContractCallMetadata;
 
-    // For contract calls, mark as a group
     if (firstOp.type === TxCategory.CONTRACTCALL) {
       return {
         ...firstOp,
@@ -150,7 +229,6 @@ export function groupSimilarOperations(
       };
     }
 
-    // For transfers, sum the amounts if they're the same asset
     return {
       ...firstOp,
       metadata: {
@@ -165,53 +243,30 @@ export function groupSimilarOperations(
   });
 }
 
-export function simplifyFee(
-  summary: TransactionSummary,
-  request?: TransactionRequest
-): SimplifiedFee {
-  const tip = request?.tip || bn(0);
-  return {
-    total: summary.fee || bn(0),
-    network: (summary.fee || bn(0)).sub(tip),
-    tip,
-    gasUsed: summary.gasUsed || bn(0),
-    gasPrice: bn(0), // This will be calculated later when we have access to the provider
-  };
-}
-
-function deriveStatus(summary: TransactionSummary): TransactionStatus {
-  if (summary.isStatusSuccess) return TransactionStatus.success;
-  if (summary.isStatusFailure) return TransactionStatus.failure;
-  if (summary.isStatusPending) return TransactionStatus.submitted;
-  return TransactionStatus.submitted; // Default to submitted if no status is set
-}
-
 export function simplifyTransaction(
   summary: TransactionSummary,
   request?: TransactionRequest,
   currentAccount?: string
 ): SimplifiedTransaction {
-  // Transform operations
   console.log('summary', summary);
-
   const operations = transformOperations(summary, currentAccount);
-
-  // Group similar operations
   const groupedOperations = groupSimilarOperations(operations);
 
-  // TODO Sort operations (current account's operations first)
-
-  // Get origin info from the request context if available
   const requestWithOrigin = request as TransactionRequestWithOrigin;
   const origin = requestWithOrigin?.origin;
   const favicon = requestWithOrigin?.favIconUrl;
 
-  const simplifiedTransaction: SimplifiedTransaction = {
+  return {
     id: summary.id,
     operations: groupedOperations,
-    status: deriveStatus(summary),
     timestamp: summary.time ? new Date(summary.time) : undefined,
-    fee: simplifyFee(summary, request),
+    fee: {
+      total: bn(summary.fee || 0),
+      network: bn(summary.fee || 0).sub(bn(request?.tip || 0)),
+      tip: bn(request?.tip || 0),
+      gasUsed: bn(summary.gasUsed || 0),
+      gasPrice: bn(0), // This will be calculated later when we have access to the provider
+    },
     origin: origin
       ? {
           name: origin,
@@ -224,8 +279,4 @@ export function simplifyTransaction(
       request,
     },
   };
-
-  console.log('simplifiedTransaction', simplifiedTransaction);
-
-  return simplifiedTransaction;
 }

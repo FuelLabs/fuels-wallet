@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box } from '@fuel-ui/react';
+import { Box, Text } from '@fuel-ui/react';
 import type { SimplifiedOperation } from '../../../../types';
 import { TxAddressDisplay } from './TxAddressDisplay';
 import { TxAssetDisplay } from './TxAssetDisplay';
@@ -15,10 +15,17 @@ export function TxOperationTransfer({ operation }: TxOperationTransferProps) {
     '0'
   ).toString();
   const operationCount = operation.metadata?.operationCount;
+  const depth = operation.depth || 0;
 
   return (
     <Box.Flex css={styles.root}>
+      <Box css={styles.depthIndicator(depth)} />
       <Box.Stack gap="$1" css={styles.contentCol}>
+        {operation.isRoot && (
+          <Text fontSize="xs" color="gray8" css={styles.rootTag}>
+            root
+          </Text>
+        )}
         <TxAddressDisplay address={operation.from} />
         <TxAssetDisplay
           amount={amount}
@@ -44,4 +51,18 @@ const styles = {
     display: 'flex',
     flex: 1,
   }),
+  rootTag: cssObj({
+    backgroundColor: '$gray3',
+    padding: '0 $1',
+    borderRadius: '$xs',
+    alignSelf: 'flex-start',
+  }),
+  depthIndicator: (depth: number) =>
+    cssObj({
+      width: depth ? '2px' : '0',
+      minWidth: depth ? '2px' : '0',
+      backgroundColor: '$gray4',
+      marginLeft: `${depth * 8}px`,
+      alignSelf: 'stretch',
+    }),
 };

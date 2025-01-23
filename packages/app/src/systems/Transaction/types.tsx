@@ -7,6 +7,7 @@ import type {
   InputContract,
   OutputContract,
   OutputContractCreated,
+  Receipt,
   TransactionRequest,
   TransactionRequestInput,
   TransactionRequestLike,
@@ -60,6 +61,10 @@ export type ContractCallMetadata = {
   isContractCallGroup?: boolean;
   operationCount?: number;
   totalAmount?: BN;
+  isRoot?: boolean;
+  receipts?: Receipt[];
+  depth?: number;
+  parentReceiptId?: string;
 };
 
 export type SwapMetadata = {
@@ -68,6 +73,9 @@ export type SwapMetadata = {
   receiveAssetId: string;
   totalAmount?: BN;
   operationCount?: number;
+  receipts?: Receipt[];
+  depth?: number;
+  parentReceiptId?: string;
 };
 
 export type SimplifiedOperation = {
@@ -77,7 +85,9 @@ export type SimplifiedOperation = {
   amount?: BN;
   assetId?: string;
   isFromCurrentAccount?: boolean;
+  isRoot?: boolean;
   groupId?: string;
+  depth?: number;
   metadata?: ContractCallMetadata | SwapMetadata;
 };
 
@@ -92,7 +102,6 @@ export type SimplifiedFee = {
 export type SimplifiedTransaction = {
   id?: string;
   operations: SimplifiedOperation[];
-  status: TransactionStatus;
   timestamp?: Date;
   fee: SimplifiedFee;
   origin?: {
@@ -112,3 +121,26 @@ export type SimplifiedTransactionViewProps = {
   isLoading?: boolean;
   footer?: ReactNode;
 };
+
+export interface AssetFlow {
+  assetId: string;
+  amount: BN;
+  from: string;
+  to: string;
+  type: 'in' | 'out'; // from perspective of current user
+}
+
+export interface SimplifiedAssetFlows {
+  assetsIn: AssetFlow[];
+  assetsOut: AssetFlow[];
+  fees: {
+    gasUsed: BN;
+    networkFee: BN;
+    tip: BN;
+    otherFees: AssetFlow[]; // Other fees paid in various assets
+  };
+  contractInteractions: Array<{
+    contractId: string;
+    functionName?: string;
+  }>;
+}

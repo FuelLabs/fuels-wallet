@@ -20,10 +20,17 @@ export function TxOperationContract({ operation }: TxOperationContractProps) {
   const hasAsset = Boolean(operation.amount);
   const isGrouped = metadata?.operationCount && metadata.operationCount > 1;
   const amount = (metadata?.totalAmount || operation.amount || '0').toString();
+  const depth = operation.depth || 0;
 
   return (
     <Box.Flex css={styles.root}>
+      <Box css={styles.depthIndicator(depth)} />
       <Box.Stack gap="$1" css={styles.contentCol}>
+        {operation.isRoot && (
+          <Text fontSize="xs" color="gray8" css={styles.rootTag}>
+            root
+          </Text>
+        )}
         <TxAddressDisplay
           address={operation.to}
           name={projectName}
@@ -95,4 +102,18 @@ const styles = {
     border: 'none',
     padding: '$1',
   }),
+  rootTag: cssObj({
+    backgroundColor: '$gray3',
+    padding: '0 $1',
+    borderRadius: '$xs',
+    alignSelf: 'flex-start',
+  }),
+  depthIndicator: (depth: number) =>
+    cssObj({
+      width: depth ? '2px' : '0',
+      minWidth: depth ? '2px' : '0',
+      backgroundColor: '$gray4',
+      marginLeft: `${depth * 8}px`,
+      alignSelf: 'stretch',
+    }),
 };
