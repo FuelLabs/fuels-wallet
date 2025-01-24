@@ -282,7 +282,6 @@ export function useSend() {
 
   const account = store.useSelector(Services.accounts, selectors.account);
 
-  // Needed so we don't overload machine with a new obj account each render. This lead to the machine not using an updated reference of the account object.
   const callTransactionRequest = useCallback(
     (ctx: MachineContext) => {
       const {
@@ -328,7 +327,8 @@ export function useSend() {
   );
 
   const service = useInterpret(
-    () => sendMachine.withConfig(sendMachineOpts),
+    // biome-ignore lint/suspicious/noExplicitAny: Even though account doesn't exist in the machine context, we need to pass it so the machine understands that it must update its references when account changes.
+    () => sendMachine.withContext({ account } as any),
     sendMachineOpts
   );
 
