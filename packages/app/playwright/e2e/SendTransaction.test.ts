@@ -95,7 +95,6 @@ test.describe('SendTransaction', () => {
 
     await expectButtonToBeEnabled(btnLocator);
     await btnLocator.click();
-    await page.pause();
 
     // Approve transaction
     await hasText(page, '0.001 ETH');
