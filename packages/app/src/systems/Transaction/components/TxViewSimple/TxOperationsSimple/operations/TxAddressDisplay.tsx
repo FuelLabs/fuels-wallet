@@ -37,7 +37,7 @@ export function TxAddressDisplay({
         )}
       </Box>
       <Box.Flex gap="$1" css={styles.contentCol}>
-        <Text as="span" fontSize="sm">
+        <Text as="span" fontSize="sm" css={styles.name}>
           {account?.name || 'Unknown'}
         </Text>
         {isContract && (
@@ -47,7 +47,7 @@ export function TxAddressDisplay({
             </Text>
           </Box>
         )}
-        <Text fontSize="sm" color="gray8">
+        <Text fontSize="sm" color="gray8" css={styles.address}>
           {shortAddress(address)}
         </Text>
         <IconButton
@@ -82,5 +82,13 @@ const styles = {
     padding: '0 $1',
     backgroundColor: '$gray3',
     borderRadius: '$md',
+  }),
+  name: cssObj({
+    fontWeight: '$semibold',
+    color: '#202020',
+  }),
+  address: cssObj({
+    fontWeight: '$medium',
+    color: '#646464',
   }),
 };
