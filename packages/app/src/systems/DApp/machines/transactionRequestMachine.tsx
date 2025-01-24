@@ -47,12 +47,9 @@ type MachineContext = {
   };
 };
 
-type EstimateDefaultTipsReturn = {
+type EstimateGasLimitAndDefaultTipsReturn = {
   regularTip: BN;
   fastTip: BN;
-};
-
-type EstimateGasLimitReturn = {
   maxGasLimit: BN;
 };
 
@@ -67,11 +64,8 @@ type MachineServices = {
   send: {
     data: TransactionSummary;
   };
-  estimateDefaultTips: {
-    data: EstimateDefaultTipsReturn;
-  };
-  estimateGasLimit: {
-    data: EstimateGasLimitReturn;
+  estimatingGasLimitAndDefaultTips: {
+    data: EstimateGasLimitAndDefaultTipsReturn;
   };
   simulateTransaction: {
     data: SimulateTransactionReturn;
@@ -108,36 +102,21 @@ export const transactionRequestMachine = createMachine(
         on: {
           START: {
             actions: ['assignTxRequestData'],
-            target: 'estimatingInitialTips',
+            target: 'estimatingGasLimitAndDefaultTips',
           },
         },
       },
-      estimatingInitialTips: {
+      estimatingGasLimitAndDefaultTips: {
         tags: ['loading'],
         invoke: {
-          src: 'estimateDefaultTips',
+          src: 'estimatingGasLimitAndDefaultTips',
           onDone: [
             {
               cond: FetchMachine.hasError,
               target: 'failed',
             },
             {
-              actions: ['assignDefaultTips'],
-              target: 'estimatingGasLimit',
-            },
-          ],
-        },
-      },
-      estimatingGasLimit: {
-        invoke: {
-          src: 'estimateGasLimit',
-          onDone: [
-            {
-              cond: FetchMachine.hasError,
-              target: 'failed',
-            },
-            {
-              actions: ['assignGasLimit'],
+              actions: ['assignGasLimitAndDefaultTips'],
               target: 'simulatingTransaction',
             },
           ],
@@ -246,16 +225,11 @@ export const transactionRequestMachine = createMachine(
     delays: { TIMEOUT: 1300 },
     actions: {
       reset: assign(() => ({})),
-      assignDefaultTips: assign((ctx, ev) => ({
+      assignGasLimitAndDefaultTips: assign((ctx, ev) => ({
         fees: {
           ...ctx.fees,
           regularTip: ev.data.regularTip,
           fastTip: ev.data.fastTip,
-        },
-      })),
-      assignGasLimit: assign((ctx, ev) => ({
-        fees: {
-          ...ctx.fees,
           maxGasLimit: ev.data.maxGasLimit,
         },
       })),
@@ -358,23 +332,14 @@ export const transactionRequestMachine = createMachine(
       }),
     },
     services: {
-      estimateDefaultTips: FetchMachine.create<
+      estimatingGasLimitAndDefaultTips: FetchMachine.create<
         never,
-        EstimateDefaultTipsReturn
+        EstimateGasLimitAndDefaultTipsReturn
       >({
         showError: false,
         maxAttempts: 1,
         async fetch() {
-          const defaultTips = await TxService.estimateDefaultTips();
-          return defaultTips;
-        },
-      }),
-      estimateGasLimit: FetchMachine.create<never, EstimateGasLimitReturn>({
-        showError: false,
-        maxAttempts: 1,
-        async fetch() {
-          const gasLimit = await TxService.estimateGasLimit();
-          return gasLimit;
+          return await TxService.estimateGasLimitAndDefaultTips();
         },
       }),
       simulateTransaction: FetchMachine.create<

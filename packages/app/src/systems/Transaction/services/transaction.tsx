@@ -1,5 +1,5 @@
 import type { Account, AccountWithBalance } from '@fuel-wallet/types';
-import type { TransactionRequest, WalletLocked } from 'fuels';
+import type { Provider, TransactionRequest, WalletLocked } from 'fuels';
 import { clone } from 'ramda';
 
 import {
@@ -376,24 +376,14 @@ export class TxService {
     };
   }
 
-  static async estimateDefaultTips() {
+  static async estimateGasLimitAndDefaultTips() {
     const currentNetwork = await NetworkService.getSelectedNetwork();
     const provider = await createProvider(currentNetwork?.url || '');
-
-    const { regularTip, fastTip } = await getCurrentTips(provider);
-
+    const [{ regularTip, fastTip }, { consensusParameters }] =
+      await Promise.all([await getCurrentTips(provider), provider.getChain()]);
     return {
       regularTip: bn(regularTip),
       fastTip: bn(fastTip),
-    };
-  }
-
-  static async estimateGasLimit() {
-    const currentNetwork = await NetworkService.getSelectedNetwork();
-    const provider = await createProvider(currentNetwork?.url || '');
-    const consensusParameters = provider.getChain().consensusParameters;
-
-    return {
       maxGasLimit: consensusParameters.txParameters.maxGasPerTx,
     };
   }
