@@ -41,9 +41,14 @@ test.describe('Check assets', () => {
   });
 
   test('should show valid asset value 0.002000', async () => {
-    expect(
-      await page.getByText('0.002000', { exact: true }).isVisible()
-    ).toBeTruthy();
+    await expect
+      .poll(
+        async () => {
+          return await page.getByText('0.002000', { exact: true }).isVisible();
+        },
+        { timeout: 10000 }
+      )
+      .toBeTruthy();
   });
 
   test('should show USDCIcon AlertTriangle', async () => {
