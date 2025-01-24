@@ -380,7 +380,7 @@ export class TxService {
     const currentNetwork = await NetworkService.getSelectedNetwork();
     const provider = await createProvider(currentNetwork?.url || '');
     const [{ regularTip, fastTip }, { consensusParameters }] =
-      await Promise.all([await getCurrentTips(provider), provider.getChain()]);
+      await Promise.all([getCurrentTips(provider), provider.getChain()]);
     return {
       regularTip: bn(regularTip),
       fastTip: bn(fastTip),
