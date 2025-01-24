@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { useAccounts } from '~/systems/Account';
+import type { AccountsMachineState } from '~/systems/Account';
 import { Pages } from '~/systems/Core';
 import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
@@ -18,7 +18,7 @@ import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { formatGasLimit } from '~/systems/Transaction';
 import { sendMachine } from '../machines/sendMachine';
-import type { SendMachineState } from '../machines/sendMachine';
+import type { MachineContext, SendMachineState } from '../machines/sendMachine';
 
 export enum SendStatus {
   loading = 'loading',
@@ -44,6 +44,9 @@ const selectors = {
   },
   readyToSend(state: SendMachineState) {
     return state.matches('readyToSend');
+  },
+  account(state: AccountsMachineState) {
+    return state.context.account;
   },
   error(state: SendMachineState) {
     if (state.context.error?.includes('Gas limit')) {
@@ -277,47 +280,56 @@ export function useSend() {
   const txRequest = useTransactionRequest();
   const provider = useProvider();
 
-  const account = store.useSelector(
-    Services.accounts,
-    (state) => state.context.account
+  const account = store.useSelector(Services.accounts, selectors.account);
+
+  // Needed so we don't overload machine with a new obj account each render. This lead to the machine not using an updated reference of the account object.
+  const callTransactionRequest = useCallback(
+    (ctx: MachineContext) => {
+      const {
+        providerUrl,
+        transactionRequest,
+        address,
+        baseFee,
+        regularTip,
+        fastTip,
+        maxGasLimit,
+      } = ctx;
+      if (!providerUrl || !transactionRequest || !address) {
+        throw new Error('Params are required');
+      }
+
+      txRequest.handlers.request({
+        providerUrl,
+        transactionRequest,
+        account,
+        address,
+        fees: {
+          baseFee,
+          regularTip,
+          fastTip,
+          maxGasLimit,
+        },
+        skipCustomFee: true,
+      });
+    },
+    [account, txRequest.handlers.request]
   );
 
-  const service = useInterpret(() =>
-    sendMachine.withConfig({
+  const sendMachineOpts = useMemo(
+    () => ({
       actions: {
         goToHome() {
           navigate(Pages.index());
         },
-        callTransactionRequest(ctx) {
-          const {
-            providerUrl,
-            transactionRequest,
-            address,
-            baseFee,
-            regularTip,
-            fastTip,
-            maxGasLimit,
-          } = ctx;
-          if (!providerUrl || !transactionRequest || !address) {
-            throw new Error('Params are required');
-          }
-
-          txRequest.handlers.request({
-            providerUrl,
-            transactionRequest,
-            account,
-            address,
-            fees: {
-              baseFee,
-              regularTip,
-              fastTip,
-              maxGasLimit,
-            },
-            skipCustomFee: true,
-          });
-        },
+        callTransactionRequest,
       },
-    })
+    }),
+    [callTransactionRequest, navigate]
+  );
+
+  const service = useInterpret(
+    () => sendMachine.withContext({ account }),
+    sendMachineOpts
   );
 
   const baseFee = useSelector(service, selectors.baseFee);
@@ -355,7 +367,7 @@ export function useSend() {
   const fastTip = useSelector(service, selectors.fastTip);
   const sendStatusSelector = selectors.status(txRequest.txStatus);
   const sendStatus = useSelector(service, sendStatusSelector);
-  const readyToSend = useSelector(service, selectors.readyToSend);
+  const readyToSend = useSelector(service, selectors.readyToSend) && !!account;
   const input = useSelector(service, selectors.input);
 
   const balanceAssetSelected = useMemo<BN>(() => {
