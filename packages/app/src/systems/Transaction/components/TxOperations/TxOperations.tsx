@@ -28,7 +28,7 @@ export function TxOperations({
   }
 
   return (
-    <Box.Stack gap="$4">
+    <Box.Stack gap="$0">
       {operations?.map((operation, index) => (
         <TxOperation
           // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
@@ -43,7 +43,7 @@ export function TxOperations({
 }
 
 TxOperations.Loader = () => (
-  <Box.Stack gap="$4">
+  <Box.Stack gap="$0">
     <TxOperation.Loader />
   </Box.Stack>
 );

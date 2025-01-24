@@ -16,7 +16,6 @@ export function TxAddressDisplay({
   name,
   image,
   isContract,
-  label,
 }: TxAddressDisplayProps) {
   const { accounts } = useAccounts();
   const account = accounts?.find(
@@ -27,19 +26,19 @@ export function TxAddressDisplay({
     <Box.Flex css={styles.root}>
       <Box css={styles.iconCol}>
         {image ? (
-          <Avatar src={image} size={20} name={name || 'Contract'} />
+          <Avatar src={image} size="sm" name={name || 'Contract'} />
         ) : (
-          <Avatar.Generated hash={address} size={20} />
+          <Avatar.Generated
+            role="img"
+            size="sm"
+            hash={address}
+            aria-label={address}
+          />
         )}
       </Box>
       <Box.Flex gap="$1" css={styles.contentCol}>
-        {label && (
-          <Text fontSize="sm" color="gray8">
-            {label}:
-          </Text>
-        )}
         <Text as="span" fontSize="sm">
-          {account?.name || name || shortAddress(address)}
+          {account?.name || 'Unknown'}
         </Text>
         {isContract && (
           <Box css={styles.badge}>
@@ -48,6 +47,9 @@ export function TxAddressDisplay({
             </Text>
           </Box>
         )}
+        <Text fontSize="sm" color="gray8">
+          {shortAddress(address)}
+        </Text>
         <IconButton
           size="xs"
           variant="link"
@@ -70,7 +72,6 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '20px',
     flexShrink: 0,
   }),
   contentCol: cssObj({
