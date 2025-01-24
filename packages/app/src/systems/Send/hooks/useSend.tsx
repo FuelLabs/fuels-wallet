@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BNInput } from 'fuels';
 import { Address, type Provider, bn, isB256 } from 'fuels';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -281,55 +281,50 @@ export function useSend() {
   const provider = useProvider();
 
   const account = store.useSelector(Services.accounts, selectors.account);
+  const callTransactionRequest = useRef<(ctx: MachineContext) => void>();
 
-  const callTransactionRequest = useCallback(
-    (ctx: MachineContext) => {
-      const {
-        providerUrl,
-        transactionRequest,
-        address,
+  callTransactionRequest.current = (ctx: MachineContext) => {
+    const {
+      providerUrl,
+      transactionRequest,
+      address,
+      baseFee,
+      regularTip,
+      fastTip,
+      maxGasLimit,
+    } = ctx;
+    if (!providerUrl || !transactionRequest || !address) {
+      throw new Error('Params are required');
+    }
+
+    console.log('fsk here account', !!account);
+    txRequest.handlers.request({
+      providerUrl,
+      transactionRequest,
+      account,
+      address,
+      fees: {
         baseFee,
         regularTip,
         fastTip,
         maxGasLimit,
-      } = ctx;
-      if (!providerUrl || !transactionRequest || !address) {
-        throw new Error('Params are required');
-      }
+      },
+      skipCustomFee: true,
+    });
+  };
 
-      txRequest.handlers.request({
-        providerUrl,
-        transactionRequest,
-        account,
-        address,
-        fees: {
-          baseFee,
-          regularTip,
-          fastTip,
-          maxGasLimit,
-        },
-        skipCustomFee: true,
-      });
-    },
-    [account, txRequest.handlers.request]
-  );
-
-  const sendMachineOpts = useMemo(
-    () => ({
+  console.log('fsk here account is an obj', !!account);
+  const service = useInterpret(() =>
+    sendMachine.withConfig({
       actions: {
         goToHome() {
           navigate(Pages.index());
         },
-        callTransactionRequest,
+        callTransactionRequest(ctx) {
+          callTransactionRequest.current?.(ctx);
+        },
       },
-    }),
-    [callTransactionRequest, navigate]
-  );
-
-  const service = useInterpret(
-    // biome-ignore lint/suspicious/noExplicitAny: Even though account doesn't exist in the machine context, we need to pass it so the machine understands that it must update its references when account changes.
-    () => sendMachine.withContext({ account } as any),
-    sendMachineOpts
+    })
   );
 
   const baseFee = useSelector(service, selectors.baseFee);
@@ -367,7 +362,10 @@ export function useSend() {
   const fastTip = useSelector(service, selectors.fastTip);
   const sendStatusSelector = selectors.status(txRequest.txStatus);
   const sendStatus = useSelector(service, sendStatusSelector);
-  const readyToSend = useSelector(service, selectors.readyToSend) && !!account;
+  const readyToSend =
+    useSelector(service, selectors.readyToSend) &&
+    !!account &&
+    !!callTransactionRequest.current;
   const input = useSelector(service, selectors.input);
 
   const balanceAssetSelected = useMemo<BN>(() => {
