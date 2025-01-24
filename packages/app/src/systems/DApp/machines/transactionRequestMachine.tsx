@@ -147,7 +147,7 @@ export const transactionRequestMachine = createMachine(
           },
         },
         after: {
-          1000: {
+          200: {
             target: 'simulatingTransaction',
           },
         },
@@ -222,7 +222,6 @@ export const transactionRequestMachine = createMachine(
     },
   },
   {
-    delays: { TIMEOUT: 1300 },
     actions: {
       reset: assign(() => ({})),
       assignGasLimitAndDefaultTips: assign((ctx, ev) => ({

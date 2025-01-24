@@ -122,7 +122,7 @@ export const sendMachine = createMachine(
           },
         },
         after: {
-          1000: {
+          200: {
             target: 'creatingTx',
           },
         },
