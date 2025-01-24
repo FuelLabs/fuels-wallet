@@ -100,10 +100,20 @@ export const transactionRequestMachine = createMachine(
     states: {
       idle: {
         on: {
-          START: {
-            actions: ['assignTxRequestData'],
-            target: 'estimatingGasLimitAndDefaultTips',
-          },
+          START: [
+            {
+              cond: (_ctx, event) =>
+                event.input?.fees?.maxGasLimit !== undefined &&
+                event.input?.fees?.fastTip !== undefined &&
+                event.input?.fees?.regularTip !== undefined,
+              actions: ['assignTxRequestData'],
+              target: 'simulatingTransaction',
+            },
+            {
+              actions: ['assignTxRequestData'],
+              target: 'estimatingGasLimitAndDefaultTips',
+            },
+          ],
         },
       },
       estimatingGasLimitAndDefaultTips: {
@@ -242,6 +252,7 @@ export const transactionRequestMachine = createMachine(
             favIconUrl,
             skipCustomFee,
             account,
+            fees,
           } = ev.input || {};
 
           if (!providerUrl) {
@@ -268,6 +279,7 @@ export const transactionRequestMachine = createMachine(
             title,
             favIconUrl,
             skipCustomFee,
+            fees,
           };
         },
         fees: (_ctx, ev) => {
