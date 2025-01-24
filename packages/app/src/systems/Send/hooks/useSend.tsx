@@ -297,7 +297,6 @@ export function useSend() {
       throw new Error('Params are required');
     }
 
-    console.log('fsk here account', !!account);
     txRequest.handlers.request({
       providerUrl,
       transactionRequest,
@@ -313,7 +312,6 @@ export function useSend() {
     });
   };
 
-  console.log('fsk here account is an obj', !!account);
   const service = useInterpret(() =>
     sendMachine.withConfig({
       actions: {
