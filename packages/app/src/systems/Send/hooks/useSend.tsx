@@ -328,7 +328,7 @@ export function useSend() {
   );
 
   const service = useInterpret(
-    () => sendMachine.withContext({ account }),
+    () => sendMachine.withConfig(sendMachineOpts),
     sendMachineOpts
   );
 
