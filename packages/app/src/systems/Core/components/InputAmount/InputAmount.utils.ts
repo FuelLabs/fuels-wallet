@@ -1,7 +1,6 @@
 import type { InputNumberProps } from '@fuel-ui/react';
 
 export const isAmountAllowed: InputNumberProps['isAllowed'] = ({ value }) => {
-  console.log(value);
   // Allow to clear the input
   if (!value) {
     return true;
