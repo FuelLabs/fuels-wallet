@@ -1,22 +1,21 @@
 import { cssObj } from '@fuel-ui/css';
 import {
   Avatar,
-  AvatarGenerated,
   Box,
+  ContentLoader,
   Icon,
   IconButton,
   Text,
 } from '@fuel-ui/react';
-import { ReceiptType } from 'fuels';
+import type { AssetFuelAmount } from '@fuel-wallet/types';
+import { useEffect, useState } from 'react';
 import { useAccounts } from '~/systems/Account';
-import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadata';
+import { AssetsAmount } from '~/systems/Asset';
+import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { shortAddress } from '~/systems/Core';
+import { NetworkService } from '~/systems/Network/services/network';
 import { TxCategory } from '../../../../types';
 import type { SimplifiedOperation } from '../../../../types';
-import { TxRecipientContractLogo } from '../../../TxRecipientCard/TxRecipientContractLogo';
-import { TxAddressDisplay } from './TxAddressDisplay';
-import { TxAssetDisplay } from './TxAssetDisplay';
-import { TxOperationNesting } from './TxOperationNesting';
 
 type TxOperationProps = {
   operation: SimplifiedOperation;
@@ -27,27 +26,95 @@ const SpacerComponent = () => {
   return <Box css={styles.spacer} />;
 };
 
+const AssetLoader = () => (
+  <ContentLoader width={120} height={20}>
+    <rect x="0" y="0" rx="4" ry="4" width="120" height="20" />
+  </ContentLoader>
+);
+
 export function TxOperation({
   operation,
   showNesting = true,
 }: TxOperationProps) {
   const metadata = operation.metadata;
-  const amount = metadata?.amount || operation.amount;
-  const assetId = metadata?.assetId || operation.assetId;
-  const hasAsset = Boolean(amount && assetId);
-  const depth = metadata?.depth || 0;
-  const receiptType = metadata?.receiptType;
   const isContract = operation.type === TxCategory.CONTRACTCALL;
   const isTransfer = operation.type === TxCategory.SEND;
-  const _contract = useContractMetadata(operation.from);
+  const depth = metadata?.depth || 0;
   const { accounts } = useAccounts();
+  const [assetsAmount, setAssetsAmount] = useState<AssetFuelAmount[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const accountFrom = accounts?.find(
     (acc) => acc.address.toLowerCase() === operation.from.toLowerCase()
   );
   const accountTo = accounts?.find(
     (acc) => acc.address.toLowerCase() === operation.to.toLowerCase()
   );
-  const _receiptTypeLabel = receiptType ? ReceiptType[receiptType] : null;
+
+  useEffect(() => {
+    const fetchAssetsAmount = async () => {
+      try {
+        const coins = [];
+        if (operation.amount && operation.assetId) {
+          coins.push({
+            amount: operation.amount,
+            assetId: operation.assetId,
+          });
+        } else if (metadata?.amount && metadata?.assetId) {
+          coins.push({
+            amount: metadata.amount,
+            assetId: metadata.assetId,
+          });
+        }
+
+        if (!coins.length) return;
+
+        setIsLoading(true);
+        const assetsCache = AssetsCache.getInstance();
+        const network = await NetworkService.getSelectedNetwork();
+        if (!network) return;
+
+        console.log('Fetching assets for:', coins);
+
+        const assetsWithAmount = await Promise.all(
+          coins.map(async (operationCoin) => {
+            const assetCached = await assetsCache.getAsset({
+              chainId: network.chainId,
+              assetId: operationCoin.assetId,
+              dbAssets: [],
+              save: false,
+            });
+
+            if (!assetCached) return null;
+
+            return {
+              type: 'fuel',
+              chainId: network.chainId,
+              name: assetCached.name,
+              symbol: assetCached.symbol,
+              decimals: assetCached.decimals,
+              icon: assetCached.icon,
+              assetId: operationCoin.assetId,
+              amount: operationCoin.amount,
+            } as AssetFuelAmount;
+          })
+        );
+
+        const filteredAssets = assetsWithAmount.filter(
+          (a): a is AssetFuelAmount => a !== null
+        );
+        console.log('Setting assets:', filteredAssets);
+        setAssetsAmount(filteredAssets);
+      } catch (error) {
+        console.error('Error fetching assets:', error);
+        setAssetsAmount([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAssetsAmount();
+  }, []); // Only run once when component mounts
 
   const getOperationType = () => {
     if (isContract) return 'Calls contract (sending funds)';
@@ -58,6 +125,10 @@ export function TxOperation({
   // For transfers, always show with 0 indentation
   // For contract calls, only show if root level (depth === 0) unless showNesting is true
   if (isContract && !showNesting && depth !== 0) return null;
+
+  const shouldShowAssetAmount =
+    (operation.amount && operation.assetId) ||
+    (metadata?.amount && metadata?.assetId);
 
   return (
     <Box.Flex css={styles.root}>
@@ -72,6 +143,7 @@ export function TxOperation({
             marginBottom: '$2',
           })}
         >
+          {/* From Address */}
           <Box.Flex justify={'flex-start'} align={'center'}>
             <Avatar.Generated
               role="img"
@@ -102,28 +174,33 @@ export function TxOperation({
               onPress={() => navigator.clipboard.writeText(operation.from)}
             />
           </Box.Flex>
+
+          {/* Spacer and Arrow */}
           <Box.Flex justify={'center'}>
             <SpacerComponent />
           </Box.Flex>
-          <Box></Box>
+          <Box />
           <Box.Flex justify={'center'} align={'center'} css={styles.blue}>
             <Icon icon="CircleArrowDown" size={16} />
           </Box.Flex>
           <Box.Flex justify={'flex-start'} align={'center'} css={styles.blue}>
             {getOperationType()}
           </Box.Flex>
+
+          {/* Asset Amount */}
           <Box.Flex justify={'center'}>
             <SpacerComponent />
           </Box.Flex>
           <Box>
-            {hasAsset && amount && assetId && (
-              <TxAssetDisplay
-                amount={amount.toString()}
-                assetId={assetId}
-                showLabel={isTransfer}
-              />
-            )}
+            {shouldShowAssetAmount &&
+              (isLoading ? (
+                <AssetLoader />
+              ) : assetsAmount.length > 0 ? (
+                <AssetsAmount amounts={assetsAmount} />
+              ) : null)}
           </Box>
+
+          {/* To Address */}
           <Box.Flex justify={'flex-start'} align={'center'}>
             <Avatar.Generated
               role="img"

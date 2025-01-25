@@ -11,7 +11,6 @@ export function TxViewSimple({
   isLoading,
   footer,
 }: SimplifiedTransactionViewProps) {
-  console.log('Rapid fire', transaction);
   return (
     <Box.Stack css={styles.root}>
       <TxHeaderSimple origin={transaction.origin} isLoading={isLoading} />

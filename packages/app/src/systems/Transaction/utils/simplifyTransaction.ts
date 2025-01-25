@@ -100,12 +100,11 @@ function transformOperation(
       type,
       from: from?.address || '',
       to: to?.address || '',
-      amount: asset.amount ? new BN(asset.amount) : undefined,
-      assetId: asset.assetId,
       isFromCurrentAccount,
+      amount: new BN(asset.amount),
+      assetId: asset.assetId,
       metadata: {
         depth,
-        receiptType: receipt?.type,
       },
     };
   }
@@ -117,7 +116,6 @@ function transformOperation(
     isFromCurrentAccount,
     metadata: {
       depth,
-      receiptType: receipt?.type,
     },
   };
 }
