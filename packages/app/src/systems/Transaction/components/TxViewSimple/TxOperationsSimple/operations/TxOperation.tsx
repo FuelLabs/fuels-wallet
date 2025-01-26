@@ -1,18 +1,24 @@
 import { cssObj } from '@fuel-ui/css';
 import {
   Avatar,
+  Badge,
   Box,
   ContentLoader,
+  Copyable,
+  Grid,
   Icon,
   IconButton,
   Text,
+  Tooltip,
 } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
-import { useEffect, useState } from 'react';
+import { bn } from 'fuels';
+import { useEffect, useRef, useState } from 'react';
 import { useAccounts } from '~/systems/Account';
 import { AssetsAmount } from '~/systems/Asset';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { shortAddress } from '~/systems/Core';
+import { formatAmount } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network/services/network';
 import { TxCategory } from '../../../../types';
 import type { SimplifiedOperation } from '../../../../types';
@@ -31,6 +37,96 @@ const AssetLoader = () => (
     <rect x="0" y="0" rx="4" ry="4" width="120" height="20" />
   </ContentLoader>
 );
+
+type AssetsAmountProps = {
+  amounts: AssetFuelAmount[];
+};
+
+const TxAssetsAmount = ({ amounts }: AssetsAmountProps) => {
+  const allEmptyAmounts = amounts.every((assetAmount) =>
+    bn(assetAmount.amount).eq(0)
+  );
+
+  return (
+    <>
+      {!allEmptyAmounts && (
+        <Box css={cssObj({ marginBottom: '$3' })}>
+          <Box.Stack gap="$1">
+            {amounts.map(
+              (assetAmount) =>
+                bn(assetAmount.amount).gt(0) && (
+                  <TxAssetsAmountItem
+                    assetAmount={assetAmount}
+                    key={assetAmount.name}
+                  />
+                )
+            )}
+          </Box.Stack>
+        </Box>
+      )}
+    </>
+  );
+};
+
+type AssetsAmountItemProps = {
+  assetAmount: AssetFuelAmount;
+};
+
+const TxAssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
+  const {
+    name = '',
+    symbol,
+    icon,
+    assetId,
+    decimals,
+    amount,
+    isNft,
+  } = assetAmount || {};
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
+
+  const formatted = formatAmount({
+    amount,
+    options: { units: decimals || 0, precision: decimals || 0 },
+  });
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const amountElement = containerRef.current.querySelector('.amount-value');
+      if (amountElement) {
+        setIsTruncated(amountElement.scrollWidth > amountElement.clientWidth);
+      }
+    }
+  }, []);
+
+  return (
+    <Box.Flex css={styles.asset} key={assetId}>
+      {icon ? (
+        <Avatar name={name} src={icon} size="xsm" />
+      ) : (
+        <Avatar.Generated hash={assetId} size="xsm" />
+      )}
+      <Box css={styles.amountContainer}>
+        <Tooltip
+          content={formatted}
+          delayDuration={0}
+          open={isTruncated ? undefined : false}
+        >
+          <Text as="span" className="amount-value">
+            {formatted}
+          </Text>
+        </Tooltip>
+        <Text as="span">{symbol}</Text>
+        {isNft && (
+          <Badge variant="ghost" intent="primary" css={styles.assetNft}>
+            NFT
+          </Badge>
+        )}
+      </Box>
+    </Box.Flex>
+  );
+};
 
 export function TxOperation({
   operation,
@@ -132,15 +228,16 @@ export function TxOperation({
 
   return (
     <Box.Flex css={styles.root}>
-      <Box.Stack gap="$2" css={styles.contentCol}>
+      <Box css={styles.contentCol}>
         <Box.Flex
           css={cssObj({
             display: 'grid',
             gridTemplateColumns: 'auto 1fr',
             gridTemplateRows: 'repeat(5, auto)',
-            gap: '$2',
             width: '100%',
             marginBottom: '$2',
+            columnGap: '$2',
+            rowGap: '$1',
           })}
         >
           {/* From Address */}
@@ -181,7 +278,7 @@ export function TxOperation({
           </Box.Flex>
           <Box />
           <Box.Flex justify={'center'} align={'center'} css={styles.blue}>
-            <Icon icon="CircleArrowDown" size={16} />
+            <Icon icon="CircleArrowDown" size={20} />
           </Box.Flex>
           <Box.Flex justify={'flex-start'} align={'center'} css={styles.blue}>
             {getOperationType()}
@@ -196,7 +293,7 @@ export function TxOperation({
               (isLoading ? (
                 <AssetLoader />
               ) : assetsAmount.length > 0 ? (
-                <AssetsAmount amounts={assetsAmount} />
+                <TxAssetsAmount amounts={assetsAmount} />
               ) : null)}
           </Box>
 
@@ -232,7 +329,7 @@ export function TxOperation({
             />
           </Box.Flex>
         </Box.Flex>
-      </Box.Stack>
+      </Box>
     </Box.Flex>
   );
 }
@@ -266,7 +363,6 @@ const styles = {
     color: '$gray8',
   }),
   spacer: cssObj({
-    borderLeft: '1px solid #D9D9D9',
     minHeight: '14px',
     width: '2px',
     height: '100%',
@@ -292,4 +388,28 @@ const styles = {
     fontWeight: '$medium',
     color: '#646464',
   }),
+  header: {
+    alignItems: 'center',
+    gap: '$2',
+    mb: '$3',
+  },
+  title: {
+    fontSize: '$sm',
+    margin: 0,
+  },
+  asset: {
+    alignItems: 'center',
+    gap: '$2',
+  },
+  assetNft: {
+    padding: '$1 $2',
+  },
+  amountContainer: {
+    fontWeight: '$semibold',
+    color: '#202020',
+    fontSize: '$sm',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
 };
