@@ -104,4 +104,16 @@ const IGNORED_ERRORS: IgnoredError[] = [
     comparison: 'partial',
     action: 'hide',
   },
+  {
+    value: 'Error fetching asset from db',
+    field: 'message',
+    comparison: 'partial',
+    action: 'hide',
+  },
+  {
+    value: 'React Error',
+    field: 'message',
+    comparison: 'partial',
+    action: 'hide',
+  },
 ];
