@@ -1,6 +1,7 @@
 import type { StoredFuelWalletError } from '@fuel-wallet/types';
 import * as Sentry from '@sentry/react';
 import { db } from '~/systems/Core/utils/database';
+import { captureException } from '~/systems/Error/utils/captureException';
 import { parseFuelError } from '../utils';
 
 export class ReportErrorService {
@@ -12,10 +13,7 @@ export class ReportErrorService {
       if (typeof window !== 'undefined' && (window as any).playwright) {
         return;
       }
-      Sentry.captureException(e.error, {
-        extra: e.extra,
-        tags: { id: e.id, manual: true },
-      });
+      captureException(e.error, e.extra);
     }
   }
 
