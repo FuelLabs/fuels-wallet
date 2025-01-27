@@ -51,7 +51,9 @@ export class ReportErrorService {
   }
 
   async getErrors(): Promise<StoredFuelWalletError[]> {
-    return db.errors.toArray();
+    return (await db.errors.toArray()).filter(
+      (e) => !getErrorIgnoreData(e?.error)?.action
+    );
   }
 
   async clearErrors() {
