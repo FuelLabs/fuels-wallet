@@ -103,9 +103,9 @@ export const transactionRequestMachine = createMachine(
           START: [
             {
               cond: (_ctx, event) =>
-                event.input?.fees?.maxGasLimit !== undefined &&
-                event.input?.fees?.fastTip !== undefined &&
-                event.input?.fees?.regularTip !== undefined,
+                event.input?.fees?.maxGasLimit != null &&
+                event.input?.fees?.fastTip != null &&
+                event.input?.fees?.regularTip != null,
               actions: ['assignTxRequestData'],
               target: 'simulatingTransaction',
             },
