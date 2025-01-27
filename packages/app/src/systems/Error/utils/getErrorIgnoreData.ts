@@ -74,4 +74,34 @@ const IGNORED_ERRORS: IgnoredError[] = [
     comparison: 'partial',
     action: 'hide',
   },
+  {
+    value: 'Provider URL',
+    field: 'message',
+    comparison: 'partial',
+    action: 'hide',
+  },
+  {
+    value: 'The above error occurred in the',
+    field: 'message',
+    comparison: 'partial',
+    action: 'hide',
+  },
+  {
+    value: '[vite]',
+    field: 'message',
+    comparison: 'partial',
+    action: 'ignore',
+  },
+  {
+    value: 'Function components cannot be given refs.',
+    field: 'message',
+    comparison: 'partial',
+    action: 'hide',
+  },
+  {
+    value: 'Encountered two children with the same key',
+    field: 'message',
+    comparison: 'partial',
+    action: 'hide',
+  },
 ];
