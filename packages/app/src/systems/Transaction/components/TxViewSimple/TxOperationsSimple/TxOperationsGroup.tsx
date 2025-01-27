@@ -1,6 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon, Text } from '@fuel-ui/react';
 import { useState } from 'react';
+import { animations } from '~/systems/Core';
+import { MotionBox } from '~/systems/Core/components/Motion';
 import type { SimplifiedOperation } from '../../../types';
 import { TxOperation } from './operations/TxOperation';
 
@@ -39,8 +41,8 @@ export function TxOperationsGroup({
         />
       </Box.Flex>
       {isExpanded && (
-        <Box.Stack
-          gap="$1"
+        <MotionBox
+          {...animations.slideInTop()}
           css={styles.content}
           onClick={(e) => e.stopPropagation()}
         >
@@ -51,7 +53,7 @@ export function TxOperationsGroup({
               showNesting={showNesting}
             />
           ))}
-        </Box.Stack>
+        </MotionBox>
       )}
     </Box.Stack>
   );
@@ -81,7 +83,11 @@ const styles = {
     color: '#202020',
     fontWeight: '$medium',
   }),
-  content: cssObj({}),
+  content: cssObj({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '$1',
+  }),
   count: cssObj({
     backgroundColor: 'white',
     borderRadius: '$full',
