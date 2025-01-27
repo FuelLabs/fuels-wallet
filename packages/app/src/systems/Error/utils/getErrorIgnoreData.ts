@@ -57,6 +57,24 @@ const IGNORED_ERRORS: IgnoredError[] = [
     action: 'hide',
   },
   {
+    value: 'Browser is shutting down.',
+    field: 'message',
+    comparison: 'partial',
+    action: 'hide',
+  },
+  {
+    value: 'is not a function',
+    field: 'message',
+    comparison: 'partial',
+    action: 'hide',
+  },
+  {
+    value: 'Asset ID already exists',
+    field: 'message',
+    comparison: 'partial',
+    action: 'ignore',
+  },
+  {
     value: 'Error fetching asset from db',
     field: 'message',
     comparison: 'partial',
@@ -112,6 +130,12 @@ const IGNORED_ERRORS: IgnoredError[] = [
   },
   {
     value: 'React Error',
+    field: 'message',
+    comparison: 'partial',
+    action: 'hide',
+  },
+  {
+    value: 'PopUp timed out waiting for event',
     field: 'message',
     comparison: 'partial',
     action: 'hide',
