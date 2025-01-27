@@ -350,7 +350,8 @@ export const transactionRequestMachine = createMachine(
         showError: false,
         maxAttempts: 1,
         async fetch() {
-          return await TxService.estimateGasLimitAndDefaultTips();
+          const estimated = await TxService.estimateGasLimitAndDefaultTips();
+          return estimated;
         },
       }),
       simulateTransaction: FetchMachine.create<
