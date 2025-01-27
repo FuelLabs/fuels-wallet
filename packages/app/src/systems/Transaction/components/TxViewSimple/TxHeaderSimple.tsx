@@ -21,7 +21,7 @@ export function TxHeaderSimple({ isLoading }: TxHeaderSimpleProps) {
       {/* <Text as="h2">Review Transaction</Text> */}
       <Box css={styles.warning}>
         <Icon icon="ExclamationCircle" />
-        <Text as="h1">
+        <Text>
           Double-check the details of your transaction before submitting.
         </Text>
       </Box>
@@ -47,7 +47,7 @@ const styles = {
     marginBottom: '$4',
     backgroundColor: '$white',
     borderBottom: '1px solid $border',
-    padding: '$4',
+    padding: '12px 18px',
 
     '.fuel_Text': {
       '&[as="h2"]': {
@@ -61,21 +61,10 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '$2',
-    fontSize: '$sm',
+    fontSize: '12px',
+    color: '#646464',
     fontWeight: '$normal',
     marginBottom: '$2',
-
-    '.fuel_Text': {
-      '&[as="h1"]': {
-        fontSize: '$sm',
-        margin: 0,
-        fontWeight: '$normal',
-      },
-    },
-
-    '.fuel_Icon': {
-      color: '$intentsWarning10',
-    },
   }),
   root: cssObj({
     padding: '$3',
