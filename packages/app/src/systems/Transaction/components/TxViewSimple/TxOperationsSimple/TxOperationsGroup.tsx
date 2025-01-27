@@ -28,14 +28,15 @@ export function TxOperationsGroup({
   return (
     <Box.Stack gap="$2" css={styles.root}>
       <Box.Flex as="button" onClick={handleClick} css={styles.header}>
-        <Icon
-          icon={isExpanded ? 'CaretDown' : 'CaretRight'}
-          size={16}
-          css={styles.icon}
-        />
+        <Text css={styles.count}>{operations.length}</Text>
         <Text fontSize="sm" css={styles.title}>
-          {title} ({operations.length})
+          {title}
         </Text>
+        <Icon
+          icon="ChevronRight"
+          css={styles.chevron}
+          data-expanded={isExpanded}
+        />
       </Box.Flex>
       {isExpanded && (
         <Box.Stack
@@ -58,9 +59,9 @@ export function TxOperationsGroup({
 
 const styles = {
   root: cssObj({
-    borderTop: '1px solid $border',
     marginTop: '$2',
-    paddingTop: '$2',
+    backgroundColor: '#E0E0E0',
+    borderRadius: '12px',
   }),
   header: cssObj({
     display: 'flex',
@@ -68,23 +69,37 @@ const styles = {
     gap: '$2',
     padding: '$2',
     cursor: 'pointer',
-    backgroundColor: 'transparent',
     border: 'none',
     width: '100%',
-    borderRadius: '$md',
     transition: 'all 0.2s ease',
-    '&:hover': {
-      backgroundColor: '$gray3',
-    },
+    backgroundColor: 'transparent',
   }),
   icon: cssObj({
-    color: '$gray8',
+    color: '#202020',
   }),
   title: cssObj({
-    color: '$gray8',
+    color: '#202020',
     fontWeight: '$medium',
   }),
-  content: cssObj({
-    paddingLeft: '$6',
+  content: cssObj({}),
+  count: cssObj({
+    backgroundColor: 'white',
+    borderRadius: '$full',
+    padding: '$1',
+    color: '#202020',
+    border: '1.5px solid #8D8D8D',
+    width: '20px',
+    height: '20px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }),
+  chevron: cssObj({
+    transform: 'rotate(0deg)',
+    transition: 'transform 0.2s ease',
+
+    '&[data-expanded=true]': {
+      transform: 'rotate(90deg)',
+    },
   }),
 };
