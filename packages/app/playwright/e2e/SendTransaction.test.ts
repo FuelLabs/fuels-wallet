@@ -346,13 +346,12 @@ test.describe('SendTransaction', () => {
     // Fee values change
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    const maxAmountAfterFee = await getInputByName(page, 'amount').inputValue();
-
     // Submit transaction
 
     const btnLocator = getButtonByText(page, 'Review');
 
     await expectButtonToBeEnabled(btnLocator);
+    const maxAmountAfterFee = await getInputByName(page, 'amount').inputValue();
     await btnLocator.click();
 
     // Approve transaction
