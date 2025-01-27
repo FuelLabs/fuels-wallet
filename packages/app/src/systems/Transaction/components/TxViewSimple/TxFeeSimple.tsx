@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import {
   Box,
+  Button,
   ContentLoader,
   RadioGroup,
   RadioGroupItem,
@@ -8,7 +9,7 @@ import {
 } from '@fuel-ui/react';
 import type { BN } from 'fuels';
 import { DEFAULT_PRECISION, bn } from 'fuels';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { formatAmount } from '~/systems/Core';
 import { TxService } from '../../services';
 import type { SimplifiedFee } from '../../types';
@@ -16,21 +17,41 @@ import type { SimplifiedFee } from '../../types';
 type TxFeeSimpleProps = {
   fee: SimplifiedFee;
   isLoading?: boolean;
+  onCustomFees?: () => void;
+  onFeeSelect?: (tip: BN) => void;
 };
 
 type FeeOption = 'regular' | 'fast';
 
-export function TxFeeSimple({ fee, isLoading }: TxFeeSimpleProps) {
+export function TxFeeSimple({
+  fee,
+  isLoading,
+  onCustomFees,
+  onFeeSelect,
+}: TxFeeSimpleProps) {
   const [selectedOption, setSelectedOption] = useState<FeeOption>('regular');
   const [tips, setTips] = useState<{ regularTip: BN; fastTip: BN }>();
+  const previousDefaultTip = useRef<BN>();
 
   useEffect(() => {
     async function getTips() {
       const { regularTip, fastTip } = await TxService.estimateDefaultTips();
       setTips({ regularTip, fastTip });
+      // Set initial tip
+      previousDefaultTip.current = regularTip;
+      onFeeSelect?.(regularTip);
     }
     getTips();
-  }, []);
+  }, [onFeeSelect]);
+
+  const handleOptionSelect = (option: FeeOption) => {
+    setSelectedOption(option);
+    if (!tips) return;
+
+    const newTip = option === 'regular' ? tips.regularTip : tips.fastTip;
+    previousDefaultTip.current = newTip;
+    onFeeSelect?.(newTip);
+  };
 
   if (isLoading) return <TxFeeSimple.Loader />;
 
@@ -56,14 +77,14 @@ export function TxFeeSimple({ fee, isLoading }: TxFeeSimpleProps) {
             <Box.Flex
               key={option.id}
               css={styles.option}
-              onClick={() => setSelectedOption(option.id as FeeOption)}
+              onClick={() => handleOptionSelect(option.id as FeeOption)}
             >
               <RadioGroupItem
                 value={option.id}
                 checked={selectedOption === option.id}
                 label={option.name}
                 labelCSS={styles.optionLabel}
-                onChange={() => setSelectedOption(option.id as FeeOption)}
+                onChange={() => handleOptionSelect(option.id as FeeOption)}
               />
 
               <Text css={styles.optionContent}>
@@ -77,6 +98,14 @@ export function TxFeeSimple({ fee, isLoading }: TxFeeSimpleProps) {
             </Box.Flex>
           ))}
         </RadioGroup>
+        <Button
+          size="xs"
+          variant="link"
+          onPress={onCustomFees}
+          css={styles.customFeesBtn}
+        >
+          Use custom fees
+        </Button>
       </Box.Stack>
     </Box>
   );
@@ -137,5 +166,11 @@ const styles = {
     height: '16px',
     margin: 0,
     width: '16px',
+  }),
+  customFeesBtn: cssObj({
+    alignSelf: 'center',
+    color: '$accent11',
+    fontSize: '$sm',
+    mt: '$2',
   }),
 };
