@@ -263,17 +263,9 @@ test.describe('ReportError', () => {
         },
       });
     });
-    await expect
-      .poll(
-        async () => {
-          return (await getPageErrors(page)).find(
-            (e) => e.error.name === 'React Error'
-          );
-        },
-        {
-          timeout: 10000,
-        }
-      )
-      .toBeUndefined();
+    await getByAriaLabel(page, 'Menu').click();
+    expect(
+      await page.locator(`[data-key="hasErrors"]`).isVisible()
+    ).toBeFalsy();
   });
 });
