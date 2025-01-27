@@ -1,7 +1,7 @@
 import type { StoredFuelWalletError } from '@fuel-wallet/types';
-import * as Sentry from '@sentry/react';
 import { db } from '~/systems/Core/utils/database';
 import { captureException } from '~/systems/Error/utils/captureException';
+import { getErrorIgnoreData } from '~/systems/Error/utils/getErrorIgnoreData';
 import { parseFuelError } from '../utils';
 
 export class ReportErrorService {
@@ -18,21 +18,27 @@ export class ReportErrorService {
   }
 
   static async saveError(error: Error) {
-    const parsedError = parseFuelError(error);
-    if (!parsedError) {
-      console.warn(`Can't save error without a message`);
-      return;
-    }
-    if (!('id' in parsedError)) {
-      console.warn(`Can't save error without an id`);
-      return;
-    }
-    if (!db.isOpen() || db.hasBeenClosed()) {
-      console.warn('Error saving error: db is closed');
-      return;
-    }
-
     try {
+      const parsedError = parseFuelError(error);
+      const ignoreData = getErrorIgnoreData(parsedError?.error);
+      if (!parsedError) {
+        console.warn(`Can't save error without a message`);
+        return;
+      }
+      if (!('id' in parsedError)) {
+        console.warn(`Can't save error without an id`);
+        return;
+      }
+      if (ignoreData?.action === 'ignore') return;
+      if (ignoreData?.action === 'hide') {
+        // Directly report to Sentry and exit
+        captureException(parsedError.error, parsedError.extra);
+        return;
+      }
+      if (!db.isOpen() || db.hasBeenClosed()) {
+        console.warn('Error saving error: db is closed');
+        return;
+      }
       return await db.errors.add(parsedError);
     } catch (e) {
       console.warn('Failed to save error', e);
