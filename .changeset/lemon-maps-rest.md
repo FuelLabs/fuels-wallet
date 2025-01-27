@@ -1,6 +1,6 @@
 ---
-"@fuel-wallet/connections": patch
-"fuels-wallet": patch
+"@fuels/playwright-utils": minor
+"fuels-wallet": minor
 ---
 
-Sped up gas calculation in SendMachine and TxRequestMachine by merging calculations of default tip and gas limit into a single parallelized promise.
+feat: performance improvement from rework on send transaction machine flows
