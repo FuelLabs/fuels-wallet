@@ -1,21 +1,82 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, ContentLoader, Text } from '@fuel-ui/react';
+import {
+  Box,
+  ContentLoader,
+  RadioGroup,
+  RadioGroupItem,
+  Text,
+} from '@fuel-ui/react';
+import type { BN } from 'fuels';
+import { DEFAULT_PRECISION, bn } from 'fuels';
+import { useEffect, useState } from 'react';
+import { formatAmount } from '~/systems/Core';
+import { TxService } from '../../services';
 import type { SimplifiedFee } from '../../types';
-import { TxAssetAmount } from './TxOperationsSimple/operations/TxAssetAmount';
 
 type TxFeeSimpleProps = {
   fee: SimplifiedFee;
   isLoading?: boolean;
 };
 
+type FeeOption = 'regular' | 'fast';
+
 export function TxFeeSimple({ fee, isLoading }: TxFeeSimpleProps) {
+  const [selectedOption, setSelectedOption] = useState<FeeOption>('regular');
+  const [tips, setTips] = useState<{ regularTip: BN; fastTip: BN }>();
+
+  useEffect(() => {
+    async function getTips() {
+      const { regularTip, fastTip } = await TxService.estimateDefaultTips();
+      setTips({ regularTip, fastTip });
+    }
+    getTips();
+  }, []);
+
   if (isLoading) return <TxFeeSimple.Loader />;
+
+  const options = [
+    {
+      id: 'regular',
+      name: 'Regular',
+      fee: tips ? fee.network.add(tips.regularTip) : fee.network,
+    },
+    {
+      id: 'fast',
+      name: 'Fast',
+      fee: tips ? fee.network.add(tips.fastTip) : fee.network,
+    },
+  ];
 
   return (
     <Box css={styles.content}>
+      <Text css={styles.title}>Fee (network)</Text>
       <Box.Stack gap="$2">
-        <Text css={styles.title}>Network Fee</Text>
-        <TxAssetAmount amount={fee.network.toString()} showAssetId={false} />
+        <RadioGroup>
+          {options.map((option) => (
+            <Box.Flex
+              key={option.id}
+              css={styles.option}
+              onClick={() => setSelectedOption(option.id as FeeOption)}
+            >
+              <RadioGroupItem
+                value={option.id}
+                checked={selectedOption === option.id}
+                label={option.name}
+                labelCSS={styles.optionLabel}
+                onChange={() => setSelectedOption(option.id as FeeOption)}
+              />
+
+              <Text css={styles.optionContent}>
+                {option.fee
+                  ? `${option.fee.format({
+                      minPrecision: DEFAULT_PRECISION,
+                      precision: DEFAULT_PRECISION,
+                    })} ETH`
+                  : '--'}
+              </Text>
+            </Box.Flex>
+          ))}
+        </RadioGroup>
       </Box.Stack>
     </Box>
   );
@@ -44,5 +105,37 @@ const styles = {
   title: cssObj({
     fontSize: '$sm',
     fontWeight: '$medium',
+    color: '#202020',
+  }),
+  option: cssObj({
+    alignItems: 'center',
+    backgroundColor: 'white',
+    border: '1px solid #e0e0e0',
+    borderRadius: '10px',
+    color: '#646464',
+    cursor: 'pointer',
+    fontSize: '13px',
+    gap: '$3',
+    justifyContent: 'space-between',
+    padding: '$3',
+    transition: 'all 0.2s ease',
+
+    '&:hover': {
+      backgroundColor: '#f0f0f0',
+    },
+  }),
+  optionContent: cssObj({
+    color: '#202020',
+  }),
+  optionLabel: cssObj({
+    color: '#202020',
+    fontSize: '13px',
+    fontWeight: '$medium',
+  }),
+  radio: cssObj({
+    cursor: 'pointer',
+    height: '16px',
+    margin: 0,
+    width: '16px',
   }),
 };
