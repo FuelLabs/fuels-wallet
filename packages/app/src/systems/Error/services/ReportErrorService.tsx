@@ -60,6 +60,25 @@ export class ReportErrorService {
     await db.errors.clear();
   }
 
+  async handleAndRemoveOldIgnoredErrors(errors: StoredFuelWalletError[]) {
+    const errorsBeingRemoved: Array<Promise<unknown>> = [];
+    // Convert to for of
+    for (const e of errors) {
+      const errorIgnoreData = getErrorIgnoreData(e?.error);
+      if (!errorIgnoreData?.action) {
+        errorsBeingRemoved.push(
+          new Promise((resolve) => {
+            if (errorIgnoreData?.action === 'hide') {
+              captureException(e.error, e.extra);
+            }
+            this.dismissError(e.id).finally(() => resolve(true));
+          })
+        );
+      }
+    }
+    await Promise.all(errorsBeingRemoved);
+  }
+
   async dismissError(key: string) {
     if (!key) return;
     db.errors.delete(key);
