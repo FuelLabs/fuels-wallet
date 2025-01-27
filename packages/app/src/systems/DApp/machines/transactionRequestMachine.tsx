@@ -51,9 +51,12 @@ type MachineContext = {
 };
 
 type PrepareInputForSimulateTransactionReturn = {
-  regularTip: BN;
-  fastTip: BN;
-  maxGasLimit: BN;
+  estimated: {
+    regularTip: BN;
+    fastTip: BN;
+    maxGasLimit: BN;
+  };
+  account: AccountWithBalance;
 };
 
 type SimulateTransactionReturn = {
@@ -135,7 +138,7 @@ export const transactionRequestMachine = createMachine(
               target: 'failed',
             },
             {
-              actions: ['assignGasLimitAndDefaultTips'],
+              actions: ['assignPreflightData'],
               target: 'simulatingTransaction',
             },
           ],
@@ -243,12 +246,13 @@ export const transactionRequestMachine = createMachine(
   {
     actions: {
       reset: assign(() => ({})),
-      assignGasLimitAndDefaultTips: assign((ctx, ev) => ({
+      assignPreflightData: assign((ctx, ev) => ({
+        account: ev.data.account,
         fees: {
           ...ctx.fees,
-          regularTip: ev.data.regularTip,
-          fastTip: ev.data.fastTip,
-          maxGasLimit: ev.data.maxGasLimit,
+          regularTip: ev.data.estimated.regularTip,
+          fastTip: ev.data.estimated.fastTip,
+          maxGasLimit: ev.data.estimated.maxGasLimit,
         },
       })),
       assignTxRequestData: assign({
@@ -354,7 +358,7 @@ export const transactionRequestMachine = createMachine(
       prepareInputForSimulateTransaction: FetchMachine.create<
         { address?: string; account?: AccountWithBalance },
         {
-          estimated: PrepareInputForSimulateTransactionReturn;
+          estimated: PrepareInputForSimulateTransactionReturn['estimated'];
           account: AccountWithBalance;
         }
       >({
