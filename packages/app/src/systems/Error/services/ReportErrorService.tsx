@@ -69,7 +69,9 @@ export class ReportErrorService {
             if (errorIgnoreData?.action === 'hide') {
               captureException(e.error, e.extra);
             }
-            this.dismissError(e.id).finally(() => resolve(true));
+            return resolve(
+              this.dismissError(e.id).finally(() => resolve(true))
+            );
           })
         );
       }
