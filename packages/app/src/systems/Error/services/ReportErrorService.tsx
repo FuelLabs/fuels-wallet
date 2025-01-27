@@ -51,9 +51,7 @@ export class ReportErrorService {
   }
 
   async getErrors(): Promise<StoredFuelWalletError[]> {
-    return (await db.errors.toArray()).filter(
-      (e) => !getErrorIgnoreData(e?.error)?.action
-    );
+    return await db.errors.toArray();
   }
 
   async clearErrors() {
@@ -65,7 +63,7 @@ export class ReportErrorService {
     // Convert to for of
     for (const e of errors) {
       const errorIgnoreData = getErrorIgnoreData(e?.error);
-      if (!errorIgnoreData?.action) {
+      if (errorIgnoreData?.action) {
         errorsBeingRemoved.push(
           new Promise((resolve) => {
             if (errorIgnoreData?.action === 'hide') {

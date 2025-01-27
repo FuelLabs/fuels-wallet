@@ -179,7 +179,9 @@ export const reportErrorMachine = createMachine(
         const errors = (await context.reportErrorService.getErrors()).filter(
           (e) => !getErrorIgnoreData(e?.error)?.action
         );
-        context.reportErrorService.handleAndRemoveOldIgnoredErrors(errors);
+        await context.reportErrorService.handleAndRemoveOldIgnoredErrors(
+          errors
+        );
 
         return {
           hasErrors,
