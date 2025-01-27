@@ -17,7 +17,8 @@ export function TxHeaderSimple({ isLoading }: TxHeaderSimpleProps) {
 
   return (
     <Box css={styles.header}>
-      <Text as="h2">Review Transaction</Text>
+      {/* Disabled while the new Wallet header is not implemented */}
+      {/* <Text as="h2">Review Transaction</Text> */}
       <Box css={styles.warning}>
         <Icon icon="ExclamationCircle" />
         <Text as="h1">

@@ -55,8 +55,7 @@ const styles = {
   }),
   content: cssObj({
     flex: 1,
-    overflowY: 'auto',
-    padding: '$4',
+    padding: '$1',
   }),
 };
 
