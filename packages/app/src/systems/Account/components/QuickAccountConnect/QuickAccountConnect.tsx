@@ -1,3 +1,5 @@
+'use client';
+
 import { cssObj } from '@fuel-ui/css';
 import {
   Alert,
@@ -61,7 +63,9 @@ export const QuickAccountConnect = () => {
   const onDismiss = () => {
     if (!origin || !account) return;
     setDismissed(true);
-    localStorage.setItem(getDismissKey(account.address, origin.full), 'true');
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(getDismissKey(account.address, origin.full), 'true');
+    }
   };
 
   useEffect(() => {
