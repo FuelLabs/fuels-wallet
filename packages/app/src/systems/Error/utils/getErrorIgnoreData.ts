@@ -11,18 +11,23 @@ type IgnoredError = {
 export function getErrorIgnoreData(
   error: Error | undefined
 ): IgnoredError | undefined {
-  return IGNORED_ERRORS.find((filter) => {
-    const errorValue = error?.[filter.field] as string | undefined;
+  try {
+    return IGNORED_ERRORS.find((filter) => {
+      const errorValue = error?.[filter.field] as string | undefined;
 
-    switch (filter.comparison) {
-      case 'exact':
-        return filter.value === errorValue;
-      case 'startsWith':
-        return errorValue?.startsWith(filter.value);
-      case 'partial':
-        return errorValue?.includes(filter.value);
-    }
-  });
+      switch (filter.comparison) {
+        case 'exact':
+          return filter.value === errorValue;
+        case 'startsWith':
+          return errorValue?.startsWith(filter.value);
+        case 'partial':
+          return errorValue?.includes(filter.value);
+      }
+    });
+  } catch (error) {
+    console.warn(error);
+    return undefined;
+  }
 }
 
 const IGNORED_ERRORS: IgnoredError[] = [
