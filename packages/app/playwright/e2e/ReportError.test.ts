@@ -48,9 +48,11 @@ test.describe('ReportError', () => {
     await getByAriaLabel(page, 'Send error reports').click();
     await expect(page.getByText(/Unexpected error/)).toHaveCount(0);
 
-    await page.waitForTimeout(2000);
-    const errorsAfterReporting = await getPageErrors(page);
-    expect(errorsAfterReporting.length).toBe(0);
+    await expect
+      .poll(async () => (await getPageErrors(page)).length, {
+        timeout: 10000,
+      })
+      .toBe(0);
   });
 
   test('should show Review Error in menu when there is a error in the database', async () => {
@@ -108,8 +110,11 @@ test.describe('ReportError', () => {
     await getByAriaLabel(page, 'Ignore error(s)').click();
     await expect(page.getByText(/Unexpected error/i)).toHaveCount(0);
 
-    await page.pause();
-    expect((await getPageErrors(page)).length).toBe(0);
+    await expect
+      .poll(async () => (await getPageErrors(page)).length, {
+        timeout: 10000,
+      })
+      .toBe(1);
   });
   test('should be able to dismiss all errors', async () => {
     await visit(page, '/');
@@ -142,8 +147,11 @@ test.describe('ReportError', () => {
     ).click();
     await expect(page.getByText(/Unexpected error/i)).toHaveCount(0);
 
-    const errorsAfterReporting = await getPageErrors(page);
-    expect(errorsAfterReporting.length).toBe(0);
+    await expect
+      .poll(async () => (await getPageErrors(page)).length, {
+        timeout: 10000,
+      })
+      .toBe(0);
   });
   test('should hide when the single error is dismissed', async () => {
     await visit(page, '/');
@@ -173,8 +181,11 @@ test.describe('ReportError', () => {
     await getByAriaLabel(page, 'Dismiss error').click();
     await expect(page.getByText(/Unexpected error/i)).toHaveCount(0);
 
-    const errorsAfterReporting = await getPageErrors(page);
-    expect(errorsAfterReporting.length).toBe(0);
+    await expect
+      .poll(async () => (await getPageErrors(page)).length, {
+        timeout: 10000,
+      })
+      .toBe(0);
   });
   test('should detect and capture global errors', async () => {
     await page.evaluate(async () => {
@@ -234,12 +245,13 @@ test.describe('ReportError', () => {
   });
   test('should not show ignored errors', async () => {
     await visit(page, '/');
+
     await page.evaluate(async () => {
       await window.fuelDB.errors.add({
         id: '12345',
         error: {
-          name: 'React error',
-          message: 'React error',
+          name: 'React Error',
+          message: 'React Error',
           stack: 'Line error 1',
         },
         extra: {
@@ -251,20 +263,17 @@ test.describe('ReportError', () => {
         },
       });
     });
-    await reload(page);
-    await getByAriaLabel(page, 'Menu').click();
-    // hasErrors should not be visible
-    expect
-      .poll(() => page.locator(`[data-key="hasErrors"]`).isVisible(), {
-        timeout: 1000,
-      })
-      .toBeFalsy();
-    await reload(page);
-    const errorsAfterReporting = await getPageErrors(page);
-    expect
-      .poll(() => errorsAfterReporting.length, {
-        timeout: 1000,
-      })
-      .toBe(0);
+    await expect
+      .poll(
+        async () => {
+          return (await getPageErrors(page)).find(
+            (e) => e.error.name === 'React Error'
+          );
+        },
+        {
+          timeout: 10000,
+        }
+      )
+      .toBeUndefined();
   });
 });

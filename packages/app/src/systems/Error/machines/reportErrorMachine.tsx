@@ -125,6 +125,9 @@ export const reportErrorMachine = createMachine(
               target: 'idle',
             },
           ],
+          onError: {
+            target: 'idle',
+          },
         },
       },
       reporting: {

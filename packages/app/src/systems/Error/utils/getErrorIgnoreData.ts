@@ -131,6 +131,12 @@ const IGNORED_ERRORS: IgnoredError[] = [
   {
     value: 'React Error',
     field: 'name',
+    comparison: 'exact',
+    action: 'hide',
+  },
+  {
+    value: 'React Error',
+    field: 'message',
     comparison: 'partial',
     action: 'hide',
   },
