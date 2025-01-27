@@ -2,7 +2,9 @@ import type { Account, AccountWithBalance } from '@fuel-wallet/types';
 import type { BN, TransactionRequest, TransactionSummary } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
+import { AccountService } from '~/systems/Account';
 import { FetchMachine, assignErrorMessage, delay } from '~/systems/Core';
+import { NetworkService } from '~/systems/Network';
 import type { GroupedErrors, VMApiError } from '~/systems/Transaction';
 import type { TxInputs } from '~/systems/Transaction/services';
 import { TxService } from '~/systems/Transaction/services';
@@ -25,6 +27,7 @@ type MachineContext = {
     isOriginRequired?: boolean;
     providerUrl?: string;
     transactionRequest?: TransactionRequest;
+    address?: string;
     account?: AccountWithBalance;
     tip?: BN;
     gasLimit?: BN;
@@ -47,7 +50,7 @@ type MachineContext = {
   };
 };
 
-type EstimateGasLimitAndDefaultTipsReturn = {
+type PrepareInputForSimulateTransactionReturn = {
   regularTip: BN;
   fastTip: BN;
   maxGasLimit: BN;
@@ -64,8 +67,8 @@ type MachineServices = {
   send: {
     data: TransactionSummary;
   };
-  estimatingGasLimitAndDefaultTips: {
-    data: EstimateGasLimitAndDefaultTipsReturn;
+  prepareInputForSimulateTransaction: {
+    data: PrepareInputForSimulateTransactionReturn;
   };
   simulateTransaction: {
     data: SimulateTransactionReturn;
@@ -111,15 +114,21 @@ export const transactionRequestMachine = createMachine(
             },
             {
               actions: ['assignTxRequestData'],
-              target: 'estimatingGasLimitAndDefaultTips',
+              target: 'prepareInputForSimulateTransaction',
             },
           ],
         },
       },
-      estimatingGasLimitAndDefaultTips: {
+      prepareInputForSimulateTransaction: {
         tags: ['loading'],
         invoke: {
-          src: 'estimatingGasLimitAndDefaultTips',
+          src: 'prepareInputForSimulateTransaction',
+          data: {
+            input: (ctx: MachineContext) => ({
+              address: ctx.input.address,
+              account: ctx.input.account,
+            }),
+          },
           onDone: [
             {
               cond: FetchMachine.hasError,
@@ -252,17 +261,15 @@ export const transactionRequestMachine = createMachine(
             favIconUrl,
             skipCustomFee,
             account,
+            address,
             fees,
           } = ev.input || {};
 
           if (!providerUrl) {
             throw new Error('providerUrl is required');
           }
-          if (!account) {
-            throw new Error('account is required');
-          }
-          if (!account.address) {
-            throw new Error('address is required');
+          if (!account?.address && !address) {
+            throw new Error('account or address is required');
           }
           if (!transactionRequest) {
             throw new Error('transaction is required');
@@ -275,6 +282,7 @@ export const transactionRequestMachine = createMachine(
             transactionRequest,
             origin,
             account,
+            address,
             providerUrl,
             title,
             favIconUrl,
@@ -343,15 +351,30 @@ export const transactionRequestMachine = createMachine(
       }),
     },
     services: {
-      estimatingGasLimitAndDefaultTips: FetchMachine.create<
-        never,
-        EstimateGasLimitAndDefaultTipsReturn
+      prepareInputForSimulateTransaction: FetchMachine.create<
+        { address?: string; account?: AccountWithBalance },
+        {
+          estimated: PrepareInputForSimulateTransactionReturn;
+          account: AccountWithBalance;
+        }
       >({
         showError: false,
         maxAttempts: 1,
-        async fetch() {
-          const estimated = await TxService.estimateGasLimitAndDefaultTips();
-          return estimated;
+        async fetch({ input }) {
+          const [estimated, acc] = await Promise.all([
+            TxService.estimateGasLimitAndDefaultTips(),
+            input?.account ||
+              AccountService.fetchAccount({
+                address: input?.address as string,
+              }).then(async (_account) => {
+                const network = await NetworkService.getSelectedNetwork();
+                return await AccountService.fetchBalance({
+                  account: _account,
+                  providerUrl: network?.url as string,
+                });
+              }),
+          ]);
+          return { estimated, account: acc };
         },
       }),
       simulateTransaction: FetchMachine.create<
@@ -377,7 +400,7 @@ export const transactionRequestMachine = createMachine(
         async fetch(params) {
           const { input } = params;
           if (
-            !input?.account ||
+            (!input?.account && !input?.address) ||
             !input?.transactionRequest ||
             !input?.providerUrl
           ) {

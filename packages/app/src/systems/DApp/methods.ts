@@ -52,31 +52,12 @@ export class RequestMethods extends ExtensionPageConnection {
     const { origin, address, provider, transaction, title, favIconUrl } = input;
     const providerUrl = provider.url;
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
-    let currentAccountWithBalance = store.getStateFrom(Services.accounts)
-      .context.account;
-    if (!currentAccountWithBalance && address) {
-      const account = await AccountService.fetchAccount({
-        address: input.address,
-      });
-      currentAccountWithBalance = await AccountService.fetchBalance({
-        account,
-        providerUrl,
-      });
-    }
-    if (
-      currentAccountWithBalance?.address !== address ||
-      !currentAccountWithBalance
-    ) {
-      throw new Error(
-        `Origin: ${address} does not match current account: ${currentAccountWithBalance?.address}`
-      );
-    }
+
     const state = await store
       .requestTransaction({
         origin,
         transactionRequest,
         address,
-        account: currentAccountWithBalance,
         providerUrl,
         title,
         favIconUrl,

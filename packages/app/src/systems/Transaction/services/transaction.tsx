@@ -45,11 +45,11 @@ export type TxInputs = {
   request: {
     providerUrl: string;
     transactionRequest: TransactionRequest;
-    address: string | undefined;
-    origin?: string | undefined;
+    address?: string;
+    origin?: string;
     title?: string;
     favIconUrl?: string;
-    account: AccountWithBalance | undefined;
+    account?: AccountWithBalance;
     skipCustomFee?: boolean;
     fees?: {
       baseFee?: BN;
@@ -59,6 +59,7 @@ export type TxInputs = {
     };
   };
   send: {
+    address?: string;
     account?: Account;
     transactionRequest: TransactionRequest;
     providerUrl?: string;
@@ -154,12 +155,15 @@ export class TxService {
 
   static async send({
     account,
-    // address: _address,
+    address,
     transactionRequest,
     providerUrl = '',
   }: TxInputs['send']) {
     const provider = await createProvider(providerUrl);
-    const wallet = new WalletLockedCustom(address, provider);
+    const wallet = new WalletLockedCustom(
+      (account?.address?.toString() || address) as string,
+      provider
+    );
     const txSent = await wallet.sendTransaction(transactionRequest);
 
     return txSent;
@@ -380,7 +384,7 @@ export class TxService {
     const currentNetwork = await NetworkService.getSelectedNetwork();
     const provider = await createProvider(currentNetwork?.url || '');
     const [{ regularTip, fastTip }, { consensusParameters }] =
-      await Promise.all([getCurrentTips(provider), provider.getChain()]);
+      await Promise.all([await getCurrentTips(provider), provider.getChain()]);
     return {
       regularTip: bn(regularTip),
       fastTip: bn(fastTip),
