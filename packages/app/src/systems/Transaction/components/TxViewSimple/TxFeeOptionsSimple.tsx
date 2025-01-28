@@ -31,7 +31,6 @@ export function TxFeeOptionsSimple({
 
   return (
     <Box css={styles.content}>
-      <Text css={styles.title}>Fee (network)</Text>
       <Box css={styles.card}>
         <HStack justify="space-between">
           <Text>Fee + Tip</Text>

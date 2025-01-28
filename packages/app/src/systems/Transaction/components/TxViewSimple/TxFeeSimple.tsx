@@ -70,8 +70,7 @@ export function TxFeeSimple({
 
   return (
     <Box css={styles.content}>
-      <Text css={styles.title}>Fee (network)</Text>
-      <Box.Stack gap="$2">
+      <Box.Stack>
         <RadioGroup>
           {options.map((option) => (
             <Box.Flex
@@ -130,11 +129,6 @@ const styles = {
     flexDirection: 'column',
     gap: '$3',
     padding: '$3',
-  }),
-  title: cssObj({
-    fontSize: '$sm',
-    fontWeight: '$medium',
-    color: '#202020',
   }),
   option: cssObj({
     alignItems: 'center',

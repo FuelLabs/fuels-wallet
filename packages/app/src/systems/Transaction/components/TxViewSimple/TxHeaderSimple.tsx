@@ -20,10 +20,8 @@ export function TxHeaderSimple({ isLoading }: TxHeaderSimpleProps) {
       {/* Disabled while the new Wallet header is not implemented */}
       {/* <Text as="h2">Review Transaction</Text> */}
       <Box css={styles.warning}>
-        <Icon icon="ExclamationCircle" />
-        <Text>
-          Double-check the details of your transaction before submitting.
-        </Text>
+        <Icon icon="InfoCircle" />
+        Double-check the details of your transaction before submitting.
       </Box>
     </Box>
   );
@@ -44,18 +42,10 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '$2',
-    marginBottom: '$4',
+    marginBottom: '$1',
     backgroundColor: '$white',
     borderBottom: '1px solid $border',
     padding: '12px 18px',
-
-    '.fuel_Text': {
-      '&[as="h2"]': {
-        fontSize: '$xl',
-        fontWeight: '$normal',
-        margin: 0,
-      },
-    },
   }),
   warning: cssObj({
     display: 'flex',
@@ -63,7 +53,7 @@ const styles = {
     gap: '$2',
     fontSize: '12px',
     color: '#646464',
-    fontWeight: '$normal',
+    fontWeight: '500',
     marginBottom: '$2',
   }),
   root: cssObj({
@@ -87,7 +77,7 @@ const styles = {
   icon: cssObj({
     width: '20px',
     height: '20px',
-    color: '$gray9',
+    color: '#8d8d8d',
   }),
   status: cssObj({
     display: 'flex',
