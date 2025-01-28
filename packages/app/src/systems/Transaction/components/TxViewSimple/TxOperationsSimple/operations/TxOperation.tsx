@@ -237,11 +237,15 @@ export function TxOperation({
             width: '100%',
             marginBottom: '$2',
             columnGap: '$2',
-            rowGap: '$1',
+            rowGap: '1px',
           })}
         >
           {/* From Address */}
-          <Box.Flex justify={'flex-start'} align={'center'}>
+          <Box.Flex
+            justify={'flex-start'}
+            align={'center'}
+            css={styles.iconCol}
+          >
             <Avatar.Generated
               role="img"
               size="sm"
@@ -298,7 +302,11 @@ export function TxOperation({
           </Box>
 
           {/* To Address */}
-          <Box.Flex justify={'flex-start'} align={'center'}>
+          <Box.Flex
+            justify={'flex-start'}
+            align={'center'}
+            css={styles.iconCol}
+          >
             <Avatar.Generated
               role="img"
               size="sm"
@@ -349,7 +357,7 @@ const styles = {
     flex: 1,
     borderRadius: '8px',
     minWidth: 0,
-    padding: '$3',
+    padding: '14px 12px',
   }),
   blue: cssObj({
     fontSize: '$sm',
@@ -357,6 +365,7 @@ const styles = {
     alignItems: 'center',
     gap: '$1',
     color: '#0D74CE',
+    lineHeight: 'normal',
   }),
   functionName: cssObj({
     fontSize: '$sm',
@@ -370,10 +379,7 @@ const styles = {
     borderRadius: '$lg',
   }),
   iconCol: cssObj({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
+    padding: '2px 0',
   }),
   badge: cssObj({
     padding: '0 $1',
