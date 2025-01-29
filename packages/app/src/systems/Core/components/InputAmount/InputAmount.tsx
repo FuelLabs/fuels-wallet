@@ -5,7 +5,7 @@
  **/
 
 import { cssObj } from '@fuel-ui/css';
-import { VStack } from '@fuel-ui/react';
+import { HStack, VStack } from '@fuel-ui/react';
 import type { BN } from 'fuels';
 import { DEFAULT_DECIMAL_UNITS, bn, format } from 'fuels';
 import { useEffect, useState } from 'react';
@@ -234,13 +234,14 @@ export const InputAmount: InputAmountComponent = ({
           </Input.ElementRight>
         )}
       </Flex>
-      <Box.Flex gap={'$2'}>
-        {!hiddenBalance && (
+      {!hiddenBalance && (
+        <VStack gap="0">
+          <Box css={styles.dashedHorizontalSeparator} />
           <Tooltip
             content={formatAmount({ amount: balance, options: formatOpts })}
             sideOffset={-5}
           >
-            <VStack gap="0">
+            <HStack justify="between" css={styles.inputAmountBalances}>
               {!!amountInUsd && (
                 <Text
                   fontSize="sm"
@@ -257,10 +258,10 @@ export const InputAmount: InputAmountComponent = ({
               >
                 Balance: {formattedBalance}
               </Text>
-            </VStack>
+            </HStack>
           </Tooltip>
-        )}
-      </Box.Flex>
+        </VStack>
+      )}
     </Input>
   );
 };
@@ -346,5 +347,26 @@ const styles = {
     borderRadius: '$full',
     width: '$5',
     height: '$5',
+  }),
+  inputAmountBalances: cssObj({
+    width: '100%',
+    justifyContent: 'space-between',
+    gap: '$1',
+    alignItems: 'center',
+    whiteSpace: 'nowrap',
+    lineHeight: '$tight',
+    fontSize: '$sm',
+    fontWeight: '$normal',
+  }),
+  dashedHorizontalSeparator: cssObj({
+    width: '100%',
+    height: 0,
+    backgroundColor: '$intentsBase8',
+    // borderRadius: '$full',
+    // Only one side of the border should be visible, to avoid extra "thickness"
+    borderTop: '1px dashed $intentsBase8',
+    my: '$2',
+    color: 'textSubtext',
+    // borderBottom: 'none',
   }),
 };

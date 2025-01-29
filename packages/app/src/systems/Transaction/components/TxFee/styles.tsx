@@ -28,12 +28,21 @@ export const styles = {
     }),
   title: cssObj({
     fontSize: '$sm',
-    fontWeight: '$normal',
+    lineHeight: '20px',
+    fontWeight: '$medium',
     textWrap: 'nowrap',
   }),
   amount: cssObj({
     fontSize: '$sm',
-    fontWeight: '$normal',
+    lineHeight: '20px',
+    fontWeight: '$medium',
+    wordWrap: 'break-word',
+    minWidth: 0,
+  }),
+  usd: cssObj({
+    fontSize: '$sm',
+    lineHeight: '20px',
+    fontWeight: '600',
     wordWrap: 'break-word',
     minWidth: 0,
   }),
