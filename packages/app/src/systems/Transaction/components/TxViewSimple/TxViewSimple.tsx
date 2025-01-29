@@ -2,8 +2,8 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Icon, Text } from '@fuel-ui/react';
 import type { BN } from 'fuels';
 import { useState } from 'react';
+import { useAccounts } from '~/systems/Account';
 import type { SimplifiedTransactionViewProps } from '../../types';
-import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
 import { TxFeeOptionsSimple } from './TxFeeOptionsSimple';
 import { TxFeeSimple } from './TxFeeSimple';
 import { TxHeaderSimple } from './TxHeaderSimple';
@@ -17,12 +17,16 @@ export function TxViewSimple({
 }: SimplifiedTransactionViewProps) {
   const [isCustomFees, setIsCustomFees] = useState(false);
   const [_selectedTip, setSelectedTip] = useState<BN>();
+  const { account } = useAccounts();
 
   return (
     <Box css={styles.root}>
       <TxHeaderSimple origin={transaction.origin} isLoading={isLoading} />
       <Box css={styles.content}>
-        <TxOperationsList operations={transaction.operations} />
+        <TxOperationsList
+          operations={transaction.operations}
+          currentAccount={account?.address}
+        />
         {showDetails && (
           <Box>
             <Box.Flex gap="18px" align="center" css={styles.feeContainer}>
