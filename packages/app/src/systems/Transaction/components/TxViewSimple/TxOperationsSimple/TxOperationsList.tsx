@@ -24,8 +24,11 @@ export function TxOperationsList({
         const depth = op.metadata?.depth || 0;
         const isTransfer = op.type === TxCategory.SEND;
         const isFromCurrentAccount =
-          currentAccount && op.from === currentAccount;
-        const isToCurrentAccount = currentAccount && op.to === currentAccount;
+          currentAccount &&
+          op.from.toLowerCase() === currentAccount.toLowerCase();
+        const isToCurrentAccount =
+          currentAccount &&
+          op.to.toLowerCase() === currentAccount.toLowerCase();
 
         // All transfers go to main list
         if (isTransfer) {
@@ -67,6 +70,7 @@ export function TxOperationsList({
             width: '100%',
             boxSizing: 'border-box',
             padding: '4px 0',
+            marginBottom: '16px',
           }}
         >
           <TxOperation operation={operation} showNesting={false} />
@@ -78,6 +82,7 @@ export function TxOperationsList({
         title="Other Contract Calls"
         operations={otherRootOperations}
         showNesting={false}
+        numberLabel="1"
       />
 
       {/* Intermediate operations with nesting */}
@@ -85,6 +90,7 @@ export function TxOperationsList({
         title="Intermediate Operations"
         operations={intermediateOperations}
         showNesting={true}
+        numberLabel={otherRootOperations.length ? '2' : '1'}
       />
     </Box>
   );

@@ -10,12 +10,14 @@ type TxOperationsGroupProps = {
   title: string;
   operations: SimplifiedOperation[];
   showNesting?: boolean;
+  numberLabel?: string;
 };
 
 export function TxOperationsGroup({
   title,
   operations,
   showNesting,
+  numberLabel,
 }: TxOperationsGroupProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -36,7 +38,7 @@ export function TxOperationsGroup({
         justify="space-between"
       >
         <Box.Flex gap="$2" align="center">
-          <Text css={styles.count}>{operations.length}</Text>
+          <Text css={styles.numberLabel}>{numberLabel}</Text>
           <Text fontSize="sm" css={styles.title}>
             {title}
           </Text>
@@ -103,7 +105,7 @@ const styles = {
     flexDirection: 'column',
     gap: '4px 0',
   }),
-  count: cssObj({
+  numberLabel: cssObj({
     backgroundColor: '$white',
     borderRadius: '$full',
     color: '#202020',
