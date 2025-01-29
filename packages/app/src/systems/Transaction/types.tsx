@@ -1,3 +1,4 @@
+import type { AssetFuelAmount } from '@fuel-wallet/types';
 import type {
   AddressType,
   BN,
@@ -8,10 +9,10 @@ import type {
   OutputContract,
   OutputContractCreated,
   Receipt,
+  ReceiptType,
   TransactionRequest,
   TransactionRequestInput,
   TransactionRequestLike,
-  TransactionStatus,
   TransactionSummary,
 } from 'fuels';
 import type { OperationFunctionCall } from 'fuels';
@@ -58,7 +59,9 @@ export type ContractCallMetadata = {
   functionData?: OperationFunctionCall;
   amount?: BN;
   assetId?: string;
-  operationCount?: number;
+  depth?: number;
+  receiptType?: ReceiptType;
+  assetAmount?: AssetFuelAmount;
 };
 
 export type SwapMetadata = {
@@ -72,15 +75,16 @@ export type SwapMetadata = {
   parentReceiptId?: string;
 };
 
-export interface SimplifiedOperation {
+export type SimplifiedOperation = {
   type: TxCategory;
   from: string;
   to: string;
   amount?: BN;
   assetId?: string;
   isFromCurrentAccount: boolean;
-  metadata?: ContractCallMetadata;
-}
+  metadata: ContractCallMetadata;
+  assetAmount?: AssetFuelAmount;
+};
 
 export type SimplifiedFee = {
   total: BN;
