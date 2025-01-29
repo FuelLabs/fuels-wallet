@@ -59,11 +59,18 @@ export function TxOperationsList({
     <Box>
       {/* Main operations (transfers and root contract calls related to current account) */}
       {mainOperations.map((operation, index) => (
-        <TxOperation
+        <Box.Flex
           key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
-          operation={operation}
-          showNesting={false}
-        />
+          css={{
+            backgroundColor: '#E0E0E0',
+            borderRadius: '12px',
+            width: '100%',
+            boxSizing: 'border-box',
+            padding: '4px 0',
+          }}
+        >
+          <TxOperation operation={operation} showNesting={false} />
+        </Box.Flex>
       ))}
 
       {/* Other root operations not related to current account */}

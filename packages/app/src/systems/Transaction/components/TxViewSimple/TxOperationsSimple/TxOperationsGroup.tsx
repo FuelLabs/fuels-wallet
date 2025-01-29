@@ -28,7 +28,7 @@ export function TxOperationsGroup({
   };
 
   return (
-    <Box.Stack gap="0" css={styles.root} data-expanded={isExpanded}>
+    <Box css={styles.root} data-expanded={isExpanded}>
       <Box.Flex
         as="button"
         onClick={handleClick}
@@ -48,7 +48,6 @@ export function TxOperationsGroup({
         />
       </Box.Flex>
       <MotionBox
-        initial={false}
         animate={{
           height: isExpanded ? 'auto' : 0,
           opacity: isExpanded ? 1 : 0,
@@ -66,7 +65,7 @@ export function TxOperationsGroup({
           ) : null
         )}
       </MotionBox>
-    </Box.Stack>
+    </Box>
   );
 }
 
@@ -79,6 +78,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     transition: 'all 0.2s ease',
+    paddingBottom: '4px',
   }),
   header: cssObj({
     display: 'flex',
@@ -102,7 +102,7 @@ const styles = {
   content: cssObj({
     display: 'flex',
     flexDirection: 'column',
-    gap: '$1',
+    gap: '4px 0',
   }),
   count: cssObj({
     backgroundColor: '$white',

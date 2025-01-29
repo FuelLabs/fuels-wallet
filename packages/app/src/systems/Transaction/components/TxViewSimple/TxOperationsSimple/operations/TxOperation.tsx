@@ -3,9 +3,6 @@ import {
   Avatar,
   Badge,
   Box,
-  ContentLoader,
-  Copyable,
-  Grid,
   Icon,
   IconButton,
   Text,
@@ -13,7 +10,7 @@ import {
 } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAccounts } from '~/systems/Account';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { shortAddress } from '~/systems/Core';
@@ -276,7 +273,7 @@ export function TxOperation({
     </Box>
   );
 }
-// we also have the operations not related to the account in a group, and intermediate contract calls
+
 const styles = {
   contentCol: cssObj({
     display: 'flex',
@@ -286,6 +283,7 @@ const styles = {
     borderRadius: '8px',
     minWidth: 0,
     padding: '14px 12px',
+    margin: '0 4px',
   }),
   blue: cssObj({
     fontSize: '$sm',
