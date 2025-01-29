@@ -77,8 +77,8 @@ const styles = {
     minHeight: '56px',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'all 0.2s ease',
     paddingBottom: '4px',
+    boxSizing: 'border-box',
   }),
   header: cssObj({
     display: 'flex',
@@ -86,9 +86,8 @@ const styles = {
     cursor: 'pointer',
     border: 'none',
     width: '100%',
-    transition: 'all 0.2s ease',
     backgroundColor: 'transparent',
-    padding: '0 22px 0 22px',
+    padding: '17px 22px 12px 22px',
     alignItems: 'center',
   }),
   icon: cssObj({
@@ -116,8 +115,6 @@ const styles = {
     justifyContent: 'center',
     fontSize: '13px',
     fontWeight: '600',
-    marginTop: '18px',
-    marginBottom: '18px',
   }),
   chevron: cssObj({
     transform: 'rotate(0deg)',
