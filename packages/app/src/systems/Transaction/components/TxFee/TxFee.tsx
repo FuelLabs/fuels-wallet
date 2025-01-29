@@ -24,41 +24,41 @@ export const TxFee: TxFeeComponent = ({
   title,
   tipInUsd,
 }: TxFeeProps) => {
-  const tipConverted = tipInUsd;
-
   return (
     <Card
       css={styles.detailItem(!!checked, !!onChecked)}
       onClick={() => onChecked?.(true)}
     >
       <Text
-        color="intentsBase11"
+        color="intentsBase12"
         css={styles.title}
         aria-label={`fee title:${title || 'Network'}`}
       >
         {title || 'Fee (network)'}
       </Text>
       <HStack gap="$1">
-        {!!tipConverted && (
+        {!!tipInUsd && (
           <Text
-            color="textSubtext"
-            css={styles.amount}
+            color="intentsBase12"
+            css={styles.usd}
             aria-label={`tip in usd:${title || 'Network'}`}
           >
-            {tipConverted.includes('$0.00') ? '<$0.00' : tipInUsd}
+            {tipInUsd}
           </Text>
         )}
         <Text
-          color="intentsBase12"
+          color="textSubtext"
           css={styles.amount}
           aria-label={`fee value:${title || 'Network'}`}
         >
+          (
           {fee
             ? `${fee.format({
                 minPrecision: DEFAULT_PRECISION,
                 precision: DEFAULT_PRECISION,
               })} ETH`
             : '--'}
+          )
         </Text>
       </HStack>
     </Card>

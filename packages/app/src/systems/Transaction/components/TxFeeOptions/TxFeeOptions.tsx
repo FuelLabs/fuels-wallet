@@ -1,3 +1,4 @@
+import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Form, HStack, Input, Text, VStack } from '@fuel-ui/react';
 import { AnimatePresence } from 'framer-motion';
 import { type BN, bn } from 'fuels';
@@ -236,7 +237,17 @@ export const TxFeeOptions = ({
           direction="column"
           layout
         >
-          <Button size="xs" variant="link" onPress={toggle}>
+          <Button
+            size="xs"
+            variant="link"
+            onPress={toggle}
+            css={cssObj({
+              fontSize: '12px',
+              lineHeight: '16px',
+              fontWeight: '$medium',
+              textDecoration: 'underline',
+            })}
+          >
             Use {isAdvanced ? 'regular options' : 'custom fees'}
           </Button>
         </MotionFlex>
