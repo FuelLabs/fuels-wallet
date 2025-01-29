@@ -39,7 +39,7 @@ export const AssetItemAmount = ({
   return (
     <Tooltip content={original.display} delayDuration={0} open={open}>
       <Box css={styles.root}>
-        <VStack gap="$1">
+        <VStack gap="0">
           <Text
             as="span"
             ref={amountRef}
@@ -58,7 +58,7 @@ export const AssetItemAmount = ({
           <Text
             aria-hidden={visibility}
             aria-label={`${symbol} conversion rate to USD`}
-            className="text-start text-sm"
+            css={styles.amountInUsd}
           >
             {visibility ? (amountInUsd ?? '$0.00') : '•••••'}
           </Text>
@@ -75,17 +75,25 @@ const styles = {
     minWidth: 0,
     alignItems: 'center',
     flexWrap: 'nowrap',
-    fontSize: '$sm',
+    textSize: 'base',
     fontWeight: '$normal',
     textAlign: 'right',
     paddingLeft: '$2',
+    lineHeight: '24px',
   }),
   amount: cssObj({
     display: 'inline-block',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    color: '$textColor',
+    fontWeight: '$medium',
   }),
   symbol: cssObj({
     flexShrink: 0,
+  }),
+  amountInUsd: cssObj({
+    textSize: 'sm',
+    fontWeight: '$normal',
+    textAlign: 'right',
   }),
 };

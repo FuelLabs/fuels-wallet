@@ -253,6 +253,8 @@ const styles = {
   assetName: cssObj({
     margin: 0,
     textSize: 'base',
+    fontWeight: '$medium',
+    letterSpacing: '$normal',
   }),
   assetIdCopy: cssObj({
     marginLeft: 2,
