@@ -28,33 +28,44 @@ export function TxOperationsGroup({
   };
 
   return (
-    <Box.Stack gap="0" css={styles.root}>
-      <Box.Flex as="button" onClick={handleClick} css={styles.header}>
-        <Text css={styles.count}>{operations.length}</Text>
-        <Text fontSize="sm" css={styles.title}>
-          {title}
-        </Text>
+    <Box.Stack gap="0" css={styles.root} data-expanded={isExpanded}>
+      <Box.Flex
+        as="button"
+        onClick={handleClick}
+        css={styles.header}
+        justify="space-between"
+      >
+        <Box.Flex gap="$2" align="center">
+          <Text css={styles.count}>{operations.length}</Text>
+          <Text fontSize="sm" css={styles.title}>
+            {title}
+          </Text>
+        </Box.Flex>
         <Icon
           icon="ChevronRight"
           css={styles.chevron}
           data-expanded={isExpanded}
         />
       </Box.Flex>
-      {isExpanded && (
-        <MotionBox
-          {...animations.slideInTop()}
-          css={styles.content}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {operations.map((operation, index) => (
+      <MotionBox
+        initial={false}
+        animate={{
+          height: isExpanded ? 'auto' : 0,
+          opacity: isExpanded ? 1 : 0,
+        }}
+        css={styles.content}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {operations.map((operation, index) =>
+          isExpanded ? (
             <TxOperation
               key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
               operation={operation}
               showNesting={showNesting}
             />
-          ))}
-        </MotionBox>
-      )}
+          ) : null
+        )}
+      </MotionBox>
     </Box.Stack>
   );
 }
@@ -67,6 +78,7 @@ const styles = {
     minHeight: '56px',
     alignItems: 'center',
     justifyContent: 'center',
+    transition: 'all 0.2s ease',
   }),
   header: cssObj({
     display: 'flex',
@@ -76,7 +88,7 @@ const styles = {
     width: '100%',
     transition: 'all 0.2s ease',
     backgroundColor: 'transparent',
-    padding: '0 20px 0 30px',
+    padding: '0 22px 0 22px',
     alignItems: 'center',
   }),
   icon: cssObj({
@@ -85,6 +97,7 @@ const styles = {
   title: cssObj({
     color: '#202020',
     fontWeight: '$medium',
+    textAlign: 'left',
   }),
   content: cssObj({
     display: 'flex',
