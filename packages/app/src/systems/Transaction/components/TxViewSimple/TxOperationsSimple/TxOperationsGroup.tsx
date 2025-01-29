@@ -28,7 +28,7 @@ export function TxOperationsGroup({
   };
 
   return (
-    <Box.Stack gap="$2" css={styles.root}>
+    <Box.Stack gap="0" css={styles.root}>
       <Box.Flex as="button" onClick={handleClick} css={styles.header}>
         <Text css={styles.count}>{operations.length}</Text>
         <Text fontSize="sm" css={styles.title}>
@@ -64,17 +64,20 @@ const styles = {
     marginTop: '$2',
     backgroundColor: '#E0E0E0',
     borderRadius: '12px',
+    minHeight: '56px',
+    alignItems: 'center',
+    justifyContent: 'center',
   }),
   header: cssObj({
     display: 'flex',
-    alignItems: 'center',
     gap: '$2',
-    padding: '$2',
     cursor: 'pointer',
     border: 'none',
     width: '100%',
     transition: 'all 0.2s ease',
     backgroundColor: 'transparent',
+    padding: '0 20px 0 30px',
+    alignItems: 'center',
   }),
   icon: cssObj({
     color: '#202020',
@@ -89,9 +92,8 @@ const styles = {
     gap: '$1',
   }),
   count: cssObj({
-    backgroundColor: 'white',
+    backgroundColor: '$white',
     borderRadius: '$full',
-    padding: '$1',
     color: '#202020',
     border: '1.5px solid #8D8D8D',
     width: '20px',
@@ -99,6 +101,10 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    fontSize: '13px',
+    fontWeight: '600',
+    marginTop: '18px',
+    marginBottom: '18px',
   }),
   chevron: cssObj({
     transform: 'rotate(0deg)',
