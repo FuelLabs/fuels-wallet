@@ -15,7 +15,6 @@ import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import { useEffect, useRef, useState } from 'react';
 import { useAccounts } from '~/systems/Account';
-import { AssetsAmount } from '~/systems/Asset';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { shortAddress } from '~/systems/Core';
 import { formatAmount } from '~/systems/Core';
@@ -28,104 +27,115 @@ type TxOperationProps = {
   showNesting?: boolean;
 };
 
-const SpacerComponent = () => {
-  return <Box css={styles.spacer} />;
-};
-
-const AssetLoader = () => (
-  <ContentLoader width={120} height={20}>
-    <rect x="0" y="0" rx="4" ry="4" width="120" height="20" />
-  </ContentLoader>
-);
-
-type AssetsAmountProps = {
-  amounts: AssetFuelAmount[];
-};
-
-const TxAssetsAmount = ({ amounts }: AssetsAmountProps) => {
+const renderAssets = (amounts: AssetFuelAmount[]) => {
   const allEmptyAmounts = amounts.every((assetAmount) =>
     bn(assetAmount.amount).eq(0)
   );
 
-  return (
-    <>
-      {!allEmptyAmounts && (
-        <Box css={cssObj({ marginBottom: '$3' })}>
-          <Box.Stack gap="$1">
-            {amounts.map(
-              (assetAmount) =>
-                bn(assetAmount.amount).gt(0) && (
-                  <TxAssetsAmountItem
-                    assetAmount={assetAmount}
-                    key={assetAmount.name}
-                  />
-                )
-            )}
-          </Box.Stack>
-        </Box>
-      )}
-    </>
-  );
-};
-
-type AssetsAmountItemProps = {
-  assetAmount: AssetFuelAmount;
-};
-
-const TxAssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
-  const {
-    name = '',
-    symbol,
-    icon,
-    assetId,
-    decimals,
-    amount,
-    isNft,
-  } = assetAmount || {};
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isTruncated, setIsTruncated] = useState(false);
-
-  const formatted = formatAmount({
-    amount,
-    options: { units: decimals || 0, precision: decimals || 0 },
-  });
-
-  useEffect(() => {
-    if (containerRef.current) {
-      const amountElement = containerRef.current.querySelector('.amount-value');
-      if (amountElement) {
-        setIsTruncated(amountElement.scrollWidth > amountElement.clientWidth);
-      }
-    }
-  }, []);
+  if (allEmptyAmounts) return null;
 
   return (
-    <Box.Flex css={styles.asset} key={assetId}>
-      {icon ? (
-        <Avatar name={name} src={icon} size="xsm" />
-      ) : (
-        <Avatar.Generated hash={assetId} size="xsm" />
-      )}
-      <Box css={styles.amountContainer}>
-        <Tooltip
-          content={formatted}
-          delayDuration={0}
-          open={isTruncated ? undefined : false}
-        >
-          <Text as="span" className="amount-value">
-            {formatted}
-          </Text>
-        </Tooltip>
-        <Text as="span">{symbol}</Text>
-        {isNft && (
-          <Badge variant="ghost" intent="primary" css={styles.assetNft}>
-            NFT
-          </Badge>
+    <Box css={cssObj({ marginBottom: '$3' })}>
+      <Box.Stack gap="$1">
+        {amounts.map(
+          (assetAmount) =>
+            bn(assetAmount.amount).gt(0) && (
+              <Box.Flex css={styles.asset} key={assetAmount.assetId}>
+                <Avatar.Generated hash={assetAmount.assetId} size="xsm" />
+                <Box css={styles.amountContainer}>
+                  <Tooltip
+                    content={formatAmount({
+                      amount: assetAmount.amount,
+                      options: {
+                        units: assetAmount.decimals || 0,
+                        precision: assetAmount.decimals || 0,
+                      },
+                    })}
+                    delayDuration={0}
+                    open={false}
+                  >
+                    <Text as="span" className="amount-value">
+                      {formatAmount({
+                        amount: assetAmount.amount,
+                        options: {
+                          units: assetAmount.decimals || 0,
+                          precision: assetAmount.decimals || 0,
+                        },
+                      })}
+                    </Text>
+                  </Tooltip>
+                  <Text as="span">{assetAmount.symbol}</Text>
+                  {assetAmount.isNft && (
+                    <Badge
+                      variant="ghost"
+                      intent="primary"
+                      css={styles.assetNft}
+                    >
+                      NFT
+                    </Badge>
+                  )}
+                </Box>
+              </Box.Flex>
+            )
         )}
-      </Box>
-    </Box.Flex>
+      </Box.Stack>
+    </Box>
   );
+};
+
+const fetchAssetsAmount = async (operation: SimplifiedOperation) => {
+  try {
+    const coins = [];
+    if (operation.amount && operation.assetId) {
+      coins.push({
+        amount: operation.amount,
+        assetId: operation.assetId,
+      });
+    } else if (operation.metadata?.amount && operation.metadata?.assetId) {
+      coins.push({
+        amount: operation.metadata.amount,
+        assetId: operation.metadata.assetId,
+      });
+    }
+
+    if (!coins.length) return [];
+
+    const assetsCache = AssetsCache.getInstance();
+    const network = await NetworkService.getSelectedNetwork();
+    if (!network) return [];
+
+    const assetsWithAmount = await Promise.all(
+      coins.map(async (operationCoin) => {
+        const assetCached = await assetsCache.getAsset({
+          chainId: network.chainId,
+          assetId: operationCoin.assetId,
+          dbAssets: [],
+          save: false,
+        });
+
+        if (!assetCached) return null;
+
+        return {
+          type: 'fuel',
+          chainId: network.chainId,
+          name: assetCached.name,
+          symbol: assetCached.symbol,
+          decimals: assetCached.decimals,
+          icon: assetCached.icon,
+          assetId: operationCoin.assetId,
+          amount: operationCoin.amount,
+        } as AssetFuelAmount;
+      })
+    );
+
+    const filteredAssets = assetsWithAmount.filter(
+      (a): a is AssetFuelAmount => a !== null
+    );
+    return filteredAssets;
+  } catch (error) {
+    console.error('Error fetching assets:', error);
+    return [];
+  }
 };
 
 export function TxOperation({
@@ -138,7 +148,6 @@ export function TxOperation({
   const depth = metadata?.depth || 0;
   const { accounts } = useAccounts();
   const [assetsAmount, setAssetsAmount] = useState<AssetFuelAmount[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   const accountFrom = accounts?.find(
     (acc) => acc.address.toLowerCase() === operation.from.toLowerCase()
@@ -148,69 +157,8 @@ export function TxOperation({
   );
 
   useEffect(() => {
-    const fetchAssetsAmount = async () => {
-      try {
-        const coins = [];
-        if (operation.amount && operation.assetId) {
-          coins.push({
-            amount: operation.amount,
-            assetId: operation.assetId,
-          });
-        } else if (metadata?.amount && metadata?.assetId) {
-          coins.push({
-            amount: metadata.amount,
-            assetId: metadata.assetId,
-          });
-        }
-
-        if (!coins.length) return;
-
-        setIsLoading(true);
-        const assetsCache = AssetsCache.getInstance();
-        const network = await NetworkService.getSelectedNetwork();
-        if (!network) return;
-
-        console.log('Fetching assets for:', coins);
-
-        const assetsWithAmount = await Promise.all(
-          coins.map(async (operationCoin) => {
-            const assetCached = await assetsCache.getAsset({
-              chainId: network.chainId,
-              assetId: operationCoin.assetId,
-              dbAssets: [],
-              save: false,
-            });
-
-            if (!assetCached) return null;
-
-            return {
-              type: 'fuel',
-              chainId: network.chainId,
-              name: assetCached.name,
-              symbol: assetCached.symbol,
-              decimals: assetCached.decimals,
-              icon: assetCached.icon,
-              assetId: operationCoin.assetId,
-              amount: operationCoin.amount,
-            } as AssetFuelAmount;
-          })
-        );
-
-        const filteredAssets = assetsWithAmount.filter(
-          (a): a is AssetFuelAmount => a !== null
-        );
-        console.log('Setting assets:', filteredAssets);
-        setAssetsAmount(filteredAssets);
-      } catch (error) {
-        console.error('Error fetching assets:', error);
-        setAssetsAmount([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchAssetsAmount();
-  }, []); // Only run once when component mounts
+    fetchAssetsAmount(operation).then(setAssetsAmount);
+  }, [operation]);
 
   const getOperationType = () => {
     if (isContract) return 'Calls contract (sending funds)';
@@ -227,129 +175,109 @@ export function TxOperation({
     (metadata?.amount && metadata?.assetId);
 
   return (
-    <Box.Flex css={styles.root}>
-      <Box css={styles.contentCol}>
-        <Box.Flex
-          css={cssObj({
-            display: 'grid',
-            gridTemplateColumns: 'auto 1fr',
-            gridTemplateRows: 'repeat(5, auto)',
-            width: '100%',
-            marginBottom: '$2',
-            columnGap: '$2',
-            rowGap: '1px',
-          })}
-        >
-          {/* From Address */}
-          <Box.Flex
-            justify={'flex-start'}
-            align={'center'}
-            css={styles.iconCol}
-          >
-            <Avatar.Generated
-              role="img"
-              size="sm"
-              hash={operation.from}
-              aria-label={operation.from}
-            />
-          </Box.Flex>
-          <Box.Flex gap="$1" justify={'flex-start'} align={'center'}>
-            <Text as="span" fontSize="sm" css={styles.name}>
-              {accountFrom?.name || 'Unknown'}
-            </Text>
-            {isContract && (
-              <Box css={styles.badge}>
-                <Text fontSize="sm" color="gray8">
-                  Contract
-                </Text>
-              </Box>
-            )}
-            <Text fontSize="sm" color="gray8" css={styles.address}>
-              {shortAddress(operation.from)}
-            </Text>
-            <IconButton
-              size="xs"
-              variant="link"
-              icon="Copy"
-              aria-label="Copy address"
-              onPress={() => navigator.clipboard.writeText(operation.from)}
-            />
-          </Box.Flex>
-
-          {/* Spacer and Arrow */}
-          <Box.Flex justify={'center'}>
-            <SpacerComponent />
-          </Box.Flex>
-          <Box />
-          <Box.Flex justify={'center'} align={'center'} css={styles.blue}>
-            <Icon icon="CircleArrowDown" size={20} />
-          </Box.Flex>
-          <Box.Flex justify={'flex-start'} align={'center'} css={styles.blue}>
-            {getOperationType()}
-          </Box.Flex>
-
-          {/* Asset Amount */}
-          <Box.Flex justify={'center'}>
-            <SpacerComponent />
-          </Box.Flex>
-          <Box>
-            {shouldShowAssetAmount &&
-              (isLoading ? (
-                <AssetLoader />
-              ) : assetsAmount.length > 0 ? (
-                <TxAssetsAmount amounts={assetsAmount} />
-              ) : null)}
-          </Box>
-
-          {/* To Address */}
-          <Box.Flex
-            justify={'flex-start'}
-            align={'center'}
-            css={styles.iconCol}
-          >
-            <Avatar.Generated
-              role="img"
-              size="sm"
-              hash={operation.to}
-              aria-label={operation.to}
-            />
-          </Box.Flex>
-          <Box.Flex justify={'flex-start'} align={'center'} gap="$1">
-            <Text as="span" fontSize="sm" css={styles.name}>
-              {accountTo?.name || 'Unknown'}
-            </Text>
-            {isContract && (
-              <Box css={styles.badge}>
-                <Text fontSize="sm" color="gray8">
-                  Contract
-                </Text>
-              </Box>
-            )}
-            <Text fontSize="sm" color="gray8" css={styles.address}>
-              {shortAddress(operation.to)}
-            </Text>
-            <IconButton
-              size="xs"
-              variant="link"
-              icon="Copy"
-              aria-label="Copy address"
-              onPress={() => navigator.clipboard.writeText(operation.to)}
-            />
-          </Box.Flex>
+    <Box css={styles.contentCol}>
+      <Box.Flex
+        css={cssObj({
+          display: 'grid',
+          gridTemplateColumns: 'auto 1fr',
+          gridTemplateRows: 'repeat(5, auto)',
+          width: '100%',
+          marginBottom: '$2',
+          columnGap: '$2',
+          rowGap: '1px',
+        })}
+      >
+        {/* From Address */}
+        <Box.Flex justify={'flex-start'} align={'center'} css={styles.iconCol}>
+          <Avatar.Generated
+            role="img"
+            size="sm"
+            hash={operation.from}
+            aria-label={operation.from}
+          />
         </Box.Flex>
-      </Box>
-    </Box.Flex>
+        <Box.Flex gap="$1" justify={'flex-start'} align={'center'}>
+          <Text as="span" fontSize="sm" css={styles.name}>
+            {accountFrom?.name || 'Unknown'}
+          </Text>
+          {isContract && (
+            <Box css={styles.badge}>
+              <Text fontSize="sm" color="gray8">
+                Contract
+              </Text>
+            </Box>
+          )}
+          <Text fontSize="sm" color="gray8" css={styles.address}>
+            {shortAddress(operation.from)}
+          </Text>
+          <IconButton
+            size="xs"
+            variant="link"
+            icon="Copy"
+            aria-label="Copy address"
+            onPress={() => navigator.clipboard.writeText(operation.from)}
+          />
+        </Box.Flex>
+
+        {/* Spacer and Arrow */}
+        <Box.Flex justify={'center'}>
+          <Box css={styles.spacer} />
+        </Box.Flex>
+        <Box />
+        <Box.Flex justify={'center'} align={'center'} css={styles.blue}>
+          <Icon icon="CircleArrowDown" size={20} />
+        </Box.Flex>
+        <Box.Flex justify={'flex-start'} align={'center'} css={styles.blue}>
+          {getOperationType()}
+        </Box.Flex>
+
+        {/* Asset Amount */}
+        <Box.Flex justify={'center'}>
+          <Box css={styles.spacer} />
+        </Box.Flex>
+        <Box>
+          {shouldShowAssetAmount &&
+            assetsAmount.length > 0 &&
+            renderAssets(assetsAmount)}
+        </Box>
+
+        {/* To Address */}
+        <Box.Flex justify={'flex-start'} align={'center'} css={styles.iconCol}>
+          <Avatar.Generated
+            role="img"
+            size="sm"
+            hash={operation.to}
+            aria-label={operation.to}
+          />
+        </Box.Flex>
+        <Box.Flex justify={'flex-start'} align={'center'} gap="$1">
+          <Text as="span" fontSize="sm" css={styles.name}>
+            {accountTo?.name || 'Unknown'}
+          </Text>
+          {isContract && (
+            <Box css={styles.badge}>
+              <Text fontSize="sm" color="gray8">
+                Contract
+              </Text>
+            </Box>
+          )}
+          <Text fontSize="sm" color="gray8" css={styles.address}>
+            {shortAddress(operation.to)}
+          </Text>
+          <IconButton
+            size="xs"
+            variant="link"
+            icon="Copy"
+            aria-label="Copy address"
+            onPress={() => navigator.clipboard.writeText(operation.to)}
+          />
+        </Box.Flex>
+      </Box.Flex>
+    </Box>
   );
 }
 // we also have the operations not related to the account in a group, and intermediate contract calls
 const styles = {
-  root: cssObj({
-    padding: '$1',
-    backgroundColor: '#E0E0E0',
-    borderRadius: '12px',
-    width: '100%',
-    boxSizing: 'border-box',
-  }),
   contentCol: cssObj({
     display: 'flex',
     backgroundColor: 'white',
