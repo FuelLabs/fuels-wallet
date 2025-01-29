@@ -25,6 +25,7 @@ export type AccountBalance = {
   balance: BN;
   balanceSymbol: string;
   amountInUsd: string | undefined;
+  totalBalanceInUsd: number;
   balances: CoinAsset[];
 };
 

@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  HStack,
   Heading,
   Icon,
   Text,
@@ -21,6 +22,9 @@ import {
 import { useAccounts } from '../../hooks';
 
 import { DEFAULT_DECIMAL_UNITS } from 'fuels';
+import { useAccountTotalBalance } from '~/systems/Account/hooks/useAccountTotalBalance';
+import { useAssets } from '~/systems/Asset';
+import { useAssetsAmount } from '~/systems/Transaction/hooks/useAssetsAmount';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 type BalanceWidgetWrapperProps = {
@@ -56,12 +60,20 @@ export function BalanceWidget({
   onChangeVisibility,
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
-
+  const totalBalanceInUsd = useAccountTotalBalance() ?? 0;
   const { original, tooltip } = useMemo(() => {
     return formatBalance(account?.balance, decimals);
   }, [account]);
 
   if (isLoading || !account) return <BalanceWidget.Loader />;
+
+  // const _totalValue = useMemo(() => assetsWithAmount.reduce((acc, asset) => {
+  //   console.log('fsk asset', asset);
+  //   // return acc + asset.amount;
+  //   return 0;
+  // }, 0), [assetsWithAmount]);
+
+  const totalValue = `$${totalBalanceInUsd?.toFixed?.(2) || '0.00'}`;
 
   return (
     <BalanceWidgetWrapper
@@ -99,39 +111,31 @@ export function BalanceWidget({
         </>
       }
       bottom={
-        <>
-          <Text className="label">Balance</Text>
-          <VStack>
-            <Box.Flex>
-              <Tooltip
-                content={original.display}
-                delayDuration={0}
-                open={visibility && tooltip ? undefined : false}
-              >
-                <Text aria-hidden={visibility} data-account-name={account.name}>
-                  {account.balanceSymbol || '$'}&nbsp;
-                  <AmountVisibility
-                    value={account.balance}
-                    visibility={visibility}
-                    units={decimals}
-                  />
-                </Text>
-              </Tooltip>
-              <VisibilityButton
-                aria-label={visibility ? 'Hide balance' : 'Show balance'}
-                visibility={visibility}
-                onChangeVisibility={onChangeVisibility}
-              />
-            </Box.Flex>
-            <Text
-              aria-hidden={visibility}
-              aria-label={`${account.balanceSymbol} conversion rate to USD`}
-              className="text-start text-sm"
+        <VStack gap="$2">
+          <Text className="label text-[0.8125rem] text-gray-11">
+            Total balance
+          </Text>
+          <HStack>
+            <Tooltip
+              content={original.display}
+              delayDuration={0}
+              open={visibility && tooltip ? undefined : false}
             >
-              {visibility ? (account.amountInUsd ?? '$0.00') : '•••••'}
-            </Text>
-          </VStack>
-        </>
+              <Text
+                aria-hidden={visibility}
+                aria-label={`${account.balanceSymbol} conversion rate to USD`}
+                className="value"
+              >
+                {visibility ? totalValue : '•••••'}
+              </Text>
+            </Tooltip>
+            <VisibilityButton
+              aria-label={visibility ? 'Hide balance' : 'Show balance'}
+              visibility={visibility}
+              onChangeVisibility={onChangeVisibility}
+            />
+          </HStack>
+        </VStack>
       }
     />
   );
@@ -150,7 +154,7 @@ const styles = {
     fontSize: '$sm',
   }),
   balance: cssObj({
-    pt: '$3',
+    py: '$5',
     px: '$4',
 
     '&[aria-hidden="true"]': {
@@ -170,6 +174,14 @@ const styles = {
     },
     '.label': {
       lineHeight: '$tight',
+      fontSize: '$sm',
+    },
+    '.value': {
+      fontSize: 32,
+      color: '$textInverse',
+      fontFamily: '$mono',
+      fontWeight: '$bold',
+      lineHeight: '36px',
     },
   }),
   name: cssObj({
@@ -183,7 +195,7 @@ const styles = {
     gap: '$3',
     alignItems: 'center',
     py: '$4',
-    px: '$4',
+    px: '$5',
     borderTop: '1px solid $border',
     borderBottom: '1px solid $border',
   }),

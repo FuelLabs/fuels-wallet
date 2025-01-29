@@ -115,6 +115,8 @@ export class AccountService {
         chainId,
         balances.map((balance) => balance.assetId)
       );
+      let totalBalanceInUsd = 0;
+
       const assetsAmountsUsdPromise = balances.map((asset) => {
         return convertAsset(
           chainId,
@@ -122,6 +124,11 @@ export class AccountService {
           asset.amount.toString()
         ).then((rate) => {
           assetsAmountsInUsd[asset.assetId] = rate?.amount;
+          if (rate?.amount) {
+            totalBalanceInUsd += Number.parseFloat(
+              rate.amount.replace(/[$,]/g, '')
+            );
+          }
         });
       });
       await Promise.all([...assetsAmountsUsdPromise, balanceAssets]);
@@ -131,13 +138,15 @@ export class AccountService {
           const prev = await acc;
           const cachedAsset = (await balanceAssets)?.get(balance.assetId);
 
+          const amountInUsd = assetsAmountsInUsd[balance.assetId];
+
           return [
             ...prev,
             {
               ...balance,
               amount: balance.amount,
               asset: cachedAsset,
-              amountInUsd: assetsAmountsInUsd[balance.assetId],
+              amountInUsd,
             },
           ];
         },
@@ -167,6 +176,7 @@ export class AccountService {
         amountInUsd: assetsAmountsInUsd[baseAssetId.toString()],
         balanceSymbol: 'ETH',
         balances: nextBalancesWithAssets,
+        totalBalanceInUsd,
       };
 
       const result: AccountWithBalance = {
@@ -181,6 +191,7 @@ export class AccountService {
         balanceSymbol: 'ETH',
         balances: [],
         amountInUsd: '',
+        totalBalanceInUsd: 0,
       };
       const result: AccountWithBalance = {
         ...account,

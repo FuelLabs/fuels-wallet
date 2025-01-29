@@ -18,6 +18,7 @@ const ACCOUNT: AccountWithBalance = {
   balanceSymbol: '$',
   balances: [],
   amountInUsd: '$38,830.32',
+  totalBalanceInUsd: 38830.32,
 };
 
 export const Usage = (args: BalanceWidgetProps) => (
