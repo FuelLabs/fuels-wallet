@@ -67,12 +67,6 @@ export function BalanceWidget({
 
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
-  // const _totalValue = useMemo(() => assetsWithAmount.reduce((acc, asset) => {
-  //   console.log('fsk asset', asset);
-  //   // return acc + asset.amount;
-  //   return 0;
-  // }, 0), [assetsWithAmount]);
-
   const totalValue = `$${totalBalanceInUsd?.toFixed?.(2) || '0.00'}`;
 
   return (
