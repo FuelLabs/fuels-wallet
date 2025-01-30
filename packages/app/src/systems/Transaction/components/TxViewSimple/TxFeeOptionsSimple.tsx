@@ -45,18 +45,13 @@ export function TxFeeOptionsSimple({
       <HStack justify="between" gap="$4">
         <Box css={styles.inputBox}>
           <Text fontSize="xs">Gas limit</Text>
-          <Input size="sm" isDisabled>
-            <Input.Number
-              value="51"
-              inputMode="numeric"
-              autoComplete="off"
-              css={{ width: '100%' }}
-            />
+          <Input size="sm" css={styles.input} isDisabled>
+            <Input.Number value="51" inputMode="numeric" autoComplete="off" />
           </Input>
         </Box>
         <Box css={styles.inputBox}>
           <Text fontSize="xs">Tip</Text>
-          <Input size="sm">
+          <Input size="sm" css={styles.input}>
             <Input.Number
               value={customTip}
               inputMode="decimal"
@@ -66,7 +61,6 @@ export function TxFeeOptionsSimple({
               thousandSeparator={false}
               decimalScale={DECIMAL_UNITS}
               placeholder="0.00"
-              css={{ width: '100%' }}
               isAllowed={isAmountAllowed}
               onChange={(e) => handleTipChange(e.target.value)}
             />
@@ -104,6 +98,19 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '$2',
+  }),
+  input: cssObj({
+    borderRadius: '8px',
+    backgroundColor: '$white',
+    border: '1px solid $gray5',
+    transition: 'border-color 0.3s',
+    '&:not([aria-disabled="true"]):focus-within': {
+      borderColor: '$brand',
+    },
+
+    '&>input': {
+      width: '100%',
+    },
   }),
   backButton: cssObj({
     alignSelf: 'center',
