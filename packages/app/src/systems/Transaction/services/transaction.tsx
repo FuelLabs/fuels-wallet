@@ -29,7 +29,7 @@ import {
   getGasLimitFromTxRequest,
   setGasLimitToTxRequest,
 } from '../utils';
-import { getCurrentTips } from '../utils/fee';
+import { convertTipToUsd, getCurrentTips } from '../utils/fee';
 import { type GetPageInfoQuery, getPageInfoQuery } from './queries';
 
 export type TxInputs = {
@@ -262,12 +262,17 @@ export class TxService {
 
       // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
       const feeAdaptedToSdkDiff = txSummary.fee.add(1);
-
+      const feeInUsd = await convertTipToUsd(
+        await provider.getChainId(),
+        await provider.getBaseAssetId(),
+        feeAdaptedToSdkDiff
+      );
       return {
         baseFee,
         txSummary: {
           ...txSummary,
           fee: feeAdaptedToSdkDiff,
+          feeInUsd,
         },
         proposedTxRequest,
       };

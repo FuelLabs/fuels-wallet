@@ -158,7 +158,7 @@ function TxContentInfo({
         isLoading={isLoading}
       />
       {isLoading && !showDetails && <TxFee.Loader />}
-      {showDetails && !fees && <TxFee fee={tx?.fee} />}
+      {showDetails && !fees && <TxFee fee={tx?.fee} tipInUsd={tx?.feeInUsd} />}
       {showDetails &&
         fees?.baseFee &&
         txRequestGasLimit &&
