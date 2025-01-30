@@ -21,7 +21,7 @@ export function TxViewSimple({
 
   return (
     <Box css={styles.root}>
-      <TxHeaderSimple origin={transaction.origin} isLoading={isLoading} />
+      <TxHeaderSimple />
       <Box css={styles.content}>
         <TxOperationsList
           operations={transaction.operations}
@@ -93,7 +93,7 @@ const styles = {
 TxViewSimple.Loader = function TxViewSimpleLoader() {
   return (
     <Box.Stack gap="$4">
-      <TxHeaderSimple.Loader />
+      <TxHeaderSimple />
       <TxOperationsList.Loader />
       <TxFeeSimple.Loader />
     </Box.Stack>
