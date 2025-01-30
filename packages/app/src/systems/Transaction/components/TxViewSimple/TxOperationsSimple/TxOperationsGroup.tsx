@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon, Text } from '@fuel-ui/react';
 import { useState } from 'react';
-import { animations } from '~/systems/Core';
 import { MotionBox } from '~/systems/Core/components/Motion';
 import type { SimplifiedOperation } from '../../../types';
 import { TxOperation } from './operations/TxOperation';
@@ -74,7 +73,7 @@ export function TxOperationsGroup({
 const styles = {
   root: cssObj({
     marginTop: '$2',
-    backgroundColor: '#E0E0E0',
+    backgroundColor: '$gray5',
     borderRadius: '12px',
     minHeight: '56px',
     alignItems: 'center',
@@ -96,7 +95,7 @@ const styles = {
     color: '#202020',
   }),
   title: cssObj({
-    color: '#202020',
+    color: '$gray12',
     fontWeight: '$medium',
     textAlign: 'left',
   }),
@@ -106,10 +105,10 @@ const styles = {
     gap: '4px 0',
   }),
   numberLabel: cssObj({
-    backgroundColor: '$white',
+    backgroundColor: '$gray1',
     borderRadius: '$full',
-    color: '#202020',
-    border: '1.5px solid #8D8D8D',
+    color: '$gray12',
+    border: '1.5px solid $gray8',
     width: '20px',
     height: '20px',
     display: 'flex',
