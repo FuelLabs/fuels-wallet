@@ -90,12 +90,12 @@ const styles = {
   title: cssObj({
     fontSize: '$sm',
     fontWeight: '$medium',
-    color: '#202020',
+    color: '$gray12',
   }),
   card: cssObj({
     padding: '$4',
-    backgroundColor: 'white',
-    border: '1px solid #e0e0e0',
+    backgroundColor: '$gray1',
+    border: '1px solid $gray6',
     borderRadius: '10px',
     fontSize: '13px',
   }),
