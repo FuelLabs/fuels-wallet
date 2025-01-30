@@ -60,7 +60,7 @@ const styles = {
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    background: '#F0F0F0',
+    background: '$gray3',
     overflow: 'auto',
   }),
   content: cssObj({
@@ -70,13 +70,13 @@ const styles = {
   title: cssObj({
     fontSize: '$sm',
     fontWeight: '$medium',
-    color: '#202020',
+    color: '$gray12',
   }),
   feeContainer: cssObj({
     padding: '32px 0 0 20px',
   }),
   icon: cssObj({
-    border: '1.5px solid rgb(100, 100, 100)',
+    border: '1.5px solid $gray9',
     borderRadius: '50%',
     width: '20px',
     height: '20px',
