@@ -1,62 +1,15 @@
 import { Box } from '@fuel-ui/react';
-import { useMemo } from 'react';
-import type { SimplifiedOperation } from '../../../types';
-import { TxCategory } from '../../../types';
+import type { CategorizedOperations } from '../../../types';
 import { TxOperationsGroup } from './TxOperationsGroup';
 import { TxOperation } from './operations/TxOperation';
 
 type TxOperationsListProps = {
-  operations: SimplifiedOperation[];
-  currentAccount?: string;
+  operations: CategorizedOperations;
 };
 
-export function TxOperationsList({
-  operations,
-  currentAccount,
-}: TxOperationsListProps) {
+export function TxOperationsList({ operations }: TxOperationsListProps) {
   const { mainOperations, otherRootOperations, intermediateOperations } =
-    useMemo(() => {
-      const main: SimplifiedOperation[] = [];
-      const otherRoot: SimplifiedOperation[] = [];
-      const intermediate: SimplifiedOperation[] = [];
-
-      for (const op of operations) {
-        const depth = op.metadata?.depth || 0;
-        const isTransfer = op.type === TxCategory.SEND;
-        const isFromCurrentAccount =
-          currentAccount &&
-          op.from.toLowerCase() === currentAccount.toLowerCase();
-        const isToCurrentAccount =
-          currentAccount &&
-          op.to.toLowerCase() === currentAccount.toLowerCase();
-
-        // All transfers go to main list
-        if (isTransfer) {
-          main.push(op);
-          continue;
-        }
-
-        // Contract calls at root level (depth 0)
-        if (depth === 0) {
-          // If related to current account, show in main list
-          if (isFromCurrentAccount || isToCurrentAccount) {
-            main.push(op);
-          } else {
-            otherRoot.push(op);
-          }
-          continue;
-        }
-
-        // All other operations (intermediate contract calls)
-        intermediate.push(op);
-      }
-
-      return {
-        mainOperations: main,
-        otherRootOperations: otherRoot,
-        intermediateOperations: intermediate,
-      };
-    }, [operations, currentAccount]);
+    operations;
 
   return (
     <Box>
@@ -65,7 +18,7 @@ export function TxOperationsList({
         <Box.Flex
           key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
           css={{
-            backgroundColor: '#E0E0E0',
+            backgroundColor: '$gray5',
             borderRadius: '12px',
             width: '100%',
             boxSizing: 'border-box',

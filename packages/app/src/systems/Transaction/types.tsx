@@ -94,9 +94,16 @@ export type SimplifiedFee = {
   gasPrice?: BN;
 };
 
+export type CategorizedOperations = {
+  mainOperations: SimplifiedOperation[];
+  otherRootOperations: SimplifiedOperation[];
+  intermediateOperations: SimplifiedOperation[];
+};
+
 export type SimplifiedTransaction = {
-  id?: string;
+  id: string;
   operations: SimplifiedOperation[];
+  categorizedOperations: CategorizedOperations;
   timestamp?: Date;
   fee: SimplifiedFee;
   origin?: {

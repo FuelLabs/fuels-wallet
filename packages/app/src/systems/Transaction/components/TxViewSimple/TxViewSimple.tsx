@@ -17,16 +17,13 @@ export function TxViewSimple({
 }: SimplifiedTransactionViewProps) {
   const [isCustomFees, setIsCustomFees] = useState(false);
   const [_selectedTip, setSelectedTip] = useState<BN>();
-  const { account } = useAccounts();
+  // const { account } = useAccounts();
 
   return (
     <Box css={styles.root}>
       <TxHeaderSimple />
       <Box css={styles.content}>
-        <TxOperationsList
-          operations={transaction.operations}
-          currentAccount={account?.address}
-        />
+        <TxOperationsList operations={transaction.categorizedOperations} />
         {showDetails && (
           <Box>
             <Box.Flex gap="18px" align="center" css={styles.feeContainer}>

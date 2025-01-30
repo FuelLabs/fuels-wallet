@@ -8,6 +8,7 @@ import {
 } from 'fuels';
 import type { ContractCallMetadata, SimplifiedOperation } from '../types';
 import { TxCategory } from '../types';
+import type { CategorizedOperations } from '../types';
 import type { SimplifiedTransaction } from '../types.tsx';
 
 type TransactionRequestWithOrigin = TransactionRequest & {
@@ -145,13 +146,60 @@ export function transformOperations(
   return operations;
 }
 
+function categorizeOperations(
+  operations: SimplifiedOperation[],
+  currentAccount?: string
+): CategorizedOperations {
+  const main: SimplifiedOperation[] = [];
+  const otherRoot: SimplifiedOperation[] = [];
+  const intermediate: SimplifiedOperation[] = [];
+
+  for (const op of operations) {
+    const depth = op.metadata?.depth || 0;
+    const isTransfer = op.type === TxCategory.SEND;
+    const isFromCurrentAccount =
+      currentAccount && op.from.toLowerCase() === currentAccount.toLowerCase();
+    const isToCurrentAccount =
+      currentAccount && op.to.toLowerCase() === currentAccount.toLowerCase();
+
+    // All transfers go to main list
+    if (isTransfer) {
+      main.push(op);
+      continue;
+    }
+
+    // Contract calls at root level (depth 0)
+    if (depth === 0) {
+      // If related to current account, show in main list
+      if (isFromCurrentAccount || isToCurrentAccount) {
+        main.push(op);
+      } else {
+        otherRoot.push(op);
+      }
+      continue;
+    }
+
+    // All other operations (intermediate contract calls)
+    intermediate.push(op);
+  }
+
+  return {
+    mainOperations: main,
+    otherRootOperations: otherRoot,
+    intermediateOperations: intermediate,
+  };
+}
+
 export function simplifyTransaction(
   summary: TransactionSummary,
   request?: TransactionRequest,
   currentAccount?: string
 ): SimplifiedTransaction {
-  console.log('summary', summary);
   const operations = transformOperations(summary, currentAccount);
+  const categorizedOperations = categorizeOperations(
+    operations,
+    currentAccount
+  );
 
   const requestWithOrigin = request as TransactionRequestWithOrigin;
   const origin = requestWithOrigin?.origin;
@@ -160,6 +208,7 @@ export function simplifyTransaction(
   return {
     id: summary.id,
     operations,
+    categorizedOperations,
     timestamp: summary.time ? new Date(summary.time) : undefined,
     fee: {
       total: new BN(summary.fee || 0),
