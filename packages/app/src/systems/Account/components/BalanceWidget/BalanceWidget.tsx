@@ -118,6 +118,7 @@ export function BalanceWidget({
               <Text
                 aria-hidden={visibility}
                 aria-label={`${account.balanceSymbol} conversion rate to USD`}
+                data-account-name={account.name}
                 className="value"
               >
                 {visibility ? totalValue : '•••••'}
