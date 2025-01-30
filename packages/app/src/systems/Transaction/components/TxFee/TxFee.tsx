@@ -26,7 +26,7 @@ export const TxFee: TxFeeComponent = ({
 }: TxFeeProps) => {
   return (
     <Card
-      css={styles.detailItem(!!checked, !!onChecked)}
+      css={styles.detailItem(!!checked, !!onChecked, !!title)}
       onClick={() => onChecked?.(true)}
     >
       <Text

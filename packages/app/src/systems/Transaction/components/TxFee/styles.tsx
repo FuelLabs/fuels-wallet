@@ -1,12 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
 
 export const styles = {
-  detailItem: (active = false, pointer = false) =>
+  detailItem: (active = false, pointer = false, title = false) =>
     cssObj({
-      padding: '$3 $4',
-      flexDirection: 'row',
+      padding: title ? '$3 $4' : '$2 $6',
+      flexDirection: title ? 'row' : 'column',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: title ? 'center' : 'flex-start',
       display: 'flex',
       columnGap: '$4',
       position: 'relative',
