@@ -8,9 +8,8 @@ import {
   Text,
 } from '@fuel-ui/react';
 import type { BN } from 'fuels';
-import { DEFAULT_PRECISION, bn } from 'fuels';
+import { DEFAULT_PRECISION } from 'fuels';
 import { useEffect, useRef, useState } from 'react';
-import { formatAmount } from '~/systems/Core';
 import { TxService } from '../../services';
 import type { SimplifiedFee } from '../../types';
 
@@ -132,7 +131,7 @@ const styles = {
   }),
   option: cssObj({
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '$white',
     border: '1px solid #e0e0e0',
     borderRadius: '10px',
     color: '#646464',
@@ -142,6 +141,7 @@ const styles = {
     justifyContent: 'space-between',
     padding: '$3',
     transition: 'all 0.2s ease',
+    boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
 
     '&:hover': {
       backgroundColor: '#f0f0f0',
