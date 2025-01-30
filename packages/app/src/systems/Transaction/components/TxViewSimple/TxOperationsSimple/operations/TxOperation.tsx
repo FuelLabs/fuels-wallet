@@ -167,7 +167,12 @@ export function TxOperation({
   }, [operation]);
 
   const getOperationType = () => {
-    if (isContract) return 'Calls contract (sending funds)';
+    if (isContract) {
+      if (operation.metadata?.amount && operation.metadata?.assetId) {
+        return 'Calls contract (sending funds)';
+      }
+      return 'Calls contract';
+    }
     if (isTransfer) return 'Sends token';
     return 'Unknown';
   };
