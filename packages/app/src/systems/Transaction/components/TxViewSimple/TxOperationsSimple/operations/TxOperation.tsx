@@ -5,8 +5,8 @@ import {
   Box,
   Icon,
   IconButton,
+  Image,
   Text,
-  Tooltip,
 } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
@@ -31,6 +31,27 @@ const renderAssets = (amounts: AssetFuelAmount[]) => {
 
   if (allEmptyAmounts) return null;
 
+  const getAssetImage = (asset: AssetFuelAmount) => {
+    if (asset?.icon) {
+      return (
+        <Image
+          src={asset.icon}
+          alt={`${asset.name} image`}
+          width="24px"
+          height="24px"
+        />
+      );
+    }
+
+    return (
+      <Avatar.Generated
+        hash={asset?.assetId || asset?.name || ''}
+        aria-label={`${asset?.name} generated image`}
+        size="xsm"
+      />
+    );
+  };
+
   return (
     <Box css={cssObj({ marginBottom: '$3' })}>
       <Box.Stack gap="$1">
@@ -38,29 +59,17 @@ const renderAssets = (amounts: AssetFuelAmount[]) => {
           (assetAmount) =>
             bn(assetAmount.amount).gt(0) && (
               <Box.Flex css={styles.asset} key={assetAmount.assetId}>
-                <Avatar.Generated hash={assetAmount.assetId} size="xsm" />
+                {getAssetImage(assetAmount)}
                 <Box css={styles.amountContainer}>
-                  <Tooltip
-                    content={formatAmount({
+                  <Text as="span" className="amount-value">
+                    {formatAmount({
                       amount: assetAmount.amount,
                       options: {
                         units: assetAmount.decimals || 0,
                         precision: assetAmount.decimals || 0,
                       },
                     })}
-                    delayDuration={0}
-                    open={false}
-                  >
-                    <Text as="span" className="amount-value">
-                      {formatAmount({
-                        amount: assetAmount.amount,
-                        options: {
-                          units: assetAmount.decimals || 0,
-                          precision: assetAmount.decimals || 0,
-                        },
-                      })}
-                    </Text>
-                  </Tooltip>
+                  </Text>
                   <Text as="span">{assetAmount.symbol}</Text>
                   {assetAmount.isNft && (
                     <Badge
@@ -184,7 +193,6 @@ export function TxOperation({
           rowGap: '1px',
         })}
       >
-        {/* From Address */}
         <Box.Flex justify={'flex-start'} align={'center'} css={styles.iconCol}>
           <Avatar.Generated
             role="img"
@@ -277,8 +285,8 @@ export function TxOperation({
 const styles = {
   contentCol: cssObj({
     display: 'flex',
-    backgroundColor: 'white',
-    boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
+    backgroundColor: '$gray1',
+    boxShadow: '0px 2px 6px -1px $colors$gray4, 0px 0px 0px 1px $colors$gray6',
     flex: 1,
     borderRadius: '8px',
     minWidth: 0,
@@ -290,18 +298,14 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '$1',
-    color: '#0D74CE',
+    color: '$indigo11',
     lineHeight: 'normal',
-  }),
-  functionName: cssObj({
-    fontSize: '$sm',
-    color: '$gray8',
   }),
   spacer: cssObj({
     minHeight: '14px',
     width: '2px',
     height: '100%',
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '$gray6',
     borderRadius: '$lg',
   }),
   iconCol: cssObj({
@@ -314,31 +318,23 @@ const styles = {
   }),
   name: cssObj({
     fontWeight: '$semibold',
-    color: '#202020',
+    color: '$gray12',
   }),
   address: cssObj({
     fontWeight: '$medium',
-    color: '#646464',
+    color: '$gray11',
   }),
-  header: {
-    alignItems: 'center',
-    gap: '$2',
-    mb: '$3',
-  },
-  title: {
-    fontSize: '$sm',
-    margin: 0,
-  },
   asset: {
     alignItems: 'center',
     gap: '$2',
+    marginTop: '$1',
   },
   assetNft: {
     padding: '$1 $2',
   },
   amountContainer: {
     fontWeight: '$semibold',
-    color: '#202020',
+    color: '$gray12',
     fontSize: '$sm',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
