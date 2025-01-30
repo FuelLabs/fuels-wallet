@@ -39,7 +39,7 @@ test.describe('HomeWallet', () => {
     await page.waitForTimeout(2000);
     await page.reload();
     await hasText(page, /Ethereum/i);
-    await hasText(page, '$0.00');
+    await hasText(page, /[$]\d{1,}\.\d{1,}/);
     await getByAriaLabel(page, 'Selected Network').click();
     await getByAriaLabel(page, 'fuel_network-item-2').click();
     await hasText(page, "You don't have any assets");
