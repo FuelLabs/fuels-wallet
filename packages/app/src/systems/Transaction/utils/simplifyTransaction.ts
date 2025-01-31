@@ -32,22 +32,16 @@ function getOperationType(operation: Operation): TxCategory {
 }
 
 function getReceiptDepth(
-  receipt: TransactionResultReceipt,
-  allReceipts: TransactionResultReceipt[]
+  allReceipts: TransactionResultReceipt[],
+  receiptIndex: number
 ): number {
-  const receiptIndex = allReceipts.findIndex((r) => r === receipt);
-  if (receiptIndex === -1) return 0;
-
   let depth = 0;
+
   for (let i = 0; i < receiptIndex; i++) {
     const r = allReceipts[i];
     if (r.type === ReceiptType.Call) depth++;
     if (r.type === ReceiptType.ReturnData && depth > 0) depth--;
-    if (
-      r.type === ReceiptType.ScriptResult &&
-      allReceipts[i - 1]?.type !== ReceiptType.Return
-    )
-      depth = 0;
+    if (r.type === ReceiptType.ScriptResult) depth = 0;
   }
 
   return depth;
@@ -56,7 +50,8 @@ function getReceiptDepth(
 function transformOperation(
   operation: Operation,
   allReceipts: TransactionResultReceipt[],
-  currentAccount?: string
+  currentAccount?: string,
+  receiptIndex?: number
 ): SimplifiedOperation {
   const {
     name,
@@ -69,7 +64,11 @@ function transformOperation(
 
   const type = getOperationType(operation);
   const receipt = receipts[0];
-  const depth = receipt ? getReceiptDepth(receipt, allReceipts) : 0;
+
+  const depth =
+    receipt && typeof receiptIndex === 'number'
+      ? getReceiptDepth(allReceipts, receiptIndex)
+      : 0;
 
   const isFromCurrentAccount = currentAccount
     ? from?.address === currentAccount
@@ -133,22 +132,31 @@ export function transformOperations(
 ): SimplifiedOperation[] {
   if (!summary.operations) return [];
 
-  // Get all receipts from all operations
-  const allReceipts = summary.operations.flatMap((op) => op.receipts || []);
+  const allReceipts = summary.receipts || [];
 
-  console.log('All receipts:', allReceipts);
+  const operations = summary.operations.map((op) => {
+    const operationReceipt = op.receipts?.[0];
+    if (!operationReceipt) return transformOperation(op, [], currentAccount);
 
-  // Transform operations with receipt depth information
-  const operations = summary.operations.map((op) =>
-    transformOperation(op, allReceipts, currentAccount)
-  );
+    const receiptIndex = allReceipts.findIndex(
+      (r) =>
+        r.type === operationReceipt.type &&
+        r.pc === operationReceipt.pc &&
+        r.is === operationReceipt.is
+    );
 
-  // Sort by depth to maintain visual hierarchy
+    if (receiptIndex === -1) {
+      console.warn('Could not find operation receipt in full receipt list');
+      return transformOperation(op, [], currentAccount);
+    }
+
+    return transformOperation(op, allReceipts, currentAccount, receiptIndex);
+  });
+
   operations.sort(
     (a, b) => (a.metadata?.depth || 0) - (b.metadata?.depth || 0)
   );
 
-  console.log('Transformed operations with depth:', operations);
   return operations;
 }
 
@@ -170,15 +178,12 @@ function categorizeOperations(
       currentAccount &&
       op.to.address.toLowerCase() === currentAccount.toLowerCase();
 
-    // All transfers go to main list
     if (isTransfer) {
       main.push(op);
       continue;
     }
 
-    // Contract calls at root level (depth 0)
     if (depth === 0) {
-      // If related to current account, show in main list
       if (isFromCurrentAccount || isToCurrentAccount) {
         main.push(op);
       } else {
@@ -187,7 +192,6 @@ function categorizeOperations(
       continue;
     }
 
-    // All other operations (intermediate contract calls)
     intermediate.push(op);
   }
 
