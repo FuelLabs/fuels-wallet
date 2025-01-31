@@ -18,11 +18,13 @@ import { TxCategory } from '../../../../types';
 type TxOperationCardProps = {
   operation: SimplifiedOperation;
   assetsAmount: AssetFuelAmount[];
+  depth: number;
 };
 
 export function TxOperationCard({
   operation,
   assetsAmount,
+  depth,
 }: TxOperationCardProps) {
   const { accounts } = useAccounts();
   const isContract = operation.type === TxCategory.CONTRACTCALL;
@@ -119,7 +121,7 @@ export function TxOperationCard({
   };
 
   return (
-    <Box css={styles.contentCol}>
+    <Box css={styles.contentCol} style={{ marginLeft: depth * 4 }}>
       <Box.Flex
         css={cssObj({
           display: 'grid',
@@ -131,7 +133,6 @@ export function TxOperationCard({
           rowGap: '1px',
         })}
       >
-        {/* From Address */}
         <Box.Flex justify={'flex-start'} align={'center'} css={styles.iconCol}>
           <Avatar.Generated
             role="img"
@@ -140,7 +141,7 @@ export function TxOperationCard({
             aria-label={operation.from.address}
           />
         </Box.Flex>
-        <Box.Flex justify={'flex-start'} align={'center'} gap="$1">
+        <Box.Flex justify={'flex-start'} align={'center'} gap="$1" wrap="wrap">
           <Text as="span" fontSize="sm" css={styles.name}>
             {accountFrom?.name || 'Unknown'}
           </Text>
@@ -165,7 +166,6 @@ export function TxOperationCard({
           />
         </Box.Flex>
 
-        {/* Spacer and Arrow */}
         <Box.Flex justify={'center'}>
           <Box css={styles.spacer} />
         </Box.Flex>
@@ -177,7 +177,6 @@ export function TxOperationCard({
           {getOperationType()}
         </Box.Flex>
 
-        {/* Asset Amount */}
         <Box.Flex justify={'center'}>
           <Box css={styles.spacer} />
         </Box.Flex>
@@ -187,7 +186,6 @@ export function TxOperationCard({
             renderAssets(assetsAmount)}
         </Box>
 
-        {/* To Address */}
         <Box.Flex justify={'flex-start'} align={'center'} css={styles.iconCol}>
           <Avatar.Generated
             role="img"
@@ -196,7 +194,7 @@ export function TxOperationCard({
             aria-label={operation.to.address}
           />
         </Box.Flex>
-        <Box.Flex justify={'flex-start'} align={'center'} gap="$1">
+        <Box.Flex justify={'flex-start'} align={'center'} gap="$1" wrap="wrap">
           <Text as="span" fontSize="sm" css={styles.name}>
             {accountTo?.name || 'Unknown'}
           </Text>
@@ -265,20 +263,20 @@ const styles = {
     color: '$indigo11',
     lineHeight: 'normal',
   }),
-  amountContainer: {
+  amountContainer: cssObj({
     fontWeight: '$semibold',
     color: '$gray12',
     fontSize: '$sm',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-  },
-  assetNft: {
+  }),
+  assetNft: cssObj({
     padding: '$1 $2',
-  },
-  asset: {
+  }),
+  asset: cssObj({
     alignItems: 'center',
     gap: '$2',
     marginTop: '$1',
-  },
+  }),
 };
