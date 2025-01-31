@@ -66,6 +66,7 @@ function transformOperation(
     calls = [],
     receipts = [],
   } = operation;
+
   const type = getOperationType(operation);
   const receipt = receipts[0];
   const depth = receipt ? getReceiptDepth(receipt, allReceipts) : 0;
@@ -73,6 +74,11 @@ function transformOperation(
   const isFromCurrentAccount = currentAccount
     ? from?.address === currentAccount
     : false;
+
+  const fromAddress = from
+    ? { address: from.address, type: from.type }
+    : undefined;
+  const toAddress = to ? { address: to.address, type: to.type } : undefined;
 
   if (name === OperationName.contractCall && calls.length > 0) {
     const call = calls[0] as OperationFunctionCall;
@@ -88,8 +94,8 @@ function transformOperation(
 
     return {
       type,
-      from: from?.address || '',
-      to: to?.address || '',
+      from: fromAddress!,
+      to: toAddress!,
       isFromCurrentAccount,
       metadata,
     };
@@ -99,8 +105,8 @@ function transformOperation(
     const asset = assetsSent[0];
     return {
       type,
-      from: from?.address || '',
-      to: to?.address || '',
+      from: fromAddress!,
+      to: toAddress!,
       isFromCurrentAccount,
       amount: new BN(asset.amount),
       assetId: asset.assetId,
@@ -112,8 +118,8 @@ function transformOperation(
 
   return {
     type,
-    from: from?.address || '',
-    to: to?.address || '',
+    from: fromAddress!,
+    to: toAddress!,
     isFromCurrentAccount,
     metadata: {
       depth,
@@ -158,9 +164,11 @@ function categorizeOperations(
     const depth = op.metadata?.depth || 0;
     const isTransfer = op.type === TxCategory.SEND;
     const isFromCurrentAccount =
-      currentAccount && op.from.toLowerCase() === currentAccount.toLowerCase();
+      currentAccount &&
+      op.from.address.toLowerCase() === currentAccount.toLowerCase();
     const isToCurrentAccount =
-      currentAccount && op.to.toLowerCase() === currentAccount.toLowerCase();
+      currentAccount &&
+      op.to.address.toLowerCase() === currentAccount.toLowerCase();
 
     // All transfers go to main list
     if (isTransfer) {
@@ -195,6 +203,7 @@ export function simplifyTransaction(
   request?: TransactionRequest,
   currentAccount?: string
 ): SimplifiedTransaction {
+  console.log('summary', summary);
   const operations = transformOperations(summary, currentAccount);
   const categorizedOperations = categorizeOperations(
     operations,

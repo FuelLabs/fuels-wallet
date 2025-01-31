@@ -75,10 +75,15 @@ export type SwapMetadata = {
   parentReceiptId?: string;
 };
 
+export type SimplifiedAddress = {
+  address: string;
+  type: number; // 0 for contract, 1 for account
+};
+
 export type SimplifiedOperation = {
   type: TxCategory;
-  from: string;
-  to: string;
+  from: SimplifiedAddress;
+  to: SimplifiedAddress;
   amount?: BN;
   assetId?: string;
   isFromCurrentAccount: boolean;

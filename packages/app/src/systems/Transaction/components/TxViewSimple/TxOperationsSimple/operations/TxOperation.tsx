@@ -156,10 +156,10 @@ export function TxOperation({
   const [assetsAmount, setAssetsAmount] = useState<AssetFuelAmount[]>([]);
 
   const accountFrom = accounts?.find(
-    (acc) => acc.address.toLowerCase() === operation.from.toLowerCase()
+    (acc) => acc.address.toLowerCase() === operation.from.address.toLowerCase()
   );
   const accountTo = accounts?.find(
-    (acc) => acc.address.toLowerCase() === operation.to.toLowerCase()
+    (acc) => acc.address.toLowerCase() === operation.to.address.toLowerCase()
   );
 
   useEffect(() => {
@@ -185,6 +185,9 @@ export function TxOperation({
     (operation.amount && operation.assetId) ||
     (metadata?.amount && metadata?.assetId);
 
+  const isFromContract = operation.from.type === 0;
+  const isToContract = operation.to.type === 0;
+
   return (
     <Box css={styles.contentCol}>
       <Box.Flex
@@ -202,15 +205,15 @@ export function TxOperation({
           <Avatar.Generated
             role="img"
             size="sm"
-            hash={operation.from}
-            aria-label={operation.from}
+            hash={operation.from.address}
+            aria-label={operation.from.address}
           />
         </Box.Flex>
-        <Box.Flex gap="$1" justify={'flex-start'} align={'center'}>
+        <Box.Flex justify={'flex-start'} align={'center'} gap="$1">
           <Text as="span" fontSize="sm" css={styles.name}>
             {accountFrom?.name || 'Unknown'}
           </Text>
-          {isContract && (
+          {isFromContract && (
             <Box css={styles.badge}>
               <Text fontSize="sm" color="gray8">
                 Contract
@@ -218,14 +221,16 @@ export function TxOperation({
             </Box>
           )}
           <Text fontSize="sm" color="gray8" css={styles.address}>
-            {shortAddress(operation.from)}
+            {shortAddress(operation.from.address)}
           </Text>
           <IconButton
             size="xs"
             variant="link"
             icon="Copy"
             aria-label="Copy address"
-            onPress={() => navigator.clipboard.writeText(operation.from)}
+            onPress={() =>
+              navigator.clipboard.writeText(operation.from.address)
+            }
           />
         </Box.Flex>
 
@@ -256,30 +261,30 @@ export function TxOperation({
           <Avatar.Generated
             role="img"
             size="sm"
-            hash={operation.to}
-            aria-label={operation.to}
+            hash={operation.to.address}
+            aria-label={operation.to.address}
           />
         </Box.Flex>
         <Box.Flex justify={'flex-start'} align={'center'} gap="$1">
           <Text as="span" fontSize="sm" css={styles.name}>
             {accountTo?.name || 'Unknown'}
           </Text>
-          {isContract && (
+          {isToContract && (
             <Box css={styles.badge}>
-              <Text fontSize="sm" color="gray8">
+              <Text fontSize="sm" color="gray11">
                 Contract
               </Text>
             </Box>
           )}
           <Text fontSize="sm" color="gray8" css={styles.address}>
-            {shortAddress(operation.to)}
+            {shortAddress(operation.to.address)}
           </Text>
           <IconButton
             size="xs"
             variant="link"
             icon="Copy"
             aria-label="Copy address"
-            onPress={() => navigator.clipboard.writeText(operation.to)}
+            onPress={() => navigator.clipboard.writeText(operation.to.address)}
           />
         </Box.Flex>
       </Box.Flex>
@@ -317,7 +322,7 @@ const styles = {
     padding: '2px 0',
   }),
   badge: cssObj({
-    padding: '0 $1',
+    padding: '2px $1',
     backgroundColor: '$gray3',
     borderRadius: '$md',
   }),
