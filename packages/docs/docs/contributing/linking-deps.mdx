@@ -1,3 +1,4 @@
+
 ---
 title: Linking local dependencies
 category: Contributing
@@ -5,42 +6,44 @@ category: Contributing
 
 # Supported dependencies
 
-We support locally link with [`@fuel-ui`](https://github.com/FuelLabs/fuel-ui) and [@fuel-ts](https://github.com/FuelLabs/fuels-ts) repositories
+We support locally linking with [`@fuel-ui`](https://github.com/FuelLabs/fuel-ui) and 
+[`@fuel-ts`](https://github.com/FuelLabs/fuels-ts) repositories.
 
-# Using local dependencies in wallet project
+# Using local dependencies in the wallet project
 
-This will link dependencies within wallet monorepo to your global `pnpm` store, enabling you to use `@fuel-ui` and/or `@fuel-ts` packages via links in your local projects.
-This task may be tedious, but you can accomplish it by following these steps:
+This will link dependencies within the wallet monorepo to your global `pnpm` store, enabling 
+you to use `@fuel-ui` and/or `@fuel-ts` packages via links in your local projects. 
+This task may require additional effort, but you can accomplish it by following these steps:
 
-1. In the root directory of the repositories(`@fuel-ui` and/or `@fuel-ts`):
+1. In the root directory of the repositories (`@fuel-ui` and/or `@fuel-ts`):
 
-- Link dependency to global pnpm store:
+- Link the dependency to the global `pnpm` store:
 
 ```sh
 pnpm -r exec pnpm link --global --dir ./
 ```
 
-- Execute your build and make sure changes will reflect in wallet:
+- Execute your build and ensure changes reflect in the wallet:
 
 ```sh
 pnpm build:packages
 ```
 
-2. Inside `fuels-wallet` root directory, edit `scripts/deps.sh`.
+2. Inside the `fuels-wallet` root directory, edit `scripts/deps.sh`.
 
-- If you're enabling link to `@fuel-ui`, enable this configuration:
+- If you're enabling the link to `@fuel-ui`, set the following configuration:
 
 ```sh
 LINK_FUEL_UI=true
 ```
 
-- If you're enabling link to `@fuel-ts`, enable this configuration:
+- If you're enabling the link to `@fuel-ts`, set the following configuration:
 
 ```sh
 LINK_FUEL_TS=true
 ```
 
-3. That's it. Now inside `fuels-wallet` root directory, run your dev command as you wish:
+3. Inside the `fuels-wallet` root directory, run your development command as needed:
 
 ```sh
 pnpm dev
@@ -50,12 +53,60 @@ pnpm dev:crx
 
 > **Note**
 >
-> This command will:
+> These commands will:
 >
-> - Link dependency repos across all wallet monorepo packages, including the root
-> - Run dev server with linked dependencies
+> - Link the dependency repositories across all wallet monorepo packages, including the root.
+> - Run the development server with linked dependencies.
 
-Done! Now your changes in `@fuel-ui` and/or `@fuel-ts` will reflect in wallet project. Test with a simple `console.log` to make sure it worked.
+Done! Now, changes in `@fuel-ui` and/or `@fuel-ts` will reflect in the wallet project. 
+To verify, run a simple `console.log` test or follow the detailed verification steps below.
+
+### Detailed Verification Steps
+
+After linking dependencies, it’s essential to verify that everything works as expected. 
+Here are some recommended tests:
+
+1. **Component Rendering Test**: Ensure components from `@fuel-ui` render correctly in the Fuel 
+Wallet app. Use a test to check if components display as expected:
+
+```javascript
+import { render } from '@testing-library/react';
+import { SomeComponent } from '@fuel-ui';
+
+test('renders Fuel UI component correctly', () => {
+  const { getByText } = render(<SomeComponent />);
+  expect(getByText('Expected text')).toBeInTheDocument();
+});
+```
+
+2. **Functionality Test**: Verify that functions from `@fuel-ts` perform as expected. For 
+instance, if `@fuel-ts` includes utility functions, test their output to confirm proper 
+integration with the main project.
+
+```javascript
+import { someFunction } from '@fuel-ts';
+
+test('someFunction returns expected data', async () => {
+  const result = await someFunction();
+  expect(result).toEqual(expectedData);
+});
+```
+
+3. **End-to-End (E2E) Test**: Run an E2E test to confirm that key user flows (like wallet 
+connection) work as expected with the linked dependencies.
+
+```javascript
+describe('Fuel Wallet Integration', () => {
+  it('should successfully connect to Fuel Wallet', () => {
+    cy.visit('http://localhost:3000');
+    cy.get('[data-testid="connect-button"]').click();
+    cy.contains('Connected').should('be.visible');
+  });
+});
+```
+
+These tests will help ensure that your local dependencies are correctly linked and functional 
+within the Fuel Wallet environment.
 
 ### Troubleshooting
 
@@ -65,7 +116,8 @@ If you're linking for the first time, you might need:
   pnpm setup
 ```
 
-If it still have problems, you might need to setup again (As `pnpm` releases new version, the global folder structure may change)
+If issues persist, you might need to run the setup again (as `pnpm` releases new versions, 
+the global folder structure may change).
 
 ```sh
   pnpm setup
