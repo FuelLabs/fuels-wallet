@@ -53,6 +53,14 @@ export enum OperationDirection {
   unknown = 'Unknown',
 }
 
+export type GroupedAssets = {
+  [assetId: string]: {
+    amount: BN;
+    assetId: string;
+    assetAmount?: AssetFuelAmount;
+  };
+};
+
 export type ContractCallMetadata = {
   contractId?: string;
   functionName?: string;
@@ -62,6 +70,8 @@ export type ContractCallMetadata = {
   depth?: number;
   receiptType?: ReceiptType;
   assetAmount?: AssetFuelAmount;
+  operationCount?: number;
+  groupedAssets?: GroupedAssets;
 };
 
 export type SwapMetadata = {

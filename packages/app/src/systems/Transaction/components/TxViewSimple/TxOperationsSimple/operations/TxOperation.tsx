@@ -162,6 +162,8 @@ export function TxOperation({
     (acc) => acc.address.toLowerCase() === operation.to.address.toLowerCase()
   );
 
+  const [isExpanded, setIsExpanded] = useState(false);
+
   useEffect(() => {
     fetchAssetsAmount(operation).then(setAssetsAmount);
   }, [operation]);
@@ -189,106 +191,142 @@ export function TxOperation({
   const isToContract = operation.to.type === 0;
 
   return (
-    <Box css={styles.contentCol}>
-      <Box.Flex
-        css={cssObj({
-          display: 'grid',
-          gridTemplateColumns: 'auto 1fr',
-          gridTemplateRows: 'repeat(5, auto)',
-          width: '100%',
-          marginBottom: '$2',
-          columnGap: '$2',
-          rowGap: '1px',
-        })}
-      >
-        <Box.Flex justify={'flex-start'} align={'center'} css={styles.iconCol}>
-          <Avatar.Generated
-            role="img"
-            size="sm"
-            hash={operation.from.address}
-            aria-label={operation.from.address}
-          />
+    <Box.VStack>
+      <Box css={styles.contentCol}>
+        <Box.Flex
+          css={cssObj({
+            display: 'grid',
+            gridTemplateColumns: 'auto 1fr',
+            gridTemplateRows: 'repeat(5, auto)',
+            width: '100%',
+            marginBottom: '$2',
+            columnGap: '$2',
+            rowGap: '1px',
+          })}
+        >
+          <Box.Flex
+            justify={'flex-start'}
+            align={'center'}
+            css={styles.iconCol}
+          >
+            <Avatar.Generated
+              role="img"
+              size="sm"
+              hash={operation.from.address}
+              aria-label={operation.from.address}
+            />
+          </Box.Flex>
+          <Box.Flex justify={'flex-start'} align={'center'} gap="$1">
+            <Text as="span" fontSize="sm" css={styles.name}>
+              {accountFrom?.name || 'Unknown'}
+            </Text>
+            {isFromContract && (
+              <Box css={styles.badge}>
+                <Text fontSize="sm" color="gray8">
+                  Contract
+                </Text>
+              </Box>
+            )}
+            <Text fontSize="sm" color="gray8" css={styles.address}>
+              {shortAddress(operation.from.address)}
+            </Text>
+            <IconButton
+              size="xs"
+              variant="link"
+              icon="Copy"
+              aria-label="Copy address"
+              onPress={() =>
+                navigator.clipboard.writeText(operation.from.address)
+              }
+            />
+          </Box.Flex>
+
+          {/* Spacer and Arrow */}
+          <Box.Flex justify={'center'}>
+            <Box css={styles.spacer} />
+          </Box.Flex>
+          <Box />
+          <Box.Flex justify={'center'} align={'center'} css={styles.blue}>
+            <Icon icon="CircleArrowDown" size={20} />
+          </Box.Flex>
+          <Box.Flex justify={'flex-start'} align={'center'} css={styles.blue}>
+            {getOperationType()}
+          </Box.Flex>
+
+          {/* Asset Amount */}
+          <Box.Flex justify={'center'}>
+            <Box css={styles.spacer} />
+          </Box.Flex>
+          <Box>
+            {shouldShowAssetAmount &&
+              assetsAmount.length > 0 &&
+              renderAssets(assetsAmount)}
+          </Box>
+
+          {/* To Address */}
+          <Box.Flex
+            justify={'flex-start'}
+            align={'center'}
+            css={styles.iconCol}
+          >
+            <Avatar.Generated
+              role="img"
+              size="sm"
+              hash={operation.to.address}
+              aria-label={operation.to.address}
+            />
+          </Box.Flex>
+          <Box.Flex justify={'flex-start'} align={'center'} gap="$1">
+            <Text as="span" fontSize="sm" css={styles.name}>
+              {accountTo?.name || 'Unknown'}
+            </Text>
+            {isToContract && (
+              <Box css={styles.badge}>
+                <Text fontSize="sm" color="gray11">
+                  Contract
+                </Text>
+              </Box>
+            )}
+            <Text fontSize="sm" color="gray8" css={styles.address}>
+              {shortAddress(operation.to.address)}
+            </Text>
+            <IconButton
+              size="xs"
+              variant="link"
+              icon="Copy"
+              aria-label="Copy address"
+              onPress={() =>
+                navigator.clipboard.writeText(operation.to.address)
+              }
+            />
+          </Box.Flex>
         </Box.Flex>
-        <Box.Flex justify={'flex-start'} align={'center'} gap="$1">
-          <Text as="span" fontSize="sm" css={styles.name}>
-            {accountFrom?.name || 'Unknown'}
+      </Box>
+      {metadata.operationCount && (
+        <Box
+          css={styles.operationCount}
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <Icon
+            icon={isExpanded ? 'ArrowsMinimize' : 'ArrowsMaximize'}
+            size={20}
+          />
+          <Text fontSize="sm" color="gray12" as="span">
+            {isExpanded ? 'Collapse' : 'Expand'}
           </Text>
-          {isFromContract && (
-            <Box css={styles.badge}>
-              <Text fontSize="sm" color="gray8">
-                Contract
-              </Text>
-            </Box>
+          {isExpanded ? null : (
+            <Text fontSize="sm" color="gray11" as="span">
+              (+{metadata.operationCount} operations)
+            </Text>
           )}
-          <Text fontSize="sm" color="gray8" css={styles.address}>
-            {shortAddress(operation.from.address)}
-          </Text>
-          <IconButton
-            size="xs"
-            variant="link"
-            icon="Copy"
-            aria-label="Copy address"
-            onPress={() =>
-              navigator.clipboard.writeText(operation.from.address)
-            }
-          />
-        </Box.Flex>
-
-        {/* Spacer and Arrow */}
-        <Box.Flex justify={'center'}>
-          <Box css={styles.spacer} />
-        </Box.Flex>
-        <Box />
-        <Box.Flex justify={'center'} align={'center'} css={styles.blue}>
-          <Icon icon="CircleArrowDown" size={20} />
-        </Box.Flex>
-        <Box.Flex justify={'flex-start'} align={'center'} css={styles.blue}>
-          {getOperationType()}
-        </Box.Flex>
-
-        {/* Asset Amount */}
-        <Box.Flex justify={'center'}>
-          <Box css={styles.spacer} />
-        </Box.Flex>
-        <Box>
-          {shouldShowAssetAmount &&
-            assetsAmount.length > 0 &&
-            renderAssets(assetsAmount)}
         </Box>
-
-        {/* To Address */}
-        <Box.Flex justify={'flex-start'} align={'center'} css={styles.iconCol}>
-          <Avatar.Generated
-            role="img"
-            size="sm"
-            hash={operation.to.address}
-            aria-label={operation.to.address}
-          />
-        </Box.Flex>
-        <Box.Flex justify={'flex-start'} align={'center'} gap="$1">
-          <Text as="span" fontSize="sm" css={styles.name}>
-            {accountTo?.name || 'Unknown'}
-          </Text>
-          {isToContract && (
-            <Box css={styles.badge}>
-              <Text fontSize="sm" color="gray11">
-                Contract
-              </Text>
-            </Box>
-          )}
-          <Text fontSize="sm" color="gray8" css={styles.address}>
-            {shortAddress(operation.to.address)}
-          </Text>
-          <IconButton
-            size="xs"
-            variant="link"
-            icon="Copy"
-            aria-label="Copy address"
-            onPress={() => navigator.clipboard.writeText(operation.to.address)}
-          />
-        </Box.Flex>
-      </Box.Flex>
-    </Box>
+      )}
+      {isExpanded && (
+        <Box css={styles.expandedOperations}>
+          <pre>{JSON.stringify(metadata.groupedAssets)}</pre>
+        </Box>
+      )}
+    </Box.VStack>
   );
 }
 
@@ -350,4 +388,18 @@ const styles = {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
+  operationCount: {
+    marginTop: '$2',
+    marginLeft: '$2',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '$1',
+    justifyContent: 'center',
+    marginBottom: '$2',
+    cursor: 'pointer',
+  },
+  expandedOperations: cssObj({
+    marginLeft: '$2',
+    marginTop: '$2',
+  }),
 };

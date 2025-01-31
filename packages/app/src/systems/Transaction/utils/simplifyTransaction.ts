@@ -160,6 +160,60 @@ export function transformOperations(
   return operations;
 }
 
+function groupSimilarOperations(
+  operations: SimplifiedOperation[]
+): SimplifiedOperation[] {
+  const groupedOps = new Map<string, SimplifiedOperation>();
+
+  for (const op of operations) {
+    const key = [
+      op.type,
+      op.from.address,
+      op.to.address,
+      op.metadata.functionName || '',
+    ].join('|');
+
+    const existing = groupedOps.get(key);
+    if (!existing) {
+      const newOp = {
+        ...op,
+        metadata: {
+          ...op.metadata,
+          operationCount: 1,
+          groupedAssets:
+            op.amount && op.assetId
+              ? {
+                  [op.assetId]: {
+                    amount: op.amount,
+                    assetId: op.assetId,
+                    assetAmount: op.assetAmount,
+                  },
+                }
+              : undefined,
+        },
+      };
+      groupedOps.set(key, newOp);
+      continue;
+    }
+
+    const groupedAssets = existing.metadata.groupedAssets || {};
+    if (op.amount && op.assetId) {
+      const existingAsset = groupedAssets[op.assetId];
+      groupedAssets[op.assetId] = {
+        amount: existingAsset ? existingAsset.amount.add(op.amount) : op.amount,
+        assetId: op.assetId,
+        assetAmount: op.assetAmount,
+      };
+    }
+
+    existing.metadata.operationCount =
+      (existing.metadata.operationCount || 1) + 1;
+    existing.metadata.groupedAssets = groupedAssets;
+  }
+
+  return Array.from(groupedOps.values());
+}
+
 function categorizeOperations(
   operations: SimplifiedOperation[],
   currentAccount?: string
@@ -195,10 +249,11 @@ function categorizeOperations(
     intermediate.push(op);
   }
 
+  // Group similar operations in each category
   return {
-    mainOperations: main,
-    otherRootOperations: otherRoot,
-    intermediateOperations: intermediate,
+    mainOperations: groupSimilarOperations(main),
+    otherRootOperations: groupSimilarOperations(otherRoot),
+    intermediateOperations: groupSimilarOperations(intermediate),
   };
 }
 
