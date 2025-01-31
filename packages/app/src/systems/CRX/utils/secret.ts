@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { decrypt, encrypt } from 'fuels';
+import { AUTO_LOCK_IN_MINUTES } from '~/config';
 
 const SALT_KEY = 'salt';
 
@@ -31,14 +32,21 @@ export async function resetTimer() {
   });
 }
 
+export async function saveLockTimeSetting(minutes: number) {
+  await chrome.storage.local.set({ userLockTime: minutes });
+}
+
 export async function saveSecret(secret: string, autoLockInMinutes: number) {
   const salt = await createSalt();
   try {
+    const { userLockTime } = await chrome.storage.local.get('userLockTime');
+    const effectiveLockTime = userLockTime || autoLockInMinutes;
+
     const encrypted = await encrypt(salt, secret);
     chrome.storage.session.set({
       data: encrypted,
-      lockTime: autoLockInMinutes,
-      timer: dayjs().add(autoLockInMinutes, 'minute').valueOf(),
+      lockTime: effectiveLockTime,
+      timer: dayjs().add(effectiveLockTime, 'minute').valueOf(),
     });
   } catch {
     clearSession();
