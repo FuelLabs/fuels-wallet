@@ -72,6 +72,7 @@ export type ContractCallMetadata = {
   assetAmount?: AssetFuelAmount;
   operationCount?: number;
   groupedAssets?: GroupedAssets;
+  childOperations?: SimplifiedOperation[];
 };
 
 export type SwapMetadata = {

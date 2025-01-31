@@ -109,12 +109,11 @@ export function TxOperation({
       )}
       {isExpanded && (
         <Box css={styles.expandedOperations}>
-          {/* Show individual operations */}
-          {metadata.groupedAssets?.map((op, idx) => (
+          {metadata.childOperations?.map((op, idx) => (
             <TxOperationCard
               key={`${op.type}-${op.from.address}-${op.to.address}-${idx}`}
               operation={op}
-              assetsAmount={[]} // Each operation will fetch its own assets
+              assetsAmount={[]}
             />
           ))}
         </Box>

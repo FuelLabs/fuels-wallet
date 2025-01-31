@@ -166,15 +166,17 @@ function groupSimilarOperations(
   const groupedOps = new Map<string, SimplifiedOperation>();
 
   for (const op of operations) {
+    // Group by depth, name, from, and to
     const key = [
-      op.type,
+      op.metadata.depth,
+      op.metadata.functionName,
       op.from.address,
       op.to.address,
-      op.metadata.functionName || '',
     ].join('|');
 
     const existing = groupedOps.get(key);
     if (!existing) {
+      // First operation of this type
       const newOp = {
         ...op,
         metadata: {
@@ -190,12 +192,14 @@ function groupSimilarOperations(
                   },
                 }
               : undefined,
+          childOperations: [op], // Store individual operations
         },
       };
       groupedOps.set(key, newOp);
       continue;
     }
 
+    // Add to existing group
     const groupedAssets = existing.metadata.groupedAssets || {};
     if (op.amount && op.assetId) {
       const existingAsset = groupedAssets[op.assetId];
@@ -209,6 +213,10 @@ function groupSimilarOperations(
     existing.metadata.operationCount =
       (existing.metadata.operationCount || 1) + 1;
     existing.metadata.groupedAssets = groupedAssets;
+    existing.metadata.childOperations = [
+      ...(existing.metadata.childOperations || []),
+      op,
+    ];
   }
 
   return Array.from(groupedOps.values());
