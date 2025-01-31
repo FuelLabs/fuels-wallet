@@ -3,6 +3,7 @@ import { Box, Icon, Text } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { useEffect, useState } from 'react';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
+import { MotionBox, animations } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network/services/network';
 import { TxCategory } from '../../../../types';
 import type { SimplifiedOperation } from '../../../../types';
@@ -89,7 +90,8 @@ export function TxOperation({
     <Box.VStack>
       <TxOperationCard operation={operation} assetsAmount={assetsAmount} />
       {metadata.operationCount && metadata.operationCount > 1 && (
-        <Box
+        <MotionBox
+          {...animations.fadeIn()}
           css={styles.operationCount}
           onClick={() => setIsExpanded(!isExpanded)}
         >
@@ -105,18 +107,19 @@ export function TxOperation({
               (+{metadata.operationCount} operations)
             </Text>
           )}
-        </Box>
+        </MotionBox>
       )}
       {isExpanded && (
-        <Box css={styles.expandedOperations}>
+        <MotionBox {...animations.slideInTop()} css={styles.expandedOperations}>
           {metadata.childOperations?.map((op, idx) => (
             <TxOperationCard
               key={`${op.type}-${op.from.address}-${op.to.address}-${idx}`}
               operation={op}
               assetsAmount={[]}
+              depth={depth}
             />
           ))}
-        </Box>
+        </MotionBox>
       )}
     </Box.VStack>
   );
