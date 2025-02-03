@@ -10,7 +10,7 @@ import {
 } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
-import { type FC, useEffect, useRef, useState } from 'react';
+import { type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { formatAmount, shortAddress } from '~/systems/Core';
 import type { InsufficientInputAmountError } from '~/systems/Transaction';
 
@@ -102,10 +102,10 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
     isNft,
     rate,
   } = assetAmount || {};
-  const amountInUsd =
-    amount == null || rate == null || decimals == null
-      ? '$0'
-      : convertToUsd(bn(amount), decimals, rate).formatted;
+  const amountInUsd = useMemo(() => {
+    if (amount == null || rate == null || decimals == null) return '$0';
+    return convertToUsd(bn(amount), decimals, rate).formatted;
+  }, [amount, rate, decimals]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [isTruncated, setIsTruncated] = useState(false);

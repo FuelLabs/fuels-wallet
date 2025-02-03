@@ -57,19 +57,33 @@ export const TxFeeOptions = ({
   });
 
   const advancedFee = baseFee.add(tip.value.amount);
-  const regularTipInUsd =
-    baseAsset?.rate != null
-      ? convertToUsd(regularTip, baseAsset?.decimals, baseAsset?.rate).formatted
-      : '$0';
-  const fastTipInUsd =
-    baseAsset?.rate != null
-      ? convertToUsd(fastTip, baseAsset?.decimals, baseAsset?.rate).formatted
-      : '$0';
-  const advancedFeeInUsd =
-    baseAsset?.rate != null
-      ? convertToUsd(advancedFee, baseAsset?.decimals, baseAsset?.rate)
-          .formatted
-      : '$0';
+
+  const { regularTipInUsd, fastTipInUsd, advancedFeeInUsd } = useMemo(() => {
+    const empty = '$0';
+
+    if (baseAsset?.rate == null) {
+      return {
+        regularTipInUsd: empty,
+        fastTipInUsd: empty,
+        advancedFeeInUsd: empty,
+      };
+    }
+
+    return {
+      regularTipInUsd: convertToUsd(
+        regularTip,
+        baseAsset?.decimals,
+        baseAsset?.rate
+      ).formatted,
+      fastTipInUsd: convertToUsd(fastTip, baseAsset?.decimals, baseAsset?.rate)
+        .formatted,
+      advancedFeeInUsd: convertToUsd(
+        advancedFee,
+        baseAsset?.decimals,
+        baseAsset?.rate
+      ).formatted,
+    };
+  }, [baseAsset, regularTip, fastTip, advancedFee]);
 
   const options = useMemo(() => {
     return [

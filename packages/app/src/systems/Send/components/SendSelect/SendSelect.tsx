@@ -57,10 +57,10 @@ export function SendSelect({
 
   const decimals = selectedAsset?.asset?.decimals;
   const rate = selectedAsset?.asset?.rate;
-  const amountInUsd =
-    amount.value == null || rate == null || decimals == null
-      ? '$0'
-      : convertToUsd(bn(amount.value), decimals, rate).formatted;
+  const amountInUsd = useMemo(() => {
+    if (amount.value == null || rate == null || decimals == null) return '$0';
+    return convertToUsd(bn(amount.value), decimals, rate).formatted;
+  }, [amount.value, rate, decimals]);
 
   const isSendingBaseAssetId = useMemo(() => {
     return (

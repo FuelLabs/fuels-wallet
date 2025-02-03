@@ -53,13 +53,6 @@ export const TxFee: TxFeeComponent = ({
 
   const feeInUsd = useMemo(() => {
     if (baseAsset?.rate == null || !fee) return '$0';
-    console.log(
-      'fsk fee',
-      fee?.format({
-        precision: baseAsset.decimals,
-        units: baseAsset.decimals,
-      })
-    );
     return convertToUsd(fee, baseAsset.decimals, baseAsset.rate).formatted;
   }, [baseAsset, fee]);
 

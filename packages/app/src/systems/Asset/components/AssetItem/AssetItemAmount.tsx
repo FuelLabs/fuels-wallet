@@ -30,10 +30,10 @@ const _AssetItemAmount = ({
     return false;
   }, [tooltip, visibility, isTruncated]);
 
-  const amountInUsd =
-    amount == null || rate == null || decimals == null
-      ? '$0'
-      : convertToUsd(bn(amount), decimals, rate).formatted;
+  const amountInUsd = useMemo(() => {
+    if (amount == null || rate == null || decimals == null) return '$0';
+    return convertToUsd(bn(amount), decimals, rate).formatted;
+  }, [amount, rate, decimals]);
 
   useEffect(() => {
     if (!tooltip && amountRef.current) {
