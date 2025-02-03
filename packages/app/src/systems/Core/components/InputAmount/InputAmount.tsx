@@ -362,11 +362,9 @@ const styles = {
     width: '100%',
     height: 0,
     backgroundColor: '$intentsBase8',
-    // borderRadius: '$full',
     // Only one side of the border should be visible, to avoid extra "thickness"
     borderTop: '1px dashed $intentsBase8',
     my: '$2',
     color: 'textSubtext',
-    // borderBottom: 'none',
   }),
 };
