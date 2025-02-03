@@ -1,22 +1,23 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Text, Tooltip, VStack } from '@fuel-ui/react';
-import type { BNInput } from 'fuels';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { type BNInput, bn } from 'fuels';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { AmountVisibility, formatBalance } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 
 type AssetItemAmountProps = {
   amount: BNInput;
   decimals: number | undefined;
   symbol: string | undefined;
-  amountInUsd: string | undefined;
+  rate: number | undefined;
 };
 
-export const AssetItemAmount = ({
+const _AssetItemAmount = ({
   amount,
   decimals,
   symbol,
-  amountInUsd,
+  rate,
 }: AssetItemAmountProps) => {
   const { visibility } = useBalanceVisibility();
   const { original, tooltip } = formatBalance(amount, decimals);
@@ -28,6 +29,11 @@ export const AssetItemAmount = ({
     if (visibility && (tooltip || isTruncated)) return undefined;
     return false;
   }, [tooltip, visibility, isTruncated]);
+
+  const amountInUsd =
+    amount == null || rate == null || decimals == null
+      ? '$0.00'
+      : convertToUsd(bn(amount), decimals, rate);
 
   useEffect(() => {
     if (!tooltip && amountRef.current) {
@@ -60,7 +66,7 @@ export const AssetItemAmount = ({
             aria-label={`${symbol} conversion rate to USD`}
             css={styles.amountInUsd}
           >
-            {visibility ? (amountInUsd ?? '$0.00') : '•••••'}
+            {visibility ? (amountInUsd ?? '$0.00') : '$••••'}
           </Text>
         </VStack>
       </Box>
@@ -97,3 +103,5 @@ const styles = {
     textAlign: 'right',
   }),
 };
+
+export const AssetItemAmount = memo(_AssetItemAmount);

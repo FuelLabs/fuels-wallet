@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Form, Input, Text } from '@fuel-ui/react';
+import { Box, Form, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -13,8 +13,8 @@ import {
 } from '~/systems/Core';
 
 import { useController, useWatch } from 'react-hook-form';
-import { convertAsset } from '~/systems/Asset/services/convert-asset';
 import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
 import type { UseSendReturn } from '../../hooks';
 
@@ -42,7 +42,7 @@ export function SendSelect({
   const isAmountFocused = useRef<boolean>(false);
   const baseFeeRef = useRef<BN | null>(baseFee);
   const tipRef = useRef<BN>(tip);
-  const [amountInUsd, setAmountInUsd] = useState<string | undefined>(undefined);
+
   const { field: amount, fieldState: amountFieldState } = useController({
     control: form.control,
     name: 'amount',
@@ -52,11 +52,17 @@ export function SendSelect({
     control: form.control,
     name: 'asset',
   });
+  const selectedAsset = useMemo(
+    () => balances?.find((a) => a.asset?.assetId === assetId),
+    [assetId, balances]
+  );
 
-  const decimals = useMemo(() => {
-    const selectedAsset = balances?.find((a) => a.asset?.assetId === assetId);
-    return selectedAsset?.asset?.decimals;
-  }, [assetId, balances]);
+  const decimals = selectedAsset?.asset?.decimals;
+  const rate = selectedAsset?.asset?.rate;
+  const amountInUsd =
+    amount.value == null || rate == null || decimals == null
+      ? '$0.00'
+      : convertToUsd(bn(amount.value), decimals, rate);
 
   const isSendingBaseAssetId = useMemo(() => {
     return (
@@ -95,25 +101,6 @@ export function SendSelect({
     assetId: b.assetId,
     ...b.asset,
   }));
-
-  useEffect(() => {
-    let abort = false;
-    async function loadAndStoreRate() {
-      if (abort) return;
-      if (assetId != null) {
-        const chainId = await provider?.getChainId();
-        convertAsset(chainId, assetId, amount.value.toString()).then((res) => {
-          if (abort) return;
-          setAmountInUsd(res?.amount ?? '$0.00');
-        });
-      }
-    }
-    const timeout = setTimeout(loadAndStoreRate, 500);
-    return () => {
-      abort = true;
-      clearTimeout(timeout);
-    };
-  }, [assetId, provider, amount]);
 
   return (
     <MotionContent {...animations.slideInTop()}>
@@ -185,7 +172,6 @@ export function SendSelect({
                 if (isAmountFocused.current) {
                   setWatchMax(false);
                   amount.onChange(val);
-                  setAmountInUsd(undefined);
                 }
               }}
               onClickMax={() => {

@@ -6,11 +6,12 @@ import type {
   CoinAsset,
 } from '@fuel-wallet/types';
 import * as Sentry from '@sentry/react';
-import { Address, type Provider, bn } from 'fuels';
+import { Address, AssetFuel, BN, type Provider, bn } from 'fuels';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { convertAsset } from '~/systems/Asset/services/convert-asset';
 import { chromeStorage } from '~/systems/Core/services/chromeStorage';
 import type { Maybe } from '~/systems/Core/types';
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { db } from '~/systems/Core/utils/database';
 import { readFromOPFS } from '~/systems/Core/utils/opfs';
 import { getUniqueString } from '~/systems/Core/utils/string';
@@ -111,32 +112,26 @@ export class AccountService {
       const assetsAmountsInUsd: Record<string, string | undefined> = {};
       const chainId = provider.getChainId();
 
-      const balanceAssets = AssetsCache.fetchAllAssets(
+      const balanceAssets = await AssetsCache.fetchAllAssets(
         chainId,
         balances.map((balance) => balance.assetId)
       );
       let totalBalanceInUsd = 0;
 
-      const assetsAmountsUsdPromise = balances.map((asset) => {
-        return convertAsset(
-          chainId,
-          asset.assetId,
-          asset.amount.toString()
-        ).then((rate) => {
-          assetsAmountsInUsd[asset.assetId] = rate?.amount;
-          if (rate?.amount) {
-            totalBalanceInUsd += Number.parseFloat(
-              rate.amount.replace(/[$,]/g, '')
-            );
-          }
-        });
+      balances.map((asset) => {
+        const assetBalance = balanceAssets.get(asset.assetId);
+        // biome-ignore lint/suspicious/noExplicitAny: type not yet updated in this @fuel-ts/account version
+        const rate = ((assetBalance as any).rate as number) ?? 0;
+        if (assetBalance?.decimals) {
+          totalBalanceInUsd +=
+            convertToUsd(asset.amount, assetBalance?.decimals, rate) ?? 0;
+        }
       });
-      await Promise.all([...assetsAmountsUsdPromise, balanceAssets]);
       // includes "asset" prop in balance, centralizing the complexity here instead of in rest of UI
       const nextBalancesWithAssets = await balances.reduce(
         async (acc, balance) => {
           const prev = await acc;
-          const cachedAsset = (await balanceAssets)?.get(balance.assetId);
+          const cachedAsset = balanceAssets?.get(balance.assetId);
 
           const amountInUsd = assetsAmountsInUsd[balance.assetId];
 

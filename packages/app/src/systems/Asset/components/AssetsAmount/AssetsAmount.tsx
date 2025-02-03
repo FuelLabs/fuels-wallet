@@ -14,8 +14,7 @@ import { type FC, useEffect, useRef, useState } from 'react';
 import { formatAmount, shortAddress } from '~/systems/Core';
 import type { InsufficientInputAmountError } from '~/systems/Transaction';
 
-import { convertAsset } from '~/systems/Asset/services/convert-asset';
-import { useProvider } from '~/systems/Network/hooks/useProvider';
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { AssetsAmountLoader } from './AssetsAmountLoader';
 import { styles } from './styles';
 
@@ -93,8 +92,6 @@ type AssetsAmountItemProps = {
 };
 
 const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
-  const [amountInUsd, setAmountInUsd] = useState<string>('$0.00');
-  const provider = useProvider();
   const {
     name = '',
     symbol,
@@ -103,7 +100,12 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
     decimals,
     amount,
     isNft,
+    rate,
   } = assetAmount || {};
+  const amountInUsd =
+    amount == null || rate == null || decimals == null
+      ? '$0.00'
+      : convertToUsd(bn(amount), decimals, rate);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [isTruncated, setIsTruncated] = useState(false);
@@ -122,25 +124,6 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
       }
     }
   }, [formatted]);
-
-  useEffect(() => {
-    let abort = false;
-    async function loadAndStoreRate() {
-      if (amount != null && !isNft) {
-        const chainId = await provider?.getChainId();
-        const baseAssetId = await provider?.getBaseAssetId();
-        if (chainId == null) return;
-        if (baseAssetId == null) return;
-        if (abort) return;
-        const res = await convertAsset(chainId, assetId, amount.toString());
-        if (!abort) setAmountInUsd(res?.amount || '$0.00');
-      }
-    }
-    loadAndStoreRate();
-    return () => {
-      abort = true;
-    };
-  }, [amount, assetId, isNft, provider]);
 
   return (
     <Grid key={assetId} css={styles.root}>

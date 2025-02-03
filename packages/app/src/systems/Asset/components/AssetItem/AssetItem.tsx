@@ -12,7 +12,7 @@ import {
   Text,
   Tooltip,
 } from '@fuel-ui/react';
-import { type FC, useEffect, useMemo, useState } from 'react';
+import { type FC, memo, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Pages, shortAddress } from '~/systems/Core';
 
@@ -21,6 +21,7 @@ import { AssetRemoveDialog } from '../AssetRemoveDialog';
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
 import type { BNInput } from 'fuels';
 import { convertAsset } from '~/systems/Asset/services/convert-asset';
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
 import useFuelAsset from '../../hooks/useFuelAsset';
 import { AssetItemAmount } from './AssetItemAmount';
@@ -35,14 +36,13 @@ export type AssetItemProps = {
   onEdit?: (assetId: string) => void;
   shouldShowAddAssetBtn?: boolean;
   shouldShowCopyAssetAddress?: boolean;
-  amountInUsd?: string;
 };
 
 type AssetItemComponent = FC<AssetItemProps> & {
   Loader: typeof AssetItemLoader;
 };
 
-export const AssetItem: AssetItemComponent = ({
+const _AssetItem: AssetItemComponent = ({
   asset: inputAsset,
   fuelAsset: inputFuelAsset,
   amount,
@@ -51,12 +51,8 @@ export const AssetItem: AssetItemComponent = ({
   onEdit,
   shouldShowAddAssetBtn,
   shouldShowCopyAssetAddress,
-  amountInUsd,
 }) => {
   const navigate = useNavigate();
-  const provider = useProvider();
-  const [fallbackAmountInUsd, setAmountInUsd] = useState<string>('$0.00');
-
   const fuelAssetFromInputAsset = useFuelAsset({ asset: inputAsset });
   const asset = useMemo(() => {
     if (!inputFuelAsset && !inputAsset && !fuelAssetFromInputAsset)
@@ -71,41 +67,9 @@ export const AssetItem: AssetItemComponent = ({
       }
     );
   }, [inputFuelAsset, inputAsset, fuelAssetFromInputAsset]);
-
-  useEffect(() => {
-    let abort = false;
-    async function loadAndStoreRate() {
-      if (abort) return;
-      if (
-        !amountInUsd &&
-        !inputFuelAsset?.isNft &&
-        amount &&
-        inputFuelAsset?.assetId != null
-      ) {
-        const chainId = await provider?.getChainId();
-        convertAsset(chainId, inputFuelAsset?.assetId, amount.toString()).then(
-          (res) => {
-            if (abort) return;
-            setAmountInUsd(res?.amount ?? '$0.00');
-          }
-        );
-      }
-    }
-    loadAndStoreRate();
-    return () => {
-      abort = true;
-    };
-  }, [
-    amountInUsd,
-    inputFuelAsset?.isNft,
-    inputFuelAsset?.assetId,
-    provider,
-    amount,
-  ]);
+  const { assetId, name, symbol, icon, decimals, isCustom } = asset ?? {};
 
   if (!asset) return null;
-
-  const { assetId, name, symbol, icon, decimals, isCustom } = asset;
 
   function getLeftEl() {
     if (assetId && shouldShowCopyAssetAddress) {
@@ -158,8 +122,8 @@ export const AssetItem: AssetItemComponent = ({
         <AssetItemAmount
           amount={amount}
           decimals={decimals}
+          rate={inputFuelAsset?.rate}
           symbol={symbol}
-          amountInUsd={amountInUsd || fallbackAmountInUsd}
         />
       );
     }
@@ -247,7 +211,9 @@ export const AssetItem: AssetItemComponent = ({
   );
 };
 
-AssetItem.Loader = AssetItemLoader;
+_AssetItem.Loader = AssetItemLoader;
+
+export const AssetItem = memo(_AssetItem);
 
 const styles = {
   assetName: cssObj({
