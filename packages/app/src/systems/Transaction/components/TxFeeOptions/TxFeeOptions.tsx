@@ -1,17 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Form, HStack, Input, Text, VStack } from '@fuel-ui/react';
-import type { AssetFuelData } from '@fuel-wallet/types';
 import { AnimatePresence } from 'framer-motion';
 import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
-import { useAsset } from '~/systems/Asset';
-import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { MotionFlex, MotionStack, animations } from '~/systems/Core';
 import { createAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import { isAmountAllowed } from '~/systems/Core/components/InputAmount/InputAmount.utils';
-import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
-import { useProvider } from '~/systems/Network/hooks/useProvider';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxFee } from '../TxFee';
 import {
@@ -37,11 +32,7 @@ export const TxFeeOptions = ({
   fastTip,
   onRecalculate,
 }: TxFeeOptionsProps) => {
-  const provider = useProvider();
-
   const { control, setValue, getValues } = useFormContext<SendFormValues>();
-  const [baseAsset, setBaseAsset] = useState<AssetFuelData | undefined>();
-  useAsset();
   const [isAdvanced, setIsAdvanced] = useState(initialAdvanced);
   const previousGasLimit = useRef<BN>(gasLimitInput);
   const previousDefaultTip = useRef<BN>(regularTip);
@@ -58,78 +49,24 @@ export const TxFeeOptions = ({
 
   const advancedFee = baseFee.add(tip.value.amount);
 
-  const { regularTipInUsd, fastTipInUsd, advancedFeeInUsd } = useMemo(() => {
-    const empty = '$0';
-
-    if (baseAsset?.rate == null) {
-      return {
-        regularTipInUsd: empty,
-        fastTipInUsd: empty,
-        advancedFeeInUsd: empty,
-      };
-    }
-
-    return {
-      regularTipInUsd: convertToUsd(
-        regularTip,
-        baseAsset?.decimals,
-        baseAsset?.rate
-      ).formatted,
-      fastTipInUsd: convertToUsd(fastTip, baseAsset?.decimals, baseAsset?.rate)
-        .formatted,
-      advancedFeeInUsd: convertToUsd(
-        advancedFee,
-        baseAsset?.decimals,
-        baseAsset?.rate
-      ).formatted,
-    };
-  }, [baseAsset, regularTip, fastTip, advancedFee]);
-
   const options = useMemo(() => {
     return [
       {
         name: 'Regular',
         fee: baseFee.add(regularTip),
         tip: regularTip,
-        tipInUsd: regularTipInUsd,
       },
       {
         name: 'Fast',
         fee: baseFee.add(fastTip),
         tip: fastTip,
-        tipInUsd: fastTipInUsd,
       },
     ];
-  }, [baseFee, regularTip, fastTip, regularTipInUsd, fastTipInUsd]);
+  }, [baseFee, regularTip, fastTip]);
 
   const toggle = () => {
     setIsAdvanced((curr) => !curr);
   };
-
-  useEffect(() => {
-    let abort = false;
-    async function loadBaseAssetRate() {
-      if (!provider) return;
-      const [baseAssetId, chainId] = await Promise.all([
-        provider?.getBaseAssetId(),
-        provider?.getChainId(),
-      ]);
-      if (abort || baseAssetId == null || chainId == null) return;
-      const asset = await AssetsCache.getInstance().getAsset({
-        chainId: provider.getChainId(),
-        assetId: baseAssetId,
-        dbAssets: [],
-        save: false,
-      });
-      if (abort) return;
-
-      setBaseAsset(asset);
-    }
-    loadBaseAssetRate();
-    return () => {
-      abort = true;
-    };
-  }, [provider]);
 
   /**
    * Resetting fees if hiding advanced options (or initializing them
@@ -162,12 +99,7 @@ export const TxFeeOptions = ({
       <AnimatePresence mode="popLayout">
         {isAdvanced ? (
           <MotionStack {...animations.slideInTop()} key="advanced" gap="$3">
-            <TxFee
-              title="Fee + Tip"
-              fee={advancedFee}
-              checked
-              tipInUsd={advancedFeeInUsd}
-            />
+            <TxFee title="Fee + Tip" fee={advancedFee} checked />
 
             <VStack gap="$1">
               <HStack gap="$3">
@@ -251,7 +183,6 @@ export const TxFeeOptions = ({
                 key={option.name}
                 fee={option.fee}
                 title={option.name}
-                tipInUsd={option.tipInUsd}
                 checked={option.tip.eq(tip.value.amount)}
                 onChecked={() => {
                   previousDefaultTip.current = option.tip;
