@@ -257,6 +257,11 @@ function categorizeOperations(
     intermediate.push(op);
   }
 
+  // set all main operations to depth 0
+  for (const op of main) {
+    op.metadata.depth = 0;
+  }
+
   // Group similar operations in each category
   return {
     mainOperations: groupSimilarOperations(main),
