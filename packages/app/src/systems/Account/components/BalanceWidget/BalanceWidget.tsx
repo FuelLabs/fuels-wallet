@@ -116,7 +116,7 @@ export function BalanceWidget({
                 data-account-name={account.name}
                 className="value"
               >
-                {visibility ? totalValue : '•••••'}
+                {visibility ? totalValue : '$•••••'}
               </Text>
             </Tooltip>
             <VisibilityButton
