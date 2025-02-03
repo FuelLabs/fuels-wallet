@@ -23,4 +23,8 @@ describe('Convert to USD', () => {
     );
     expect(formatted).toBe('$10.00');
   });
+  it('should not lose precision when dealing with really small amounts', () => {
+    const { formatted } = convertToUsd(bn(1), DECIMAL_FUEL, MOCK_ETH_RATE);
+    expect(formatted).toBe('$0.000002');
+  });
 });
