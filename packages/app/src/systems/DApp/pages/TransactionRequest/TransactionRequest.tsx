@@ -6,7 +6,8 @@ import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import {
-  TxViewSimpleWrapper,
+  TxContent,
+  TxDetails,
   getGasLimitFromTxRequest,
 } from '~/systems/Transaction';
 import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
@@ -64,7 +65,7 @@ export function TransactionRequest() {
       <Layout title={title} noBorder>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
-          <TxViewSimpleWrapper isLoading />
+          <TxContent.Loader />
         </Layout.Content>
       </Layout>
     );
@@ -86,7 +87,7 @@ export function TransactionRequest() {
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
           {shouldShowTxSimulated && (
-            <TxViewSimpleWrapper
+            <TxDetails
               summary={txSummarySimulated}
               request={proposedTxRequest}
               showDetails
@@ -94,7 +95,7 @@ export function TransactionRequest() {
             />
           )}
           {shouldShowTxExecuted && (
-            <TxViewSimpleWrapper
+            <TxDetails
               summary={txSummaryExecuted}
               showDetails
               footer={

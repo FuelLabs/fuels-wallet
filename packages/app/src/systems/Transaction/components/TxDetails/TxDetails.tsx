@@ -1,3 +1,4 @@
+import { log } from 'node:console';
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon, Text } from '@fuel-ui/react';
 import type {
@@ -15,7 +16,7 @@ import { TxOperationsList } from './TxOperationsSimple/TxOperationsList';
 
 export type TxViewVariant = 'default' | 'history';
 
-type TxViewSimpleProps = {
+type TxDetailsProps = {
   summary?: TransactionSummary | TransactionResult;
   request?: TransactionRequest;
   showDetails?: boolean;
@@ -24,22 +25,17 @@ type TxViewSimpleProps = {
   variant?: TxViewVariant;
 };
 
-export function TxViewSimple({
+export function TxDetails({
   summary,
   request,
   showDetails = true,
   isLoading: externalLoading,
   footer,
   variant = 'default',
-}: TxViewSimpleProps) {
+}: TxDetailsProps) {
   const [isCustomFees, setIsCustomFees] = useState(false);
-  const [_selectedTip, setSelectedTip] = useState<BN>();
+  const [_, setSelectedTip] = useState<BN>();
   const isHistory = variant === 'history';
-
-  const hasValidStatus = !!summary;
-  if (!hasValidStatus || externalLoading) {
-    return <TxViewSimple.Loader />;
-  }
 
   const { transaction, isReady } = useSimplifiedTransaction({
     summary,
@@ -113,15 +109,4 @@ const styles = {
       strokeWidth: '2.5px',
     },
   }),
-};
-
-// Add a loader component for loading states
-TxViewSimple.Loader = function TxViewSimpleLoader() {
-  return (
-    <Box.Stack gap="$4">
-      <TxHeaderSimple />
-      <TxOperationsList.Loader />
-      <TxFeeSimple.Loader />
-    </Box.Stack>
-  );
 };

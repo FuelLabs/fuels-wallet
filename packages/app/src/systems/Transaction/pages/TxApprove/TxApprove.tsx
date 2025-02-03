@@ -6,7 +6,7 @@ import { Pages } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 import { useTransactionRequest } from '~/systems/DApp';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
-import { TxViewSimpleWrapper } from '../../components';
+import { TxDetails } from '../../components/TxDetails/TxDetails';
 
 export const TxApprove = () => {
   const ctx = useTransactionRequest();
@@ -30,7 +30,7 @@ export const TxApprove = () => {
       </OverlayDialogTopbar>
       <Dialog.Description as="div" css={styles.description}>
         {ctx.shouldShowTxSimulated && (
-          <TxViewSimpleWrapper
+          <TxDetails
             summary={ctx.txSummarySimulated}
             showDetails
             isLoading={!ctx.txSummarySimulated}
@@ -50,7 +50,7 @@ export const TxApprove = () => {
           />
         )}
         {ctx.shouldShowTxExecuted && (
-          <TxViewSimpleWrapper
+          <TxDetails
             summary={ctx.txSummaryExecuted}
             showDetails
             isLoading={false}
