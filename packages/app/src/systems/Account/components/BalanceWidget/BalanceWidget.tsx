@@ -101,9 +101,7 @@ export function BalanceWidget({
       }
       bottom={
         <VStack gap="$2">
-          <Text className="label text-[0.8125rem] text-gray-11">
-            Total balance
-          </Text>
+          <Text className="label">Total balance</Text>
           <HStack>
             <Tooltip
               content={original.display}
@@ -165,10 +163,10 @@ const styles = {
     '.label': {
       lineHeight: '$tight',
       fontSize: '$sm',
+      fontWeight: '$medium',
     },
     '.value': {
       fontSize: 32,
-      color: '$textInverse',
       fontFamily: '$mono',
       fontWeight: '$bold',
       lineHeight: '36px',
