@@ -8,7 +8,8 @@ export const styles = {
       justifyContent: 'space-between',
       alignItems: title ? 'center' : 'flex-start',
       display: 'flex',
-      columnGap: '$4',
+      columnGap: title ? '$4' : '$6',
+      gap: title ? undefined : '$2',
       position: 'relative',
       cursor: pointer ? 'pointer' : 'auto',
 
