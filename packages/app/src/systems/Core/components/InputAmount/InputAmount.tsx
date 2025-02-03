@@ -237,20 +237,21 @@ export const InputAmount: InputAmountComponent = ({
       {!hiddenBalance && (
         <VStack gap="0">
           <Box css={styles.dashedHorizontalSeparator} />
-          <Tooltip
-            content={formatAmount({ amount: balance, options: formatOpts })}
-            sideOffset={-5}
-          >
-            <HStack justify="between" css={styles.inputAmountBalances}>
-              {!!amountInUsd && (
-                <Text
-                  fontSize="sm"
-                  aria-label={`${asset?.name} value converted to USD`}
-                  color="textSubtext"
-                >
-                  {amountInUsd}
-                </Text>
-              )}
+
+          <HStack justify="between" css={styles.inputAmountBalances}>
+            {!!amountInUsd && (
+              <Text
+                fontSize="sm"
+                aria-label={`${asset?.name} value converted to USD`}
+                color="textSubtext"
+              >
+                {amountInUsd}
+              </Text>
+            )}
+            <Tooltip
+              content={formatAmount({ amount: balance, options: formatOpts })}
+              sideOffset={-5}
+            >
               <Text
                 fontSize="sm"
                 aria-label={`Balance: ${formattedBalance}`}
@@ -258,8 +259,8 @@ export const InputAmount: InputAmountComponent = ({
               >
                 Balance: {formattedBalance}
               </Text>
-            </HStack>
-          </Tooltip>
+            </Tooltip>
+          </HStack>
         </VStack>
       )}
     </Input>
