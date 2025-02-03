@@ -26,15 +26,11 @@ export type MachineContext = {
   maxGasLimit?: BN;
   input?: TxInputs['createTransfer'];
   error?: string;
-  regularTipInUsd?: string | undefined;
-  fastTipInUsd?: string | undefined;
 };
 
 type EstimateDefaultTipsReturn = {
   regularTip: BN;
   fastTip: BN;
-  regularTipInUsd: string | undefined;
-  fastTipInUsd: string | undefined;
 };
 
 type EstimateGasLimitReturn = {
@@ -172,8 +168,6 @@ export const sendMachine = createMachine(
       assignDefaultTips: assign((_ctx, ev) => ({
         regularTip: ev.data.regularTip,
         fastTip: ev.data.fastTip,
-        regularTipInUsd: ev.data.regularTipInUsd,
-        fastTipInUsd: ev.data.fastTipInUsd,
         error: undefined,
       })),
       assignGasLimit: assign((_ctx, ev) => ({

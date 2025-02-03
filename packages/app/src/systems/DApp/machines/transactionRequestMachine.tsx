@@ -41,8 +41,6 @@ type MachineContext = {
     baseFee?: BN;
     regularTip?: BN;
     fastTip?: BN;
-    regularTipInUsd?: string;
-    fastTipInUsd?: string;
     maxGasLimit?: BN;
   };
   errors?: {
@@ -54,8 +52,6 @@ type MachineContext = {
 type EstimateDefaultTipsReturn = {
   regularTip: BN;
   fastTip: BN;
-  regularTipInUsd?: string;
-  fastTipInUsd?: string;
 };
 
 type EstimateGasLimitReturn = {
@@ -279,8 +275,6 @@ export const transactionRequestMachine = createMachine(
           ...ctx.fees,
           regularTip: ev.data.regularTip,
           fastTip: ev.data.fastTip,
-          regularTipInUsd: ev.data.regularTipInUsd,
-          fastTipInUsd: ev.data.fastTipInUsd,
         },
       })),
       assignGasLimit: assign((ctx, ev) => ({
@@ -337,8 +331,6 @@ export const transactionRequestMachine = createMachine(
             regularTip: fees?.regularTip,
             fastTip: fees?.fastTip,
             maxGasLimit: fees?.maxGasLimit,
-            regularTipInUsd: fees?.regularTipInUsd,
-            fastTipInUsd: fees?.fastTipInUsd,
           };
         },
       }),
