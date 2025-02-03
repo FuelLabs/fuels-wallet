@@ -88,12 +88,6 @@ export const TxFeeOptions = ({
       <AnimatePresence mode="popLayout">
         {isAdvanced ? (
           <MotionStack {...animations.slideInTop()} key="advanced" gap="$3">
-            <TxFee
-              title="Fee + Tip"
-              fee={baseFee.add(tip.value.amount)}
-              checked
-            />
-
             <VStack gap="$1">
               <HStack gap="$3">
                 <VStack gap="$2">

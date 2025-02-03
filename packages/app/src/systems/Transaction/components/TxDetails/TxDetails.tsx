@@ -8,8 +8,9 @@ import type {
   TransactionSummary,
 } from 'fuels';
 import { useState } from 'react';
-import { TxFeeOptions, TxFeeSimple } from '.';
+import { TxFeeOptions } from '.';
 import { useSimplifiedTransaction } from '../../hooks/useSimplifiedTransaction';
+import { TxFee } from '../TxFee';
 import { TxHeaderSimple } from './TxHeaderSimple';
 import { TxOperationsList } from './TxOperationsSimple/TxOperationsList';
 
@@ -61,7 +62,7 @@ export function TxDetails({
                 onTipChange={setSelectedTip}
               />
             ) : (
-              <TxFeeSimple
+              <TxFee
                 fee={transaction.fee}
                 isLoading={externalLoading}
                 onCustomFees={() => setIsCustomFees(true)}
