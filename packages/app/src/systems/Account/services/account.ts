@@ -6,9 +6,8 @@ import type {
   CoinAsset,
 } from '@fuel-wallet/types';
 import * as Sentry from '@sentry/react';
-import { Address, AssetFuel, BN, type Provider, bn } from 'fuels';
+import { Address, type Provider, bn } from 'fuels';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
-import { convertAsset } from '~/systems/Asset/services/convert-asset';
 import { chromeStorage } from '~/systems/Core/services/chromeStorage';
 import type { Maybe } from '~/systems/Core/types';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';

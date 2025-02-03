@@ -1,6 +1,5 @@
 import type { BN, Provider } from 'fuels';
 import { PolicyType, bn } from 'fuels';
-import { convertAsset } from '~/systems/Asset/services/convert-asset';
 
 type CalculateTotalFeeParams = {
   gasPerByte: BN;

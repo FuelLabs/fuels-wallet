@@ -20,9 +20,6 @@ import { AssetRemoveDialog } from '../AssetRemoveDialog';
 
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
 import type { BNInput } from 'fuels';
-import { convertAsset } from '~/systems/Asset/services/convert-asset';
-import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
-import { useProvider } from '~/systems/Network/hooks/useProvider';
 import useFuelAsset from '../../hooks/useFuelAsset';
 import { AssetItemAmount } from './AssetItemAmount';
 import { AssetItemLoader } from './AssetItemLoader';
