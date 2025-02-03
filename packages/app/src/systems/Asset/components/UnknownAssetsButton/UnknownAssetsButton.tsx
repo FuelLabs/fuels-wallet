@@ -13,6 +13,8 @@ export function UnknownAssetsButton({
   isLoading,
   toggle,
 }: UnknownAssetsButtonProps) {
+  if (!unknownLength) return null;
+
   return (
     <Button
       size="xs"
