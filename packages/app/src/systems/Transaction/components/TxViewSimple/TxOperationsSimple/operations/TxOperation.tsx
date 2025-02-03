@@ -71,15 +71,13 @@ const fetchAssetsAmount = async (operation: SimplifiedOperation) => {
 
 export function TxOperation({
   operation,
-  showNesting = true,
+  // showNesting = true,
 }: TxOperationProps) {
   const metadata = operation.metadata;
-  const isContract = operation.type === TxCategory.CONTRACTCALL;
+  // const isContract = operation.type === TxCategory.CONTRACTCALL;
   const depth = metadata?.depth || 0;
-  console.log(showNesting, isContract, depth);
   const [assetsAmount, setAssetsAmount] = useState<AssetFuelAmount[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
-  console.log(operation);
   useEffect(() => {
     fetchAssetsAmount(operation).then(setAssetsAmount);
   }, [operation]);
@@ -88,7 +86,11 @@ export function TxOperation({
 
   return (
     <Box.VStack>
-      <TxOperationCard operation={operation} assetsAmount={assetsAmount} />
+      <TxOperationCard
+        operation={operation}
+        assetsAmount={assetsAmount}
+        depth={depth}
+      />
       {metadata.operationCount && metadata.operationCount > 1 && (
         <MotionBox
           {...animations.fadeIn()}
@@ -147,7 +149,8 @@ const styles = {
     cursor: 'pointer',
   },
   expandedOperations: cssObj({
-    marginLeft: '$2',
-    marginTop: '$2',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '$1',
   }),
 };
