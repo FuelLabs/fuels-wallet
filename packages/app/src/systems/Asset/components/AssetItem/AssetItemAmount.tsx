@@ -61,13 +61,15 @@ export const AssetItemAmount = ({
               {symbol}
             </Text>
           </Text>
-          <Text
-            aria-hidden={visibility}
-            aria-label={`${symbol} conversion rate to USD`}
-            css={styles.amountInUsd}
-          >
-            {visibility ? (amountInUsd ?? '$0') : '$••••'}
-          </Text>
+          {!!amountInUsd && amountInUsd !== '$0' && (
+            <Text
+              aria-hidden={visibility}
+              aria-label={`${symbol} conversion rate to USD`}
+              css={styles.amountInUsd}
+            >
+              {visibility ? amountInUsd : '$••••'}
+            </Text>
+          )}
         </VStack>
       </Box>
     </Tooltip>
