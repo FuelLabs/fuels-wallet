@@ -8,11 +8,11 @@ import type {
   TransactionSummary,
 } from 'fuels';
 import { useState } from 'react';
-import { TxFeeOptions } from '.';
 import { useSimplifiedTransaction } from '../../hooks/useSimplifiedTransaction';
 import { TxFee } from '../TxFee';
+import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
+import { TxOperations } from '../TxOperations';
 import { TxHeaderSimple } from './TxHeaderSimple';
-import { TxOperationsList } from './TxOperationsSimple/TxOperationsList';
 
 export type TxViewVariant = 'default' | 'history';
 
@@ -48,7 +48,7 @@ export function TxDetails({
     <Box css={styles.root}>
       {!isHistory && <TxHeaderSimple />}
       <Box css={styles.content}>
-        <TxOperationsList operations={transaction.categorizedOperations} />
+        <TxOperations operations={transaction.categorizedOperations} />
         {showDetails && !isHistory && (
           <Box>
             <Box.Flex gap="18px" align="center" css={styles.feeContainer}>

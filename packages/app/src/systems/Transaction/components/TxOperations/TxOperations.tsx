@@ -1,49 +1,67 @@
-import { Alert, Box } from '@fuel-ui/react';
-import type { AssetData } from '@fuel-wallet/types';
-import type { Operation, TransactionStatus } from 'fuels';
-import type { Maybe } from '~/systems/Core';
+import { Box } from '@fuel-ui/react';
+import type { CategorizedOperations } from '../../types';
+import { TxOperationsGroup } from '../TxDetails/TxOperationsSimple/TxOperationsGroup';
+import { TxOperation } from '../TxDetails/TxOperationsSimple/operations/TxOperation';
 
-import { useNetworks } from '~/systems/Network';
-import { TxOperation } from '../TxOperation/TxOperation';
-
-export type TxOperationsProps = {
-  operations?: Operation[];
-  status?: Maybe<TransactionStatus>;
-  isLoading?: boolean;
+type TxOperationsListProps = {
+  operations: CategorizedOperations;
 };
 
-export function TxOperations({
-  operations,
-  status,
-  isLoading,
-}: TxOperationsProps) {
-  if (operations?.length === 0) {
-    return (
-      <Alert status="info">
-        <Alert.Description>
-          No operations found in this transaction
-        </Alert.Description>
-      </Alert>
-    );
-  }
+export function TxOperations({ operations }: TxOperationsListProps) {
+  const { mainOperations, otherRootOperations, intermediateOperations } =
+    operations;
 
   return (
-    <Box.Stack gap="$0">
-      {operations?.map((operation, index) => (
-        <TxOperation
-          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-          key={index}
-          operation={operation}
-          status={status}
-          isLoading={isLoading}
+    <>
+      {/* Main operations (transfers and root contract calls related to current account) */}
+      {mainOperations.map((operation, index) => (
+        <Box.Flex
+          key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
+          css={{
+            borderRadius: '12px',
+            flex: 1,
+            boxSizing: 'border-box',
+            marginBottom: '16px',
+          }}
+        >
+          <TxOperation operation={operation} showNesting={false} />
+        </Box.Flex>
+      ))}
+
+      {/* Other root operations not related to current account */}
+      <TxOperationsGroup
+        title="Other Contract Calls"
+        operations={otherRootOperations}
+        showNesting={false}
+        numberLabel="1"
+      />
+
+      {/* Intermediate operations with nesting */}
+      {/* Intermediate opreations exist in the current setup? Wont they all be under the nesting of a root level operation? */}
+      <TxOperationsGroup
+        title="Intermediate Operations"
+        operations={intermediateOperations}
+        showNesting={true}
+        numberLabel={otherRootOperations.length ? '2' : '1'}
+      />
+    </>
+  );
+}
+
+TxOperations.Loader = function TxOperationsLoader() {
+  return (
+    <Box.Stack gap="$1">
+      {[1, 2].map((i) => (
+        <Box
+          key={i}
+          css={{
+            height: '80px',
+            backgroundColor: '$gray2',
+            borderRadius: '$md',
+            animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }}
         />
       ))}
     </Box.Stack>
   );
-}
-
-TxOperations.Loader = () => (
-  <Box.Stack gap="$0">
-    <TxOperation.Loader />
-  </Box.Stack>
-);
+};
