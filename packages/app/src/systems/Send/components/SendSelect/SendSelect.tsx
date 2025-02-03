@@ -33,6 +33,7 @@ export function SendSelect({
   errorMessage,
   warningMessage,
   provider,
+  handlers,
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
   const isAmountFocused = useRef<boolean>(false);
@@ -83,7 +84,9 @@ export function SendSelect({
       const maxFee = baseFee.add(tip).add(1);
       if (maxFee.gt(balanceAssetSelected)) return;
 
-      form.setValue('amount', balanceAssetSelected.sub(maxFee));
+      const newAmount = balanceAssetSelected.sub(maxFee);
+      form.setValue('amount', newAmount);
+      handlers.recalculateFromAmount(newAmount);
     }
   }, [
     watchMax,
@@ -176,6 +179,7 @@ export function SendSelect({
                   setWatchMax(true);
                 } else {
                   form.setValue('amount', balanceAssetSelected);
+                  handlers.recalculateFromAmount(balanceAssetSelected);
                 }
               }}
               inputProps={{
@@ -212,6 +216,7 @@ export function SendSelect({
                 gasLimit={gasLimit}
                 regularTip={regularTip}
                 fastTip={fastTip}
+                onRecalculate={handlers.recalculateFromTip}
               />
             </MotionStack>
           )}
