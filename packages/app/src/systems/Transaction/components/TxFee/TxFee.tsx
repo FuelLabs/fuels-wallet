@@ -58,14 +58,16 @@ export const TxFee: TxFeeComponent = ({
     return convertToUsd(fee, baseAsset.decimals, baseAsset.rate).formatted;
   }, [baseAsset, fee]);
 
+  const ready = !!fee && !!feeInUsd;
+
   // Horrible workaround to force re-render of this section.
   useEffect(() => {
     setTimeout(() => {
       setFlag((prev) => !prev);
     }, 500);
-  }, []);
+  }, [ready]);
 
-  if (!fee || !feeInUsd) return <TxFee.Loader />;
+  if (!ready) return <TxFee.Loader />;
 
   return (
     <Card
