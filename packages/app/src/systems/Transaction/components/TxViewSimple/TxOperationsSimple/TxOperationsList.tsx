@@ -12,17 +12,15 @@ export function TxOperationsList({ operations }: TxOperationsListProps) {
     operations;
 
   return (
-    <Box>
+    <>
       {/* Main operations (transfers and root contract calls related to current account) */}
       {mainOperations.map((operation, index) => (
         <Box.Flex
           key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
           css={{
-            backgroundColor: '$gray5',
             borderRadius: '12px',
-            width: '100%',
+            flex: 1,
             boxSizing: 'border-box',
-            padding: '4px 0',
             marginBottom: '16px',
           }}
         >
@@ -39,13 +37,14 @@ export function TxOperationsList({ operations }: TxOperationsListProps) {
       />
 
       {/* Intermediate operations with nesting */}
+      {/* Intermediate opreations exist in the current setup? Wont they all be under the nesting of a root level operation? */}
       <TxOperationsGroup
         title="Intermediate Operations"
         operations={intermediateOperations}
         showNesting={true}
         numberLabel={otherRootOperations.length ? '2' : '1'}
       />
-    </Box>
+    </>
   );
 }
 
