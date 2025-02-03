@@ -8,9 +8,8 @@ import type {
   TransactionSummary,
 } from 'fuels';
 import { useState } from 'react';
+import { TxFeeOptions, TxFeeSimple } from '.';
 import { useSimplifiedTransaction } from '../../hooks/useSimplifiedTransaction';
-import { TxFeeOptionsSimple } from './TxFeeOptionsSimple';
-import { TxFeeSimple } from './TxFeeSimple';
 import { TxHeaderSimple } from './TxHeaderSimple';
 import { TxOperationsList } from './TxOperationsSimple/TxOperationsList';
 
@@ -56,7 +55,7 @@ export function TxDetails({
               <Text css={styles.title}>Fee (network)</Text>
             </Box.Flex>
             {isCustomFees ? (
-              <TxFeeOptionsSimple
+              <TxFeeOptions
                 baseFee={transaction.fee.network}
                 onBack={() => setIsCustomFees(false)}
                 onTipChange={setSelectedTip}

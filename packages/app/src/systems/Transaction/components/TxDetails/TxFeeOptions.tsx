@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { createAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import { isAmountAllowed } from '~/systems/Core/components/InputAmount/InputAmount.utils';
 
-type TxFeeOptionsSimpleProps = {
+type TxFeeOptionsProps = {
   baseFee: BN;
   onBack: () => void;
   onTipChange?: (tip: BN) => void;
@@ -14,11 +14,11 @@ type TxFeeOptionsSimpleProps = {
 
 const DECIMAL_UNITS = 9;
 
-export function TxFeeOptionsSimple({
+export function TxFeeOptions({
   baseFee,
   onBack,
   onTipChange,
-}: TxFeeOptionsSimpleProps) {
+}: TxFeeOptionsProps) {
   const [customTip, setCustomTip] = useState('0');
 
   const handleTipChange = (text: string) => {
