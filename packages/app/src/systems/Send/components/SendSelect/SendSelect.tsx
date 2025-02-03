@@ -60,7 +60,7 @@ export function SendSelect({
   const amountInUsd =
     amount.value == null || rate == null || decimals == null
       ? '$0.00'
-      : `$${convertToUsd(bn(amount.value), decimals, rate)}`;
+      : convertToUsd(bn(amount.value), decimals, rate).formatted;
 
   const isSendingBaseAssetId = useMemo(() => {
     return (

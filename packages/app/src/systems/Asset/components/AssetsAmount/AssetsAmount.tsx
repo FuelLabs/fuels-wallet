@@ -105,7 +105,7 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
   const amountInUsd =
     amount == null || rate == null || decimals == null
       ? '$0.00'
-      : `$${convertToUsd(bn(amount), decimals, rate)}`;
+      : convertToUsd(bn(amount), decimals, rate).formatted;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [isTruncated, setIsTruncated] = useState(false);

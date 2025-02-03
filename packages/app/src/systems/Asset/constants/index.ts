@@ -13,3 +13,8 @@ export const ASSET_ENDPOINTS: Record<string, AssetEndpoint> = {
 };
 
 export const DEFAULT_ASSET_ENDPOINT = ASSET_ENDPOINTS[CHAIN_IDS.fuel.mainnet];
+
+export const INTL_FORMATTER = Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+});

@@ -18,6 +18,7 @@ import { VisibilityButton, formatBalance } from '~/systems/Core';
 import { useAccounts } from '../../hooks';
 
 import { DEFAULT_DECIMAL_UNITS } from 'fuels';
+import { INTL_FORMATTER } from '~/systems/Asset/constants';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 type BalanceWidgetWrapperProps = {
@@ -46,6 +47,7 @@ export type BalanceWidgetProps = {
 };
 
 const decimals = DEFAULT_DECIMAL_UNITS;
+
 export function BalanceWidget({
   account,
   isLoading,
@@ -60,7 +62,7 @@ export function BalanceWidget({
 
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
-  const totalValue = `$${totalBalanceInUsd?.toFixed?.(2) || '0.00'}`;
+  const totalValue = INTL_FORMATTER.format(totalBalanceInUsd);
 
   return (
     <BalanceWidgetWrapper

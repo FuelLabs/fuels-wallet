@@ -33,7 +33,7 @@ const _AssetItemAmount = ({
   const amountInUsd =
     amount == null || rate == null || decimals == null
       ? '$0.00'
-      : `$${convertToUsd(bn(amount), decimals, rate)}`;
+      : convertToUsd(bn(amount), decimals, rate).formatted;
 
   useEffect(() => {
     if (!tooltip && amountRef.current) {

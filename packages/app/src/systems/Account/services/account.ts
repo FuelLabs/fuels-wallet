@@ -108,7 +108,10 @@ export class AccountService {
     try {
       const provider = await createProvider(providerUrl!);
       const balances = await getBalances(provider, account.address);
-      const assetsAmountsInUsd: Record<string, number | undefined> = {};
+      const assetsAmountsInUsd: Record<
+        string,
+        { value: number; formatted: string } | undefined
+      > = {};
       const chainId = provider.getChainId();
 
       const balanceAssets = await AssetsCache.fetchAllAssets(
@@ -124,7 +127,7 @@ export class AccountService {
         if (assetBalance?.decimals) {
           assetsAmountsInUsd[asset.assetId] =
             convertToUsd(asset.amount, assetBalance?.decimals, rate) ?? 0;
-          totalBalanceInUsd += assetsAmountsInUsd[asset.assetId] ?? 0;
+          totalBalanceInUsd += assetsAmountsInUsd[asset.assetId]?.value ?? 0;
         }
       });
       // includes "asset" prop in balance, centralizing the complexity here instead of in rest of UI
@@ -141,7 +144,7 @@ export class AccountService {
               ...balance,
               amount: balance.amount,
               asset: cachedAsset,
-              amountInUsd: `$${amountInUsd ? `$${amountInUsd}` : '0.00'}`,
+              amountInUsd: amountInUsd ? amountInUsd.formatted : '$0.00',
             },
           ];
         },
@@ -168,7 +171,8 @@ export class AccountService {
       const ethBalance = ethAsset?.amount;
       const accountAssets: AccountBalance = {
         balance: ethBalance ?? bn(0),
-        amountInUsd: `$${assetsAmountsInUsd[baseAssetId.toString()] ?? '0.00'}`,
+        amountInUsd:
+          assetsAmountsInUsd[baseAssetId.toString()]?.formatted ?? '$0.00',
         balanceSymbol: 'ETH',
         balances: nextBalancesWithAssets,
         totalBalanceInUsd,
