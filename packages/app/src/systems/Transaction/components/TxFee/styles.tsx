@@ -9,7 +9,7 @@ export const styles = {
       alignItems: title ? 'center' : 'flex-start',
       display: 'flex',
       columnGap: title ? '$4' : '$6',
-      gap: title ? undefined : '$2',
+      gap: title ? undefined : '$1',
       position: 'relative',
       cursor: pointer ? 'pointer' : 'auto',
 
