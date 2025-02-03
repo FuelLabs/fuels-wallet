@@ -225,12 +225,10 @@ const styles = {
   contentCol: cssObj({
     display: 'flex',
     backgroundColor: '$gray1',
-    boxShadow: '0px 2px 6px -1px $colors$gray4, 0px 0px 0px 1px $colors$gray6',
+    boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
     flex: 1,
     borderRadius: '8px',
-    minWidth: 0,
     padding: '14px 12px',
-    margin: '0 4px',
   }),
   spacer: cssObj({
     minHeight: '14px',
@@ -260,7 +258,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '$1',
-    color: '$indigo11',
+    color: '$indigo10',
     lineHeight: 'normal',
   }),
   amountContainer: cssObj({
