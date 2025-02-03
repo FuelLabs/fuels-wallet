@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Text, Tooltip, VStack } from '@fuel-ui/react';
 import { type BNInput, bn } from 'fuels';
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AmountVisibility, formatBalance } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
@@ -13,7 +13,7 @@ type AssetItemAmountProps = {
   rate: number | undefined;
 };
 
-const _AssetItemAmount = ({
+export const AssetItemAmount = ({
   amount,
   decimals,
   symbol,
@@ -103,5 +103,3 @@ const styles = {
     textAlign: 'right',
   }),
 };
-
-export const AssetItemAmount = memo(_AssetItemAmount);

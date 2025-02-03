@@ -12,7 +12,7 @@ import {
   Text,
   Tooltip,
 } from '@fuel-ui/react';
-import { type FC, memo, useEffect, useMemo, useState } from 'react';
+import { type FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Pages, shortAddress } from '~/systems/Core';
 
@@ -39,7 +39,7 @@ type AssetItemComponent = FC<AssetItemProps> & {
   Loader: typeof AssetItemLoader;
 };
 
-const _AssetItem: AssetItemComponent = ({
+export const AssetItem: AssetItemComponent = ({
   asset: inputAsset,
   fuelAsset: inputFuelAsset,
   amount,
@@ -208,9 +208,7 @@ const _AssetItem: AssetItemComponent = ({
   );
 };
 
-_AssetItem.Loader = AssetItemLoader;
-
-export const AssetItem = memo(_AssetItem);
+AssetItem.Loader = AssetItemLoader;
 
 const styles = {
   assetName: cssObj({
