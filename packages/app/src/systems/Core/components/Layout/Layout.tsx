@@ -128,7 +128,7 @@ export const styles = {
     ...coreStyles.scrollable(),
 
     '&:has(.layout__bottom) .layout__content': {
-      padding: '$0',
+      pb: '$0',
     },
   }),
   wrapper: cssObj({
@@ -150,8 +150,7 @@ export const styles = {
     flex: 1,
     '&[data-scrollable=true]:not([data-noborder])': {
       padding: '$0',
-      // ...coreStyles.scrollable(),
-      overflow: 'auto',
+      ...coreStyles.scrollable(),
     },
     '&[data-noborder]': {
       padding: '$0',
