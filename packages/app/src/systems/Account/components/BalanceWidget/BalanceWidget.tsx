@@ -13,18 +13,11 @@ import {
 import type { AccountWithBalance } from '@fuel-wallet/types';
 import { type ReactNode, useMemo } from 'react';
 import { FuelAddress } from '~/systems/Account';
-import {
-  AmountVisibility,
-  VisibilityButton,
-  formatBalance,
-} from '~/systems/Core';
+import { VisibilityButton, formatBalance } from '~/systems/Core';
 
 import { useAccounts } from '../../hooks';
 
 import { DEFAULT_DECIMAL_UNITS } from 'fuels';
-import { useAccountTotalBalance } from '~/systems/Account/hooks/useAccountTotalBalance';
-import { useAssets } from '~/systems/Asset';
-import { useAssetsAmount } from '~/systems/Transaction/hooks/useAssetsAmount';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 type BalanceWidgetWrapperProps = {
@@ -60,7 +53,7 @@ export function BalanceWidget({
   onChangeVisibility,
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
-  const totalBalanceInUsd = useAccountTotalBalance() ?? 0;
+  const totalBalanceInUsd = account?.totalBalanceInUsd ?? 0;
   const { original, tooltip } = useMemo(() => {
     return formatBalance(account?.balance, decimals);
   }, [account]);
