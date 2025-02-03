@@ -6,7 +6,7 @@ import { Pages } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 import { useTransactionRequest } from '~/systems/DApp';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
-import { TxContent } from '~/systems/Transaction';
+import { TxViewSimpleWrapper } from '../../components';
 
 export const TxApprove = () => {
   const ctx = useTransactionRequest();
@@ -29,21 +29,32 @@ export const TxApprove = () => {
         {ctx.title}
       </OverlayDialogTopbar>
       <Dialog.Description as="div" css={styles.description}>
-        {!ctx.txSummarySimulated && <TxContent.Loader />}
         {ctx.shouldShowTxSimulated && (
-          <TxContent.Info
+          <TxViewSimpleWrapper
+            summary={ctx.txSummarySimulated}
             showDetails
-            tx={ctx.txSummarySimulated}
-            isLoading={isLoading}
-            errors={ctx.errors.simulateTxErrors}
-            isConfirm
+            isLoading={!ctx.txSummarySimulated}
+            variant="default"
+            footer={
+              ctx.status('failed') && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  intent="error"
+                  onPress={ctx.handlers.tryAgain}
+                >
+                  Try again
+                </Button>
+              )
+            }
           />
         )}
         {ctx.shouldShowTxExecuted && (
-          <TxContent.Info
+          <TxViewSimpleWrapper
+            summary={ctx.txSummaryExecuted}
             showDetails
-            tx={ctx.txSummaryExecuted}
-            txStatus={ctx.executedStatus()}
+            isLoading={false}
+            variant="default"
             footer={
               ctx.status('failed') && (
                 <Button
@@ -88,7 +99,8 @@ const styles = {
   description: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
     overflowY: 'scroll !important',
-    paddingLeft: '$4',
+    paddingLeft: '0',
+    paddingRight: '0',
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
