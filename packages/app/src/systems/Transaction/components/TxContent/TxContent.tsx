@@ -117,7 +117,7 @@ function TxContentInfo({
   const isExecuted = !!tx?.id;
   const txRequestGasLimit = getGasLimitFromTxRequest(txRequest);
 
-  const initialAdvanced = useMemo(() => {
+  const _initialAdvanced = useMemo(() => {
     if (!fees?.regularTip || !fees?.fastTip) return false;
 
     // it will start as advanced if the transaction tip is not equal to the regular tip and fast tip
@@ -156,7 +156,7 @@ function TxContentInfo({
         isLoading={isLoading}
       />
       {isLoading && !showDetails && <TxFee.Loader />}
-      {showDetails && !fees && <TxFee fee={tx?.fee} />}
+      {/* {showDetails && !fees && <TxFee fee={tx?.fee} />} */}
       {showDetails &&
         fees?.baseFee &&
         txRequestGasLimit &&
@@ -164,13 +164,13 @@ function TxContentInfo({
         fees?.fastTip && (
           <VStack gap="$3">
             <Text as="span">Fee (network)</Text>
-            <TxFeeOptions
+            {/* <TxFeeOptions
               initialAdvanced={initialAdvanced}
               baseFee={fees.baseFee}
               gasLimit={txRequestGasLimit}
               regularTip={fees.regularTip}
               fastTip={fees.fastTip}
-            />
+            /> */}
           </VStack>
         )}
       {footer}
