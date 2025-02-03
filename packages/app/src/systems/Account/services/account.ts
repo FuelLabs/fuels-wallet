@@ -144,7 +144,7 @@ export class AccountService {
               ...balance,
               amount: balance.amount,
               asset: cachedAsset,
-              amountInUsd: `$${amountInUsd ?? '0.00'}`,
+              amountInUsd: `$${amountInUsd ? `$${amountInUsd}` : '0.00'}`,
             },
           ];
         },

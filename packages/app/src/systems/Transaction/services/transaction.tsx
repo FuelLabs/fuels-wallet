@@ -274,12 +274,12 @@ export class TxService {
       });
       const feeInUsd =
         baseAsset != null
-          ? convertToUsd(
+          ? `$${convertToUsd(
               feeAdaptedToSdkDiff,
               baseAsset?.decimals,
               // biome-ignore lint/suspicious/noExplicitAny: @fuel-ts/accounts types are not updated
               (baseAsset as any)?.rate
-            )
+            )}`
           : '$0.00';
       return {
         baseFee,
