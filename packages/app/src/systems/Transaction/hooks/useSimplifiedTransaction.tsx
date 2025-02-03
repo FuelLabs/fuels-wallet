@@ -5,21 +5,21 @@ import type { SimplifiedTransaction } from '../types';
 import { simplifyTransaction } from '../utils/simplifyTransaction';
 
 type UseSimplifiedTransactionProps = {
-  summary?: TransactionSummary;
-  request?: TransactionRequest;
+  tx?: TransactionSummary;
+  txRequest?: TransactionRequest;
 };
 
 export function useSimplifiedTransaction({
-  summary,
-  request,
+  tx,
+  txRequest,
 }: UseSimplifiedTransactionProps) {
   const { account } = useAccounts();
 
   const transaction = useMemo<SimplifiedTransaction | undefined>(() => {
-    if (!summary) return undefined;
+    if (!tx) return undefined;
 
-    return simplifyTransaction(summary, request, account?.address);
-  }, [summary, request, account?.address]);
+    return simplifyTransaction(tx, txRequest, account?.address);
+  }, [tx, txRequest, account?.address]);
 
   return {
     transaction,

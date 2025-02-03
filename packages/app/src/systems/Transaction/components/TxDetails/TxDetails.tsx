@@ -17,8 +17,8 @@ import { TxHeaderSimple } from './TxHeaderSimple';
 export type TxViewVariant = 'default' | 'history';
 
 type TxDetailsProps = {
-  summary?: TransactionSummary | TransactionResult;
-  request?: TransactionRequest;
+  tx?: TransactionSummary | TransactionResult;
+  txRequest?: TransactionRequest;
   showDetails?: boolean;
   isLoading?: boolean;
   footer?: React.ReactNode;
@@ -26,20 +26,21 @@ type TxDetailsProps = {
 };
 
 export function TxDetails({
-  summary,
-  request,
+  tx,
+  txRequest,
   showDetails = true,
   isLoading: externalLoading,
   footer,
   variant = 'default',
 }: TxDetailsProps) {
+  // TODO: Handle errors.simulateTxErrors, isConfirm, fees
   const [isCustomFees, setIsCustomFees] = useState(false);
   const [_, setSelectedTip] = useState<BN>();
   const isHistory = variant === 'history';
 
   const { transaction, isReady } = useSimplifiedTransaction({
-    summary,
-    request,
+    tx,
+    txRequest,
   });
 
   if (!isReady || !transaction) return null;

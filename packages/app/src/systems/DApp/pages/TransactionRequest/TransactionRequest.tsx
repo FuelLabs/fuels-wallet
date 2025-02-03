@@ -73,15 +73,15 @@ export function TransactionRequest() {
         <Layout.Content css={styles.content}>
           {shouldShowTxSimulated && (
             <TxDetails
-              summary={txSummarySimulated}
-              request={proposedTxRequest}
+              tx={txSummarySimulated}
+              txRequest={proposedTxRequest}
               showDetails
               isLoading={isLoadingInfo || !defaultValues}
             />
           )}
           {shouldShowTxExecuted && (
             <TxDetails
-              summary={txSummaryExecuted}
+              tx={txSummaryExecuted}
               showDetails
               footer={
                 status('failed') && (

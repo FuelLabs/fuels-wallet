@@ -28,7 +28,7 @@ export function TxView() {
         )}
         {txResult && (
           <TxDetails
-            summary={txResult}
+            tx={txResult}
             showDetails={ctx.shouldShowTxFee}
             isLoading={!txResult}
             variant="history"

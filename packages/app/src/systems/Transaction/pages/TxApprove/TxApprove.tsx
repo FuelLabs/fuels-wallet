@@ -31,7 +31,7 @@ export const TxApprove = () => {
       <Dialog.Description as="div" css={styles.description}>
         {ctx.shouldShowTxSimulated && (
           <TxDetails
-            summary={ctx.txSummarySimulated}
+            tx={ctx.txSummarySimulated}
             showDetails
             isLoading={!ctx.txSummarySimulated}
             variant="default"
@@ -51,7 +51,7 @@ export const TxApprove = () => {
         )}
         {ctx.shouldShowTxExecuted && (
           <TxDetails
-            summary={ctx.txSummaryExecuted}
+            tx={ctx.txSummaryExecuted}
             showDetails
             isLoading={false}
             variant="default"
