@@ -19,6 +19,8 @@ import { WalletLockedCustom, db } from '~/systems/Core';
 
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
+import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { graphqlRequest } from '~/systems/Core/utils/graphql';
 import { NetworkService } from '~/systems/Network/services/network';
 import type { TransactionCursor } from '../types';
@@ -29,7 +31,7 @@ import {
   getGasLimitFromTxRequest,
   setGasLimitToTxRequest,
 } from '../utils';
-import { convertTipToUsd, getCurrentTips } from '../utils/fee';
+import { getCurrentTips } from '../utils/fee';
 import { type GetPageInfoQuery, getPageInfoQuery } from './queries';
 
 export type TxInputs = {
@@ -55,8 +57,6 @@ export type TxInputs = {
       regularTip?: BN;
       fastTip?: BN;
       maxGasLimit?: BN;
-      regularTipInUsd?: string;
-      fastTipInUsd?: string;
     };
   };
   send: {
@@ -262,11 +262,25 @@ export class TxService {
 
       // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
       const feeAdaptedToSdkDiff = txSummary.fee.add(1);
-      const feeInUsd = await convertTipToUsd(
-        await provider.getChainId(),
-        await provider.getBaseAssetId(),
-        feeAdaptedToSdkDiff
-      );
+      const [chainId, baseAssetId] = await Promise.all([
+        provider.getChainId(),
+        provider.getBaseAssetId(),
+      ]);
+      const baseAsset = await AssetsCache.getInstance().getAsset({
+        chainId: chainId,
+        assetId: baseAssetId,
+        dbAssets: [],
+        save: false,
+      });
+      const feeInUsd =
+        baseAsset != null
+          ? convertToUsd(
+              feeAdaptedToSdkDiff,
+              baseAsset?.decimals,
+              // biome-ignore lint/suspicious/noExplicitAny: @fuel-ts/accounts types are not updated
+              (baseAsset as any)?.rate
+            )
+          : '$0.00';
       return {
         baseFee,
         txSummary: {
@@ -385,14 +399,11 @@ export class TxService {
     const currentNetwork = await NetworkService.getSelectedNetwork();
     const provider = await createProvider(currentNetwork?.url || '');
 
-    const { regularTip, fastTip, regularTipInUsd, fastTipInUsd } =
-      await getCurrentTips(provider);
+    const { regularTip, fastTip } = await getCurrentTips(provider);
 
     return {
       regularTip: bn(regularTip),
       fastTip: bn(fastTip),
-      regularTipInUsd,
-      fastTipInUsd,
     };
   }
 

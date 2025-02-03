@@ -5,8 +5,8 @@ export function convertToUsd(
   decimals: number,
   rate: number,
   outDecimals = 2
-): string {
-  if (!rate) return '$0.00';
+): number {
+  if (!rate) 0;
 
   // biome-ignore lint/style/useExponentiationOperator: <explanation>
   const factor = Math.pow(10, outDecimals);
@@ -16,5 +16,5 @@ export function convertToUsd(
 
   // Convert the scaled value (which is in fixed-point) to a number
   // and scale it back to its true value.
-  return `$${Number(scaledUsdBN.toString()) / factor}`;
+  return Number(scaledUsdBN.toString()) / factor;
 }

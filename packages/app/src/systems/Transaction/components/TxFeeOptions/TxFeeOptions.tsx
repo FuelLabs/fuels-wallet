@@ -1,13 +1,16 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Form, HStack, Input, Text, VStack } from '@fuel-ui/react';
+import type { AssetFuelData } from '@fuel-wallet/types';
 import { AnimatePresence } from 'framer-motion';
 import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
-import { convertAsset } from '~/systems/Asset/services/convert-asset';
+import { useAsset } from '~/systems/Asset';
+import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { MotionFlex, MotionStack, animations } from '~/systems/Core';
 import { createAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import { isAmountAllowed } from '~/systems/Core/components/InputAmount/InputAmount.utils';
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxFee } from '../TxFee';
@@ -23,8 +26,6 @@ type TxFeeOptionsProps = {
   gasLimit: BN;
   regularTip: BN;
   fastTip: BN;
-  regularTipInUsd: string | undefined;
-  fastTipInUsd: string | undefined;
   onRecalculate?: (tip: BN) => void;
 };
 
@@ -34,15 +35,13 @@ export const TxFeeOptions = ({
   gasLimit: gasLimitInput,
   regularTip,
   fastTip,
-  regularTipInUsd,
-  fastTipInUsd,
   onRecalculate,
 }: TxFeeOptionsProps) => {
   const provider = useProvider();
+
   const { control, setValue, getValues } = useFormContext<SendFormValues>();
-  const [advancedFeeInUsd, setAdvancedFeeInUsd] = useState<string | undefined>(
-    undefined
-  );
+  const [baseAsset, setBaseAsset] = useState<AssetFuelData | undefined>();
+  useAsset();
   const [isAdvanced, setIsAdvanced] = useState(initialAdvanced);
   const previousGasLimit = useRef<BN>(gasLimitInput);
   const previousDefaultTip = useRef<BN>(regularTip);
@@ -56,6 +55,20 @@ export const TxFeeOptions = ({
     control,
     name: 'fees.gasLimit',
   });
+
+  const advancedFee = baseFee.add(tip.value.amount);
+  const regularTipInUsd =
+    baseAsset?.rate != null
+      ? `$${convertToUsd(regularTip, baseAsset?.decimals, baseAsset?.rate)}`
+      : '$0.00';
+  const fastTipInUsd =
+    baseAsset?.rate != null
+      ? `$${convertToUsd(fastTip, baseAsset?.decimals, baseAsset?.rate)}`
+      : '$0.00';
+  const advancedFeeInUsd =
+    baseAsset?.rate != null
+      ? `$${convertToUsd(advancedFee, baseAsset?.decimals, baseAsset?.rate)}`
+      : '$0.00';
 
   const options = useMemo(() => {
     return [
@@ -78,8 +91,33 @@ export const TxFeeOptions = ({
     setIsAdvanced((curr) => !curr);
   };
 
+  useEffect(() => {
+    let abort = false;
+    async function loadBaseAssetRate() {
+      if (!provider) return;
+      const [baseAssetId, chainId] = await Promise.all([
+        provider?.getBaseAssetId(),
+        provider?.getChainId(),
+      ]);
+      if (abort || baseAssetId == null || chainId == null) return;
+      const asset = await AssetsCache.getInstance().getAsset({
+        chainId: provider.getChainId(),
+        assetId: baseAssetId,
+        dbAssets: [],
+        save: false,
+      });
+      if (abort) return;
+
+      setBaseAsset(asset);
+    }
+    loadBaseAssetRate();
+    return () => {
+      abort = true;
+    };
+  }, [provider]);
+
   /**
-   * Resetting fees if hiding advanced options (or initializing them)
+   * Resetting fees if hiding advanced options (or initializing them
    */
   useEffect(() => {
     if (!isAdvanced) {
@@ -103,24 +141,6 @@ export const TxFeeOptions = ({
       }
     }
   }, [isAdvanced, setValue, getValues]);
-
-  const advancedFee = baseFee.add(tip.value.amount);
-  useEffect(() => {
-    const abort = false;
-    if (!isAdvanced) setAdvancedFeeInUsd(undefined);
-    async function loadAndStoreRate() {
-      if (advancedFee != null) {
-        const baseAssetId = await provider?.getBaseAssetId();
-        if (baseAssetId == null) return;
-        convertAsset(
-          await provider?.getChainId(),
-          baseAssetId,
-          advancedFee.toString()
-        ).then((res) => !abort && setAdvancedFeeInUsd(res?.amount || '$0.00'));
-      }
-    }
-    loadAndStoreRate();
-  }, [advancedFee, isAdvanced, provider]);
 
   return (
     <Box.Stack gap="$2">

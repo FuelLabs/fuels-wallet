@@ -109,7 +109,7 @@ export class AccountService {
     try {
       const provider = await createProvider(providerUrl!);
       const balances = await getBalances(provider, account.address);
-      const assetsAmountsInUsd: Record<string, string | undefined> = {};
+      const assetsAmountsInUsd: Record<string, number | undefined> = {};
       const chainId = provider.getChainId();
 
       const balanceAssets = await AssetsCache.fetchAllAssets(
@@ -117,14 +117,17 @@ export class AccountService {
         balances.map((balance) => balance.assetId)
       );
       let totalBalanceInUsd = 0;
+      console.log('fsk balanceAssets', await balanceAssets);
+      console.log('fsk balances', balances);
 
       balances.map((asset) => {
         const assetBalance = balanceAssets.get(asset.assetId);
         // biome-ignore lint/suspicious/noExplicitAny: type not yet updated in this @fuel-ts/account version
         const rate = ((assetBalance as any).rate as number) ?? 0;
         if (assetBalance?.decimals) {
-          totalBalanceInUsd +=
+          assetsAmountsInUsd[asset.assetId] =
             convertToUsd(asset.amount, assetBalance?.decimals, rate) ?? 0;
+          totalBalanceInUsd += assetsAmountsInUsd[asset.assetId] ?? 0;
         }
       });
       // includes "asset" prop in balance, centralizing the complexity here instead of in rest of UI
@@ -141,7 +144,7 @@ export class AccountService {
               ...balance,
               amount: balance.amount,
               asset: cachedAsset,
-              amountInUsd,
+              amountInUsd: `$${amountInUsd ?? '0.00'}`,
             },
           ];
         },
@@ -168,7 +171,7 @@ export class AccountService {
       const ethBalance = ethAsset?.amount;
       const accountAssets: AccountBalance = {
         balance: ethBalance ?? bn(0),
-        amountInUsd: assetsAmountsInUsd[baseAssetId.toString()],
+        amountInUsd: `$${assetsAmountsInUsd[baseAssetId.toString()] ?? '0.00'}`,
         balanceSymbol: 'ETH',
         balances: nextBalancesWithAssets,
         totalBalanceInUsd,

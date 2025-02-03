@@ -31,8 +31,6 @@ export function SendSelect({
   tip,
   regularTip,
   fastTip,
-  regularTipInUsd,
-  fastTipInUsd,
   errorMessage,
   warningMessage,
   provider,
@@ -217,8 +215,6 @@ export function SendSelect({
                 gasLimit={gasLimit}
                 regularTip={regularTip}
                 fastTip={fastTip}
-                regularTipInUsd={regularTipInUsd}
-                fastTipInUsd={fastTipInUsd}
                 onRecalculate={handlers.recalculateFromTip}
               />
             </MotionStack>

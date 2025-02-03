@@ -25,22 +25,10 @@ export async function calculateTotalFee({
   );
 }
 
-export async function convertTipToUsd(
-  chainId: number,
-  baseAssetId: string,
-  tip: BN
-): Promise<string> {
-  return convertAsset(chainId, baseAssetId, tip.toString()).then(
-    (res) => res?.amount || '$0.00'
-  );
-}
-
 // @TODO: this can be removed when fuel-core provides a way of querying tips in the network
 export async function getCurrentTips(provider: Provider) {
   const DEFAULT_REGULAR_TIP = 0;
   const DEFAULT_FAST_TIP = 1000;
-  const baseAssetId = await provider.getBaseAssetId();
-  const chainId = await provider.getChainId();
   const blockWithTransactions =
     await provider.getBlockWithTransactions('latest');
   if (!blockWithTransactions) {
@@ -70,12 +58,5 @@ export async function getCurrentTips(provider: Provider) {
   const fastTip =
     orderedTips[Math.floor(orderedTips.length * 0.8)] || DEFAULT_FAST_TIP;
 
-  const regularTipInUsd = await convertTipToUsd(
-    chainId,
-    baseAssetId,
-    bn(regularTip)
-  );
-  const fastTipInUsd = await convertTipToUsd(chainId, baseAssetId, bn(fastTip));
-
-  return { regularTip, fastTip, regularTipInUsd, fastTipInUsd };
+  return { regularTip, fastTip };
 }
