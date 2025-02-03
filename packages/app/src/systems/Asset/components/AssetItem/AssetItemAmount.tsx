@@ -91,15 +91,16 @@ const styles = {
     display: 'inline-block',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    color: '$textColor',
-    fontWeight: '$medium',
+    color: '$textHeading',
   }),
   symbol: cssObj({
     flexShrink: 0,
+    color: '$textHeading',
   }),
   amountInUsd: cssObj({
     textSize: 'sm',
     fontWeight: '$normal',
     textAlign: 'right',
+    color: '$primary',
   }),
 };

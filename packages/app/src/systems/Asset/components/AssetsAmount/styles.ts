@@ -38,7 +38,8 @@ export const styles = {
 
     '& span': {
       fontSize: '$sm',
-      color: '$intentsBase12',
+      fontWeight: '$medium',
+      color: '$textHeading',
     },
   }),
   address: cssObj({
@@ -65,6 +66,8 @@ export const styles = {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     textAlign: 'right',
+    fontWeight: '$medium',
+    color: '$textHeading',
   }),
   amountInUsd: cssObj({
     fontSize: '$sm',
