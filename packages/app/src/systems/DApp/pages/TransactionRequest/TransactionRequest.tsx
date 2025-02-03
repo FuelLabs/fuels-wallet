@@ -75,8 +75,8 @@ export function TransactionRequest() {
             <TxDetails
               tx={txSummarySimulated}
               txRequest={proposedTxRequest}
-              showDetails
               isLoading={isLoadingInfo || !defaultValues}
+              showDetails
             />
           )}
           {shouldShowTxExecuted && (

@@ -1,4 +1,3 @@
-export * from './TxContent';
 export * from './TxFee';
 export * from './TxFromTo';
 export * from './TxHeader';
