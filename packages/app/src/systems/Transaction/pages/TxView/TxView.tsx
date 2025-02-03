@@ -1,16 +1,8 @@
-import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Layout } from '~/systems/Core';
 import { useNetworks } from '~/systems/Network';
-import type { SendFormValues } from '~/systems/Send/hooks';
-import {
-  TxStatusAlert,
-  TxViewSimple,
-  TxViewSimpleWrapper,
-} from '../../components';
-import { TxContent } from '../../components/TxContent';
+import { TxStatusAlert, TxViewSimpleWrapper } from '../../components';
 import { useTxResult } from '../../hooks';
-import { simplifyTransaction } from '../../utils/simplifyTransaction';
 
 export function TxView() {
   const txIdQueryParam = useParams<{ txId: string }>().txId;
@@ -38,6 +30,7 @@ export function TxView() {
             summary={txResult}
             showDetails={ctx.shouldShowTxFee}
             isLoading={!txResult}
+            variant="history"
           />
         )}
       </Layout.Content>

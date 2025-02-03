@@ -9,23 +9,30 @@ import { TxFeeSimple } from './TxFeeSimple';
 import { TxHeaderSimple } from './TxHeaderSimple';
 import { TxOperationsList } from './TxOperationsSimple/TxOperationsList';
 
+export type TxViewVariant = 'default' | 'history';
+
+type TxViewSimpleProps = SimplifiedTransactionViewProps & {
+  variant?: TxViewVariant;
+};
+
 export function TxViewSimple({
   transaction,
   showDetails = true,
   isLoading,
   footer,
-}: SimplifiedTransactionViewProps) {
+  variant = 'default',
+}: TxViewSimpleProps) {
   const [isCustomFees, setIsCustomFees] = useState(false);
   const [_selectedTip, setSelectedTip] = useState<BN>();
+  const isHistory = variant === 'history';
   // const { account } = useAccounts();
 
   return (
     <Box css={styles.root}>
-      {/* TODO: The header should not show in transaction history */}
-      <TxHeaderSimple />
+      {!isHistory && <TxHeaderSimple />}
       <Box css={styles.content}>
         <TxOperationsList operations={transaction.categorizedOperations} />
-        {showDetails && (
+        {showDetails && !isHistory && (
           <Box>
             <Box.Flex gap="18px" align="center" css={styles.feeContainer}>
               <Icon icon="CurrencyCent" css={styles.icon} />

@@ -4,7 +4,7 @@ import type {
   TransactionSummary,
 } from 'fuels';
 import { useSimplifiedTransaction } from '../hooks/useSimplifiedTransaction';
-import { TxViewSimple } from './TxViewSimple';
+import { TxViewSimple, type TxViewVariant } from './TxViewSimple';
 
 type TxViewSimpleWrapperProps = {
   summary?: TransactionSummary | TransactionResult;
@@ -12,6 +12,7 @@ type TxViewSimpleWrapperProps = {
   showDetails?: boolean;
   isLoading?: boolean;
   footer?: React.ReactNode;
+  variant?: TxViewVariant;
 };
 
 export function TxViewSimpleWrapper({
@@ -20,6 +21,7 @@ export function TxViewSimpleWrapper({
   showDetails,
   isLoading: externalLoading,
   footer,
+  variant,
 }: TxViewSimpleWrapperProps) {
   // If we have a summary but no explicit status, treat it as pending
   const hasValidStatus = !!summary;
@@ -40,6 +42,7 @@ export function TxViewSimpleWrapper({
       transaction={transaction}
       showDetails={showDetails}
       footer={footer}
+      variant={variant}
     />
   );
 }
