@@ -8,7 +8,7 @@ export function TxHeaderSimple() {
       {/* <Text as="h2">Review Transaction</Text> */}
       <Box css={styles.warning}>
         <Icon icon="InfoCircle" />
-        Double-check the details of your transaction before submitting.
+        Double-check your transaction before submitting.
       </Box>
     </Box>
   );
