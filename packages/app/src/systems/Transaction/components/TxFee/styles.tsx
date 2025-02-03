@@ -33,6 +33,10 @@ export const styles = {
     fontWeight: '$medium',
     textWrap: 'nowrap',
   }),
+  fee: (flag = false) =>
+    cssObj({
+      height: flag ? '21px' : 'auto',
+    }),
   amount: cssObj({
     fontSize: '$sm',
     lineHeight: '20px',

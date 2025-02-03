@@ -26,6 +26,7 @@ export const TxFee: TxFeeComponent = ({
   onChecked,
   title,
 }: TxFeeProps) => {
+  const [flag, setFlag] = useState(false);
   const provider = useProvider();
   const [baseAsset, setBaseAsset] = useState<AssetFuelData | undefined>();
   useEffect(() => {
@@ -57,6 +58,15 @@ export const TxFee: TxFeeComponent = ({
     return convertToUsd(fee, baseAsset.decimals, baseAsset.rate).formatted;
   }, [baseAsset, fee]);
 
+  // Horrible workaround to force re-render of this section.
+  useEffect(() => {
+    setTimeout(() => {
+      setFlag((prev) => !prev);
+    }, 500);
+  }, []);
+
+  if (!fee || !feeInUsd) return <TxFee.Loader />;
+
   return (
     <Card
       css={styles.detailItem(!!checked, !!onChecked, !!title)}
@@ -69,7 +79,7 @@ export const TxFee: TxFeeComponent = ({
       >
         {title || 'Fee (network)'}
       </Text>
-      <HStack gap="$1">
+      <HStack gap="$1" css={styles.fee(flag)}>
         {!!feeInUsd && (
           <Text
             color="intentsBase12"
