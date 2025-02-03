@@ -45,20 +45,19 @@ export function TxFeeOptions({
       <HStack justify="between" gap="$4">
         <Box css={styles.inputBox}>
           <Text fontSize="xs">Gas limit</Text>
-          <Input size="sm" css={styles.input} isDisabled>
+          <Input size="md" css={styles.input} isDisabled>
             <Input.Number value="51" inputMode="numeric" autoComplete="off" />
           </Input>
         </Box>
         <Box css={styles.inputBox}>
           <Text fontSize="xs">Tip</Text>
-          <Input size="sm" css={styles.input}>
+          <Input size="md" css={styles.input}>
             <Input.Number
               value={customTip}
               inputMode="decimal"
               autoComplete="off"
               allowedDecimalSeparators={['.']}
               allowNegative={false}
-              thousandSeparator={false}
               decimalScale={DECIMAL_UNITS}
               placeholder="0.00"
               isAllowed={isAmountAllowed}
@@ -101,13 +100,6 @@ const styles = {
   }),
   input: cssObj({
     borderRadius: '8px',
-    backgroundColor: '$white',
-    border: '1px solid $gray5',
-    transition: 'border-color 0.3s',
-    '&:not([aria-disabled="true"]):focus-within': {
-      borderColor: '$brand',
-    },
-
     '&>input': {
       width: '100%',
     },
