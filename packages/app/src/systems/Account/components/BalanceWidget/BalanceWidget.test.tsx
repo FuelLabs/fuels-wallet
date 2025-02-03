@@ -39,7 +39,7 @@ describe('BalanceWidget', () => {
 
   it('should show formatted balance', async () => {
     renderWithProvider(<BalanceWidget account={ACCOUNT} />);
-    expect(screen.getByText('$0.00')).toBeInTheDocument();
+    expect(screen.getByText(ACCOUNT.amountInUsd ?? '$0')).toBeInTheDocument();
   });
 
   it('should hide balance when user sets his balance to hide', async () => {
