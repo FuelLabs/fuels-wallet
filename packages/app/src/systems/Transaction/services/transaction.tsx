@@ -280,7 +280,7 @@ export class TxService {
               // biome-ignore lint/suspicious/noExplicitAny: @fuel-ts/accounts types are not updated
               (baseAsset as any)?.rate
             ).formatted
-          : '$0.00';
+          : '$0';
       return {
         baseFee,
         txSummary: {

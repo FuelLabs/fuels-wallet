@@ -32,7 +32,7 @@ const _AssetItemAmount = ({
 
   const amountInUsd =
     amount == null || rate == null || decimals == null
-      ? '$0.00'
+      ? '$0'
       : convertToUsd(bn(amount), decimals, rate).formatted;
 
   useEffect(() => {
@@ -66,7 +66,7 @@ const _AssetItemAmount = ({
             aria-label={`${symbol} conversion rate to USD`}
             css={styles.amountInUsd}
           >
-            {visibility ? (amountInUsd ?? '$0.00') : '$••••'}
+            {visibility ? (amountInUsd ?? '$0') : '$••••'}
           </Text>
         </VStack>
       </Box>

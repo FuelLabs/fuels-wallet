@@ -113,7 +113,7 @@ export const InputAmount: InputAmountComponent = ({
   inputProps,
   asset,
   assetTooltip,
-  amountInUsd = '$0.00',
+  amountInUsd = '$0',
   onClickAsset,
   ...props
 }) => {

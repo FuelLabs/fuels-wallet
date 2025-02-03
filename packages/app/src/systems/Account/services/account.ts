@@ -144,7 +144,7 @@ export class AccountService {
               ...balance,
               amount: balance.amount,
               asset: cachedAsset,
-              amountInUsd: amountInUsd ? amountInUsd.formatted : '$0.00',
+              amountInUsd: amountInUsd ? amountInUsd.formatted : '$0',
             },
           ];
         },
@@ -172,7 +172,7 @@ export class AccountService {
       const accountAssets: AccountBalance = {
         balance: ethBalance ?? bn(0),
         amountInUsd:
-          assetsAmountsInUsd[baseAssetId.toString()]?.formatted ?? '$0.00',
+          assetsAmountsInUsd[baseAssetId.toString()]?.formatted ?? '$0',
         balanceSymbol: 'ETH',
         balances: nextBalancesWithAssets,
         totalBalanceInUsd,
