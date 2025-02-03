@@ -24,9 +24,6 @@ import { act } from 'react';
 
 // Initialize the MSW server with the necessary request handlers
 const server = setupServer(
-  rest.get('/convert_rate', (_req, res, ctx) => {
-    return res(ctx.status(200), ctx.json({ amount: '$0' }));
-  }),
   rest.get('/assets.json', (_req, res, ctx) => {
     return res(
       ctx.status(200),
