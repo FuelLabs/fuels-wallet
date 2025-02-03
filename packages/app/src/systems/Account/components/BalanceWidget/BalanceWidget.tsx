@@ -100,9 +100,9 @@ export function BalanceWidget({
         </>
       }
       bottom={
-        <VStack gap="$2">
+        <>
           <Text className="label">Total balance</Text>
-          <HStack>
+          <Box.Flex>
             <Tooltip
               content={original.display}
               delayDuration={0}
@@ -122,8 +122,8 @@ export function BalanceWidget({
               visibility={visibility}
               onChangeVisibility={onChangeVisibility}
             />
-          </HStack>
-        </VStack>
+          </Box.Flex>
+        </>
       }
     />
   );
@@ -142,7 +142,7 @@ const styles = {
     fontSize: '$sm',
   }),
   balance: cssObj({
-    py: '$5',
+    pt: '$3',
     px: '$4',
 
     '&[aria-hidden="true"]': {
@@ -183,7 +183,7 @@ const styles = {
     gap: '$3',
     alignItems: 'center',
     py: '$4',
-    px: '$5',
+    px: '$4',
     borderTop: '1px solid $border',
     borderBottom: '1px solid $border',
   }),
