@@ -117,8 +117,6 @@ export class AccountService {
         balances.map((balance) => balance.assetId)
       );
       let totalBalanceInUsd = 0;
-      console.log('fsk balanceAssets', await balanceAssets);
-      console.log('fsk balances', balances);
 
       balances.map((asset) => {
         const assetBalance = balanceAssets.get(asset.assetId);
