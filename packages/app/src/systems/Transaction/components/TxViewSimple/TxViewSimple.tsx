@@ -1,9 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon, Text } from '@fuel-ui/react';
-import type { BN } from 'fuels';
+import type {
+  BN,
+  TransactionRequest,
+  TransactionResult,
+  TransactionSummary,
+} from 'fuels';
 import { useState } from 'react';
-import { useAccounts } from '~/systems/Account';
-import type { SimplifiedTransactionViewProps } from '../../types';
+import { useSimplifiedTransaction } from '../../hooks/useSimplifiedTransaction';
 import { TxFeeOptionsSimple } from './TxFeeOptionsSimple';
 import { TxFeeSimple } from './TxFeeSimple';
 import { TxHeaderSimple } from './TxHeaderSimple';
@@ -11,21 +15,38 @@ import { TxOperationsList } from './TxOperationsSimple/TxOperationsList';
 
 export type TxViewVariant = 'default' | 'history';
 
-type TxViewSimpleProps = SimplifiedTransactionViewProps & {
+type TxViewSimpleProps = {
+  summary?: TransactionSummary | TransactionResult;
+  request?: TransactionRequest;
+  showDetails?: boolean;
+  isLoading?: boolean;
+  footer?: React.ReactNode;
   variant?: TxViewVariant;
 };
 
 export function TxViewSimple({
-  transaction,
+  summary,
+  request,
   showDetails = true,
-  isLoading,
+  isLoading: externalLoading,
   footer,
   variant = 'default',
 }: TxViewSimpleProps) {
   const [isCustomFees, setIsCustomFees] = useState(false);
   const [_selectedTip, setSelectedTip] = useState<BN>();
   const isHistory = variant === 'history';
-  // const { account } = useAccounts();
+
+  const hasValidStatus = !!summary;
+  if (!hasValidStatus || externalLoading) {
+    return <TxViewSimple.Loader />;
+  }
+
+  const { transaction, isReady } = useSimplifiedTransaction({
+    summary,
+    request,
+  });
+
+  if (!isReady || !transaction) return null;
 
   return (
     <Box css={styles.root}>
@@ -47,7 +68,7 @@ export function TxViewSimple({
             ) : (
               <TxFeeSimple
                 fee={transaction.fee}
-                isLoading={isLoading}
+                isLoading={externalLoading}
                 onCustomFees={() => setIsCustomFees(true)}
                 onFeeSelect={setSelectedTip}
               />

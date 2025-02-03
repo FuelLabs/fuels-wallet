@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { Layout } from '~/systems/Core';
 import { useNetworks } from '~/systems/Network';
-import { TxStatusAlert, TxViewSimpleWrapper } from '../../components';
+import { TxStatusAlert, TxViewSimple } from '../../components';
 import { useTxResult } from '../../hooks';
 
 export function TxView() {
@@ -26,7 +26,7 @@ export function TxView() {
           <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
         )}
         {txResult && (
-          <TxViewSimpleWrapper
+          <TxViewSimple
             summary={txResult}
             showDetails={ctx.shouldShowTxFee}
             isLoading={!txResult}
