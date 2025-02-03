@@ -85,7 +85,7 @@ export function TxOperation({
   // if (isContract && !showNesting && depth !== 0) return null;
 
   return (
-    <Box.VStack>
+    <Box.VStack grow={1}>
       <TxOperationCard
         operation={operation}
         assetsAmount={assetsAmount}

@@ -1,9 +1,13 @@
-import type { TransactionRequest, TransactionSummary } from 'fuels';
+import type {
+  TransactionRequest,
+  TransactionResult,
+  TransactionSummary,
+} from 'fuels';
 import { useSimplifiedTransaction } from '../hooks/useSimplifiedTransaction';
 import { TxViewSimple } from './TxViewSimple';
 
 type TxViewSimpleWrapperProps = {
-  summary?: TransactionSummary;
+  summary?: TransactionSummary | TransactionResult;
   request?: TransactionRequest;
   showDetails?: boolean;
   isLoading?: boolean;

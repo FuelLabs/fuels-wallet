@@ -21,6 +21,7 @@ export function TxViewSimple({
 
   return (
     <Box css={styles.root}>
+      {/* TODO: The header should not show in transaction history */}
       <TxHeaderSimple />
       <Box css={styles.content}>
         <TxOperationsList operations={transaction.categorizedOperations} />

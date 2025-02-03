@@ -1,4 +1,9 @@
-import type { Operation, TransactionRequest, TransactionSummary } from 'fuels';
+import type {
+  Operation,
+  TransactionRequest,
+  TransactionResult,
+  TransactionSummary,
+} from 'fuels';
 import {
   BN,
   type OperationFunctionCall,
@@ -271,7 +276,7 @@ function categorizeOperations(
 }
 
 export function simplifyTransaction(
-  summary: TransactionSummary,
+  summary: TransactionSummary | TransactionResult,
   request?: TransactionRequest,
   currentAccount?: string
 ): SimplifiedTransaction {
