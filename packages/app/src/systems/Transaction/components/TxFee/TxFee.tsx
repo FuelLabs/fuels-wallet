@@ -1,7 +1,11 @@
 import { Card, HStack, Text } from '@fuel-ui/react';
 import { type BN, DEFAULT_PRECISION } from 'fuels';
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useEffect, useMemo, useState } from 'react';
 
+import type { AssetFuelData } from '@fuel-wallet/types';
+import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
+import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { TxFeeLoader } from './TxFeeLoader';
 import { styles } from './styles';
 
@@ -10,7 +14,6 @@ export type TxFeeProps = {
   checked?: boolean;
   onChecked?: (checked: boolean) => void;
   title?: string;
-  tipInUsd?: string;
 };
 
 type TxFeeComponent = FC<TxFeeProps> & {
@@ -22,8 +25,37 @@ export const TxFee: TxFeeComponent = ({
   checked,
   onChecked,
   title,
-  tipInUsd,
 }: TxFeeProps) => {
+  const provider = useProvider();
+  const [baseAsset, setBaseAsset] = useState<AssetFuelData | undefined>();
+  useEffect(() => {
+    let abort = false;
+    const getBaseAsset = async () => {
+      const [baseAssetId, chainId] = await Promise.all([
+        provider?.getBaseAssetId(),
+        provider?.getChainId(),
+      ]);
+      if (abort || baseAssetId == null || chainId == null) return;
+      const baseAsset = await AssetsCache.getInstance().getAsset({
+        chainId: chainId,
+        assetId: baseAssetId,
+        dbAssets: [],
+        save: false,
+      });
+      if (abort) return;
+      setBaseAsset(baseAsset);
+    };
+    getBaseAsset();
+    return () => {
+      abort = true;
+    };
+  }, [provider]);
+
+  const feeInUsd = useMemo(() => {
+    if (baseAsset?.rate == null || !fee) return '$0.00';
+    return convertToUsd(fee, baseAsset.decimals, baseAsset.rate).formatted;
+  }, [baseAsset, fee]);
+
   return (
     <Card
       css={styles.detailItem(!!checked, !!onChecked, !!title)}
@@ -37,13 +69,13 @@ export const TxFee: TxFeeComponent = ({
         {title || 'Fee (network)'}
       </Text>
       <HStack gap="$1">
-        {!!tipInUsd && (
+        {!!feeInUsd && (
           <Text
             color="intentsBase12"
             css={styles.usd}
             aria-label={`tip in usd:${title || 'Network'}`}
           >
-            {tipInUsd}
+            ${feeInUsd}
           </Text>
         )}
         <Text

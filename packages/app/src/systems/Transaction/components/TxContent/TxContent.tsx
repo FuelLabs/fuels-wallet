@@ -156,10 +156,7 @@ function TxContentInfo({
         isLoading={isLoading}
       />
       {isLoading && !showDetails && <TxFee.Loader />}
-      {showDetails && !fees && (
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        <TxFee fee={tx?.fee} tipInUsd={(tx as any)?.feeInUsd} />
-      )}
+      {showDetails && !fees && <TxFee fee={tx?.fee} />}
       {showDetails &&
         fees?.baseFee &&
         txRequestGasLimit &&
