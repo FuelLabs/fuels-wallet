@@ -82,7 +82,7 @@ export const TxFee: TxFeeComponent = ({
             css={styles.usd}
             aria-label={`tip in usd:${title || 'Network'}`}
           >
-            ${feeInUsd}
+            {feeInUsd}
           </Text>
         )}
         <Text

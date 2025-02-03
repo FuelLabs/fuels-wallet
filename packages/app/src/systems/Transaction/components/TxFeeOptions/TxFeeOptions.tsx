@@ -60,16 +60,16 @@ export const TxFeeOptions = ({
   const regularTipInUsd =
     baseAsset?.rate != null
       ? convertToUsd(regularTip, baseAsset?.decimals, baseAsset?.rate).formatted
-      : '$0.00';
+      : '$0';
   const fastTipInUsd =
     baseAsset?.rate != null
       ? convertToUsd(fastTip, baseAsset?.decimals, baseAsset?.rate).formatted
-      : '$0.00';
+      : '$0';
   const advancedFeeInUsd =
     baseAsset?.rate != null
       ? convertToUsd(advancedFee, baseAsset?.decimals, baseAsset?.rate)
           .formatted
-      : '$0.00';
+      : '$0';
 
   const options = useMemo(() => {
     return [

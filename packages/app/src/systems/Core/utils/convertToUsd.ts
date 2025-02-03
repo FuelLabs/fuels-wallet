@@ -29,5 +29,5 @@ export function convertToUsd(
     maximumFractionDigits: 9,
   });
 
-  return { value, formatted };
+  return { value, formatted: `$${formatted}` };
 }
