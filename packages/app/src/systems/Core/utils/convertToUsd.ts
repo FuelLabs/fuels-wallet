@@ -4,7 +4,7 @@ const DEFAULT_MIN_PRECISION = 2;
 
 export function convertToUsd(
   amount: BN,
-  decimals: number, // on-chain token decimals, e.g. 9
+  decimals: number,
   rate: number
 ): { value: number; formatted: string } {
   if (!rate) return { value: 0, formatted: '$0' };
@@ -31,7 +31,6 @@ export function convertToUsd(
   // so we must divide by (precisionFactor * outFactor) to get the actual value.
   const value = Number(scaledUsdBN.toString()) / (precisionFactor * outFactor);
 
-  // Formatting the result (unchanged)
   if (value === 0) return { value, formatted: '$0' };
 
   let formatted: string;
