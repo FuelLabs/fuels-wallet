@@ -69,7 +69,7 @@ export const TxFeeOptions = ({
   };
 
   /**
-   * Resetting fees if hiding advanced options (or initializing them
+   * Resetting fees if hiding advanced options (or initializing them)
    */
   useEffect(() => {
     if (!isAdvanced) {
