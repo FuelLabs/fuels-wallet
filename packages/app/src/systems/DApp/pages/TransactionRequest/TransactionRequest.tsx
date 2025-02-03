@@ -5,11 +5,7 @@ import { useMemo } from 'react';
 import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
-import {
-  TxContent,
-  TxDetails,
-  getGasLimitFromTxRequest,
-} from '~/systems/Transaction';
+import { TxDetails, getGasLimitFromTxRequest } from '~/systems/Transaction';
 import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 import { AutoSubmit } from './TransactionRequest.AutoSubmit';
@@ -60,17 +56,6 @@ export function TransactionRequest() {
     return status('loading') || status('sending') || isLoadingAssets;
   }, [status, isLoadingAssets]);
 
-  if (!defaultValues) {
-    return (
-      <Layout title={title} noBorder>
-        <Layout.TopBar type={TopBarType.external} />
-        <Layout.Content css={styles.content}>
-          <TxContent.Loader />
-        </Layout.Content>
-      </Layout>
-    );
-  }
-
   return (
     <FormProvider
       onSubmit={handlers.approve}
@@ -91,7 +76,7 @@ export function TransactionRequest() {
               summary={txSummarySimulated}
               request={proposedTxRequest}
               showDetails
-              isLoading={isLoadingInfo}
+              isLoading={isLoadingInfo || !defaultValues}
             />
           )}
           {shouldShowTxExecuted && (
