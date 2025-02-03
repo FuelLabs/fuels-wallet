@@ -15,9 +15,4 @@
   "typescript.suggest.paths": true,
   "typescript.suggest.enabled": true,
   "typescript.suggest.completeFunctionCalls": true,
-  "jestrunner.projectPath": "",
-  "jestrunner.jestPath": "jestrunner.projectPath/node_modules/jest/bin/jest.js",
-  "jestrunner.jestCommand": "pnpm test --filter=fuels-wallet --",
-  "jestrunner.changeDirectoryToWorkspaceRoot": false,
-  "jestrunner.configPath": "packages/app/jest.config.ts",
 }
