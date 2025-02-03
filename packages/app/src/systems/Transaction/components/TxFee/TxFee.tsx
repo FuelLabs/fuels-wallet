@@ -52,7 +52,8 @@ export const TxFee: TxFeeComponent = ({
   }, [provider]);
 
   const feeInUsd = useMemo(() => {
-    if (baseAsset?.rate == null || !fee) return '$0';
+    if (baseAsset?.rate == null || fee == null) return '$0';
+
     return convertToUsd(fee, baseAsset.decimals, baseAsset.rate).formatted;
   }, [baseAsset, fee]);
 
