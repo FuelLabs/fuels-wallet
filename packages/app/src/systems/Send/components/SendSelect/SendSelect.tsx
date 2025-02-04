@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Form, Input, Text } from '@fuel-ui/react';
+import { Box, Form, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -14,6 +14,7 @@ import {
 
 import { useController, useWatch } from 'react-hook-form';
 import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
 import type { UseSendReturn } from '../../hooks';
 
@@ -50,11 +51,17 @@ export function SendSelect({
     control: form.control,
     name: 'asset',
   });
+  const selectedAsset = useMemo(
+    () => balances?.find((a) => a.asset?.assetId === assetId),
+    [assetId, balances]
+  );
 
-  const decimals = useMemo(() => {
-    const selectedAsset = balances?.find((a) => a.asset?.assetId === assetId);
-    return selectedAsset?.asset?.decimals;
-  }, [assetId, balances]);
+  const decimals = selectedAsset?.asset?.decimals;
+  const rate = selectedAsset?.asset?.rate;
+  const amountInUsd = useMemo(() => {
+    if (amount.value == null || rate == null || decimals == null) return '$0';
+    return convertToUsd(bn(amount.value), decimals, rate).formatted;
+  }, [amount.value, rate, decimals]);
 
   useEffect(() => {
     let abort = false;
@@ -167,6 +174,7 @@ export function SendSelect({
               balance={balanceAssetSelected}
               value={amount.value}
               units={decimals}
+              amountInUsd={amountInUsd}
               onChange={(val) => {
                 if (isAmountFocused.current) {
                   setWatchMax(false);
@@ -247,6 +255,7 @@ const styles = {
     color: '$intentsBase12',
     fontSize: '$md',
     fontWeight: '$normal',
+    width: '48px',
   }),
   addressRow: cssObj({
     flex: 1,

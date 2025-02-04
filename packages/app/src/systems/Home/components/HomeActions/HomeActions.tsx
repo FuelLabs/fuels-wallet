@@ -51,9 +51,9 @@ export const HomeActions = ({
 const styles = {
   wrapper: cssObj({
     px: '$4',
-    pb: '$4',
+    pb: '$5',
     mt: '$2',
-    mb: '$4',
+    mb: '$5',
     flexShrink: 0,
     gap: '$2',
     borderBottom: '1px solid $border',
