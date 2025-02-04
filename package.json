@@ -98,9 +98,6 @@
       "allowAny": ["react", "react-dom"],
       "ignoreMissing": ["react", "react-dom"]
     },
-    "auditConfig": {
-      "ignoreGhsas": ["GHSA-vg6x-rcgg-rjx6"]
-    },
     "overrides": {
       "follow-redirects": ">=1.15.6",
       "glob-parent@<5.1.2": ">=5.1.2",
