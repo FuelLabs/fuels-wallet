@@ -11,6 +11,7 @@ import { TxOperationCard } from './TxOperationCard';
 type TxOperationProps = {
   operation: SimplifiedOperation;
   showNesting?: boolean;
+  flat?: boolean;
 };
 
 const fetchAssetsAmount = async (operation: SimplifiedOperation) => {
@@ -71,6 +72,7 @@ const fetchAssetsAmount = async (operation: SimplifiedOperation) => {
 export function TxOperation({
   operation,
   // showNesting = true,
+  flat = false,
 }: TxOperationProps) {
   const metadata = operation.metadata;
   // const isContract = operation.type === TxCategory.CONTRACTCALL;
@@ -84,11 +86,12 @@ export function TxOperation({
   // if (isContract && !showNesting && depth !== 0) return null;
 
   return (
-    <Box.VStack grow={1} css={styles.root}>
+    <Box.VStack grow={1} css={styles.root(flat)}>
       <TxOperationCard
         operation={operation}
         assetsAmount={assetsAmount}
         depth={depth}
+        flat={flat}
       />
       {metadata.operationCount && metadata.operationCount > 1 && (
         <MotionBox
@@ -127,19 +130,10 @@ export function TxOperation({
 }
 
 const styles = {
-  contentCol: cssObj({
-    display: 'flex',
-    backgroundColor: '$gray1',
-    boxShadow: '0px 2px 6px -1px $colors$gray4, 0px 0px 0px 1px $colors$gray6',
-    flex: 1,
-    borderRadius: '8px',
-    minWidth: 0,
-    padding: '14px 12px',
-    margin: '0 4px',
-  }),
-  root: cssObj({
-    padding: '0 4px',
-  }),
+  root: (flat: boolean) =>
+    cssObj({
+      padding: flat ? '0' : '0 4px',
+    }),
   operationCount: {
     marginTop: '$2',
     marginLeft: '$2',

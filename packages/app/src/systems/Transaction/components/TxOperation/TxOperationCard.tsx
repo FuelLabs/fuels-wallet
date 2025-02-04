@@ -18,12 +18,14 @@ type TxOperationCardProps = {
   operation: SimplifiedOperation;
   assetsAmount: AssetFuelAmount[];
   depth: number;
+  flat?: boolean;
 };
 
 export function TxOperationCard({
   operation,
   assetsAmount,
   depth,
+  flat = false,
 }: TxOperationCardProps) {
   const { accounts } = useAccounts();
   const isContract = operation.type === TxCategory.CONTRACTCALL;
@@ -120,7 +122,7 @@ export function TxOperationCard({
   };
 
   return (
-    <Box css={styles.contentCol} style={{ marginLeft: depth * 0 * 4 }}>
+    <Box css={styles.contentCol(flat)} style={{ marginLeft: depth * 0 * 4 }}>
       <Box.Flex
         css={cssObj({
           display: 'grid',
@@ -221,14 +223,17 @@ export function TxOperationCard({
 }
 
 const styles = {
-  contentCol: cssObj({
-    display: 'flex',
-    backgroundColor: '$gray1',
-    boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
-    flex: 1,
-    borderRadius: '8px',
-    padding: '14px 12px',
-  }),
+  contentCol: (flat: boolean) =>
+    cssObj({
+      display: 'flex',
+      backgroundColor: '$gray1',
+      boxShadow: flat
+        ? 'none'
+        : '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
+      flex: 1,
+      borderRadius: '8px',
+      padding: '14px 12px',
+    }),
   spacer: cssObj({
     minHeight: '14px',
     width: '2px',
