@@ -6,7 +6,7 @@ import { Pages } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 import { useTransactionRequest } from '~/systems/DApp';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
-import { TxContent } from '~/systems/Transaction';
+import { TxDetails } from '../../components/TxDetails/TxDetails';
 
 export const TxApprove = () => {
   const ctx = useTransactionRequest();
@@ -29,21 +29,31 @@ export const TxApprove = () => {
         {ctx.title}
       </OverlayDialogTopbar>
       <Dialog.Description as="div" css={styles.description}>
-        {!ctx.txSummarySimulated && <TxContent.Loader />}
         {ctx.shouldShowTxSimulated && (
-          <TxContent.Info
+          <TxDetails
             showDetails
             tx={ctx.txSummarySimulated}
             isLoading={isLoading}
             errors={ctx.errors.simulateTxErrors}
+            footer={
+              ctx.status('failed') && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  intent="error"
+                  onPress={ctx.handlers.tryAgain}
+                >
+                  Try again
+                </Button>
+              )
+            }
             isConfirm
           />
         )}
         {ctx.shouldShowTxExecuted && (
-          <TxContent.Info
+          <TxDetails
             showDetails
             tx={ctx.txSummaryExecuted}
-            txStatus={ctx.executedStatus()}
             footer={
               ctx.status('failed') && (
                 <Button
@@ -88,7 +98,8 @@ const styles = {
   description: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
     overflowY: 'scroll !important',
-    paddingLeft: '$4',
+    paddingLeft: '0',
+    paddingRight: '0',
     flex: 1,
     display: 'flex',
     flexDirection: 'column',

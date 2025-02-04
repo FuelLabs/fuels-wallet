@@ -1,10 +1,11 @@
+import { cssObj } from '@fuel-ui/css';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Layout } from '~/systems/Core';
+import { Layout, scrollable } from '~/systems/Core';
 import { useNetworks } from '~/systems/Network';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxStatusAlert } from '../../components';
-import { TxContent } from '../../components/TxContent';
+import { TxDetails } from '../../components/TxDetails/TxDetails';
 import { useTxResult } from '../../hooks';
 
 export function TxView() {
@@ -25,14 +26,20 @@ export function TxView() {
       isLoading={ctx.isFetching || ctx.isFetchingResult}
     >
       <Layout.TopBar onBack={() => navigate(-1)} />
-      <Layout.Content>
-        {!txResult && <TxContent.Loader />}
+      <Layout.Content
+        css={cssObj({
+          height: '550px',
+          ...scrollable(),
+          overflowY: 'scroll !important',
+          background: '$gray3',
+        })}
+      >
         {ctx.shouldShowAlert && (
           <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
         )}
         {txResult && (
           <FormProvider {...form}>
-            <TxContent.Info
+            <TxDetails
               tx={txResult}
               isLoading={ctx.isFetching}
               showDetails={ctx.shouldShowTxFee}

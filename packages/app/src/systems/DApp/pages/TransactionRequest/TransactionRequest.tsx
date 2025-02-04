@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
-import { TxContent, getGasLimitFromTxRequest } from '~/systems/Transaction';
+import { TxDetails, getGasLimitFromTxRequest } from '~/systems/Transaction';
 import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 import { AutoSubmit } from './TransactionRequest.AutoSubmit';
@@ -29,7 +29,6 @@ export function TransactionRequest() {
     shouldShowActions,
     shouldDisableApproveBtn,
     errors,
-    executedStatus,
     proposedTxRequest,
   } = txRequest;
   const { isLoading: isLoadingAssets } = useAssets();
@@ -58,17 +57,6 @@ export function TransactionRequest() {
     return status('loading') || status('sending') || isLoadingAssets;
   }, [status, isLoadingAssets]);
 
-  if (!defaultValues) {
-    return (
-      <Layout title={title} noBorder>
-        <Layout.TopBar type={TopBarType.external} />
-        <Layout.Content css={styles.content}>
-          <TxContent.Loader />
-        </Layout.Content>
-      </Layout>
-    );
-  }
-
   return (
     <FormProvider
       onSubmit={handlers.approve}
@@ -85,21 +73,20 @@ export function TransactionRequest() {
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
           {shouldShowTxSimulated && (
-            <TxContent.Info
+            <TxDetails
               showDetails
               tx={txSummarySimulated}
               txRequest={proposedTxRequest}
-              isLoading={isLoadingInfo}
+              isLoading={isLoadingInfo || !defaultValues}
               errors={errors.simulateTxErrors}
               isConfirm
               fees={fees}
             />
           )}
           {shouldShowTxExecuted && (
-            <TxContent.Info
-              showDetails
+            <TxDetails
               tx={txSummaryExecuted}
-              txStatus={executedStatus()}
+              showDetails
               footer={
                 status('failed') && (
                   <Button
