@@ -132,9 +132,9 @@ export function TxOperations({ operations }: TxOperationsListProps) {
 
 const styles = {
   drawer: cssObj({
-    backgroundColor: '#F9F9F9',
+    backgroundColor: '$gray2',
     borderRadius: '8px',
-    border: '1px solid #D9D9D9',
+    border: '1px solid $gray5',
     marginBottom: '$2',
     overflow: 'hidden',
   }),
@@ -147,7 +147,7 @@ const styles = {
       padding: '$3',
       alignItems: 'center',
       border: 'none',
-      borderBottom: isExpanded ? '1px solid #D9D9D9' : 'none',
+      borderBottom: isExpanded ? '1px solid $gray5' : 'none',
       minHeight: '50px',
     }),
   title: cssObj({
