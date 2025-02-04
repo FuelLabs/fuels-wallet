@@ -31,10 +31,10 @@ export const TxApprove = () => {
       <Dialog.Description as="div" css={styles.description}>
         {ctx.shouldShowTxSimulated && (
           <TxDetails
-            tx={ctx.txSummarySimulated}
             showDetails
-            isLoading={!ctx.txSummarySimulated}
-            variant="default"
+            tx={ctx.txSummarySimulated}
+            isLoading={isLoading}
+            errors={ctx.errors.simulateTxErrors}
             footer={
               ctx.status('failed') && (
                 <Button
@@ -52,10 +52,8 @@ export const TxApprove = () => {
         )}
         {ctx.shouldShowTxExecuted && (
           <TxDetails
-            tx={ctx.txSummaryExecuted}
             showDetails
-            isLoading={false}
-            variant="default"
+            tx={ctx.txSummaryExecuted}
             footer={
               ctx.status('failed') && (
                 <Button

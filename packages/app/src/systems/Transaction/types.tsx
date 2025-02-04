@@ -133,13 +133,6 @@ export type SimplifiedTransaction = {
   };
 };
 
-export type SimplifiedTransactionViewProps = {
-  transaction: SimplifiedTransaction;
-  showDetails?: boolean;
-  isLoading?: boolean;
-  footer?: ReactNode;
-};
-
 export interface AssetFlow {
   assetId: string;
   amount: BN;

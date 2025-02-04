@@ -33,9 +33,8 @@ export function TxView() {
           <FormProvider {...form}>
             <TxDetails
               tx={txResult}
+              isLoading={ctx.isFetching}
               showDetails={ctx.shouldShowTxFee}
-              isLoading={!txResult}
-              variant="history"
             />
           </FormProvider>
         )}

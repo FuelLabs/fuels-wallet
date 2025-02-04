@@ -62,7 +62,6 @@ type TxDetailsProps = {
   showDetails?: boolean;
   isLoading?: boolean;
   footer?: React.ReactNode;
-  variant?: TxViewVariant;
   errors?: GroupedErrors;
   isConfirm?: boolean;
   fees?: {
@@ -75,15 +74,13 @@ type TxDetailsProps = {
 export function TxDetails({
   tx,
   txRequest,
-  showDetails = true,
-  isLoading: externalLoading,
+  showDetails,
+  isLoading,
   footer,
-  variant = 'default',
   errors,
   isConfirm,
   fees,
 }: TxDetailsProps) {
-  const isHistory = variant === 'history';
   const { getValues } = useFormContext<SendFormValues>();
   const hasErrors = Boolean(Object.keys(errors || {}).length);
   const isExecuted = !!tx?.id;
@@ -114,7 +111,6 @@ export function TxDetails({
   }, [getValues, fees, txRequestGasLimit]);
 
   function getHeader() {
-    console.log('isHistory', isHistory, 'isExecuted', isExecuted);
     if (hasErrors) return <ErrorHeader errors={errors} />;
     if (isConfirm) return <ConfirmHeader />;
     if (isExecuted) return null;
@@ -126,31 +122,29 @@ export function TxDetails({
       {getHeader()}
       <Box css={styles.content}>
         <TxOperations operations={transaction.categorizedOperations} />
-        {!isHistory && (
-          <Box>
-            <Box.Flex gap="18px" align="center" css={styles.feeContainer}>
-              <Icon icon="CurrencyCent" css={styles.icon} />
-              <Text css={styles.title}>Fee (network)</Text>
-            </Box.Flex>
-            {externalLoading && !showDetails && <TxFee.Loader />}
-            {showDetails && !fees && <TxFee fee={transaction?.fee} />}
-            {showDetails &&
-              fees?.baseFee &&
-              txRequestGasLimit &&
-              fees?.regularTip &&
-              fees?.fastTip && (
-                <TxFeeOptions
-                  initialAdvanced={initialAdvanced}
-                  baseFee={fees.baseFee}
-                  gasLimit={txRequestGasLimit}
-                  regularTip={fees.regularTip}
-                  fastTip={fees.fastTip}
-                />
-              )}
-          </Box>
-        )}
-        {footer}
+        {isLoading && !showDetails && <TxFee.Loader />}
+        {showDetails && !fees && <TxFee fee={transaction?.fee} />}
+        {showDetails &&
+          fees?.baseFee &&
+          txRequestGasLimit &&
+          fees?.regularTip &&
+          fees?.fastTip && (
+            <Box>
+              <Box.Flex gap="18px" align="center" css={styles.feeContainer}>
+                <Icon icon="CurrencyCent" css={styles.icon} />
+                <Text css={styles.title}>Fee (network)</Text>
+              </Box.Flex>
+              <TxFeeOptions
+                initialAdvanced={initialAdvanced}
+                baseFee={fees.baseFee}
+                gasLimit={txRequestGasLimit}
+                regularTip={fees.regularTip}
+                fastTip={fees.fastTip}
+              />
+            </Box>
+          )}
       </Box>
+      {footer}
     </Box>
   );
 }
