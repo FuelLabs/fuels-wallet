@@ -8,10 +8,14 @@ import {
   Image,
   Text,
 } from '@fuel-ui/react';
-import type { AssetFuelAmount } from '@fuel-wallet/types';
+import type { AssetFuelAmount, AssetFuelData } from '@fuel-wallet/types';
 import { bn } from 'fuels';
+import { useEffect, useState } from 'react';
 import { useAccounts } from '~/systems/Account';
+import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { formatAmount, shortAddress } from '~/systems/Core';
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
+import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { type SimplifiedOperation, TxCategory } from '../../types';
 
 type TxOperationCardProps = {
@@ -28,6 +32,33 @@ export function TxOperationCard({
   flat = false,
 }: TxOperationCardProps) {
   const { accounts } = useAccounts();
+  const provider = useProvider();
+  const [baseAsset, setBaseAsset] = useState<AssetFuelData | undefined>();
+
+  // Fetch base asset info for USD conversion
+  useEffect(() => {
+    let abort = false;
+    const getBaseAsset = async () => {
+      const [baseAssetId, chainId] = await Promise.all([
+        provider?.getBaseAssetId(),
+        provider?.getChainId(),
+      ]);
+      if (abort || baseAssetId == null || chainId == null) return;
+      const baseAsset = await AssetsCache.getInstance().getAsset({
+        chainId: chainId,
+        assetId: baseAssetId,
+        dbAssets: [],
+        save: false,
+      });
+      if (abort) return;
+      setBaseAsset(baseAsset);
+    };
+    getBaseAsset();
+    return () => {
+      abort = true;
+    };
+  }, [provider]);
+
   const isContract = operation.type === TxCategory.CONTRACTCALL;
   const isTransfer = operation.type === TxCategory.SEND;
 
@@ -93,25 +124,44 @@ export function TxOperationCard({
                 <Box.Flex css={styles.asset} key={assetAmount.assetId}>
                   {getAssetImage(assetAmount)}
                   <Box css={styles.amountContainer}>
-                    <Text as="span" className="amount-value">
-                      {formatAmount({
-                        amount: assetAmount.amount,
-                        options: {
-                          units: assetAmount.decimals || 0,
-                          precision: assetAmount.decimals || 0,
-                        },
-                      })}
-                    </Text>
-                    <Text as="span">{assetAmount.symbol}</Text>
-                    {assetAmount.isNft && (
-                      <Badge
-                        variant="ghost"
-                        intent="primary"
-                        css={styles.assetNft}
-                      >
-                        NFT
-                      </Badge>
-                    )}
+                    <Box.Flex direction="column">
+                      <Box.Flex gap="$1">
+                        <Text as="span" className="amount-value">
+                          {formatAmount({
+                            amount: assetAmount.amount,
+                            options: {
+                              units: assetAmount.decimals || 0,
+                              precision: assetAmount.decimals || 0,
+                            },
+                          })}
+                        </Text>
+                        <Text as="span">{assetAmount.symbol}</Text>
+                        {baseAsset?.rate &&
+                          assetAmount.amount &&
+                          assetAmount.assetId === baseAsset.assetId && (
+                            <Text color="gray8">
+                              (
+                              {
+                                convertToUsd(
+                                  assetAmount.amount,
+                                  assetAmount.decimals,
+                                  baseAsset.rate
+                                ).formatted
+                              }
+                              )
+                            </Text>
+                          )}
+                        {assetAmount.isNft && (
+                          <Badge
+                            variant="ghost"
+                            intent="primary"
+                            css={styles.assetNft}
+                          >
+                            NFT
+                          </Badge>
+                        )}
+                      </Box.Flex>
+                    </Box.Flex>
                   </Box>
                 </Box.Flex>
               )
@@ -272,6 +322,9 @@ const styles = {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '$1',
   }),
   assetNft: cssObj({
     padding: '$1 $2',
