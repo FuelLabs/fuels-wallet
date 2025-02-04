@@ -3,23 +3,22 @@ import {
   Avatar,
   Box,
   Button,
+  HStack,
   Heading,
   Icon,
   Text,
   Tooltip,
+  VStack,
 } from '@fuel-ui/react';
 import type { AccountWithBalance } from '@fuel-wallet/types';
 import { type ReactNode, useMemo } from 'react';
 import { FuelAddress } from '~/systems/Account';
-import {
-  AmountVisibility,
-  VisibilityButton,
-  formatBalance,
-} from '~/systems/Core';
+import { VisibilityButton, formatBalance } from '~/systems/Core';
 
 import { useAccounts } from '../../hooks';
 
 import { DEFAULT_DECIMAL_UNITS } from 'fuels';
+import { INTL_FORMATTER } from '~/systems/Asset/constants';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 type BalanceWidgetWrapperProps = {
@@ -48,6 +47,7 @@ export type BalanceWidgetProps = {
 };
 
 const decimals = DEFAULT_DECIMAL_UNITS;
+
 export function BalanceWidget({
   account,
   isLoading,
@@ -55,12 +55,14 @@ export function BalanceWidget({
   onChangeVisibility,
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
-
+  const totalBalanceInUsd = account?.totalBalanceInUsd ?? 0;
   const { original, tooltip } = useMemo(() => {
     return formatBalance(account?.balance, decimals);
   }, [account]);
 
   if (isLoading || !account) return <BalanceWidget.Loader />;
+
+  const totalValue = INTL_FORMATTER.format(totalBalanceInUsd);
 
   return (
     <BalanceWidgetWrapper
@@ -99,20 +101,20 @@ export function BalanceWidget({
       }
       bottom={
         <>
-          <Text className="label">Balance</Text>
+          <Text className="label">Total balance</Text>
           <Box.Flex>
             <Tooltip
               content={original.display}
               delayDuration={0}
               open={visibility && tooltip ? undefined : false}
             >
-              <Text aria-hidden={visibility} data-account-name={account.name}>
-                {account.balanceSymbol || '$'}&nbsp;
-                <AmountVisibility
-                  value={account.balance}
-                  visibility={visibility}
-                  units={decimals}
-                />
+              <Text
+                aria-hidden={visibility}
+                aria-label={`${account.balanceSymbol} conversion rate to USD`}
+                data-account-name={account.name}
+                className="value"
+              >
+                {visibility ? totalValue : '$•••••'}
               </Text>
             </Tooltip>
             <VisibilityButton
@@ -160,6 +162,14 @@ const styles = {
     },
     '.label': {
       lineHeight: '$tight',
+      fontSize: '$sm',
+      fontWeight: '$medium',
+    },
+    '.value': {
+      fontSize: 32,
+      fontFamily: '$mono',
+      fontWeight: '$bold',
+      lineHeight: '36px',
     },
   }),
   name: cssObj({
