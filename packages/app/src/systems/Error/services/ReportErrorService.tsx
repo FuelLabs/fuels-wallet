@@ -47,7 +47,9 @@ export class ReportErrorService {
 
   async checkForErrors(): Promise<boolean> {
     const errors = await this.getErrors();
-    return errors.length > 0;
+    return (
+      errors.filter((e) => !getErrorIgnoreData(e?.error)?.action).length > 0
+    );
   }
 
   async getErrors(): Promise<StoredFuelWalletError[]> {
