@@ -151,4 +151,22 @@ const IGNORED_ERRORS: IgnoredError[] = [
     comparison: 'partial',
     action: 'hide',
   },
+  {
+    value: 'type is invalid',
+    field: 'message',
+    comparison: 'partial',
+    action: 'hide',
+  },
+  {
+    value: 'Param name is required',
+    field: 'message',
+    comparison: 'partial',
+    action: 'hide',
+  },
+  {
+    value: `Cannot access 'store' before initialization`,
+    field: 'message',
+    comparison: 'partial',
+    action: 'hide',
+  },
 ];
