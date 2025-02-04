@@ -120,7 +120,7 @@ export function TxOperationCard({
   };
 
   return (
-    <Box css={styles.contentCol} style={{ marginLeft: depth * 4 }}>
+    <Box css={styles.contentCol} style={{ marginLeft: depth * 0 * 4 }}>
       <Box.Flex
         css={cssObj({
           display: 'grid',

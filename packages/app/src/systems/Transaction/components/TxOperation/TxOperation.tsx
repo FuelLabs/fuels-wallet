@@ -84,7 +84,7 @@ export function TxOperation({
   // if (isContract && !showNesting && depth !== 0) return null;
 
   return (
-    <Box.VStack grow={1}>
+    <Box.VStack grow={1} css={styles.root}>
       <TxOperationCard
         operation={operation}
         assetsAmount={assetsAmount}
@@ -136,6 +136,9 @@ const styles = {
     minWidth: 0,
     padding: '14px 12px',
     margin: '0 4px',
+  }),
+  root: cssObj({
+    padding: '0 4px',
   }),
   operationCount: {
     marginTop: '$2',
