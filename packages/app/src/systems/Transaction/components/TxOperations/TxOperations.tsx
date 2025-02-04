@@ -21,7 +21,6 @@ export function TxOperations({ operations }: TxOperationsListProps) {
             borderRadius: '12px',
             flex: 1,
             boxSizing: 'border-box',
-            marginBottom: '16px',
           }}
         >
           <TxOperation operation={operation} showNesting={false} />

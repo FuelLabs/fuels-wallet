@@ -1,3 +1,4 @@
+import { cssObj } from '@fuel-ui/css';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Layout } from '~/systems/Core';
@@ -25,7 +26,7 @@ export function TxView() {
       isLoading={ctx.isFetching || ctx.isFetchingResult}
     >
       <Layout.TopBar onBack={() => navigate(-1)} />
-      <Layout.Content>
+      <Layout.Content noBorder css={cssObj({ overflow: 'auto' })}>
         {ctx.shouldShowAlert && (
           <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
         )}

@@ -151,15 +151,12 @@ export function TxDetails({
 
 const styles = {
   root: cssObj({
-    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     background: '$gray3',
-    overflow: 'auto',
   }),
   content: cssObj({
-    flex: 1,
-    padding: '$1 $2',
+    padding: '$1',
   }),
   title: cssObj({
     fontSize: '$sm',

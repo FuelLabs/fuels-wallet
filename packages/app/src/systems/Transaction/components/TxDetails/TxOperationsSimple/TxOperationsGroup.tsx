@@ -72,8 +72,7 @@ export function TxOperationsGroup({
 
 const styles = {
   root: cssObj({
-    marginTop: '$2',
-    marginBottom: '$2',
+    margin: '$2 $1',
     backgroundColor: '$gray5',
     borderRadius: '12px',
     minHeight: '56px',
