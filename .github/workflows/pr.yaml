@@ -23,7 +23,7 @@ jobs:
     outputs:
       changed: ${{ steps.packages-changed.outputs.any_changed }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Check external packages changes
         id: packages-changed
         uses: tj-actions/changed-files@v22.2
@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -57,7 +57,7 @@ jobs:
     name: Audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: FuelLabs/github-actions/setups/node@master
         with:
           node-version: 20.11.0
@@ -83,7 +83,7 @@ jobs:
     name: Strict Audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: FuelLabs/github-actions/setups/node@master
         with:
           node-version: 20.11.0
@@ -99,7 +99,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node
         uses: FuelLabs/github-actions/setups/node@master

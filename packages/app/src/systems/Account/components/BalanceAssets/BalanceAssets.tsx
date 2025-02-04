@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { isUnknownAsset } from '~/systems/Asset';
 import { AssetItem, AssetList } from '~/systems/Asset/components';
 import type { AssetListEmptyProps } from '~/systems/Asset/components/AssetList/AssetListEmpty';
+import { UnknownAssetsButton } from '~/systems/Asset/components/UnknownAssetsButton/UnknownAssetsButton';
 
 export type BalanceAssetListProp = {
   balances?: CoinAsset[];
@@ -64,11 +65,12 @@ export const BalanceAssets = ({
           />
         );
       })}
-      {!!(!isLoading && unknownLength) && (
-        <Button size="xs" variant="link" onPress={toggle}>
-          {showUnknown ? 'Hide' : 'Show'} unknown assets ({unknownLength})
-        </Button>
-      )}
+      <UnknownAssetsButton
+        showUnknown={showUnknown}
+        unknownLength={unknownLength}
+        isLoading={!!isLoading}
+        toggle={toggle}
+      />
     </CardList>
   );
 };
