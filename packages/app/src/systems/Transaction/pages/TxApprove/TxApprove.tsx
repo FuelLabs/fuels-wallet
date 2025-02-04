@@ -47,6 +47,7 @@ export const TxApprove = () => {
                 </Button>
               )
             }
+            isConfirm
           />
         )}
         {ctx.shouldShowTxExecuted && (

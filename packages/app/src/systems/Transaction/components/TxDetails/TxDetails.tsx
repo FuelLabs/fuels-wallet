@@ -1,18 +1,58 @@
-import { log } from 'node:console';
 import { cssObj } from '@fuel-ui/css';
-import { Box, Icon, Text } from '@fuel-ui/react';
+import { Alert, Box, Copyable, Icon, Text } from '@fuel-ui/react';
 import type {
   BN,
   TransactionRequest,
   TransactionResult,
   TransactionSummary,
 } from 'fuels';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import type { SendFormValues } from '~/systems/Send/hooks';
+import {
+  type GroupedErrors,
+  getGasLimitFromTxRequest,
+} from '~/systems/Transaction';
 import { useSimplifiedTransaction } from '../../hooks/useSimplifiedTransaction';
 import { TxFee } from '../TxFee';
 import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
 import { TxOperations } from '../TxOperations';
-import { TxHeaderSimple } from './TxHeaderSimple';
+
+const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
+  return (
+    <Alert status="error" css={styles.alert} aria-label="Transaction Error">
+      <Copyable
+        value={errors ?? ''}
+        aria-label={errors}
+        iconProps={{
+          icon: Icon.is('Copy'),
+          'aria-label': 'Copy Error',
+        }}
+        tooltipMessage="Copy Error"
+      >
+        <Alert.Description
+          as="div"
+          css={{
+            wordBreak: 'break-word',
+          }}
+        >
+          {errors}
+        </Alert.Description>
+      </Copyable>
+    </Alert>
+  );
+};
+
+const ConfirmHeader = () => (
+  <Box css={styles.header}>
+    {/* Disabled while the new Wallet header is not implemented */}
+    {/* <Text as="h2">Review Transaction</Text> */}
+    <Box css={styles.warning}>
+      <Icon icon="InfoCircle" />
+      Double-check your transaction before submitting.
+    </Box>
+  </Box>
+);
 
 export type TxViewVariant = 'default' | 'history';
 
@@ -23,6 +63,13 @@ type TxDetailsProps = {
   isLoading?: boolean;
   footer?: React.ReactNode;
   variant?: TxViewVariant;
+  errors?: GroupedErrors;
+  isConfirm?: boolean;
+  fees?: {
+    baseFee?: BN;
+    regularTip?: BN;
+    fastTip?: BN;
+  };
 };
 
 export function TxDetails({
@@ -32,11 +79,15 @@ export function TxDetails({
   isLoading: externalLoading,
   footer,
   variant = 'default',
+  errors,
+  isConfirm,
+  fees,
 }: TxDetailsProps) {
-  // TODO: Handle errors.simulateTxErrors, isConfirm, fees
-  const [isCustomFees, setIsCustomFees] = useState(false);
-  const [_, setSelectedTip] = useState<BN>();
   const isHistory = variant === 'history';
+  const { getValues } = useFormContext<SendFormValues>();
+  const hasErrors = Boolean(Object.keys(errors || {}).length);
+  const isExecuted = !!tx?.id;
+  const txRequestGasLimit = getGasLimitFromTxRequest(txRequest);
 
   const { transaction, isReady } = useSimplifiedTransaction({
     tx,
@@ -45,31 +96,57 @@ export function TxDetails({
 
   if (!isReady || !transaction) return null;
 
+  const initialAdvanced = useMemo(() => {
+    if (!fees?.regularTip || !fees?.fastTip) return false;
+
+    const isFeeAmountTheRegularTip = getValues('fees.tip.amount').eq(
+      fees.regularTip
+    );
+    const isFeeAmountTheFastTip = getValues('fees.tip.amount').eq(fees.fastTip);
+    const isGasLimitTheTxRequestGasLimit = getValues('fees.gasLimit.amount').eq(
+      txRequestGasLimit
+    );
+
+    return (
+      (!isFeeAmountTheRegularTip && !isFeeAmountTheFastTip) ||
+      !isGasLimitTheTxRequestGasLimit
+    );
+  }, [getValues, fees, txRequestGasLimit]);
+
+  function getHeader() {
+    console.log('isHistory', isHistory, 'isExecuted', isExecuted);
+    if (hasErrors) return <ErrorHeader errors={errors} />;
+    if (isConfirm) return <ConfirmHeader />;
+    if (isExecuted) return null;
+    return <ConfirmHeader />;
+  }
+
   return (
     <Box css={styles.root}>
-      {!isHistory && <TxHeaderSimple />}
+      {getHeader()}
       <Box css={styles.content}>
         <TxOperations operations={transaction.categorizedOperations} />
-        {showDetails && !isHistory && (
+        {!isHistory && (
           <Box>
             <Box.Flex gap="18px" align="center" css={styles.feeContainer}>
               <Icon icon="CurrencyCent" css={styles.icon} />
               <Text css={styles.title}>Fee (network)</Text>
             </Box.Flex>
-            {isCustomFees ? (
-              <TxFeeOptions
-                baseFee={transaction.fee.network}
-                onBack={() => setIsCustomFees(false)}
-                onTipChange={setSelectedTip}
-              />
-            ) : (
-              <TxFee
-                fee={transaction.fee}
-                isLoading={externalLoading}
-                onCustomFees={() => setIsCustomFees(true)}
-                onFeeSelect={setSelectedTip}
-              />
-            )}
+            {externalLoading && !showDetails && <TxFee.Loader />}
+            {showDetails && !fees && <TxFee fee={transaction?.fee} />}
+            {showDetails &&
+              fees?.baseFee &&
+              txRequestGasLimit &&
+              fees?.regularTip &&
+              fees?.fastTip && (
+                <TxFeeOptions
+                  initialAdvanced={initialAdvanced}
+                  baseFee={fees.baseFee}
+                  gasLimit={txRequestGasLimit}
+                  regularTip={fees.regularTip}
+                  fastTip={fees.fastTip}
+                />
+              )}
           </Box>
         )}
         {footer}
@@ -109,5 +186,31 @@ const styles = {
       height: '16px',
       strokeWidth: '2.5px',
     },
+  }),
+  alert: cssObj({
+    '& .fuel_Alert-content': {
+      gap: '$1',
+    },
+    ' & .fuel_Heading': {
+      fontSize: '$sm',
+    },
+    '& .fuel_Icon': {
+      mt: '-2px',
+    },
+  }),
+  header: cssObj({
+    marginBottom: '$2',
+    backgroundColor: '$white',
+    borderBottom: '1px solid $gray3',
+    padding: '12px 18px',
+  }),
+  warning: cssObj({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '$1',
+    fontSize: '12px',
+    color: '$gray11',
+    fontWeight: '500',
+    marginBottom: '$2',
   }),
 };

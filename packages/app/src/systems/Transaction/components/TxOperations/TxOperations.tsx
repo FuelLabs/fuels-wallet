@@ -1,7 +1,7 @@
 import { Box } from '@fuel-ui/react';
 import type { CategorizedOperations } from '../../types';
 import { TxOperationsGroup } from '../TxDetails/TxOperationsSimple/TxOperationsGroup';
-import { TxOperation } from '../TxDetails/TxOperationsSimple/operations/TxOperation';
+import { TxOperation } from '../TxOperation';
 
 type TxOperationsListProps = {
   operations: CategorizedOperations;

@@ -28,6 +28,7 @@ export function TransactionRequest() {
     shouldShowTxExecuted,
     shouldShowActions,
     shouldDisableApproveBtn,
+    errors,
     proposedTxRequest,
   } = txRequest;
   const { isLoading: isLoadingAssets } = useAssets();
@@ -73,10 +74,13 @@ export function TransactionRequest() {
         <Layout.Content css={styles.content}>
           {shouldShowTxSimulated && (
             <TxDetails
+              showDetails
               tx={txSummarySimulated}
               txRequest={proposedTxRequest}
               isLoading={isLoadingInfo || !defaultValues}
-              showDetails
+              errors={errors.simulateTxErrors}
+              isConfirm
+              fees={fees}
             />
           )}
           {shouldShowTxExecuted && (

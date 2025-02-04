@@ -12,8 +12,7 @@ import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import { useAccounts } from '~/systems/Account';
 import { formatAmount, shortAddress } from '~/systems/Core';
-import type { SimplifiedOperation } from '../../../../types';
-import { TxCategory } from '../../../../types';
+import { type SimplifiedOperation, TxCategory } from '../../types';
 
 type TxOperationCardProps = {
   operation: SimplifiedOperation;

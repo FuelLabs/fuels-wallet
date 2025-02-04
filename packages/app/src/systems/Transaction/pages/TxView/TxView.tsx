@@ -1,6 +1,8 @@
+import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Layout } from '~/systems/Core';
 import { useNetworks } from '~/systems/Network';
+import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxStatusAlert } from '../../components';
 import { TxDetails } from '../../components/TxDetails/TxDetails';
 import { useTxResult } from '../../hooks';
@@ -15,6 +17,7 @@ export function TxView() {
     txId: txIdQueryParam,
     waitProviderUrl: true,
   });
+  const form = useForm<SendFormValues>();
 
   return (
     <Layout
@@ -27,12 +30,14 @@ export function TxView() {
           <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
         )}
         {txResult && (
-          <TxDetails
-            tx={txResult}
-            showDetails={ctx.shouldShowTxFee}
-            isLoading={!txResult}
-            variant="history"
-          />
+          <FormProvider {...form}>
+            <TxDetails
+              tx={txResult}
+              showDetails={ctx.shouldShowTxFee}
+              isLoading={!txResult}
+              variant="history"
+            />
+          </FormProvider>
         )}
       </Layout.Content>
     </Layout>

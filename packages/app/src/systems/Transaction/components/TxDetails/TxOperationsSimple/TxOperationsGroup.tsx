@@ -3,7 +3,7 @@ import { Box, Icon, Text } from '@fuel-ui/react';
 import { useState } from 'react';
 import { MotionBox } from '~/systems/Core/components/Motion';
 import type { SimplifiedOperation } from '../../../types';
-import { TxOperation } from './operations/TxOperation';
+import { TxOperation } from '../../TxOperation';
 
 type TxOperationsGroupProps = {
   title: string;
