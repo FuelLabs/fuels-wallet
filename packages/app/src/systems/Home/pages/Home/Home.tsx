@@ -69,7 +69,7 @@ const styles = {
     },
   }),
   assetsList: cssObj({
-    maxHeight: 200,
+    maxHeight: 230,
     paddingBottom: '$4',
     ...scrollable(),
     overflowY: 'scroll !important',
