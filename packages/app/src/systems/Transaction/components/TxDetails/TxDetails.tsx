@@ -6,7 +6,7 @@ import type {
   TransactionResult,
   TransactionSummary,
 } from 'fuels';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import {
@@ -49,7 +49,7 @@ const ConfirmHeader = () => (
     {/* <Text as="h2">Review Transaction</Text> */}
     <Box css={styles.warning}>
       <Icon icon="InfoCircle" />
-      Double-check your transaction before submitting.
+      Check your transaction before submitting.
     </Box>
   </Box>
 );
@@ -118,7 +118,7 @@ export function TxDetails({
   }
 
   return (
-    <Box css={styles.root}>
+    <>
       {getHeader()}
       <Box css={styles.content}>
         <TxOperations operations={transaction.categorizedOperations} />
@@ -145,18 +145,17 @@ export function TxDetails({
           )}
       </Box>
       {footer}
-    </Box>
+    </>
   );
 }
 
 const styles = {
-  root: cssObj({
+  content: cssObj({
+    paddingTop: '$2',
     display: 'flex',
     flexDirection: 'column',
-    background: '$gray3',
-  }),
-  content: cssObj({
-    padding: '$1',
+    minHeight: 525,
+    justifyContent: 'space-between',
   }),
   title: cssObj({
     fontSize: '$sm',
