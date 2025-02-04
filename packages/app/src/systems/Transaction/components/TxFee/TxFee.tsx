@@ -1,170 +1,113 @@
-import { cssObj } from '@fuel-ui/css';
-import {
-  Box,
-  Button,
-  ContentLoader,
-  RadioGroup,
-  RadioGroupItem,
-  Text,
-} from '@fuel-ui/react';
-import type { BN } from 'fuels';
-import { DEFAULT_PRECISION } from 'fuels';
-import { useEffect, useRef, useState } from 'react';
-import { TxService } from '../../services';
-import type { SimplifiedFee } from '../../types';
+import { Card, HStack, Text } from '@fuel-ui/react';
+import { type BN, DEFAULT_PRECISION } from 'fuels';
+import { type FC, useEffect, useMemo, useState } from 'react';
 
-type TxFeeProps = {
-  fee: SimplifiedFee;
-  isLoading?: boolean;
-  onCustomFees?: () => void;
-  onFeeSelect?: (tip: BN) => void;
+import type { AssetFuelData } from '@fuel-wallet/types';
+import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
+import { useProvider } from '~/systems/Network/hooks/useProvider';
+import { TxFeeLoader } from './TxFeeLoader';
+import { styles } from './styles';
+
+export type TxFeeProps = {
+  fee?: BN;
+  checked?: boolean;
+  onChecked?: (checked: boolean) => void;
+  title?: string;
 };
 
-type FeeOption = 'regular' | 'fast';
+type TxFeeComponent = FC<TxFeeProps> & {
+  Loader: typeof TxFeeLoader;
+};
 
-export function TxFee({
+export const TxFee: TxFeeComponent = ({
   fee,
-  isLoading,
-  onCustomFees,
-  onFeeSelect,
-}: TxFeeProps) {
-  const [selectedOption, setSelectedOption] = useState<FeeOption>('regular');
-  const [tips, setTips] = useState<{ regularTip: BN; fastTip: BN }>();
-  const previousDefaultTip = useRef<BN>();
-
+  checked,
+  onChecked,
+  title,
+}: TxFeeProps) => {
+  const [flag, setFlag] = useState(false);
+  const provider = useProvider();
+  const [baseAsset, setBaseAsset] = useState<AssetFuelData | undefined>();
   useEffect(() => {
-    async function getTips() {
-      const { regularTip, fastTip } = await TxService.estimateDefaultTips();
-      setTips({ regularTip, fastTip });
-      // Set initial tip
-      previousDefaultTip.current = regularTip;
-      onFeeSelect?.(regularTip);
-    }
-    getTips();
-  }, [onFeeSelect]);
+    let abort = false;
+    const getBaseAsset = async () => {
+      const [baseAssetId, chainId] = await Promise.all([
+        provider?.getBaseAssetId(),
+        provider?.getChainId(),
+      ]);
+      if (abort || baseAssetId == null || chainId == null) return;
+      const baseAsset = await AssetsCache.getInstance().getAsset({
+        chainId: chainId,
+        assetId: baseAssetId,
+        dbAssets: [],
+        save: false,
+      });
+      if (abort) return;
+      setBaseAsset(baseAsset);
+    };
+    getBaseAsset();
+    return () => {
+      abort = true;
+    };
+  }, [provider]);
 
-  const handleOptionSelect = (option: FeeOption) => {
-    setSelectedOption(option);
-    if (!tips) return;
+  const feeInUsd = useMemo(() => {
+    if (baseAsset?.rate == null || fee == null) return '$0';
 
-    const newTip = option === 'regular' ? tips.regularTip : tips.fastTip;
-    previousDefaultTip.current = newTip;
-    onFeeSelect?.(newTip);
-  };
+    return convertToUsd(fee, baseAsset.decimals, baseAsset.rate).formatted;
+  }, [baseAsset, fee]);
 
-  if (isLoading) return <TxFee.Loader />;
+  const ready = !!fee && !!feeInUsd;
 
-  const options = [
-    {
-      id: 'regular',
-      name: 'Regular',
-      fee: tips ? fee.network.add(tips.regularTip) : fee.network,
-    },
-    {
-      id: 'fast',
-      name: 'Fast',
-      fee: tips ? fee.network.add(tips.fastTip) : fee.network,
-    },
-  ];
+  // Horrible workaround to force re-render of this section.
+  useEffect(() => {
+    setTimeout(() => {
+      setFlag((prev) => !prev);
+    }, 500);
+  }, [ready]);
+
+  if (!ready) return <TxFee.Loader />;
 
   return (
-    <Box css={styles.content}>
-      <Box.Stack>
-        <RadioGroup>
-          {options.map((option) => (
-            <Box.Flex
-              key={option.id}
-              css={styles.option}
-              onClick={() => handleOptionSelect(option.id as FeeOption)}
-            >
-              <RadioGroupItem
-                value={option.id}
-                checked={selectedOption === option.id}
-                label={option.name}
-                labelCSS={styles.optionLabel}
-                onChange={() => handleOptionSelect(option.id as FeeOption)}
-              />
-
-              <Text css={styles.optionContent}>
-                {option.fee
-                  ? `${option.fee.format({
-                      minPrecision: DEFAULT_PRECISION,
-                      precision: DEFAULT_PRECISION,
-                    })} ETH`
-                  : '--'}
-              </Text>
-            </Box.Flex>
-          ))}
-        </RadioGroup>
-        <Button
-          size="xs"
-          variant="link"
-          onPress={onCustomFees}
-          css={styles.customFeesBtn}
+    <Card
+      css={styles.detailItem(!!checked, !!onChecked, !!title)}
+      onClick={() => onChecked?.(true)}
+    >
+      <Text
+        color="intentsBase12"
+        css={styles.title}
+        aria-label={`fee title:${title || 'Network'}`}
+      >
+        {title || 'Fee (network)'}
+      </Text>
+      <HStack gap="$1" css={styles.fee(flag)}>
+        {!!feeInUsd && (
+          <Text
+            color="intentsBase12"
+            css={styles.usd}
+            aria-label={`tip in usd:${title || 'Network'}`}
+          >
+            {feeInUsd}
+          </Text>
+        )}
+        <Text
+          color="textSubtext"
+          css={styles.amount}
+          aria-label={`fee value:${title || 'Network'}`}
         >
-          Use custom fees
-        </Button>
-      </Box.Stack>
-    </Box>
-  );
-}
-
-TxFee.Loader = function TxFeeLoader() {
-  return (
-    <Box css={styles.content}>
-      <ContentLoader width={300} height={80} viewBox="0 0 300 80">
-        <rect x="20" y="20" rx="4" ry="4" width="100" height="16" />
-        <rect x="180" y="20" rx="4" ry="4" width="100" height="16" />
-        <rect x="20" y="44" rx="4" ry="4" width="100" height="16" />
-        <rect x="180" y="44" rx="4" ry="4" width="100" height="16" />
-      </ContentLoader>
-    </Box>
+          (
+          {fee
+            ? `${fee.format({
+                minPrecision: DEFAULT_PRECISION,
+                precision: DEFAULT_PRECISION,
+              })} ETH`
+            : '--'}
+          )
+        </Text>
+      </HStack>
+    </Card>
   );
 };
 
-const styles = {
-  content: cssObj({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '$3',
-    padding: '$3',
-  }),
-  option: cssObj({
-    alignItems: 'center',
-    backgroundColor: '$white',
-    border: '1px solid #e0e0e0',
-    borderRadius: '10px',
-    color: '#646464',
-    cursor: 'pointer',
-    fontSize: '13px',
-    gap: '$3',
-    justifyContent: 'space-between',
-    padding: '$3',
-    transition: 'all 0.2s ease',
-    boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
-
-    '&:hover': {
-      backgroundColor: '#f0f0f0',
-    },
-  }),
-  optionContent: cssObj({
-    color: '#202020',
-  }),
-  optionLabel: cssObj({
-    color: '#202020',
-    fontSize: '13px',
-    fontWeight: '$medium',
-  }),
-  radio: cssObj({
-    cursor: 'pointer',
-    height: '16px',
-    margin: 0,
-    width: '16px',
-  }),
-  customFeesBtn: cssObj({
-    alignSelf: 'center',
-    color: '$accent11',
-    fontSize: '$sm',
-    mt: '$2',
-  }),
-};
+TxFee.Loader = TxFeeLoader;

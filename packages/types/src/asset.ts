@@ -20,6 +20,7 @@ export type AssetFuelData = AssetFuel & {
   indexed?: boolean;
   suspicious?: boolean;
   collection?: string;
+  rate?: number;
   isNft?: boolean;
   verified?: boolean;
   metadata?: {

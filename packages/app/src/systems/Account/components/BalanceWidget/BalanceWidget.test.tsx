@@ -16,6 +16,8 @@ const ACCOUNT: AccountWithBalance = {
   balance: bn(4999989994),
   balanceSymbol: 'ETH',
   balances: [],
+  amountInUsd: '$16,167.22',
+  totalBalanceInUsd: 16167.22,
 };
 
 describe('BalanceWidget', () => {
@@ -37,7 +39,7 @@ describe('BalanceWidget', () => {
 
   it('should show formatted balance', async () => {
     renderWithProvider(<BalanceWidget account={ACCOUNT} />);
-    expect(screen.getByText(/4\.999/)).toBeInTheDocument();
+    expect(screen.getByText(ACCOUNT.amountInUsd ?? '$0')).toBeInTheDocument();
   });
 
   it('should hide balance when user sets his balance to hide', async () => {

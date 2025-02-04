@@ -6,13 +6,15 @@ import {
   Grid,
   Text,
   Tooltip,
+  VStack,
 } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
-import { type FC, useEffect, useRef, useState } from 'react';
+import { type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { formatAmount, shortAddress } from '~/systems/Core';
 import type { InsufficientInputAmountError } from '~/systems/Transaction';
 
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { AssetsAmountLoader } from './AssetsAmountLoader';
 import { styles } from './styles';
 
@@ -98,7 +100,12 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
     decimals,
     amount,
     isNft,
+    rate,
   } = assetAmount || {};
+  const amountInUsd = useMemo(() => {
+    if (amount == null || rate == null || decimals == null) return '$0';
+    return convertToUsd(bn(amount), decimals, rate).formatted;
+  }, [amount, rate, decimals]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [isTruncated, setIsTruncated] = useState(false);
@@ -140,6 +147,7 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
           {shortAddress(assetId)}
         </Text>
       </Copyable>
+
       <Box.Flex
         ref={containerRef}
         aria-label="amount-container"
@@ -151,11 +159,11 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
           open={isTruncated ? undefined : false}
         >
           <Text as="span" css={styles.amountValue} className="amount-value">
-            {formatted}
+            {formatted}&nbsp;{symbol}
           </Text>
         </Tooltip>
-        <Text as="span" css={styles.amountSymbol}>
-          {symbol}
+        <Text as="span" css={styles.amountInUsd}>
+          {amountInUsd}
         </Text>
       </Box.Flex>
     </Grid>
