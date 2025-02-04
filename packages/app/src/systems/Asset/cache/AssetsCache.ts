@@ -1,13 +1,12 @@
 import type { AssetData } from '@fuel-wallet/types';
 import type { AssetFuel } from 'fuels';
+import {
+  ASSET_ENDPOINTS,
+  DEFAULT_ASSET_ENDPOINT,
+} from '~/systems/Asset/constants';
 import { AssetService } from '~/systems/Asset/services';
 import { getFuelAssetByAssetId } from '~/systems/Asset/utils';
 import { type FuelCachedAsset, db } from '~/systems/Core/utils/database';
-
-type Endpoint = {
-  chainId: number;
-  url: string;
-};
 
 const FIVE_MINUTES = 5 * 60 * 1000;
 export const assetDbKeyFactory = (chainId: number, assetId: string) =>
@@ -23,16 +22,7 @@ export class AssetsCache {
     [chainId: number]: Array<AssetData>;
   };
   private static instance: AssetsCache;
-  private endpoints: Endpoint[] = [
-    {
-      chainId: 9889,
-      url: 'https://explorer-indexer-mainnet.fuel.network',
-    },
-    {
-      chainId: 0,
-      url: 'https://explorer-indexer-testnet.fuel.network',
-    },
-  ];
+
   private storage: IndexedAssetsDB;
 
   private constructor() {
@@ -48,9 +38,7 @@ export class AssetsCache {
   };
 
   private getIndexerEndpoint(chainId: number) {
-    return this.endpoints.find(
-      (endpoint: Endpoint) => endpoint.chainId === chainId
-    );
+    return ASSET_ENDPOINTS[chainId.toString()] || DEFAULT_ASSET_ENDPOINT;
   }
 
   static async fetchAllAssets(chainId: number, assetsIds: string[]) {

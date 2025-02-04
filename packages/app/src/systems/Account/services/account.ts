@@ -10,6 +10,7 @@ import { Address, type Provider, bn } from 'fuels';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { chromeStorage } from '~/systems/Core/services/chromeStorage';
 import type { Maybe } from '~/systems/Core/types';
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { db } from '~/systems/Core/utils/database';
 import { readFromOPFS } from '~/systems/Core/utils/opfs';
 import { getUniqueString } from '~/systems/Core/utils/string';
@@ -107,15 +108,35 @@ export class AccountService {
     try {
       const provider = await createProvider(providerUrl!);
       const balances = await getBalances(provider, account.address);
+      const assetsAmountsInUsd: Record<
+        string,
+        { value: number; formatted: string } | undefined
+      > = {};
+      const chainId = provider.getChainId();
+
       const balanceAssets = await AssetsCache.fetchAllAssets(
-        provider.getChainId(),
+        chainId,
         balances.map((balance) => balance.assetId)
       );
+      let totalBalanceInUsd = 0;
+
+      balances.map((asset) => {
+        const assetBalance = balanceAssets.get(asset.assetId);
+        // biome-ignore lint/suspicious/noExplicitAny: type not yet updated in this @fuel-ts/account version
+        const rate = ((assetBalance as any).rate as number) ?? 0;
+        if (assetBalance?.decimals) {
+          assetsAmountsInUsd[asset.assetId] =
+            convertToUsd(asset.amount, assetBalance?.decimals, rate) ?? 0;
+          totalBalanceInUsd += assetsAmountsInUsd[asset.assetId]?.value ?? 0;
+        }
+      });
       // includes "asset" prop in balance, centralizing the complexity here instead of in rest of UI
       const nextBalancesWithAssets = await balances.reduce(
         async (acc, balance) => {
           const prev = await acc;
-          const cachedAsset = balanceAssets.get(balance.assetId);
+          const cachedAsset = balanceAssets?.get(balance.assetId);
+
+          const amountInUsd = assetsAmountsInUsd[balance.assetId];
 
           return [
             ...prev,
@@ -123,6 +144,7 @@ export class AccountService {
               ...balance,
               amount: balance.amount,
               asset: cachedAsset,
+              amountInUsd: amountInUsd ? amountInUsd.formatted : '$0',
             },
           ];
         },
@@ -149,8 +171,11 @@ export class AccountService {
       const ethBalance = ethAsset?.amount;
       const accountAssets: AccountBalance = {
         balance: ethBalance ?? bn(0),
+        amountInUsd:
+          assetsAmountsInUsd[baseAssetId.toString()]?.formatted ?? '$0',
         balanceSymbol: 'ETH',
         balances: nextBalancesWithAssets,
+        totalBalanceInUsd,
       };
 
       const result: AccountWithBalance = {
@@ -164,6 +189,8 @@ export class AccountService {
         balance: bn(0),
         balanceSymbol: 'ETH',
         balances: [],
+        amountInUsd: '',
+        totalBalanceInUsd: 0,
       };
       const result: AccountWithBalance = {
         ...account,
