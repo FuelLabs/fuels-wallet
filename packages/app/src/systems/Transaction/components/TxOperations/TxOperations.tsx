@@ -46,7 +46,7 @@ function OperationsDrawer({
       <Box.Flex
         as="button"
         onClick={handleClick}
-        css={styles.header}
+        css={styles.header({ isExpanded })}
         justify="space-between"
       >
         <Text fontSize="sm" css={styles.title}>
@@ -135,19 +135,21 @@ const styles = {
     backgroundColor: '#F9F9F9',
     borderRadius: '8px',
     border: '1px solid #D9D9D9',
-    minHeight: '56px',
     marginBottom: '$2',
+    overflow: 'hidden',
   }),
-  header: cssObj({
-    display: 'flex',
-    cursor: 'pointer',
-    width: '100%',
-    backgroundColor: 'transparent',
-    padding: '$3',
-    alignItems: 'center',
-    border: 'none',
-    borderBottom: '1px solid #D9D9D9',
-  }),
+  header: ({ isExpanded }: { isExpanded: boolean }) =>
+    cssObj({
+      display: 'flex',
+      cursor: 'pointer',
+      width: '100%',
+      backgroundColor: 'transparent',
+      padding: '$3',
+      alignItems: 'center',
+      border: 'none',
+      borderBottom: isExpanded ? '1px solid #D9D9D9' : 'none',
+      minHeight: '50px',
+    }),
   title: cssObj({
     letterSpacing: '-0.01em',
     color: '#646464',
