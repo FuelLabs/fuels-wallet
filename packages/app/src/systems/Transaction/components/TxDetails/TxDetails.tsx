@@ -123,7 +123,7 @@ export function TxDetails({
       <Box css={styles.content}>
         <TxOperations operations={transaction.categorizedOperations} />
         {isLoading && !showDetails && <TxFee.Loader />}
-        {showDetails && !fees && <TxFee fee={transaction?.fee} />}
+        {showDetails && !fees && <TxFee fee={transaction?.fee.total} />}
         {showDetails &&
           fees?.baseFee &&
           txRequestGasLimit &&
