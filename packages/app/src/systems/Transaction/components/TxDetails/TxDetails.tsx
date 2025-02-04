@@ -91,24 +91,33 @@ export function TxDetails({
     txRequest,
   });
 
-  if (!isReady || !transaction) return null;
-
   const initialAdvanced = useMemo(() => {
     if (!fees?.regularTip || !fees?.fastTip) return false;
 
-    const isFeeAmountTheRegularTip = getValues('fees.tip.amount').eq(
-      fees.regularTip
-    );
-    const isFeeAmountTheFastTip = getValues('fees.tip.amount').eq(fees.fastTip);
-    const isGasLimitTheTxRequestGasLimit = getValues('fees.gasLimit.amount').eq(
-      txRequestGasLimit
-    );
+    try {
+      const tipAmount = getValues('fees.tip.amount');
+      const gasLimitAmount = getValues('fees.gasLimit.amount');
 
-    return (
-      (!isFeeAmountTheRegularTip && !isFeeAmountTheFastTip) ||
-      !isGasLimitTheTxRequestGasLimit
-    );
+      // Check if form values exist
+      if (!tipAmount || !gasLimitAmount) return false;
+
+      const isFeeAmountTheRegularTip = tipAmount.eq(fees.regularTip);
+      const isFeeAmountTheFastTip = tipAmount.eq(fees.fastTip);
+      const isGasLimitTheTxRequestGasLimit =
+        gasLimitAmount.eq(txRequestGasLimit);
+
+      return (
+        (!isFeeAmountTheRegularTip && !isFeeAmountTheFastTip) ||
+        !isGasLimitTheTxRequestGasLimit
+      );
+    } catch (error) {
+      console.error(error);
+      // If there's any error accessing form values, return false
+      return false;
+    }
   }, [getValues, fees, txRequestGasLimit]);
+
+  if (!isReady || !transaction) return null;
 
   function getHeader() {
     if (hasErrors) return <ErrorHeader errors={errors} />;
@@ -154,7 +163,7 @@ const styles = {
     paddingTop: '$2',
     display: 'flex',
     flexDirection: 'column',
-    minHeight: 525,
+    minHeight: 500,
     justifyContent: 'space-between',
   }),
   title: cssObj({
@@ -163,7 +172,7 @@ const styles = {
     color: '$gray12',
   }),
   feeContainer: cssObj({
-    padding: '32px 0 0 20px',
+    padding: '32px 0 16px 20px',
   }),
   icon: cssObj({
     border: '1.5px solid $gray9',
