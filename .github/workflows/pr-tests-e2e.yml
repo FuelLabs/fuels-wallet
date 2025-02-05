@@ -25,9 +25,14 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Cache Docker images
+        uses: ScribeMD/docker-cache@0.5.0
+        with:
+          key: docker-${{ runner.os }}-${{ hashFiles('docker/docker-compose.yml') }}-${{ hashFiles('docker/fuel-core/Dockerfile') }}
+
       - name: Start Test Node
         run: pnpm node:up
-      
+
       - name: Generate .env
         run: cp packages/app/.env.example packages/app/.env
 
@@ -65,9 +70,14 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Cache Docker images
+        uses: ScribeMD/docker-cache@0.5.0
+        with:
+          key: docker-${{ runner.os }}-${{ hashFiles('docker/docker-compose.yml') }}-${{ hashFiles('docker/fuel-core/Dockerfile') }}
+
       - name: Start Test Node
         run: pnpm node:up
-      
+
       - name: Generate .env
         run: cp packages/app/.env.example packages/app/.env
 
@@ -80,7 +90,7 @@ jobs:
 
       - uses: ./.github/actions/setup-playwright
         with:
-          browser: 'chrome-beta'
+          browser: "chrome-beta"
 
       - name: Run E2E Tests
         run: xvfb-run --auto-servernum -- pnpm test:e2e:beta
