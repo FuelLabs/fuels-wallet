@@ -143,7 +143,7 @@ export function TxOperationCard({
                               (
                               {
                                 convertToUsd(
-                                  assetAmount.amount,
+                                  bn(assetAmount.amount),
                                   assetAmount.decimals,
                                   baseAsset.rate
                                 ).formatted
