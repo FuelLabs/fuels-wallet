@@ -1,9 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
+import { Address } from 'fuels';
 import { useNavigate } from 'react-router-dom';
 import { useAccounts } from '~/systems/Account';
 import { Layout, MotionFlex, Pages, animations } from '~/systems/Core';
 
-import { Address } from 'fuels';
 import { ReceiverQRCode } from '../../components/QRCode';
 import { UserAddressCard } from '../../components/UserAddressCard';
 

@@ -9,6 +9,6 @@ export const calculateAssetId = (contractId: string, subId: string) => {
 };
 
 export const getBaseAssetId = async () => {
-  const provider = await Provider.create(process.env.VITE_FUEL_PROVIDER_URL!);
-  return provider.getBaseAssetId();
+  const provider = new Provider(process.env.VITE_FUEL_PROVIDER_URL!);
+  return await provider.getBaseAssetId();
 };

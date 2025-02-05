@@ -1,4 +1,5 @@
 import { Card, HStack, Text } from '@fuel-ui/react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { type BN, DEFAULT_PRECISION } from 'fuels';
 import { type FC, useEffect, useMemo, useState } from 'react';
 
@@ -6,6 +7,7 @@ import type { AssetFuelData } from '@fuel-wallet/types';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
+import { TxFeeAmountLoader } from '~/systems/Transaction/components/TxFee/TxFeeAmountLoader';
 import { TxFeeLoader } from './TxFeeLoader';
 import { styles } from './styles';
 
@@ -20,13 +22,19 @@ type TxFeeComponent = FC<TxFeeProps> & {
   Loader: typeof TxFeeLoader;
 };
 
+const MotionText = motion(Text);
+
+const fadeInVariant = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { delay: 0.2 } },
+};
+
 export const TxFee: TxFeeComponent = ({
   fee,
   checked,
   onChecked,
   title,
 }: TxFeeProps) => {
-  const [flag, setFlag] = useState(false);
   const provider = useProvider();
   const [baseAsset, setBaseAsset] = useState<AssetFuelData | undefined>();
   useEffect(() => {
@@ -60,15 +68,6 @@ export const TxFee: TxFeeComponent = ({
 
   const ready = !!fee && !!feeInUsd;
 
-  // Horrible workaround to force re-render of this section.
-  useEffect(() => {
-    setTimeout(() => {
-      setFlag((prev) => !prev);
-    }, 500);
-  }, [ready]);
-
-  if (!ready) return <TxFee.Loader />;
-
   return (
     <Card
       css={styles.detailItem(!!checked, !!onChecked, !!title)}
@@ -81,17 +80,35 @@ export const TxFee: TxFeeComponent = ({
       >
         {title || 'Fee (network)'}
       </Text>
-      <HStack gap="$1" css={styles.fee(flag)}>
-        {!!feeInUsd && (
-          <Text
-            color="intentsBase12"
-            css={styles.usd}
-            aria-label={`tip in usd:${title || 'Network'}`}
-          >
-            {feeInUsd}
-          </Text>
-        )}
-        <Text
+      <HStack gap="$1">
+        <AnimatePresence>
+          {!ready ? (
+            <motion.div
+              key="loader"
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: 0.5 } }}
+            >
+              <TxFeeAmountLoader />
+            </motion.div>
+          ) : (
+            <MotionText
+              key="feeText"
+              variants={fadeInVariant}
+              initial="hidden"
+              animate="visible"
+              color="intentsBase12"
+              css={styles.usd}
+              aria-label={`tip in usd:${title || 'Network'}`}
+            >
+              {feeInUsd}
+            </MotionText>
+          )}
+        </AnimatePresence>
+        <MotionText
+          variants={fadeInVariant}
+          initial="hidden"
+          animate="visible"
           color="textSubtext"
           css={styles.amount}
           aria-label={`fee value:${title || 'Network'}`}
@@ -104,7 +121,7 @@ export const TxFee: TxFeeComponent = ({
               })} ETH`
             : '--'}
           )
-        </Text>
+        </MotionText>
       </HStack>
     </Card>
   );

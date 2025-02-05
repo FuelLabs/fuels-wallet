@@ -14,24 +14,10 @@ export const EthAddress = ({ address, css }: EthAddressProps) => {
   const ethAddress = isValidAddress ? bn(address).toHex(20) : '';
 
   return (
-    <Box.Flex css={styles.root}>
-      <Copyable value={address} aria-label={address}>
-        <Tooltip content={address} className="address_tooltip" side="top">
-          <Text css={css}>{shortAddress(ethAddress)}</Text>
-        </Tooltip>
+    <Box.Flex>
+      <Copyable value={ethAddress} aria-label={address}>
+        <Text css={css}>{shortAddress(ethAddress)}</Text>
       </Copyable>
     </Box.Flex>
   );
-};
-
-const styles = {
-  root: {
-    '.address_tooltip': cssObj({
-      fontSize: '$xs',
-      lineHeight: '$4',
-      maxWidth: 125,
-      textAlign: 'center',
-      wordWrap: 'break-word',
-    }),
-  },
 };

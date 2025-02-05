@@ -83,5 +83,5 @@ export const chromeStorage = {
   vaults: new ChromeStorageTable<Vault>('vaults'),
   clear: () => {
     chrome?.storage?.local?.clear();
-  }
+  },
 };

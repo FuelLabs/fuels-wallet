@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from '@fuel-ui/react';
 import type { OperationTransactionAddress } from 'fuels';
-import { Address, AddressType, ChainName, isB256, isBech32 } from 'fuels';
+import { Address, AddressType, ChainName, isB256 } from 'fuels';
 import { type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 
@@ -33,9 +33,9 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
 }) => {
   const { accounts } = useAccounts();
   const address = recipient?.address || '';
-  const isValidAddress = isB256(address) || isBech32(address);
+  const isValidAddress = isB256(address);
   const fuelAddress = isValidAddress
-    ? Address.fromString(address).toString()
+    ? Address.fromDynamicInput(address).toString()
     : '';
   const isContract = recipient?.type === AddressType.contract;
   const isEthChain = recipient?.chain === ChainName.ethereum;

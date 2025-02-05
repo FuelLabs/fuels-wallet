@@ -29,7 +29,7 @@ export const useAssetsAmount = (params: UseAmountAmountParams) => {
         const assetsWithAmount: (AssetFuelAmount | null)[] = await Promise.all(
           params.operationsCoin.map(async (operationCoin) => {
             const assetCached = await assetsCache.getAsset({
-              chainId: provider.getChainId(),
+              chainId: await provider.getChainId(),
               assetId: operationCoin.assetId,
               dbAssets: [],
               save: false,

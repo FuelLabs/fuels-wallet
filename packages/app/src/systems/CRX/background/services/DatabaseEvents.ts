@@ -15,9 +15,9 @@ import {
   FuelConnectorEventTypes,
   type NetworkEvent,
 } from 'fuels';
+import { chromeStorage } from '~/systems/Core/services/chromeStorage';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { DatabaseObservable } from './DatabaseObservable';
-import { chromeStorage } from '~/systems/Core/services/chromeStorage';
 
 export class DatabaseEvents {
   readonly databaseObservable: DatabaseObservable<
@@ -75,7 +75,7 @@ export class DatabaseEvents {
       }
     );
 
-    // -- START Events for sync db with chrome storage 
+    // -- START Events for sync db with chrome storage
     this.databaseObservable.on<'accounts:create', Account>(
       'accounts:create',
       async (event) => {
@@ -101,7 +101,7 @@ export class DatabaseEvents {
         }
       }
     );
-    // -- END Events for sync db with chrome storage 
+    // -- END Events for sync db with chrome storage
 
     this.databaseObservable.on<'accounts:update', Account>(
       'accounts:update',

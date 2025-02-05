@@ -17,7 +17,7 @@ export const getMockedTransaction = async (
   const transactionRequest = await TxService.createTransfer({
     to: destinyAddress.toString(),
     amount: bn.parseUnits('0.1'),
-    assetId: provider.getBaseAssetId(),
+    assetId: await provider.getBaseAssetId(),
     tip: bn(0),
     gasLimit: bn(1_000_000),
   });
