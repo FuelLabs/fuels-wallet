@@ -143,7 +143,6 @@ export function transformOperations(
   if (!summary.operations) return [];
 
   const allReceipts = summary.receipts || [];
-  console.log('allReceipts', allReceipts);
   const operations = summary.operations.map((op) => {
     // @ts-ignore - receipts will exist in future SDK versions
     const operationReceipt = op.receipts?.[0];
