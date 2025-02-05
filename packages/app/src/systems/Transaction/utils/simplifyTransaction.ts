@@ -68,12 +68,17 @@ function transformOperation(
   } = operation;
 
   const type = getOperationType(operation);
-  const receipt = receipts[0];
-
-  const depth =
-    receipt && typeof receiptIndex === 'number'
-      ? getReceiptDepth(allReceipts, receiptIndex)
-      : 0;
+  let depth = 0;
+  let receipt = null;
+  try {
+    receipt = receipts[0];
+    if (receipt && typeof receiptIndex === 'number' && allReceipts.length > 0) {
+      depth = getReceiptDepth(allReceipts, receiptIndex);
+    }
+  } catch (error) {
+    console.warn('Could not calculate operation depth, defaulting to 0', error);
+    depth = 0;
+  }
 
   const isFromCurrentAccount = currentAccount
     ? from?.address === currentAccount
