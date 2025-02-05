@@ -28,25 +28,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cache Docker images
-        uses: ScribeMD/docker-cache@0.5.0
-        with:
-          key: docker-${{ runner.os }}-${{ hashFiles('docker/docker-compose.yaml') }}-${{ hashFiles('docker/fuel-core/Dockerfile') }}
-          read-only: true
-
-      - name: Start Test Node
-        run: pnpm node:up
-
-      - name: Generate .env
-        run: cp packages/app/.env.example packages/app/.env
-
       # Unit tests running with JEST
-      - name: Find PR number
-        uses: jwalton/gh-find-current-pr@v1
-        id: findPr
-
-      - name: Build libs
-        run: pnpm build:libs --concurrency=100%
 
       - name: Run Jest Tests
         run: pnpm test:ci --shard ${{ matrix.shard }}/4
