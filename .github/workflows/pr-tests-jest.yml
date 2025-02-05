@@ -28,13 +28,11 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cache Docker images.
+      - name: Cache Docker images
         uses: ScribeMD/docker-cache@0.5.0
         with:
-          # Make it also hash Dockerfile
           key: docker-${{ runner.os }}-${{ hashFiles('docker/docker-compose.yaml') }}-${{ hashFiles('docker/fuel-core/Dockerfile') }}
-          restore-keys: |
-            docker-${{ runner.os }}-
+          read-only: true
 
       - name: Start Test Node
         run: pnpm node:up
