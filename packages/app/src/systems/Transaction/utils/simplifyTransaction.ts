@@ -111,14 +111,15 @@ function transformOperation(
   }
 
   if (assetsSent.length > 0) {
-    const asset = assetsSent[0];
     return {
       type,
       from: fromAddress!,
       to: toAddress!,
       isFromCurrentAccount,
-      amount: new BN(asset.amount),
-      assetId: asset.assetId,
+      assets: assetsSent.map((asset) => ({
+        amount: new BN(asset.amount),
+        assetId: asset.assetId,
+      })),
       metadata: {
         depth,
       },
@@ -181,63 +182,40 @@ export function transformOperations(
 function groupSimilarOperations(
   operations: SimplifiedOperation[]
 ): SimplifiedOperation[] {
-  const groupedOps = new Map<string, SimplifiedOperation>();
+  // Group similar operations
+  const groups = operations.reduce(
+    (acc, op) => {
+      const key = `${op.type}-${op.from.address}-${op.to.address}-${op.metadata?.depth}`;
+      if (!acc[key]) {
+        acc[key] = {
+          ...op,
+          metadata: {
+            ...op.metadata,
+            operationCount: 1,
+            groupedAssets: {},
+          },
+        };
+      } else {
+        // Combine assets from same type of operations
+        for (const asset of op.assets || []) {
+          const existing = acc[key].metadata.groupedAssets![asset.assetId];
+          if (existing) {
+            existing.amount = existing.amount.add(asset.amount);
+          } else {
+            acc[key].metadata.groupedAssets![asset.assetId] = {
+              amount: asset.amount,
+              assetId: asset.assetId,
+            };
+          }
+        }
+        acc[key].metadata.operationCount! += 1;
+      }
+      return acc;
+    },
+    {} as Record<string, SimplifiedOperation>
+  );
 
-  for (const op of operations) {
-    // Group by depth, name, from, and to
-    const key = [
-      op.metadata.depth,
-      op.metadata.functionName,
-      op.from.address,
-      op.to.address,
-    ].join('|');
-
-    const existing = groupedOps.get(key);
-    if (!existing) {
-      // First operation of this type
-      const newOp = {
-        ...op,
-        metadata: {
-          ...op.metadata,
-          operationCount: 1,
-          groupedAssets:
-            op.amount && op.assetId
-              ? {
-                  [op.assetId]: {
-                    amount: op.amount,
-                    assetId: op.assetId,
-                    assetAmount: op.assetAmount,
-                  },
-                }
-              : undefined,
-          childOperations: [op], // Store individual operations
-        },
-      };
-      groupedOps.set(key, newOp);
-      continue;
-    }
-
-    // Add to existing group
-    const groupedAssets = existing.metadata.groupedAssets || {};
-    if (op.amount && op.assetId) {
-      const existingAsset = groupedAssets[op.assetId];
-      groupedAssets[op.assetId] = {
-        amount: existingAsset ? existingAsset.amount.add(op.amount) : op.amount,
-        assetId: op.assetId,
-        assetAmount: op.assetAmount,
-      };
-    }
-
-    existing.metadata.operationCount =
-      (existing.metadata.operationCount || 1) + 1;
-    existing.metadata.groupedAssets = groupedAssets;
-    existing.metadata.childOperations = [
-      ...(existing.metadata.childOperations || []),
-      op,
-    ];
-  }
-
-  return Array.from(groupedOps.values());
+  return Object.values(groups);
 }
 
 function categorizeOperations(
@@ -249,6 +227,15 @@ function categorizeOperations(
   const intermediate: SimplifiedOperation[] = [];
 
   for (const op of operations) {
+    // Check if operation has assets or is a contract call with amount
+    const hasAssets =
+      op.assets?.length || (op.metadata?.amount && op.metadata?.assetId);
+
+    // If operation has no assets and is not a contract call, skip
+    if (!hasAssets && op.type !== TxCategory.CONTRACTCALL) {
+      continue;
+    }
+
     const depth = op.metadata?.depth || 0;
     const isTransfer = op.type === TxCategory.SEND;
     const isFromCurrentAccount =

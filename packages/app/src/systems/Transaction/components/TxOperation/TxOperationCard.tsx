@@ -80,9 +80,7 @@ export function TxOperationCard({
     return 'Unknown';
   };
 
-  const shouldShowAssetAmount =
-    (operation.amount && operation.assetId) ||
-    (operation.metadata?.amount && operation.metadata?.assetId);
+  const shouldShowAssetAmount = assetsAmount?.length > 0;
 
   const isFromContract = operation.from.type === 0;
   const isToContract = operation.to.type === 0;
@@ -231,11 +229,7 @@ export function TxOperationCard({
         <Box.Flex justify={'center'}>
           <Box css={styles.spacer} />
         </Box.Flex>
-        <Box>
-          {shouldShowAssetAmount &&
-            assetsAmount.length > 0 &&
-            renderAssets(assetsAmount)}
-        </Box>
+        <Box>{shouldShowAssetAmount && renderAssets(assetsAmount)}</Box>
 
         <Box.Flex justify={'flex-start'} align={'center'} css={styles.iconCol}>
           <Avatar.Generated

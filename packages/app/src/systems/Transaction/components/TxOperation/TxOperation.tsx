@@ -17,11 +17,8 @@ type TxOperationProps = {
 const fetchAssetsAmount = async (operation: SimplifiedOperation) => {
   try {
     const coins = [];
-    if (operation.amount && operation.assetId) {
-      coins.push({
-        amount: operation.amount,
-        assetId: operation.assetId,
-      });
+    if (operation.assets?.length) {
+      coins.push(...operation.assets);
     } else if (operation.metadata?.amount && operation.metadata?.assetId) {
       coins.push({
         amount: operation.metadata.amount,

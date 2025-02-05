@@ -95,9 +95,11 @@ export type SimplifiedOperation = {
   type: TxCategory;
   from: SimplifiedAddress;
   to: SimplifiedAddress;
-  amount?: BN;
-  assetId?: string;
   isFromCurrentAccount: boolean;
+  assets?: Array<{
+    amount: BN;
+    assetId: string;
+  }>;
   metadata: ContractCallMetadata;
   assetAmount?: AssetFuelAmount;
 };
