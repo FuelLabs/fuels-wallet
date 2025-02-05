@@ -28,8 +28,9 @@ export async function calculateTotalFee({
 export async function getCurrentTips(provider: Provider) {
   const DEFAULT_REGULAR_TIP = 0;
   const DEFAULT_FAST_TIP = 1000;
-  const blockWithTransactions =
-    await provider.getBlockWithTransactions('latest');
+  const blockWithTransactions = await provider
+    ?.getBlockWithTransactions('latest')
+    .catch(() => null);
   if (!blockWithTransactions) {
     return {
       regularTip: DEFAULT_REGULAR_TIP,
