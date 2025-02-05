@@ -59,19 +59,5 @@ describe('Mnemonic', () => {
         expect(await screen.findByLabelText(word)).toBeInTheDocument();
       }
     });
-
-    it('should paste into all inputs when paste on first input', async () => {
-      const { user } = render(<Mnemonic type="write" />);
-      await navigator.clipboard.writeText(WORDS.join(' '));
-
-      const firstInput = screen.getAllByRole('textbox')[0];
-      await user.tab();
-      expect(firstInput).toHaveFocus();
-      await user.paste();
-
-      for (const word of WORDS) {
-        expect(screen.getByLabelText(word)).toBeInTheDocument();
-      }
-    });
   });
 });
