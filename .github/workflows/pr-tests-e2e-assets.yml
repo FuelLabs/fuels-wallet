@@ -15,7 +15,7 @@ jobs:
     runs-on: buildjet-8vcpu-ubuntu-2204
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: FuelLabs/github-actions/setups/node@master
         with:
           node-version: 20.11.0

@@ -19,6 +19,8 @@ import { WalletLockedCustom, db } from '~/systems/Core';
 
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
+import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { graphqlRequest } from '~/systems/Core/utils/graphql';
 import { NetworkService } from '~/systems/Network/services/network';
 import type { TransactionCursor } from '../types';
@@ -266,12 +268,31 @@ export class TxService {
 
       // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
       const feeAdaptedToSdkDiff = txSummary.fee.add(1);
-
+      const [chainId, baseAssetId] = await Promise.all([
+        provider.getChainId(),
+        provider.getBaseAssetId(),
+      ]);
+      const baseAsset = await AssetsCache.getInstance().getAsset({
+        chainId: chainId,
+        assetId: baseAssetId,
+        dbAssets: [],
+        save: false,
+      });
+      const feeInUsd =
+        baseAsset != null
+          ? convertToUsd(
+              feeAdaptedToSdkDiff,
+              baseAsset?.decimals,
+              // biome-ignore lint/suspicious/noExplicitAny: @fuel-ts/accounts types are not updated
+              (baseAsset as any)?.rate
+            ).formatted
+          : '$0';
       return {
         baseFee,
         txSummary: {
           ...txSummary,
           fee: feeAdaptedToSdkDiff,
+          feeInUsd,
         },
         proposedTxRequest,
       };

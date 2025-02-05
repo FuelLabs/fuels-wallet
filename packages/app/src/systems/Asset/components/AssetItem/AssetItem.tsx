@@ -50,7 +50,6 @@ export const AssetItem: AssetItemComponent = ({
   shouldShowCopyAssetAddress,
 }) => {
   const navigate = useNavigate();
-
   const fuelAssetFromInputAsset = useFuelAsset({ asset: inputAsset });
   const asset = useMemo(() => {
     if (!inputFuelAsset && !inputAsset && !fuelAssetFromInputAsset)
@@ -65,10 +64,9 @@ export const AssetItem: AssetItemComponent = ({
       }
     );
   }, [inputFuelAsset, inputAsset, fuelAssetFromInputAsset]);
+  const { assetId, name, symbol, icon, decimals, isCustom } = asset ?? {};
 
   if (!asset) return null;
-
-  const { assetId, name, symbol, icon, decimals, isCustom } = asset;
 
   function getLeftEl() {
     if (assetId && shouldShowCopyAssetAddress) {
@@ -118,7 +116,12 @@ export const AssetItem: AssetItemComponent = ({
 
     if (amount) {
       return (
-        <AssetItemAmount amount={amount} decimals={decimals} symbol={symbol} />
+        <AssetItemAmount
+          amount={amount}
+          decimals={decimals}
+          rate={inputFuelAsset?.rate}
+          symbol={symbol}
+        />
       );
     }
 
@@ -211,6 +214,8 @@ const styles = {
   assetName: cssObj({
     margin: 0,
     textSize: 'base',
+    fontWeight: '$medium',
+    letterSpacing: '$normal',
   }),
   assetIdCopy: cssObj({
     marginLeft: 2,
@@ -240,6 +245,7 @@ const styles = {
     '.fuel_Button': {
       px: '$1 !important',
       color: '$intentsBase8 !important',
+      height: 44,
     },
 
     '.fuel_Button:hover': {
