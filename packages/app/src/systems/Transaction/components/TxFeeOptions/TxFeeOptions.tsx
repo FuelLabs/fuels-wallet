@@ -6,12 +6,11 @@ import {
   HStack,
   Input,
   RadioGroup,
-  RadioGroupItem,
   Text,
   VStack,
 } from '@fuel-ui/react';
 import { AnimatePresence } from 'framer-motion';
-import { type BN, DEFAULT_PRECISION, bn } from 'fuels';
+import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { MotionFlex, MotionStack, animations } from '~/systems/Core';

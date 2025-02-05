@@ -1,13 +1,11 @@
-import { Box, Card, HStack, RadioGroupItem, Text } from '@fuel-ui/react';
+import { Box, RadioGroupItem, Text } from '@fuel-ui/react';
 import { type BN, DEFAULT_PRECISION } from 'fuels';
 import { type FC, useEffect, useMemo, useState } from 'react';
 
-import { cssObj } from '@fuel-ui/css';
 import type { AssetFuelData } from '@fuel-wallet/types';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
-import { formatTip } from '../TxFeeOptions/TxFeeOptions.utils';
 import { TxFee } from './TxFee';
 import { TxFeeLoader } from './TxFeeLoader';
 import { styles } from './styles';

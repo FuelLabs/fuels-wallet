@@ -210,7 +210,7 @@ test.describe('SendTransaction', () => {
     await getInputByName(page, 'amount').fill('0.001');
 
     //Selecting and extracting fast fee amount
-    const fastFeeComponent = getByAriaLabel(page, 'fee value:Fast');
+    const fastFeeComponent = getByAriaLabel(page, 'Fast');
     await fastFeeComponent.click();
 
     // Waiting button change to Review in order to change fee amount
@@ -256,7 +256,7 @@ test.describe('SendTransaction', () => {
     await page.waitForTimeout(1000);
 
     // Selecting and extracting regular fee amount
-    const regularFeeComponent = getByAriaLabel(page, 'fee value:Regular');
+    const regularFeeComponent = getByAriaLabel(page, 'Regular');
     await regularFeeComponent.click();
 
     // Waiting button change to Review in order to ensure that fee amount is updated
@@ -278,7 +278,7 @@ test.describe('SendTransaction', () => {
     await getButtonByText(page, 'Back').click();
 
     // Selecting and extracting fast fee amount
-    const fastFeeComponent = getByAriaLabel(page, 'fee value:Fast');
+    const fastFeeComponent = getByAriaLabel(page, 'Fast');
     await fastFeeComponent.click();
 
     // Waiting button change to Review in order to change fee amount
