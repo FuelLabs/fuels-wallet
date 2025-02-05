@@ -132,7 +132,7 @@ export function TxOperationCard({
                               precision: assetAmount.decimals || 0,
                             },
                           })}{' '}
-                          {assetAmount.symbol}
+                          {assetAmount.symbol || 'Unknown'}
                         </Text>
                         {baseAsset?.rate &&
                           assetAmount.amount &&
