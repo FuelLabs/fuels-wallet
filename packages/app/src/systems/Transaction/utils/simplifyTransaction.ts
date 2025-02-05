@@ -58,25 +58,25 @@ function transformOperation(
   currentAccount?: string,
   receiptIndex?: number
 ): SimplifiedOperation {
-  const {
-    name,
-    from,
-    to,
-    assetsSent = [],
-    calls = [],
-    receipts = [],
-  } = operation;
+  const { name, from, to, assetsSent = [], calls = [] } = operation;
 
   const type = getOperationType(operation);
   let depth = 0;
   let receipt = null;
+
+  // Safely check for receipts property
   try {
+    // @ts-ignore - receipts will exist in future SDK versions
+    const receipts = operation.receipts || [];
     receipt = receipts[0];
     if (receipt && typeof receiptIndex === 'number' && allReceipts.length > 0) {
       depth = getReceiptDepth(allReceipts, receiptIndex);
     }
   } catch (error) {
-    console.warn('Could not calculate operation depth, defaulting to 0', error);
+    console.warn(
+      'Could not access operation receipts, defaulting depth to 0',
+      error
+    );
     depth = 0;
   }
 
@@ -143,17 +143,26 @@ export function transformOperations(
   if (!summary.operations) return [];
 
   const allReceipts = summary.receipts || [];
-
+  console.log('allReceipts', allReceipts);
   const operations = summary.operations.map((op) => {
+    // @ts-ignore - receipts will exist in future SDK versions
     const operationReceipt = op.receipts?.[0];
     if (!operationReceipt) return transformOperation(op, [], currentAccount);
 
-    const receiptIndex = allReceipts.findIndex(
-      (r) =>
-        r.type === operationReceipt.type &&
-        r.pc === operationReceipt.pc &&
-        r.is === operationReceipt.is
-    );
+    const receiptIndex = allReceipts.findIndex((r) => {
+      // Only compare pc and is if they exist on both receipts
+      const pcMatch =
+        'pc' in r && 'pc' in operationReceipt
+          ? r.pc === operationReceipt.pc
+          : true;
+
+      const isMatch =
+        'is' in r && 'is' in operationReceipt
+          ? r.is === operationReceipt.is
+          : true;
+
+      return r.type === operationReceipt.type && pcMatch && isMatch;
+    });
 
     if (receiptIndex === -1) {
       console.warn('Could not find operation receipt in full receipt list');
