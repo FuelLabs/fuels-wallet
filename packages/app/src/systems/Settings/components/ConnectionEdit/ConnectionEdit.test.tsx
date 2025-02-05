@@ -6,6 +6,7 @@ import { connectionsLoader } from '../../__mocks__/connection';
 import { testQueries } from '../../__test__';
 import { useConnections } from '../../hooks';
 
+import { mockServer } from '~/systems/Core/__tests__/utils/msw';
 import { Usage } from './ConnectionEdit.stories';
 
 function Content() {
@@ -19,6 +20,10 @@ const opts = {
 };
 
 describe('ConnectionEdit', () => {
+  const server = mockServer();
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
   beforeEach(async () => {
     await connectionsLoader();
   });
