@@ -67,10 +67,10 @@ test.describe('Mint Assets', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
     // short address function copied from app package
-    await hasText(walletNotificationPage, shortAddress(assetId), 0, 10000);
+    // await hasText(walletNotificationPage, shortAddress(assetId), 0, 10000);
 
     // test mint amount is correct
-    await hasText(walletNotificationPage, formattedMintAmount);
+    await hasText(walletNotificationPage, `${formattedMintAmount} Unknown`);
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
@@ -153,8 +153,8 @@ test.describe('Mint Assets', () => {
       window.scrollTo(0, document.body.scrollHeight)
     );
 
-    await hasText(walletNotificationPage, name);
-    await hasText(walletNotificationPage, shortAddress(assetId), 0, 10000);
+    // await hasText(walletNotificationPage, name);
+    // await hasText(walletNotificationPage, shortAddress(assetId), 0, 10000);
     // test mint amount is correct
     await hasText(walletNotificationPage, `1.2345 ${symbol}`);
 

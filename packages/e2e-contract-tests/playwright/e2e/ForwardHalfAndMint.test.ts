@@ -74,44 +74,17 @@ test.describe('Forward Half ETH and Mint Custom Asset', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
-    // Test if asset name is defined (not unknown)
-    await checkAriaLabelsContainsText(
-      walletNotificationPage,
-      'Asset Name',
-      'Ethereum'
-    );
-    // Test if sender name is defined (not unknown)
-    await checkAriaLabelsContainsText(
-      walletNotificationPage,
-      'Sender Name',
-      ''
-    );
-
-    // test forward asset name is shown
-    await hasText(walletNotificationPage, 'Ethereum');
-    // test forward asset id is shown
-    await hasText(walletNotificationPage, shortAddress(await getBaseAssetId()));
     // test forward eth amount is correct
     await hasText(walletNotificationPage, `${depositAmount} ETH`);
 
-    // test return asset name is shown
-    await hasText(walletNotificationPage, 'Ethereum', 1);
-    // test return asset id is shown
-    await hasText(
-      walletNotificationPage,
-      shortAddress(await getBaseAssetId()),
-      1
-    );
     // test return eth amount is correct
     await hasText(walletNotificationPage, `${halfDepositAmount} ETH`);
 
     // test mint asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
-    // test mint asset id is shown
     const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
-    await hasText(walletNotificationPage, shortAddress(assetId));
     // test mint amount is correct
-    await hasText(walletNotificationPage, formattedMintAmount);
+    await hasText(walletNotificationPage, `${formattedMintAmount} Unknown`);
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');

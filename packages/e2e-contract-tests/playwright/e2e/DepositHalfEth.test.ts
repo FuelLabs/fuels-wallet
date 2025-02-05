@@ -64,34 +64,35 @@ test.describe('Deposit Half ETH', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
-    // Test if asset name is defined (not unknown)
-    await checkAriaLabelsContainsText(
-      walletNotificationPage,
-      'Asset Name',
-      'Ethereum'
-    );
-    // Test if sender name is defined (not unknown)
-    await checkAriaLabelsContainsText(
-      walletNotificationPage,
-      'Sender Name',
-      ''
-    );
+    // The new UI doesnt show asset name and sender name
+    // // Test if asset name is defined (not unknown)
+    // await checkAriaLabelsContainsText(
+    //   walletNotificationPage,
+    //   'Asset Name',
+    //   'Ethereum'
+    // );
+    // // Test if sender name is defined (not unknown)
+    // await checkAriaLabelsContainsText(
+    //   walletNotificationPage,
+    //   'Sender Name',
+    //   ''
+    // );
 
     // test forward asset name is shown
-    await hasText(walletNotificationPage, 'Ethereum');
+    // await hasText(walletNotificationPage, 'ETH');
     // test forward asset id is shown
-    await hasText(walletNotificationPage, shortAddress(await getBaseAssetId()));
+    // await hasText(walletNotificationPage, shortAddress(await getBaseAssetId()));
     // test forward eth amount is correct
     await hasText(walletNotificationPage, `${depositAmount} ETH`);
 
     // test return asset name is shown
-    await hasText(walletNotificationPage, 'Ethereum', 1);
+    // await hasText(walletNotificationPage, 'ETH', 1);
     // test return asset id is shown
-    await hasText(
-      walletNotificationPage,
-      shortAddress(await getBaseAssetId()),
-      1
-    );
+    // await hasText(
+    //   walletNotificationPage,
+    //   shortAddress(await getBaseAssetId()),
+    //   1
+    // );
     // test return eth amount is correct
     await hasText(walletNotificationPage, `${halfDepositAmount} ETH`);
 
