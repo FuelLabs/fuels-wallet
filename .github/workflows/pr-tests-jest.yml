@@ -11,8 +11,12 @@ concurrency:
 
 jobs:
   tests-jest:
-    name: Test
-    runs-on: buildjet-8vcpu-ubuntu-2204
+    name: Jest Tests [Shard ${{ matrix.shard }}]
+    runs-on: buildjet-8vcpu-ubuntu-2204-arm
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
       - uses: FuelLabs/github-actions/setups/node@master
@@ -36,12 +40,10 @@ jobs:
         id: findPr
 
       - name: Build libs
-        run: |
-          pnpm build:libs
+        run: pnpm build:libs --concurrency=100%
 
       - name: Run Jest Tests
-        run: |
-          pnpm test:ci
+        run: pnpm test:ci --shard ${{ matrix.shard }}/4
         timeout-minutes: 10
 
       - name: Stop Test Node
