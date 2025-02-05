@@ -305,18 +305,14 @@ export const transactionHistoryMachine = createMachine(
 
           const { address, pagination } = input;
 
-          console.log('fsk 1 ');
           const selectedNetwork = await NetworkService.getSelectedNetwork();
-          console.log('fsk 2 ');
           const { transactionHistory } = await TxService.getTransactionHistory({
             address,
             providerUrl: selectedNetwork?.url,
             pagination,
-          }).catch((e) => {
-            console.log('fsk error', e);
+          }).catch((_e) => {
             return { transactionHistory: [] };
           });
-          console.log('fsk 3 ');
           return { transactionHistory };
         },
       }),
@@ -330,17 +326,11 @@ export const transactionHistoryMachine = createMachine(
             throw new Error('Missing input');
           }
 
-          console.log('fsk 0 ');
           const selectedNetwork = await NetworkService.getSelectedNetwork();
-          console.log('fsk 01 ');
-          const cursors = await Promise.race([
-            TxService.getTxCursors({
-              address: input.address,
-              providerUrl: selectedNetwork?.url || '',
-            }),
-            new Promise((_resolve, reject) => setTimeout(reject, 5000)),
-          ]).catch((e) => console.log('fsk error2', e));
-          console.log('fsk 02 ');
+          const cursors = await TxService.getTxCursors({
+            address: input.address,
+            providerUrl: selectedNetwork?.url || '',
+          });
 
           return {
             cursors,
@@ -357,7 +347,6 @@ export const transactionHistoryMachine = createMachine(
             throw new Error('Missing input');
           }
 
-          console.log('fsk 20 ');
           const selectedNetwork = await NetworkService.getSelectedNetwork();
 
           const address = input.address;
@@ -371,22 +360,18 @@ export const transactionHistoryMachine = createMachine(
             maxDepth: 1,
           });
 
-          console.log('fsk 22 ');
           // Adding missing cursors
           if (result.cursors.length > 0) {
-            console.log('fsk 23');
             await TxService.addTxCursors({
               address,
               providerUrl,
               cursors: result.cursors,
             });
           }
-          console.log('fsk 24');
           const cursors = await TxService.getTxCursors({
             address,
             providerUrl,
           });
-          console.log('fsk 25');
 
           return {
             cursors,
