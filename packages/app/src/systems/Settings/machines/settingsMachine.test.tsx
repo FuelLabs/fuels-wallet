@@ -1,11 +1,18 @@
 import type { InterpreterFrom } from 'xstate';
 import { interpret } from 'xstate';
+
 import { expectStateMatch } from '~/systems/Core/__tests__';
 import type { VaultInputs } from '~/systems/Vault';
 
+import { mockServer } from '~/systems/Core/__tests__/utils/msw';
 import { settingsMachine } from './settingsMachine';
 
 describe('settingsMachine', () => {
+  const server = mockServer();
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
+
   const redirectToWallet = jest.fn();
   let service: InterpreterFrom<typeof settingsMachine>;
 
