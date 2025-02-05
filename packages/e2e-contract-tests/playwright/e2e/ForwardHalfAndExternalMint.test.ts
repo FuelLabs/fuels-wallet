@@ -116,7 +116,7 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
     );
     // await hasText(walletNotificationPage, shortAddress(assetId));
     // test mint amount is correct
-    await hasText(walletNotificationPage, formattedMintAmount);
+    await hasText(walletNotificationPage, `${formattedMintAmount} Unknown`);
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');

@@ -99,7 +99,7 @@ test.describe('Forward and Mint Multicall', () => {
     const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
     // await hasText(walletNotificationPage, shortAddress(assetId));
     // test mint amount is correct
-    await hasText(walletNotificationPage, formattedMintAMount);
+    await hasText(walletNotificationPage, `${formattedMintAMount} Unknown`);
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');

@@ -106,7 +106,10 @@ test.describe('Forward Custom Asset', () => {
     // await hasText(walletNotificationPage, shortAddress(assetId));
 
     // test forward custom asset amount is correct
-    await hasText(walletNotificationPage, formattedForwardCustomAssetAmount);
+    await hasText(
+      walletNotificationPage,
+      `${formattedForwardCustomAssetAmount} Unknown`
+    );
 
     // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');
