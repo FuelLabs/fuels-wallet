@@ -9,6 +9,7 @@ import { MOCK_ACCOUNTS } from '../../__mocks__';
 import type { AccountWithBalance } from '@fuel-wallet/types';
 import { Address, bn } from 'fuels';
 import { act } from 'react';
+import { mockServer } from '~/systems/Core/__tests__/utils/msw';
 import { BalanceWidget } from './BalanceWidget';
 
 const ACCOUNT: AccountWithBalance = {
@@ -21,6 +22,11 @@ const ACCOUNT: AccountWithBalance = {
 };
 
 describe('BalanceWidget', () => {
+  const server = mockServer();
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
+
   it('a11y', async () => {
     await testA11y(<BalanceWidget account={ACCOUNT} />, {
       wrapper: TestWrapper,
