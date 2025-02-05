@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { MotionBox } from '~/systems/Core/components/Motion';
 import type { CategorizedOperations, SimplifiedOperation } from '../../types';
 import { TxCategory } from '../../types';
-import { TxOperationsGroup } from '../TxDetails/TxOperationsSimple/TxOperationsGroup';
+import { TxOperationsGroup } from '../TxContent/TxOperationsSimple/TxOperationsGroup';
 import { TxOperation } from '../TxOperation';
 
 type GroupedOperations = {

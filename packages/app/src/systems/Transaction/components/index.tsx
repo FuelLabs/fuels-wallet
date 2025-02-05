@@ -5,4 +5,4 @@ export * from './TxOperation';
 export * from './TxOperations';
 export * from './TxRecipientCard';
 export * from './TxStatusAlert';
-export * from './TxDetails';
+export * from './TxContent';

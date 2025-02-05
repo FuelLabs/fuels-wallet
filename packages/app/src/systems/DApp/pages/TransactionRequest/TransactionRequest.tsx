@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
-import { TxDetails, getGasLimitFromTxRequest } from '~/systems/Transaction';
+import { TxContent, getGasLimitFromTxRequest } from '~/systems/Transaction';
 import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 import { AutoSubmit } from './TransactionRequest.AutoSubmit';
@@ -29,6 +29,7 @@ export function TransactionRequest() {
     shouldShowActions,
     shouldDisableApproveBtn,
     errors,
+    executedStatus,
     proposedTxRequest,
   } = txRequest;
   const { isLoading: isLoadingAssets } = useAssets();
@@ -73,10 +74,9 @@ export function TransactionRequest() {
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
           {shouldShowTxSimulated && (
-            <TxDetails
+            <TxContent
               showDetails
               tx={txSummarySimulated}
-              txRequest={proposedTxRequest}
               isLoading={isLoadingInfo || !defaultValues}
               errors={errors.simulateTxErrors}
               isConfirm
@@ -84,9 +84,11 @@ export function TransactionRequest() {
             />
           )}
           {shouldShowTxExecuted && (
-            <TxDetails
-              tx={txSummaryExecuted}
+            <TxContent
               showDetails
+              tx={txSummaryExecuted}
+              txRequest={proposedTxRequest}
+              txStatus={executedStatus()}
               footer={
                 status('failed') && (
                   <Button

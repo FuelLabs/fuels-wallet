@@ -4,10 +4,12 @@ import type {
   BN,
   TransactionRequest,
   TransactionResult,
+  TransactionStatus,
   TransactionSummary,
 } from 'fuels';
 import { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
+import type { Maybe } from '~/systems/Core';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import {
   type GroupedErrors,
@@ -16,6 +18,7 @@ import {
 import { useSimplifiedTransaction } from '../../hooks/useSimplifiedTransaction';
 import { TxFee } from '../TxFee';
 import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
+import { TxHeader } from '../TxHeader';
 import { TxOperations } from '../TxOperations';
 
 const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
@@ -56,9 +59,10 @@ const ConfirmHeader = () => (
 
 export type TxViewVariant = 'default' | 'history';
 
-type TxDetailsProps = {
+type TxContentProps = {
   tx?: TransactionSummary | TransactionResult;
   txRequest?: TransactionRequest;
+  txStatus?: Maybe<TransactionStatus>;
   showDetails?: boolean;
   isLoading?: boolean;
   footer?: React.ReactNode;
@@ -71,17 +75,21 @@ type TxDetailsProps = {
   };
 };
 
-export function TxDetails({
+export function TxContent({
   tx,
-  txRequest,
+  txStatus,
   showDetails,
   isLoading,
   footer,
   errors,
   isConfirm,
   fees,
-}: TxDetailsProps) {
+  txRequest,
+}: TxContentProps) {
   const { getValues } = useFormContext<SendFormValues>();
+
+  console.log(txStatus, tx);
+  const status = txStatus || tx?.status || txStatus;
   const hasErrors = Boolean(Object.keys(errors || {}).length);
   const isExecuted = !!tx?.id;
   const txRequestGasLimit = getGasLimitFromTxRequest(txRequest);
@@ -122,7 +130,10 @@ export function TxDetails({
   function getHeader() {
     if (hasErrors) return <ErrorHeader errors={errors} />;
     if (isConfirm) return <ConfirmHeader />;
-    if (isExecuted) return null;
+    if (isExecuted)
+      return (
+        <TxHeader id={tx?.id} type={tx?.type} status={status || undefined} />
+      );
     return <ConfirmHeader />;
   }
 
@@ -163,7 +174,6 @@ const styles = {
     paddingTop: '$2',
     display: 'flex',
     flexDirection: 'column',
-    minHeight: 500,
     justifyContent: 'space-between',
   }),
   title: cssObj({

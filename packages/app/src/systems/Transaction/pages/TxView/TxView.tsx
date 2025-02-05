@@ -5,7 +5,7 @@ import { Layout, scrollable } from '~/systems/Core';
 import { useNetworks } from '~/systems/Network';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxStatusAlert } from '../../components';
-import { TxDetails } from '../../components/TxDetails/TxDetails';
+import { TxContent } from '../../components/TxContent/TxContent';
 import { useTxResult } from '../../hooks';
 
 export function TxView() {
@@ -27,6 +27,7 @@ export function TxView() {
     >
       <Layout.TopBar onBack={() => navigate(-1)} />
       <Layout.Content
+        noBorder
         css={cssObj({
           height: '550px',
           ...scrollable(),
@@ -39,7 +40,7 @@ export function TxView() {
         )}
         {txResult && (
           <FormProvider {...form}>
-            <TxDetails
+            <TxContent
               tx={txResult}
               isLoading={ctx.isFetching}
               showDetails={ctx.shouldShowTxFee}
