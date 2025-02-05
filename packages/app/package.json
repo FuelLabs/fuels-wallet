@@ -14,7 +14,7 @@
     "dev:storybook": "storybook dev -p 6006",
     "preview": "vite preview",
     "test": "jest --verbose",
-    "test:ci": "pnpm ts:check && pnpm test",
+    "test:ci": "pnpm ts:check && jest --verbose",
     "test:watch": "jest --watch",
     "ts:check": "pnpm xstate:typegen && tsc --noEmit",
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
