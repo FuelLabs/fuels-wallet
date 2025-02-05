@@ -133,9 +133,9 @@ export function TxOperationCard({
                               units: assetAmount.decimals || 0,
                               precision: assetAmount.decimals || 0,
                             },
-                          })}
+                          })}{' '}
+                          {assetAmount.symbol}
                         </Text>
-                        <Text as="span">{assetAmount.symbol}</Text>
                         {baseAsset?.rate &&
                           assetAmount.amount &&
                           assetAmount.assetId === baseAsset.assetId && (
