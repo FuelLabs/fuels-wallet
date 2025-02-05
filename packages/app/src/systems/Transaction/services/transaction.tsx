@@ -104,6 +104,7 @@ export type TxInputs = {
     address: string;
     providerUrl?: string;
     initialEndCursor: string | null;
+    depth?: number;
   };
   fundTransaction: {
     wallet: WalletLocked;
@@ -364,12 +365,17 @@ export class TxService {
     address,
     providerUrl = '',
     initialEndCursor,
+    depth = Number.POSITIVE_INFINITY,
   }: TxInputs['getAllCursors']) {
     let hasNextPage = true;
     const cursors: string[] = [];
     let endCursor: string | null | undefined = initialEndCursor;
 
+    let count = 0;
     while (hasNextPage) {
+      if (count > depth) {
+        break;
+      }
       const result: GetPageInfoQuery = await graphqlRequest(
         providerUrl,
         'getTransactionsByOwner',
@@ -388,6 +394,7 @@ export class TxService {
       if (hasNextPage && endCursor) {
         cursors.push(endCursor);
       }
+      count++;
     }
 
     return {

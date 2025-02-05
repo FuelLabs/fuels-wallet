@@ -354,6 +354,7 @@ export const transactionHistoryMachine = createMachine(
             address,
             providerUrl,
             initialEndCursor,
+            depth: 1,
           });
           // Adding missing cursors
           if (result.cursors.length > 0) {
