@@ -1,5 +1,5 @@
 up:
-	docker compose -p dev --env-file .env up -d --build 
+	DOCKER_BUILDKIT=1 docker compose -p dev --env-file .env up -d --build 
 
 down:
 	docker compose -p dev stop

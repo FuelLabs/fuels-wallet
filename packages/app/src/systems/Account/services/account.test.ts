@@ -13,7 +13,7 @@ import { AccountService } from './account';
 const _providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
 const MOCK_ACCOUNT = MOCK_ACCOUNTS[0];
 
-const MOCK_BALANCES = [
+const _MOCK_BALANCES = [
   {
     node: {
       assetId: MOCK_BASE_ASSET_ID,
@@ -22,7 +22,7 @@ const MOCK_BALANCES = [
   },
 ];
 
-mockServer([mockBalancesOnGraphQL(MOCK_BALANCES)]);
+// mockServer([mockBalancesOnGraphQL(MOCK_BALANCES)]);
 
 describe('AccountService', () => {
   beforeEach(async () => {
