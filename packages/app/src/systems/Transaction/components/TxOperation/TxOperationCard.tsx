@@ -17,6 +17,7 @@ import { formatAmount, shortAddress } from '~/systems/Core';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { type SimplifiedOperation, TxCategory } from '../../types';
+import { TxOperationAssets } from './TxOperationAssets';
 
 type TxOperationCardProps = {
   operation: SimplifiedOperation;
@@ -97,90 +98,6 @@ export function TxOperationCard({
   const isFromContract = operation.from.type === 0;
   const isToContract = operation.to.type === 0;
 
-  const renderAssets = (amounts: AssetFuelAmount[]) => {
-    const allEmptyAmounts = amounts.every((assetAmount) =>
-      bn(assetAmount.amount).eq(0)
-    );
-
-    if (allEmptyAmounts) return null;
-
-    const getAssetImage = (asset: AssetFuelAmount) => {
-      if (asset?.icon) {
-        return (
-          <Image
-            src={asset.icon}
-            alt={`${asset.name} image`}
-            width="24px"
-            height="24px"
-          />
-        );
-      }
-
-      return (
-        <Avatar.Generated
-          hash={asset?.assetId || asset?.name || ''}
-          aria-label={`${asset?.name} generated image`}
-          size="xsm"
-        />
-      );
-    };
-
-    return (
-      <Box css={cssObj({ marginBottom: '$3' })}>
-        <Box.Stack gap="$1">
-          {amounts.map(
-            (assetAmount) =>
-              bn(assetAmount.amount).gt(0) && (
-                <Box.Flex css={styles.asset} key={assetAmount.assetId}>
-                  {getAssetImage(assetAmount)}
-                  <Box css={styles.amountContainer}>
-                    <Box.Flex direction="column">
-                      <Box.Flex gap="$1" aria-label="amount-container">
-                        <Text as="span" className="amount-value">
-                          {formatAmount({
-                            amount: assetAmount.amount,
-                            options: {
-                              units: assetAmount.decimals || 0,
-                              precision: assetAmount.decimals || 0,
-                            },
-                          })}{' '}
-                          {assetAmount.symbol || 'Unknown'}
-                        </Text>
-                        {baseAsset?.rate &&
-                          assetAmount.amount &&
-                          assetAmount.assetId === baseAsset.assetId && (
-                            <Text color="gray8">
-                              (
-                              {
-                                convertToUsd(
-                                  bn(assetAmount.amount),
-                                  assetAmount.decimals,
-                                  baseAsset.rate
-                                ).formatted
-                              }
-                              )
-                            </Text>
-                          )}
-                        {assetAmount.isNft && (
-                          <Badge
-                            variant="ghost"
-                            intent="primary"
-                            css={styles.assetNft}
-                          >
-                            NFT
-                          </Badge>
-                        )}
-                      </Box.Flex>
-                    </Box.Flex>
-                  </Box>
-                </Box.Flex>
-              )
-          )}
-        </Box.Stack>
-      </Box>
-    );
-  };
-
   return (
     <Box css={styles.contentCol(flat)} style={{ marginLeft: depth * 0 * 4 }}>
       <Box.Flex
@@ -244,7 +161,11 @@ export function TxOperationCard({
         <Box.Flex justify={'center'}>
           <Box css={styles.spacer} />
         </Box.Flex>
-        <Box>{shouldShowAssetAmount && renderAssets(assetsAmount)}</Box>
+        <Box>
+          {shouldShowAssetAmount && (
+            <TxOperationAssets amounts={assetsAmount} baseAsset={baseAsset} />
+          )}
+        </Box>
 
         <Box.Flex justify={'flex-start'} align={'center'} css={styles.iconCol}>
           <Avatar.Generated
