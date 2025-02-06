@@ -1,5 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Copyable, Icon, Text } from '@fuel-ui/react';
+import {
+  Alert,
+  Box,
+  CardList,
+  ContentLoader,
+  Copyable,
+  Icon,
+  Text,
+} from '@fuel-ui/react';
 import type {
   BN,
   TransactionRequest,
@@ -9,7 +17,7 @@ import type {
 } from 'fuels';
 import { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
-import type { Maybe } from '~/systems/Core';
+import { type Maybe, MotionStack, animations } from '~/systems/Core';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import {
   type GroupedErrors,
@@ -57,9 +65,30 @@ const ConfirmHeader = () => (
   </Box>
 );
 
+const LoaderHeader = () => (
+  <CardList.Item
+    css={{ padding: '$2 !important' }}
+    aria-label="Loading Transaction"
+  >
+    <ContentLoader width={300} height={40} viewBox="0 0 300 40">
+      <rect x="20" y="10" rx="4" ry="4" width="92" height="20" />
+    </ContentLoader>
+  </CardList.Item>
+);
+
+function TxContentLoader() {
+  return (
+    <MotionStack {...animations.slideInTop()} gap="$4">
+      <LoaderHeader />
+      <TxOperations.Loader />
+      <TxFee.Loader />
+    </MotionStack>
+  );
+}
+
 export type TxViewVariant = 'default' | 'history';
 
-type TxContentProps = {
+export type TxContentInfoProps = {
   tx?: TransactionSummary | TransactionResult;
   txRequest?: TransactionRequest;
   txStatus?: Maybe<TransactionStatus>;
@@ -75,7 +104,7 @@ type TxContentProps = {
   };
 };
 
-export function TxContent({
+function TxContentInfo({
   tx,
   txStatus,
   showDetails,
@@ -85,7 +114,7 @@ export function TxContent({
   isConfirm,
   fees,
   txRequest,
-}: TxContentProps) {
+}: TxContentInfoProps) {
   const { getValues } = useFormContext<SendFormValues>();
 
   const status = txStatus || tx?.status || txStatus;
@@ -167,6 +196,11 @@ export function TxContent({
     </>
   );
 }
+
+export const TxContent = {
+  Loader: TxContentLoader,
+  Info: TxContentInfo,
+};
 
 const styles = {
   content: cssObj({

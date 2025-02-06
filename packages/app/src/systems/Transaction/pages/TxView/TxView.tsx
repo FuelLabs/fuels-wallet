@@ -40,7 +40,7 @@ export function TxView() {
         )}
         {txResult && (
           <FormProvider {...form}>
-            <TxContent
+            <TxContent.Info
               tx={txResult}
               isLoading={ctx.isFetching}
               showDetails={ctx.shouldShowTxFee}

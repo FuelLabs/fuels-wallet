@@ -58,6 +58,17 @@ export function TransactionRequest() {
     return status('loading') || status('sending') || isLoadingAssets;
   }, [status, isLoadingAssets]);
 
+  if (!defaultValues) {
+    return (
+      <Layout title={title} noBorder>
+        <Layout.TopBar type={TopBarType.external} />
+        <Layout.Content css={styles.content}>
+          <TxContent.Loader />
+        </Layout.Content>
+      </Layout>
+    );
+  }
+
   return (
     <FormProvider
       onSubmit={handlers.approve}
@@ -74,7 +85,7 @@ export function TransactionRequest() {
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
           {shouldShowTxSimulated && (
-            <TxContent
+            <TxContent.Info
               showDetails
               tx={txSummarySimulated}
               isLoading={isLoadingInfo || !defaultValues}
@@ -84,7 +95,7 @@ export function TransactionRequest() {
             />
           )}
           {shouldShowTxExecuted && (
-            <TxContent
+            <TxContent.Info
               showDetails
               tx={txSummaryExecuted}
               txRequest={proposedTxRequest}
