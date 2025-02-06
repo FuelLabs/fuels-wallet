@@ -11,11 +11,10 @@ import {
 import type {
   BN,
   TransactionRequest,
-  TransactionResult,
   TransactionStatus,
   TransactionSummary,
 } from 'fuels';
-import { useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { type Maybe, MotionStack, animations } from '~/systems/Core';
 import type { SendFormValues } from '~/systems/Send/hooks';
@@ -85,7 +84,7 @@ function TxContentLoader() {
 }
 
 export type TxContentInfoProps = {
-  footer?: React.ReactNode;
+  footer?: ReactNode;
   tx: TransactionSummary;
   txStatus?: Maybe<TransactionStatus>;
   showDetails?: boolean;

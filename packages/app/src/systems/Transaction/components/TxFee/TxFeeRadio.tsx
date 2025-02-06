@@ -23,7 +23,6 @@ export const TxFeeRadio: TxFeeRadioComponent = ({
   checked,
   title,
 }: TxFeeRadioProps) => {
-  const [_flag, setFlag] = useState(false);
   const provider = useProvider();
   const [baseAsset, setBaseAsset] = useState<AssetFuelData | undefined>();
   useEffect(() => {
@@ -56,13 +55,6 @@ export const TxFeeRadio: TxFeeRadioComponent = ({
   }, [baseAsset, fee]);
 
   const ready = !!fee && !!feeInUsd;
-
-  // Horrible workaround to force re-render of this section.
-  useEffect(() => {
-    setTimeout(() => {
-      setFlag((prev) => !prev);
-    }, 500);
-  }, [ready]);
 
   if (!ready) return <TxFee.Loader />;
 
