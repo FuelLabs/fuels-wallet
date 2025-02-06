@@ -88,7 +88,8 @@ export function TransactionRequest() {
             <TxContent.Info
               showDetails
               tx={txSummarySimulated}
-              isLoading={isLoadingInfo || !defaultValues}
+              txRequest={proposedTxRequest}
+              isLoading={isLoadingInfo}
               errors={errors.simulateTxErrors}
               isConfirm
               fees={fees}
@@ -98,7 +99,6 @@ export function TransactionRequest() {
             <TxContent.Info
               showDetails
               tx={txSummaryExecuted}
-              txRequest={proposedTxRequest}
               txStatus={executedStatus()}
               footer={
                 status('failed') && (
