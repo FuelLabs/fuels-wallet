@@ -50,19 +50,11 @@ export const TxFeeOptions = ({
   const { field: tip, fieldState: tipState } = useController({
     control,
     name: 'fees.tip',
-    defaultValue: {
-      amount: regularTip,
-      text: formatTip(regularTip),
-    },
   });
 
   const { field: gasLimit, fieldState: gasLimitState } = useController({
     control,
     name: 'fees.gasLimit',
-    defaultValue: {
-      amount: gasLimitInput,
-      text: gasLimitInput.toString(),
-    },
   });
 
   const advancedFee = baseFee.add(tip.value?.amount || bn(0));
@@ -96,14 +88,14 @@ export const TxFeeOptions = ({
         'fees.gasLimit.amount',
       ]);
 
-      if (!currentGasLimit?.eq(previousGasLimit.current)) {
+      if (!currentGasLimit.eq(previousGasLimit.current)) {
         setValue('fees.gasLimit', {
           amount: previousGasLimit.current,
           text: previousGasLimit.current.toString(),
         });
       }
 
-      if (!currentTip?.eq(previousDefaultTip.current)) {
+      if (!currentTip.eq(previousDefaultTip.current)) {
         setValue('fees.tip', {
           amount: previousDefaultTip.current,
           text: formatTip(previousDefaultTip.current),
