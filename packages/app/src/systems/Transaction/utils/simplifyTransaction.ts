@@ -226,6 +226,7 @@ function categorizeOperations(
   const otherRoot: SimplifiedOperation[] = [];
   const intermediate: SimplifiedOperation[] = [];
 
+  // First pass: separate operations
   for (const op of operations) {
     // Check if operation has assets or is a contract call with amount
     const hasAssets =
@@ -237,7 +238,8 @@ function categorizeOperations(
     }
 
     const depth = op.metadata?.depth || 0;
-    const isTransfer = op.type === TxCategory.SEND;
+    const isTransfer =
+      op.type === TxCategory.SEND || op.type === TxCategory.RECEIVE;
     const isFromCurrentAccount =
       currentAccount &&
       op.from.address.toLowerCase() === currentAccount.toLowerCase();
@@ -245,13 +247,14 @@ function categorizeOperations(
       currentAccount &&
       op.to.address.toLowerCase() === currentAccount.toLowerCase();
 
-    if (isTransfer) {
-      main.push(op);
-      continue;
-    }
-
     if (depth === 0) {
-      if (isFromCurrentAccount || isToCurrentAccount) {
+      if (isTransfer) {
+        if (isFromCurrentAccount || isToCurrentAccount) {
+          main.push(op);
+        } else {
+          otherRoot.push(op);
+        }
+      } else if (isFromCurrentAccount || isToCurrentAccount) {
         main.push(op);
       } else {
         otherRoot.push(op);
@@ -261,6 +264,20 @@ function categorizeOperations(
 
     intermediate.push(op);
   }
+
+  // Sort main operations: from user first, then to user
+  main.sort((a, b) => {
+    const aFromUser =
+      currentAccount &&
+      a.from.address.toLowerCase() === currentAccount.toLowerCase();
+    const bFromUser =
+      currentAccount &&
+      b.from.address.toLowerCase() === currentAccount.toLowerCase();
+
+    if (aFromUser && !bFromUser) return -1;
+    if (!aFromUser && bFromUser) return 1;
+    return 0;
+  });
 
   // set all main operations to depth 0
   for (const op of main) {
