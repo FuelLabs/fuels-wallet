@@ -5,7 +5,7 @@ import type { SimplifiedTransaction } from '../types';
 import { simplifyTransaction } from '../utils/simplifyTransaction';
 
 type UseSimplifiedTransactionProps = {
-  tx?: TransactionSummary;
+  tx: TransactionSummary;
   txRequest?: TransactionRequest;
 };
 
@@ -15,9 +15,7 @@ export function useSimplifiedTransaction({
 }: UseSimplifiedTransactionProps) {
   const { account } = useAccounts();
 
-  const transaction = useMemo<SimplifiedTransaction | undefined>(() => {
-    if (!tx) return undefined;
-
+  const transaction = useMemo<SimplifiedTransaction>(() => {
     return simplifyTransaction(tx, txRequest, account?.address);
   }, [tx, txRequest, account?.address]);
 

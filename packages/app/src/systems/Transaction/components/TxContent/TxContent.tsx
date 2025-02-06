@@ -56,8 +56,6 @@ const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
 
 const ConfirmHeader = () => (
   <Box css={styles.header}>
-    {/* Disabled while the new Wallet header is not implemented */}
-    {/* <Text as="h2">Review Transaction</Text> */}
     <Box css={styles.warning}>
       <Icon icon="InfoCircle" />
       Check your transaction before submitting.
@@ -86,32 +84,30 @@ function TxContentLoader() {
   );
 }
 
-export type TxViewVariant = 'default' | 'history';
-
 export type TxContentInfoProps = {
-  tx?: TransactionSummary | TransactionResult;
-  txRequest?: TransactionRequest;
+  footer?: React.ReactNode;
+  tx: TransactionSummary;
   txStatus?: Maybe<TransactionStatus>;
   showDetails?: boolean;
   isLoading?: boolean;
-  footer?: React.ReactNode;
-  errors?: GroupedErrors;
   isConfirm?: boolean;
+  errors?: GroupedErrors;
   fees?: {
     baseFee?: BN;
     regularTip?: BN;
     fastTip?: BN;
   };
+  txRequest?: TransactionRequest;
 };
 
 function TxContentInfo({
   tx,
   txStatus,
+  footer,
   showDetails,
   isLoading,
-  footer,
-  errors,
   isConfirm,
+  errors,
   fees,
   txRequest,
 }: TxContentInfoProps) {
@@ -122,7 +118,7 @@ function TxContentInfo({
   const isExecuted = !!tx?.id;
   const txRequestGasLimit = getGasLimitFromTxRequest(txRequest);
 
-  const { transaction, isReady } = useSimplifiedTransaction({
+  const { transaction } = useSimplifiedTransaction({
     tx,
     txRequest,
   });
@@ -133,8 +129,6 @@ function TxContentInfo({
     try {
       const tipAmount = getValues('fees.tip.amount');
       const gasLimitAmount = getValues('fees.gasLimit.amount');
-
-      // Check if form values exist
       if (!tipAmount || !gasLimitAmount) return false;
 
       const isFeeAmountTheRegularTip = tipAmount.eq(fees.regularTip);
@@ -146,14 +140,10 @@ function TxContentInfo({
         (!isFeeAmountTheRegularTip && !isFeeAmountTheFastTip) ||
         !isGasLimitTheTxRequestGasLimit
       );
-    } catch (error) {
-      console.error(error);
-      // If there's any error accessing form values, return false
+    } catch (_) {
       return false;
     }
   }, [getValues, fees, txRequestGasLimit]);
-
-  if (!isReady || !transaction) return null;
 
   function getHeader() {
     if (hasErrors) return <ErrorHeader errors={errors} />;
