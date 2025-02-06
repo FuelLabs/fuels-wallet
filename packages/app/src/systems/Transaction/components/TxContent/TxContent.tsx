@@ -88,7 +88,6 @@ export function TxContent({
 }: TxContentProps) {
   const { getValues } = useFormContext<SendFormValues>();
 
-  console.log(txStatus, tx);
   const status = txStatus || tx?.status || txStatus;
   const hasErrors = Boolean(Object.keys(errors || {}).length);
   const isExecuted = !!tx?.id;

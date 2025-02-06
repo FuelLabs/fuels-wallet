@@ -9,7 +9,7 @@ import {
   Text,
 } from '@fuel-ui/react';
 import type { AssetFuelAmount, AssetFuelData } from '@fuel-wallet/types';
-import { bn } from 'fuels';
+import { Address, bn, isB256, isBech32 } from 'fuels';
 import { useEffect, useState } from 'react';
 import { useAccounts } from '~/systems/Account';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
@@ -68,6 +68,18 @@ export function TxOperationCard({
   const accountTo = accounts?.find(
     (acc) => acc.address.toLowerCase() === operation.to.address.toLowerCase()
   );
+
+  const isValidFromAddress =
+    isB256(operation.from.address) || isBech32(operation.from.address);
+  const isValidToAddress =
+    isB256(operation.to.address) || isBech32(operation.to.address);
+
+  const fuelFromAddress = isValidFromAddress
+    ? Address.fromString(operation.from.address).toString()
+    : '';
+  const fuelToAddress = isValidToAddress
+    ? Address.fromString(operation.to.address).toString()
+    : '';
 
   const getOperationType = () => {
     if (isContract) {
@@ -207,16 +219,14 @@ export function TxOperationCard({
             css={styles.address}
             aria-label={operation.from.address}
           >
-            {shortAddress(operation.from.address)}
+            {shortAddress(fuelFromAddress)}
           </Text>
           <IconButton
             size="xs"
             variant="link"
             icon="Copy"
             aria-label="Copy address"
-            onPress={() =>
-              navigator.clipboard.writeText(operation.from.address)
-            }
+            onPress={() => navigator.clipboard.writeText(fuelFromAddress)}
           />
         </Box.Flex>
 
@@ -256,14 +266,14 @@ export function TxOperationCard({
             </Box>
           )}
           <Text fontSize="sm" color="gray8" css={styles.address}>
-            {shortAddress(operation.to.address)}
+            {shortAddress(fuelToAddress)}
           </Text>
           <IconButton
             size="xs"
             variant="link"
             icon="Copy"
             aria-label="Copy address"
-            onPress={() => navigator.clipboard.writeText(operation.to.address)}
+            onPress={() => navigator.clipboard.writeText(fuelToAddress)}
           />
         </Box.Flex>
       </Box.Flex>

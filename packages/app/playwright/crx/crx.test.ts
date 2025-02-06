@@ -703,7 +703,7 @@ test.describe('FuelWallet Extension', () => {
           .toBeTruthy();
         await waitAriaLabel(
           approveTransactionPage,
-          senderAccount.address.toString().toLowerCase()
+          senderAccount.address.toString()
         );
 
         await getButtonByText(approveTransactionPage, /Submit/i).click();
