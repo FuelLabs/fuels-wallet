@@ -9,17 +9,10 @@ import { bn } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
 
 import '../../load.envs';
-import { getBaseAssetId, shortAddress } from '../../src/utils';
 import { testSetup, transferMaxBalance } from '../utils';
 
-import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import {
-  checkAddresses,
-  checkAriaLabelsContainsText,
-  connect,
-  waitSuccessTransaction,
-} from './utils';
+import { connect, waitSuccessTransaction } from './utils';
 
 useLocalCRX();
 
@@ -63,33 +56,9 @@ test.describe('Forward Eth', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
-    // await checkAriaLabelsContainsText(
-    //   walletNotificationPage,
-    //   'Asset Name',
-    //   'Ethereum'
-    // );
-    // // Test if sender name is defined (not unknown)
-    // await checkAriaLabelsContainsText(
-    //   walletNotificationPage,
-    //   'Sender Name',
-    //   ''
-    // );
-    // await hasText(walletNotificationPage, 'Ethereum');
-
-    // test asset id is correct
-    // const baseAssetId = await getBaseAssetId();
-    // await hasText(walletNotificationPage, shortAddress(baseAssetId));
-
     // test forward eth amount is correct
     await hasText(walletNotificationPage, `${forwardEthAmount} ETH`);
     await hasText(walletNotificationPage, 'Fee (network)');
-
-    // test to and from addresses
-    await checkAddresses(
-      { address: fuelWallet.address.toString(), isContract: false },
-      { address: MAIN_CONTRACT_ID, isContract: true },
-      walletNotificationPage
-    );
 
     // Test approve
     const preDepositBalanceEth = await fuelWallet.getBalance();

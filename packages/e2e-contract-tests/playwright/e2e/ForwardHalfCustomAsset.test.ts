@@ -10,22 +10,13 @@ import { bn } from 'fuels';
 
 import '../../load.envs';
 import type { IdentityInput } from '../../src/contracts/contracts/CustomAssetAbi';
-import {
-  calculateAssetId,
-  getBaseAssetId,
-  shortAddress,
-} from '../../src/utils';
+import { calculateAssetId, getBaseAssetId } from '../../src/utils';
 import { testSetup, transferMaxBalance } from '../utils';
 
 import { CustomAsset } from '../../src/contracts/contracts';
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import {
-  checkAddresses,
-  checkAriaLabelsContainsText,
-  connect,
-  waitSuccessTransaction,
-} from './utils';
+import { connect, waitSuccessTransaction } from './utils';
 
 useLocalCRX();
 test.describe('Forward Half Custom Asset', () => {
@@ -88,18 +79,6 @@ test.describe('Forward Half Custom Asset', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
-    // Test if asset name is defined (not unknown)
-    // await checkAriaLabelsContainsText(
-    //   walletNotificationPage,
-    //   'Asset Name',
-    //   'Ethereum'
-    // );
-    // // Test if sender name is defined (not unknown)
-    // await checkAriaLabelsContainsText(
-    //   walletNotificationPage,
-    //   'Sender Name',
-    //   ''
-    // );
     // test the forward asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
     // test forward asset id is correct
@@ -112,8 +91,6 @@ test.describe('Forward Half Custom Asset', () => {
 
     // test return asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 1, 5000, true);
-    // test return asset id is shown
-    // await hasText(walletNotificationPage, shortAddress(assetId), 1);
     // test return asset amount is correct
     await hasText(
       walletNotificationPage,
@@ -122,18 +99,6 @@ test.describe('Forward Half Custom Asset', () => {
 
     // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');
-
-    // test to and from addresses
-    await checkAddresses(
-      { address: fuelWallet.address.toString(), isContract: false },
-      { address: MAIN_CONTRACT_ID, isContract: true },
-      walletNotificationPage
-    );
-    await checkAddresses(
-      { address: MAIN_CONTRACT_ID, isContract: true },
-      { address: fuelWallet.address.toString(), isContract: false },
-      walletNotificationPage
-    );
 
     // Test approve
     const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);

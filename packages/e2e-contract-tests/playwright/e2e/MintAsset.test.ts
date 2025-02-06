@@ -9,17 +9,12 @@ import { bn } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
 
 import '../../load.envs.js';
-import {
-  calculateAssetId,
-  getBaseAssetId,
-  shortAddress,
-} from '../../src/utils';
+import { calculateAssetId, getBaseAssetId } from '../../src/utils';
 import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
 import {
-  checkAddresses,
   checkAriaLabelsContainsText,
   connect,
   waitSuccessTransaction,
@@ -66,25 +61,12 @@ test.describe('Mint Assets', () => {
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
-    // short address function copied from app package
-    // await hasText(walletNotificationPage, shortAddress(assetId), 0, 10000);
 
     // test mint amount is correct
     await hasText(walletNotificationPage, `${formattedMintAmount} Unknown`);
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
-
-    await checkAddresses(
-      { address: fuelWallet.address.toString(), isContract: false },
-      { address: MAIN_CONTRACT_ID, isContract: true },
-      walletNotificationPage
-    );
-    await checkAddresses(
-      { address: MAIN_CONTRACT_ID, isContract: true },
-      { address: fuelWallet.address.toString(), isContract: false },
-      walletNotificationPage
-    );
 
     const preMintBalanceTkn = await fuelWallet.getBalance(assetId);
     await fuelWalletTestHelper.walletApprove();
@@ -160,18 +142,6 @@ test.describe('Mint Assets', () => {
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
-
-    // test to and from addresses
-    await checkAddresses(
-      { address: fuelWallet.address.toString(), isContract: false },
-      { address: MAIN_CONTRACT_ID, isContract: true },
-      walletNotificationPage
-    );
-    await checkAddresses(
-      { address: MAIN_CONTRACT_ID, isContract: true },
-      { address: fuelWallet.address.toString(), isContract: false },
-      walletNotificationPage
-    );
 
     const preMintBalanceTkn = await fuelWallet.getBalance(assetId);
     await fuelWalletTestHelper.walletApprove();

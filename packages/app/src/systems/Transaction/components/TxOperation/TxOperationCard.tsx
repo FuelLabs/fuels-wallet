@@ -115,11 +115,17 @@ export function TxOperationCard({
           <Avatar.Generated
             role="img"
             size="sm"
-            hash={operation.from.address}
-            aria-label={operation.from.address}
+            hash={fuelFromAddress}
+            aria-label={fuelFromAddress}
           />
         </Box.Flex>
-        <Box.Flex justify={'flex-start'} align={'center'} gap="$1" wrap="wrap">
+        <Box.Flex
+          justify={'flex-start'}
+          align={'center'}
+          gap="$1"
+          wrap="wrap"
+          aria-label="From address"
+        >
           <Text as="span" fontSize="sm" css={styles.name}>
             {accountFrom?.name || 'Unknown'}
           </Text>
@@ -134,7 +140,7 @@ export function TxOperationCard({
             fontSize="sm"
             color="gray8"
             css={styles.address}
-            aria-label={operation.from.address}
+            aria-label={fuelFromAddress}
           >
             {shortAddress(fuelFromAddress)}
           </Text>
@@ -171,11 +177,17 @@ export function TxOperationCard({
           <Avatar.Generated
             role="img"
             size="sm"
-            hash={operation.to.address}
-            aria-label={operation.to.address}
+            hash={fuelToAddress}
+            aria-label={fuelToAddress}
           />
         </Box.Flex>
-        <Box.Flex justify={'flex-start'} align={'center'} gap="$1" wrap="wrap">
+        <Box.Flex
+          justify={'flex-start'}
+          align={'center'}
+          gap="$1"
+          wrap="wrap"
+          aria-label="To address"
+        >
           <Text as="span" fontSize="sm" css={styles.name}>
             {accountTo?.name || 'Unknown'}
           </Text>
@@ -186,7 +198,12 @@ export function TxOperationCard({
               </Text>
             </Box>
           )}
-          <Text fontSize="sm" color="gray8" css={styles.address}>
+          <Text
+            fontSize="sm"
+            color="gray8"
+            css={styles.address}
+            aria-label={fuelToAddress}
+          >
             {shortAddress(fuelToAddress)}
           </Text>
           <IconButton

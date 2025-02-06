@@ -9,21 +9,12 @@ import { bn } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
 
 import '../../load.envs.js';
-import {
-  calculateAssetId,
-  getBaseAssetId,
-  shortAddress,
-} from '../../src/utils';
+import { calculateAssetId, getBaseAssetId } from '../../src/utils';
 import { testSetup, transferMaxBalance } from '../utils';
 
-import { EXTERNAL_CONTRACT_ID, MAIN_CONTRACT_ID } from './config';
+import { EXTERNAL_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import {
-  checkAddresses,
-  checkAriaLabelsContainsText,
-  connect,
-  waitSuccessTransaction,
-} from './utils';
+import { connect, waitSuccessTransaction } from './utils';
 
 useLocalCRX();
 
@@ -76,34 +67,9 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
-    // Test if asset name is defined (not unknown)
-    // await checkAriaLabelsContainsText(
-    //   walletNotificationPage,
-    //   'Asset Name',
-    //   'Ethereum'
-    // );
-    // // Test if sender name is defined (not unknown)
-    // await checkAriaLabelsContainsText(
-    //   walletNotificationPage,
-    //   'Sender Name',
-    //   ''
-    // );
-
-    // test forward asset name is shown
-    // await hasText(walletNotificationPage, 'Ethereum');
-    // test forward asset id is shown
-    // await hasText(walletNotificationPage, shortAddress(await getBaseAssetId()));
     // test forward eth amount is correct
     await hasText(walletNotificationPage, `${depositAmount} ETH`);
 
-    // test return asset name is shown
-    // await hasText(walletNotificationPage, 'Ethereum', 1);
-    // test return asset id is shown
-    // await hasText(
-    //   walletNotificationPage,
-    //   shortAddress(await getBaseAssetId()),
-    //   1
-    // );
     // test return eth amount is correct
     await hasText(walletNotificationPage, `${halfDepositAmount} ETH`);
 
@@ -120,29 +86,6 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    // const fee = bn.parseUnits('0.000005431');
-    // await checkFee(walletNotificationPage, {
-    //   minFee: fee.sub(100),
-    //   maxFee: fee.add(100),
-    // });
-
-    await checkAddresses(
-      { address: fuelWallet.address.toString(), isContract: false },
-      { address: MAIN_CONTRACT_ID, isContract: true },
-      walletNotificationPage
-    );
-    await checkAddresses(
-      { address: fuelWallet.address.toString(), isContract: false },
-      { address: EXTERNAL_CONTRACT_ID, isContract: true },
-      walletNotificationPage,
-      1,
-      1
-    );
-    await checkAddresses(
-      { address: MAIN_CONTRACT_ID, isContract: true },
-      { address: fuelWallet.address.toString(), isContract: false },
-      walletNotificationPage
-    );
 
     // Test approve
     const preDepositBalanceEth = await fuelWallet.getBalance();

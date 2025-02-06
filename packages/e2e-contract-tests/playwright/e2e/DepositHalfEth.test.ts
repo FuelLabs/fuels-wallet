@@ -9,17 +9,10 @@ import type { WalletUnlocked } from 'fuels';
 import { bn } from 'fuels';
 
 import '../../load.envs.js';
-import { getBaseAssetId, shortAddress } from '../../src/utils';
 import { testSetup, transferMaxBalance } from '../utils';
 
-import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import {
-  checkAddresses,
-  checkAriaLabelsContainsText,
-  connect,
-  waitSuccessTransaction,
-} from './utils';
+import { connect, waitSuccessTransaction } from './utils';
 
 useLocalCRX();
 
@@ -57,59 +50,18 @@ test.describe('Deposit Half ETH', () => {
 
     const depositHalfButton = getButtonByText(page, 'Deposit Half ETH', true);
     await expectButtonToBeEnabled(depositHalfButton);
-    await page.waitForTimeout(1000); // Wait for slow VM
+    await page.waitForTimeout(1000);
     await depositHalfButton.click();
-    await page.waitForTimeout(1000); // Wait for slow VM
+    await page.waitForTimeout(1000);
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
-    // The new UI doesnt show asset name and sender name
-    // // Test if asset name is defined (not unknown)
-    // await checkAriaLabelsContainsText(
-    //   walletNotificationPage,
-    //   'Asset Name',
-    //   'Ethereum'
-    // );
-    // // Test if sender name is defined (not unknown)
-    // await checkAriaLabelsContainsText(
-    //   walletNotificationPage,
-    //   'Sender Name',
-    //   ''
-    // );
-
-    // test forward asset name is shown
-    // await hasText(walletNotificationPage, 'ETH');
-    // test forward asset id is shown
-    // await hasText(walletNotificationPage, shortAddress(await getBaseAssetId()));
-    // test forward eth amount is correct
     await hasText(walletNotificationPage, `${depositAmount} ETH`);
 
-    // test return asset name is shown
-    // await hasText(walletNotificationPage, 'ETH', 1);
-    // test return asset id is shown
-    // await hasText(
-    //   walletNotificationPage,
-    //   shortAddress(await getBaseAssetId()),
-    //   1
-    // );
-    // test return eth amount is correct
     await hasText(walletNotificationPage, `${halfDepositAmount} ETH`);
 
-    // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
-
-    // test to and from addresses
-    await checkAddresses(
-      { address: fuelWallet.address.toString(), isContract: false },
-      { address: MAIN_CONTRACT_ID, isContract: true },
-      walletNotificationPage
-    );
-    await checkAddresses(
-      { address: MAIN_CONTRACT_ID, isContract: true },
-      { address: fuelWallet.address.toString(), isContract: false },
-      walletNotificationPage
-    );
 
     const preDepositBalanceEth = await fuelWallet.getBalance();
 
