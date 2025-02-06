@@ -123,7 +123,7 @@ export function TxOperationCard({
                   {getAssetImage(assetAmount)}
                   <Box css={styles.amountContainer}>
                     <Box.Flex direction="column">
-                      <Box.Flex gap="$1">
+                      <Box.Flex gap="$1" aria-label="amount-container">
                         <Text as="span" className="amount-value">
                           {formatAmount({
                             amount: assetAmount.amount,
@@ -201,7 +201,12 @@ export function TxOperationCard({
               </Text>
             </Box>
           )}
-          <Text fontSize="sm" color="gray8" css={styles.address}>
+          <Text
+            fontSize="sm"
+            color="gray8"
+            css={styles.address}
+            aria-label={operation.from.address}
+          >
             {shortAddress(operation.from.address)}
           </Text>
           <IconButton
