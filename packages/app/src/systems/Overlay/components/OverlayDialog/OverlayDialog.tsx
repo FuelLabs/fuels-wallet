@@ -56,7 +56,7 @@ const styles = {
 
     '.fuel_Dialog-description': {
       flex: 1,
-      overflowY: 'auto !important',
+      overflowY: 'auto',
       height: '100%',
     },
     '.fuel_Dialog-heading': {
