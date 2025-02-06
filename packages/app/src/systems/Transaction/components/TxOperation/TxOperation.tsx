@@ -1,69 +1,15 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon, Text } from '@fuel-ui/react';
-import type { AssetFuelAmount } from '@fuel-wallet/types';
-import { useEffect, useState } from 'react';
-import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
+import { useState } from 'react';
 import { MotionBox, animations } from '~/systems/Core';
-import { NetworkService } from '~/systems/Network/services/network';
+import { useAssetsAmount } from '../../hooks/useAssetsAmount';
 import type { SimplifiedOperation } from '../../types';
 import { TxOperationCard } from './TxOperationCard';
 
-type TxOperationProps = {
+export type TxOperationProps = {
   operation: SimplifiedOperation;
   showNesting?: boolean;
   flat?: boolean;
-};
-
-const fetchAssetsAmount = async (operation: SimplifiedOperation) => {
-  try {
-    const coins = [];
-    if (operation.assets?.length) {
-      coins.push(...operation.assets);
-    } else if (operation.metadata?.amount && operation.metadata?.assetId) {
-      coins.push({
-        amount: operation.metadata.amount,
-        assetId: operation.metadata.assetId,
-      });
-    }
-
-    if (!coins.length) return [];
-
-    const assetsCache = AssetsCache.getInstance();
-    const network = await NetworkService.getSelectedNetwork();
-    if (!network) return [];
-
-    const assetsWithAmount = await Promise.all(
-      coins.map(async (operationCoin) => {
-        const assetCached = await assetsCache.getAsset({
-          chainId: network.chainId,
-          assetId: operationCoin.assetId,
-          dbAssets: [],
-          save: false,
-        });
-
-        if (!assetCached) return null;
-
-        return {
-          type: 'fuel',
-          chainId: network.chainId,
-          name: assetCached.name,
-          symbol: assetCached.symbol,
-          decimals: assetCached.decimals,
-          icon: assetCached.icon,
-          assetId: operationCoin.assetId,
-          amount: operationCoin.amount,
-        } as AssetFuelAmount;
-      })
-    );
-
-    const filteredAssets = assetsWithAmount.filter(
-      (a): a is AssetFuelAmount => a !== null
-    );
-    return filteredAssets;
-  } catch (error) {
-    console.error('Error fetching assets:', error);
-    return [];
-  }
 };
 
 export function TxOperation({
@@ -71,22 +17,18 @@ export function TxOperation({
   // showNesting = true,
   flat = false,
 }: TxOperationProps) {
-  const metadata = operation.metadata;
-  // const isContract = operation.type === TxCategory.CONTRACTCALL;
+  const { metadata, assets } = operation;
+  const amounts = useAssetsAmount({
+    operationsCoin: assets,
+  });
   const depth = metadata?.depth || 0;
-  const [assetsAmount, setAssetsAmount] = useState<AssetFuelAmount[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
-  useEffect(() => {
-    fetchAssetsAmount(operation).then(setAssetsAmount);
-  }, [operation]);
-
-  // if (isContract && !showNesting && depth !== 0) return null;
 
   return (
     <Box.VStack grow={1} css={styles.root(flat)}>
       <TxOperationCard
         operation={operation}
-        assetsAmount={assetsAmount}
+        assetsAmount={amounts}
         depth={depth}
         flat={flat}
       />
