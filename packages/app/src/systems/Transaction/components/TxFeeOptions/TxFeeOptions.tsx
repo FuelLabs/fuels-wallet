@@ -57,7 +57,7 @@ export const TxFeeOptions = ({
     name: 'fees.gasLimit',
   });
 
-  const advancedFee = baseFee.add(tip.value?.amount || bn(0));
+  const advancedFee = baseFee.add(tip.value.amount);
 
   const options = useMemo(() => {
     return [

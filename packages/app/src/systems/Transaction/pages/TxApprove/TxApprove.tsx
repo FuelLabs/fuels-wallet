@@ -29,7 +29,7 @@ export const TxApprove = () => {
         {ctx.title}
       </OverlayDialogTopbar>
       <Dialog.Description as="div" css={styles.description}>
-        {ctx.shouldShowTxSimulated && (
+        {ctx.shouldShowTxSimulated && ctx.txSummarySimulated && (
           <TxContent.Info
             showDetails
             tx={ctx.txSummarySimulated}
@@ -50,7 +50,7 @@ export const TxApprove = () => {
             isConfirm
           />
         )}
-        {ctx.shouldShowTxExecuted && (
+        {ctx.shouldShowTxExecuted && ctx.txSummaryExecuted && (
           <TxContent.Info
             showDetails
             tx={ctx.txSummaryExecuted}
