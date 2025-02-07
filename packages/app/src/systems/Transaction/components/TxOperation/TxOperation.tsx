@@ -86,6 +86,6 @@ const styles = {
   expandedOperations: cssObj({
     display: 'flex',
     flexDirection: 'column',
-    gap: '$1',
+    padding: '$1',
   }),
 };

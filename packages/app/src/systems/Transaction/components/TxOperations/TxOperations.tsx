@@ -159,7 +159,7 @@ const styles = {
   content: cssObj({
     display: 'flex',
     flexDirection: 'column',
-    gap: '4px',
+    gap: '0',
   }),
   operation: cssObj({
     flex: 1,

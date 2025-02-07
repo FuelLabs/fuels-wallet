@@ -98,11 +98,11 @@ export const TxApprove = () => {
 const styles = {
   description: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
-    overflowY: 'scroll !important',
-    paddingLeft: '0',
-    paddingRight: '0',
+    overflowY: 'auto !important',
+    padding: '$2',
     flex: 1,
     display: 'flex',
+    height: '462px',
     flexDirection: 'column',
     gap: '$4',
   }),
