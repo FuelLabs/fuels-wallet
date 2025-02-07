@@ -63,7 +63,7 @@ function OperationsDrawer({
           height: isExpanded ? 'auto' : 0,
           opacity: isExpanded ? 1 : 0,
         }}
-        css={styles.content}
+        css={styles.expandedOperations}
         onClick={(e) => e.stopPropagation()}
       >
         {operations.operations.map((operation, index) =>
@@ -72,7 +72,7 @@ function OperationsDrawer({
               key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
               css={styles.operation}
             >
-              <TxOperation operation={operation} showNesting={false} flat />
+              <TxOperation operation={operation} showNesting={false} />
             </Box.Flex>
           ) : null
         )}
@@ -156,7 +156,7 @@ const styles = {
     fontWeight: '$medium',
     fontSize: '13px',
   }),
-  content: cssObj({
+  expandedOperations: cssObj({
     display: 'flex',
     flexDirection: 'column',
     gap: '0',
