@@ -21,7 +21,7 @@ import {
 
 import { Address } from 'fuels';
 import type { MockData } from '../mocks';
-import { WALLET_PASSWORD, mockData } from '../mocks';
+import { PRIVATE_KEY, WALLET_PASSWORD, mockData } from '../mocks';
 
 test.describe('New Accounts', () => {
   let browser: Browser;
@@ -43,7 +43,7 @@ test.describe('New Accounts', () => {
   test('should not be able to import public address as a private key', async () => {
     await getByAriaLabel(page, 'Accounts').click();
     await getByAriaLabel(page, 'Import from private key').click();
-    await getByAriaLabel(page, 'Private Key').fill(privateKey);
+    await getByAriaLabel(page, 'Private Key').fill(PRIVATE_KEY);
     await expect
       .poll(
         async () => {
