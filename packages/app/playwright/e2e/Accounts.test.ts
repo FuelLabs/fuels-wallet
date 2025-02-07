@@ -54,6 +54,20 @@ test.describe('New Accounts', () => {
         },
         { timeout: 10000 }
       )
+      .toBeFalsy();
+    await getByAriaLabel(page, 'Private Key').fill(
+      '0xC425c5D0d1685Dd52BFD10A4e5C7612ea50794Cb2e675c4aa94F1E1291712ef5'
+    );
+    await expect
+      .poll(
+        async () => {
+          return await getElementByText(
+            page,
+            'This is a public key, please insert a private key instead.'
+          ).isVisible();
+        },
+        { timeout: 10000 }
+      )
       .toBeTruthy();
   });
 
