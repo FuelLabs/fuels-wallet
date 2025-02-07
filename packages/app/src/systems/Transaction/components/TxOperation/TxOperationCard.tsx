@@ -74,7 +74,7 @@ export function TxOperationCard({
 
   const getOperationType = () => {
     if (isContract) {
-      if (operation.metadata?.amount && operation.metadata?.assetId) {
+      if (assetsAmount.length > 0) {
         return 'Calls contract (sending funds)';
       }
       return 'Calls contract';
@@ -242,9 +242,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '$1',
-  }),
-  assetNft: cssObj({
-    padding: '$1 $2',
   }),
   asset: cssObj({
     alignItems: 'center',

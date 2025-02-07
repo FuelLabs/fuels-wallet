@@ -31,6 +31,8 @@ function getOperationType(operation: Operation): TxCategory {
       return TxCategory.CONTRACTCALL;
     case OperationName.script:
       return TxCategory.SCRIPT;
+    case OperationName.contractCreated:
+      return TxCategory.CONTRACTCREATED;
     default:
       return TxCategory.SEND;
   }
@@ -233,15 +235,6 @@ function categorizeOperations(
 
   // First pass: separate operations
   for (const op of operations) {
-    // Check if operation has assets or is a contract call with amount
-    const hasAssets =
-      op.assets?.length || (op.metadata?.amount && op.metadata?.assetId);
-
-    // If operation has no assets and is not a contract call, skip
-    if (!hasAssets && op.type !== TxCategory.CONTRACTCALL) {
-      continue;
-    }
-
     const depth = op.metadata?.depth || 0;
     const isTransfer =
       op.type === TxCategory.SEND || op.type === TxCategory.RECEIVE;
@@ -313,7 +306,7 @@ export function simplifyTransaction(
   const origin = requestWithOrigin?.origin;
   const favicon = requestWithOrigin?.favIconUrl;
 
-  return {
+  const simplifiedTransaction = {
     id: summary.id,
     operations,
     categorizedOperations,
@@ -337,4 +330,6 @@ export function simplifyTransaction(
       request,
     },
   };
+  console.log('simplifiedTransaction', simplifiedTransaction);
+  return simplifiedTransaction;
 }

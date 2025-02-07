@@ -24,6 +24,7 @@ export enum TxCategory {
   CONTRACTCALL = 'contractcall',
   SCRIPT = 'script',
   PREDICATE = 'predicate',
+  CONTRACTCREATED = 'contractcreated',
 }
 
 export type TxRecipientAddress = {

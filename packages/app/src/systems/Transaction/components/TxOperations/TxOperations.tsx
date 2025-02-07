@@ -31,6 +31,7 @@ function OperationsDrawer({
       [TxCategory.CONTRACTCALL]: 'Contract Call',
       [TxCategory.SCRIPT]: 'Script',
       [TxCategory.PREDICATE]: 'Predicate',
+      [TxCategory.CONTRACTCREATED]: 'Contract Created',
     };
     return `${count} ${labels[operations.type] || 'Operation'}${count > 1 ? 's' : ''}`;
   }, [operations]);
