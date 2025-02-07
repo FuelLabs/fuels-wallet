@@ -4,6 +4,7 @@ import test, { chromium, expect } from '@playwright/test';
 import {
   getButtonByText,
   getByAriaLabel,
+  getElementByText,
   getInputByName,
   hasAriaLabel,
   hasText,
@@ -37,6 +38,23 @@ test.describe('New Accounts', () => {
     await visit(page, '/');
     data = await mockData(page, 2, undefined, mnemonic);
     await reload(page);
+  });
+
+  test('should not be able to import public address as a private key', async () => {
+    await getByAriaLabel(page, 'Accounts').click();
+    await getByAriaLabel(page, 'Import from private key').click();
+    await getByAriaLabel(page, 'Private Key').fill(privateKey);
+    await expect
+      .poll(
+        async () => {
+          return await getElementByText(
+            page,
+            'You can not use public addresses as private keys'
+          ).isVisible();
+        },
+        { timeout: 10000 }
+      )
+      .toBeTruthy();
   });
 
   test('should be able to switch between accounts', async () => {
