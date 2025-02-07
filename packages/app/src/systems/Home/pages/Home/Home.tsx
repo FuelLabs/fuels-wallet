@@ -69,8 +69,7 @@ const styles = {
     },
   }),
   assetsList: cssObj({
-    maxHeight: 200,
-    paddingBottom: '$4',
+    height: BALANCE_NFTS_TAB_HEIGHT,
     ...scrollable(),
     overflowY: 'scroll !important',
   }),
