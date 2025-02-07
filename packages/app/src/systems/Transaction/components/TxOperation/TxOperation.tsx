@@ -69,23 +69,26 @@ export function TxOperation({
 }
 
 const styles = {
-  root: (flat: boolean) =>
-    cssObj({
-      padding: flat ? '0' : '0 4px',
-    }),
+  root: cssObj({
+    padding: '0',
+  }),
   operationCount: {
     marginTop: '$2',
     marginLeft: '$2',
+    marginBottom: '$3',
     display: 'flex',
     alignItems: 'center',
     gap: '$1',
     justifyContent: 'center',
-    marginBottom: '$2',
     cursor: 'pointer',
   },
   expandedOperations: cssObj({
     display: 'flex',
     flexDirection: 'column',
-    padding: '$1',
+    borderRadius: '8px',
+    border: '1px solid $gray5',
+    padding: '0',
+    margin: '0 4px 4px',
+    overflow: 'hidden',
   }),
 };
