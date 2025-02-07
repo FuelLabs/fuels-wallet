@@ -50,7 +50,7 @@ export function TxOperationAssets({
             {getAssetImage(assetAmount)}
             <Box css={styles.amountContainer}>
               <Box.Flex direction="column">
-                <Box.Flex gap="$1" aria-label="amount-container">
+                <Box.Flex gap="$2" aria-label="amount-container" align="center">
                   <Text as="span" className="amount-value">
                     {formatAmount({
                       amount: assetAmount.amount,
@@ -108,7 +108,7 @@ const styles = {
     gap: '$1',
   }),
   assetNft: cssObj({
-    padding: '$1 $2',
+    padding: '$0 $1',
   }),
   asset: cssObj({
     alignItems: 'center',
