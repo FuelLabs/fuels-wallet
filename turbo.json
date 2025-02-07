@@ -1,8 +1,23 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": [".env", ".env.production"],
-  "globalEnv": ["NODE_ENV", "CRX_OUT", "CRX_NAME"],
-  "pipeline": {
+  "globalEnv": [
+    "NODE_ENV",
+    "CRX_OUT",
+    "CRX_NAME",
+    "CRX_VERSION_API",
+    "CRX_RELEASE",
+    "FUEL_FAUCET_URL",
+    "FUEL_PROVIDER_UR",
+    "ECOSYSTEM_PROJECTS_URL",
+    "MNEMONIC_WORDS",
+    "AUTO_LOCK_IN_MINUTES",
+    "SENTRY_DSN",
+    "READONLY_TESTNET_ASSETS_VIEW",
+    "ADDR_OWNER",
+    "GENESIS_SECRET"
+  ],
+  "tasks": {
     "ts:check": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": [],
@@ -11,7 +26,7 @@
     "build": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["ts:check"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", "dist/**/*.zip"]
     },
     "build:docs": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
@@ -21,7 +36,7 @@
     "build:crx": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["ts:check"],
-      "outputs": ["dist-crx*/**", "dist/fuel-wallet*.zip"]
+      "outputs": ["dist-crx/**", "dist/fuel-wallet*.zip"]
     },
     "build:web": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
