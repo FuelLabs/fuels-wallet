@@ -193,6 +193,7 @@ function groupSimilarOperations(
             ...op.metadata,
             operationCount: 1,
             groupedAssets: {},
+            childOperations: [op],
           },
         };
       } else {
@@ -208,6 +209,10 @@ function groupSimilarOperations(
             };
           }
         }
+        acc[key].metadata.childOperations = [
+          ...(acc[key].metadata.childOperations || []),
+          op,
+        ];
         acc[key].metadata.operationCount! += 1;
       }
       return acc;
