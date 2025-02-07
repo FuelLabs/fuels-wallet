@@ -21,7 +21,7 @@
     "build:crx": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["ts:check"],
-      "outputs": ["dist-crx*/**"]
+      "outputs": ["dist-crx*/**", "dist/fuel-wallet*.zip"]
     },
     "build:web": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
