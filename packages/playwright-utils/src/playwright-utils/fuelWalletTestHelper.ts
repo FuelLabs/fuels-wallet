@@ -51,6 +51,7 @@ export class FuelWalletTestHelper {
     );
     const signupPage = await context.waitForEvent('page', {
       predicate: (page) => page.url().includes('sign-up'),
+      timeout: 10_000,
     });
     expect(signupPage.url()).toContain('sign-up');
     await popupNotSignedUpPage.close();

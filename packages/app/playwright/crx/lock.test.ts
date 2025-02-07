@@ -26,6 +26,7 @@ test.describe('Lock FuelWallet after inactivity', () => {
     await popupPage.goto(`chrome-extension://${extensionId}/popup.html`);
     const page = await context.waitForEvent('page', {
       predicate: (page) => page.url().includes('sign-up'),
+      timeout: 10_000,
     });
     expect(page.url()).toContain('sign-up');
   });
