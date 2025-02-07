@@ -7,7 +7,6 @@ import {
   Copyable,
   Icon,
   Text,
-  VStack,
 } from '@fuel-ui/react';
 import type {
   BN,
@@ -17,17 +16,17 @@ import type {
 } from 'fuels';
 import { type ReactNode, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
-import type { Maybe } from '~/systems/Core';
-import { MotionStack, animations } from '~/systems/Core';
+import { type Maybe, MotionStack, animations } from '~/systems/Core';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import {
   type GroupedErrors,
-  TxFee,
-  TxHeader,
-  TxOperations,
   getGasLimitFromTxRequest,
 } from '~/systems/Transaction';
+import { useSimplifiedTransaction } from '../../hooks/useSimplifiedTransaction';
+import { TxFee } from '../TxFee';
 import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
+import { TxHeader } from '../TxHeader';
+import { TxOperations } from '../TxOperations';
 
 const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
   return (
@@ -55,11 +54,12 @@ const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
 };
 
 const ConfirmHeader = () => (
-  <Alert status="warning" css={styles.alert} aria-label="Confirm Transaction">
-    <Alert.Description>
-      Carefully check if all the details in your transaction are correct
-    </Alert.Description>
-  </Alert>
+  <Box css={styles.header}>
+    <Box css={styles.warning}>
+      <Icon icon="InfoCircle" />
+      Check your transaction before submitting.
+    </Box>
+  </Box>
 );
 
 const LoaderHeader = () => (
@@ -85,7 +85,7 @@ function TxContentLoader() {
 
 export type TxContentInfoProps = {
   footer?: ReactNode;
-  tx?: Maybe<TransactionSummary>;
+  tx: TransactionSummary;
   txStatus?: Maybe<TransactionStatus>;
   showDetails?: boolean;
   isLoading?: boolean;
@@ -117,23 +117,31 @@ function TxContentInfo({
   const isExecuted = !!tx?.id;
   const txRequestGasLimit = getGasLimitFromTxRequest(txRequest);
 
+  const { transaction } = useSimplifiedTransaction({
+    tx,
+    txRequest,
+  });
+
   const initialAdvanced = useMemo(() => {
     if (!fees?.regularTip || !fees?.fastTip) return false;
 
-    // it will start as advanced if the transaction tip is not equal to the regular tip and fast tip
-    const isFeeAmountTheRegularTip = getValues('fees.tip.amount').eq(
-      fees.regularTip
-    );
-    const isFeeAmountTheFastTip = getValues('fees.tip.amount').eq(fees.fastTip);
-    // it will start as advanced if the gasLimit if different from the tx gasLimit
-    const isGasLimitTheTxRequestGasLimit = getValues('fees.gasLimit.amount').eq(
-      txRequestGasLimit
-    );
+    try {
+      const tipAmount = getValues('fees.tip.amount');
+      const gasLimitAmount = getValues('fees.gasLimit.amount');
+      if (!tipAmount || !gasLimitAmount) return false;
 
-    return (
-      (!isFeeAmountTheRegularTip && !isFeeAmountTheFastTip) ||
-      !isGasLimitTheTxRequestGasLimit
-    );
+      const isFeeAmountTheRegularTip = tipAmount.eq(fees.regularTip);
+      const isFeeAmountTheFastTip = tipAmount.eq(fees.fastTip);
+      const isGasLimitTheTxRequestGasLimit =
+        gasLimitAmount.eq(txRequestGasLimit);
+
+      return (
+        (!isFeeAmountTheRegularTip && !isFeeAmountTheFastTip) ||
+        !isGasLimitTheTxRequestGasLimit
+      );
+    } catch (_) {
+      return false;
+    }
   }, [getValues, fees, txRequestGasLimit]);
 
   function getHeader() {
@@ -143,38 +151,38 @@ function TxContentInfo({
       return (
         <TxHeader id={tx?.id} type={tx?.type} status={status || undefined} />
       );
-
     return <ConfirmHeader />;
   }
 
   return (
-    <Box.Stack gap="$4">
+    <>
       {getHeader()}
-      <TxOperations
-        operations={tx?.operations}
-        status={status}
-        isLoading={isLoading}
-      />
-      {isLoading && !showDetails && <TxFee.Loader />}
-      {showDetails && !fees && <TxFee fee={tx?.fee} />}
-      {showDetails &&
-        fees?.baseFee &&
-        txRequestGasLimit &&
-        fees?.regularTip &&
-        fees?.fastTip && (
-          <VStack gap="$3">
-            <Text as="span">Fee (network)</Text>
-            <TxFeeOptions
-              initialAdvanced={initialAdvanced}
-              baseFee={fees.baseFee}
-              gasLimit={txRequestGasLimit}
-              regularTip={fees.regularTip}
-              fastTip={fees.fastTip}
-            />
-          </VStack>
-        )}
+      <Box css={styles.content}>
+        <TxOperations operations={transaction.categorizedOperations} />
+        {isLoading && !showDetails && <TxFee.Loader />}
+        {showDetails && !fees && <TxFee fee={transaction?.fee.total} />}
+        {showDetails &&
+          fees?.baseFee &&
+          txRequestGasLimit &&
+          fees?.regularTip &&
+          fees?.fastTip && (
+            <Box>
+              <Box.Flex gap="18px" align="center" css={styles.feeContainer}>
+                <Icon icon="CurrencyCent" css={styles.icon} />
+                <Text css={styles.title}>Fee (network)</Text>
+              </Box.Flex>
+              <TxFeeOptions
+                initialAdvanced={initialAdvanced}
+                baseFee={fees.baseFee}
+                gasLimit={txRequestGasLimit}
+                regularTip={fees.regularTip}
+                fastTip={fees.fastTip}
+              />
+            </Box>
+          )}
+      </Box>
       {footer}
-    </Box.Stack>
+    </>
   );
 }
 
@@ -184,10 +192,31 @@ export const TxContent = {
 };
 
 const styles = {
-  fees: cssObj({
-    color: '$intentsBase12',
-    fontSize: '$md',
-    fontWeight: '$normal',
+  content: cssObj({
+    paddingTop: '$2',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  }),
+  title: cssObj({
+    fontSize: '$sm',
+    fontWeight: '$medium',
+    color: '$gray12',
+  }),
+  feeContainer: cssObj({
+    padding: '32px 0 16px 20px',
+  }),
+  icon: cssObj({
+    border: '1.5px solid $gray9',
+    borderRadius: '50%',
+    width: '20px',
+    height: '20px',
+    boxSizing: 'border-box',
+    '& svg': {
+      width: '16px',
+      height: '16px',
+      strokeWidth: '2.5px',
+    },
   }),
   alert: cssObj({
     '& .fuel_Alert-content': {
@@ -199,5 +228,20 @@ const styles = {
     '& .fuel_Icon': {
       mt: '-2px',
     },
+  }),
+  header: cssObj({
+    marginBottom: '$2',
+    backgroundColor: '$white',
+    borderBottom: '1px solid $gray3',
+    padding: '12px 18px',
+  }),
+  warning: cssObj({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '$1',
+    fontSize: '12px',
+    color: '$gray11',
+    fontWeight: '500',
+    marginBottom: '$2',
   }),
 };

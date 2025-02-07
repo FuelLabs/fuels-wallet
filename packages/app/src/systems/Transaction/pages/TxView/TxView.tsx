@@ -1,10 +1,11 @@
+import { cssObj } from '@fuel-ui/css';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Layout } from '~/systems/Core';
+import { Layout, scrollable } from '~/systems/Core';
 import { useNetworks } from '~/systems/Network';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxStatusAlert } from '../../components';
-import { TxContent } from '../../components/TxContent';
+import { TxContent } from '../../components/TxContent/TxContent';
 import { useTxResult } from '../../hooks';
 
 export function TxView() {
@@ -26,7 +27,6 @@ export function TxView() {
     >
       <Layout.TopBar onBack={() => navigate(-1)} />
       <Layout.Content>
-        {!txResult && <TxContent.Loader />}
         {ctx.shouldShowAlert && (
           <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
         )}

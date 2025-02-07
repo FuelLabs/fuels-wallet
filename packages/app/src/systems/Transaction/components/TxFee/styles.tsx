@@ -51,4 +51,29 @@ export const styles = {
     wordWrap: 'break-word',
     minWidth: 0,
   }),
+  option: cssObj({
+    alignItems: 'center',
+    backgroundColor: '$white',
+    border: '1px solid #e0e0e0',
+    borderRadius: '10px',
+    color: '#646464',
+    cursor: 'pointer',
+    fontSize: '13px',
+    gap: '$3',
+    justifyContent: 'space-between',
+    padding: '$3',
+    transition: 'all 0.2s ease',
+
+    '&:hover': {
+      backgroundColor: '#f0f0f0',
+    },
+  }),
+  optionContent: cssObj({
+    color: '#202020',
+  }),
+  optionLabel: cssObj({
+    color: '#202020',
+    fontSize: '13px',
+    fontWeight: '$medium',
+  }),
 };
