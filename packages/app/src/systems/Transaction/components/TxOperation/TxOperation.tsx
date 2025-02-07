@@ -25,7 +25,7 @@ export function TxOperation({
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <Box.VStack grow={1} css={styles.root(flat)}>
+    <Box.VStack grow={1} css={styles.root}>
       <TxOperationCard
         operation={operation}
         assetsAmount={amounts}
