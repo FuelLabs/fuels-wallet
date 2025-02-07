@@ -7,6 +7,11 @@ export async function hasText(
   position = 0,
   timeout = 5000
 ) {
+  expect
+    .poll(async () => () => page.getByText(text).nth(position), {
+      timeout,
+    })
+    .not.toThrow();
   const textFound = page.getByText(text).nth(position);
   await expect(textFound).toHaveText(text, {
     useInnerText: true,
