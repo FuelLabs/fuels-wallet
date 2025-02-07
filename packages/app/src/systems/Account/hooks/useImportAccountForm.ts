@@ -34,7 +34,7 @@ export function useImportAccountForm(opts: UseImportAccountForm) {
       .test('is-key-valid', 'Private Key is not valid', (v = '') => isB256(v))
       .test(
         'is-not-checksum',
-        'You can not use public addresses as private keys',
+        'This is a public key, please insert a private key instead.',
         (v = '') => !Address.isChecksumValid(v)
       )
       .required('Private Key is required'),

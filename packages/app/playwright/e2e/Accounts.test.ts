@@ -49,7 +49,7 @@ test.describe('New Accounts', () => {
         async () => {
           return await getElementByText(
             page,
-            'You can not use public addresses as private keys'
+            'This is a public key, please insert a private key instead.'
           ).isVisible();
         },
         { timeout: 10000 }
