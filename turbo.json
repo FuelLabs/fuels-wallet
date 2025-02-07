@@ -2,7 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": [".env", ".env.production"],
   "globalEnv": ["NODE_ENV", "CRX_OUT", "CRX_NAME"],
-  "pipeline": {
+  "tasks": {
     "ts:check": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": [],
@@ -11,7 +11,7 @@
     "build": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["ts:check"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", "dist/**/*.zip"]
     },
     "build:docs": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
@@ -21,7 +21,7 @@
     "build:crx": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["ts:check"],
-      "outputs": ["dist-crx*/**", "dist/fuel-wallet*.zip"]
+      "outputs": ["dist-crx*/**"]
     },
     "build:web": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
