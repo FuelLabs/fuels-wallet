@@ -23,12 +23,12 @@ test.describe('Lock FuelWallet after inactivity', () => {
     extensionId,
   }) => {
     const popupPage = await context.newPage();
-    await popupPage.goto(`chrome-extension://${extensionId}/popup.html`);
-    const page = await context.waitForEvent('page', {
+    const pagePromise = context.waitForEvent('page', {
       predicate: (page) => page.url().includes('sign-up'),
       timeout: 10_000,
     });
-    expect(page.url()).toContain('sign-up');
+    await popupPage.goto(`chrome-extension://${extensionId}/popup.html`);
+    expect((await pagePromise).url()).toContain('sign-up');
   });
 
   test('should lock the wallet after 1 minute of inactivity (config in .env file)', async ({
