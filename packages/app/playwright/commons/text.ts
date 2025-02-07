@@ -8,7 +8,7 @@ export async function hasText(
   timeout = 5000
 ) {
   expect
-    .poll(async () => page.getByText(text).nth(position), {
+    .poll(async () => () => page.getByText(text).nth(position), {
       timeout,
     })
     .not.toThrow();
