@@ -29,7 +29,7 @@ jobs:
         uses: tj-actions/changed-files@v22.2
         with:
           files: |
-            **/packages/app/**  
+            **/packages/app/**
             **/packages/types/**
             **/packages/react/**
 
@@ -66,8 +66,8 @@ jobs:
         run: sudo apt-get install jq
       - run: |
           pnpm audit --prod --json | jq '
-            .advisories | to_entries | 
-            map(select(.value.patched_versions != "<0.0.0" and .value.severity == "critical") | {package: .value.module_name, vulnerable: .value.vulnerable_versions, fixed_in: .value.patched_versions}) 
+            .advisories | to_entries |
+            map(select(.value.patched_versions != "<0.0.0" and .value.severity == "critical") | {package: .value.module_name, vulnerable: .value.vulnerable_versions, fixed_in: .value.patched_versions})
           ' > audit_fix_packages.json
           if [ "$(jq 'length' audit_fix_packages.json)" -gt "0" ]; then
             echo "Actionable vulnerabilities found in the following packages:"
@@ -78,7 +78,7 @@ jobs:
             echo "No actionable vulnerabilities"
             exit 0
           fi
-  
+
   strict-audit:
     name: Strict Audit
     runs-on: ubuntu-latest
@@ -97,6 +97,9 @@ jobs:
       checks: write
       pull-requests: write
       contents: write
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -111,11 +114,11 @@ jobs:
         run: |
           pnpm ts:check
           pnpm lint:ci
-          
+
   docs:
     name: Docs
     uses: FuelLabs/github-actions/.github/workflows/next-docs.yml@master
     with:
-      doc-folder-path: 'packages/docs/docs'
-      src-folder-path: 'packages/docs/src'
-      spellcheck-config-path: 'packages/docs/.spellcheck.yml'
+      doc-folder-path: "packages/docs/docs"
+      src-folder-path: "packages/docs/src"
+      spellcheck-config-path: "packages/docs/.spellcheck.yml"

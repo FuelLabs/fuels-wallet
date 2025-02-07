@@ -12,8 +12,11 @@ concurrency:
 jobs:
   tests-e2e-contracts:
     name: Test (Chrome Stable) [Shard ${{ matrix.shard }}]
-    runs-on: buildjet-8vcpu-ubuntu-2204	
+    runs-on: buildjet-8vcpu-ubuntu-2204
     timeout-minutes: 20
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     strategy:
       fail-fast: false
       matrix:
@@ -32,8 +35,7 @@ jobs:
 
       - name: Run PNPM install
         id: pnpm-cache
-        run:
-          pnpm recursive install --frozen-lockfile
+        run: pnpm recursive install --frozen-lockfile
 
       - name: Start Test Node
         run: pnpm node:up
@@ -50,7 +52,7 @@ jobs:
           providerUrl: "http://localhost:4000/v1/graphql"
           masterMnemonic: ${{ secrets.VITE_MASTER_WALLET_MNEMONIC }}
           genesisSecret: "0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298"
-          browser: 'chromium'
+          browser: "chromium"
           shard: ${{ matrix.shard }}/4
 
       - uses: actions/upload-artifact@v4
@@ -62,9 +64,12 @@ jobs:
 
   tests-e2e-contracts-beta:
     name: Test (Chrome Beta) [Shard ${{ matrix.shard }}]
-    runs-on: buildjet-8vcpu-ubuntu-2204	
+    runs-on: buildjet-8vcpu-ubuntu-2204
     timeout-minutes: 20
     continue-on-error: true
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     strategy:
       fail-fast: false
       matrix:
@@ -84,8 +89,7 @@ jobs:
 
       - name: Run PNPM install
         id: pnpm-cache
-        run:
-          pnpm recursive install --frozen-lockfile
+        run: pnpm recursive install --frozen-lockfile
 
       - name: Start Test Node
         run: pnpm node:up
@@ -102,7 +106,7 @@ jobs:
           providerUrl: "http://localhost:4000/v1/graphql"
           masterMnemonic: ${{ secrets.VITE_MASTER_WALLET_MNEMONIC }}
           genesisSecret: "0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298"
-          browser: 'chrome-beta'
+          browser: "chrome-beta"
           shard: ${{ matrix.shard }}/4
 
       - uses: actions/upload-artifact@v4
@@ -111,5 +115,3 @@ jobs:
           name: playwright-e2e-contract-tests-report-beta-shard-${{ matrix.shard }}
           path: packages/e2e-contract-tests/playwright-results
           retention-days: 30
-
-             
