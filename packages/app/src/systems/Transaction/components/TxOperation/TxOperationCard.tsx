@@ -1,20 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Avatar,
-  Badge,
-  Box,
-  Icon,
-  IconButton,
-  Image,
-  Text,
-} from '@fuel-ui/react';
+import { Avatar, Box, Icon, Text } from '@fuel-ui/react';
 import type { AssetFuelAmount, AssetFuelData } from '@fuel-wallet/types';
-import { Address, bn, isB256, isBech32 } from 'fuels';
+import { Address, isB256, isBech32 } from 'fuels';
 import { useEffect, useState } from 'react';
-import { useAccounts } from '~/systems/Account';
+import { FuelAddress, useAccounts } from '~/systems/Account';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
-import { formatAmount, shortAddress } from '~/systems/Core';
-import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { type SimplifiedOperation, TxCategory } from '../../types';
 import { TxOperationAssets } from './TxOperationAssets';
@@ -136,20 +126,10 @@ export function TxOperationCard({
               </Text>
             </Box>
           )}
-          <Text
-            fontSize="sm"
-            color="gray8"
+          <FuelAddress
+            address={fuelFromAddress}
+            isContract={isFromContract}
             css={styles.address}
-            aria-label={fuelFromAddress}
-          >
-            {shortAddress(fuelFromAddress)}
-          </Text>
-          <IconButton
-            size="xs"
-            variant="link"
-            icon="Copy"
-            aria-label="Copy address"
-            onPress={() => navigator.clipboard.writeText(fuelFromAddress)}
           />
         </Box.Flex>
 
@@ -198,20 +178,10 @@ export function TxOperationCard({
               </Text>
             </Box>
           )}
-          <Text
-            fontSize="sm"
-            color="gray8"
+          <FuelAddress
+            address={fuelToAddress}
+            isContract={isToContract}
             css={styles.address}
-            aria-label={fuelToAddress}
-          >
-            {shortAddress(fuelToAddress)}
-          </Text>
-          <IconButton
-            size="xs"
-            variant="link"
-            icon="Copy"
-            aria-label="Copy address"
-            onPress={() => navigator.clipboard.writeText(fuelToAddress)}
           />
         </Box.Flex>
       </Box.Flex>
@@ -251,6 +221,7 @@ const styles = {
   }),
   address: cssObj({
     fontWeight: '$medium',
+    fontSize: '$sm',
     color: '$gray11',
   }),
   blue: cssObj({
