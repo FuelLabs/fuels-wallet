@@ -135,8 +135,6 @@ test.describe('Mint Assets', () => {
       window.scrollTo(0, document.body.scrollHeight)
     );
 
-    // await hasText(walletNotificationPage, name);
-    // await hasText(walletNotificationPage, shortAddress(assetId), 0, 10000);
     // test mint amount is correct
     await hasText(walletNotificationPage, `1.2345 ${symbol}`);
 

@@ -81,7 +81,6 @@ test.describe('Forward Custom Asset', () => {
 
     // test asset id is correct
     const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
-    // await hasText(walletNotificationPage, shortAddress(assetId));
 
     // test forward custom asset amount is correct
     await hasText(

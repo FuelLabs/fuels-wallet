@@ -70,7 +70,6 @@ test.describe('Forward and Mint Multicall', () => {
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
     // test mint asset id is shown
     const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
-    // await hasText(walletNotificationPage, shortAddress(assetId));
     // test mint amount is correct
     await hasText(walletNotificationPage, `${formattedMintAMount} Unknown`);
 

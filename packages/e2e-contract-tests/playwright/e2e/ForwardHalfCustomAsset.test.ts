@@ -81,8 +81,6 @@ test.describe('Forward Half Custom Asset', () => {
 
     // test the forward asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
-    // test forward asset id is correct
-    // await hasText(walletNotificationPage, shortAddress(assetId));
     // test forward custom asset amount is correct
     await hasText(
       walletNotificationPage,
