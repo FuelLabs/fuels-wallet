@@ -310,6 +310,8 @@ export const transactionHistoryMachine = createMachine(
             address,
             providerUrl: selectedNetwork?.url,
             pagination,
+          }).catch((_e) => {
+            return { transactionHistory: [] };
           });
           return { transactionHistory };
         },
@@ -350,11 +352,14 @@ export const transactionHistoryMachine = createMachine(
           const address = input.address;
           const providerUrl = selectedNetwork?.url || '';
           const initialEndCursor = input.initialEndCursor;
+          // const result = await Promise.race([
           const result = await TxService.getAllCursors({
             address,
             providerUrl,
             initialEndCursor,
+            maxDepth: 1,
           });
+
           // Adding missing cursors
           if (result.cursors.length > 0) {
             await TxService.addTxCursors({

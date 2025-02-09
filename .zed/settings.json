@@ -1,0 +1,24 @@
+// Folder-specific settings
+//
+// For a full list of overridable settings, and general information on folder-specific settings,
+// see the documentation: https://zed.dev/docs/configuring-zed#settings-files
+{
+  "lsp": {
+    "graphql": {
+      "settings": {
+        "config_dir": "../packages/app"
+      }
+    },
+    "biome": {
+      "settings": {
+        "config_path": "../biome.json",
+        "require_config_file": true
+      }
+    }
+  },
+  "formatter": {
+    "language_server": {
+      "name": "biome"
+    }
+  }
+}
