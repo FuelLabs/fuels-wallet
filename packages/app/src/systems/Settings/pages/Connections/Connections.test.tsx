@@ -7,6 +7,7 @@ import { ConnectionService } from '~/systems/DApp/services';
 import { connectionsLoader } from '../../__mocks__/connection';
 import { testQueries } from '../../__test__';
 
+import { mockServer } from '~/systems/Core/__tests__/utils/msw';
 import { List } from './Connections.stories';
 
 const opts = {
@@ -15,6 +16,10 @@ const opts = {
 };
 
 describe('Connections', () => {
+  const server = mockServer();
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
   let conn1: Connection;
   let conn2: Connection;
 
