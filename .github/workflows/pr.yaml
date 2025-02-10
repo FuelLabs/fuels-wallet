@@ -74,23 +74,18 @@ jobs:
             (async () => {
               const fs = require('fs');
               const path = require('path');
+              const marker = "<!-- checklist-validation-comment -->";
 
-              // Obtain the PR body from the event payload
+              // Get PR details
               const pr = context.payload.pull_request;
               const prBody = pr.body || "";
 
-              // Define the template file path relative to the workspace.
-              // We expect the checked out branch to contain an up-to-date PR template.
-              const templateFilePath = path.join(process.cwd(), ".github/pull_request_template.md");
+              // Load the checklist template from the current checkout, or fallback to the GitHub API.
               let templateContent = "";
-
+              const templateFilePath = path.join(process.cwd(), ".github/pull_request_template.md");
               if (fs.existsSync(templateFilePath)) {
-                // Load from current checkout.
                 templateContent = fs.readFileSync(templateFilePath, { encoding: "utf8" });
-                console.log("Template loaded from current checkout.");
               } else {
-                // Fallback: use GitHub API to fetch the template (from main branch, for example).
-                console.log("Template not found locally; falling back to GitHub API.");
                 const response = await github.rest.repos.getContent({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
@@ -100,34 +95,58 @@ jobs:
                 templateContent = buff.toString('utf8');
               }
 
-              // Count the checklist items in the template via the pattern "- [ ]"
-              const templateCheckboxMatches = templateContent.match(/-\s*\[\s*\]/g) || [];
-              const expectedCount = templateCheckboxMatches.length;
-              console.log(`Expected checklist count from template: ${expectedCount}`);
-
-              // Count the completed checkboxes in the PR body via "- [x]" or "- [X]"
-              const prCheckedMatches = prBody.match(/-\s*\[[xX]\]/g) || [];
-              const checkedCount = prCheckedMatches.length;
-              console.log(`Checked checkbox count in PR: ${checkedCount}`);
+              // Count the checklist items in the template and the checkmarked items in the PR
+              const expectedCount = (templateContent.match(/-\s*\[\s*\]/g) || []).length;
+              const checkedCount = (prBody.match(/-\s*\[[xX]\]/g) || []).length;
 
               if (checkedCount < expectedCount) {
-                const errorMessage = `❌ Incomplete checklist: expected ${expectedCount} completed items, but found ${checkedCount}. Please complete all checklist items in the PR template.`;
-                // Add a comment to the PR with the error message.
-                await github.rest.issues.createComment({
+                const errorMessage = `${marker}❌ Incomplete checklist: expected ${expectedCount} completed items, but found ${checkedCount}. Please complete all checklist items in the PR [template](https://github.com/FuelLabs/fuels-wallet/blob/master/.github/pull_request_template.md).`;
+
+                // List all comments and look for an existing error comment.
+                const { data: comments } = await github.rest.issues.listComments({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: pr.number,
-                  body: errorMessage,
                 });
+                const existingComment = comments.find(comment => comment.body && comment.body.includes(marker));
+
+                if (existingComment) {
+                  await github.rest.issues.updateComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    comment_id: existingComment.id,
+                    body: errorMessage,
+                  });
+                } else {
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: pr.number,
+                    body: errorMessage,
+                  });
+                }
                 throw new Error(errorMessage);
               } else {
+                // If the checklist is complete, remove any existing error comment.
+                const { data: comments } = await github.rest.issues.listComments({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                });
+                const existingComment = comments.find(comment => comment.body && comment.body.includes(marker));
+                if (existingComment) {
+                  await github.rest.issues.deleteComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    comment_id: existingComment.id,
+                  });
+                }
                 console.log("All checklist items have been completed.");
               }
             })().catch(error => {
               console.error(error);
               throw error;
             });
-
   verify-issue-reference:
     name: Validate PR Issue References
     runs-on: ubuntu-latest
