@@ -68,7 +68,6 @@ jobs:
         with:
           script: |
             (async () => {
-              const core = require('@actions/core');
               const pr = context.payload.pull_request;
               const prBody = pr.body || "";
               // Look for any unchecked item: "- [ ]"
@@ -82,7 +81,7 @@ jobs:
                   event: "REQUEST_CHANGES",
                   body: errorMessage
                 });
-                core.setFailed("Not all checklist items are marked as completed.");
+                throw new Error("Not all checklist items are marked as completed.");
               } else {
                 console.log("All checklist items have been completed.");
               }
@@ -100,7 +99,6 @@ jobs:
         with:
           script: |
             (async () => {
-              const core = require('@actions/core');
               const pr = context.payload.pull_request;
               const prBody = pr.body || "";
               // Regex for a GitHub issue reference, e.g. "Closes #123"
@@ -125,7 +123,7 @@ jobs:
                   event: "REQUEST_CHANGES",
                   body: errorMessage
                 });
-                core.setFailed("Missing required issue references in the PR description.");
+                throw new Error("Missing required issue references in the PR description.");
               } else {
                 console.log("Both GitHub and Linear issue references are present in the PR.");
               }
