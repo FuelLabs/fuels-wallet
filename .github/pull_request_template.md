@@ -11,10 +11,10 @@ Please provide a summary of your changes if they are not self-explanatory from t
 
 # Checklist
 
-- [ ] I've added error handling for all actions/requests.
-- [ ] I've reviewed how my changes will display in the UI.
-- [ ] I've checked all the copy (text) changes or additions in this PR.
-- [ ] I've included references to the issues being closed on GitHub and/or Linear.
-- [ ] I've ensured that the documentation is up to date and reflects any changes.
-- [ ] I've added documentation links where it may be helpful.
-- [ ] I **reviewed** the **entire PR** myself.
+- [ ] I've added error handling for all actions/requests, and verified how this error will show on UI. (or there was no error handling)
+- [ ] I've reviewed all the copy changed/added in this PR, using AI if needed. (or there was no copy changes)
+- [ ] I've included the reference to the issues being closed from Github and/or Linear (or there was no issues)
+- [ ] I've changed the Docs to reflect my changes (or it was not needed)
+- [ ] I've put docs links where it may be helpful (or it was not needed)
+- [ ] I checked the resulting UI both in Light and Dark mode (or no UI changes were made)
+- [ ] I **reviewed** the **entire PR** myself (preferably, on GH UI)
