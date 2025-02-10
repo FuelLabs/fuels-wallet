@@ -10,7 +10,7 @@ import { Send } from '../../components';
 import { useSend } from '../../hooks';
 
 const CHECKSUM_MESSAGE =
-  "We couldn't verify the address. Make sure you are sending to a valid address.";
+  'This address lacks checksum verification. Double-check before proceeding.';
 
 export function SendPage() {
   const send = useSend();
