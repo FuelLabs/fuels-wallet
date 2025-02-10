@@ -80,7 +80,7 @@ jobs:
               const prBody = pr.body || "";
 
               // Define the template file path relative to the workspace.
-              // We expect that the checked out branch contains an up-to-date PR template.
+              // We expect the checked out branch to contain an up-to-date PR template.
               const templateFilePath = path.join(process.cwd(), ".github/pull_request_template.md");
               let templateContent = "";
 
@@ -100,24 +100,24 @@ jobs:
                 templateContent = buff.toString('utf8');
               }
 
-              // Count the checklist items in the template
+              // Count the checklist items in the template via the pattern "- [ ]"
               const templateCheckboxMatches = templateContent.match(/-\s*\[\s*\]/g) || [];
               const expectedCount = templateCheckboxMatches.length;
               console.log(`Expected checklist count from template: ${expectedCount}`);
 
-              // Count the completed checkboxes in the PR body
+              // Count the completed checkboxes in the PR body via "- [x]" or "- [X]"
               const prCheckedMatches = prBody.match(/-\s*\[[xX]\]/g) || [];
               const checkedCount = prCheckedMatches.length;
               console.log(`Checked checkbox count in PR: ${checkedCount}`);
 
               if (checkedCount < expectedCount) {
                 const errorMessage = `❌ Incomplete checklist: expected ${expectedCount} completed items, but found ${checkedCount}. Please complete all checklist items in the PR template.`;
-                await github.rest.pulls.createReview({
+                // Add a comment to the PR with the error message.
+                await github.rest.issues.createComment({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  pull_number: pr.number,
-                  event: "REQUEST_CHANGES",
-                  body: errorMessage
+                  issue_number: pr.number,
+                  body: errorMessage,
                 });
                 throw new Error(errorMessage);
               } else {
@@ -157,12 +157,12 @@ jobs:
 
               if (missingRefs.length > 0) {
                 const errorMessage = "❌ Missing required references: " + missingRefs.join(" and ") + ". Please include both a GitHub and a Linear issue reference in your PR description.";
-                await github.rest.pulls.createReview({
+                // Add a comment in the PR conversation
+                await github.rest.issues.createComment({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  pull_number: pr.number,
-                  event: "REQUEST_CHANGES",
-                  body: errorMessage
+                  issue_number: pr.number,
+                  body: errorMessage,
                 });
                 throw new Error("Missing required issue references in the PR description.");
               } else {
@@ -230,19 +230,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Extract pnpm version from .tool-versions
         id: get_pnpm
         run: |
           PNPM_VERSION=$(grep '^pnpm' .tool-versions | awk '{print $2}')
           echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
-
       - name: Setup Node
         uses: FuelLabs/github-actions/setups/node@master
         with:
           node-version: 20.11.0
           pnpm-version: ${{ env.PNPM_VERSION }}
-
       - name: Run lint
         run: |
           pnpm ts:check
