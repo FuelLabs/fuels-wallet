@@ -81,7 +81,7 @@ jobs:
 
               // Define the template file path relative to the workspace.
               // We expect that the checked out branch contains an up-to-date PR template.
-              const templateFilePath = path.join(process.cwd(), "fuels-wallet/.github/pull_request_template.md");
+              const templateFilePath = path.join(process.cwd(), ".github/pull_request_template.md");
               let templateContent = "";
 
               if (fs.existsSync(templateFilePath)) {
@@ -94,7 +94,7 @@ jobs:
                 const response = await github.rest.repos.getContent({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  path: "fuels-wallet/.github/pull_request_template.md",
+                  path: ".github/pull_request_template.md",
                 });
                 const buff = Buffer.from(response.data.content, 'base64');
                 templateContent = buff.toString('utf8');
