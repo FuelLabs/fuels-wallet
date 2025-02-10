@@ -246,7 +246,7 @@ const styles = {
     color: '$intentsBase12',
     fontSize: '$md',
     fontWeight: '$normal',
-    width: '48px',
+    width: '42px',
   }),
   addressRow: cssObj({
     flex: 1,
