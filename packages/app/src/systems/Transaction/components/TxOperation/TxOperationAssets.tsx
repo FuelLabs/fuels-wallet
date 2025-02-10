@@ -50,8 +50,12 @@ export function TxOperationAssets({
             {getAssetImage(assetAmount)}
             <Box css={styles.amountContainer}>
               <Box.Flex direction="column">
-                <Box.Flex gap="$2" aria-label="amount-container" align="center">
-                  <Text as="span" className="amount-value">
+                <Box.Flex gap="$2" align="center">
+                  <Text
+                    as="span"
+                    className="amount-value"
+                    aria-label="amount-container"
+                  >
                     {formatAmount({
                       amount: assetAmount.amount,
                       options: {
