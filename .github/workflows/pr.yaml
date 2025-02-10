@@ -100,7 +100,7 @@ jobs:
               const checkedCount = (prBody.match(/-\s*\[[xX]\]/g) || []).length;
 
               if (checkedCount < expectedCount) {
-                const errorMessage = `${marker}❌ Incomplete checklist: expected ${expectedCount} completed items, but found ${checkedCount}. Please complete all checklist items in the PR [template](https://github.com/FuelLabs/fuels-wallet/blob/master/.github/pull_request_template.md).`;
+                const errorMessage = `${marker}❌ Incomplete checklist: expected ${expectedCount} completed items, but found ${checkedCount}. Please complete all checklist items in the PR template.`;
 
                 // List all comments and look for an existing error comment.
                 const { data: comments } = await github.rest.issues.listComments({
