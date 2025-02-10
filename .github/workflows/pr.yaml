@@ -74,7 +74,7 @@ jobs:
             (async () => {
               const fs = require('fs');
               const path = require('path');
-              const marker = "<!-- checklist-validation-comment -->";
+              const marker = "<!-- validation-comment -->";
 
               // Get PR details
               const pr = context.payload.pull_request;
@@ -175,14 +175,32 @@ jobs:
               }
 
               if (missingRefs.length > 0) {
-                const errorMessage = "❌ Missing required references: " + missingRefs.join(" and ") + ". Please include both a GitHub and a Linear issue reference in your PR description.";
+                const marker = "<!-- validation-comment -->";
+                const errorMessage = "${marker}❌ Missing required references: " + missingRefs.join(" and ") + ". Please include both a GitHub and a Linear issue reference in your PR description.";
                 // Add a comment in the PR conversation
-                await github.rest.issues.createComment({
+                // List all comments and look for an existing error comment.
+                const { data: comments } = await github.rest.issues.listComments({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: pr.number,
-                  body: errorMessage,
                 });
+                const existingComment = comments.find(comment => comment.body && comment.body.includes(marker));
+
+                if (existingComment) {
+                  await github.rest.issues.updateComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    comment_id: existingComment.id,
+                    body: errorMessage,
+                  });
+                } else {
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: pr.number,
+                    body: errorMessage,
+                  });
+                }
                 throw new Error("Missing required issue references in the PR description.");
               } else {
                 console.log("Both GitHub and Linear issue references are present in the PR.");
@@ -192,6 +210,35 @@ jobs:
               throw error;
             });
 
+  cleanup-gh-comments:
+    name: Remove validation comments
+    runs-on: ubuntu-latest
+    needs: [validate-checklist, verify-issue-reference]
+    steps:
+      - name: Remove checklist and reference validation comments
+        uses: actions/github-script@v6
+        with:
+          script: |
+            (async () => {
+              const pr = context.payload.pull_request;
+              const { data: comments } = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+              });
+              const marker = "<!-- validation-comment -->";
+              const errorComments = comments.filter(comment => comment.body && comment.body.includes(marker));
+              for (const comment of errorComments) {
+                await github.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: comment.id,
+                });
+              }
+            })().catch(error => {
+              console.error(error);
+              throw error;
+            });
   audit:
     name: Audit
     runs-on: ubuntu-latest
