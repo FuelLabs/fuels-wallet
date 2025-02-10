@@ -685,6 +685,7 @@ test.describe('FuelWallet Extension', () => {
         // Wait for approve transaction page to show
         const approveTransactionPage = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
+          timeout: 15000,
         });
 
         // Approve transaction
