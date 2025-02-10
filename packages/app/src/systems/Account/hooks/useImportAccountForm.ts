@@ -31,7 +31,7 @@ export function useImportAccountForm(opts: UseImportAccountForm) {
     name: nameSchemaObj,
     privateKey: yup
       .string()
-      .test('is-key-valid', 'Private Key is not valid', (v = '') => isB256(v))
+      .test('is-key-valid', 'Private Key is not valid', (v) => isB256(v || ''))
       .test(
         'is-not-checksum',
         'This is a public key, please insert a private key instead.',
