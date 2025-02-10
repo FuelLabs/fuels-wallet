@@ -59,6 +59,81 @@ jobs:
       - name: Validate Changeset
         run: pnpm changeset status --since=origin/${{ github.base_ref }}
 
+  validate-checklist:
+    name: Validate PR Checklist Completion
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check that all checklist items are complete
+        uses: actions/github-script@v6
+        with:
+          script: |
+            (async () => {
+              const core = require('@actions/core');
+              const pr = context.payload.pull_request;
+              const prBody = pr.body || "";
+              // Look for any unchecked item: "- [ ]"
+              const unchecked = prBody.match(/- \[[ ]\]/);
+              if (unchecked) {
+                const errorMessage = "❌ Please complete all checklist items in the PR template before submitting your changes.";
+                await github.rest.pulls.createReview({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                  event: "REQUEST_CHANGES",
+                  body: errorMessage
+                });
+                core.setFailed("Not all checklist items are marked as completed.");
+              } else {
+                console.log("All checklist items have been completed.");
+              }
+            })().catch(error => {
+              console.error(error);
+              throw error;
+            });
+
+  verify-issue-reference:
+    name: Validate PR Issue References
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for GitHub and Linear issue references
+        uses: actions/github-script@v6
+        with:
+          script: |
+            (async () => {
+              const core = require('@actions/core');
+              const pr = context.payload.pull_request;
+              const prBody = pr.body || "";
+              // Regex for a GitHub issue reference, e.g. "Closes #123"
+              const githubIssueRegex = /#\d+/;
+              // Regex for a Linear issue reference, e.g. "FE-123"
+              const linearIssueRegex = /FE-\d+/;
+              const githubIssueMatch = prBody.match(githubIssueRegex);
+              const linearIssueMatch = prBody.match(linearIssueRegex);
+              let missingRefs = [];
+              if (!githubIssueMatch) {
+                missingRefs.push("GitHub Issue (e.g., Closes #123)");
+              }
+              if (!linearIssueMatch) {
+                missingRefs.push("Linear Issue (e.g., FE-123)");
+              }
+              if (missingRefs.length > 0) {
+                const errorMessage = "❌ Missing required references: " + missingRefs.join(" and ") + ". Please include both a GitHub and a Linear issue reference in your PR description.";
+                await github.rest.pulls.createReview({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                  event: "REQUEST_CHANGES",
+                  body: errorMessage
+                });
+                core.setFailed("Missing required issue references in the PR description.");
+              } else {
+                console.log("Both GitHub and Linear issue references are present in the PR.");
+              }
+            })().catch(error => {
+              console.error(error);
+              throw error;
+            });
+
   audit:
     name: Audit
     runs-on: ubuntu-latest
