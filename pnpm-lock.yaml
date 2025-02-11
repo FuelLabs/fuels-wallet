@@ -35,7 +35,6 @@ overrides:
   elliptic@<6.6.0: '>=6.6.0'
   cross-spawn@<7.0.5: '>=7.0.5'
   nanoid@<3.3.8: 3.3.8
-  store2@<2.14.4: '>=2.14.4'
 
 importers:
 
@@ -12241,8 +12240,8 @@ packages:
     resolution: {integrity: sha512-iCGQj+0l0HOdZ2AEeBADlsRC+vsnDsZsbdSiH1yNSjcfKM7fdpCMfqAL/dwF5BLiw/XhRft/Wax6zQbhq2BcjQ==}
     engines: {node: '>= 0.4'}
 
-  store2@2.14.4:
-    resolution: {integrity: sha512-srTItn1GOvyvOycgxjAnPA63FZNwy0PTyUBFMHRM+hVFltAeoh0LmNBz9SZqUS9mMqGk8rfyWyXn3GH5ReJ8Zw==}
+  store2@2.14.2:
+    resolution: {integrity: sha512-siT1RiqlfQnGqgT/YzXVUNsom9S0H1OX+dpdGN1xkyYATo4I6sep5NmsRD/40s3IIOvlCq6akxkqG82urIZW1w==}
 
   storybook-addon-react-router-v6@2.0.7:
     resolution: {integrity: sha512-vky9WXG84fQjwx55KKFQdhyUC5AnfsGJSoYx/yaJi2q/oTDcCTkcwpxlcrSKpTpNtVjsFNnaS3cuWXX+Sfc8Vw==}
@@ -22466,7 +22465,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       semver: 7.5.4
-      store2: 2.14.4
+      store2: 2.14.2
       telejson: 7.2.0
       ts-dedent: 2.2.0
 
@@ -32588,7 +32587,7 @@ snapshots:
     dependencies:
       internal-slot: 1.0.5
 
-  store2@2.14.4: {}
+  store2@2.14.2: {}
 
   storybook-addon-react-router-v6@2.0.7(@storybook/blocks@7.4.6(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@storybook/channels@7.4.6)(@storybook/components@7.4.6(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@storybook/core-events@7.4.6)(@storybook/manager-api@7.4.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@storybook/preview-api@7.4.6)(@storybook/theming@7.4.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react-router-dom@6.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1):
     dependencies:
