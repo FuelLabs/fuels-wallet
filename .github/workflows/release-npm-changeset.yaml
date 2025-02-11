@@ -16,6 +16,9 @@ jobs:
   check-commit:
     name: Release master or rc
     runs-on: buildjet-4vcpu-ubuntu-2204
+    permissions:
+      contents: read
+      pull-requests: read
     outputs:
       is_changeset_pr: ${{ steps.check-commit.outputs.is_changeset_pr }}
     steps:
@@ -43,14 +46,13 @@ jobs:
     needs: check-commit
     if: needs.check-commit.outputs.is_changeset_pr == 'false'
     runs-on: buildjet-4vcpu-ubuntu-2204
-    environment: npm-deploy
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
-          # need this to get full git-history/clone in order to build changelogs and check changesets
           fetch-depth: 0
-          # workaround to ensure force pushes to changeset branch use REPO_TOKEN owner's account
-          # see https://github.com/changesets/action/issues/70
           persist-credentials: false
       - name: Extract pnpm version from .tool-versions
         id: get_pnpm
@@ -61,9 +63,6 @@ jobs:
         with:
           node-version: 20.11.0
           pnpm-version: ${{  env.PNPM_VERSION }}
-      - uses: FuelLabs/github-actions/setups/npm@master
-        with:
-          npm-token: ${{ secrets.NPM_TOKEN_WALLET }}
 
       - name: Setup git user (for changelog step)
         run: |
@@ -77,7 +76,7 @@ jobs:
           title: "ci(changesets): versioning packages"
           createGithubReleases: false
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-npm:
     needs: check-commit
