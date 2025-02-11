@@ -1,6 +1,6 @@
 # fuels-wallet
 
-## 1.0.0
+## 0.48.0
 
 ### Major Changes
 
