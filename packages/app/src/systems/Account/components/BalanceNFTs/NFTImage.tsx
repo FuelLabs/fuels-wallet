@@ -34,10 +34,10 @@ const _NFTImage = ({ assetId, image }: NFTImageProps) => {
     }
   }, []);
 
+  if (!image || !!fallback) return <Empty />;
+
   return (
     <Box css={styles.item}>
-      {(!image || !!fallback) && <Empty />}
-
       {image && !fallback && isLoading && <NFTImageLoading />}
       {image && !fallback && (
         <Image
