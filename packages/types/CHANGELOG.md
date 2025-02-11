@@ -1,5 +1,11 @@
 # @fuel-wallet/types
 
+## 1.0.0
+
+### Patch Changes
+
+- [#1788](https://github.com/FuelLabs/fuels-wallet/pull/1788) [`fd1e342a`](https://github.com/FuelLabs/fuels-wallet/commit/fd1e342a81041aa6fed925df9c45449cb3946e00) Thanks [@arthurgeron](https://github.com/arthurgeron)! - feat: show token value converted to USD
+
 ## 0.47.1
 
 ## 0.47.0
