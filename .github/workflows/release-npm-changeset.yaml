@@ -14,7 +14,8 @@ env:
 
 jobs:
   check-commit:
-    runs-on: ubuntu-latest
+    name: Release master or rc
+    runs-on: buildjet-4vcpu-ubuntu-2204
     outputs:
       is_changeset_pr: ${{ steps.check-commit.outputs.is_changeset_pr }}
     steps:
@@ -41,12 +42,15 @@ jobs:
   create-pr:
     needs: check-commit
     if: needs.check-commit.outputs.is_changeset_pr == 'false'
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
     environment: npm-deploy
     steps:
       - uses: actions/checkout@v4
         with:
+          # need this to get full git-history/clone in order to build changelogs and check changesets
           fetch-depth: 0
+          # workaround to ensure force pushes to changeset branch use REPO_TOKEN owner's account
+          # see https://github.com/changesets/action/issues/70
           persist-credentials: false
       - name: Extract pnpm version from .tool-versions
         id: get_pnpm
@@ -59,15 +63,15 @@ jobs:
           pnpm-version: ${{  env.PNPM_VERSION }}
       - uses: FuelLabs/github-actions/setups/npm@master
         with:
-          npm-token: ${{ secrets.NPM_TOKEN }}
+          npm-token: ${{ secrets.NPM_TOKEN_WALLET }}
 
-      - name: Setup git user
+      - name: Setup git user (for changelog step)
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
       - name: Create Changeset PR
-        uses: changesets/action@v1
+        uses: FuelLabs/changesets-action@v2.0.0
         with:
           commit: "ci(changesets): versioning packages"
           title: "ci(changesets): versioning packages"
@@ -96,7 +100,7 @@ jobs:
           pnpm-version: ${{  env.PNPM_VERSION }}
       - uses: FuelLabs/github-actions/setups/npm@master
         with:
-          npm-token: ${{ secrets.NPM_TOKEN }}
+          npm-token: ${{ secrets.NPM_TOKEN_WALLET }}
 
       - name: Bump and Collect Version
         run: |
@@ -110,24 +114,26 @@ jobs:
         run: pnpm build:libs
 
       - name: Publish to NPM
-        id: publish
-        uses: changesets/action@v1
+        id: changesets
+        uses: FuelLabs/changesets-action@v2.0.0
         with:
           publish: pnpm changeset publish --tag next
           createGithubReleases: aggregate
           version: pnpm changeset version
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN_WALLET }}
 
       - name: Build Fuel Wallet
-        if: steps.publish.outputs.published == 'true'
+        if: steps.changesets.outputs.published == 'true'
         run: pnpm build:crx
         env:
+          ## increase node.js m memory limit for building
+          ## with sourcemaps
           NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Build Fuel Wallet Development
-        if: steps.publish.outputs.published == 'true'
+        if: steps.changesets.outputs.published == 'true'
         run: pnpm build:crx
         env:
           VITE_CRX_RELEASE: false
@@ -137,7 +143,7 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Upload Production artifacts to Sentry
-        if: steps.publish.outputs.published == 'true'
+        if: steps.changesets.outputs.published == 'true'
         run: |
           pnpm sentry-cli sourcemaps inject --release ${{ env.BUILD_VERSION }} ./dist-crx
           pnpm sentry-cli sourcemaps upload --release ${{ env.BUILD_VERSION }} ./dist-crx
@@ -148,7 +154,7 @@ jobs:
         working-directory: ./packages/app
 
       - name: Upload Development artifacts to Sentry
-        if: steps.publish.outputs.published == 'true'
+        if: steps.changesets.outputs.published == 'true'
         run: |
           pnpm sentry-cli sourcemaps inject --release ${{ env.BUILD_VERSION }} ./dist-crx-dev
           pnpm sentry-cli sourcemaps upload --release ${{ env.BUILD_VERSION }} ./dist-crx-dev
@@ -159,7 +165,7 @@ jobs:
         working-directory: ./packages/app
 
       - name: Attach Fuel Wallet to release
-        if: steps.publish.outputs.published == 'true'
+        if: steps.changesets.outputs.published == 'true'
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
