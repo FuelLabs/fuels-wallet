@@ -1,0 +1,5 @@
+---
+"fuels-wallet": patch
+---
+
+test
