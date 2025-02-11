@@ -1,5 +1,11 @@
 # @fuels/playwright-utils
 
+## 1.1.0
+
+### Patch Changes
+
+- [`3314f039`](https://github.com/FuelLabs/fuels-wallet/commit/3314f039c2b773d009ad44daeb321bbdfcc366cc) Thanks [@nelitow](https://github.com/nelitow)! - asd
+
 ## 1.0.0
 
 ## 0.47.1
