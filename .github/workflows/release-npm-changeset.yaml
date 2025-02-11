@@ -14,7 +14,7 @@ env:
 
 jobs:
   check-commit:
-    name: Release master or rc
+    name: Decide if releases or create PR
     runs-on: buildjet-4vcpu-ubuntu-2204
     permissions:
       contents: read
@@ -25,8 +25,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Check if merge from changeset PR
-        id: check-commit
+      - id: check-commit
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -43,6 +42,7 @@ jobs:
           echo "is_changeset_pr=false" >> $GITHUB_OUTPUT
 
   create-pr:
+    name: Push changes to Changeset PR
     needs: check-commit
     if: needs.check-commit.outputs.is_changeset_pr == 'false'
     runs-on: buildjet-4vcpu-ubuntu-2204
@@ -79,6 +79,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-npm:
+    name: Release to NPM
     needs: check-commit
     if: needs.check-commit.outputs.is_changeset_pr == 'true'
     runs-on: ubuntu-latest
