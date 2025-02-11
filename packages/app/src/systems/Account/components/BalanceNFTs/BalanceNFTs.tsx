@@ -1,7 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
-import { Accordion, Badge, Box, Copyable, VStack } from '@fuel-ui/react';
+import { Accordion, Badge, Box, Copyable } from '@fuel-ui/react';
 import type { CoinAsset } from '@fuel-wallet/types';
 import { useMemo } from 'react';
+import { AssetList } from '~/systems/Asset';
 import { AssetListEmpty } from '~/systems/Asset/components/AssetList/AssetListEmpty';
 import { shortAddress } from '~/systems/Core';
 import { NFTImage } from './NFTImage';
@@ -12,9 +13,15 @@ import {
 
 interface BalanceNFTsProps {
   balances: CoinAsset[] | undefined;
+  isLoading?: boolean;
 }
 
-export const BalanceNFTs = ({ balances = [] }: BalanceNFTsProps) => {
+const EMPTY_ARRAY: CoinAsset[] = [];
+
+export const BalanceNFTs = ({
+  balances = EMPTY_ARRAY,
+  isLoading,
+}: BalanceNFTsProps) => {
   const { collections, defaultValue } = useMemo(() => {
     const collections = groupNFTsByCollection(balances);
     const defaultValue = collections
@@ -27,21 +34,20 @@ export const BalanceNFTs = ({ balances = [] }: BalanceNFTsProps) => {
     };
   }, [balances]);
 
-  if (collections.length === 0) {
-    return (
-      <AssetListEmpty
-        text="You don't have any NFTs"
-        supportText="To add NFTs, simply send them to your Fuel address."
-        hideFaucet
-      />
-    );
-  }
-
   return (
     <Box css={styles.root}>
-      <Accordion type="multiple" defaultValue={defaultValue}>
-        {collections.map((collection) => {
-          return (
+      {isLoading ? (
+        <AssetList.Loading items={4} />
+      ) : (
+        <Accordion type="multiple" defaultValue={defaultValue}>
+          {true && (
+            <AssetListEmpty
+              text="You don't have any NFTs"
+              supportText="To add NFTs, simply send them to your Fuel address."
+              hideFaucet
+            />
+          )}
+          {collections.map((collection) => (
             <Accordion.Item key={collection.name} value={collection.name}>
               <Accordion.Trigger>
                 <Badge variant="ghost" color="gray" as="span">
@@ -64,9 +70,9 @@ export const BalanceNFTs = ({ balances = [] }: BalanceNFTsProps) => {
                 </Box>
               </Accordion.Content>
             </Accordion.Item>
-          );
-        })}
-      </Accordion>
+          ))}
+        </Accordion>
+      )}
     </Box>
   );
 };
