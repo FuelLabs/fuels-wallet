@@ -127,7 +127,7 @@ const styles = {
     px: '$5',
     gap: '$3',
     alignItems: 'center',
-    minHeight: '50px',
+    minHeight: '55px',
     transition: 'none',
   }),
   menuContainer: cssObj({
