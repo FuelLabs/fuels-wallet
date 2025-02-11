@@ -16,6 +16,7 @@ jobs:
   release-changesets:
     name: Release master or rc
     runs-on: buildjet-4vcpu-ubuntu-2204
+    environment: npm-deploy
     steps:
       - uses: actions/checkout@v4
         with:
