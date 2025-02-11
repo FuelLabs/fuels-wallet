@@ -23,8 +23,8 @@
 - [#1805](https://github.com/FuelLabs/fuels-wallet/pull/1805) [`f653d59f`](https://github.com/FuelLabs/fuels-wallet/commit/f653d59f1678c04641dea923a7ac9ed02e365d47) Thanks [@arthurgeron](https://github.com/arthurgeron)! - fix: jest unit tests
 
 - Updated dependencies []:
-  - @fuel-wallet/connections@1.0.0
-  - @fuels/playwright-utils@1.0.0
+  - @fuel-wallet/connections@0.48.0
+  - @fuels/playwright-utils@0.48.0
 
 ## 0.47.1
 
