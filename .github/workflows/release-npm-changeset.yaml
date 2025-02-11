@@ -71,7 +71,7 @@ jobs:
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
       - name: Create Changeset PR
-        uses: FuelLabs/changesets-action@v2.0.0
+        uses: changesets/action@v1
         with:
           commit: "ci(changesets): versioning packages"
           title: "ci(changesets): versioning packages"
