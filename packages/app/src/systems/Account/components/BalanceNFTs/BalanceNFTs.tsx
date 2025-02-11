@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Accordion, Badge, Box, Copyable } from '@fuel-ui/react';
 import type { CoinAsset } from '@fuel-wallet/types';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { AssetList } from '~/systems/Asset';
 import { AssetListEmpty } from '~/systems/Asset/components/AssetList/AssetListEmpty';
 import { shortAddress } from '~/systems/Core';
@@ -18,7 +18,7 @@ interface BalanceNFTsProps {
 
 const EMPTY_ARRAY: CoinAsset[] = [];
 
-export const BalanceNFTs = ({
+const _BalanceNFTs = ({
   balances = EMPTY_ARRAY,
   isLoading,
 }: BalanceNFTsProps) => {
@@ -36,17 +36,9 @@ export const BalanceNFTs = ({
 
   return (
     <Box css={styles.root}>
-      {isLoading ? (
-        <AssetList.Loading items={4} />
-      ) : (
+      {isLoading && <AssetList.Loading items={4} />}
+      {!!collections.length && (
         <Accordion type="multiple" defaultValue={defaultValue}>
-          {true && (
-            <AssetListEmpty
-              text="You don't have any NFTs"
-              supportText="To add NFTs, simply send them to your Fuel address."
-              hideFaucet
-            />
-          )}
           {collections.map((collection) => (
             <Accordion.Item key={collection.name} value={collection.name}>
               <Accordion.Trigger>
@@ -72,6 +64,13 @@ export const BalanceNFTs = ({
             </Accordion.Item>
           ))}
         </Accordion>
+      )}
+      {!collections?.length && (
+        <AssetListEmpty
+          text="You don't have any NFTs"
+          supportText="To add NFTs, simply send them to your Fuel address."
+          hideFaucet
+        />
       )}
     </Box>
   );
@@ -142,3 +141,9 @@ const styles = {
     textAlign: 'center',
   }),
 };
+
+export const BalanceNFTs = memo(
+  _BalanceNFTs,
+  (a: BalanceNFTsProps, b: BalanceNFTsProps) =>
+    a.balances?.length === b.balances?.length && a.isLoading === b.isLoading
+);
