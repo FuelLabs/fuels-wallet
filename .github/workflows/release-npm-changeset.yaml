@@ -14,7 +14,7 @@ env:
 
 jobs:
   check-commit:
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: ubuntu-latest
     outputs:
       is_changeset_pr: ${{ steps.check-commit.outputs.is_changeset_pr }}
     steps:
@@ -32,7 +32,7 @@ jobs:
   create-pr:
     needs: check-commit
     if: needs.check-commit.outputs.is_changeset_pr == 'false'
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: ubuntu-latest
     environment: npm-deploy
     steps:
       - uses: actions/checkout@v4
@@ -69,7 +69,7 @@ jobs:
   publish-npm:
     needs: check-commit
     if: needs.check-commit.outputs.is_changeset_pr == 'true'
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: ubuntu-latest
     environment: npm-deploy
     steps:
       - uses: actions/checkout@v4
