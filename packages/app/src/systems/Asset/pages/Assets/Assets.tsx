@@ -50,7 +50,7 @@ export function Assets() {
           leftIcon={Icon.is('Plus')}
           variant="ghost"
         >
-          Add Wedewel!
+          Add new
         </Button>
       </Layout.BottomBar>
     </Layout>
