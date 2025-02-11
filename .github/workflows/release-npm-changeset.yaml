@@ -76,7 +76,7 @@ jobs:
           title: "ci(changesets): versioning packages"
           createGithubReleases: false
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-npm:
     needs: check-commit
