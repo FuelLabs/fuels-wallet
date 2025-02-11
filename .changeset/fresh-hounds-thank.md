@@ -1,5 +1,0 @@
----
-"fuels-wallet": patch
----
-
-gap
