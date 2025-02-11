@@ -1,5 +1,23 @@
 # fuels-wallet
 
+## 1.2.0
+
+### Minor Changes
+
+- [`87e5b8d7`](https://github.com/FuelLabs/fuels-wallet/commit/87e5b8d7eb0188d523bf046859b9f3c970b886f3) Thanks [@nelitow](https://github.com/nelitow)! - adasdasd
+
+### Patch Changes
+
+- [`35169fce`](https://github.com/FuelLabs/fuels-wallet/commit/35169fce8ccc026b78f0a93e87981c771c150aba) Thanks [@nelitow](https://github.com/nelitow)! - gap
+
+- [`16064815`](https://github.com/FuelLabs/fuels-wallet/commit/160648150a245c80d39c6b43da44b6c1266e2667) Thanks [@nelitow](https://github.com/nelitow)! - 1
+
+- [`1430d669`](https://github.com/FuelLabs/fuels-wallet/commit/1430d669b342b9523a2686fd4ab1cd0b4f05e48d) Thanks [@nelitow](https://github.com/nelitow)! - asd
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@1.2.0
+  - @fuels/playwright-utils@1.2.0
+
 ## 1.1.0
 
 ### Minor Changes
