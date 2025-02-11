@@ -128,6 +128,8 @@ jobs:
         if: steps.changesets.outputs.published == 'true'
         run: pnpm build:crx
         env:
+          ## increase node.js m memory limit for building
+          ## with sourcemaps
           NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Build Fuel Wallet Development
