@@ -43,7 +43,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(
         data-noborder={noBorder}
         data-scrollable={!noScroll}
       >
-        {children}
+        {children}!
       </Box>
     );
   }
