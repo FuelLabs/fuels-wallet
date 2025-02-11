@@ -14,7 +14,7 @@ env:
 
 jobs:
   check-commit:
-    name: Release master or rc
+    name: Decide if releases or create PR
     runs-on: buildjet-4vcpu-ubuntu-2204
     permissions:
       contents: read
@@ -25,24 +25,24 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Check if merge from changeset PR
-        id: check-commit
+      - id: check-commit
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [[ "${{ github.event.head_commit.message }}" == "Merge pull request"* ]]; then
             PR_NUMBER=$(echo "${{ github.event.head_commit.message }}" | grep -o '#[0-9]\+' | tr -d '#')
-            if [ ! -z "$PR_NUMBER" ]; then
-              PR_TITLE=$(gh pr view $PR_NUMBER --json title -q .title)
+            if [ -n "$PR_NUMBER" ]; then
+              PR_TITLE=$(gh pr view "$PR_NUMBER" --json title -q .title)
               if [[ "$PR_TITLE" == "ci(changesets): versioning packages" ]]; then
-                echo "is_changeset_pr=true" >> $GITHUB_OUTPUT
+                echo "is_changeset_pr=true" >> "$GITHUB_OUTPUT"
                 exit 0
               fi
             fi
           fi
-          echo "is_changeset_pr=false" >> $GITHUB_OUTPUT
+          echo "is_changeset_pr=false" >> "$GITHUB_OUTPUT"
 
   create-pr:
+    name: Push changes to Changeset PR
     needs: check-commit
     if: needs.check-commit.outputs.is_changeset_pr == 'false'
     runs-on: buildjet-4vcpu-ubuntu-2204
@@ -79,6 +79,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-npm:
+    name: Release to NPM
     needs: check-commit
     if: needs.check-commit.outputs.is_changeset_pr == 'true'
     runs-on: ubuntu-latest
