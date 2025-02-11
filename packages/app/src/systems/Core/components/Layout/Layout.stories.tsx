@@ -64,7 +64,7 @@ export const Internal = (args: LayoutProps) => (
 export const InternalLoading = (args: LayoutProps) => (
   <Layout {...args} isLoading title="Some Title">
     <Layout.TopBar />
-    <Layout.Content>This is a content!</Layout.Content>
+    <Layout.Content>This is a content!!!</Layout.Content>
   </Layout>
 );
 
