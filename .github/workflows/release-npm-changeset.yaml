@@ -122,7 +122,7 @@ jobs:
           version: pnpm changeset version
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-          NPM_TOKEN_WALLET: ${{ secrets.NPM_TOKEN_WALLET }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN_WALLET }}
 
       - name: Build Fuel Wallet
         if: steps.changesets.outputs.published == 'true'
