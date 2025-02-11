@@ -7,7 +7,6 @@ export type Maybe<T> = T | null | undefined;
 export enum CRXPages {
   signup = '/index.html',
   popup = '/popup.html',
-  background = '/background.html',
 }
 
 export const Pages = {
