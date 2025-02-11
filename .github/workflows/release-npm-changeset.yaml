@@ -12,14 +12,13 @@ concurrency:
 env:
   BUILD_VERSION: ""
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   check-commit:
     name: Release master or rc
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
     outputs:
       is_changeset_pr: ${{ steps.check-commit.outputs.is_changeset_pr }}
     steps:
@@ -47,6 +46,9 @@ jobs:
     needs: check-commit
     if: needs.check-commit.outputs.is_changeset_pr == 'false'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
