@@ -19,7 +19,7 @@ interface BalanceNFTsProps {
 
 const EMPTY_ARRAY: CoinAsset[] = [];
 
-const _BalanceNFTs = ({
+export const BalanceNFTs = ({
   balances = EMPTY_ARRAY,
   isLoading,
 }: BalanceNFTsProps) => {
@@ -155,9 +155,3 @@ const styles = {
     textAlign: 'center',
   }),
 };
-
-export const BalanceNFTs = memo(
-  _BalanceNFTs,
-  (a: BalanceNFTsProps, b: BalanceNFTsProps) =>
-    a.balances?.length === b.balances?.length && a.isLoading === b.isLoading
-);
