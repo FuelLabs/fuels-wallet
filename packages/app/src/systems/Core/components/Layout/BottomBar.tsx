@@ -23,7 +23,7 @@ const styles = {
   root: (count: number) =>
     cssObj({
       width: '100%',
-      px: '$4',
+      px: '$3',
       py: '$4',
       boxSizing: 'border-box',
       gridTemplateColumns: `repeat(${count}, 1fr)`,
