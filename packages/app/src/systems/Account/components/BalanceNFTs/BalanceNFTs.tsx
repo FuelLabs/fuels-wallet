@@ -42,7 +42,17 @@ export const BalanceNFTs = ({
           <NFTImageLoading />
           <NFTImageLoading />
           <NFTImageLoading />
+          <NFTImageLoading />
+          <NFTImageLoading />
+          <NFTImageLoading />
         </Box>
+      )}
+      {!isLoading && !collections?.length && (
+        <AssetListEmpty
+          text="You don't have any NFTs"
+          supportText="To add NFTs, simply send them to your Fuel address."
+          hideFaucet
+        />
       )}
       {!!collections.length && (
         <Accordion type="multiple" defaultValue={defaultValue}>
@@ -71,13 +81,6 @@ export const BalanceNFTs = ({
             </Accordion.Item>
           ))}
         </Accordion>
-      )}
-      {!collections?.length && (
-        <AssetListEmpty
-          text="You don't have any NFTs"
-          supportText="To add NFTs, simply send them to your Fuel address."
-          hideFaucet
-        />
       )}
     </Box>
   );
