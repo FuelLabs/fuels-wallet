@@ -1,5 +1,6 @@
 import { crx } from '@crxjs/vite-plugin';
 import { defineConfig } from 'vite';
+import type { PluginOption } from 'vite';
 
 import manifest from './manifest.config.js';
 import baseConfig from './vite-utils/vite.base.config.js';
@@ -17,15 +18,29 @@ export default defineConfig({
     ...baseConfig.build,
     outDir: OUT_DIR,
   },
-  plugins: baseConfig.plugins?.concat([
+  plugins: [
+    ...(baseConfig.plugins || []),
     crx({
       manifest,
-    }),
+    }) as PluginOption,
     zipBuildPlugin({
       inDir: OUT_DIR,
       outDir: baseConfig.build?.outDir,
       outFileName: `fuel-wallet-${APP_VERSION}${APP_VERSION_POSTFIX}.zip`,
       excludeFiles: /.map$/,
     }),
-  ]),
+  ],
+  legacy: {
+    skipWebSocketTokenCheck: true,
+  },
+  server: {
+    ...baseConfig.server,
+    allowedHosts: true,
+    cors: true,
+    hmr: {
+      protocol: 'ws',
+      clientPort: Number(process.env.PORT),
+      host: 'localhost',
+    },
+  },
 });

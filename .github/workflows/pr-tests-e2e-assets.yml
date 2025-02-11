@@ -16,10 +16,17 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+
+      - name: Extract pnpm version from .tool-versions
+        id: get_pnpm
+        run: |
+          PNPM_VERSION=$(grep '^pnpm' .tool-versions | awk '{print $2}')
+          echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
+
       - uses: FuelLabs/github-actions/setups/node@master
         with:
           node-version: 20.11.0
-          pnpm-version: 9.5.0
+          pnpm-version: ${{ env.PNPM_VERSION }}
 
       - uses: ./.github/actions/setup-playwright
 
@@ -28,7 +35,7 @@ jobs:
         timeout-minutes: 15
         env:
           NODE_ENV: test
-          READONLY_TESTNET_ASSETS_VIEW: ${{secrets.READONLY_TESTNET_ASSETS_VIEW}}
+          READONLY_TESTNET_ASSETS_VIEW: ${{ secrets.READONLY_TESTNET_ASSETS_VIEW }}
 
       - name: Upload Test Report
         if: failure()
