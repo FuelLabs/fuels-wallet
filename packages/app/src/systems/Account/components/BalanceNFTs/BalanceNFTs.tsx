@@ -2,6 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Accordion, Badge, Box, Copyable } from '@fuel-ui/react';
 import type { CoinAsset } from '@fuel-wallet/types';
 import { memo, useMemo } from 'react';
+import { NFTImageLoading } from '~/systems/Account/components/BalanceNFTs/NFTImageLoading';
 import { AssetList } from '~/systems/Asset';
 import { AssetListEmpty } from '~/systems/Asset/components/AssetList/AssetListEmpty';
 import { shortAddress } from '~/systems/Core';
@@ -36,7 +37,13 @@ const _BalanceNFTs = ({
 
   return (
     <Box css={styles.root}>
-      {isLoading && <AssetList.Loading items={4} />}
+      {isLoading && !collections.length && (
+        <Box css={styles.gridLoading}>
+          <NFTImageLoading />
+          <NFTImageLoading />
+          <NFTImageLoading />
+        </Box>
+      )}
       {!!collections.length && (
         <Accordion type="multiple" defaultValue={defaultValue}>
           {collections.map((collection) => (
@@ -107,7 +114,6 @@ const styles = {
 
       svg: {
         width: '$3',
-        height: '$3',
       },
     },
     '.fuel_Accordion-content': {
@@ -132,6 +138,14 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '$3',
+  }),
+  gridLoading: cssObj({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '$3',
+    marginTop: '45px',
+    paddingLeft: '$5',
+    paddingRight: '$2',
   }),
   name: cssObj({
     marginTop: '$1',
