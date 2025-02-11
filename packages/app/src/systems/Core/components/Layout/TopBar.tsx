@@ -124,7 +124,7 @@ export function TopBar({ type = TopBarType.internal, ...props }: TopBarProps) {
 const styles = {
   root: cssObj({
     py: '$2',
-    px: '$5',
+    px: '$1',
     gap: '$3',
     alignItems: 'center',
     minHeight: '52px',
