@@ -50,7 +50,7 @@ export function Assets() {
           leftIcon={Icon.is('Plus')}
           variant="ghost"
         >
-          Add new
+          Add new asset
         </Button>
       </Layout.BottomBar>
     </Layout>
