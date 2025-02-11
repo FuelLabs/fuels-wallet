@@ -1,5 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Card, Heading, Icon, Text } from '@fuel-ui/react';
+import { BALANCE_NFTS_TAB_HEIGHT } from '~/systems/Account/components/BalanceNFTs/constants';
 import { useFundWallet } from '~/systems/FundWallet';
 
 export type AssetListEmptyProps = {
@@ -17,7 +18,7 @@ export function AssetListEmpty({
   const showFund = hasFaucet || hasBridge;
 
   return (
-    <Box style={{ minHeight: 244 }}>
+    <Box css={styles.container}>
       <Card css={styles.empty}>
         <Card.Body>
           {!!text && <Heading as="h5">{text}</Heading>}
@@ -42,6 +43,9 @@ export function AssetListEmpty({
 }
 
 const styles = {
+  container: cssObj({
+    minHeight: BALANCE_NFTS_TAB_HEIGHT,
+  }),
   empty: cssObj({
     h5: {
       margin: 0,
