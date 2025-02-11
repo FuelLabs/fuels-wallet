@@ -19,15 +19,24 @@ jobs:
       is_changeset_pr: ${{ steps.check-commit.outputs.is_changeset_pr }}
     steps:
       - uses: actions/checkout@v4
-      - name: Check commit message
+        with:
+          fetch-depth: 0
+      - name: Check if merge from changeset PR
         id: check-commit
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          COMMIT_MSG=$(git log -1 --pretty=%B)
-          if [[ "$COMMIT_MSG" == "ci(changesets): versioning packages"* ]]; then
-            echo "is_changeset_pr=true" >> $GITHUB_OUTPUT
-          else
-            echo "is_changeset_pr=false" >> $GITHUB_OUTPUT
+          if [[ "${{ github.event.head_commit.message }}" == "Merge pull request"* ]]; then
+            PR_NUMBER=$(echo "${{ github.event.head_commit.message }}" | grep -o '#[0-9]\+' | tr -d '#')
+            if [ ! -z "$PR_NUMBER" ]; then
+              PR_TITLE=$(gh pr view $PR_NUMBER --json title -q .title)
+              if [[ "$PR_TITLE" == "ci(changesets): versioning packages" ]]; then
+                echo "is_changeset_pr=true" >> $GITHUB_OUTPUT
+                exit 0
+              fi
+            fi
           fi
+          echo "is_changeset_pr=false" >> $GITHUB_OUTPUT
 
   create-pr:
     needs: check-commit
