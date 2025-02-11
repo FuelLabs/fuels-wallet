@@ -352,7 +352,6 @@ export const transactionHistoryMachine = createMachine(
           const address = input.address;
           const providerUrl = selectedNetwork?.url || '';
           const initialEndCursor = input.initialEndCursor;
-          // const result = await Promise.race([
           const result = await TxService.getAllCursors({
             address,
             providerUrl,
