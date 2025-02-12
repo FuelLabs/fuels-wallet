@@ -4,7 +4,6 @@ category: For Developers
 ---
 
 # Getting Started
-
 The Fuel Wallet SDK serves as a connection manager between your DApp and other wallets compatible with the Fuel Network. This package ensures that you can connect to the Fuel Wallet as well as any other wallet using a unified API.
 
 If you are using **React** jump to the [React section](./#using-react).
@@ -14,10 +13,18 @@ If you are using **React** jump to the [React section](./#using-react).
 To begin integrating the Fuel Wallet SDK into your DApp, you first need to install the packages `@fuels/connectors` and `fuels`.
 
 ```bash
-npm install fuels @fuels/connectors
+npm install fuels @fuels/connectors wagmi viem
 ```
 
 The installation also requires the `fuels` SDK, as it is used to communicate with the Fuel Network and provides a set of utilities required for interacting with contracts on the Fuel Network.
+
+Besides that, we also need to install the `@reown/appkit` to allow connection to Ethereum and Solana wallets.
+
+```bash
+npm install @reown/appkit @reown/appkit-adapter-wagmi @reown/appkit-adapter-solana @solana/wallet-adapter-wallets
+```
+
+This will allow developers and projects to choose and configure multiple blockchain networks within their instance of AppKit, extending beyond just Fuel (fuelVM) networks.
 
 ## Example
 
@@ -56,13 +63,26 @@ We also provide a set of React hooks and a user interface (UI) for seamless inte
 ### Installation
 
 ```bash
-npm install fuels @fuels/connectors @fuels/react @tanstack/react-query
+npm install fuels @fuels/connectors @fuels/react @tanstack/react-query wagmi viem
 ```
 
 - [fuels](https://github.com/FuelLabs/fuels-ts) is the SDK that provides a set of utilities for interacting with the Fuel Network.
 - [@fuels/connectors](https://github.com/FuelLabs/fuel-connectors) is the collection of connectors that allow you to connect to the Fuel Wallet.
 - [@fuels/react](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react) is a set of React hooks and a UI for seamless interaction with connectors.
 - [@tanstack/react-query](https://github.com/tanstack/query) is a library for managing and caching data in React applications.
+- [wagmi](https://github.com/wevm/wagmi) is a React library for Ethereum apps.
+- [viem](https://github.com/wevm/viem) is a Typescript interface for Ethereum apps.
+
+Besides that, we also need to install the `@reown/appkit` to allow connection to Ethereum and Solana wallets.
+
+```bash
+npm install @reown/appkit @reown/appkit-adapter-wagmi @reown/appkit-adapter-solana @solana/wallet-adapter-wallets
+```
+
+- [@reown/appkit](https://github.com/reown/appkit) is a SDK that allows you to connect to Ethereum and Solana wallets.
+- [@reown/appkit-adapter-wagmi](https://github.com/reown-com/appkit/tree/main/packages/adapters/wagmi) is a adapter for the Wagmi library.
+- [@reown/appkit-adapter-solana](https://github.com/reown-com/appkit/tree/main/packages/adapters/solana) is a adapter for the Solana Wallet Adapter.
+- [@solana/wallet-adapter-wallets](https://github.com/anza-xyz/wallet-adapter) is a modular TypeScript wallet adapters for Solana.
 
 ### Example
 
@@ -73,17 +93,72 @@ Wrap your application with the providers `QueryClientProvider` and `FuelProvider
 ```tsx
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { FuelProvider } from '@fuels/react';
+import { createAppKit } from '@reown/appkit';
+import { type AppKitNetwork, mainnet, solana } from '@reown/appkit/networks';
+import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
+import { SolanaAdapter } from '@reown/appkit-adapter-solana';
+
+import { Provider, CHAIN_IDS, type FuelConfig } from 'fuels';
+import { FuelProvider, type NetworkConfig } from '@fuels/react';
 import { defaultConnectors } from '@fuels/connectors';
 
+// 1. Setup queryClient
 const queryClient = new QueryClient();
+
+// 2. Setup Ethereum and Solana networks
+const networks: [AppKitNetwork, ...AppKitNetwork[]] = [mainnet, solana];
+
+// 3. Create Wagmi Adapter
+const WC_PROJECT_ID = 'YOUR_WALLET_CONNECT_PROJECT_ID';
+const wagmiAdapter = new WagmiAdapter({
+  networks,
+  projectId: WC_PROJECT_ID,
+});
+
+// 4. Create Solana Adapter
+const solanaAdapter = new SolanaAdapter();
+
+// 5. Create AppKit
+const appkit = createAppKit({
+  adapters: [wagmiAdapter, solanaAdapter],
+  enableWalletConnect: !!WC_PROJECT_ID,
+  projectId: WC_PROJECT_ID,
+  networks,
+  features: {
+    email: false,
+    socials: false,
+    analytics: false,
+  },
+});
+
+// 6. Setup fuelConfig
+const PROVIDER_URL = 'https://node.fuel.network/graphql';
+const CHAIN_ID = CHAIN_IDS.fuel.mainnet;
+const fuelConfig: FuelConfig = {
+  connectors: defaultConnectors({ 
+    devMode: true,
+    chainId: CHAIN_ID,
+    fuelProvider: Provider.create(PROVIDER_URL),
+    appkit,
+  }),
+};
+
+// 7. Setup fuelNetworks
+const fuelNetworks: NetworkConfig[] = [
+  {
+    chainId: CHAIN_ID,
+    url: PROVIDER_URL,
+  },
+];
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <FuelProvider fuelConfig={{ connectors: defaultConnectors({ devMode: true }) }}>
-        <App />
-      </FuelProvider>
+      <WagmiProvider config={wagmiAdapter.wagmiConfig}>
+        <FuelProvider fuelConfig={fuelConfig} networks={fuelNetworks}>
+          <App />
+        </FuelProvider>
+      </WagmiProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );
