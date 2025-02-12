@@ -1,5 +1,13 @@
 # fuels-wallet
 
+## 0.48.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.48.2
+  - @fuels/playwright-utils@0.48.2
+
 ## 0.48.1
 
 ### Patch Changes
