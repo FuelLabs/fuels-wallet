@@ -1,17 +1,19 @@
 import { cssObj } from '@fuel-ui/css';
-import { ContentLoader } from '@fuel-ui/react';
+import { Box, ContentLoader } from '@fuel-ui/react';
 
-export function NFTImageLoading({ height = 89 }: { height?: number }) {
+export function NFTImageLoading({ size = 89 }: { size?: number }) {
   return (
-    <ContentLoader
-      width="100%"
-      height={height ?? '100%'}
-      viewBox={`0 0 22 ${height}`}
-      style={cssObj({
-        borderRadius: '12px',
+    <Box
+      css={cssObj({
+        overflow: 'hidden',
+        borderRadius: '10px',
+        width: `${size}px`,
+        height: `${size}px`,
       })}
     >
-      <rect x="0" y="0" rx="0" ry="0" width="22" height="89" />
-    </ContentLoader>
+      <ContentLoader width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <rect x="0" y="0" rx="0" ry="0" width={size} height={size} />
+      </ContentLoader>
+    </Box>
   );
 }
