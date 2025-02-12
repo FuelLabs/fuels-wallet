@@ -4,6 +4,7 @@ import test, { chromium, expect } from '@playwright/test';
 import {
   getButtonByText,
   getByAriaLabel,
+  getElementByText,
   getInputByName,
   hasAriaLabel,
   hasText,
@@ -20,7 +21,7 @@ import {
 
 import { Address } from 'fuels';
 import type { MockData } from '../mocks';
-import { WALLET_PASSWORD, mockData } from '../mocks';
+import { PRIVATE_KEY, WALLET_PASSWORD, mockData } from '../mocks';
 
 test.describe('New Accounts', () => {
   let browser: Browser;
@@ -37,6 +38,37 @@ test.describe('New Accounts', () => {
     await visit(page, '/');
     data = await mockData(page, 2, undefined, mnemonic);
     await reload(page);
+  });
+
+  test('should not be able to import public address as a private key', async () => {
+    await getByAriaLabel(page, 'Accounts').click();
+    await getByAriaLabel(page, 'Import from private key').click();
+    await getByAriaLabel(page, 'Private Key').fill(PRIVATE_KEY);
+    await expect
+      .poll(
+        async () => {
+          return await getElementByText(
+            page,
+            'This is a public key, please insert a private key instead.'
+          ).isVisible();
+        },
+        { timeout: 10000 }
+      )
+      .toBeFalsy();
+    await getByAriaLabel(page, 'Private Key').fill(
+      '0xC425c5D0d1685Dd52BFD10A4e5C7612ea50794Cb2e675c4aa94F1E1291712ef5'
+    );
+    await expect
+      .poll(
+        async () => {
+          return await getElementByText(
+            page,
+            'This is a public key, please insert a private key instead.'
+          ).isVisible();
+        },
+        { timeout: 10000 }
+      )
+      .toBeTruthy();
   });
 
   test('should be able to switch between accounts', async () => {

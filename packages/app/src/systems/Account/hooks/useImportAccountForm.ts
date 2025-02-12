@@ -1,6 +1,6 @@
 import type { Account } from '@fuel-wallet/types';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { isB256 } from 'fuels';
+import { Address, isB256 } from 'fuels';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import type { Maybe } from '~/systems/Core';
@@ -32,6 +32,11 @@ export function useImportAccountForm(opts: UseImportAccountForm) {
     privateKey: yup
       .string()
       .test('is-key-valid', 'Private Key is not valid', (v) => isB256(v || ''))
+      .test(
+        'is-not-checksum',
+        'This is a public key, please insert a private key instead.',
+        (v = '') => !Address.isChecksumValid(v)
+      )
       .required('Private Key is required'),
   });
 

@@ -13,19 +13,87 @@ env:
   BUILD_VERSION: ""
 
 jobs:
-  release-changesets:
-    name: Release master or rc
+  check-commit:
+    name: Decide if releases or create PR
     runs-on: buildjet-4vcpu-ubuntu-2204
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      is_changeset_pr: ${{ steps.check-commit.outputs.is_changeset_pr }}
     steps:
       - uses: actions/checkout@v4
         with:
-          # need this to get full git-history/clone in order to build changelogs and check changesets
           fetch-depth: 0
-          # workaround to ensure force pushes to changeset branch use REPO_TOKEN owner's account
-          # see https://github.com/changesets/action/issues/70
+      - id: check-commit
+        name: Check if this commit is a regular merge or a changeset PR merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          FIRST_LINE=$(echo "$COMMIT_MSG" | head -n1)
+          if [[ "$FIRST_LINE" == "ci(changesets): versioning packages"* ]]; then
+            PR_NUMBER=$(echo "$FIRST_LINE" | grep -o '#[0-9]\+' | head -n1 | tr -d '#')
+            if [ -n "$PR_NUMBER" ]; then
+              PR_TITLE=$(gh pr view "$PR_NUMBER" --json title -q .title)
+              if [[ "$PR_TITLE" == "ci(changesets): versioning packages" ]]; then
+                echo "is_changeset_pr=true" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+            fi
+          fi
+          echo "is_changeset_pr=false" >> "$GITHUB_OUTPUT"
+
+  create-pr:
+    name: Push changes to Changeset PR
+    needs: check-commit
+    if: needs.check-commit.outputs.is_changeset_pr == 'false'
+    runs-on: buildjet-4vcpu-ubuntu-2204
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Extract pnpm version from .tool-versions
+        id: get_pnpm
+        run: |
+          PNPM_VERSION=$(grep '^pnpm' .tool-versions | awk '{print $2}')
+          echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
+      - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 20.11.0
+          pnpm-version: ${{  env.PNPM_VERSION }}
+
+      - name: Setup git user (for changelog step)
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Create Changeset PR
+        uses: changesets/action@v1
+        with:
+          commit: "ci(changesets): versioning packages"
+          title: "ci(changesets): versioning packages"
+          createGithubReleases: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-npm:
+    name: Release to NPM
+    needs: check-commit
+    if: needs.check-commit.outputs.is_changeset_pr == 'true'
+    runs-on: ubuntu-latest
+    environment: npm-deploy
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
           persist-credentials: false
       - name: Extract pnpm version from .tool-versions
         id: get_pnpm
@@ -48,27 +116,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup git user (for changelog step)
-        run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-
       - name: Build packages
         run: pnpm build:libs
 
-      - name: Create Release Pull Request or Publish to NPM
+      - name: Publish to NPM
         id: changesets
         uses: FuelLabs/changesets-action@v2.0.0
         with:
           publish: pnpm changeset publish --tag next
-          commit: "ci(changesets): versioning packages"
-          title: "ci(changesets): versioning packages"
           createGithubReleases: aggregate
-          githubReleaseName: v${{ env.BUILD_VERSION }}
-          githubTagName: v${{ env.BUILD_VERSION }}
+          version: pnpm changeset version
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN_WALLET }}
 
       - name: Build Fuel Wallet
         if: steps.changesets.outputs.published == 'true'
