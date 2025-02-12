@@ -26,10 +26,10 @@ jobs:
         with:
           fetch-depth: 0
       - id: check-commit
+        name: Check if commit is a changeset PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Store commit message in a variable and escape it
           COMMIT_MSG=$(git log -1 --pretty=%B)
           FIRST_LINE=$(echo "$COMMIT_MSG" | head -n1)
           if [[ "$FIRST_LINE" == "ci(changesets): versioning packages"* ]]; then
