@@ -1,19 +1,19 @@
 {
   "name": "@fuels/playwright-utils",
-  "version": "0.48.2",
+  "version": "0.48.3",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "type": "module",
   "publishConfig": {
     "access": "public",
     "main": "./dist/index.js",
-    "module": "./dist/index.mjs",
+    "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "typings": "./dist/index.d.ts",
     "exports": {
       ".": {
         "require": "./dist/index.js",
-        "default": "./dist/index.mjs"
+        "default": "./dist/index.js"
       }
     }
   },
