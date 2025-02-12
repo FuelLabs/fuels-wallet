@@ -25,12 +25,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - id: check-commit1
+      - id: check-commit
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [[ "$(echo "${{ github.event.head_commit.message }}" | head -n1)" == "ci(changesets): versioning packages"* ]]; then
-            PR_NUMBER=$(echo "${{ github.event.head_commit.message }}" | grep -o '#[0-9]\+' | tr -d '#')
+          # Store commit message in a variable and escape it
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          FIRST_LINE=$(echo "$COMMIT_MSG" | head -n1)
+          if [[ "$FIRST_LINE" == "ci(changesets): versioning packages"* ]]; then
+            PR_NUMBER=$(echo "$FIRST_LINE" | grep -o '#[0-9]\+' | head -n1 | tr -d '#')
             if [ -n "$PR_NUMBER" ]; then
               PR_TITLE=$(gh pr view "$PR_NUMBER" --json title -q .title)
               if [[ "$PR_TITLE" == "ci(changesets): versioning packages"* ]]; then
