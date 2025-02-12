@@ -7,6 +7,7 @@ import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 import { BalanceAssets } from '~/systems/Account/components/BalanceAssets/BalanceAssets';
 import { BalanceNFTs } from '~/systems/Account/components/BalanceNFTs/BalanceNFTs';
+import { BALANCE_NFTS_TAB_HEIGHT } from '~/systems/Account/components/BalanceNFTs/constants';
 import { QuickAccountConnect } from '~/systems/Account/components/QuickAccountConnect/QuickAccountConnect';
 import { HomeActions } from '../../components';
 
@@ -52,7 +53,7 @@ export function Home() {
             <BalanceAssets balances={account?.balances} isLoading={isLoading} />
           </Tabs.Content>
           <Tabs.Content value="nft" css={styles.assetsList}>
-            <BalanceNFTs balances={account?.balances} />
+            <BalanceNFTs balances={account?.balances} isLoading={isLoading} />
           </Tabs.Content>
         </Tabs>
       </Layout.Content>
@@ -69,8 +70,7 @@ const styles = {
     },
   }),
   assetsList: cssObj({
-    maxHeight: 230,
-    paddingBottom: '$4',
+    height: BALANCE_NFTS_TAB_HEIGHT,
     ...scrollable(),
     overflowY: 'scroll !important',
   }),

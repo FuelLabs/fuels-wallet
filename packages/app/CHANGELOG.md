@@ -1,5 +1,57 @@
 # fuels-wallet
 
+## 0.48.3
+
+### Patch Changes
+
+- Updated dependencies [[`58797edd`](https://github.com/FuelLabs/fuels-wallet/commit/58797eddf31deb94c89da335423ca73d4f852627)]:
+  - @fuels/playwright-utils@0.48.3
+  - @fuel-wallet/connections@0.48.3
+
+## 0.48.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.48.2
+  - @fuels/playwright-utils@0.48.2
+
+## 0.48.1
+
+### Patch Changes
+
+- [#1829](https://github.com/FuelLabs/fuels-wallet/pull/1829) [`72366976`](https://github.com/FuelLabs/fuels-wallet/commit/723669768e9f3a28643364e42ebc0fa49f66385b) Thanks [@arthurgeron](https://github.com/arthurgeron)! - fix: nft list getting cut off
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.48.1
+  - @fuels/playwright-utils@0.48.1
+
+## 0.48.0
+
+### Major Changes
+
+- [#1784](https://github.com/FuelLabs/fuels-wallet/pull/1784) [`b3aa7cec`](https://github.com/FuelLabs/fuels-wallet/commit/b3aa7cec50bd141d336528062e60026688464373) Thanks [@Dhanraj30](https://github.com/Dhanraj30)! - chore: make address checksummed on Receive Page
+
+### Minor Changes
+
+- [#1810](https://github.com/FuelLabs/fuels-wallet/pull/1810) [`5ab72e4f`](https://github.com/FuelLabs/fuels-wallet/commit/5ab72e4f868d1499517d60ad9c8855be163b5c81) Thanks [@arthurgeron](https://github.com/arthurgeron)! - feat: prevent users from importing public keys as private
+
+### Patch Changes
+
+- [#1788](https://github.com/FuelLabs/fuels-wallet/pull/1788) [`fd1e342a`](https://github.com/FuelLabs/fuels-wallet/commit/fd1e342a81041aa6fed925df9c45449cb3946e00) Thanks [@arthurgeron](https://github.com/arthurgeron)! - feat: show token value converted to USD
+
+- [#1814](https://github.com/FuelLabs/fuels-wallet/pull/1814) [`44cb7823`](https://github.com/FuelLabs/fuels-wallet/commit/44cb7823a43c78a36358927a9caee7152d12b196) Thanks [@nelitow](https://github.com/nelitow)! - Audit package updates
+
+- [#1813](https://github.com/FuelLabs/fuels-wallet/pull/1813) [`1bca7e3c`](https://github.com/FuelLabs/fuels-wallet/commit/1bca7e3cc5e339b855cca2e2b8e3c3af1cbbd157) Thanks [@arthurgeron](https://github.com/arthurgeron)! - feat: use adf version of pnpm
+
+- [#1802](https://github.com/FuelLabs/fuels-wallet/pull/1802) [`37a5c22b`](https://github.com/FuelLabs/fuels-wallet/commit/37a5c22b69ba48eabf20e033f166b3c5228cff98) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: upgrade checkout action to v4 + remove chainInfo machine
+
+- [#1805](https://github.com/FuelLabs/fuels-wallet/pull/1805) [`f653d59f`](https://github.com/FuelLabs/fuels-wallet/commit/f653d59f1678c04641dea923a7ac9ed02e365d47) Thanks [@arthurgeron](https://github.com/arthurgeron)! - fix: jest unit tests
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.48.0
+  - @fuels/playwright-utils@0.48.0
+
 ## 0.47.1
 
 ### Patch Changes
