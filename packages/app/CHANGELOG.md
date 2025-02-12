@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.48.1
+
+### Patch Changes
+
+- [#1829](https://github.com/FuelLabs/fuels-wallet/pull/1829) [`72366976`](https://github.com/FuelLabs/fuels-wallet/commit/723669768e9f3a28643364e42ebc0fa49f66385b) Thanks [@arthurgeron](https://github.com/arthurgeron)! - fix: nft list getting cut off
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.48.1
+  - @fuels/playwright-utils@0.48.1
+
 ## 0.48.0
 
 ### Major Changes
