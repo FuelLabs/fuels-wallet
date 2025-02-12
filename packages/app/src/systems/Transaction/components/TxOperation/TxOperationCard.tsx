@@ -193,7 +193,7 @@ const styles = {
   contentCol: (flat: boolean) =>
     cssObj({
       display: 'flex',
-      backgroundColor: '$white',
+      backgroundColor: '$cardBg',
       boxShadow: flat
         ? 'none'
         : '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',

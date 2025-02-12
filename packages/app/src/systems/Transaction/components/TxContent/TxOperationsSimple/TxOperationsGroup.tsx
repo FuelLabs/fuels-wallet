@@ -80,6 +80,7 @@ const styles = {
     justifyContent: 'center',
     paddingBottom: '4px',
     boxSizing: 'border-box',
+    padding: '0 $1',
   }),
   header: cssObj({
     display: 'flex',
