@@ -1,5 +1,3 @@
-'use client';
-
 import { cssObj } from '@fuel-ui/css';
 import {
   Alert,
