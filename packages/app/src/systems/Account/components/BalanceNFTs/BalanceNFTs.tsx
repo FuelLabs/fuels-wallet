@@ -7,6 +7,8 @@ import { AssetList } from '~/systems/Asset';
 import { AssetListEmpty } from '~/systems/Asset/components/AssetList/AssetListEmpty';
 import { shortAddress } from '~/systems/Core';
 import { NFTImage } from './NFTImage';
+import { NFTListItemLoading } from './NFTListItemLoading';
+import { NFTTitleLoading } from './NFTTitleLoading';
 import {
   UNKNOWN_COLLECTION_TITLE,
   groupNFTsByCollection,
@@ -38,13 +40,16 @@ export const BalanceNFTs = ({
   return (
     <Box css={styles.root}>
       {isLoading && !collections.length && (
-        <Box css={styles.gridLoading}>
-          <NFTImageLoading />
-          <NFTImageLoading />
-          <NFTImageLoading />
-          <NFTImageLoading />
-          <NFTImageLoading />
-          <NFTImageLoading />
+        <Box css={styles.titleLoading}>
+          <NFTTitleLoading />
+          <Box css={styles.gridLoading}>
+            <NFTListItemLoading />
+            <NFTListItemLoading />
+            <NFTListItemLoading />
+            <NFTListItemLoading />
+            <NFTListItemLoading />
+            <NFTListItemLoading />
+          </Box>
         </Box>
       )}
       {!isLoading && !collections?.length && (
@@ -146,9 +151,12 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '$3',
-    marginTop: '45px',
+    marginTop: '14px',
     paddingLeft: '$5',
     paddingRight: '$2',
+  }),
+  titleLoading: cssObj({
+    marginTop: '16px',
   }),
   name: cssObj({
     marginTop: '$1',
