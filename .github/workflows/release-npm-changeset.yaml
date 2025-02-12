@@ -14,43 +14,48 @@ env:
 
 jobs:
   check-commit:
-    name: Release master or rc
+    name: Decide if releases or create PR
     runs-on: buildjet-4vcpu-ubuntu-2204
+    permissions:
+      contents: read
+      pull-requests: read
     outputs:
       is_changeset_pr: ${{ steps.check-commit.outputs.is_changeset_pr }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Check if merge from changeset PR
-        id: check-commit
+      - id: check-commit
+        name: Check if this commit is a regular merge or a changeset PR merge
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [[ "${{ github.event.head_commit.message }}" == "Merge pull request"* ]]; then
-            PR_NUMBER=$(echo "${{ github.event.head_commit.message }}" | grep -o '#[0-9]\+' | tr -d '#')
-            if [ ! -z "$PR_NUMBER" ]; then
-              PR_TITLE=$(gh pr view $PR_NUMBER --json title -q .title)
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          FIRST_LINE=$(echo "$COMMIT_MSG" | head -n1)
+          if [[ "$FIRST_LINE" == "ci(changesets): versioning packages"* ]]; then
+            PR_NUMBER=$(echo "$FIRST_LINE" | grep -o '#[0-9]\+' | head -n1 | tr -d '#')
+            if [ -n "$PR_NUMBER" ]; then
+              PR_TITLE=$(gh pr view "$PR_NUMBER" --json title -q .title)
               if [[ "$PR_TITLE" == "ci(changesets): versioning packages" ]]; then
-                echo "is_changeset_pr=true" >> $GITHUB_OUTPUT
+                echo "is_changeset_pr=true" >> "$GITHUB_OUTPUT"
                 exit 0
               fi
             fi
           fi
-          echo "is_changeset_pr=false" >> $GITHUB_OUTPUT
+          echo "is_changeset_pr=false" >> "$GITHUB_OUTPUT"
 
   create-pr:
+    name: Push changes to Changeset PR
     needs: check-commit
     if: needs.check-commit.outputs.is_changeset_pr == 'false'
     runs-on: buildjet-4vcpu-ubuntu-2204
-    environment: npm-deploy
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
-          # need this to get full git-history/clone in order to build changelogs and check changesets
           fetch-depth: 0
-          # workaround to ensure force pushes to changeset branch use REPO_TOKEN owner's account
-          # see https://github.com/changesets/action/issues/70
           persist-credentials: false
       - name: Extract pnpm version from .tool-versions
         id: get_pnpm
@@ -61,9 +66,6 @@ jobs:
         with:
           node-version: 20.11.0
           pnpm-version: ${{  env.PNPM_VERSION }}
-      - uses: FuelLabs/github-actions/setups/npm@master
-        with:
-          npm-token: ${{ secrets.NPM_TOKEN_WALLET }}
 
       - name: Setup git user (for changelog step)
         run: |
@@ -77,9 +79,10 @@ jobs:
           title: "ci(changesets): versioning packages"
           createGithubReleases: false
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-npm:
+    name: Release to NPM
     needs: check-commit
     if: needs.check-commit.outputs.is_changeset_pr == 'true'
     runs-on: ubuntu-latest
@@ -121,7 +124,7 @@ jobs:
           createGithubReleases: aggregate
           version: pnpm changeset version
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN_WALLET }}
 
       - name: Build Fuel Wallet
