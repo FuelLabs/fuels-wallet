@@ -127,7 +127,7 @@ jobs:
           createGithubReleases: aggregate
           version: pnpm changeset version
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN_WALLET }}
 
       - name: Build Fuel Wallet
