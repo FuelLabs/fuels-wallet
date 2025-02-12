@@ -29,11 +29,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [[ "${{ github.event.head_commit.message }}" == "Merge pull request"* ]]; then
+          if [[ "${{ github.event.head_commit.message }}" == "ci(changesets): versioning packages"* ]]; then
             PR_NUMBER=$(echo "${{ github.event.head_commit.message }}" | grep -o '#[0-9]\+' | tr -d '#')
             if [ -n "$PR_NUMBER" ]; then
               PR_TITLE=$(gh pr view "$PR_NUMBER" --json title -q .title)
-              if [[ "$PR_TITLE" == "ci(changesets): versioning packages" ]]; then
+              if [[ "$PR_TITLE" == "ci(changesets): versioning packages"* ]]; then
                 echo "is_changeset_pr=true" >> "$GITHUB_OUTPUT"
                 exit 0
               fi
