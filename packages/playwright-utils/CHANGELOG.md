@@ -1,5 +1,11 @@
 # @fuels/playwright-utils
 
+## 0.48.3
+
+### Patch Changes
+
+- [#1842](https://github.com/FuelLabs/fuels-wallet/pull/1842) [`58797edd`](https://github.com/FuelLabs/fuels-wallet/commit/58797eddf31deb94c89da335423ca73d4f852627) Thanks [@arthurgeron](https://github.com/arthurgeron)! - fix: playwright export pointing to wrong file extension
+
 ## 0.48.2
 
 ## 0.48.1
