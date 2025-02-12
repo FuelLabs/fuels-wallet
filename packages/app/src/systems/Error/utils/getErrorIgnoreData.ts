@@ -47,7 +47,7 @@ const IGNORED_ERRORS: IgnoredError[] = [
     value: 'TypeError:',
     field: 'stack',
     comparison: 'startsWith',
-    action: 'ignore',
+    action: 'hide',
   },
   {
     value: 'NotFoundError',
