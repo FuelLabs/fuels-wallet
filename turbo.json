@@ -72,7 +72,8 @@
       "cache": false
     },
     "dev:crx": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     },
     "dev:deps": {
       "cache": false
