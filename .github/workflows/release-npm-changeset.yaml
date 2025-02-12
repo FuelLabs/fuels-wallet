@@ -26,11 +26,14 @@ jobs:
         with:
           fetch-depth: 0
       - id: check-commit
+        name: Check if this commit is a regular merge or a changeset PR merge
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [[ "${{ github.event.head_commit.message }}" == "Merge pull request"* ]]; then
-            PR_NUMBER=$(echo "${{ github.event.head_commit.message }}" | grep -o '#[0-9]\+' | tr -d '#')
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          FIRST_LINE=$(echo "$COMMIT_MSG" | head -n1)
+          if [[ "$FIRST_LINE" == "ci(changesets): versioning packages"* ]]; then
+            PR_NUMBER=$(echo "$FIRST_LINE" | grep -o '#[0-9]\+' | head -n1 | tr -d '#')
             if [ -n "$PR_NUMBER" ]; then
               PR_TITLE=$(gh pr view "$PR_NUMBER" --json title -q .title)
               if [[ "$PR_TITLE" == "ci(changesets): versioning packages" ]]; then
