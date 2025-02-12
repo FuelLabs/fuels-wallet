@@ -30,12 +30,17 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo "asd github.event.head_commit.message: ${{ github.event.head_commit.message }}"
           COMMIT_MSG=$(git log -1 --pretty=%B)
           FIRST_LINE=$(echo "$COMMIT_MSG" | head -n1)
+          echo "asd COMMIT_MSG: $COMMIT_MSG"
+          echo "asd FIRST_LINE: $FIRST_LINE"
           if [[ "$FIRST_LINE" == "ci(changesets): versioning packages"* ]]; then
             PR_NUMBER=$(echo "$FIRST_LINE" | grep -o '#[0-9]\+' | head -n1 | tr -d '#')
+            echo "asd PR_NUMBER: $PR_NUMBER"
             if [ -n "$PR_NUMBER" ]; then
               PR_TITLE=$(gh pr view "$PR_NUMBER" --json title -q .title)
+              echo "asd PR_TITLE: $PR_TITLE"
               if [[ "$PR_TITLE" == "ci(changesets): versioning packages"* ]]; then
                 echo "is_changeset_pr=true" >> "$GITHUB_OUTPUT"
                 exit 0
