@@ -168,7 +168,8 @@ export class TxService {
   static async fetch({ txId, providerUrl = '' }: TxInputs['fetch']) {
     const provider = await createProvider(providerUrl);
     const txResult = await getTransactionSummary({ id: txId, provider });
-    const txResponse = new TransactionResponse(txId, provider);
+    const chainId = await provider.getChainId();
+    const txResponse = new TransactionResponse(txId, provider, chainId);
     // TODO: remove this when we get SDK with new TransactionResponse flow
     const abiMap = await getAbiMap({
       inputs: txResult.transaction.inputs,
@@ -205,6 +206,7 @@ export class TxService {
     const initialGasLimit = getGasLimitFromTxRequest(inputTransactionRequest);
 
     try {
+      let baseFee: BN | undefined;
       /*
       we'll work always based on the first inputted transactioRequest, then cloning it and manipulating
       then outputting a proposedTxRequest, which will be the one to go for approval
@@ -243,6 +245,8 @@ export class TxService {
             requiredQuantities: [],
           });
         }
+
+        baseFee = proposedTxRequest.maxFee.sub(proposedTxRequest.tip ?? bn(0));
       }
 
       const transaction = proposedTxRequest.toTransaction();
@@ -255,10 +259,6 @@ export class TxService {
         transactionRequest: proposedTxRequest,
         abiMap,
       });
-
-      const baseFee = proposedTxRequest.maxFee.sub(
-        proposedTxRequest.tip ?? bn(0)
-      );
 
       // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
       const feeAdaptedToSdkDiff = txSummary.fee.add(1);
@@ -292,8 +292,9 @@ export class TxService {
       };
     } catch (e) {
       const { gasPerByte, gasPriceFactor, gasCosts, maxGasPerTx } =
-        provider.getGasConfig();
-      const consensusParameters = provider.getChain().consensusParameters;
+        await provider.getGasConfig();
+      const consensusParameters = (await provider.getChain())
+        .consensusParameters;
       const { maxInputs } = consensusParameters.txParameters;
 
       const transaction = inputTransactionRequest.toTransaction();
@@ -307,7 +308,7 @@ export class TxService {
         e instanceof FuelError ? getErrorMessage(e) : 'Unknown error';
 
       const gasPrice = await provider.getLatestGasPrice();
-      const baseAssetId = provider.getBaseAssetId();
+      const baseAssetId = await provider.getBaseAssetId();
       const txSummary = assembleTransactionSummary({
         receipts: [],
         transaction,
@@ -410,7 +411,7 @@ export class TxService {
   static async estimateGasLimit() {
     const currentNetwork = await NetworkService.getSelectedNetwork();
     const provider = await createProvider(currentNetwork?.url || '');
-    const consensusParameters = provider.getChain().consensusParameters;
+    const consensusParameters = (await provider.getChain()).consensusParameters;
 
     return {
       maxGasLimit: consensusParameters.txParameters.maxGasPerTx,
