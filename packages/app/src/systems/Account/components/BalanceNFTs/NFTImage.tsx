@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, ContentLoader, Icon } from '@fuel-ui/react';
-import { useEffect, useRef, useState } from 'react';
+import { Box, ContentLoader, Icon, Image } from '@fuel-ui/react';
+import { memo, useEffect, useRef, useState } from 'react';
+import { NFTImageLoading } from '~/systems/Account/components/BalanceNFTs/NFTImageLoading';
 import { shortAddress } from '~/systems/Core';
 
 interface NFTImageProps {
@@ -8,7 +9,15 @@ interface NFTImageProps {
   image: string | undefined;
 }
 
-export const NFTImage = ({ assetId, image }: NFTImageProps) => {
+function Empty() {
+  return (
+    <Box css={styles.noImage}>
+      <Icon icon={Icon.is('FileOff')} />
+    </Box>
+  );
+}
+
+const _NFTImage = ({ assetId, image }: NFTImageProps) => {
   const imgRef = useRef<HTMLImageElement>(null);
 
   const [fallback, setFallback] = useState(false);
@@ -25,31 +34,22 @@ export const NFTImage = ({ assetId, image }: NFTImageProps) => {
     }
   }, []);
 
-  if (image && !fallback) {
-    return (
-      <Box css={styles.item}>
-        {isLoading && (
-          <ContentLoader width="100%" height="100%" viewBox="0 0 22 22">
-            <rect x="0" y="0" rx="0" ry="0" width="22" height="22" />
-          </ContentLoader>
-        )}
-        <img
+  if (!image || !!fallback) return <Empty />;
+
+  return (
+    <Box css={styles.item}>
+      {image && !fallback && isLoading && <NFTImageLoading />}
+      {image && !fallback && (
+        <Image
           ref={imgRef}
           src={image}
           alt={shortAddress(assetId)}
           data-loading={isLoading}
+          style={cssObj({ visibility: isLoading ? 'hidden' : 'visible' })}
           onLoad={() => setLoading(false)}
-          onError={() => {
-            setFallback(true);
-          }}
+          onError={() => setFallback(true)}
         />
-      </Box>
-    );
-  }
-
-  return (
-    <Box css={styles.noImage}>
-      <Icon icon={Icon.is('FileOff')} />
+      )}
     </Box>
   );
 };
@@ -59,7 +59,7 @@ const styles = {
     aspectRatio: '1 / 1',
     borderRadius: '12px',
     overflow: 'hidden',
-
+    minHeight: '89px',
     img: {
       width: '100%',
       objectFit: 'cover',
@@ -79,3 +79,7 @@ const styles = {
     alignItems: 'center',
   }),
 };
+
+export const NFTImage = memo(_NFTImage, (a, b) => {
+  return a.assetId === b.assetId && a.image === b.image;
+});
