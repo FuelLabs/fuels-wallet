@@ -29,7 +29,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [[ "${{ github.event.head_commit.message }}" == "ci(changesets): versioning packages"* ]]; then
+          if [[ "$(echo "${{ github.event.head_commit.message }}" | head -n1)" == "ci(changesets): versioning packages"* ]]; then
             PR_NUMBER=$(echo "${{ github.event.head_commit.message }}" | grep -o '#[0-9]\+' | tr -d '#')
             if [ -n "$PR_NUMBER" ]; then
               PR_TITLE=$(gh pr view "$PR_NUMBER" --json title -q .title)
