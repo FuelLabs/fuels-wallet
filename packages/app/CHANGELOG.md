@@ -1,5 +1,13 @@
 # fuels-wallet
 
+## 0.48.3
+
+### Patch Changes
+
+- Updated dependencies [[`58797edd`](https://github.com/FuelLabs/fuels-wallet/commit/58797eddf31deb94c89da335423ca73d4f852627)]:
+  - @fuels/playwright-utils@0.48.3
+  - @fuel-wallet/connections@0.48.3
+
 ## 0.48.2
 
 ### Patch Changes
