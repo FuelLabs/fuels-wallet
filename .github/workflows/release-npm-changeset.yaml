@@ -26,11 +26,10 @@ jobs:
         with:
           fetch-depth: 0
       - id: check-commit
-        name: Check if commit is a changeset PR
+        name: Check if commit is a regular merge or a changeset PR merge
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "asd github.event.head_commit.message: ${{ github.event.head_commit.message }}"
           COMMIT_MSG=$(git log -1 --pretty=%B)
           FIRST_LINE=$(echo "$COMMIT_MSG" | head -n1)
           echo "asd COMMIT_MSG: $COMMIT_MSG"
