@@ -2,4 +2,4 @@
 "fuels-wallet": patch
 ---
 
-feat: ignore common errors
+feat: send common errors automatically, instead of asking user to review
