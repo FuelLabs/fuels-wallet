@@ -25,7 +25,7 @@ export interface IUpdateChange<T = unknown, Y = unknown> {
   type: DatabaseChangeType.Update;
   table: string;
   key: T;
-  mods: Y; //{ [keyPath: string]: unknown | undefined };
+  mods: Y; //{ [keyPath: string]: unknown | undefined } ;
   obj: Y;
   source?: string;
 }
