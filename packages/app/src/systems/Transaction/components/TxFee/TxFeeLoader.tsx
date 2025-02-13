@@ -6,9 +6,6 @@ import { styles } from './styles';
 
 export const TxFeeLoader = (props: ContentLoaderProps) => (
   <Card css={styles.detailItem()}>
-    <Text color="intentsBase11" css={styles.title}>
-      Fee (network)
-    </Text>
     <TxFeeAmountLoader {...props} />
   </Card>
 );
