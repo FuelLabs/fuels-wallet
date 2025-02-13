@@ -9,15 +9,11 @@ import { TxOperationCard } from './TxOperationCard';
 
 export type TxOperationProps = {
   operation: SimplifiedOperation;
-  showNesting?: boolean;
-  flat?: boolean;
   bidirectionalInfo?: BidirectionalInfo;
 };
 
 export function TxOperation({
   operation,
-  // showNesting = true,
-  flat = false,
   bidirectionalInfo,
 }: TxOperationProps) {
   const { metadata, assets } = operation;
@@ -33,7 +29,6 @@ export function TxOperation({
         operation={operation}
         assetsAmount={amounts}
         depth={depth}
-        flat={flat}
         bidirectionalInfo={bidirectionalInfo}
       />
       {metadata.operationCount && metadata.operationCount > 1 && (

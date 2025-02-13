@@ -13,7 +13,6 @@ type TxOperationCardProps = {
   operation: SimplifiedOperation;
   assetsAmount: AssetFuelAmount[];
   depth: number;
-  flat?: boolean;
   bidirectionalInfo?: BidirectionalInfo;
 };
 
@@ -21,7 +20,6 @@ export function TxOperationCard({
   operation,
   assetsAmount,
   depth,
-  flat = false,
   bidirectionalInfo = null,
 }: TxOperationCardProps) {
   const { accounts } = useAccounts();
@@ -90,7 +88,7 @@ export function TxOperationCard({
 
   return (
     <Box
-      css={styles.contentCol(flat, bidirectionalInfo)}
+      css={styles.contentCol(bidirectionalInfo)}
       style={{ marginLeft: depth * 0 * 4 }}
     >
       <Box
@@ -202,14 +200,13 @@ export function TxOperationCard({
 }
 
 const styles = {
-  contentCol: (flat: boolean, bidirectionalInfo: BidirectionalInfo) =>
+  contentCol: (bidirectionalInfo: BidirectionalInfo) =>
     cssObj({
       display: 'flex',
       backgroundColor: '$cardBg',
-      boxShadow:
-        flat || !!bidirectionalInfo
-          ? 'none'
-          : '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
+      boxShadow: bidirectionalInfo
+        ? 'none'
+        : '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
       flex: 1,
       padding: `${bidirectionalInfo === 'btoa' ? '0px' : '14px'} 12px ${bidirectionalInfo === 'atob' ? '0px' : '14px'}`,
     }),
