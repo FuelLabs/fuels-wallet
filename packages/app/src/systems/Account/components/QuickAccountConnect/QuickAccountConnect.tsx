@@ -9,7 +9,7 @@ import {
   VStack,
   toast,
 } from '@fuel-ui/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useCurrentTab } from '~/systems/CRX/hooks/useCurrentTab';
 import { useConnection } from '~/systems/DApp/hooks/useConnection';
 import { useOrigin } from '~/systems/DApp/hooks/useOrigin';
@@ -22,10 +22,6 @@ enum ConnectionStatus {
   NoAccounts = 'NO_ACCOUNTS',
 }
 
-export const getDismissKey = (account: string, origin: string) => {
-  return `quick-account-connect-${account}-${origin}`;
-};
-
 export const QuickAccountConnect = () => {
   const { account } = useCurrentAccount();
   const { currentTab } = useCurrentTab();
@@ -34,7 +30,7 @@ export const QuickAccountConnect = () => {
     origin: origin?.full,
   });
 
-  const [dismissed, setDismissed] = useState(true);
+  const [dismissedAccount, setDismissedAccount] = useState<string>('');
 
   const status = useMemo<ConnectionStatus>(() => {
     if (!account || !connection) {
@@ -48,6 +44,10 @@ export const QuickAccountConnect = () => {
     return ConnectionStatus.OtherAccount;
   }, [account, connection]);
 
+  const isDismissed = useMemo<boolean>(() => {
+    return account?.address === dismissedAccount;
+  }, [account?.address, dismissedAccount]);
+
   const onConnect = async () => {
     if (!origin || !account) return;
     await ConnectionService.addAccountTo({
@@ -59,25 +59,15 @@ export const QuickAccountConnect = () => {
   };
 
   const onDismiss = () => {
-    if (!origin || !account) return;
-    setDismissed(true);
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem(getDismissKey(account.address, origin.full), 'true');
+    if (account?.address) {
+      setDismissedAccount(account.address);
     }
   };
-
-  useEffect(() => {
-    if (!origin || !account) return;
-    const hasDismissed = localStorage.getItem(
-      getDismissKey(account.address, origin.full)
-    );
-    setDismissed(!!hasDismissed);
-  }, [account, origin]);
 
   return (
     <Box
       css={styles.wrapper}
-      data-open={status === ConnectionStatus.OtherAccount && !dismissed}
+      data-open={status === ConnectionStatus.OtherAccount && !isDismissed}
     >
       <Alert status="info" css={styles.alert}>
         <Alert.Description as="div">
