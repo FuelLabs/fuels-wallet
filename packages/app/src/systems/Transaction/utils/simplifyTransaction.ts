@@ -61,82 +61,61 @@ function transformOperation(
   receiptIndex?: number
 ): SimplifiedOperation {
   const { name, from, to, assetsSent = [], calls = [] } = operation;
+  // Build base operation object
+  const baseOperation = {
+    type: getOperationType(operation),
+    from: from ? { address: from.address, type: from.type } : undefined,
+    to: to ? { address: to.address, type: to.type } : undefined,
+    isFromCurrentAccount: currentAccount
+      ? from?.address === currentAccount.toLowerCase()
+      : false,
+    isToCurrentAccount: currentAccount
+      ? to?.address === currentAccount.toLowerCase()
+      : false,
+    metadata: {
+      depth: 0,
+    },
+  } as SimplifiedOperation;
 
-  const type = getOperationType(operation);
-  let depth = 0;
-  let receipt = null;
-
-  // Safely check for receipts property
+  // Calculate depth if receipts exist
   try {
     // @ts-ignore - receipts will exist in future SDK versions
     const receipts = operation.receipts || [];
-    receipt = receipts[0];
+    const receipt = receipts[0];
     if (receipt && typeof receiptIndex === 'number' && allReceipts.length > 0) {
-      depth = getReceiptDepth(allReceipts, receiptIndex);
+      baseOperation.metadata.depth = getReceiptDepth(allReceipts, receiptIndex);
     }
   } catch (error) {
     console.warn(
       'Could not access operation receipts, defaulting depth to 0',
       error
     );
-    depth = 0;
   }
 
-  const isFromCurrentAccount = currentAccount
-    ? from?.address === currentAccount
-    : false;
-
-  const fromAddress = from
-    ? { address: from.address, type: from.type }
-    : undefined;
-  const toAddress = to ? { address: to.address, type: to.type } : undefined;
-
+  // Add contract call metadata if applicable
   if (name === OperationName.contractCall && calls.length > 0) {
     const call = calls[0] as OperationFunctionCall;
-    const metadata: ContractCallMetadata = {
+    baseOperation.metadata = {
+      ...baseOperation.metadata,
       contractId: to?.address,
       functionName: call.functionName,
       functionData: call,
       amount: call.amount ? new BN(call.amount) : undefined,
       assetId: call.assetId,
-      depth,
-      receiptType: receipt?.type,
-    };
-
-    return {
-      type,
-      from: fromAddress!,
-      to: toAddress!,
-      isFromCurrentAccount,
-      metadata,
+      // @ts-ignore - receipts will exist in future SDK versions
+      receiptType: operation.receipts?.[0]?.type,
     };
   }
 
+  // Add assets if they exist
   if (assetsSent.length > 0) {
-    return {
-      type,
-      from: fromAddress!,
-      to: toAddress!,
-      isFromCurrentAccount,
-      assets: assetsSent.map((asset) => ({
-        amount: new BN(asset.amount),
-        assetId: asset.assetId,
-      })),
-      metadata: {
-        depth,
-      },
-    };
+    baseOperation.assets = assetsSent.map((asset) => ({
+      amount: new BN(asset.amount),
+      assetId: asset.assetId,
+    }));
   }
 
-  return {
-    type,
-    from: fromAddress!,
-    to: toAddress!,
-    isFromCurrentAccount,
-    metadata: {
-      depth,
-    },
-  };
+  return baseOperation;
 }
 
 export function transformOperations(
@@ -235,32 +214,13 @@ function categorizeOperations(
 
   // First pass: separate operations
   for (const op of operations) {
-    const depth = op.metadata?.depth || 0;
-    const isTransfer =
-      op.type === TxCategory.SEND || op.type === TxCategory.RECEIVE;
-    const isFromCurrentAccount =
-      currentAccount &&
-      op.from.address.toLowerCase() === currentAccount.toLowerCase();
-    const isToCurrentAccount =
-      currentAccount &&
-      op.to.address.toLowerCase() === currentAccount.toLowerCase();
-
-    if (depth === 0) {
-      if (isTransfer) {
-        if (isFromCurrentAccount || isToCurrentAccount) {
-          main.push(op);
-        } else {
-          otherRoot.push(op);
-        }
-      } else if (isFromCurrentAccount || isToCurrentAccount) {
-        main.push(op);
-      } else {
-        otherRoot.push(op);
-      }
-      continue;
+    if (op.isFromCurrentAccount || op.isToCurrentAccount) {
+      main.push(op);
+    } else {
+      otherRoot.push(op);
     }
-
-    intermediate.push(op);
+    console.log('op', op.metadata.depth);
+    // intermediate.push(op);
   }
 
   // Sort main operations: from user first, then to user
@@ -277,7 +237,7 @@ function categorizeOperations(
     return 0;
   });
 
-  // set all main operations to depth 0
+  // set all main operations to depth 0 TODO: remove this
   for (const op of main) {
     op.metadata.depth = 0;
   }
