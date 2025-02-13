@@ -2,4 +2,4 @@
 "fuels-wallet": patch
 ---
 
-Remove 'Account created' toast.
+chore: remove 'Account created' toast.
