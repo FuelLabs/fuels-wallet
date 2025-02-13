@@ -6,6 +6,7 @@ import {
 import type { DatabaseRestartEvent, RequestMessage } from '@fuel-wallet/types';
 import { AUTO_LOCK_IN_MINUTES } from '~/config';
 import { VaultServer } from '~/systems/Vault/services/VaultServer';
+import lockTimer from '../../utils/lockTimer';
 
 import {
   clearSession,
