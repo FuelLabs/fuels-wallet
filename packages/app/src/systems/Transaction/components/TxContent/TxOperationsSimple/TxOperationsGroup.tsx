@@ -19,15 +19,15 @@ function getBidirectionalInfo(
   next: SimplifiedOperation
 ): BidirectionalInfo {
   if (
-    current.to.address === next.from.address &&
-    current.from.address === next.to.address
+    current?.to?.address === next?.from?.address &&
+    current?.from?.address === next?.to?.address
   ) {
     return 'atob';
   }
 
   if (
-    current.from.address === next.from.address &&
-    current.to.address === next.to.address
+    current?.from?.address === next?.from?.address &&
+    current?.to?.address === next?.to?.address
   ) {
     return 'btoa';
   }
