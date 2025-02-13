@@ -6,13 +6,14 @@ import {
   Button,
   CardList,
   Copyable,
-  Heading,
+  HStack,
   Icon,
   IconButton,
   Text,
   Tooltip,
+  VStack,
 } from '@fuel-ui/react';
-import { type FC, useMemo } from 'react';
+import { type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Pages, shortAddress } from '~/systems/Core';
 
@@ -20,6 +21,7 @@ import { AssetRemoveDialog } from '../AssetRemoveDialog';
 
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
 import type { BNInput } from 'fuels';
+import { useTruncation } from '~/systems/Core/hooks/useTruncation';
 import useFuelAsset from '../../hooks/useFuelAsset';
 import { AssetItemAmount } from './AssetItemAmount';
 import { AssetItemLoader } from './AssetItemLoader';
@@ -64,7 +66,10 @@ export const AssetItem: AssetItemComponent = ({
       }
     );
   }, [inputFuelAsset, inputAsset, fuelAssetFromInputAsset]);
+
   const { assetId, name, symbol, icon, decimals, isCustom } = asset ?? {};
+
+  const { ref, open } = useTruncation<HTMLSpanElement>();
 
   if (!asset) return null;
 
@@ -146,23 +151,38 @@ export const AssetItem: AssetItemComponent = ({
   );
 
   return (
-    <CardList.Item rightEl={getRightEl()} css={{ alignItems: 'center' }}>
-      {icon ? (
-        <Avatar
-          name={name || ''}
-          src={icon}
-          css={{ height: 36, width: 36, borderRadius: '$full', flexShrink: 0 }}
-        />
-      ) : (
-        <Avatar.Generated
-          hash={assetId || ''}
-          size={36}
-          css={{ flexShrink: 0 }}
-        />
-      )}
-      <Box.Flex direction="column">
-        <Heading as="h6" css={styles.assetName}>
-          {name || 'Unknown'}
+    <CardList.Item
+      rightEl={getRightEl()}
+      css={{
+        alignItems: 'center',
+        '& > .fuel_Box-flex:first-child': { minWidth: 140 },
+      }}
+    >
+      <Box css={styles.icon}>
+        {icon ? (
+          <Avatar
+            name={name || ''}
+            src={icon}
+            css={{ height: 36, width: 36 }}
+          />
+        ) : (
+          <Avatar.Generated hash={assetId || ''} size={36} />
+        )}
+      </Box>
+
+      <VStack gap="0" css={styles.assetContainer}>
+        <HStack gap="0" align="center">
+          <Tooltip content={name} delayDuration={0} open={open}>
+            <Text
+              as="span"
+              ref={ref}
+              color="textHeading"
+              fontSize="base"
+              css={styles.assetName}
+            >
+              {name || 'Unknown'}
+            </Text>
+          </Tooltip>
           {!!asset.suspicious && (
             <Tooltip content={suspiciousTooltipContent}>
               <Icon
@@ -187,20 +207,18 @@ export const AssetItem: AssetItemComponent = ({
               (Add)
             </Button>
           )}
-        </Heading>
-        <Box.Flex direction="row">
-          {symbol ? (
-            <>
-              <Text css={styles.assetSymbol}>{symbol}</Text>
-              {getLeftEl()}
-            </>
-          ) : (
-            <Copyable value={assetId || ''} css={styles.unknownAssetId}>
-              {shortAddress(assetId)}
-            </Copyable>
-          )}
-        </Box.Flex>
-      </Box.Flex>
+        </HStack>
+        {symbol ? (
+          <HStack align="center" gap="0">
+            <Text css={styles.assetSymbol}>{symbol}</Text>
+            {getLeftEl()}
+          </HStack>
+        ) : (
+          <Copyable value={assetId || ''} css={styles.unknownAssetId}>
+            {shortAddress(assetId)}
+          </Copyable>
+        )}
+      </VStack>
     </CardList.Item>
   );
 };
@@ -208,12 +226,22 @@ export const AssetItem: AssetItemComponent = ({
 AssetItem.Loader = AssetItemLoader;
 
 const styles = {
+  icon: cssObj({
+    height: 36,
+    width: 36,
+    borderRadius: '$full',
+    overflow: 'hidden',
+    flexShrink: 0,
+  }),
+  assetContainer: cssObj({
+    minWidth: 0,
+  }),
   assetName: cssObj({
-    display: 'inline-flex',
-    margin: 0,
-    textSize: 'base',
     fontWeight: '$medium',
+    fontFamily: '$heading',
     letterSpacing: '$normal',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   }),
   assetIdCopy: cssObj({
@@ -222,6 +250,8 @@ const styles = {
   assetSymbol: cssObj({
     textSize: 'sm',
     fontWeight: '$normal',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   }),
   assetSuspicious: cssObj({
