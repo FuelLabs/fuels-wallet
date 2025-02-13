@@ -45,13 +45,8 @@ export const AssetItemAmount = ({
   return (
     <Tooltip content={original.display} delayDuration={0} open={open}>
       <VStack gap="0" align="flex-end" css={styles.container}>
-        <Box css={styles.balanceRow}>
-          <Text
-            as="span"
-            ref={amountRef}
-            css={styles.amount}
-            aria-label={`${symbol} token balance`}
-          >
+        <Box css={styles.balanceRow} aria-label={`${symbol} token balance`}>
+          <Text as="span" ref={amountRef} css={styles.amount}>
             <AmountVisibility
               value={amount}
               units={decimals}
