@@ -50,15 +50,15 @@ test.describe('Check assets', () => {
         { timeout: 10000 }
       )
       .toBeTruthy();
-    expect(
-      await page.getByLabel('ETH token balance', { exact: true }).textContent()
-    ).toContain('0.002000 ETH');
+    await expect(
+      page.getByLabel('ETH token balance', { exact: true })
+    ).toContainText('0.002000 ETH');
   });
 
-  test('should show USDCIcon AlertTriangle', async () => {
+  test('should show USDC Icon AlertTriangle', async () => {
     await expect
       .poll(
-        async () => await page.getByText('USDCIcon AlertTriangle').isVisible(),
+        async () => await page.getByText('USDC Icon AlertTriangle').isVisible(),
         { timeout: 10000 }
       )
       .toBeTruthy();
