@@ -60,8 +60,6 @@ test.describe('SendTransaction', () => {
     const btnLocator = getButtonByText(page, 'Review');
 
     await expectButtonToBeEnabled(btnLocator);
-    await page.waitForTimeout(5000);
-    await expectButtonToBeEnabled(btnLocator);
     await btnLocator.click();
 
     await getButtonByText(page, 'Submit').click();
@@ -95,8 +93,6 @@ test.describe('SendTransaction', () => {
     // make sure the button is enabled
     const btnLocator = getButtonByText(page, 'Review');
 
-    await expectButtonToBeEnabled(btnLocator);
-    await page.waitForTimeout(5000);
     await expectButtonToBeEnabled(btnLocator);
     await btnLocator.click();
 
@@ -141,8 +137,6 @@ test.describe('SendTransaction', () => {
     const btnLocator = getButtonByText(page, 'Review');
 
     await expectButtonToBeEnabled(btnLocator);
-    await page.waitForTimeout(5000);
-    await expectButtonToBeEnabled(btnLocator);
     await btnLocator.click();
 
     // Approve transaction
@@ -173,12 +167,9 @@ test.describe('SendTransaction', () => {
 
     // Waiting button change to Review in order to ensure that fee amount is updated
     await page.waitForSelector('button:has-text("Review")');
-    await page.waitForTimeout(1000);
 
     const btnLocator = getButtonByText(page, 'Review');
 
-    await expectButtonToBeEnabled(btnLocator);
-    await page.waitForTimeout(5000);
     await expectButtonToBeEnabled(btnLocator);
     await btnLocator.click();
 
@@ -215,12 +206,9 @@ test.describe('SendTransaction', () => {
 
     // Waiting button change to Review in order to change fee amount
     await page.waitForSelector('button:has-text("Review")');
-    await page.waitForTimeout(1000);
 
     const btnLocator = getButtonByText(page, 'Review');
 
-    await expectButtonToBeEnabled(btnLocator);
-    await page.waitForTimeout(5000);
     await expectButtonToBeEnabled(btnLocator);
     await btnLocator.click();
 
@@ -253,27 +241,38 @@ test.describe('SendTransaction', () => {
 
     // Waiting button change to Review in order to ensure that fee amount is updated
     await page.waitForSelector('button:has-text("Review")');
-    await page.waitForTimeout(1000);
 
     // Selecting and extracting regular fee amount
+    await expect
+      .poll(
+        async () => {
+          return await getByAriaLabel(page, 'fee value:Regular').isVisible();
+        },
+        { timeout: 10000 }
+      )
+      .toBeTruthy();
     const regularFeeComponent = getByAriaLabel(page, 'fee value:Regular');
     await regularFeeComponent.click();
 
     // Waiting button change to Review in order to ensure that fee amount is updated
     await page.waitForSelector('button:has-text("Review")');
-    await page.waitForTimeout(1000);
 
     const btnLocatorBeforeApprv = getButtonByText(page, 'Review');
 
-    await expectButtonToBeEnabled(btnLocatorBeforeApprv);
-    await page.waitForTimeout(5000);
     await expectButtonToBeEnabled(btnLocatorBeforeApprv);
     await btnLocatorBeforeApprv.click();
 
     // Waiting button change to Approve in order to get updated fee amount
     await page.waitForSelector('button:has-text("Submit")');
-    await page.waitForTimeout(1000);
 
+    await expect
+      .poll(
+        async () => {
+          return await getButtonByText(page, 'Back').isVisible();
+        },
+        { timeout: 10000 }
+      )
+      .toBeTruthy();
     // Going back to select other fee value
     await getButtonByText(page, 'Back').click();
 
@@ -283,27 +282,37 @@ test.describe('SendTransaction', () => {
 
     // Waiting button change to Review in order to change fee amount
     await page.waitForSelector('button:has-text("Review")');
-    await page.waitForTimeout(1000);
 
     const btnLocator = getButtonByText(page, 'Review');
 
-    await expectButtonToBeEnabled(btnLocator);
-    await page.waitForTimeout(5000);
     await expectButtonToBeEnabled(btnLocator);
     await btnLocator.click();
 
     // Waiting button change to Approve in order to get updated fee amount
     await page.waitForSelector('button:has-text("Submit")');
-    await page.waitForTimeout(1000);
 
     await hasText(page, '0.001 ETH');
 
-    await page.waitForTimeout(1000);
+    await expect
+      .poll(
+        async () => {
+          return await getButtonByText(page, 'Submit').isEnabled();
+        },
+        { timeout: 10000 }
+      )
+      .toBeTruthy();
     await getButtonByText(page, 'Submit').click();
     await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
-    await hasText(page, 'success');
+    await expect
+      .poll(
+        async () => {
+          return await hasText(page, 'success');
+        },
+        { timeout: 10000 }
+      )
+      .toBeTruthy();
   });
 
   test('Send max amount transaction', async () => {
@@ -337,15 +346,12 @@ test.describe('SendTransaction', () => {
     // Fee values change
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    const maxAmountAfterFee = await getInputByName(page, 'amount').inputValue();
-
     // Submit transaction
 
     const btnLocator = getButtonByText(page, 'Review');
 
     await expectButtonToBeEnabled(btnLocator);
-    await page.waitForTimeout(5000);
-    await expectButtonToBeEnabled(btnLocator);
+    const maxAmountAfterFee = await getInputByName(page, 'amount').inputValue();
     await btnLocator.click();
 
     // Approve transaction

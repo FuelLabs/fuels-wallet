@@ -21,7 +21,9 @@ export function expectButtonToBeEnabled(
   return expect
     .poll(async () => await button.isEnabled(), {
       timeout: timeout ?? 7000,
-      intervals: intervals ?? [1000, 2000, 3000, 4000, 5000, 6000, 7000],
+      intervals: intervals ?? [
+        0, 500, 1000, 2000, 3000, 4000, 5000, 6000, 7000,
+      ],
       message: message ?? 'Button is not enabled',
     })
     .toBeTruthy();

@@ -1,5 +1,5 @@
-import type { Account } from '@fuel-wallet/types';
-import type { TransactionRequest, WalletLocked } from 'fuels';
+import type { Account, AccountWithBalance } from '@fuel-wallet/types';
+import type { Provider, TransactionRequest, WalletLocked } from 'fuels';
 import { clone } from 'ramda';
 
 import {
@@ -51,6 +51,7 @@ export type TxInputs = {
     origin?: string;
     title?: string;
     favIconUrl?: string;
+    account?: AccountWithBalance;
     skipCustomFee?: boolean;
     fees?: {
       baseFee?: BN;
@@ -60,7 +61,8 @@ export type TxInputs = {
     };
   };
   send: {
-    address: string;
+    address?: string;
+    account?: Account;
     transactionRequest: TransactionRequest;
     providerUrl?: string;
   };
@@ -154,12 +156,16 @@ export class TxService {
   }
 
   static async send({
+    account,
     address,
     transactionRequest,
     providerUrl = '',
   }: TxInputs['send']) {
     const provider = await createProvider(providerUrl);
-    const wallet = new WalletLockedCustom(address, provider);
+    const wallet = new WalletLockedCustom(
+      (account?.address?.toString() || address) as string,
+      provider
+    );
     const txSent = await wallet.sendTransaction(transactionRequest);
 
     return txSent;
@@ -396,15 +402,15 @@ export class TxService {
     };
   }
 
-  static async estimateDefaultTips() {
+  static async estimateGasLimitAndDefaultTips() {
     const currentNetwork = await NetworkService.getSelectedNetwork();
     const provider = await createProvider(currentNetwork?.url || '');
-
-    const { regularTip, fastTip } = await getCurrentTips(provider);
-
+    const [{ regularTip, fastTip }, { consensusParameters }] =
+      await Promise.all([getCurrentTips(provider), provider.getChain()]);
     return {
       regularTip: bn(regularTip),
       fastTip: bn(fastTip),
+      maxGasLimit: consensusParameters.txParameters.maxGasPerTx,
     };
   }
 

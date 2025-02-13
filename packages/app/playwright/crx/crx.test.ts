@@ -90,10 +90,11 @@ test.describe('FuelWallet Extension', () => {
     extensionId,
   }) => {
     const popupPage = await context.newPage();
-    await popupPage.goto(`chrome-extension://${extensionId}/popup.html`);
-    const page = await context.waitForEvent('page', {
+    const pagePromise = context.waitForEvent('page', {
       predicate: (page) => page.url().includes('sign-up'),
     });
+    await popupPage.goto(`chrome-extension://${extensionId}/popup.html`);
+    const page = await pagePromise;
     expect(page.url()).toContain('sign-up');
   });
 
