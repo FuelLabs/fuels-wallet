@@ -117,7 +117,6 @@ export type SimplifiedFee = {
 export type CategorizedOperations = {
   mainOperations: SimplifiedOperation[];
   otherRootOperations: SimplifiedOperation[];
-  intermediateOperations: SimplifiedOperation[];
 };
 
 export type SimplifiedTransaction = {

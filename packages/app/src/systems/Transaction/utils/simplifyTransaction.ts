@@ -208,7 +208,6 @@ function categorizeOperations(
 ): CategorizedOperations {
   const main: SimplifiedOperation[] = [];
   const otherRoot: SimplifiedOperation[] = [];
-  const intermediate: SimplifiedOperation[] = [];
 
   // First pass: separate operations
   for (const op of operations) {
@@ -217,8 +216,6 @@ function categorizeOperations(
     } else {
       otherRoot.push(op);
     }
-    console.log('op', op.metadata.depth);
-    // intermediate.push(op);
   }
 
   // Sort main operations: from user first, then to user
@@ -244,7 +241,6 @@ function categorizeOperations(
   return {
     mainOperations: groupSimilarOperations(main),
     otherRootOperations: groupSimilarOperations(otherRoot),
-    intermediateOperations: groupSimilarOperations(intermediate),
   };
 }
 

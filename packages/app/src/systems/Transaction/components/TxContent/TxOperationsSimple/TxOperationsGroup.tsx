@@ -65,11 +65,7 @@ export function TxOperationsGroup({
             {title}
           </Text>
         </Box.Flex>
-        <Icon
-          icon="ChevronRight"
-          css={styles.chevron}
-          data-expanded={isExpanded}
-        />
+        <Icon icon="Minus" css={styles.chevron} data-expanded={isExpanded} />
       </Box.Flex>
       <MotionBox
         animate={{
@@ -99,7 +95,7 @@ export function TxOperationsGroup({
 
 const styles = {
   root: cssObj({
-    margin: '$2 $1',
+    margin: '0 0 $2',
     backgroundColor: '$gray5',
     borderRadius: '12px',
     minHeight: '56px',
@@ -111,12 +107,12 @@ const styles = {
   }),
   header: cssObj({
     display: 'flex',
-    gap: '$2',
+    gap: '$1',
     cursor: 'pointer',
     border: 'none',
     width: '100%',
     backgroundColor: 'transparent',
-    padding: '17px 22px 12px 22px',
+    padding: '17px 16px 12px 18px',
     alignItems: 'center',
   }),
   icon: cssObj({
@@ -139,6 +135,9 @@ const styles = {
     border: '1.5px solid $gray8',
     width: '20px',
     height: '20px',
+    minWidth: '20px',
+    minHeight: '20px',
+    padding: '0',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

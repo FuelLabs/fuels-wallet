@@ -6,33 +6,16 @@ import type { SimplifiedOperation } from '../../types';
 import { TxCategory } from '../../types';
 import { TxOperation } from '../TxOperation';
 
-type GroupedOperations = {
-  type: TxCategory;
+type TxOperationsDrawerProps = {
   operations: SimplifiedOperation[];
 };
 
-type TxOperationsDrawerProps = {
-  operations: GroupedOperations;
-  defaultExpanded?: boolean;
-};
-
-export function TxOperationsDrawer({
-  operations,
-  defaultExpanded = true,
-}: TxOperationsDrawerProps) {
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const title = useMemo(() => {
-    const count = operations.operations.length;
-    const labels = {
-      [TxCategory.SEND]: 'Send',
-      [TxCategory.RECEIVE]: 'Receive',
-      [TxCategory.CONTRACTCALL]: 'Contract Call',
-      [TxCategory.SCRIPT]: 'Script',
-      [TxCategory.PREDICATE]: 'Predicate',
-      [TxCategory.CONTRACTCREATED]: 'Contract Created',
-    };
-    return `${count} ${labels[operations.type] || 'Operation'}${count > 1 ? 's' : ''}`;
+    const count = operations.length;
+    return `${count} Contract call${count > 1 ? 's' : ''}`;
   }, [operations]);
 
   const handleClick = (e: React.MouseEvent) => {
@@ -68,21 +51,23 @@ export function TxOperationsDrawer({
 
   return (
     <Box css={styles.drawer} data-expanded={isExpanded}>
-      <Box.Flex
-        as="button"
-        onClick={handleClick}
-        css={styles.header({ isExpanded })}
-        justify="space-between"
-      >
-        <Text fontSize="sm" css={styles.title}>
-          {title}
-        </Text>
-        <Icon
-          icon={isExpanded ? 'ArrowsMaximize' : 'ArrowsMinimize'}
-          css={styles.chevron}
-          data-expanded={isExpanded}
-        />
-      </Box.Flex>
+      {operations.length > 1 && (
+        <Box.Flex
+          as="button"
+          onClick={handleClick}
+          css={styles.header({ isExpanded })}
+          justify="space-between"
+        >
+          <Text fontSize="sm" css={styles.title}>
+            {title}
+          </Text>
+          <Icon
+            icon={isExpanded ? 'ArrowsMaximize' : 'ArrowsMinimize'}
+            css={styles.chevron}
+            data-expanded={isExpanded}
+          />
+        </Box.Flex>
+      )}
       <MotionBox
         animate={{
           height: isExpanded ? 'auto' : 0,
@@ -91,7 +76,7 @@ export function TxOperationsDrawer({
         css={styles.expandedOperations}
         onClick={(e) => e.stopPropagation()}
       >
-        {operations.operations.map((operation, index) =>
+        {operations.map((operation, index) =>
           isExpanded ? (
             <Box.Flex
               key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
@@ -101,9 +86,9 @@ export function TxOperationsDrawer({
                 operation={operation}
                 showNesting={false}
                 bidirectionalInfo={getBidirectionalInfo(
-                  operations.operations[index - 1],
+                  operations[index - 1],
                   operation,
-                  operations.operations[index + 1]
+                  operations[index + 1]
                 )}
               />
             </Box.Flex>

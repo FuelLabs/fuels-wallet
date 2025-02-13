@@ -1,5 +1,6 @@
 import { Box } from '@fuel-ui/react';
 import { useMemo } from 'react';
+import { useAccounts } from '~/systems/Account';
 import type { CategorizedOperations, SimplifiedOperation } from '../../types';
 import type { TxCategory } from '../../types';
 import { TxOperationsGroup } from '../TxContent/TxOperationsSimple/TxOperationsGroup';
@@ -10,7 +11,9 @@ type TxOperationsListProps = {
 };
 
 export function TxOperations({ operations }: TxOperationsListProps) {
-  const groupedMainOperations = useMemo(() => {
+  const { account } = useAccounts();
+
+  const _groupedMainOperations = useMemo(() => {
     const groups = new Map<TxCategory, SimplifiedOperation[]>();
 
     for (const op of operations.mainOperations) {
@@ -27,28 +30,14 @@ export function TxOperations({ operations }: TxOperationsListProps) {
   return (
     <Box.Stack gap="$2">
       {/* Main operations grouped by type */}
-      {groupedMainOperations.map((group) => (
-        <TxOperationsDrawer
-          key={group.type}
-          operations={group}
-          defaultExpanded={true}
-        />
-      ))}
+      <TxOperationsDrawer operations={operations.mainOperations} />
 
       {/* Other root operations */}
       <TxOperationsGroup
-        title="Other Contract Calls"
+        title={`Operations not related to ${account?.name}`}
         operations={operations.otherRootOperations}
         showNesting={false}
         numberLabel="1"
-      />
-
-      {/* Intermediate operations */}
-      <TxOperationsGroup
-        title="Intermediate Operations"
-        operations={operations.intermediateOperations}
-        showNesting={true}
-        numberLabel={operations.otherRootOperations.length ? '2' : '1'}
       />
     </Box.Stack>
   );
