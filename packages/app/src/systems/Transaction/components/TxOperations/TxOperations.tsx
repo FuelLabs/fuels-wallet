@@ -1,49 +1,73 @@
-import { Alert, Box } from '@fuel-ui/react';
-import type { AssetData } from '@fuel-wallet/types';
-import type { Operation, TransactionStatus } from 'fuels';
-import type { Maybe } from '~/systems/Core';
+import { Box } from '@fuel-ui/react';
+import { useMemo } from 'react';
+import type { CategorizedOperations, SimplifiedOperation } from '../../types';
+import type { TxCategory } from '../../types';
+import { TxOperationsGroup } from '../TxContent/TxOperationsSimple/TxOperationsGroup';
+import { TxOperationsDrawer } from './TxOperationsDrawer';
 
-import { useNetworks } from '~/systems/Network';
-import { TxOperation } from '../TxOperation/TxOperation';
-
-export type TxOperationsProps = {
-  operations?: Operation[];
-  status?: Maybe<TransactionStatus>;
-  isLoading?: boolean;
+type TxOperationsListProps = {
+  operations: CategorizedOperations;
 };
 
-export function TxOperations({
-  operations,
-  status,
-  isLoading,
-}: TxOperationsProps) {
-  if (operations?.length === 0) {
-    return (
-      <Alert status="info">
-        <Alert.Description>
-          No operations found in this transaction
-        </Alert.Description>
-      </Alert>
-    );
-  }
+export function TxOperations({ operations }: TxOperationsListProps) {
+  const groupedMainOperations = useMemo(() => {
+    const groups = new Map<TxCategory, SimplifiedOperation[]>();
+
+    for (const op of operations.mainOperations) {
+      const existing = groups.get(op.type) || [];
+      groups.set(op.type, [...existing, op]);
+    }
+
+    return Array.from(groups.entries()).map(([type, ops]) => ({
+      type,
+      operations: ops,
+    }));
+  }, [operations.mainOperations]);
 
   return (
-    <Box.Stack gap="$4">
-      {operations?.map((operation, index) => (
-        <TxOperation
-          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-          key={index}
-          operation={operation}
-          status={status}
-          isLoading={isLoading}
+    <Box.Stack gap="$2">
+      {/* Main operations grouped by type */}
+      {groupedMainOperations.map((group) => (
+        <TxOperationsDrawer
+          key={group.type}
+          operations={group}
+          defaultExpanded={true}
         />
       ))}
+
+      {/* Other root operations */}
+      <TxOperationsGroup
+        title="Other Contract Calls"
+        operations={operations.otherRootOperations}
+        showNesting={false}
+        numberLabel="1"
+      />
+
+      {/* Intermediate operations */}
+      <TxOperationsGroup
+        title="Intermediate Operations"
+        operations={operations.intermediateOperations}
+        showNesting={true}
+        numberLabel={operations.otherRootOperations.length ? '2' : '1'}
+      />
     </Box.Stack>
   );
 }
 
-TxOperations.Loader = () => (
-  <Box.Stack gap="$4">
-    <TxOperation.Loader />
-  </Box.Stack>
-);
+TxOperations.Loader = function TxOperationsLoader() {
+  return (
+    <Box.Stack gap="$1">
+      {[1, 2].map((i) => (
+        <Box
+          key={i}
+          css={{
+            height: '80px',
+            backgroundColor: '$gray2',
+            borderRadius: '$md',
+            animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }}
+        />
+      ))}
+    </Box.Stack>
+  );
+};

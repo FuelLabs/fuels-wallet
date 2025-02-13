@@ -1,5 +1,14 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Form, HStack, Input, Text, VStack } from '@fuel-ui/react';
+import {
+  Box,
+  Button,
+  Form,
+  HStack,
+  Input,
+  RadioGroup,
+  Text,
+  VStack,
+} from '@fuel-ui/react';
 import { AnimatePresence } from 'framer-motion';
 import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -9,6 +18,7 @@ import { createAmount } from '~/systems/Core/components/InputAmount/InputAmount'
 import { isAmountAllowed } from '~/systems/Core/components/InputAmount/InputAmount.utils';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxFee } from '../TxFee';
+import { TxFeeRadio } from '../TxFee/TxFeeRadio';
 import {
   DECIMAL_UNITS,
   formatTip,
@@ -178,22 +188,29 @@ export const TxFeeOptions = ({
           </MotionStack>
         ) : (
           <MotionStack {...animations.slideInTop()} key="regular" gap="$2">
-            {options.map((option) => (
-              <TxFee
-                key={option.name}
-                fee={option.fee}
-                title={option.name}
-                checked={option.tip.eq(tip.value.amount)}
-                onChecked={() => {
-                  previousDefaultTip.current = option.tip;
-                  setValue('fees.tip', {
-                    amount: option.tip,
-                    text: formatTip(option.tip),
-                  });
-                  onRecalculate?.(option.tip);
-                }}
-              />
-            ))}
+            <RadioGroup
+              value={options.find((o) => o.tip.eq(tip.value.amount))?.name}
+              onValueChange={(value) => {
+                const option = options.find((o) => o.name === value);
+                if (!option) return;
+
+                previousDefaultTip.current = option.tip;
+                setValue('fees.tip', {
+                  amount: option.tip,
+                  text: formatTip(option.tip),
+                });
+                onRecalculate?.(option.tip);
+              }}
+            >
+              {options.map((option) => (
+                <TxFeeRadio
+                  key={option.name}
+                  fee={option.fee}
+                  title={option.name}
+                  checked={option.tip.eq(tip.value.amount)}
+                />
+              ))}
+            </RadioGroup>
           </MotionStack>
         )}
         <MotionFlex

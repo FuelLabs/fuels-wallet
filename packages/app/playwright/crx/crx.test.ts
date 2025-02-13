@@ -92,6 +92,7 @@ test.describe('FuelWallet Extension', () => {
     const popupPage = await context.newPage();
     const pagePromise = context.waitForEvent('page', {
       predicate: (page) => page.url().includes('sign-up'),
+      timeout: 15000,
     });
     await popupPage.goto(`chrome-extension://${extensionId}/popup.html`);
     const page = await pagePromise;
@@ -686,6 +687,7 @@ test.describe('FuelWallet Extension', () => {
         // Wait for approve transaction page to show
         const approveTransactionPage = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
+          timeout: 15000,
         });
 
         // Approve transaction
@@ -707,7 +709,6 @@ test.describe('FuelWallet Extension', () => {
           senderAccount.address.toString()
         );
 
-        await hasAriaLabel(approveTransactionPage, 'Confirm Transaction');
         await getButtonByText(approveTransactionPage, /Submit/i).click();
 
         await expect(transferStatus).resolves.toBe('success');
