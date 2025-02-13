@@ -97,6 +97,7 @@ export type SimplifiedOperation = {
   from: SimplifiedAddress;
   to: SimplifiedAddress;
   isFromCurrentAccount: boolean;
+  isToCurrentAccount: boolean;
   assets?: Array<{
     amount: BN;
     assetId: string;
