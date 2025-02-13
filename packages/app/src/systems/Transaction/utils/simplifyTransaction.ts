@@ -29,8 +29,6 @@ function getOperationType(operation: Operation): TxCategory {
       return operation.to ? TxCategory.SEND : TxCategory.RECEIVE;
     case OperationName.contractCall:
       return TxCategory.CONTRACTCALL;
-    case OperationName.script:
-      return TxCategory.SCRIPT;
     case OperationName.contractCreated:
       return TxCategory.CONTRACTCREATED;
     default:
