@@ -14,6 +14,7 @@ import { type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { formatAmount, shortAddress } from '~/systems/Core';
 import type { InsufficientInputAmountError } from '~/systems/Transaction';
 
+import { useTruncation } from '~/systems/Core/hooks/useTruncation';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { AssetsAmountLoader } from './AssetsAmountLoader';
 import { styles } from './styles';
@@ -107,23 +108,13 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
     return convertToUsd(bn(amount), decimals, rate).formatted;
   }, [amount, rate, decimals]);
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isTruncated, setIsTruncated] = useState(false);
-
   const formatted = formatAmount({
     amount,
     options: { units: decimals || 0, precision: decimals || 0 },
   });
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (containerRef.current) {
-      const amountElement = containerRef.current.querySelector('.amount-value');
-      if (amountElement) {
-        setIsTruncated(amountElement.scrollWidth > amountElement.clientWidth);
-      }
-    }
-  }, [formatted]);
+  const { ref: refAmount, open: openAmount } = useTruncation<HTMLSpanElement>();
+  const { ref: refInUsd, open: openInUsd } = useTruncation<HTMLSpanElement>();
 
   return (
     <Grid key={assetId} css={styles.root}>
@@ -148,24 +139,27 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
         </Text>
       </Copyable>
 
-      <Box.Flex
-        ref={containerRef}
-        aria-label="amount-container"
-        css={styles.amountContainer}
-      >
-        <Tooltip
-          content={formatted}
-          delayDuration={0}
-          open={isTruncated ? undefined : false}
-        >
-          <Text as="span" css={styles.amountValue} className="amount-value">
-            {formatted}&nbsp;{symbol}
+      <Box.Flex aria-label="amount-container" css={styles.amountContainer}>
+        <Tooltip content={formatted} delayDuration={0} open={openAmount}>
+          <Text
+            as="span"
+            ref={refAmount}
+            css={styles.amountValue}
+            color="inherit"
+          >
+            {formatted}
           </Text>
         </Tooltip>
-        <Text as="span" css={styles.amountInUsd}>
-          {amountInUsd}
+        <Text as="span" color="inherit" css={styles.amountSymbol}>
+          {symbol}
         </Text>
       </Box.Flex>
+
+      <Tooltip content={amountInUsd} delayDuration={0} open={openInUsd}>
+        <Text as="span" ref={refInUsd} css={styles.amountInUsd}>
+          {amountInUsd}
+        </Text>
+      </Tooltip>
     </Grid>
   );
 };
