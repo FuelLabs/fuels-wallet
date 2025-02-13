@@ -13,7 +13,7 @@ import {
   Tooltip,
   VStack,
 } from '@fuel-ui/react';
-import { type FC, useEffect, useMemo, useRef, useState } from 'react';
+import { type FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Pages, shortAddress } from '~/systems/Core';
 
@@ -69,7 +69,7 @@ export const AssetItem: AssetItemComponent = ({
 
   const { assetId, name, symbol, icon, decimals, isCustom } = asset ?? {};
 
-  const { ref, open } = useTruncation<HTMLSpanElement>();
+  const { ref, open } = useTruncation<HTMLHeadingElement>();
 
   if (!asset) return null;
 
@@ -174,7 +174,7 @@ export const AssetItem: AssetItemComponent = ({
         <HStack gap="0" align="center">
           <Tooltip content={name} delayDuration={0} open={open}>
             <Text
-              as="span"
+              as="h6"
               ref={ref}
               color="textHeading"
               fontSize="base"

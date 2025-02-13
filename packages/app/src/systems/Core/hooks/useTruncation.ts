@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
-interface UseTruncationReturn {
-  ref: React.RefObject<HTMLElement>;
+interface UseTruncationReturn<T extends HTMLElement> {
+  ref: React.RefObject<T>;
   isTruncated: boolean;
   open: boolean | undefined;
 }
 
-export function useTruncation<T extends HTMLElement>(): UseTruncationReturn {
+export function useTruncation<T extends HTMLElement>(): UseTruncationReturn<T> {
   const ref = useRef<T>(null);
   const [isTruncated, setIsTruncated] = useState(false);
 
