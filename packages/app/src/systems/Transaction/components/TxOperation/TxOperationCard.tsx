@@ -121,7 +121,7 @@ export function TxOperationCard({
           </Text>
           {isFromContract && (
             <Box css={styles.badge}>
-              <Text fontSize="sm" color="gray8">
+              <Text fontSize="sm" color="gray11">
                 Contract
               </Text>
             </Box>
