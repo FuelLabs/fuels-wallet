@@ -162,35 +162,31 @@ export const AssetItem: AssetItemComponent = ({
       )}
       <Box.Flex direction="column">
         <Heading as="h6" css={styles.assetName}>
-          <Box.Flex>
-            {name || 'Unknown'}
-            {asset.suspicious ? (
-              <Tooltip content={suspiciousTooltipContent}>
-                <Icon
-                  css={styles.assetSuspicious}
-                  icon={Icon.is('AlertTriangle')}
-                />
-              </Tooltip>
-            ) : (
-              ''
-            )}
-            {asset.isNft && (
-              <Badge variant="ghost" intent="primary" css={styles.assetNft}>
-                NFT
-              </Badge>
-            )}
-            {shouldShowAddAssetBtn && (
-              <Button
-                size="xs"
-                intent="primary"
-                variant="link"
-                onPress={() => goToAsset(asset)}
-                css={styles.addAssetBtn}
-              >
-                (Add)
-              </Button>
-            )}
-          </Box.Flex>
+          {name || 'Unknown'}
+          {!!asset.suspicious && (
+            <Tooltip content={suspiciousTooltipContent}>
+              <Icon
+                css={styles.assetSuspicious}
+                icon={Icon.is('AlertTriangle')}
+              />
+            </Tooltip>
+          )}
+          {asset.isNft && (
+            <Badge variant="ghost" intent="primary" css={styles.assetNft}>
+              NFT
+            </Badge>
+          )}
+          {shouldShowAddAssetBtn && (
+            <Button
+              size="xs"
+              intent="primary"
+              variant="link"
+              onPress={() => goToAsset(asset)}
+              css={styles.addAssetBtn}
+            >
+              (Add)
+            </Button>
+          )}
         </Heading>
         <Box.Flex direction="row">
           {symbol ? (
@@ -213,10 +209,12 @@ AssetItem.Loader = AssetItemLoader;
 
 const styles = {
   assetName: cssObj({
+    display: 'inline-flex',
     margin: 0,
     textSize: 'base',
     fontWeight: '$medium',
     letterSpacing: '$normal',
+    whiteSpace: 'nowrap',
   }),
   assetIdCopy: cssObj({
     marginLeft: 2,
@@ -224,6 +222,7 @@ const styles = {
   assetSymbol: cssObj({
     textSize: 'sm',
     fontWeight: '$normal',
+    whiteSpace: 'nowrap',
   }),
   assetSuspicious: cssObj({
     marginLeft: 5,

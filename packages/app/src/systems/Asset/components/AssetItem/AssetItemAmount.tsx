@@ -44,8 +44,8 @@ export const AssetItemAmount = ({
 
   return (
     <Tooltip content={original.display} delayDuration={0} open={open}>
-      <Box css={styles.root}>
-        <VStack gap="0">
+      <VStack gap="0" align="flex-end" css={styles.container}>
+        <Box css={styles.balanceRow}>
           <Text
             as="span"
             ref={amountRef}
@@ -57,30 +57,33 @@ export const AssetItemAmount = ({
               units={decimals}
               visibility={visibility}
             />
-            <Text as="span" css={styles.symbol}>
-              {symbol}
-            </Text>
           </Text>
-          {!!amountInUsd && amountInUsd !== '$0' && (
-            <Text
-              aria-hidden={visibility}
-              aria-label={`${symbol} conversion rate to USD`}
-              css={styles.amountInUsd}
-            >
-              {visibility ? amountInUsd : '$••••'}
-            </Text>
-          )}
-        </VStack>
-      </Box>
+          <Text as="span" css={styles.symbol}>
+            {symbol}
+          </Text>
+        </Box>
+        {!!amountInUsd && amountInUsd !== '$0' && (
+          <Text
+            aria-hidden={visibility}
+            aria-label={`${symbol} conversion rate to USD`}
+            css={styles.amountInUsd}
+          >
+            {visibility ? amountInUsd : '$••••'}
+          </Text>
+        )}
+      </VStack>
     </Tooltip>
   );
 };
 
 const styles = {
-  root: cssObj({
+  container: cssObj({
+    minWidth: 0,
+  }),
+  balanceRow: cssObj({
     display: 'inline-flex',
     columnGap: '$1',
-    minWidth: 0,
+    width: '100%',
     alignItems: 'center',
     flexWrap: 'nowrap',
     textSize: 'base',
@@ -93,6 +96,7 @@ const styles = {
     display: 'inline-block',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
     color: '$textHeading',
   }),
   symbol: cssObj({
