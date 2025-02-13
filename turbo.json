@@ -26,12 +26,12 @@
     "build": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["ts:check"],
-      "outputs": ["dist/**", "dist/**/*.zip"]
+      "outputs": ["dist/**", "dist/**/*.zip", "**/out/**"]
     },
     "build:docs": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", "**/out/**"]
     },
     "build:crx": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
@@ -41,21 +41,21 @@
     "build:web": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", "**/out/**"]
     },
     "build:app": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["build:web", "build:crx"],
-      "outputs": ["dist/**", "dist-crx/**"]
+      "outputs": ["dist/**", "dist-crx/**", "**/out/**"]
     },
     "build:all": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", "**/out/**"]
     },
     "build:preview": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["^build"],
-      "outputs": ["./dist/"]
+      "outputs": ["./dist/**", "**/out/**"]
     },
     "test": {
       "cache": false,
