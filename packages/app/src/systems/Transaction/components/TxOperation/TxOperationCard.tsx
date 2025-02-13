@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Icon, Text } from '@fuel-ui/react';
 import type { AssetFuelAmount, AssetFuelData } from '@fuel-wallet/types';
-import { Address, isB256, isBech32 } from 'fuels';
+import { Address, isB256 } from 'fuels';
 import { useEffect, useState } from 'react';
 import { FuelAddress, useAccounts } from '~/systems/Account';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
@@ -62,10 +62,8 @@ export function TxOperationCard({
     (acc) => acc.address.toLowerCase() === operation.to.address.toLowerCase()
   );
 
-  const isValidFromAddress =
-    isB256(operation.from.address) || isBech32(operation.from.address);
-  const isValidToAddress =
-    isB256(operation.to.address) || isBech32(operation.to.address);
+  const isValidFromAddress = isB256(operation.from.address);
+  const isValidToAddress = isB256(operation.to.address);
 
   const fuelFromAddress = isValidFromAddress
     ? Address.fromString(operation.from.address).toString()
