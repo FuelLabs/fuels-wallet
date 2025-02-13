@@ -82,7 +82,7 @@ export class AccountService {
     const { address } = input;
     const account = await db.transaction('r', db.accounts, async () => {
       return db.accounts.get({
-        address: Address.fromString(address).toString(),
+        address: Address.fromDynamicInput(address).toString(),
       });
     });
 
@@ -112,7 +112,7 @@ export class AccountService {
         string,
         { value: number; formatted: string } | undefined
       > = {};
-      const chainId = provider.getChainId();
+      const chainId = await provider.getChainId();
 
       const balanceAssets = await AssetsCache.fetchAllAssets(
         chainId,
@@ -164,7 +164,7 @@ export class AccountService {
       });
 
       // includes eth balance info, centralizing the complexity here instead of in rest of UI
-      const baseAssetId = provider.getBaseAssetId();
+      const baseAssetId = await provider.getBaseAssetId();
       const ethAsset = balances.find(
         (balance) => balance.assetId === baseAssetId.toString()
       );

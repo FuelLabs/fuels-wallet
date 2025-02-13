@@ -140,9 +140,9 @@ const schemaFactory = (provider?: Provider) =>
                 message: 'Address is not a valid',
               });
             }
-            const standardizedAddress = Address.fromString(value).toString();
-            const accountType =
-              await provider?.getAddressType(standardizedAddress);
+            const accountType = await provider?.getAddressType(
+              Address.fromDynamicInput(value).toB256()
+            );
             if (accountType !== 'Account') {
               return ctx.createError({
                 message: `You can't send to ${accountType} address`,

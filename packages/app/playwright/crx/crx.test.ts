@@ -99,7 +99,7 @@ test.describe('FuelWallet Extension', () => {
   });
 
   test('SDK operations', async ({ context, baseURL, extensionId }) => {
-    const provider = await Provider.create(process.env.VITE_FUEL_PROVIDER_URL);
+    const provider = new Provider(process.env.VITE_FUEL_PROVIDER_URL);
     // Use a single instance of the page to avoid
     // multiple waiting times, and window.fuel checking.
     const blankPage = await context.newPage();
