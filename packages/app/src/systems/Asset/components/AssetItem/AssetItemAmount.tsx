@@ -3,6 +3,7 @@ import { Box, Text, Tooltip, VStack } from '@fuel-ui/react';
 import { type BNInput, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AmountVisibility, formatBalance } from '~/systems/Core';
+import { useTruncation } from '~/systems/Core/hooks/useTruncation';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 
@@ -22,8 +23,7 @@ export const AssetItemAmount = ({
   const { visibility } = useBalanceVisibility();
   const { original, tooltip } = formatBalance(amount, decimals);
 
-  const amountRef = useRef<HTMLSpanElement>(null);
-  const [isTruncated, setIsTruncated] = useState(false);
+  const { ref, isTruncated } = useTruncation<HTMLSpanElement>();
 
   const open = useMemo<boolean | undefined>(() => {
     if (visibility && (tooltip || isTruncated)) return undefined;
@@ -35,64 +35,56 @@ export const AssetItemAmount = ({
     return convertToUsd(bn(amount), decimals, rate).formatted;
   }, [amount, rate, decimals]);
 
-  useEffect(() => {
-    if (!tooltip && amountRef.current) {
-      const amountEl = amountRef.current;
-      setIsTruncated(amountEl.scrollWidth > amountEl.clientWidth);
-    }
-  }, [tooltip]);
-
   return (
     <Tooltip content={original.display} delayDuration={0} open={open}>
-      <Box css={styles.root}>
-        <VStack gap="0">
-          <Text
-            as="span"
-            ref={amountRef}
-            css={styles.amount}
-            aria-label={`${symbol} token balance`}
-          >
+      <VStack gap="0" align="flex-end" css={styles.container}>
+        <Box css={styles.balanceRow} aria-label={`${symbol} token balance`}>
+          <Text as="span" ref={ref} css={styles.amount}>
             <AmountVisibility
               value={amount}
               units={decimals}
               visibility={visibility}
             />
-            <Text as="span" css={styles.symbol}>
-              {symbol}
-            </Text>
           </Text>
-          {!!amountInUsd && amountInUsd !== '$0' && (
-            <Text
-              aria-hidden={visibility}
-              aria-label={`${symbol} conversion rate to USD`}
-              css={styles.amountInUsd}
-            >
-              {visibility ? amountInUsd : '$••••'}
-            </Text>
-          )}
-        </VStack>
-      </Box>
+          <Text as="span" css={styles.symbol}>
+            {symbol}
+          </Text>
+        </Box>
+        {!!amountInUsd && amountInUsd !== '$0' && (
+          <Text
+            aria-hidden={visibility}
+            aria-label={`${symbol} conversion rate to USD`}
+            css={styles.amountInUsd}
+          >
+            {visibility ? amountInUsd : '$••••'}
+          </Text>
+        )}
+      </VStack>
     </Tooltip>
   );
 };
 
 const styles = {
-  root: cssObj({
+  container: cssObj({
+    minWidth: 0,
+  }),
+  balanceRow: cssObj({
     display: 'inline-flex',
     columnGap: '$1',
-    minWidth: 0,
+    width: '100%',
     alignItems: 'center',
+    justifyContent: 'flex-end',
     flexWrap: 'nowrap',
     textSize: 'base',
     fontWeight: '$normal',
     textAlign: 'right',
-    paddingLeft: '$2',
     lineHeight: '24px',
   }),
   amount: cssObj({
     display: 'inline-block',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
     color: '$textHeading',
   }),
   symbol: cssObj({
