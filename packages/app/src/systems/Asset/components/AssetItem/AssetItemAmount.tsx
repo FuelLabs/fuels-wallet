@@ -85,6 +85,7 @@ const styles = {
     columnGap: '$1',
     width: '100%',
     alignItems: 'center',
+    justifyContent: 'flex-end',
     flexWrap: 'nowrap',
     textSize: 'base',
     fontWeight: '$normal',
