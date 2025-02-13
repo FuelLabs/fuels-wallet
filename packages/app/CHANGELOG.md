@@ -1,5 +1,21 @@
 # fuels-wallet
 
+## 0.49.0
+
+### Minor Changes
+
+- [#1774](https://github.com/FuelLabs/fuels-wallet/pull/1774) [`32950ceb`](https://github.com/FuelLabs/fuels-wallet/commit/32950cebefc5e207f6c746bed10aa4daa72cef62) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fuel SDK updated to 0.98.0, breaking changes (e.g. Provide.create, async provider calls, removal of AbstractAddress) are covered. Read [here](https://github.com/fuellabs/fuels-ts/releases/tag/v0.98.0) for more info.
+
+### Patch Changes
+
+- [#1774](https://github.com/FuelLabs/fuels-wallet/pull/1774) [`32950ceb`](https://github.com/FuelLabs/fuels-wallet/commit/32950cebefc5e207f6c746bed10aa4daa72cef62) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Gasless transactions are now supported via the `skipCustomFee` param
+
+- [#1799](https://github.com/FuelLabs/fuels-wallet/pull/1799) [`118f4f44`](https://github.com/FuelLabs/fuels-wallet/commit/118f4f4467f1ce8bb267e18a207c298c50c061b9) Thanks [@arthurgeron](https://github.com/arthurgeron)! - feat: send common errors automatically, instead of asking user to review
+
+- Updated dependencies [[`32950ceb`](https://github.com/FuelLabs/fuels-wallet/commit/32950cebefc5e207f6c746bed10aa4daa72cef62), [`32950ceb`](https://github.com/FuelLabs/fuels-wallet/commit/32950cebefc5e207f6c746bed10aa4daa72cef62)]:
+  - @fuel-wallet/connections@0.49.0
+  - @fuels/playwright-utils@0.49.0
+
 ## 0.48.3
 
 ### Patch Changes

@@ -2,6 +2,7 @@ import { ExtensionPageConnection } from '@fuel-wallet/connections';
 import { transactionRequestify } from 'fuels';
 import { IS_CRX } from '~/config';
 import { Services, store } from '~/store';
+import { AccountService } from '~/systems/Account/services/account';
 import type {
   MessageInputs,
   PopUpServiceInputs,
@@ -48,9 +49,18 @@ export class RequestMethods extends ExtensionPageConnection {
   }
 
   async sendTransaction(input: MessageInputs['sendTransaction']) {
-    const { origin, address, provider, transaction, title, favIconUrl } = input;
+    const {
+      origin,
+      address,
+      provider,
+      transaction,
+      title,
+      favIconUrl,
+      skipCustomFee,
+    } = input;
     const providerUrl = provider.url;
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
+
     const state = await store
       .requestTransaction({
         origin,
@@ -59,6 +69,7 @@ export class RequestMethods extends ExtensionPageConnection {
         providerUrl,
         title,
         favIconUrl,
+        skipCustomFee,
       })
       .waitForState(Services.txRequest, {
         ...WAIT_FOR_CONFIG,

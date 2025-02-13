@@ -32,8 +32,8 @@ export const testSetup = async ({
   for (const p of pages) {
     if (p !== page) await p.close();
   }
-  const fuelProvider = await Provider.create(VITE_FUEL_PROVIDER_URL!);
-  const chainName = fuelProvider.getChain().name;
+  const fuelProvider = new Provider(VITE_FUEL_PROVIDER_URL!);
+  const chainName = (await fuelProvider.getChain()).name;
   const masterWallet = Wallet.fromMnemonic(VITE_MASTER_WALLET_MNEMONIC!);
   masterWallet.connect(fuelProvider);
 
@@ -66,7 +66,7 @@ export const testSetup = async ({
     fuelExtensionId: extensionId,
     fuelProvider: {
       url: fuelProvider.url,
-      chainId: fuelProvider.getChainId(),
+      chainId: await fuelProvider.getChainId(),
     },
     chainName,
     mnemonic: randomMnemonic,
