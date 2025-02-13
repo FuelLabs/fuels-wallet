@@ -55,10 +55,10 @@ test.describe('Check assets', () => {
     ).toContainText('0.002000 ETH');
   });
 
-  test('should show USDCIcon AlertTriangle', async () => {
+  test('should show USDC Icon AlertTriangle', async () => {
     await expect
       .poll(
-        async () => await page.getByText('USDCIcon AlertTriangle').isVisible(),
+        async () => await page.getByText('USDC Icon AlertTriangle').isVisible(),
         { timeout: 10000 }
       )
       .toBeTruthy();
