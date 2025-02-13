@@ -7,13 +7,14 @@ import { FuelAddress, useAccounts } from '~/systems/Account';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { type SimplifiedOperation, TxCategory } from '../../types';
+import type { BidirectionalInfo } from '../TxContent/TxOperationsSimple/TxOperationsGroup';
 import { TxOperationAssets } from './TxOperationAssets';
-
 type TxOperationCardProps = {
   operation: SimplifiedOperation;
   assetsAmount: AssetFuelAmount[];
   depth: number;
   flat?: boolean;
+  bidirectionalInfo?: BidirectionalInfo;
 };
 
 export function TxOperationCard({
@@ -21,6 +22,7 @@ export function TxOperationCard({
   assetsAmount,
   depth,
   flat = false,
+  bidirectionalInfo = null,
 }: TxOperationCardProps) {
   const { accounts } = useAccounts();
   const provider = useProvider();
@@ -89,8 +91,11 @@ export function TxOperationCard({
   const isToContract = operation.to.type === 0;
 
   return (
-    <Box css={styles.contentCol(flat)} style={{ marginLeft: depth * 0 * 4 }}>
-      <Box.Flex
+    <Box
+      css={styles.contentCol(flat, bidirectionalInfo)}
+      style={{ marginLeft: depth * 0 * 4 }}
+    >
+      <Box
         css={cssObj({
           display: 'grid',
           gridTemplateColumns: 'auto 1fr',
@@ -99,39 +104,48 @@ export function TxOperationCard({
           marginBottom: '$2',
           columnGap: '$2',
           rowGap: '1px',
+          margin: '0px',
         })}
       >
-        <Box.Flex justify={'flex-start'} align={'center'} css={styles.iconCol}>
-          <Avatar.Generated
-            role="img"
-            size="sm"
-            hash={fuelFromAddress}
-            aria-label={fuelFromAddress}
-          />
-        </Box.Flex>
-        <Box.Flex
-          justify={'flex-start'}
-          align={'center'}
-          gap="$1"
-          wrap="wrap"
-          aria-label="From address"
-        >
-          <Text as="span" fontSize="sm" css={styles.name}>
-            {accountFrom?.name || 'Unknown'}
-          </Text>
-          {isFromContract && (
-            <Box css={styles.badge}>
-              <Text fontSize="sm" color="gray11">
-                Contract
+        {bidirectionalInfo !== 'btoa' && (
+          <>
+            <Box.Flex
+              justify={'flex-start'}
+              align={'center'}
+              css={styles.iconCol}
+            >
+              <Avatar.Generated
+                role="img"
+                size="sm"
+                hash={fuelFromAddress}
+                aria-label={fuelFromAddress}
+              />
+            </Box.Flex>
+            <Box.Flex
+              justify={'flex-start'}
+              align={'center'}
+              gap="$1"
+              wrap="wrap"
+              aria-label="From address"
+            >
+              <Text as="span" fontSize="sm" css={styles.name}>
+                {accountFrom?.name || 'Unknown'}
               </Text>
-            </Box>
-          )}
-          <FuelAddress
-            address={fuelFromAddress}
-            isContract={isFromContract}
-            css={styles.address}
-          />
-        </Box.Flex>
+              {isFromContract && (
+                <Box css={styles.badge}>
+                  <Text fontSize="sm" color="gray11">
+                    Contract
+                  </Text>
+                </Box>
+              )}
+              <FuelAddress
+                address={fuelFromAddress}
+                isContract={isFromContract}
+                css={styles.address}
+              />
+            </Box.Flex>
+          </>
+        )}
 
         <Box.Flex justify={'center'}>
           <Box css={styles.spacer} />
@@ -184,21 +198,22 @@ export function TxOperationCard({
             css={styles.address}
           />
         </Box.Flex>
-      </Box.Flex>
+      </Box>
     </Box>
   );
 }
 
 const styles = {
-  contentCol: (flat: boolean) =>
+  contentCol: (flat: boolean, bidirectionalInfo: BidirectionalInfo) =>
     cssObj({
       display: 'flex',
       backgroundColor: '$cardBg',
-      boxShadow: flat
-        ? 'none'
-        : '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
+      boxShadow:
+        flat || !!bidirectionalInfo
+          ? 'none'
+          : '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
       flex: 1,
-      padding: '14px 12px',
+      padding: `${bidirectionalInfo === 'btoa' ? '0px' : '14px'} 12px ${bidirectionalInfo === 'atob' ? '0px' : '14px'}`,
     }),
   spacer: cssObj({
     minHeight: '14px',

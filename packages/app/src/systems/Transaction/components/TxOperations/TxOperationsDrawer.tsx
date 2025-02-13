@@ -41,6 +41,31 @@ export function TxOperationsDrawer({
     setIsExpanded(!isExpanded);
   };
 
+  function getBidirectionalInfo(
+    previous: SimplifiedOperation,
+    current: SimplifiedOperation,
+    next: SimplifiedOperation
+  ) {
+    // if next operation is the reverse of the current operation, return 'atob'
+    // if previous operation is the reverse of the current operation, return 'btoa'
+    // otherwise return null
+    if (
+      next &&
+      next.from.address === current.to.address &&
+      next.to.address === current.from.address
+    ) {
+      return 'atob';
+    }
+    if (
+      previous &&
+      previous.from.address === current.to.address &&
+      previous.to.address === current.from.address
+    ) {
+      return 'btoa';
+    }
+    return null;
+  }
+
   return (
     <Box css={styles.drawer} data-expanded={isExpanded}>
       <Box.Flex
@@ -72,7 +97,15 @@ export function TxOperationsDrawer({
               key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
               css={styles.operation}
             >
-              <TxOperation operation={operation} showNesting={false} />
+              <TxOperation
+                operation={operation}
+                showNesting={false}
+                bidirectionalInfo={getBidirectionalInfo(
+                  operations.operations[index - 1],
+                  operation,
+                  operations.operations[index + 1]
+                )}
+              />
             </Box.Flex>
           ) : null
         )}

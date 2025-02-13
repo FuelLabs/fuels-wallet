@@ -12,6 +12,29 @@ type TxOperationsGroupProps = {
   numberLabel?: string;
 };
 
+export type BidirectionalInfo = 'atob' | 'btoa' | null;
+
+function getBidirectionalInfo(
+  current: SimplifiedOperation,
+  next: SimplifiedOperation
+): BidirectionalInfo {
+  if (
+    current.to.address === next.from.address &&
+    current.from.address === next.to.address
+  ) {
+    return 'atob';
+  }
+
+  if (
+    current.from.address === next.from.address &&
+    current.to.address === next.to.address
+  ) {
+    return 'btoa';
+  }
+
+  return null;
+}
+
 export function TxOperationsGroup({
   title,
   operations,
@@ -62,6 +85,10 @@ export function TxOperationsGroup({
               key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
               operation={operation}
               showNesting={showNesting}
+              bidirectionalInfo={getBidirectionalInfo(
+                operation,
+                operations[index + 1]
+              )}
             />
           ) : null
         )}

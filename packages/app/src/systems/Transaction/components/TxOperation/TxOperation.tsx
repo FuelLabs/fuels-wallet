@@ -4,18 +4,21 @@ import { useState } from 'react';
 import { MotionBox, animations } from '~/systems/Core';
 import { useAssetsAmount } from '../../hooks/useAssetsAmount';
 import type { SimplifiedOperation } from '../../types';
+import type { BidirectionalInfo } from '../TxContent/TxOperationsSimple/TxOperationsGroup';
 import { TxOperationCard } from './TxOperationCard';
 
 export type TxOperationProps = {
   operation: SimplifiedOperation;
   showNesting?: boolean;
   flat?: boolean;
+  bidirectionalInfo?: BidirectionalInfo;
 };
 
 export function TxOperation({
   operation,
   // showNesting = true,
   flat = false,
+  bidirectionalInfo,
 }: TxOperationProps) {
   const { metadata, assets } = operation;
   const amounts = useAssetsAmount({
@@ -31,6 +34,7 @@ export function TxOperation({
         assetsAmount={amounts}
         depth={depth}
         flat={flat}
+        bidirectionalInfo={bidirectionalInfo}
       />
       {metadata.operationCount && metadata.operationCount > 1 && (
         <MotionBox
