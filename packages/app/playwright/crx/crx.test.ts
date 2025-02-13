@@ -90,15 +90,17 @@ test.describe('FuelWallet Extension', () => {
     extensionId,
   }) => {
     const popupPage = await context.newPage();
-    await popupPage.goto(`chrome-extension://${extensionId}/popup.html`);
-    const _page = await context.waitForEvent('page', {
+    const pagePromise = context.waitForEvent('page', {
       predicate: (page) => page.url().includes('sign-up'),
       timeout: 15000,
     });
+    await popupPage.goto(`chrome-extension://${extensionId}/popup.html`);
+    const page = await pagePromise;
+    expect(page.url()).toContain('sign-up');
   });
 
   test('SDK operations', async ({ context, baseURL, extensionId }) => {
-    const provider = await Provider.create(process.env.VITE_FUEL_PROVIDER_URL);
+    const provider = new Provider(process.env.VITE_FUEL_PROVIDER_URL);
     // Use a single instance of the page to avoid
     // multiple waiting times, and window.fuel checking.
     const blankPage = await context.newPage();

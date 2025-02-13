@@ -29,9 +29,15 @@ export function TransferAssetsHook() {
   const { wallet } = useWallet(); // or useAccount(address);
 
   useEffect(() => {
-    Provider.create('http://localhost:4000/v1/graphql').then((provider) => {
-      setAssetId(provider.getBaseAssetId());
+    let abort = false;
+    const provider = new Provider('http://localhost:4000/v1/graphql');
+    provider.getBaseAssetId().then((assetId) => {
+      if (abort) return;
+      setAssetId(assetId);
     });
+    return () => {
+      abort = true;
+    };
   }, []);
 
   async function transfer(

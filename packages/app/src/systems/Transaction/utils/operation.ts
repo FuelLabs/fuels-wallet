@@ -10,9 +10,11 @@ export function getOperationDirection(operation: Operation, owner: string) {
     return OperationDirection.unknown;
   }
 
-  const ownerAddr = Address.fromString(owner);
+  const ownerAddr = Address.fromDynamicInput(owner);
 
-  return ownerAddr.equals(Address.fromString(operation?.to?.address ?? ''))
+  return ownerAddr.equals(
+    Address.fromDynamicInput(operation?.to?.address ?? '')
+  )
     ? OperationDirection.from
     : OperationDirection.to;
 }

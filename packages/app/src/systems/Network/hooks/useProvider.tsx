@@ -5,7 +5,8 @@ import { useNetworks } from './useNetworks';
 
 export function useProvider() {
   const { network } = useNetworks();
-  const [provider, setProvider] = useState<Provider | undefined>(undefined);
+  // When we pass a function to the useState, we guarantee that the function will be called only once.
+  const [provider, setProvider] = useState<Provider | undefined>();
 
   useEffect(() => {
     if (network?.url) {
