@@ -151,12 +151,13 @@ export const AssetItem: AssetItemComponent = ({
         <Avatar
           name={name || ''}
           src={icon}
-          css={{ height: 36, width: 36, borderRadius: '$full' }}
+          css={{ height: 36, width: 36, borderRadius: '$full', flexShrink: 0 }}
         />
       ) : (
         <Avatar.Generated
           hash={assetId || ''}
-          css={{ height: 36, width: 36 }}
+          size={36}
+          css={{ flexShrink: 0 }}
         />
       )}
       <Box.Flex direction="column">
