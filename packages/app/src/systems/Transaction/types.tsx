@@ -62,6 +62,12 @@ export type GroupedAssets = {
   };
 };
 
+type IdenticalOpsGroup = {
+  operation: SimplifiedOperation;
+  count: number;
+  instances: SimplifiedOperation[];
+};
+
 export type ContractCallMetadata = {
   contractId?: string;
   functionName?: string;
@@ -72,8 +78,9 @@ export type ContractCallMetadata = {
   receiptType?: ReceiptType;
   assetAmount?: AssetFuelAmount;
   operationCount?: number;
-  groupedAssets?: GroupedAssets;
+  groupedAssets?: Record<string, SimplifiedOperation['assets'][0]>;
   childOperations?: SimplifiedOperation[];
+  identicalOps?: IdenticalOpsGroup[];
 };
 
 export type SwapMetadata = {

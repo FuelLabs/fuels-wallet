@@ -158,14 +158,28 @@ export function transformOperations(
   return operations;
 }
 
+// Helper to create a unique key for identical operations
+function getOperationKey(op: SimplifiedOperation) {
+  // Include all properties that make operations identical
+  return JSON.stringify({
+    type: op.type,
+    from: op.from.address,
+    to: op.to.address,
+    // Sort assets to ensure consistent key regardless of array order
+    assets: (op.assets || []).map((a) => `${a.assetId}-${a.amount}`).sort(),
+  });
+}
+
 function groupSimilarOperations(
   operations: SimplifiedOperation[]
 ): SimplifiedOperation[] {
-  // Group similar operations
-  const groups = operations.reduce(
+  // First level grouping: by type, addresses, and depth
+  const baseGroups = operations.reduce(
     (acc, op) => {
+      // Group key includes only base properties
       const key = `${op.type}-${op.from.address}-${op.to.address}-${op.metadata?.depth}`;
       if (!acc[key]) {
+        // Initialize group with metadata for UI
         acc[key] = {
           ...op,
           metadata: {
@@ -173,10 +187,29 @@ function groupSimilarOperations(
             operationCount: 1,
             groupedAssets: {},
             childOperations: [op],
+            // New: track identical operations within group
+            identicalOps: new Map(),
           },
         };
       } else {
-        // Combine assets from same type of operations
+        // Add operation to group and update metadata
+        acc[key].metadata.operationCount! += 1;
+        acc[key].metadata.childOperations!.push(op);
+
+        // Group identical operations
+        const identicalKey = getOperationKey(op);
+        const identicalGroup = acc[key].metadata.identicalOps.get(
+          identicalKey
+        ) || {
+          operation: op,
+          count: 0,
+          instances: [],
+        };
+        identicalGroup.count += 1;
+        identicalGroup.instances.push(op);
+        acc[key].metadata.identicalOps.set(identicalKey, identicalGroup);
+
+        // Combine assets as before
         for (const asset of op.assets || []) {
           const existing = acc[key].metadata.groupedAssets![asset.assetId];
           if (existing) {
@@ -188,18 +221,25 @@ function groupSimilarOperations(
             };
           }
         }
-        acc[key].metadata.childOperations = [
-          ...(acc[key].metadata.childOperations || []),
-          op,
-        ];
-        acc[key].metadata.operationCount! += 1;
       }
       return acc;
     },
     {} as Record<string, SimplifiedOperation>
   );
 
-  return Object.values(groups);
+  // Convert identical ops Map to array for easier UI consumption
+  const result = Object.values(baseGroups).map((group) => ({
+    ...group,
+    metadata: {
+      ...group.metadata,
+      // Only include groups with multiple identical operations
+      identicalOps: Array.from(group.metadata.identicalOps.values()).filter(
+        (g) => g.count > 1
+      ),
+    },
+  }));
+
+  return result;
 }
 
 function categorizeOperations(

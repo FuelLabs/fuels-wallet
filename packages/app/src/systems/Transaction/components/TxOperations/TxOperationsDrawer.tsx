@@ -84,7 +84,6 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
             >
               <TxOperation
                 operation={operation}
-                showNesting={false}
                 bidirectionalInfo={getBidirectionalInfo(
                   operations[index - 1],
                   operation,

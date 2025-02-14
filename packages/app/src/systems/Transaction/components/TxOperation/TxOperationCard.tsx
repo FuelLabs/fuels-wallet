@@ -1,4 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
+import { type ThemeUtilsCSS, cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Icon, Text } from '@fuel-ui/react';
 import type { AssetFuelAmount, AssetFuelData } from '@fuel-wallet/types';
 import { Address, isB256 } from 'fuels';
@@ -11,16 +11,16 @@ import type { BidirectionalInfo } from '../TxContent/TxOperationsSimple/TxOperat
 import { TxOperationAssets } from './TxOperationAssets';
 type TxOperationCardProps = {
   operation: SimplifiedOperation;
-  assetsAmount: AssetFuelAmount[];
-  depth: number;
+  assetsAmount?: AssetFuelAmount[];
   bidirectionalInfo?: BidirectionalInfo;
+  css?: ThemeUtilsCSS;
 };
 
 export function TxOperationCard({
   operation,
   assetsAmount,
-  depth,
   bidirectionalInfo = null,
+  css,
 }: TxOperationCardProps) {
   const { accounts } = useAccounts();
   const provider = useProvider();
@@ -72,7 +72,7 @@ export function TxOperationCard({
 
   const getOperationType = () => {
     if (isContract) {
-      if (assetsAmount.length > 0) {
+      if (assetsAmount && assetsAmount.length > 0) {
         return 'Calls contract (sending funds)';
       }
       return 'Calls contract';
@@ -81,16 +81,13 @@ export function TxOperationCard({
     return 'Unknown';
   };
 
-  const shouldShowAssetAmount = assetsAmount?.length > 0;
+  const shouldShowAssetAmount = assetsAmount && assetsAmount.length > 0;
 
   const isFromContract = operation.from.type === 0;
   const isToContract = operation.to.type === 0;
 
   return (
-    <Box
-      css={styles.contentCol(bidirectionalInfo)}
-      style={{ marginLeft: depth * 0 * 4 }}
-    >
+    <Box css={styles.contentCol(bidirectionalInfo)} style={css}>
       <Box
         css={cssObj({
           display: 'grid',

@@ -38,7 +38,6 @@ function getBidirectionalInfo(
 export function TxOperationsGroup({
   title,
   operations,
-  showNesting,
   numberLabel,
 }: TxOperationsGroupProps) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -65,7 +64,11 @@ export function TxOperationsGroup({
             {title}
           </Text>
         </Box.Flex>
-        <Icon icon="Minus" css={styles.chevron} data-expanded={isExpanded} />
+        <Icon
+          icon={isExpanded ? 'ChevronDown' : 'Minus'}
+          css={styles.chevron}
+          data-expanded={isExpanded}
+        />
       </Box.Flex>
       <MotionBox
         animate={{
@@ -80,7 +83,6 @@ export function TxOperationsGroup({
             <TxOperation
               key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
               operation={operation}
-              showNesting={showNesting}
               bidirectionalInfo={getBidirectionalInfo(
                 operation,
                 operations[index + 1]
@@ -145,11 +147,10 @@ const styles = {
     fontWeight: '600',
   }),
   chevron: cssObj({
-    transform: 'rotate(0deg)',
-    transition: 'transform 0.2s ease',
+    transition: 'transform 0.3s ease',
 
     '&[data-expanded=true]': {
-      transform: 'rotate(90deg)',
+      transform: 'rotate(360deg)',
     },
   }),
 };

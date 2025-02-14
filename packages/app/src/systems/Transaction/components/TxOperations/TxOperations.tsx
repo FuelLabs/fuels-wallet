@@ -13,20 +13,6 @@ type TxOperationsListProps = {
 export function TxOperations({ operations }: TxOperationsListProps) {
   const { account } = useAccounts();
 
-  const _groupedMainOperations = useMemo(() => {
-    const groups = new Map<TxCategory, SimplifiedOperation[]>();
-
-    for (const op of operations.mainOperations) {
-      const existing = groups.get(op.type) || [];
-      groups.set(op.type, [...existing, op]);
-    }
-
-    return Array.from(groups.entries()).map(([type, ops]) => ({
-      type,
-      operations: ops,
-    }));
-  }, [operations.mainOperations]);
-
   return (
     <Box.Stack gap="$2">
       {/* Main operations grouped by type */}
@@ -37,7 +23,7 @@ export function TxOperations({ operations }: TxOperationsListProps) {
         title={`Operations not related to ${account?.name}`}
         operations={operations.otherRootOperations}
         showNesting={false}
-        numberLabel="1"
+        numberLabel={`${operations.otherRootOperations.length}`}
       />
     </Box.Stack>
   );
