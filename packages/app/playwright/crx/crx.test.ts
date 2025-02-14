@@ -1,5 +1,5 @@
 import type { NetworkData, Account as WalletAccount } from '@fuel-wallet/types';
-import { type Locator, expect } from '@playwright/test';
+import { type Locator, Page, expect } from '@playwright/test';
 
 import {
   delay,
@@ -92,6 +92,7 @@ test.describe('FuelWallet Extension', () => {
     const popupPage = await context.newPage();
     const pagePromise = context.waitForEvent('page', {
       predicate: (page) => page.url().includes('sign-up'),
+      timeout: 10_000,
     });
     await popupPage.goto(`chrome-extension://${extensionId}/popup.html`);
     const page = await pagePromise;
@@ -298,6 +299,7 @@ test.describe('FuelWallet Extension', () => {
       });
       const connectPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
+        timeout: 10_000,
       });
 
       await expect
@@ -359,6 +361,7 @@ test.describe('FuelWallet Extension', () => {
         );
         const selectNetworkPage = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
+          timeout: 10_000,
         });
         await hasText(selectNetworkPage, 'Switching To');
         await hasText(selectNetworkPage, network.name);
@@ -386,6 +389,7 @@ test.describe('FuelWallet Extension', () => {
 
         const selectNetworkPage = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
+          timeout: 10_000,
         });
 
         await hasText(selectNetworkPage, 'Review the Network to be added:');
@@ -591,6 +595,7 @@ test.describe('FuelWallet Extension', () => {
         );
         const signMessageRequest = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
+          timeout: 10_000,
         });
         // Confirm signature
         await hasText(signMessageRequest, message);
@@ -686,6 +691,7 @@ test.describe('FuelWallet Extension', () => {
         // Wait for approve transaction page to show
         const approveTransactionPage = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
+          timeout: 10_000,
         });
 
         // Approve transaction
@@ -791,6 +797,7 @@ test.describe('FuelWallet Extension', () => {
 
       const addAssetPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
+        timeout: 10_000,
       });
       await hasText(addAssetPage, 'Review the Assets to be added:');
       await getButtonByText(addAssetPage, /add assets/i).click();
@@ -814,6 +821,7 @@ test.describe('FuelWallet Extension', () => {
 
       const addAssetPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
+        timeout: 10_000,
       });
       await hasText(addAssetPage, 'Review the Assets to be added:');
       await getButtonByText(addAssetPage, /add assets/i).click();
