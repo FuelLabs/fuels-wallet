@@ -160,7 +160,6 @@ export function transformOperations(
 
 // Helper to create a unique key for identical operations
 function getOperationKey(op: SimplifiedOperation) {
-  // Include all properties that make operations identical
   return JSON.stringify({
     type: op.type,
     from: op.from.address,
@@ -198,7 +197,7 @@ function groupSimilarOperations(
 
         // Group identical operations
         const identicalKey = getOperationKey(op);
-        const identicalGroup = acc[key].metadata.identicalOps.get(
+        const identicalGroup = acc[key].metadata?.identicalOps?.get(
           identicalKey
         ) || {
           operation: op,
@@ -207,7 +206,7 @@ function groupSimilarOperations(
         };
         identicalGroup.count += 1;
         identicalGroup.instances.push(op);
-        acc[key].metadata.identicalOps.set(identicalKey, identicalGroup);
+        acc[key].metadata?.identicalOps?.set(identicalKey, identicalGroup);
 
         // Combine assets as before
         for (const asset of op.assets || []) {

@@ -80,7 +80,7 @@ export type ContractCallMetadata = {
   operationCount?: number;
   groupedAssets?: Record<string, SimplifiedOperation['assets'][0]>;
   childOperations?: SimplifiedOperation[];
-  identicalOps?: IdenticalOpsGroup[];
+  identicalOps?: Map<string, IdenticalOpsGroup>;
 };
 
 export type SwapMetadata = {

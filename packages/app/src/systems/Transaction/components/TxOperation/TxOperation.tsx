@@ -61,10 +61,8 @@ export function TxOperation({
   const amounts = useAssetsAmount({
     operationsCoin: assets,
   });
-  const _depth = metadata?.depth || 0;
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Show identical operations if they exist
   const identicalOps = operation.metadata?.identicalOps || [];
 
   return (
