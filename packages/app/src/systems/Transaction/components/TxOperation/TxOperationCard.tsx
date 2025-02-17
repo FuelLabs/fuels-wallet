@@ -9,19 +9,19 @@ import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { type SimplifiedOperation, TxCategory } from '../../types';
 import type { BidirectionalInfo } from '../TxContent/TxOperationsSimple/TxOperationsGroup';
 import { TxOperationAssets } from './TxOperationAssets';
-type TxOperationCardProps = {
+
+export type TxOperationCardProps = {
   operation: SimplifiedOperation;
   assetsAmount?: AssetFuelAmount[];
-  bidirectionalInfo?: BidirectionalInfo;
-  css?: ThemeUtilsCSS;
+  css?: CSS;
 };
 
 export function TxOperationCard({
   operation,
   assetsAmount,
-  bidirectionalInfo = null,
   css,
 }: TxOperationCardProps) {
+  const { bidirectionalInfo } = operation;
   const { accounts } = useAccounts();
   const provider = useProvider();
   const [baseAsset, setBaseAsset] = useState<AssetFuelData | undefined>();

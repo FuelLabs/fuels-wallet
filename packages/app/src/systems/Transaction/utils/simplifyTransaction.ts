@@ -11,10 +11,13 @@ import {
   ReceiptType,
   type TransactionResultReceipt,
 } from 'fuels';
-import type { ContractCallMetadata, SimplifiedOperation } from '../types';
+import type {
+  BidirectionalInfo,
+  ContractCallMetadata,
+  SimplifiedOperation,
+} from '../types';
 import { TxCategory } from '../types';
-import type { CategorizedOperations } from '../types';
-import type { SimplifiedTransaction } from '../types.tsx';
+import type { CategorizedOperations, SimplifiedTransaction } from '../types';
 
 type TransactionRequestWithOrigin = TransactionRequest & {
   origin?: string;
@@ -116,6 +119,33 @@ function transformOperation(
   return baseOperation;
 }
 
+function calculateBidirectionalInfo(
+  operations: SimplifiedOperation[],
+  currentIndex: number
+): BidirectionalInfo {
+  const current = operations[currentIndex];
+  const next = operations[currentIndex + 1];
+  const previous = operations[currentIndex - 1];
+
+  if (
+    next &&
+    next.from.address === current.to.address &&
+    next.to.address === current.from.address
+  ) {
+    return 'atob';
+  }
+
+  if (
+    previous &&
+    previous.from.address === current.to.address &&
+    previous.to.address === current.from.address
+  ) {
+    return 'btoa';
+  }
+
+  return null;
+}
+
 export function transformOperations(
   summary: TransactionSummary,
   currentAccount?: string
@@ -155,18 +185,11 @@ export function transformOperations(
     (a, b) => (a.metadata?.depth || 0) - (b.metadata?.depth || 0)
   );
 
-  return operations;
-}
-
-// Helper to create a unique key for identical operations
-function getOperationKey(op: SimplifiedOperation) {
-  return JSON.stringify({
-    type: op.type,
-    from: op.from.address,
-    to: op.to.address,
-    // Sort assets to ensure consistent key regardless of array order
-    assets: (op.assets || []).map((a) => `${a.assetId}-${a.amount}`).sort(),
-  });
+  // Calculate bidirectional info for each operation
+  return operations.map((op, index) => ({
+    ...op,
+    bidirectionalInfo: calculateBidirectionalInfo(operations, index),
+  }));
 }
 
 function groupSimilarOperations(
@@ -187,7 +210,7 @@ function groupSimilarOperations(
             groupedAssets: {},
             childOperations: [op],
             // New: track identical operations within group
-            identicalOps: new Map(),
+            identicalOps: [],
           },
         };
       } else {
@@ -196,9 +219,10 @@ function groupSimilarOperations(
         acc[key].metadata.childOperations!.push(op);
 
         // Group identical operations
-        const identicalKey = getOperationKey(op);
-        const identicalGroup = acc[key].metadata?.identicalOps?.get(
-          identicalKey
+        const identicalGroup = acc[key].metadata?.identicalOps?.find(
+          (g) =>
+            g.operation.from.address === op.from.address &&
+            g.operation.to.address === op.to.address
         ) || {
           operation: op,
           count: 0,
@@ -206,7 +230,7 @@ function groupSimilarOperations(
         };
         identicalGroup.count += 1;
         identicalGroup.instances.push(op);
-        acc[key].metadata?.identicalOps?.set(identicalKey, identicalGroup);
+        acc[key].metadata?.identicalOps?.push(identicalGroup);
 
         // Combine assets as before
         for (const asset of op.assets || []) {
@@ -232,7 +256,7 @@ function groupSimilarOperations(
     metadata: {
       ...group.metadata,
       // Only include groups with multiple identical operations
-      identicalOps: Array.from(group.metadata.identicalOps.values()).filter(
+      identicalOps: Array.from(group.metadata?.identicalOps || []).filter(
         (g) => g.count > 1
       ),
     },

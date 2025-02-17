@@ -3,13 +3,11 @@ import { Box, Icon, Text } from '@fuel-ui/react';
 import { useState } from 'react';
 import { MotionBox, MotionStack, animations } from '~/systems/Core';
 import { useAssetsAmount } from '../../hooks/useAssetsAmount';
-import type { SimplifiedOperation } from '../../types';
-import type { BidirectionalInfo } from '../TxContent/TxOperationsSimple/TxOperationsGroup';
+import type { BidirectionalInfo, SimplifiedOperation } from '../../types.tsx';
 import { TxOperationCard } from './TxOperationCard';
 
 export type TxOperationProps = {
   operation: SimplifiedOperation;
-  bidirectionalInfo?: BidirectionalInfo;
 };
 
 type IdenticalOpsProps = {
@@ -53,10 +51,7 @@ function IdenticalOperations({ count, instances }: IdenticalOpsProps) {
   );
 }
 
-export function TxOperation({
-  operation,
-  bidirectionalInfo,
-}: TxOperationProps) {
+export function TxOperation({ operation }: TxOperationProps) {
   const { metadata, assets } = operation;
   const amounts = useAssetsAmount({
     operationsCoin: assets,
@@ -70,7 +65,6 @@ export function TxOperation({
       <TxOperationCard
         operation={operation}
         assetsAmount={amounts}
-        bidirectionalInfo={bidirectionalInfo}
         css={styles.card}
       />
       {metadata.childOperations && metadata.childOperations.length > 1 && (
