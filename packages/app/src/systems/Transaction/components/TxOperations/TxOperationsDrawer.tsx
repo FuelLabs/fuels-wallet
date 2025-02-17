@@ -29,20 +29,26 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
     current: SimplifiedOperation,
     next: SimplifiedOperation
   ) {
+    console.log('previous', previous);
+    console.log('current', current);
+    console.log('next', next);
     // if next operation is the reverse of the current operation, return 'atob'
     // if previous operation is the reverse of the current operation, return 'btoa'
     // otherwise return null
     if (
       next &&
       next.from.address === current.to.address &&
-      next.to.address === current.from.address
+      next.to.address === current.from.address &&
+      (!next.metadata?.identicalOps || next.metadata.identicalOps.size === 0)
     ) {
       return 'atob';
     }
     if (
       previous &&
       previous.from.address === current.to.address &&
-      previous.to.address === current.from.address
+      previous.to.address === current.from.address &&
+      (!previous.metadata?.identicalOps ||
+        previous.metadata.identicalOps.size === 0)
     ) {
       return 'btoa';
     }
