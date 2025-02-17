@@ -40,7 +40,7 @@ function IdenticalOperations({ count, instances }: IdenticalOpsProps) {
         <TxOperationCard operation={instances[0]} />
         {isExpanded && (
           <MotionStack {...animations.slideInTop()} gap="0">
-            {instances.map((op) => (
+            {instances.slice(1).map((op) => (
               <TxOperationCard
                 key={`${op.from.address}-${op.to.address}-${op.metadata?.functionName || ''}`}
                 operation={op}
@@ -73,7 +73,7 @@ export function TxOperation({
         bidirectionalInfo={bidirectionalInfo}
         css={styles.card}
       />
-      {metadata.operationCount && metadata.operationCount > 1 && (
+      {metadata.childOperations && metadata.childOperations.length > 1 && (
         <MotionBox
           {...animations.fadeIn()}
           css={styles.operationCount}
