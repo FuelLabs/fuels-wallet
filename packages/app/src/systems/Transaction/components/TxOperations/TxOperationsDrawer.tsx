@@ -67,11 +67,14 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
           <Text fontSize="sm" css={styles.title}>
             {title}
           </Text>
-          <Icon
-            icon={isExpanded ? 'ArrowsMaximize' : 'ArrowsMinimize'}
-            css={styles.chevron}
-            data-expanded={isExpanded}
-          />
+          <Text fontSize="sm" css={styles.toggle}>
+            {isExpanded ? 'Collapse' : 'Expand'}
+            <Icon
+              icon={isExpanded ? 'ArrowsMaximize' : 'ArrowsMinimize'}
+              css={styles.chevron}
+              data-expanded={isExpanded}
+            />
+          </Text>
         </Box.Flex>
       )}
       <MotionBox
@@ -130,6 +133,12 @@ const styles = {
     fontWeight: '$medium',
     fontSize: '13px',
   }),
+  toggle: cssObj({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '$2',
+    color: '$gray12',
+  }),
   expandedOperations: cssObj({
     display: 'flex',
     flexDirection: 'column',
@@ -141,5 +150,6 @@ const styles = {
   }),
   chevron: cssObj({
     transition: 'all 0.2s ease',
+    display: 'inline-block',
   }),
 };

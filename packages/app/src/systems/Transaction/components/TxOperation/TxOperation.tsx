@@ -119,7 +119,7 @@ const styles = {
     width: '100%',
   }),
   card: cssObj({
-    borderRadius: '8px',
+    // borderRadius: '8px',
   }),
   operationCount: {
     marginTop: '$2',
