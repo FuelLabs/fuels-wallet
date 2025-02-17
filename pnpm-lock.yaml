@@ -23,9 +23,8 @@ overrides:
   braces@<3.0.3: '>=3.0.3'
   fast-xml-parser@<4.4.1: '>=4.4.1'
   ws@>=8.0.0 <8.17.1: '>=8.17.1'
-  elliptic@>=4.0.0 <=6.5.6: '>=6.5.7'
-  elliptic@>=2.0.0 <=6.5.6: '>=6.5.7'
-  elliptic@>=5.2.1 <=6.5.6: '>=6.5.7'
+  elliptic@<=6.6.0: '>6.6.0'
+  vitest@<2.1.9: '>=2.1.9'
   micromatch@<4.0.8: '>=4.0.8'
   send@<0.19.0: '>=0.19.0'
   serve-static@<1.16.0: '>=1.16.0'
@@ -2923,7 +2922,7 @@ packages:
     resolution: {integrity: sha512-jnU1318E70r/9vNP4tXO+EIIt3ruIfPwRcf+IApzJmn2NRgGUVGbIT1WBi289Ya1E/ZQPlAJt3qU3BSF/eDqcA==}
     engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
     peerDependencies:
-      vitest: 2.0.5
+      vitest: '>=2.1.9'
 
   '@fuel-ts/versions@0.98.0':
     resolution: {integrity: sha512-ZWpZ/RYFfWFCV8ShDONaBy2IyZtvvVCGPjlCoAdpJOa1sU6OcNplSopIHPH79gRorW8TFpA0Ck69ehSLcCaCzw==}
@@ -5788,7 +5787,7 @@ packages:
       '@jest/globals': '>= 28'
       '@types/jest': '>= 28'
       jest: '>= 28'
-      vitest: '>= 0.32'
+      vitest: '>=2.1.9'
     peerDependenciesMeta:
       '@jest/globals':
         optional: true
