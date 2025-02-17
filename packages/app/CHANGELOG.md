@@ -1,5 +1,23 @@
 # fuels-wallet
 
+## 0.50.0
+
+### Minor Changes
+
+- [#1794](https://github.com/FuelLabs/fuels-wallet/pull/1794) [`23369813`](https://github.com/FuelLabs/fuels-wallet/commit/23369813cc0cb40d369f72ab4e4c387301efd13d) Thanks [@arthurgeron](https://github.com/arthurgeron)! - feat: performance improvement from rework on send transaction machine flows
+
+### Patch Changes
+
+- [#1848](https://github.com/FuelLabs/fuels-wallet/pull/1848) [`9fbe9625`](https://github.com/FuelLabs/fuels-wallet/commit/9fbe9625ec6f8c0c85311ba52e3a6cb971cd9019) Thanks [@arthurgeron](https://github.com/arthurgeron)! - chore: remove label in loading state
+
+- [#1850](https://github.com/FuelLabs/fuels-wallet/pull/1850) [`195eca55`](https://github.com/FuelLabs/fuels-wallet/commit/195eca55e191e37b303bf9b3828d2ebebd96a76d) Thanks [@helciofranco](https://github.com/helciofranco)! - chore: remove 'Account created' toast.
+
+- [#1850](https://github.com/FuelLabs/fuels-wallet/pull/1850) [`195eca55`](https://github.com/FuelLabs/fuels-wallet/commit/195eca55e191e37b303bf9b3828d2ebebd96a76d) Thanks [@helciofranco](https://github.com/helciofranco)! - fix: image size for assets with and without an icon.
+
+- Updated dependencies [[`23369813`](https://github.com/FuelLabs/fuels-wallet/commit/23369813cc0cb40d369f72ab4e4c387301efd13d)]:
+  - @fuels/playwright-utils@0.50.0
+  - @fuel-wallet/connections@0.50.0
+
 ## 0.49.0
 
 ### Minor Changes

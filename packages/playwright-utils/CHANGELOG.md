@@ -1,5 +1,11 @@
 # @fuels/playwright-utils
 
+## 0.50.0
+
+### Minor Changes
+
+- [#1794](https://github.com/FuelLabs/fuels-wallet/pull/1794) [`23369813`](https://github.com/FuelLabs/fuels-wallet/commit/23369813cc0cb40d369f72ab4e4c387301efd13d) Thanks [@arthurgeron](https://github.com/arthurgeron)! - feat: performance improvement from rework on send transaction machine flows
+
 ## 0.49.0
 
 ### Minor Changes
