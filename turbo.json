@@ -1,8 +1,23 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": [".env", ".env.production"],
-  "globalEnv": ["NODE_ENV", "CRX_OUT", "CRX_NAME"],
-  "pipeline": {
+  "globalEnv": [
+    "NODE_ENV",
+    "CRX_OUT",
+    "CRX_NAME",
+    "CRX_VERSION_API",
+    "CRX_RELEASE",
+    "FUEL_FAUCET_URL",
+    "FUEL_PROVIDER_UR",
+    "ECOSYSTEM_PROJECTS_URL",
+    "MNEMONIC_WORDS",
+    "AUTO_LOCK_IN_MINUTES",
+    "SENTRY_DSN",
+    "READONLY_TESTNET_ASSETS_VIEW",
+    "ADDR_OWNER",
+    "GENESIS_SECRET"
+  ],
+  "tasks": {
     "ts:check": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": [],
@@ -11,36 +26,36 @@
     "build": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["ts:check"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", "dist/**/*.zip", "**/out/**"]
     },
     "build:docs": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", "**/out/**"]
     },
     "build:crx": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["ts:check"],
-      "outputs": ["dist-crx*/**", "dist/fuel-wallet*.zip"]
+      "outputs": ["dist-crx/**", "dist/fuel-wallet*.zip"]
     },
     "build:web": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", "**/out/**"]
     },
     "build:app": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["build:web", "build:crx"],
-      "outputs": ["dist/**", "dist-crx/**"]
+      "outputs": ["dist/**", "dist-crx/**", "**/out/**"]
     },
     "build:all": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", "**/out/**"]
     },
     "build:preview": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": ["^build"],
-      "outputs": ["./dist/"]
+      "outputs": ["./dist/**", "**/out/**"]
     },
     "test": {
       "cache": false,
@@ -57,7 +72,8 @@
       "cache": false
     },
     "dev:crx": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     },
     "dev:deps": {
       "cache": false
