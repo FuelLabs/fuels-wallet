@@ -1,4 +1,4 @@
-name: "Release"
+name: "Release to NPM"
 
 on:
   push:
@@ -14,7 +14,7 @@ env:
 
 jobs:
   check-commit:
-    name: Decide if releases or create PR
+    name: Check if release is needed
     runs-on: buildjet-4vcpu-ubuntu-2204
     permissions:
       contents: read
@@ -26,7 +26,7 @@ jobs:
         with:
           fetch-depth: 0
       - id: check-commit
-        name: Check if this commit is a regular merge or a changeset PR merge
+        name: Check if this commit is a changeset PR merge
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -43,43 +43,6 @@ jobs:
             fi
           fi
           echo "is_changeset_pr=false" >> "$GITHUB_OUTPUT"
-
-  create-pr:
-    name: Push changes to Changeset PR
-    needs: check-commit
-    if: needs.check-commit.outputs.is_changeset_pr == 'false'
-    runs-on: buildjet-4vcpu-ubuntu-2204
-    permissions:
-      contents: write
-      pull-requests: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - name: Extract pnpm version from .tool-versions
-        id: get_pnpm
-        run: |
-          PNPM_VERSION=$(grep '^pnpm' .tool-versions | awk '{print $2}')
-          echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
-      - uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 20.11.0
-          pnpm-version: ${{  env.PNPM_VERSION }}
-
-      - name: Setup git user (for changelog step)
-        run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-
-      - name: Create Changeset PR
-        uses: changesets/action@v1
-        with:
-          commit: "ci(changesets): versioning packages"
-          title: "ci(changesets): versioning packages"
-          createGithubReleases: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-npm:
     name: Release to NPM
@@ -131,8 +94,6 @@ jobs:
         if: steps.changesets.outputs.published == 'true'
         run: pnpm build:crx
         env:
-          ## increase node.js m memory limit for building
-          ## with sourcemaps
           NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Build Fuel Wallet Development
@@ -174,4 +135,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: v${{ env.BUILD_VERSION }}
           files: |
-            ./packages/app/dist/*.zip
+            ./packages/app/dist/*.zip 

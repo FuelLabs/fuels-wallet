@@ -1,0 +1,46 @@
+name: "Update Changeset PR"
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  create-pr:
+    name: Push changes to Changeset PR
+    runs-on: buildjet-4vcpu-ubuntu-2204
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Extract pnpm version from .tool-versions
+        id: get_pnpm
+        run: |
+          PNPM_VERSION=$(grep '^pnpm' .tool-versions | awk '{print $2}')
+          echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
+      - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 20.11.0
+          pnpm-version: ${{  env.PNPM_VERSION }}
+
+      - name: Setup git user (for changelog step)
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Create Changeset PR
+        uses: changesets/action@v1
+        with:
+          commit: "ci(changesets): versioning packages"
+          title: "ci(changesets): versioning packages"
+          createGithubReleases: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
