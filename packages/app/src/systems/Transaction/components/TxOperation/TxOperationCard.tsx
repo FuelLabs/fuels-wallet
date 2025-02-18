@@ -6,14 +6,17 @@ import { useEffect, useState } from 'react';
 import { FuelAddress, useAccounts } from '~/systems/Account';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
-import { type SimplifiedOperation, TxCategory } from '../../types';
-import type { BidirectionalInfo } from '../TxContent/TxOperationsSimple/TxOperationsGroup';
+import {
+  type BidirectionalInfo,
+  type SimplifiedOperation,
+  TxCategory,
+} from '../../types';
 import { TxOperationAssets } from './TxOperationAssets';
 
 export type TxOperationCardProps = {
   operation: SimplifiedOperation;
   assetsAmount?: AssetFuelAmount[];
-  css?: CSS;
+  css?: ThemeUtilsCSS;
 };
 
 export function TxOperationCard({
