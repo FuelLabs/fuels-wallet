@@ -12,13 +12,10 @@ type TxOperationsListProps = {
 
 export function TxOperations({ operations }: TxOperationsListProps) {
   const { account } = useAccounts();
-
   return (
     <Box.Stack gap="$2">
-      {/* Main operations grouped by type */}
       <TxOperationsDrawer operations={operations.mainOperations} />
 
-      {/* Other root operations */}
       <TxOperationsGroup
         title={`Operations not related to ${account?.name}`}
         operations={operations.otherRootOperations}
