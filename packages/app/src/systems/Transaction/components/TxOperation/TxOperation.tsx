@@ -19,50 +19,58 @@ export function TxOperation({ operation }: TxOperationProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const identicalOps = operation.metadata?.identicalOps || [];
+  console.log('identicalOps', operation);
   return (
     <Box.Stack gap="$2" css={styles.root}>
-      <TxOperationCard
-        operation={operation}
-        assetsAmount={amounts}
-        css={styles.card}
-      />
-      {metadata.childOperations && metadata.childOperations.length > 1 && (
-        <MotionBox
-          {...animations.fadeIn()}
-          css={styles.operationCount}
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          <Icon
-            icon={isExpanded ? 'ArrowsMinimize' : 'ArrowsMaximize'}
-            size={20}
-          />
-          <Text fontSize="sm" color="gray12" as="span">
-            {isExpanded ? 'Collapse' : 'Expand'}
-          </Text>
-          {isExpanded ? null : (
-            <Text fontSize="sm" color="gray11" as="span">
-              (+{metadata.operationCount} operations)
-            </Text>
-          )}
-        </MotionBox>
-      )}
-      {isExpanded && (
-        <MotionBox {...animations.slideInTop()} css={styles.expandedOperations}>
-          {metadata.childOperations?.map((op, idx) => (
-            <TxOperationCard
-              key={`${op.type}-${op.from.address}-${op.to.address}-${idx}`}
-              operation={op}
-              assetsAmount={[]}
-            />
-          ))}
-        </MotionBox>
-      )}
-      {identicalOps.map((group) => (
+      {identicalOps.length > 1 && (
         <IdenticalOperations
-          key={`${group.operation.from.address}-${group.operation.to.address}-${group.count}`}
-          {...group}
+          count={identicalOps.length}
+          instances={identicalOps.map((op) => op.operation)}
         />
-      ))}
+      )}
+      {identicalOps.length <= 1 && (
+        <>
+          <TxOperationCard
+            operation={operation}
+            assetsAmount={amounts}
+            css={styles.card}
+          />
+          {metadata.childOperations && metadata.childOperations.length > 1 && (
+            <MotionBox
+              {...animations.fadeIn()}
+              css={styles.operationCount}
+              onClick={() => setIsExpanded(!isExpanded)}
+            >
+              <Icon
+                icon={isExpanded ? 'ArrowsMinimize' : 'ArrowsMaximize'}
+                size={20}
+              />
+              <Text fontSize="sm" color="gray12" as="span">
+                {isExpanded ? 'Collapse' : 'Expand'}
+              </Text>
+              {isExpanded ? null : (
+                <Text fontSize="sm" color="gray11" as="span">
+                  (+{metadata.operationCount} operations)
+                </Text>
+              )}
+            </MotionBox>
+          )}
+          {isExpanded && (
+            <MotionBox
+              {...animations.slideInTop()}
+              css={styles.expandedOperations}
+            >
+              {metadata.childOperations?.map((op, idx) => (
+                <TxOperationCard
+                  key={`${op.type}-${op.from.address}-${op.to.address}-${idx}`}
+                  operation={op}
+                  assetsAmount={[]}
+                />
+              ))}
+            </MotionBox>
+          )}
+        </>
+      )}
     </Box.Stack>
   );
 }
