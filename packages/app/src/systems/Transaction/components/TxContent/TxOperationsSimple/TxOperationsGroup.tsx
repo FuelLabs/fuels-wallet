@@ -47,23 +47,25 @@ export function TxOperationsGroup({
           data-expanded={isExpanded}
         />
       </Box.Flex>
-      <MotionBox
-        animate={{
-          height: isExpanded ? 'auto' : 0,
-          opacity: isExpanded ? 1 : 0,
-        }}
-        css={styles.content}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {operations.map((operation, index) =>
-          isExpanded ? (
-            <TxOperation
-              key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
-              operation={operation}
-            />
-          ) : null
-        )}
-      </MotionBox>
+      <Box css={styles.container}>
+        <MotionBox
+          animate={{
+            height: isExpanded ? 'auto' : 0,
+            opacity: isExpanded ? 1 : 0,
+          }}
+          css={styles.content}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {operations.map((operation, index) =>
+            isExpanded ? (
+              <TxOperation
+                key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
+                operation={operation}
+              />
+            ) : null
+          )}
+        </MotionBox>
+      </Box>
     </Box>
   );
 }
@@ -78,7 +80,11 @@ const styles = {
     justifyContent: 'center',
     paddingBottom: '4px',
     boxSizing: 'border-box',
-    padding: '0 $1',
+    padding: '$1',
+  }),
+  container: cssObj({
+    borderRadius: '8px',
+    overflow: 'hidden',
   }),
   header: cssObj({
     display: 'flex',
