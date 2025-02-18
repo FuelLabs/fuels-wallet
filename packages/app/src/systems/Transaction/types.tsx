@@ -78,7 +78,7 @@ export type ContractCallMetadata = {
   receiptType?: ReceiptType;
   assetAmount?: AssetFuelAmount;
   operationCount?: number;
-  groupedAssets?: Record<string, SimplifiedOperation['assets'][0]>;
+  groupedAssets?: Record<string, SimplifiedOperation['assets']>;
   childOperations?: SimplifiedOperation[];
   identicalOps?: Array<IdenticalOpsGroup>;
 };
