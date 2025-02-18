@@ -200,7 +200,7 @@ export function TxOperationCard({
 }
 
 const styles = {
-  contentCol: (bidirectionalInfo: BidirectionalInfo) =>
+  contentCol: (bidirectionalInfo: BidirectionalInfo | undefined) =>
     cssObj({
       display: 'flex',
       backgroundColor: '$cardBg',
