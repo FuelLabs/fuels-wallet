@@ -2,6 +2,7 @@ import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import {
   expectButtonToBeEnabled,
   getButtonByText,
+  getByAriaLabel,
   hasText,
 } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
@@ -156,7 +157,18 @@ test.describe('Mint Assets', () => {
     await hasText(walletNotificationPage, name);
     await hasText(walletNotificationPage, shortAddress(assetId), 0, 10000);
     // test mint amount is correct
-    await hasText(walletNotificationPage, `1.2345 ${symbol}`);
+    expect
+      .poll(
+        async () => {
+          const amountContainer = getByAriaLabel(
+            walletNotificationPage,
+            'amount-container'
+          );
+          return (await amountContainer.innerText()).replace('\n', ' ');
+        },
+        { timeout: 10000 }
+      )
+      .toBe(`1.2345 ${symbol}`);
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
