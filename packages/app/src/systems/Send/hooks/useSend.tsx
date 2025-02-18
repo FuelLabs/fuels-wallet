@@ -2,21 +2,23 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BNInput } from 'fuels';
 import { Address, type Provider, bn, isB256 } from 'fuels';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { useAccounts } from '~/systems/Account';
+import type { AccountsMachineState } from '~/systems/Account';
 import { Pages } from '~/systems/Core';
 import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
 
+import { Services } from '~/store';
+import { store } from '~/store';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { formatGasLimit } from '~/systems/Transaction';
 import { sendMachine } from '../machines/sendMachine';
-import type { SendMachineState } from '../machines/sendMachine';
+import type { MachineContext, SendMachineState } from '../machines/sendMachine';
 
 export enum SendStatus {
   loading = 'loading',
@@ -42,6 +44,9 @@ const selectors = {
   },
   readyToSend(state: SendMachineState) {
     return state.matches('readyToSend');
+  },
+  account(state: AccountsMachineState) {
+    return state.context.account;
   },
   error(state: SendMachineState) {
     if (state.context.error?.includes('Gas limit')) {
@@ -135,9 +140,9 @@ const schemaFactory = (provider?: Provider) =>
                 message: 'Address is not a valid',
               });
             }
-            const standardizedAddress = Address.fromString(value).toString();
-            const accountType =
-              await provider?.getAddressType(standardizedAddress);
+            const accountType = await provider?.getAddressType(
+              Address.fromDynamicInput(value).toB256()
+            );
             if (accountType !== 'Account') {
               return ctx.createError({
                 message: `You can't send to ${accountType} address`,
@@ -273,8 +278,39 @@ const DEFAULT_VALUES: SendFormValues = {
 export function useSend() {
   const navigate = useNavigate();
   const txRequest = useTransactionRequest();
-  const { account } = useAccounts();
   const provider = useProvider();
+
+  const account = store.useSelector(Services.accounts, selectors.account);
+  const callTransactionRequest = useRef<(ctx: MachineContext) => void>();
+
+  callTransactionRequest.current = (ctx: MachineContext) => {
+    const {
+      providerUrl,
+      transactionRequest,
+      address,
+      baseFee,
+      regularTip,
+      fastTip,
+      maxGasLimit,
+    } = ctx;
+    if (!providerUrl || !transactionRequest || !address) {
+      throw new Error('Params are required');
+    }
+
+    txRequest.handlers.request({
+      providerUrl,
+      transactionRequest,
+      account,
+      address,
+      fees: {
+        baseFee,
+        regularTip,
+        fastTip,
+        maxGasLimit,
+      },
+      skipCustomFee: true,
+    });
+  };
 
   const service = useInterpret(() =>
     sendMachine.withConfig({
@@ -283,31 +319,7 @@ export function useSend() {
           navigate(Pages.index());
         },
         callTransactionRequest(ctx) {
-          const {
-            providerUrl,
-            transactionRequest,
-            address,
-            baseFee,
-            regularTip,
-            fastTip,
-            maxGasLimit,
-          } = ctx;
-          if (!providerUrl || !transactionRequest || !address) {
-            throw new Error('Params are required');
-          }
-
-          txRequest.handlers.request({
-            providerUrl,
-            transactionRequest,
-            address,
-            fees: {
-              baseFee,
-              regularTip,
-              fastTip,
-              maxGasLimit,
-            },
-            skipCustomFee: true,
-          });
+          callTransactionRequest.current?.(ctx);
         },
       },
     })
@@ -348,7 +360,10 @@ export function useSend() {
   const fastTip = useSelector(service, selectors.fastTip);
   const sendStatusSelector = selectors.status(txRequest.txStatus);
   const sendStatus = useSelector(service, sendStatusSelector);
-  const readyToSend = useSelector(service, selectors.readyToSend);
+  const readyToSend =
+    useSelector(service, selectors.readyToSend) &&
+    !!account &&
+    !!callTransactionRequest.current;
   const input = useSelector(service, selectors.input);
 
   const balanceAssetSelected = useMemo<BN>(() => {

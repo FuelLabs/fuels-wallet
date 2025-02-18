@@ -7,10 +7,10 @@
     "start": "vite"
   },
   "dependencies": {
-    "@fuels/connectors": "0.35.1",
-    "@fuels/react": "0.35.1",
+    "@fuels/connectors": "0.39.0-main-5f9794e",
+    "@fuels/react": "0.39.0-main-5f9794e",
     "@tanstack/react-query": "5.28.4",
-    "fuels": "0.96.1",
+    "fuels": "0.98.0",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
@@ -20,6 +20,6 @@
     "@types/react-dom": "18.3.0",
     "@vitejs/plugin-react": "4.2.1",
     "typescript": "5.2.2",
-    "vite": "6.0.3"
+    "vite": "6.0.8"
   }
 }
