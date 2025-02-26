@@ -32,13 +32,16 @@ export function convertToUsd(
   const targetPrecision = getTargetPrecision(rateDecimals, decimals);
 
   // Convert the rate to a fixed-point integer (truncated to avoid rounding errors).
+  // If the amount has more decimals than the rate, we need to add zeros to the rate.
+  // If not, we don't need to do anything.
   const ratePrecision = 10 ** targetPrecision;
   const rateFixed = Math.trunc(rate * ratePrecision);
 
-  // Diff
+  // Get how many decimal places we need to apply to the amount to match the rate precision.
+  // Sometimes the rate has more decimals than the amount, so we need to add zeros to the amount.
   const amountPrecision = Math.max(rateDecimals - decimals, 0);
 
-  // Calculate the USD value in fixed-point: (amount * rateFixed) / 10^targetPrecision.
+  // Calculate the USD value in fixed-point: ((amount * 10^amountPrecision) * rateFixed) / 10^targetPrecision.
   const amountFixed = amount.mul(bn(10).pow(amountPrecision));
   const numerator = amountFixed.mul(bn(rateFixed));
   const denominator = bn(10).pow(bn(targetPrecision));
