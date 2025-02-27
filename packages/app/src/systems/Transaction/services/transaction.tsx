@@ -53,6 +53,7 @@ export type TxInputs = {
     favIconUrl?: string;
     account?: AccountWithBalance;
     skipCustomFee?: boolean;
+    isPrepareOnly?: boolean;
     fees?: {
       baseFee?: BN;
       regularTip?: BN;

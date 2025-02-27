@@ -206,6 +206,50 @@ export class PopUpService {
     return this.client.request('sendTransaction', input);
   }
 
+  async prepareForSend(input: MessageInputs['prepareForSend']) {
+    // Guard against undefined input
+    if (!input) {
+      console.error('🔴 POPUP: prepareForSend received undefined input');
+      throw new Error('prepareForSend requires input parameters');
+    }
+
+    try {
+      // Ensure we're passing the parameters in the correct format by extracting and explicitly structuring them
+      const {
+        address,
+        provider,
+        transaction,
+        origin,
+        title,
+        favIconUrl,
+        skipCustomFee,
+        isPrepareOnly,
+      } = input;
+
+      console.log('🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 ', input);
+
+      const result = await this.client.request('prepareForSend', {
+        address,
+        provider,
+        transaction,
+        origin,
+        title,
+        favIconUrl,
+        skipCustomFee,
+        isPrepareOnly,
+      });
+
+      console.log(
+        '🚨 POPUP: prepareForSend result received:',
+        result ? 'has data' : 'no data'
+      );
+      return result;
+    } catch (error) {
+      console.error('🔴 POPUP: Error in prepareForSend request:', error);
+      throw error;
+    }
+  }
+
   async addAssets(input: MessageInputs['addAssets']) {
     return this.client.request('addAssets', input);
   }

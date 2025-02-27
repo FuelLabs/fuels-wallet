@@ -32,11 +32,13 @@ type MachineContext = {
     tip?: BN;
     gasLimit?: BN;
     skipCustomFee?: boolean;
+    isPrepareOnly?: boolean;
   };
   response?: {
     txSummarySimulated?: TransactionSummary;
     txSummaryExecuted?: TransactionSummary;
     proposedTxRequest?: TransactionRequest;
+    preparedTransaction?: TransactionRequest;
   };
   fees: {
     baseFee?: BN;
@@ -176,13 +178,39 @@ export const transactionRequestMachine = createMachine(
       },
       waitingApproval: {
         on: {
-          APPROVE: {
-            target: 'sendingTx',
-          },
+          APPROVE: [
+            {
+              cond: (ctx) => {
+                const isPrepareOnly = !!ctx.input.isPrepareOnly;
+                return isPrepareOnly;
+              },
+              target: 'preparingTx',
+            },
+            {
+              target: 'sendingTx',
+            },
+          ],
           REJECT: {
             actions: [assignErrorMessage('User rejected the transaction!')],
             target: 'failed',
           },
+        },
+      },
+      preparingTx: {
+        tags: ['loading'],
+        entry: [
+          () => {},
+          assign({
+            response: (ctx) => {
+              return {
+                ...ctx.response,
+                preparedTransaction: ctx.response?.proposedTxRequest,
+              };
+            },
+          }),
+        ],
+        after: {
+          100: 'txSuccess',
         },
       },
       sendingTx: {
@@ -209,6 +237,7 @@ export const transactionRequestMachine = createMachine(
         },
       },
       txSuccess: {
+        entry: () => {},
         on: {
           CLOSE: {
             target: 'done',
@@ -267,6 +296,7 @@ export const transactionRequestMachine = createMachine(
             account,
             address,
             fees,
+            isPrepareOnly,
           } = ev.input || {};
 
           if (!providerUrl) {
@@ -282,7 +312,7 @@ export const transactionRequestMachine = createMachine(
             throw new Error('origin is required');
           }
 
-          return {
+          const result = {
             transactionRequest,
             origin,
             account,
@@ -291,8 +321,11 @@ export const transactionRequestMachine = createMachine(
             title,
             favIconUrl,
             skipCustomFee,
+            isPrepareOnly,
             fees,
           };
+
+          return result;
         },
         fees: (_ctx, ev) => {
           const { fees } = ev.input || {};
