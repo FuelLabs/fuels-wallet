@@ -51,7 +51,6 @@ export class BackgroundService {
     'disconnect',
     'signMessage',
     'sendTransaction',
-    'prepareForSend',
     'currentAccount',
     'addAssets',
     'assets',
@@ -331,60 +330,6 @@ export class BackgroundService {
     });
     popupService.destroy();
     return signedMessage;
-  }
-
-  async prepareForSend(
-    input: Exclude<MessageInputs['prepareForSend'], 'origin'>,
-    serverParams: EventOrigin
-  ) {
-    await this.requireAccountConnection(serverParams.connection, input.address);
-    const origin = serverParams.origin;
-    const title = serverParams.title;
-    const favIconUrl = serverParams.favIconUrl;
-    const selectedNetwork = await NetworkService.getSelectedNetwork();
-
-    if (selectedNetwork?.url !== input.provider.url) {
-      throw new Error(
-        [
-          `${input.provider.url} is different from the user current network!`,
-          'Request the user to add the new network. fuel.addNetwork([...]).',
-        ].join('\n')
-      );
-    }
-
-    const {
-      address: _address,
-      provider,
-      transaction,
-      skipCustomFee,
-      isPrepareOnly = true,
-    } = input;
-
-    const popupService = await PopUpService.open(
-      origin,
-      Pages.requestTransaction(),
-      this.communicationProtocol
-    );
-
-    const address = Address.fromDynamicInput(_address).toString();
-
-    try {
-      const preparedTransaction = await popupService.prepareForSend({
-        address,
-        provider,
-        transaction,
-        origin,
-        title,
-        favIconUrl,
-        skipCustomFee,
-        isPrepareOnly,
-      });
-      popupService.destroy();
-      return preparedTransaction;
-    } catch (error) {
-      popupService.destroy();
-      throw error;
-    }
   }
 
   async currentAccount(_: unknown, serverParams: EventOrigin) {

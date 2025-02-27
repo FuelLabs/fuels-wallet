@@ -22,16 +22,6 @@ export type MessageInputs = {
     transaction: string;
     skipCustomFee?: boolean;
   };
-  prepareForSend: {
-    address: string;
-    origin: string;
-    title?: string;
-    favIconUrl?: string;
-    provider: FuelProviderConfig;
-    transaction: string;
-    skipCustomFee?: boolean;
-    isPrepareOnly?: boolean;
-  };
   addAssets: {
     assets: AssetData[];
     origin: string;

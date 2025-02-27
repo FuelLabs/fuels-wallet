@@ -21,7 +21,6 @@ export class RequestMethods extends ExtensionPageConnection {
     this.requestConnection,
     this.signMessage,
     this.sendTransaction,
-    this.prepareForSend,
     this.addAssets,
     this.selectNetwork,
     this.addNetwork,
@@ -77,45 +76,6 @@ export class RequestMethods extends ExtensionPageConnection {
         done: 'txSuccess',
       });
     return state.context.response?.txSummaryExecuted?.id;
-  }
-
-  async prepareForSend(input: MessageInputs['prepareForSend']) {
-    const {
-      address,
-      provider,
-      transaction,
-      origin,
-      title,
-      favIconUrl,
-      skipCustomFee,
-      isPrepareOnly,
-    } = input;
-
-    const providerUrl = provider.url;
-
-    const transactionRequest = transactionRequestify(JSON.parse(transaction));
-
-    const requestObj = {
-      origin,
-      transactionRequest,
-      address,
-      providerUrl,
-      title,
-      favIconUrl,
-      skipCustomFee,
-      isPrepareOnly,
-    };
-
-    const state = await store
-      .requestTransaction(requestObj)
-      .waitForState(Services.txRequest, {
-        ...WAIT_FOR_CONFIG,
-        done: 'txSuccess',
-      });
-
-    const prepared = state.context.response?.preparedTransaction;
-
-    return prepared;
   }
 
   async addAssets(input: MessageInputs['addAssets']) {
