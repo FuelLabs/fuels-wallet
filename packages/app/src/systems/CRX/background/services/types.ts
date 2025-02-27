@@ -1,9 +1,5 @@
-import type {
-  AssetData,
-  FuelProviderConfig,
-  NetworkData,
-} from '@fuel-wallet/types';
-import type { AbiMap, SelectNetworkArguments } from 'fuels';
+import type { AssetData, NetworkData } from '@fuel-wallet/types';
+import type { AbiMap, FuelConnectorSendTxParams } from 'fuels';
 
 export type MessageInputs = {
   signMessage: {
@@ -13,15 +9,7 @@ export type MessageInputs = {
     title?: string;
     favIconUrl?: string;
   };
-  sendTransaction: {
-    address: string;
-    origin: string;
-    title?: string;
-    favIconUrl?: string;
-    provider: FuelProviderConfig;
-    transaction: string;
-    skipCustomFee?: boolean;
-  };
+  sendTransaction: FuelConnectorSendTxParams;
   addAssets: {
     assets: AssetData[];
     origin: string;
