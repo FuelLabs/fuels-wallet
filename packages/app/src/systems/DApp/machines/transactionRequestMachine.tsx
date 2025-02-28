@@ -1,5 +1,6 @@
 import type { Account, AccountWithBalance } from '@fuel-wallet/types';
-import type { BN, TransactionRequest, TransactionSummary } from 'fuels';
+import type { TransactionRequest, TransactionSummary } from 'fuels';
+import { BN } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { AccountService } from '~/systems/Account';
@@ -32,11 +33,48 @@ type MachineContext = {
     tip?: BN;
     gasLimit?: BN;
     skipCustomFee?: boolean;
+    isPrepareOnly?: boolean;
+    state?: {
+      state?: 'funded' | 'immutable';
+    };
+    providerCache?: {
+      consensusParameterTimestamp?: string;
+      chain?: {
+        name?: string;
+        consensusParameters?: Record<string, unknown>;
+        daHeight?: string;
+        [key: string]: unknown;
+      };
+      chainInfo?: {
+        name?: string;
+        consensusParameters?: Record<string, unknown>;
+        latestBlockHeight?: string;
+        [key: string]: unknown;
+      };
+      nodeInfo?: {
+        maxDepth?: string;
+        maxTx?: string;
+        nodeVersion?: string;
+        utxoValidation?: boolean;
+        vmBacktrace?: boolean;
+        [key: string]: unknown;
+      };
+    };
+    transactionData?: {
+      latestGasPrice?: string;
+      estimatedGasPrice?: string;
+      summary?: {
+        operations?: unknown[];
+        changes?: unknown[];
+        [key: string]: unknown;
+      };
+    };
   };
   response?: {
     txSummarySimulated?: TransactionSummary;
     txSummaryExecuted?: TransactionSummary;
     proposedTxRequest?: TransactionRequest;
+    preparedTransaction?: TransactionRequest;
   };
   fees: {
     baseFee?: BN;
@@ -79,7 +117,14 @@ type MachineServices = {
 };
 
 type MachineEvents =
-  | { type: 'START'; input?: TxInputs['request'] }
+  | {
+      type: 'START';
+      input?: TxInputs['request'] & {
+        state?: MachineContext['input']['state'];
+        providerCache?: MachineContext['input']['providerCache'];
+        transactionData?: MachineContext['input']['transactionData'];
+      };
+    }
   | { type: 'SET_CUSTOM_FEES'; input: TxInputs['setCustomFees'] }
   | { type: 'RESET'; input?: null }
   | { type: 'APPROVE'; input?: null }
@@ -130,6 +175,8 @@ export const transactionRequestMachine = createMachine(
             input: (ctx: MachineContext) => ({
               address: ctx.input.address,
               account: ctx.input.account,
+              providerCache: ctx.input.providerCache,
+              transactionData: ctx.input.transactionData,
             }),
           },
           onDone: [
@@ -150,7 +197,12 @@ export const transactionRequestMachine = createMachine(
         invoke: {
           src: 'simulateTransaction',
           data: {
-            input: (ctx: MachineContext) => ctx.input,
+            input: (ctx: MachineContext) => ({
+              ...ctx.input,
+              providerCache: ctx.input.providerCache,
+              transactionData: ctx.input.transactionData,
+              state: ctx.input.state,
+            }),
           },
           onDone: [
             {
@@ -267,7 +319,23 @@ export const transactionRequestMachine = createMachine(
             account,
             address,
             fees,
+            state,
+            providerCache,
+            transactionData,
           } = ev.input || {};
+
+          // Log if we received rich data with the transaction
+          if (state || providerCache || transactionData) {
+            console.log(
+              '🎁 Rich data received with transaction:',
+              'state',
+              state,
+              'providerCache',
+              providerCache,
+              'transactionData',
+              transactionData
+            );
+          }
 
           if (!providerUrl) {
             throw new Error('providerUrl is required');
@@ -292,6 +360,9 @@ export const transactionRequestMachine = createMachine(
             favIconUrl,
             skipCustomFee,
             fees,
+            state,
+            providerCache,
+            transactionData,
           };
         },
         fees: (_ctx, ev) => {
@@ -316,10 +387,12 @@ export const transactionRequestMachine = createMachine(
         },
       }),
       assignApprovedTx: assign({
-        response: (ctx, ev) => ({
-          ...ctx.response,
-          txSummaryExecuted: ev.data,
-        }),
+        response: (ctx, ev) => {
+          return {
+            ...ctx.response,
+            txSummaryExecuted: ev.data,
+          };
+        },
       }),
       assignSimulateResult: assign({
         response: (ctx, ev) => ({
@@ -356,7 +429,12 @@ export const transactionRequestMachine = createMachine(
     },
     services: {
       prepareInputForSimulateTransaction: FetchMachine.create<
-        { address?: string; account?: AccountWithBalance },
+        {
+          address?: string;
+          account?: AccountWithBalance;
+          providerCache?: MachineContext['input']['providerCache'];
+          transactionData?: MachineContext['input']['transactionData'];
+        },
         {
           estimated: PrepareInputForSimulateTransactionReturn['estimated'];
           account: AccountWithBalance;
@@ -365,24 +443,68 @@ export const transactionRequestMachine = createMachine(
         showError: false,
         maxAttempts: 1,
         async fetch({ input }) {
-          const [estimated, acc] = await Promise.all([
-            TxService.estimateGasLimitAndDefaultTips(),
-            input?.account ||
-              AccountService.fetchAccount({
-                address: input?.address as string,
-              }).then(async (_account) => {
-                const network = await NetworkService.getSelectedNetwork();
-                return await AccountService.fetchBalance({
-                  account: _account,
-                  providerUrl: network?.url as string,
-                });
-              }),
-          ]);
+          let acc = input?.account;
+          if (!acc) {
+            acc = await AccountService.fetchAccount({
+              address: input?.address as string,
+            }).then(async (_account) => {
+              const network = await NetworkService.getSelectedNetwork();
+              return await AccountService.fetchBalance({
+                account: _account,
+                providerUrl: network?.url as string,
+              });
+            });
+          }
+
+          if (!acc) {
+            throw new Error('Could not retrieve account information');
+          }
+
+          // Check if we have cached gas prices from the SDK - now directly from input
+          const hasEstimatedGasPrice =
+            !!input?.transactionData?.estimatedGasPrice;
+          const hasLatestGasPrice = !!input?.transactionData?.latestGasPrice;
+
+          if (hasEstimatedGasPrice && hasLatestGasPrice) {
+            try {
+              const estimatedGasPrice = input?.transactionData
+                ?.estimatedGasPrice as string;
+              const latestGasPrice = input?.transactionData
+                ?.latestGasPrice as string;
+
+              // We need maxGasLimit in any case
+              const { maxGasLimit } =
+                await TxService.estimateGasLimitAndDefaultTips();
+
+              return {
+                estimated: {
+                  // Using constructor to parse strings
+                  regularTip: new BN(latestGasPrice),
+                  fastTip: new BN(estimatedGasPrice),
+                  maxGasLimit,
+                },
+                account: acc,
+              };
+            } catch (error) {
+              console.warn(
+                'Failed to use cached gas prices, falling back',
+                error
+              );
+              // Fall through to regular estimation
+            }
+          }
+
+          // Standard implementation if no cached data or any errors
+          const estimated = await TxService.estimateGasLimitAndDefaultTips();
           return { estimated, account: acc };
         },
       }),
       simulateTransaction: FetchMachine.create<
-        TxInputs['simulateTransaction'],
+        TxInputs['simulateTransaction'] & {
+          state?: MachineContext['input']['state'];
+          providerCache?: MachineContext['input']['providerCache'];
+          transactionData?: MachineContext['input']['transactionData'];
+        },
         SimulateTransactionReturn
       >({
         showError: false,
@@ -391,6 +513,68 @@ export const transactionRequestMachine = createMachine(
             throw new Error('Invalid simulateTransaction input');
           }
 
+          console.log('🚀 Simulation input:', input);
+
+          // Now access rich data directly from input instead of accessing machine context
+          const hasTransactionData = !!input.transactionData;
+          const hasState = !!input.state;
+          const hasProviderCache = !!input.providerCache;
+
+          // Log for debugging
+          if (hasTransactionData || hasState || hasProviderCache) {
+            console.log('🚀 Rich transaction data found in input:', {
+              hasTransactionData,
+              hasState,
+              hasProviderCache,
+            });
+
+            // Check if we have cached provider info we can use
+            if (
+              hasProviderCache &&
+              (input.providerCache?.chain || input.providerCache?.chainInfo)
+            ) {
+              // TODO: Use cached provider info
+            }
+
+            // Check if we can skip simulation because the transaction is already funded
+            const isFunded = input.state?.state === 'funded';
+            const hasSummary = !!input.transactionData?.summary;
+
+            if (isFunded && hasSummary) {
+              try {
+                // Just create a transaction summary from the cached data
+                const summary = input.transactionData?.summary || {};
+                const txSummary = {
+                  id: summary.id,
+                  gasUsed: summary.gasUsed,
+                  fee: new BN(summary.fee ? summary.fee.toString() : '0'),
+                  receipts: summary.receipts || [],
+                } as TransactionSummary;
+
+                // Return the mocked simulation result
+                return {
+                  txSummary,
+                  baseFee: input.transactionData?.estimatedGasPrice
+                    ? new BN(input.transactionData.estimatedGasPrice)
+                    : undefined,
+                  proposedTxRequest: input.transactionRequest,
+                };
+              } catch (error) {
+                console.warn(
+                  'Failed to use cached transaction summary, falling back to simulation',
+                  error
+                );
+                // Fall through to regular simulation if anything goes wrong
+              }
+            }
+          } else {
+            console.log(
+              'No rich data found in input, continuing with simulation'
+            );
+          }
+
+          // Standard implementation if we couldn't use cached data
+          console.log('Running standard transaction simulation...');
           const simulatedInfo = await TxService.simulateTransaction(input);
           return simulatedInfo;
         },
