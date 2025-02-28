@@ -194,11 +194,10 @@ export const TxContent = {
 
 const styles = {
   content: cssObj({
-    padding: '$2',
+    padding: '$2 $1',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    backgroundColor: '$gray3',
   }),
   title: cssObj({
     fontSize: '$sm',
