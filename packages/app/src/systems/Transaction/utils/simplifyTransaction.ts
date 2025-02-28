@@ -25,6 +25,14 @@ type TransactionRequestWithOrigin = TransactionRequest & {
   favIconUrl?: string;
 };
 
+// Define proper receipt data type
+type ParsedReceiptData = {
+  indent: number;
+  arrow: string;
+  type: number;
+  data: TransactionResultReceipt;
+};
+
 function getOperationType(operation: Operation): TxCategory {
   const { name } = operation;
 
@@ -40,29 +48,45 @@ function getOperationType(operation: Operation): TxCategory {
   }
 }
 
-function getReceiptDepth(
-  allReceipts: TransactionResultReceipt[],
-  receiptIndex: number
-): number {
-  let depth = 0;
-
-  for (let i = 0; i < receiptIndex; i++) {
-    const r = allReceipts[i];
-    if (r.type === ReceiptType.Call) depth++;
-    if (r.type === ReceiptType.ReturnData && depth > 0) depth--;
-    if (r.type === ReceiptType.ScriptResult) depth = 0;
+function parseReceipts(receipts) {
+  try {
+    if (!receipts) return [];
+    let indent = 0;
+    const flow = [];
+    for (const [index, item] of receipts.entries()) {
+      const type = item.type;
+      const previousItem = receipts[index - 1] || {};
+      if (
+        previousItem.type !== ReceiptType.Return &&
+        type === ReceiptType.ScriptResult
+      )
+        indent = 0;
+      const arrow = `${'-'.repeat(indent + 1)}>`;
+      flow.push({ indent, arrow, type, data: item });
+      if ([ReceiptType.Call, ReceiptType.Return].includes(type)) indent++;
+      if ([ReceiptType.ReturnData].includes(type) && indent > 0) indent--;
+    }
+    return flow;
+  } catch (error) {
+    console.error('Error parsing receipts', error);
+    return [];
   }
-
-  return depth;
 }
 
 function transformOperation(
   operation: Operation,
-  allReceipts: TransactionResultReceipt[],
+  // biome-ignore lint/correctness/noUnusedVariables: kept for compatibility
+  _allReceipts: TransactionResultReceipt[],
   currentAccount?: string,
-  receiptIndex?: number
+  // biome-ignore lint/correctness/noUnusedVariables: kept for compatibility
+  _receiptIndex?: number,
+  parsedReceipts?: ParsedReceiptData[]
 ): SimplifiedOperation {
   const { name, from, to, assetsSent = [], calls = [] } = operation;
+
+  // @ts-ignore - receipts will exist in future SDK versions
+  const operationReceipt = operation.receipts?.[0];
+
   // Build base operation object
   const baseOperation = {
     type: getOperationType(operation),
@@ -74,23 +98,18 @@ function transformOperation(
     isToCurrentAccount: currentAccount
       ? to?.address === currentAccount.toLowerCase()
       : false,
+    // Include the receipt if it exists
+    receipts: operationReceipt ? [operationReceipt] : undefined,
     metadata: {
-      depth: 0,
+      depth: 0, // Default value that will be overridden if possible
     },
   } as SimplifiedOperation;
 
-  // Calculate depth if receipts exist
-  try {
-    // @ts-ignore - receipts will exist in future SDK versions
-    const receipts = operation.receipts || [];
-    const receipt = receipts[0];
-    if (receipt && typeof receiptIndex === 'number' && allReceipts.length > 0) {
-      baseOperation.metadata.depth = getReceiptDepth(allReceipts, receiptIndex);
-    }
-  } catch (error) {
-    console.warn(
-      'Could not access operation receipts, defaulting depth to 0',
-      error
+  // Calculate depth using getOperationDepth if possible
+  if (parsedReceipts && baseOperation.receipts) {
+    baseOperation.metadata.depth = getOperationDepth(
+      baseOperation,
+      parsedReceipts
     );
   }
 
@@ -151,7 +170,8 @@ function calculateBidirectionalInfo(
 
 export function transformOperations(
   summary: TransactionSummary,
-  currentAccount?: string
+  currentAccount?: string,
+  parsedReceipts?: ParsedReceiptData[]
 ): SimplifiedOperation[] {
   if (!summary.operations) return [];
 
@@ -159,7 +179,14 @@ export function transformOperations(
   const operations = summary.operations.map((op) => {
     // @ts-ignore - receipts will exist in future SDK versions
     const operationReceipt = op.receipts?.[0];
-    if (!operationReceipt) return transformOperation(op, [], currentAccount);
+    if (!operationReceipt)
+      return transformOperation(
+        op,
+        [],
+        currentAccount,
+        undefined,
+        parsedReceipts
+      );
 
     const receiptIndex = allReceipts.findIndex((r) => {
       // Only compare pc and is if they exist on both receipts
@@ -178,15 +205,23 @@ export function transformOperations(
 
     if (receiptIndex === -1) {
       console.warn('Could not find operation receipt in full receipt list');
-      return transformOperation(op, [], currentAccount);
+      return transformOperation(
+        op,
+        [],
+        currentAccount,
+        undefined,
+        parsedReceipts
+      );
     }
 
-    return transformOperation(op, allReceipts, currentAccount, receiptIndex);
+    return transformOperation(
+      op,
+      allReceipts,
+      currentAccount,
+      receiptIndex,
+      parsedReceipts
+    );
   });
-
-  // operations.sort(
-  //   (a, b) => (a.metadata?.depth || 0) - (b.metadata?.depth || 0)
-  // );
 
   // Calculate bidirectional info for each operation
   return operations.map((op, index) => ({
@@ -325,31 +360,49 @@ function categorizeOperations(
     }
   }
 
-  // Sort main operations: from user first, then to user
-  // main.sort((a, b) => {
-  //   const aFromUser =
-  //     currentAccount &&
-  //     a.from.address.toLowerCase() === currentAccount.toLowerCase();
-  //   const bFromUser =
-  //     currentAccount &&
-  //     b.from.address.toLowerCase() === currentAccount.toLowerCase();
+  // Calculate asset totals for mainOperations
+  const assetsTotalFrom: Array<{ assetId: string; amount: BN }> = [];
+  const assetsTotalTo: Array<{ assetId: string; amount: BN }> = [];
 
-  //   if (aFromUser && !bFromUser) return -1;
-  //   if (!aFromUser && bFromUser) return 1;
-  //   return 0;
-  // });
+  // Aggregate assets across all main operations
+  for (const op of main) {
+    console.log('op', op);
+    if (op.isFromCurrentAccount) {
+      assetsTotalFrom.push(...(op.assets || []));
+    } else {
+      assetsTotalTo.push(...(op.assets || []));
+    }
+  }
 
-  // // set all main operations to depth 0 TODO: remove this
-  // for (const op of main) {
-  //   op.metadata.depth = 0;
-  // }
   console.log('main', main);
   console.log('otherRoot', otherRoot);
+
   // Group similar operations in each category
+  const groupedMain = groupSimilarOperations(main);
+  console.log('assetsTotalFrom', assetsTotalFrom);
+  console.log('assetsTotalTo', assetsTotalTo);
   return {
-    mainOperations: groupSimilarOperations(main),
+    mainOperations: groupedMain,
+    mainOperationsAssetTotals: {
+      from: Object.values(assetsTotalFrom),
+      to: Object.values(assetsTotalTo),
+    },
     otherRootOperations: groupSimilarOperations(otherRoot),
   };
+}
+function getOperationDepth(
+  operation: SimplifiedOperation,
+  parsedReceipts: ParsedReceiptData[]
+) {
+  let depth = 0;
+  // find the parsedReceipt where parsedReceipt.data.id === op.receipts[0].id
+  const receiptIndex = parsedReceipts.findIndex(
+    (r) => r.data.id === operation.receipts[0].id
+  );
+  if (receiptIndex !== -1) {
+    depth = parsedReceipts[receiptIndex].indent;
+  }
+  return depth;
 }
 
 export function simplifyTransaction(
@@ -358,7 +411,13 @@ export function simplifyTransaction(
   currentAccount?: string
 ): SimplifiedTransaction {
   console.log('summary', summary);
-  const operations = transformOperations(summary, currentAccount);
+  const parsedReceipts = parseReceipts(summary.receipts);
+  const operations = transformOperations(
+    summary,
+    currentAccount,
+    parsedReceipts
+  );
+
   const categorizedOperations = categorizeOperations(
     operations,
     currentAccount
@@ -392,6 +451,5 @@ export function simplifyTransaction(
       request,
     },
   };
-  console.log('simplifiedTransaction', simplifiedTransaction);
   return simplifiedTransaction;
 }
