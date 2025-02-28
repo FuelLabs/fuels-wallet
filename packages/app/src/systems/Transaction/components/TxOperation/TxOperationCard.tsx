@@ -204,11 +204,13 @@ const styles = {
     cssObj({
       display: 'flex',
       backgroundColor: '$cardBg',
-      boxShadow: bidirectionalInfo
-        ? 'none'
-        : '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
+      // boxShadow: bidirectionalInfo
+      //   ? 'none'
+      //   : '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
+      boxShadow:
+        '0px 0px 0px 1px rgba(32, 32, 32, 0.12), 0px 2px 6px -1px rgba(32, 32, 32, 0.10)',
       flex: 1,
-      padding: `${bidirectionalInfo === 'btoa' ? '0px' : '14px'} 12px ${bidirectionalInfo === 'atob' ? '0px' : '14px'}`,
+      padding: `${bidirectionalInfo === 'btoa' ? '0px' : '$4'} 12px ${bidirectionalInfo === 'atob' ? '0px' : '$4'}`,
     }),
   spacer: cssObj({
     minHeight: '14px',
@@ -228,6 +230,7 @@ const styles = {
   name: cssObj({
     fontWeight: '$semibold',
     color: '$gray12',
+    mr: '$1',
   }),
   address: cssObj({
     fontWeight: '$medium',
@@ -252,10 +255,5 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '$1',
-  }),
-  asset: cssObj({
-    alignItems: 'center',
-    gap: '$2',
-    marginTop: '$1',
   }),
 };

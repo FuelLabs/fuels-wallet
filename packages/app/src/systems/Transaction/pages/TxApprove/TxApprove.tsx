@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Dialog } from '@fuel-ui/react';
+import { Box, Button, Dialog } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useAssets } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
@@ -22,7 +22,7 @@ export const TxApprove = () => {
   };
 
   return (
-    <>
+    <Box css={styles.wrapper}>
       <OverlayDialogTopbar
         onClose={isSuccess ? goToWallet : ctx.handlers.closeDialog}
       >
@@ -91,19 +91,25 @@ export const TxApprove = () => {
           </>
         )}
       </Dialog.Footer>
-    </>
+    </Box>
   );
 };
 
 const styles = {
+  wrapper: cssObj({
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '$0',
+  }),
   description: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
     overflowY: 'auto !important',
-    padding: '$2',
+    padding: '0',
     flex: 1,
     display: 'flex',
-    height: '462px',
+    // height: '462px',
     flexDirection: 'column',
-    gap: '$4',
+    gap: '$0',
   }),
 };

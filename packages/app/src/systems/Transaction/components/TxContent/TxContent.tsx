@@ -53,15 +53,6 @@ const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
   );
 };
 
-const ConfirmHeader = () => (
-  <Box css={styles.header}>
-    <Box css={styles.warning}>
-      <Icon icon="InfoCircle" />
-      Check your transaction before submitting.
-    </Box>
-  </Box>
-);
-
 const LoaderHeader = () => (
   <CardList.Item
     css={{ padding: '$2 !important' }}
@@ -146,12 +137,22 @@ function TxContentInfo({
 
   function getHeader() {
     if (hasErrors) return <ErrorHeader errors={errors} />;
-    if (isConfirm) return <ConfirmHeader />;
+    if (isConfirm)
+      return (
+        <Box css={styles.header}>
+          <Text css={styles.reviewTxWarningTitle}>Review Transaction</Text>
+          <Box css={styles.warning}>
+            <Icon icon="InfoCircle" stroke={2} size={16} />
+            Double-check transaction details before submit.
+          </Box>
+        </Box>
+      );
     if (isExecuted)
       return (
         <TxHeader id={tx?.id} type={tx?.type} status={status || undefined} />
       );
-    return <ConfirmHeader />;
+
+    return null;
   }
 
   return (
@@ -193,10 +194,11 @@ export const TxContent = {
 
 const styles = {
   content: cssObj({
-    paddingTop: '$2',
+    padding: '$2',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
+    backgroundColor: '$gray3',
   }),
   title: cssObj({
     fontSize: '$sm',
@@ -204,7 +206,8 @@ const styles = {
     color: '$gray12',
   }),
   feeContainer: cssObj({
-    padding: '32px 0 16px 20px',
+    py: '$4',
+    pl: '$2',
   }),
   icon: cssObj({
     border: '1.5px solid $gray9',
@@ -230,10 +233,17 @@ const styles = {
     },
   }),
   header: cssObj({
-    marginBottom: '$2',
-    backgroundColor: '$white',
-    borderBottom: '1px solid $gray3',
-    padding: '12px 18px',
+    backgroundColor: '$bodyBg',
+    borderTop: '1px solid $gray5',
+    borderBottom: '1px solid $gray5',
+    padding: '$3 $4',
+  }),
+  reviewTxWarningTitle: cssObj({
+    color: '$textHeading',
+    fontSize: '$sm',
+    fontWeight: '$medium',
+    lineHeight: '$tight',
+    mb: '$1',
   }),
   warning: cssObj({
     display: 'flex',
@@ -241,7 +251,6 @@ const styles = {
     gap: '$1',
     fontSize: '12px',
     color: '$gray11',
-    fontWeight: '500',
-    marginBottom: '$2',
+    lineHeight: '$tight',
   }),
 };

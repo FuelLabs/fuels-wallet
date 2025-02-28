@@ -73,7 +73,9 @@ const styles = {
   drawer: cssObj({
     backgroundColor: '$gray2',
     borderRadius: '8px',
-    border: '1px solid $gray5',
+    // border: '1px solid $gray5',
+    boxShadow:
+      '0px 0px 0px 1px rgba(32, 32, 32, 0.12), 0px 2px 6px -1px rgba(32, 32, 32, 0.10)',
     marginBottom: '$2',
     overflow: 'hidden',
   }),

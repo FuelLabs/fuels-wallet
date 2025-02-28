@@ -26,7 +26,11 @@ export function TxView() {
       isLoading={ctx.isFetching || ctx.isFetchingResult}
     >
       <Layout.TopBar onBack={() => navigate(-1)} />
-      <Layout.Content>
+      <Layout.Content
+        css={{
+          padding: '0',
+        }}
+      >
         {ctx.shouldShowAlert && (
           <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
         )}
