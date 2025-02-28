@@ -233,8 +233,8 @@ const styles = {
   }),
   header: cssObj({
     backgroundColor: '$bodyBg',
-    borderTop: '1px solid $gray5',
-    borderBottom: '1px solid $gray5',
+    // borderTop: '1px solid $gray5', Disabled while we still have the other top bar
+    // borderBottom: '1px solid $gray5',
     padding: '$3 $4',
   }),
   reviewTxWarningTitle: cssObj({
