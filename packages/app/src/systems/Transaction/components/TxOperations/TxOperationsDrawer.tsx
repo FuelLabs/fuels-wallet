@@ -47,23 +47,33 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
         </Box.Flex>
       )}
       <MotionBox
+        initial={{
+          height: isExpanded ? 'auto' : 0,
+          opacity: isExpanded ? 1 : 0,
+        }}
         animate={{
           height: isExpanded ? 'auto' : 0,
           opacity: isExpanded ? 1 : 0,
         }}
+        transition={{
+          duration: 0.3,
+          ease: 'easeInOut',
+          opacity: { duration: 0.2 },
+        }}
         css={styles.expandedOperations}
         onClick={(e) => e.stopPropagation()}
       >
-        {operations.map((operation, index) =>
-          isExpanded ? (
-            <Box.Flex
-              key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
-              css={styles.operation}
-            >
-              <TxOperation operation={operation} />
-            </Box.Flex>
-          ) : null
-        )}
+        {operations.map((operation, index) => (
+          <Box.Flex
+            key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
+            css={[
+              styles.operation,
+              isExpanded ? {} : cssObj({ display: 'none' }),
+            ]}
+          >
+            <TxOperation operation={operation} />
+          </Box.Flex>
+        ))}
       </MotionBox>
     </Box>
   );
