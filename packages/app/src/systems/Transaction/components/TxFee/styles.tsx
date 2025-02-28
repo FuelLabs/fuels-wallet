@@ -47,4 +47,29 @@ export const styles = {
     wordWrap: 'break-word',
     minWidth: 0,
   }),
+  option: cssObj({
+    alignItems: 'center',
+    backgroundColor: '$cardBg',
+    border: '1px solid $gray5',
+    borderRadius: '10px',
+    color: '$gray1',
+    cursor: 'pointer',
+    fontSize: '13px',
+    gap: '$3',
+    justifyContent: 'space-between',
+    padding: '$3',
+    transition: 'all 0.2s ease',
+
+    '&:hover': {
+      backgroundColor: '$gray3',
+    },
+  }),
+  optionContent: cssObj({
+    color: '$gray12',
+  }),
+  optionLabel: cssObj({
+    color: '$gray12',
+    fontSize: '13px',
+    fontWeight: '$medium',
+  }),
 };

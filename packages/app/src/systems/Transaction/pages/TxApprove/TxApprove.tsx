@@ -1,12 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Dialog } from '@fuel-ui/react';
+import { Box, Button, Dialog } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useAssets } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 import { useTransactionRequest } from '~/systems/DApp';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
-import { TxContent } from '~/systems/Transaction';
+import { TxContent } from '../../components/TxContent/TxContent';
 
 export const TxApprove = () => {
   const ctx = useTransactionRequest();
@@ -22,24 +22,35 @@ export const TxApprove = () => {
   };
 
   return (
-    <>
+    <Box css={styles.wrapper}>
       <OverlayDialogTopbar
         onClose={isSuccess ? goToWallet : ctx.handlers.closeDialog}
       >
         {ctx.title}
       </OverlayDialogTopbar>
       <Dialog.Description as="div" css={styles.description}>
-        {!ctx.txSummarySimulated && <TxContent.Loader />}
-        {ctx.shouldShowTxSimulated && (
+        {ctx.shouldShowTxSimulated && ctx.txSummarySimulated && (
           <TxContent.Info
             showDetails
             tx={ctx.txSummarySimulated}
             isLoading={isLoading}
             errors={ctx.errors.simulateTxErrors}
+            footer={
+              ctx.status('failed') && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  intent="error"
+                  onPress={ctx.handlers.tryAgain}
+                >
+                  Try again
+                </Button>
+              )
+            }
             isConfirm
           />
         )}
-        {ctx.shouldShowTxExecuted && (
+        {ctx.shouldShowTxExecuted && ctx.txSummaryExecuted && (
           <TxContent.Info
             showDetails
             tx={ctx.txSummaryExecuted}
@@ -80,18 +91,25 @@ export const TxApprove = () => {
           </>
         )}
       </Dialog.Footer>
-    </>
+    </Box>
   );
 };
 
 const styles = {
-  description: cssObj({
-    ...coreStyles.scrollable('$intentsBase3'),
-    overflowY: 'scroll !important',
-    paddingLeft: '$4',
+  wrapper: cssObj({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    gap: '$4',
+    gap: '$0',
+  }),
+  description: cssObj({
+    ...coreStyles.scrollable('$intentsBase3'),
+    overflowY: 'auto !important',
+    padding: '0',
+    flex: 1,
+    display: 'flex',
+    // height: '462px',
+    flexDirection: 'column',
+    gap: '$0',
   }),
 };

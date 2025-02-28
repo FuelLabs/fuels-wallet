@@ -84,7 +84,7 @@ export function TransactionRequest() {
       <Layout title={title} noBorder>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
-          {shouldShowTxSimulated && (
+          {shouldShowTxSimulated && txSummarySimulated && (
             <TxContent.Info
               showDetails
               tx={txSummarySimulated}
@@ -95,7 +95,7 @@ export function TransactionRequest() {
               fees={fees}
             />
           )}
-          {shouldShowTxExecuted && (
+          {shouldShowTxExecuted && txSummaryExecuted && (
             <TxContent.Info
               showDetails
               tx={txSummaryExecuted}
