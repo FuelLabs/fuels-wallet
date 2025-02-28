@@ -49,10 +49,10 @@ export const styles = {
   }),
   option: cssObj({
     alignItems: 'center',
-    backgroundColor: '$white',
-    border: '1px solid #e0e0e0',
+    backgroundColor: '$cardBg',
+    border: '1px solid $gray5',
     borderRadius: '10px',
-    color: '#646464',
+    color: '$gray1',
     cursor: 'pointer',
     fontSize: '13px',
     gap: '$3',
@@ -61,14 +61,14 @@ export const styles = {
     transition: 'all 0.2s ease',
 
     '&:hover': {
-      backgroundColor: '#f0f0f0',
+      backgroundColor: '$gray3',
     },
   }),
   optionContent: cssObj({
-    color: '#202020',
+    color: '$gray12',
   }),
   optionLabel: cssObj({
-    color: '#202020',
+    color: '$gray12',
     fontSize: '13px',
     fontWeight: '$medium',
   }),
