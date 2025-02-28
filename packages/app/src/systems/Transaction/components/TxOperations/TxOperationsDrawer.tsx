@@ -46,6 +46,13 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
           </Text>
         </Box.Flex>
       )}
+      {operations.length === 0 && (
+        <Box css={styles.header({ isExpanded })}>
+          <Text fontSize="sm" css={styles.title}>
+            No root operations related to this account.
+          </Text>
+        </Box>
+      )}
       <MotionBox
         initial={{
           height: isExpanded ? 'auto' : 0,
