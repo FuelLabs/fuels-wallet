@@ -1,5 +1,17 @@
 # fuels-wallet
 
+## 0.50.1
+
+### Patch Changes
+
+- [#1852](https://github.com/FuelLabs/fuels-wallet/pull/1852) [`52a635aa`](https://github.com/FuelLabs/fuels-wallet/commit/52a635aaa176c7cca169ad50e5ae3d80643eec4c) Thanks [@arthurgeron](https://github.com/arthurgeron)! - test: improve timeout handling and page navigation in e2e tests
+
+- [#1863](https://github.com/FuelLabs/fuels-wallet/pull/1863) [`f82963e1`](https://github.com/FuelLabs/fuels-wallet/commit/f82963e1c0cc47b715085a5a95cacebdc9573a94) Thanks [@helciofranco](https://github.com/helciofranco)! - fix: improve precision handling for USD conversion with low rates (e.g. $0.0123)
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.50.1
+  - @fuels/playwright-utils@0.50.1
+
 ## 0.50.0
 
 ### Minor Changes
