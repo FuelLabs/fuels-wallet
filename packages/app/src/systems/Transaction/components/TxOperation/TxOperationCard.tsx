@@ -5,6 +5,7 @@ import { Address, isB256 } from 'fuels';
 import { useEffect, useState } from 'react';
 import { FuelAddress, useAccounts } from '~/systems/Account';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
+import { MotionBox } from '~/systems/Core/components/Motion';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
 import {
   type BidirectionalInfo,
@@ -159,7 +160,13 @@ export function TxOperationCard({
         </Box.Flex>
         <Box>
           {shouldShowAssetAmount && (
-            <TxOperationAssets amounts={assetsAmount} baseAsset={baseAsset} />
+            <MotionBox
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: 'easeIn' }}
+            >
+              <TxOperationAssets amounts={assetsAmount} baseAsset={baseAsset} />
+            </MotionBox>
           )}
         </Box>
 
