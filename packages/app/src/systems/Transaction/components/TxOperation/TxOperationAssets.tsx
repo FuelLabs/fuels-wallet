@@ -118,5 +118,6 @@ const styles = {
     alignItems: 'center',
     gap: '$2',
     marginTop: '$1',
+    minHeight: '24px',
   }),
 };
