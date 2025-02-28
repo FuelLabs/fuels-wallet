@@ -97,7 +97,12 @@ const styles = {
   root: cssObj({
     px: '$4',
     py: '$3',
+    margin: '$1 $1 0', // To match the card as the main wallet padding cannot be changed now
     fontWeight: '$normal',
+    borderRadius: '8px', // 8px to match the other cards in this PR according to the latest figma but on the other figma with all the views it is 12px
+    boxShadow:
+      '0px 0px 0px 1px rgba(32, 32, 32, 0.12), 0px 2px 6px -1px rgba(32, 32, 32, 0.10)',
+    border: 'none',
 
     '.fuel_copyable-icon': {
       color: '$brand !important',
