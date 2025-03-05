@@ -210,7 +210,7 @@ const styles = {
   contentCol: (bidirectionalInfo: BidirectionalInfo | undefined) =>
     cssObj({
       display: 'flex',
-      backgroundColor: '$cardBg',
+      backgroundColor: '$bodyBg',
       // boxShadow: bidirectionalInfo
       //   ? 'none'
       //   : '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',

@@ -1,33 +1,20 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Dialog } from '@fuel-ui/react';
-import { useNavigate } from 'react-router-dom';
 import { useAssets } from '~/systems/Asset';
-import { Pages } from '~/systems/Core';
+import { Layout } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 import { useTransactionRequest } from '~/systems/DApp';
-import { OverlayDialogTopbar } from '~/systems/Overlay';
 import { TxContent } from '../../components/TxContent/TxContent';
 
 export const TxApprove = () => {
   const ctx = useTransactionRequest();
-  const navigate = useNavigate();
   const { isLoading: isLoadingAssets } = useAssets();
-  const isSuccess = ctx.status('success');
   const isLoading =
     ctx.status('loading') || ctx.status('sending') || isLoadingAssets;
 
-  const goToWallet = () => {
-    ctx.handlers.closeDialog();
-    navigate(Pages.index());
-  };
-
   return (
     <Box css={styles.wrapper}>
-      <OverlayDialogTopbar
-        onClose={isSuccess ? goToWallet : ctx.handlers.closeDialog}
-      >
-        {ctx.title}
-      </OverlayDialogTopbar>
+      <Layout.TopBar isTxScreen />
       <Dialog.Description as="div" css={styles.description}>
         {ctx.shouldShowTxSimulated && ctx.txSummarySimulated && (
           <TxContent.Info
@@ -70,13 +57,14 @@ export const TxApprove = () => {
           />
         )}
       </Dialog.Description>
-      <Dialog.Footer>
+      <Dialog.Footer css={styles.footer}>
         {ctx.shouldShowActions && (
           <>
             <Button
               variant="ghost"
               isDisabled={isLoading}
               onPress={ctx.handlers.closeDialog}
+              css={styles.footerButton}
             >
               Back
             </Button>
@@ -85,6 +73,7 @@ export const TxApprove = () => {
               isLoading={isLoading}
               isDisabled={ctx.shouldDisableApproveBtn}
               onPress={ctx.handlers.approve}
+              css={styles.footerButton}
             >
               Submit
             </Button>
@@ -108,8 +97,15 @@ const styles = {
     padding: '0',
     flex: 1,
     display: 'flex',
-    // height: '462px',
     flexDirection: 'column',
     gap: '$0',
+    backgroundColor: '$intentsBase3',
+  }),
+  footer: cssObj({
+    p: '$4 $5',
+    borderTop: '1px solid $gray7',
+  }),
+  footerButton: cssObj({
+    mt: '$4',
   }),
 };

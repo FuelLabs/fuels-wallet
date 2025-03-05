@@ -215,7 +215,7 @@ export function SendSelect({
           regularTip &&
           fastTip && (
             <MotionStack {...animations.slideInTop()} gap="$3">
-              <Text as="span" css={styles.title}>
+              <Text as="span" css={styles.titleFee}>
                 Fee (network)
               </Text>
               <TxFeeOptions
@@ -256,6 +256,12 @@ const styles = {
     fontSize: '$md',
     fontWeight: '$normal',
     width: '48px',
+  }),
+  titleFee: cssObj({
+    pt: '$2',
+    color: '$intentsBase12',
+    fontSize: '$md',
+    fontWeight: '$normal',
   }),
   addressRow: cssObj({
     flex: 1,

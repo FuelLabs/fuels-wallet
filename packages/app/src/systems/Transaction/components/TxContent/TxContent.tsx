@@ -161,7 +161,14 @@ function TxContentInfo({
       <Box css={styles.content}>
         <TxOperations operations={transaction.categorizedOperations} />
         {isLoading && !showDetails && <TxFee.Loader />}
-        {showDetails && !fees && <TxFee fee={transaction?.fee.total} />}
+        {showDetails && !fees && (
+          <Box.Flex align="center">
+            <Box css={styles.feeIconWrapper}>
+              <Icon icon="CurrencyCent" css={styles.feeIcon} />
+            </Box>
+            <TxFee fee={transaction?.fee.total} />
+          </Box.Flex>
+        )}
         {showDetails &&
           fees?.baseFee &&
           txRequestGasLimit &&
@@ -194,7 +201,7 @@ export const TxContent = {
 
 const styles = {
   content: cssObj({
-    padding: '$2 $1',
+    padding: '$3',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -233,8 +240,8 @@ const styles = {
   }),
   header: cssObj({
     backgroundColor: '$bodyBg',
-    // borderTop: '1px solid $gray5', Disabled while we still have the other top bar
-    // borderBottom: '1px solid $gray5',
+    borderTop: '1px solid $gray7',
+    borderBottom: '1px solid $gray7',
     padding: '$3 $4',
   }),
   reviewTxWarningTitle: cssObj({
@@ -251,5 +258,18 @@ const styles = {
     fontSize: '12px',
     color: '$gray11',
     lineHeight: '$tight',
+  }),
+  feeIconWrapper: cssObj({
+    borderRadius: '$full',
+    border: '1px solid $intentsBase11',
+    ml: '$3',
+    mr: '$2',
+  }),
+  feeIcon: cssObj({
+    color: '$intentsBase11',
+    m: '2px',
+    '& svg': {
+      strokeWidth: '2px',
+    },
   }),
 };

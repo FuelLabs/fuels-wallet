@@ -12,7 +12,7 @@ type TxOperationsListProps = {
 
 export function TxOperations({ operations }: TxOperationsListProps) {
   const { account } = useAccounts();
-  const [showAllDepths, setShowAllDepths] = useState(false);
+  const [showAllDepths, _setShowAllDepths] = useState(false);
 
   // Filter operations based on the toggle state
   const mainOperationsToShow = useMemo(() => {
@@ -29,39 +29,6 @@ export function TxOperations({ operations }: TxOperationsListProps) {
 
   return (
     <Box.Stack gap="$2">
-      <Box.Flex
-        css={{
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '$2',
-        }}
-      >
-        <Text>Operations</Text>
-        <Tooltip content="Show nested operations">
-          <Box.Flex
-            css={{
-              alignItems: 'center',
-              gap: '$2',
-            }}
-          >
-            <Text
-              css={{
-                fontSize: '$sm',
-                color: 'gray10',
-              }}
-            >
-              Show nested calls
-            </Text>
-            <Switch
-              size="sm"
-              checked={showAllDepths}
-              onCheckedChange={setShowAllDepths}
-              aria-label="Show nested operations"
-            />
-          </Box.Flex>
-        </Tooltip>
-      </Box.Flex>
-
       <TxOperationsDrawer operations={mainOperationsToShow} />
 
       <TxOperationsGroup

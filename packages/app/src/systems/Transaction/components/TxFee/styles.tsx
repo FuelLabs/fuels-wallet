@@ -3,7 +3,7 @@ import { cssObj } from '@fuel-ui/css';
 export const styles = {
   detailItem: (active = false, pointer = false, title = false) =>
     cssObj({
-      padding: title ? '$3 $4' : '$2 $6',
+      padding: title ? '$3 $4' : '$3 $2',
       flexDirection: title ? 'row' : 'column',
       justifyContent: 'space-between',
       alignItems: title ? 'center' : 'flex-start',
