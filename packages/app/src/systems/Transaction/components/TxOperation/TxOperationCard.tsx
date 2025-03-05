@@ -7,11 +7,7 @@ import { FuelAddress, useAccounts } from '~/systems/Account';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { MotionBox } from '~/systems/Core/components/Motion';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
-import {
-  type BidirectionalInfo,
-  type SimplifiedOperation,
-  TxCategory,
-} from '../../types';
+import { type SimplifiedOperation, TxCategory } from '../../types';
 import { TxOperationAssets } from './TxOperationAssets';
 
 export type TxOperationCardProps = {
@@ -25,7 +21,7 @@ export function TxOperationCard({
   assetsAmount,
   css,
 }: TxOperationCardProps) {
-  const { bidirectionalInfo } = operation;
+  const { metadata } = operation;
   const { accounts } = useAccounts();
   const provider = useProvider();
   const [baseAsset, setBaseAsset] = useState<AssetFuelData | undefined>();
@@ -91,7 +87,7 @@ export function TxOperationCard({
   const isToContract = operation.to.type === 0;
 
   return (
-    <Box css={styles.contentCol(bidirectionalInfo)} style={css}>
+    <Box css={styles.contentCol(metadata.direction)} style={css}>
       <Box
         css={cssObj({
           display: 'grid',
@@ -104,7 +100,7 @@ export function TxOperationCard({
           margin: '0px',
         })}
       >
-        {bidirectionalInfo !== 'btoa' && (
+        {metadata.direction !== 'out' && (
           <>
             <Box.Flex
               justify={'flex-start'}
@@ -207,17 +203,17 @@ export function TxOperationCard({
 }
 
 const styles = {
-  contentCol: (bidirectionalInfo: BidirectionalInfo | undefined) =>
+  contentCol: (direction: 'in' | 'out' | undefined) =>
     cssObj({
       display: 'flex',
       backgroundColor: '$bodyBg',
       // boxShadow: bidirectionalInfo
       //   ? 'none'
       //   : '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
-      boxShadow:
-        '0px 0px 0px 1px rgba(32, 32, 32, 0.12), 0px 2px 6px -1px rgba(32, 32, 32, 0.10)',
+      // boxShadow:
+      //   '0px 0px 0px 1px rgba(32, 32, 32, 0.12), 0px 2px 6px -1px rgba(32, 32, 32, 0.10)',
       flex: 1,
-      padding: `${bidirectionalInfo === 'btoa' ? '0px' : '$4'} 12px ${bidirectionalInfo === 'atob' ? '0px' : '$4'}`,
+      padding: `${direction === 'out' ? '0' : '$4'} $4 ${direction === 'in' ? '0' : '$4'}`,
     }),
   spacer: cssObj({
     minHeight: '14px',

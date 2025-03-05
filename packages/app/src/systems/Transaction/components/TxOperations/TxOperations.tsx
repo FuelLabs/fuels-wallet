@@ -1,8 +1,7 @@
 import { Box, Switch, Text, Tooltip } from '@fuel-ui/react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAccounts } from '~/systems/Account';
-import type { CategorizedOperations, SimplifiedOperation } from '../../types';
-import type { TxCategory } from '../../types';
+import type { CategorizedOperations } from '../../types';
 import { TxOperationsGroup } from '../TxContent/TxOperationsSimple/TxOperationsGroup';
 import { TxOperationsDrawer } from './TxOperationsDrawer';
 
@@ -12,9 +11,8 @@ type TxOperationsListProps = {
 
 export function TxOperations({ operations }: TxOperationsListProps) {
   const { account } = useAccounts();
-  const [showAllDepths, _setShowAllDepths] = useState(false);
+  const [showAllDepths, setShowAllDepths] = useState(false);
 
-  // Filter operations based on the toggle state
   const mainOperationsToShow = useMemo(() => {
     return operations.mainOperations.filter(
       (operation) => showAllDepths || operation.metadata.depth === 0
@@ -26,6 +24,13 @@ export function TxOperations({ operations }: TxOperationsListProps) {
       (operation) => showAllDepths || operation.metadata.depth === 0
     );
   }, [operations.otherRootOperations, showAllDepths]);
+
+  useEffect(() => {
+    // This was a button toggle, now it is automatic when there are no main operations (rare case)
+    if (mainOperationsToShow.length === 0) {
+      setShowAllDepths(true);
+    }
+  }, [mainOperationsToShow]);
 
   return (
     <Box.Stack gap="$2">

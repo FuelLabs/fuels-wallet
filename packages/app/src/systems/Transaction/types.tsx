@@ -81,6 +81,7 @@ export type ContractCallMetadata = {
   groupedAssets?: Record<string, SimplifiedOperation['assets']>;
   childOperations?: SimplifiedOperation[];
   identicalOps?: Array<IdenticalOpsGroup>;
+  direction?: 'in' | 'out';
 };
 
 export type SwapMetadata = {
@@ -99,8 +100,6 @@ export type SimplifiedAddress = {
   type: number; // 0 for contract, 1 for account
 };
 
-export type BidirectionalInfo = 'atob' | 'btoa' | null;
-
 export type SimplifiedOperation = {
   type: TxCategory;
   from: SimplifiedAddress;
@@ -113,7 +112,6 @@ export type SimplifiedOperation = {
   }>;
   metadata: ContractCallMetadata;
   assetAmount?: AssetFuelAmount;
-  bidirectionalInfo?: BidirectionalInfo;
 };
 
 export type SimplifiedFee = {
