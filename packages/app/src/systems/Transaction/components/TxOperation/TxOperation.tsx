@@ -19,7 +19,6 @@ export function TxOperation({ operation }: TxOperationProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const identicalOps = operation.metadata?.identicalOps || [];
-
   return (
     <Box.Stack gap="$2" css={styles.root}>
       {identicalOps.length > 1 && (

@@ -1,4 +1,4 @@
-import { Box, Switch, Text, Tooltip } from '@fuel-ui/react';
+import { Box } from '@fuel-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { useAccounts } from '~/systems/Account';
 import type { CategorizedOperations } from '../../types';
@@ -25,7 +25,6 @@ export function TxOperations({ operations }: TxOperationsListProps) {
     );
   }, [operations.otherRootOperations, showAllDepths]);
 
-  // New memoized variable for intermediate operations (depth !== 0)
   const intermediateOperations = useMemo(() => {
     return [
       ...operations.mainOperations.filter(

@@ -97,7 +97,7 @@ export const TxHeader: TxHeaderComponent = ({ status, id, type }) => {
 
 const styles = {
   root: cssObj({
-    margin: '$2 $1', // To match the card as the main wallet padding cannot be changed now
+    margin: '$2 $1 $3', // To match the card as the main wallet padding cannot be changed now
     fontWeight: '$normal',
     borderRadius: '10px',
     border: 'none',
