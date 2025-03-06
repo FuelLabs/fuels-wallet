@@ -207,11 +207,9 @@ const styles = {
     cssObj({
       display: 'flex',
       backgroundColor: '$bodyBg',
-      // boxShadow: bidirectionalInfo
-      //   ? 'none'
-      //   : '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
-      // boxShadow:
-      //   '0px 0px 0px 1px rgba(32, 32, 32, 0.12), 0px 2px 6px -1px rgba(32, 32, 32, 0.10)',
+      'html[class="fuel_dark-theme"] &': {
+        bg: '$gray3',
+      },
       flex: 1,
       padding: `${direction === 'out' ? '0' : '$4'} $4 ${direction === 'in' ? '0' : '$4'}`,
     }),

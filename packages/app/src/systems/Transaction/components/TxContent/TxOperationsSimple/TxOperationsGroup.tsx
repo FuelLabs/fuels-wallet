@@ -82,6 +82,10 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '2px',
+    'html[class="fuel_dark-theme"] &': {
+      bg: '$gray2',
+      border: '1px solid $gray3',
+    },
   }),
   container: cssObj({}),
   header: cssObj({
@@ -125,7 +129,9 @@ const styles = {
   }),
   chevron: cssObj({
     transition: 'transform 0.3s ease',
-
+    'html[class="fuel_dark-theme"] &': {
+      color: '$gray12',
+    },
     '&[data-expanded=true]': {
       transform: 'rotate(-180deg)',
     },

@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Icon, Text } from '@fuel-ui/react';
-import { BN, ReceiptType } from 'fuels';
+import { Box, Icon, Text, useFuelTheme } from '@fuel-ui/react';
+import { BN } from 'fuels';
 import { useMemo, useState } from 'react';
 import { MotionBox } from '~/systems/Core/components/Motion';
 import type { AssetFlow, SimplifiedOperation } from '../../types';
@@ -65,9 +65,12 @@ function sumAssets(operations: SimplifiedOperation[]): AssetFlow[] {
   return assetFlows;
 }
 
+let _isDark = false;
+
 export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-
+  const { current: theme } = useFuelTheme();
+  _isDark = theme === 'dark';
   const assetSummary = useMemo(() => sumAssets(operations), [operations]);
   // to be able to show a combined view, all root main operations should have the same initiator and recipient
   const operationsInitiator = operations[0]?.from;
@@ -214,19 +217,20 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
 
 const styles = {
   drawer: cssObj({
-    backgroundColor: '$gray5',
+    bg: '$gray5',
     borderRadius: '10px',
-    // border: '1px solid $gray5',
-    // boxShadow:
-    //   '0px 0px 0px 1px rgba(32, 32, 32, 0.12), 0px 2px 6px -1px rgba(32, 32, 32, 0.10)',
     marginBottom: '$2',
     overflow: 'hidden',
+    'html[class="fuel_dark-theme"] &': {
+      bg: '$gray2',
+      border: '1px solid $gray3',
+    },
   }),
   header: cssObj({
     display: 'flex',
     cursor: 'pointer',
     width: '100%',
-    backgroundColor: 'transparent',
+    bg: 'transparent',
     padding: '0 $4',
     alignItems: 'center',
     border: 'none',

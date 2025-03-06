@@ -106,13 +106,19 @@ const styles = {
     '.fuel_copyable-icon': {
       color: '$brand !important',
     },
+    'html[class="fuel_dark-theme"] &': {
+      backgroundColor: '$gray2',
+      border: '1px solid $gray3',
+    },
   }),
   header: cssObj({
     px: '$4',
     py: '$3',
     backgroundColor: '$cardBg',
     borderRadius: '8px',
-    boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
+    'html[class="fuel_light-theme"] &': {
+      boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
+    },
   }),
   circle: cssObj({
     borderRadius: '100%',
