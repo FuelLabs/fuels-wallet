@@ -13,11 +13,9 @@ type TxOperationsDrawerProps = {
 
 // Helper to sum assets by assetId and create proper AssetFlow objects
 function sumAssets(operations: SimplifiedOperation[]): AssetFlow[] {
-  // First group assets by direction and assetId
   const incomingAssets: Record<string, BN> = {};
   const outgoingAssets: Record<string, BN> = {};
 
-  // We'll need addresses for proper AssetFlow objects
   let fromAddress = '';
   let toAddress = '';
   if (operations.length > 0) {
@@ -42,10 +40,8 @@ function sumAssets(operations: SimplifiedOperation[]): AssetFlow[] {
     }
   }
 
-  // Convert to proper AssetFlow objects
   const assetFlows: AssetFlow[] = [];
 
-  // Add incoming assets
   for (const [assetId, amount] of Object.entries(incomingAssets)) {
     assetFlows.push({
       assetId,
@@ -56,7 +52,6 @@ function sumAssets(operations: SimplifiedOperation[]): AssetFlow[] {
     });
   }
 
-  // Add outgoing assets
   for (const [assetId, amount] of Object.entries(outgoingAssets)) {
     assetFlows.push({
       assetId,
@@ -73,12 +68,16 @@ function sumAssets(operations: SimplifiedOperation[]): AssetFlow[] {
 export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // const title = useMemo(() => {
-  //   const count = operations.length;
-  //   return `${count} Contract call${count > 1 ? 's' : ''}`;
-  // }, [operations]);
-
   const assetSummary = useMemo(() => sumAssets(operations), [operations]);
+  // to be able to show a combined view, all root main operations should have the same initiator and recipient
+  const operationsInitiator = operations[0]?.from;
+  const operationsRecipient = operations[0]?.to;
+
+  const allOperationsHaveSameInitiatorAndRecipient = operations.every(
+    (operation) =>
+      operation.from?.address === operationsInitiator?.address &&
+      operation.to?.address === operationsRecipient?.address
+  );
 
   function createOperationCard(
     assetFlows: AssetFlow[],
@@ -89,17 +88,17 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
     );
 
     const isOutgoing = direction === 'out';
-    const firstOp = operations[0];
-
     return {
-      type: TxCategory.CONTRACTCALL,
-      from: isOutgoing ? firstOp?.from : firstOp?.to,
-      to: isOutgoing ? firstOp?.to : firstOp?.from,
+      type:
+        assetsForDirection.length === 0
+          ? TxCategory.CONTRACTCALL
+          : TxCategory.SEND,
+      from: direction === 'in' ? operationsInitiator : operationsRecipient,
+      to: direction === 'in' ? operationsRecipient : operationsInitiator,
       assets: assetsForDirection,
       isFromCurrentAccount: isOutgoing,
       isToCurrentAccount: !isOutgoing,
       metadata: {
-        functionName: isOutgoing ? 'Outgoing Assets' : 'Incoming Assets',
         depth: 0,
         operationCount: assetsForDirection.length,
         isSummary: true,
@@ -114,29 +113,38 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
     setIsExpanded(!isExpanded);
   };
 
-  return (
-    <Box css={styles.drawer} data-expanded={isExpanded}>
-      {operations.length === 0 && (
+  const renderOperations = () => {
+    if (operations.length === 0) {
+      return (
         <Box css={styles.header}>
           <Text fontSize="sm" css={styles.title}>
             No root operations related to this account.
           </Text>
         </Box>
-      )}
-
-      {/* Summary view shown when collapsed */}
-      {operations.length > 0 && (
-        <Box.Flex css={styles.summaryContainer}>
-          <Box.Stack gap="0" css={styles.cardStyle}>
-            <TxOperation operation={createOperationCard(assetSummary, 'in')!} />
-            <TxOperation
-              operation={createOperationCard(assetSummary, 'out')!}
-            />
-          </Box.Stack>
-        </Box.Flex>
-      )}
-      {operations.length > 1 && (
+      );
+    }
+    if (operations.length === 1) {
+      return (
+        <Box css={styles.container}>
+          <Box.Flex css={styles.cardStyle}>
+            <TxOperation operation={operations[0]} />
+          </Box.Flex>
+        </Box>
+      );
+    }
+    if (operations.length > 1 && allOperationsHaveSameInitiatorAndRecipient) {
+      return (
         <>
+          <Box.Flex css={styles.container}>
+            <Box.Stack gap="0" css={styles.cardStyle}>
+              <TxOperation
+                operation={createOperationCard(assetSummary, 'in')!}
+              />
+              <TxOperation
+                operation={createOperationCard(assetSummary, 'out')!}
+              />
+            </Box.Stack>
+          </Box.Flex>
           <Box.Flex
             as="button"
             onClick={handleClick}
@@ -183,7 +191,23 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
             ))}
           </MotionBox>
         </>
-      )}
+      );
+    }
+    return (
+      <Box css={styles.container}>
+        {operations.map((operation, index) => (
+          <TxOperation
+            key={`${operation.type}-${operation?.from}-${operation.to}-${index}`}
+            operation={operation}
+          />
+        ))}
+      </Box>
+    );
+  };
+
+  return (
+    <Box css={styles.drawer} data-expanded={isExpanded}>
+      {renderOperations()}
     </Box>
   );
 }
@@ -231,7 +255,7 @@ const styles = {
     display: 'inline-block',
   }),
   // New styles for summary view
-  summaryContainer: cssObj({
+  container: cssObj({
     padding: '2px',
   }),
   cardStyle: cssObj({
