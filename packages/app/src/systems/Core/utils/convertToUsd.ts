@@ -10,8 +10,9 @@ function countDecimals(value: number): number {
 
   // Handle scientific notation
   if (str.includes('e-')) {
-    const [, exp] = str.split('e-');
-    return Number(exp);
+    const [nonExp, exp] = str.split('e-');
+    const [, decimals] = nonExp.split('.');
+    return Number(exp) + decimals.length;
   }
   return str.split('.')[1]?.length || 0;
 }
@@ -31,11 +32,11 @@ export function convertToUsd(
   const rateDecimals = countDecimals(rate);
   const targetPrecision = getTargetPrecision(rateDecimals, decimals);
 
-  // Convert the rate to a fixed-point integer (truncated to avoid rounding errors).
-  // If the amount has more decimals than the rate, we need to add zeros to the rate.
-  // If not, we don't need to do anything.
-  const ratePrecision = 10 ** targetPrecision;
-  const rateFixed = Math.trunc(rate * ratePrecision);
+  // Get how many decimal places we need to apply to the rate to match the amount precision.
+  // Usually the amount has more decimals than the rate, so we need to add zeros to the rate.
+  const ratePrecision = Math.max(decimals - rateDecimals, 0);
+  const rateUnits = bn.parseUnits(rate.toFixed(rateDecimals), rateDecimals);
+  const rateFixed = rateUnits.mul(bn(10).pow(ratePrecision));
 
   // Get how many decimal places we need to apply to the amount to match the rate precision.
   // Sometimes the rate has more decimals than the amount, so we need to add zeros to the amount.

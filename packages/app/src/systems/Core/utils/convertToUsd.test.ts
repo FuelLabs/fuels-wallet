@@ -1,4 +1,4 @@
-import { DECIMAL_FUEL, bn } from 'fuels';
+import { DECIMAL_FUEL, DECIMAL_WEI, bn } from 'fuels';
 import { convertToUsd } from './convertToUsd';
 
 const MOCK_ETH_RATE = 2742.15;
@@ -54,6 +54,26 @@ describe('Convert to USD', () => {
     );
     expect(formatted).toBe('$24,699,091,436.38');
     expect(value).toBe(24699091436.38);
+  });
+
+  it('should be able to handle large amounts with high precision and regular rate', () => {
+    const { formatted, value } = convertToUsd(
+      bn('123456789999999999900000000000000001'),
+      DECIMAL_WEI,
+      MOCK_ETH_RATE
+    );
+    expect(formatted).toBe('$338,537,036,698,499,999,725.78');
+    expect(value).toBe(338537036698500000000);
+  });
+
+  it('should be able to handle large amounts with high precision decimal and low rate', () => {
+    const { formatted, value } = convertToUsd(
+      bn('123456789999999999900000000000000001'),
+      DECIMAL_WEI,
+      MOCK_REALLY_LOW_RATE
+    );
+    expect(formatted).toBe('$91,691,357,932.99');
+    expect(value).toBe(91691357932.99);
   });
 
   it('should be able to handle lower rates', () => {
