@@ -3,6 +3,7 @@ import { convertToUsd } from './convertToUsd';
 
 const MOCK_ETH_RATE = 2742.15;
 const MOCK_FUEL_RATE = 0.01167;
+const MOCK_SCIENTIFIC_RATE = 1e-7;
 const MOCK_REALLY_LOW_RATE = 0.0000007427;
 
 describe('Convert to USD', () => {
@@ -74,6 +75,16 @@ describe('Convert to USD', () => {
     );
     expect(formatted).toBe('$91,691,357,932.99');
     expect(value).toBe(91691357932.99);
+  });
+
+  it('should be able to handle scientific notation', () => {
+    const { formatted, value } = convertToUsd(
+      bn('10000000'),
+      DECIMAL_WEI,
+      MOCK_SCIENTIFIC_RATE
+    );
+    expect(formatted).toBe('$0.000000000000000001');
+    expect(value).toBe(1e-18);
   });
 
   it('should be able to handle lower rates', () => {

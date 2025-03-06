@@ -11,8 +11,11 @@ function countDecimals(value: number): number {
   // Handle scientific notation
   if (str.includes('e-')) {
     const [nonExp, exp] = str.split('e-');
-    const [, decimals] = nonExp.split('.');
-    return Number(exp) + decimals.length;
+    if (nonExp.includes('.')) {
+      const [, decimals] = nonExp.split('.');
+      return Number(exp) + decimals.length;
+    }
+    return Number(exp);
   }
   return str.split('.')[1]?.length || 0;
 }
