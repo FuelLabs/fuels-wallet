@@ -201,7 +201,7 @@ export const TxContent = {
 
 const styles = {
   content: cssObj({
-    padding: '$3',
+    padding: '$1',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
