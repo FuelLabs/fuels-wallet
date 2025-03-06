@@ -60,7 +60,7 @@ export function TransactionRequest() {
 
   if (!defaultValues) {
     return (
-      <Layout title={title} noBorder>
+      <Layout title={title} warning={txRequest.warning} noBorder>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
           <TxContent.Loader />
@@ -81,7 +81,7 @@ export function TransactionRequest() {
     >
       <AutoSubmit />
 
-      <Layout title={title} noBorder>
+      <Layout title={title} warning={txRequest.warning} noBorder>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
           {shouldShowTxSimulated && txSummarySimulated && (

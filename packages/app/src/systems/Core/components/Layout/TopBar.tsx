@@ -100,23 +100,68 @@ function InternalTopBar({ onBack, isTxScreen: inputIsTxScreen }: TopBarProps) {
 // ----------------------------------------------------------------------------
 
 function ExternalTopBar() {
-  const { isLoading, title, isHome } = useLayoutContext();
-  const { selectedNetwork, handlers } = useNetworks();
+  const { isLoading, title, isHome, warning } = useLayoutContext();
+  const { selectedNetwork } = useNetworks();
 
   return (
-    <Box.Flex as="nav" css={styles.root} data-home={isHome}>
-      <Box.Flex css={{ alignItems: 'center', gap: '$5', flex: 1 }}>
-        {isLoading && <Spinner aria-label="Spinner" />}
-        {!isLoading && <Text css={styles.title}>{title}</Text>}
+    <Box.Stack
+      as="nav"
+      justify="center"
+      css={{
+        ...styles.root,
+        gap: '0',
+        py: '0',
+        minHeight: '72px',
+        alignItems: 'flex-start',
+        backgroundColor: '$cardBg',
+        borderBottom: '1px solid $gray6',
+      }}
+      data-home={isHome}
+    >
+      <Box.Flex css={{ width: '100%' }}>
+        <Box.Flex css={{ flex: 1, minWidth: 0 }}>
+          {isLoading && <Spinner aria-label="Spinner" />}
+          {!isLoading && (
+            <Text
+              css={{
+                ...styles.title,
+                fontWeight: '$semibold',
+              }}
+            >
+              {title}
+            </Text>
+          )}
+        </Box.Flex>
+        {selectedNetwork && (
+          <Box.Flex css={{ flexShrink: 0 }}>
+            <Text
+              as="span"
+              css={{
+                color: '$intentsPrimary10',
+                fontSize: '$xs',
+                mr: '$1',
+              }}
+            >
+              ●
+            </Text>
+            <Text
+              css={{
+                ...styles.title,
+                fontWeight: '$medium',
+              }}
+            >
+              {selectedNetwork.name}
+            </Text>
+          </Box.Flex>
+        )}
       </Box.Flex>
-      {selectedNetwork && (
-        <NetworkDropdown
-          selected={selectedNetwork}
-          onPress={handlers.openNetworks}
-          isDisabled
-        />
+      {warning && (
+        <Box css={styles.warning}>
+          <Icon icon="InfoCircle" stroke={2} size={16} />
+          {warning}
+        </Box>
       )}
-    </Box.Flex>
+    </Box.Stack>
   );
 }
 
@@ -166,7 +211,7 @@ const styles = {
     },
   }),
   title: cssObj({
-    textSize: 'lg',
+    fontSize: '$sm',
     fontWeight: '$normal',
     color: '$intentsBase12',
   }),
@@ -196,5 +241,13 @@ const styles = {
       {
         transform: 'scale(0.97) translateY(-50%)',
       },
+  }),
+  warning: cssObj({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '$1',
+    fontSize: 'calc($sm - 1px)',
+    color: '$gray11',
+    lineHeight: '$tight',
   }),
 };

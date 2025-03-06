@@ -80,7 +80,6 @@ export type TxContentInfoProps = {
   txStatus?: Maybe<TransactionStatus>;
   showDetails?: boolean;
   isLoading?: boolean;
-  isConfirm?: boolean;
   errors?: GroupedErrors;
   fees?: {
     baseFee?: BN;
@@ -96,7 +95,6 @@ function TxContentInfo({
   footer,
   showDetails,
   isLoading,
-  isConfirm,
   errors,
   fees,
   txRequest,
@@ -137,16 +135,6 @@ function TxContentInfo({
 
   function getHeader() {
     if (hasErrors) return <ErrorHeader errors={errors} />;
-    if (isConfirm)
-      return (
-        <Box css={styles.header}>
-          <Text css={styles.reviewTxWarningTitle}>Review Transaction</Text>
-          <Box css={styles.warning}>
-            <Icon icon="InfoCircle" stroke={2} size={16} />
-            Double-check transaction details before submit.
-          </Box>
-        </Box>
-      );
     if (isExecuted)
       return (
         <TxHeader id={tx?.id} type={tx?.type} status={status || undefined} />
@@ -250,14 +238,6 @@ const styles = {
     fontWeight: '$medium',
     lineHeight: '$tight',
     mb: '$1',
-  }),
-  warning: cssObj({
-    display: 'flex',
-    alignItems: 'center',
-    gap: '$1',
-    fontSize: '12px',
-    color: '$gray11',
-    lineHeight: '$tight',
   }),
   feeIconWrapper: cssObj({
     borderRadius: '$full',
