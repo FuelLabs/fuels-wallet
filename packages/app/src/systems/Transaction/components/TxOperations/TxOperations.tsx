@@ -11,7 +11,7 @@ type TxOperationsListProps = {
 
 export function TxOperations({ operations }: TxOperationsListProps) {
   const { account } = useAccounts();
-  const [showAllDepths, setShowAllDepths] = useState(false);
+  const [showAllDepths, _setShowAllDepths] = useState(false);
 
   const mainOperationsToShow = useMemo(() => {
     return operations.mainOperations.filter(
@@ -38,9 +38,9 @@ export function TxOperations({ operations }: TxOperationsListProps) {
   }, [operations.mainOperations, operations.otherRootOperations]);
 
   useEffect(() => {
-    // This was a button toggle, now it is automatic when there are no main operations (rare case)
+    // This was a button toggle, to show all depths when there are no root main operations
     if (mainOperationsToShow.length === 0) {
-      setShowAllDepths(true);
+      // setShowAllDepths(true);
     }
   }, [mainOperationsToShow]);
 
@@ -52,7 +52,7 @@ export function TxOperations({ operations }: TxOperationsListProps) {
         title={`Operations not related to ${account?.name}`}
         operations={otherOperationsToShow}
         showNesting={false}
-        numberLabel={`${operations.otherRootOperations.length}`}
+        numberLabel={`${otherOperationsToShow.length}`}
       />
 
       {intermediateOperations.length > 0 && (
