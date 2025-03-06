@@ -127,7 +127,7 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
       {/* Summary view shown when collapsed */}
       {operations.length > 0 && (
         <Box.Flex css={styles.summaryContainer}>
-          <Box.Stack gap="0" css={styles.assetSummary}>
+          <Box.Stack gap="0" css={styles.cardStyle}>
             <TxOperation operation={createOperationCard(assetSummary, 'in')!} />
             <TxOperation
               operation={createOperationCard(assetSummary, 'out')!}
@@ -136,66 +136,65 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
         </Box.Flex>
       )}
       {operations.length > 1 && (
-        <Box.Flex
-          as="button"
-          onClick={handleClick}
-          css={styles.header}
-          justify="center"
-        >
-          <Text fontSize="sm" css={styles.toggle}>
-            <Icon
-              icon={isExpanded ? 'ArrowsDiagonalMinimize2' : 'ArrowsDiagonal'}
-              css={styles.chevron}
-              data-expanded={isExpanded}
-            />
-            {isExpanded ? 'Collapse' : 'Expand'}
-            <Text fontSize="sm" css={cssObj({ color: '$gray11' })}>
-              {!isExpanded && `(+${operations.length} operations)`}
-            </Text>
-          </Text>
-        </Box.Flex>
-      )}
-      {/* Expanded view with individual operations */}
-      <MotionBox
-        initial={{
-          height: isExpanded ? 'auto' : 0,
-          opacity: isExpanded ? 1 : 0,
-        }}
-        animate={{
-          height: isExpanded ? 'auto' : 0,
-          opacity: isExpanded ? 1 : 0,
-        }}
-        transition={{
-          duration: 0.3,
-          ease: 'easeInOut',
-          opacity: { duration: 0.2 },
-        }}
-        css={styles.expandedOperations}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {operations.map((operation, index) => (
+        <>
           <Box.Flex
-            key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
-            css={[
-              styles.operation,
-              isExpanded ? {} : cssObj({ display: 'none' }),
-            ]}
+            as="button"
+            onClick={handleClick}
+            css={styles.header}
+            justify="center"
           >
-            <TxOperation operation={operation} />
+            <Text fontSize="sm" css={styles.toggle}>
+              <Icon
+                icon={isExpanded ? 'ArrowsDiagonalMinimize2' : 'ArrowsDiagonal'}
+                css={styles.chevron}
+                data-expanded={isExpanded}
+              />
+              {isExpanded ? 'Collapse' : 'Expand'}
+              <Text fontSize="sm" css={cssObj({ color: '$gray11' })}>
+                {!isExpanded && `(+${operations.length} operations)`}
+              </Text>
+            </Text>
           </Box.Flex>
-        ))}
-      </MotionBox>
+          {/* Expanded view with individual operations */}
+          <MotionBox
+            initial={{
+              height: isExpanded ? 'auto' : 0,
+              opacity: isExpanded ? 1 : 0,
+            }}
+            animate={{
+              height: isExpanded ? 'auto' : 0,
+              opacity: isExpanded ? 1 : 0,
+            }}
+            transition={{
+              duration: 0.3,
+              ease: 'easeInOut',
+              opacity: { duration: 0.2 },
+            }}
+            css={styles.expandedOperations}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {operations.map((operation, index) => (
+              <Box.Flex
+                key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
+                css={styles.cardStyle}
+              >
+                <TxOperation operation={operation} />
+              </Box.Flex>
+            ))}
+          </MotionBox>
+        </>
+      )}
     </Box>
   );
 }
 
 const styles = {
   drawer: cssObj({
-    backgroundColor: '$gray3',
-    borderRadius: '8px',
+    backgroundColor: '$gray5',
+    borderRadius: '10px',
     // border: '1px solid $gray5',
-    boxShadow:
-      '0px 0px 0px 1px rgba(32, 32, 32, 0.12), 0px 2px 6px -1px rgba(32, 32, 32, 0.10)',
+    // boxShadow:
+    //   '0px 0px 0px 1px rgba(32, 32, 32, 0.12), 0px 2px 6px -1px rgba(32, 32, 32, 0.10)',
     marginBottom: '$2',
     overflow: 'hidden',
   }),
@@ -224,11 +223,8 @@ const styles = {
   expandedOperations: cssObj({
     display: 'flex',
     flexDirection: 'column',
-    gap: '0',
-  }),
-  operation: cssObj({
-    flex: 1,
-    boxSizing: 'border-box',
+    padding: '2px',
+    gap: '2px', // In the Design, it looks like they are touching, but that is not a border, but a shadow, so we need to add a gap
   }),
   chevron: cssObj({
     transition: 'all 0.2s ease',
@@ -236,9 +232,9 @@ const styles = {
   }),
   // New styles for summary view
   summaryContainer: cssObj({
-    padding: '1px',
+    padding: '2px',
   }),
-  assetSummary: cssObj({
+  cardStyle: cssObj({
     width: '100%',
     borderRadius: '8px',
     overflow: 'hidden',
