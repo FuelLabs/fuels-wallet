@@ -42,7 +42,7 @@ export function TxOperationsGroup({
           </Text>
         </Box.Flex>
         <Icon
-          icon={isExpanded ? 'ChevronDown' : 'Minus'}
+          icon={'ChevronDown'}
           css={styles.chevron}
           data-expanded={isExpanded}
         />
@@ -56,13 +56,16 @@ export function TxOperationsGroup({
           css={styles.content}
           onClick={(e) => e.stopPropagation()}
         >
-          {operations.map((operation, index) =>
-            isExpanded ? (
-              <TxOperation
-                key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
-                operation={operation}
-              />
-            ) : null
+          {operations.map(
+            (operation, index) =>
+              isExpanded && (
+                <Box.Flex
+                  key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
+                  css={styles.cardStyle}
+                >
+                  <TxOperation operation={operation} />
+                </Box.Flex>
+              )
           )}
         </MotionBox>
       </Box>
@@ -74,18 +77,13 @@ const styles = {
   root: cssObj({
     margin: '0 0 $2',
     backgroundColor: '$gray5',
-    borderRadius: '12px',
+    borderRadius: '10px',
     minHeight: '56px',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: '4px',
-    boxSizing: 'border-box',
-    padding: '$1',
+    padding: '2px',
   }),
-  container: cssObj({
-    borderRadius: '8px',
-    overflow: 'hidden',
-  }),
+  container: cssObj({}),
   header: cssObj({
     display: 'flex',
     gap: '$1',
@@ -107,7 +105,7 @@ const styles = {
   content: cssObj({
     display: 'flex',
     flexDirection: 'column',
-    gap: '0',
+    gap: '2px',
   }),
   numberLabel: cssObj({
     backgroundColor: '$gray1',
@@ -129,7 +127,13 @@ const styles = {
     transition: 'transform 0.3s ease',
 
     '&[data-expanded=true]': {
-      transform: 'rotate(360deg)',
+      transform: 'rotate(-180deg)',
     },
+  }),
+  cardStyle: cssObj({
+    width: '100%',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
   }),
 };
