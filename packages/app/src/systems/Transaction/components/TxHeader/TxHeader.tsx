@@ -33,80 +33,86 @@ export const TxHeader: TxHeaderComponent = ({ status, id, type }) => {
 
   return (
     <Card css={styles.root}>
-      <HStack align="center" justify="between" gap="$2">
-        <Box.Flex grow="1" gap="$2">
-          <Text fontSize="sm">ID: </Text>
-          <Text fontSize="sm" color="intentsBase12">
-            {shortAddress(id)}
-          </Text>
-        </Box.Flex>
-        <HStack align="center">
-          <Copyable
-            value={id || ''}
-            iconProps={{
-              icon: Icon.is('Copy'),
-              'aria-label': 'Copy Transaction ID',
-            }}
-            tooltipMessage="Copy Transaction ID"
-          />
-          {href && (
-            <>
-              <Copyable
-                value={href}
-                tooltipMessage="Copy Transaction Link"
-                iconProps={{
-                  icon: Icon.is('Link'),
-                  'aria-label': 'Copy Transaction Link',
-                }}
-              />
-              <Tooltip content="View on Explorer">
-                <Icon
-                  css={styles.icon}
-                  icon={Icon.is('ExternalLink')}
-                  onClick={openExplorer}
-                  aria-label="View on Explorer"
+      <Box css={styles.header}>
+        <HStack align="center" justify="between" gap="$2">
+          <Box.Flex grow="1" gap="$2">
+            <Text fontSize="sm">ID: </Text>
+            <Text fontSize="sm" color="intentsBase12">
+              {shortAddress(id)}
+            </Text>
+          </Box.Flex>
+          <HStack align="center">
+            <Copyable
+              value={id || ''}
+              iconProps={{
+                icon: Icon.is('Copy'),
+                'aria-label': 'Copy Transaction ID',
+              }}
+              tooltipMessage="Copy Transaction ID"
+            />
+            {href && (
+              <>
+                <Copyable
+                  value={href}
+                  tooltipMessage="Copy Transaction Link"
+                  iconProps={{
+                    icon: Icon.is('Link'),
+                    'aria-label': 'Copy Transaction Link',
+                  }}
                 />
-              </Tooltip>
-            </>
-          )}
+                <Tooltip content="View on Explorer">
+                  <Icon
+                    css={styles.icon}
+                    icon={Icon.is('ExternalLink')}
+                    onClick={openExplorer}
+                    aria-label="View on Explorer"
+                  />
+                </Tooltip>
+              </>
+            )}
+          </HStack>
         </HStack>
-      </HStack>
-      <HStack align="center" gap="$2">
-        <Text fontSize="sm">Status: </Text>
-        <Text fontSize="sm" color="intentsBase12">
-          {status}
-        </Text>
-        <Text
-          as="span"
-          aria-label="Status Circle"
-          css={styles.circle}
-          data-status={status}
-        />
-      </HStack>
-      <HStack align="center" gap="$2">
-        <Text fontSize="sm">Type: </Text>
-        <Text fontSize="sm" color="intentsBase12">
-          {type}
-        </Text>
-      </HStack>
+        <HStack align="center" gap="$2">
+          <Text fontSize="sm">Status: </Text>
+          <Text fontSize="sm" color="intentsBase12">
+            {status}
+          </Text>
+          <Text
+            as="span"
+            aria-label="Status Circle"
+            css={styles.circle}
+            data-status={status}
+          />
+        </HStack>
+        <HStack align="center" gap="$2">
+          <Text fontSize="sm">Type: </Text>
+          <Text fontSize="sm" color="intentsBase12">
+            {type}
+          </Text>
+        </HStack>
+      </Box>
     </Card>
   );
 };
 
 const styles = {
   root: cssObj({
-    px: '$4',
-    py: '$3',
-    margin: '$1 $1 0', // To match the card as the main wallet padding cannot be changed now
+    margin: '$2 $1', // To match the card as the main wallet padding cannot be changed now
     fontWeight: '$normal',
-    borderRadius: '8px', // 8px to match the other cards in this PR according to the latest figma but on the other figma with all the views it is 12px
-    boxShadow:
-      '0px 0px 0px 1px rgba(32, 32, 32, 0.12), 0px 2px 6px -1px rgba(32, 32, 32, 0.10)',
+    borderRadius: '10px',
     border: 'none',
-
+    backgroundColor: '$gray5',
+    padding: '2px',
     '.fuel_copyable-icon': {
       color: '$brand !important',
     },
+  }),
+  header: cssObj({
+    px: '$4',
+    py: '$3',
+    backgroundColor: '$cardBg',
+    borderRadius: '8px',
+    boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
   }),
   circle: cssObj({
     borderRadius: '100%',

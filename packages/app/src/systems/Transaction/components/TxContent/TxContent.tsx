@@ -101,9 +101,9 @@ function TxContentInfo({
 }: TxContentInfoProps) {
   const { getValues } = useFormContext<SendFormValues>();
 
-  const _status = txStatus || tx?.status || txStatus;
+  const status = txStatus || tx?.status || txStatus;
   const hasErrors = Boolean(Object.keys(errors || {}).length);
-  const _isExecuted = !!tx?.id;
+  const isExecuted = !!tx?.id && status; // Added status check to ensure the tx is executed, as TX.id is now always present.
   const txRequestGasLimit = getGasLimitFromTxRequest(txRequest);
 
   const { transaction } = useSimplifiedTransaction({
@@ -135,10 +135,10 @@ function TxContentInfo({
 
   function getHeader() {
     if (hasErrors) return <ErrorHeader errors={errors} />;
-    // if (isExecuted)
-    //   return (
-    //     // <TxHeader id={tx?.id} type={tx?.type} status={status || undefined} />
-    //   );
+    if (isExecuted)
+      return (
+        <TxHeader id={tx?.id} type={tx?.type} status={status || undefined} />
+      );
 
     return null;
   }
