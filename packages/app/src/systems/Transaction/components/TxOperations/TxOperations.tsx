@@ -25,6 +25,18 @@ export function TxOperations({ operations }: TxOperationsListProps) {
     );
   }, [operations.otherRootOperations, showAllDepths]);
 
+  // New memoized variable for intermediate operations (depth !== 0)
+  const intermediateOperations = useMemo(() => {
+    return [
+      ...operations.mainOperations.filter(
+        (operation) => operation.metadata.depth !== 0
+      ),
+      ...operations.otherRootOperations.filter(
+        (operation) => operation.metadata.depth !== 0
+      ),
+    ];
+  }, [operations.mainOperations, operations.otherRootOperations]);
+
   useEffect(() => {
     // This was a button toggle, now it is automatic when there are no main operations (rare case)
     if (mainOperationsToShow.length === 0) {
@@ -42,6 +54,15 @@ export function TxOperations({ operations }: TxOperationsListProps) {
         showNesting={false}
         numberLabel={`${operations.otherRootOperations.length}`}
       />
+
+      {intermediateOperations.length > 0 && (
+        <TxOperationsGroup
+          title="Intermediate contract calls"
+          operations={intermediateOperations}
+          showNesting={true}
+          numberLabel={`${intermediateOperations.length}`}
+        />
+      )}
     </Box.Stack>
   );
 }
