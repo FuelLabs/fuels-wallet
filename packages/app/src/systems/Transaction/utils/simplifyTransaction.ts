@@ -86,10 +86,10 @@ function transformOperation(
 
   // @ts-ignore - receipts will exist in future SDK versions
   const operationReceipt = operation.receipts?.[0];
-
+  const operationType = getOperationType(operation);
   // Build base operation object
   const baseOperation = {
-    type: getOperationType(operation),
+    type: operationType,
     from: from ? { address: from.address, type: from.type } : undefined,
     to: to ? { address: to.address, type: to.type } : undefined,
     isFromCurrentAccount: currentAccount
@@ -137,35 +137,6 @@ function transformOperation(
   }
 
   return baseOperation;
-}
-
-function calculateBidirectionalInfo(
-  operations: SimplifiedOperation[],
-  currentIndex: number
-): BidirectionalInfo {
-  return null;
-  // biome-ignore lint/correctness/noUnreachable: Disabled while we confirm expected behaviour.
-  const current = operations[currentIndex];
-  const next = operations[currentIndex + 1];
-  const previous = operations[currentIndex - 1];
-
-  if (
-    next &&
-    next.from.address === current.to.address &&
-    next.to.address === current.from.address
-  ) {
-    return 'atob';
-  }
-
-  if (
-    previous &&
-    previous.from.address === current.to.address &&
-    previous.to.address === current.from.address
-  ) {
-    return 'btoa';
-  }
-
-  return null;
 }
 
 export function transformOperations(
@@ -224,10 +195,7 @@ export function transformOperations(
   });
 
   // Calculate bidirectional info for each operation
-  return operations.map((op, index) => ({
-    ...op,
-    bidirectionalInfo: calculateBidirectionalInfo(operations, index),
-  }));
+  return operations;
 }
 
 function findIdenticalOperations(operations: SimplifiedOperation[]): {
@@ -374,13 +342,8 @@ function categorizeOperations(
     }
   }
 
-  console.log('main', main);
-  console.log('otherRoot', otherRoot);
-
   // Group similar operations in each category
   const groupedMain = groupSimilarOperations(main);
-  console.log('assetsTotalFrom', assetsTotalFrom);
-  console.log('assetsTotalTo', assetsTotalTo);
   return {
     mainOperations: groupedMain,
     mainOperationsAssetTotals: {
