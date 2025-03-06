@@ -150,19 +150,22 @@ function TxContentInfo({
         <TxOperations operations={transaction.categorizedOperations} />
         {isLoading && !showDetails && <TxFee.Loader />}
         {showDetails && !fees && (
-          <Box.Flex align="center">
-            <Box css={styles.feeIconWrapper}>
-              <Icon icon="CurrencyCent" css={styles.feeIcon} />
-            </Box>
-            <TxFee fee={transaction?.fee.total} />
-          </Box.Flex>
+          <Box.VStack align="flex-start" css={styles.feeWrapper}>
+            <Box.HStack gap="$2" align="center">
+              <Box css={styles.feeIconWrapper}>
+                <Icon icon="CurrencyCent" css={styles.feeIcon} />
+              </Box>
+              <Text css={styles.title}>Fee (network)</Text>
+            </Box.HStack>
+            <TxFee fee={transaction?.fee.total} title=" " />
+          </Box.VStack>
         )}
         {showDetails &&
           fees?.baseFee &&
           txRequestGasLimit &&
           fees?.regularTip &&
           fees?.fastTip && (
-            <Box>
+            <Box css={styles.feeWrapper}>
               <Box.Flex gap="18px" align="center" css={styles.feeContainer}>
                 <Icon icon="CurrencyCent" css={styles.icon} />
                 <Text css={styles.title}>Fee (network)</Text>
@@ -198,6 +201,14 @@ const styles = {
     fontSize: '$sm',
     fontWeight: '$medium',
     color: '$gray12',
+  }),
+  feeWrapper: cssObj({
+    border: '1px solid $gray7',
+    padding: '$2',
+    borderRadius: '10px',
+    'html[class="fuel_dark-theme"] &': {
+      border: '1px solid $gray3',
+    },
   }),
   feeContainer: cssObj({
     py: '$4',
@@ -244,6 +255,7 @@ const styles = {
     border: '1px solid $intentsBase11',
     ml: '$3',
     mr: '$2',
+    my: '$2',
   }),
   feeIcon: cssObj({
     color: '$intentsBase11',

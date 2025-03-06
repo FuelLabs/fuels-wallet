@@ -5,13 +5,23 @@ export const styles = {
     cssObj({
       padding: title ? '$3 $4' : '$3 $2',
       flexDirection: title ? 'row' : 'column',
-      justifyContent: 'space-between',
-      alignItems: title ? 'center' : 'flex-start',
+      alignItems: 'flex-start',
+      boxSizing: 'border-box',
+      width: '100%',
       display: 'flex',
       columnGap: title ? '$4' : '$6',
       gap: title ? undefined : '$1',
       position: 'relative',
       cursor: pointer ? 'pointer' : 'auto',
+      backgroundColor: '$cardBg',
+      borderRadius: '8px',
+      'html[class="fuel_light-theme"] &': {
+        boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
+      },
+      'html[class="fuel_dark-theme"] &': {
+        backgroundColor: '$gray2',
+        border: '1px solid $gray3',
+      },
 
       ...(active && {
         '&::after': {
