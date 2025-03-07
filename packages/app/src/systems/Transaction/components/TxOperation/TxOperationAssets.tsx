@@ -1,9 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Badge, Box, Image, Text } from '@fuel-ui/react';
+import { Avatar, Badge, Box, Icon, Image, Text } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import type { AssetFuelData } from '@fuel-wallet/types';
 import { bn } from 'fuels';
-import { formatAmount } from '~/systems/Core';
+import { useEffect, useRef, useState } from 'react';
+import { formatAmount, shortAddress } from '~/systems/Core';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 
 type TxOperationAssetsProps = {
@@ -11,11 +12,51 @@ type TxOperationAssetsProps = {
   baseAsset?: AssetFuelData;
 };
 
+function TxNFTImage({ assetId, image }: { assetId: string; image: string }) {
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [fallback, setFallback] = useState(false);
+
+  useEffect(() => {
+    if (imgRef.current?.complete) {
+      if (imgRef.current.naturalWidth) {
+        return;
+      }
+      setFallback(true);
+    }
+  }, []);
+
+  if (!image || fallback) {
+    return (
+      <Box css={styles.emptyNFT}>
+        <Icon icon={Icon.is('FileOff')} size={16} />
+      </Box>
+    );
+  }
+
+  return (
+    <Box css={styles.nftImageWrapper}>
+      <Image
+        ref={imgRef}
+        src={image}
+        alt={shortAddress(assetId)}
+        css={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        onError={() => setFallback(true)}
+      />
+    </Box>
+  );
+}
+
 export function TxOperationAssets({
   amounts,
   baseAsset,
 }: TxOperationAssetsProps) {
   const getAssetImage = (asset: AssetFuelAmount) => {
+    if (asset.isNft && asset.metadata?.image) {
+      return (
+        <TxNFTImage assetId={asset.assetId} image={asset.metadata.image} />
+      );
+    }
+
     if (asset?.icon) {
       return (
         <Image
@@ -47,7 +88,9 @@ export function TxOperationAssets({
       <Box.Stack gap="$1">
         {nonEmptyAmounts.map((assetAmount) => (
           <Box.Flex css={styles.asset} key={assetAmount.assetId}>
-            {getAssetImage(assetAmount)}
+            <Box css={assetAmount.isNft ? styles.nftImageContainer : {}}>
+              {getAssetImage(assetAmount)}
+            </Box>
             <Box css={styles.amountContainer}>
               <Box.Flex direction="column">
                 <Box.Flex gap="$2" align="center">
@@ -56,13 +99,14 @@ export function TxOperationAssets({
                     className="amount-value"
                     aria-label="amount-container"
                   >
-                    {formatAmount({
-                      amount: assetAmount.amount,
-                      options: {
-                        units: assetAmount.decimals || 0,
-                        precision: assetAmount.decimals || 0,
-                      },
-                    })}{' '}
+                    {!assetAmount.isNft &&
+                      formatAmount({
+                        amount: assetAmount.amount,
+                        options: {
+                          units: assetAmount.decimals || 0,
+                          precision: assetAmount.decimals || 0,
+                        },
+                      })}{' '}
                     {assetAmount.symbol || 'Unknown'}
                   </Text>
                   {baseAsset?.rate &&
@@ -80,15 +124,6 @@ export function TxOperationAssets({
                         )
                       </Text>
                     )}
-                  {assetAmount.isNft && (
-                    <Badge
-                      variant="ghost"
-                      intent="primary"
-                      css={styles.assetNft}
-                    >
-                      NFT
-                    </Badge>
-                  )}
                 </Box.Flex>
               </Box.Flex>
             </Box>
@@ -118,6 +153,33 @@ const styles = {
     alignItems: 'center',
     gap: '$2',
     marginTop: '$1',
-    minHeight: '24px',
+    minHeight: '40px', // Increased to accommodate NFT image height
+  }),
+  nftImageContainer: cssObj({
+    width: '40px',
+    height: '40px',
+    minWidth: '40px',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }),
+  nftImageWrapper: cssObj({
+    width: '100%',
+    height: '100%',
+    borderRadius: '6px',
+    overflow: 'hidden',
+  }),
+  emptyNFT: cssObj({
+    width: '40px',
+    height: '40px',
+    borderRadius: '8px',
+    border: '1px solid $cardBorder',
+    backgroundColor: '$cardBg',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '$gray9',
   }),
 };

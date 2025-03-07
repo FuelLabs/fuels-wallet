@@ -77,7 +77,13 @@ export function TxOperationCard({
       }
       return 'Calls contract';
     }
-    if (isTransfer) return 'Sends token';
+    if (isTransfer) {
+      // If all sent assets are NFTs, return 'Sends NFT'
+      if (assetsAmount?.every((asset) => asset.isNft)) {
+        return 'Sends NFT';
+      }
+      return 'Sends token';
+    }
     return 'Unknown';
   };
 
