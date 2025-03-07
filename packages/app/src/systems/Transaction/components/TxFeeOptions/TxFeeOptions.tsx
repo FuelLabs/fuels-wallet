@@ -187,7 +187,7 @@ export const TxFeeOptions = ({
             </VStack>
           </MotionStack>
         ) : (
-          <MotionStack {...animations.slideInTop()} key="regular" gap="$2">
+          <MotionStack {...animations.slideInTop()} key="regular">
             <RadioGroup
               value={options.find((o) => o.tip.eq(tip.value.amount))?.name}
               onValueChange={(value) => {
@@ -201,6 +201,9 @@ export const TxFeeOptions = ({
                 });
                 onRecalculate?.(option.tip);
               }}
+              css={cssObj({
+                gap: '0',
+              })}
             >
               {options.map((option) => (
                 <TxFeeRadio
@@ -228,6 +231,7 @@ export const TxFeeOptions = ({
               fontSize: '12px',
               lineHeight: '16px',
               fontWeight: '$medium',
+              color: '$gray12',
               textDecoration: 'underline',
             })}
           >

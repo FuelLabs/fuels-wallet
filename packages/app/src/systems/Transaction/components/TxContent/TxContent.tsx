@@ -166,10 +166,12 @@ function TxContentInfo({
           fees?.regularTip &&
           fees?.fastTip && (
             <Box css={styles.feeWrapper}>
-              <Box.Flex gap="18px" align="center" css={styles.feeContainer}>
-                <Icon icon="CurrencyCent" css={styles.icon} />
+              <Box.HStack gap="$2" align="center">
+                <Box css={styles.feeIconWrapper}>
+                  <Icon icon="CurrencyCent" css={styles.feeIcon} />
+                </Box>
                 <Text css={styles.title}>Fee (network)</Text>
-              </Box.Flex>
+              </Box.HStack>
               <TxFeeOptions
                 initialAdvanced={initialAdvanced}
                 baseFee={fees.baseFee}
