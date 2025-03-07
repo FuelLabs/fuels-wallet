@@ -25,10 +25,11 @@ export function TxView() {
       title="Transaction"
       isLoading={ctx.isFetching || ctx.isFetchingResult}
     >
-      <Layout.TopBar onBack={() => navigate(-1)} />
+      <Layout.TopBar onBack={() => navigate(-1)} isTxScreen />
       <Layout.Content
         css={{
           padding: '0',
+          backgroundColor: '$intentsBase3',
         }}
       >
         {ctx.shouldShowAlert && (
