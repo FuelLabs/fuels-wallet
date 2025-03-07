@@ -1,62 +1,44 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect } from 'react';
-import { Services, store } from '~/store';
-import { VaultService } from '~/systems/Vault';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
 
-import type { UnlockMachineState } from '../machines';
+const schema = yup
+  .object({
+    password: yup.string().required('Password is required'),
+  })
+  .required();
 
-const selectors = {
-  error(state: UnlockMachineState) {
-    return state.context.error;
-  },
-  isLoading(state: UnlockMachineState) {
-    return state.hasTag('loading');
-  },
-  isUnlocked(state: UnlockMachineState) {
-    return state.matches('unlocked');
-  },
-  isReseting(state: UnlockMachineState) {
-    return state.matches('reseting');
-  },
+export type UseUnlockFormReturn = ReturnType<typeof useUnlockForm>;
+
+export type UnlockFormValues = {
+  password: string;
 };
 
-export function useUnlock() {
-  const error = store.useSelector(Services.unlock, selectors.error);
-  const isLoading = store.useSelector(Services.unlock, selectors.isLoading);
-  const isUnlocked = store.useSelector(Services.unlock, selectors.isUnlocked);
-  const isReseting = store.useSelector(Services.unlock, selectors.isReseting);
+export type UnlockFormValuesErrors = Partial<Record<keyof UnlockFormValues, string>>;
 
-  // Lock Wallet when Vault is locked
-  useEffect(() => {
-    const onLock = () => {
-      store.checkLock();
-    };
-    VaultService.on('lock', onLock);
-    return () => {
-      VaultService.off('lock', onLock);
-    };
-  }, []);
-
-  store.useUpdateMachineConfig(Services.unlock, {
-    actions: {
-      reload: () => window.location.reload(),
+export function useUnlockForm(formErrors?: UnlockFormValuesErrors) {
+  const form = useForm<UnlockFormValues>({
+    resolver: yupResolver(schema),
+    reValidateMode: 'onChange',
+    mode: 'onChange',
+    defaultValues: {
+      password: '',
     },
   });
 
-  function reset() {
-    store.send(Services.unlock, {
-      type: 'RESET_WALLET',
-    });
-  }
+  useEffect(() => {
+    if (formErrors) {
+      Object.entries(formErrors).forEach(([key, message]) => {
+        if (message) {
+          form.setError(key as keyof UnlockFormValues, {
+            type: 'manual',
+            message,
+          });
+        }
+      });
+    }
+  }, [formErrors, form.setError]);
 
-  return {
-    error,
-    isLoading,
-    isUnlocked,
-    isReseting,
-    handlers: {
-      unlock: store.unlock,
-      lock: store.lock,
-      reset,
-    },
-  };
+  return form;
 }
