@@ -53,7 +53,9 @@ export function TxOperationAssets({
   const getAssetImage = (asset: AssetFuelAmount) => {
     if (asset.isNft && asset.metadata?.image) {
       return (
-        <TxNFTImage assetId={asset.assetId} image={asset.metadata.image} />
+        <Box css={styles.nftImageContainer}>
+          <TxNFTImage assetId={asset.assetId} image={asset.metadata.image} />
+        </Box>
       );
     }
 
@@ -88,9 +90,7 @@ export function TxOperationAssets({
       <Box.Stack gap="$1">
         {nonEmptyAmounts.map((assetAmount) => (
           <Box.Flex css={styles.asset} key={assetAmount.assetId}>
-            <Box css={assetAmount.isNft ? styles.nftImageContainer : {}}>
-              {getAssetImage(assetAmount)}
-            </Box>
+            {getAssetImage(assetAmount)}
             <Box css={styles.amountContainer}>
               <Box.Flex direction="column">
                 <Box.Flex gap="$2" align="center">
@@ -99,15 +99,22 @@ export function TxOperationAssets({
                     className="amount-value"
                     aria-label="amount-container"
                   >
-                    {!assetAmount.isNft &&
-                      formatAmount({
-                        amount: assetAmount.amount,
-                        options: {
-                          units: assetAmount.decimals || 0,
-                          precision: assetAmount.decimals || 0,
-                        },
-                      })}{' '}
-                    {assetAmount.symbol || 'Unknown'}
+                    {!assetAmount.isNft ? (
+                      <>
+                        {formatAmount({
+                          amount: assetAmount.amount,
+                          options: {
+                            units: assetAmount.decimals || 0,
+                            precision: assetAmount.decimals || 0,
+                          },
+                        })}
+                        {assetAmount.symbol || 'Unknown'}
+                      </>
+                    ) : (
+                      <Text as="span" className="nft-name">
+                        {assetAmount.metadata?.name}
+                      </Text>
+                    )}
                   </Text>
                   {baseAsset?.rate &&
                     assetAmount.amount &&
@@ -153,23 +160,23 @@ const styles = {
     alignItems: 'center',
     gap: '$2',
     marginTop: '$1',
-    minHeight: '40px', // Increased to accommodate NFT image height
+    minHeight: '24px',
   }),
   nftImageContainer: cssObj({
-    width: '40px',
-    height: '40px',
-    minWidth: '40px',
-    borderRadius: '8px',
-    overflow: 'hidden',
+    width: '35px',
+    height: '35px',
     display: 'flex',
-    justifyContent: 'center',
+    overflow: 'hidden',
+    borderRadius: '$md',
     alignItems: 'center',
+    boxSizing: 'border-box',
+    justifyContent: 'center',
+    backgroundColor: '$gray6',
+    border: '1.5px solid $cardBg',
   }),
   nftImageWrapper: cssObj({
     width: '100%',
     height: '100%',
-    borderRadius: '6px',
-    overflow: 'hidden',
   }),
   emptyNFT: cssObj({
     width: '40px',

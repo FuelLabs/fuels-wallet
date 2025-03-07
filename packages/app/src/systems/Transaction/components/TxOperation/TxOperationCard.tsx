@@ -80,7 +80,7 @@ export function TxOperationCard({
     if (isTransfer) {
       // If all sent assets are NFTs, return 'Sends NFT'
       if (assetsAmount?.every((asset) => asset.isNft)) {
-        return 'Sends NFT';
+        return `Sends NFT${assetsAmount?.length > 1 ? 's' : ''}`;
       }
       return 'Sends token';
     }
