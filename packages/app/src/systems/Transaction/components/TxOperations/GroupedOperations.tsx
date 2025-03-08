@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon, Text } from '@fuel-ui/react';
-import { useState } from 'react';
+import { BN } from 'fuels';
+import { useMemo, useState } from 'react';
 import { MotionBox } from '~/systems/Core/components/Motion';
 import type { AssetFlow, SimplifiedOperation } from '../../types';
 import { TxCategory } from '../../types';
@@ -9,18 +10,68 @@ import { operationsStyles as styles } from './TxOperationsStyles';
 
 type GroupedOperationsProps = {
   operations: SimplifiedOperation[];
-  assetSummary: AssetFlow[];
   operationsInitiator: SimplifiedOperation['from'];
   operationsRecipient: SimplifiedOperation['to'];
 };
+function sumAssets(operations: SimplifiedOperation[]): AssetFlow[] {
+  const incomingAssets: Record<string, BN> = {};
+  const outgoingAssets: Record<string, BN> = {};
 
+  let fromAddress = '';
+  let toAddress = '';
+  if (operations.length > 0) {
+    const firstOp = operations[0];
+    fromAddress = firstOp.from?.address || '';
+    toAddress = firstOp.to?.address || '';
+  }
+
+  for (const op of operations) {
+    if (!op.assets?.length) continue;
+
+    for (const asset of op.assets) {
+      const { assetId, amount } = asset;
+      const direction = op.isFromCurrentAccount
+        ? outgoingAssets
+        : incomingAssets;
+
+      if (!direction[assetId]) {
+        direction[assetId] = new BN(0);
+      }
+      direction[assetId] = direction[assetId].add(amount);
+    }
+  }
+
+  const assetFlows: AssetFlow[] = [];
+
+  for (const [assetId, amount] of Object.entries(incomingAssets)) {
+    assetFlows.push({
+      assetId,
+      amount,
+      from: fromAddress,
+      to: toAddress,
+      type: 'in',
+    });
+  }
+
+  for (const [assetId, amount] of Object.entries(outgoingAssets)) {
+    assetFlows.push({
+      assetId,
+      amount,
+      from: toAddress,
+      to: fromAddress,
+      type: 'out',
+    });
+  }
+
+  return assetFlows;
+}
 export function GroupedOperations({
   operations,
-  assetSummary,
   operationsInitiator,
   operationsRecipient,
 }: GroupedOperationsProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const assetSummary = useMemo(() => sumAssets(operations), [operations]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -28,7 +79,6 @@ export function GroupedOperations({
     setIsExpanded(!isExpanded);
   };
 
-  // This function was moved from TxOperationsDrawer
   function createOperationCard(
     assetFlows: AssetFlow[],
     direction: 'in' | 'out'
@@ -83,7 +133,6 @@ export function GroupedOperations({
           </Text>
         </Text>
       </Box.Flex>
-      {/* Expanded view with individual operations */}
       <MotionBox
         initial={{
           height: isExpanded ? 'auto' : 0,
