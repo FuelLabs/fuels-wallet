@@ -69,7 +69,7 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
   const { current: theme } = useFuelTheme();
   _isDark = theme === 'dark';
   const assetSummary = useMemo(() => sumAssets(operations), [operations]);
-  // to be able to show a combined view, all root main operations should have the same initiator and recipient
+
   const operationsInitiator = operations[0]?.from;
   const operationsRecipient = operations[0]?.to;
 
