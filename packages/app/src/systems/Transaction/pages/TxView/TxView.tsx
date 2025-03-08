@@ -26,12 +26,7 @@ export function TxView() {
       isLoading={ctx.isFetching || ctx.isFetchingResult}
     >
       <Layout.TopBar onBack={() => navigate(-1)} isTxScreen />
-      <Layout.Content
-        css={{
-          padding: '0',
-          backgroundColor: '$intentsBase3',
-        }}
-      >
+      <Layout.Content>
         {ctx.shouldShowAlert && (
           <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
         )}
