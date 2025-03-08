@@ -34,7 +34,6 @@ export const TxApprove = () => {
                 </Button>
               )
             }
-            isConfirm
           />
         )}
         {ctx.shouldShowTxExecuted && ctx.txSummaryExecuted && (
