@@ -93,10 +93,10 @@ function transformOperation(
     from: from ? { address: from.address, type: from.type } : undefined,
     to: to ? { address: to.address, type: to.type } : undefined,
     isFromCurrentAccount: currentAccount
-      ? from?.address === currentAccount.toLowerCase()
+      ? from?.address.toLowerCase() === currentAccount.toLowerCase()
       : false,
     isToCurrentAccount: currentAccount
-      ? to?.address === currentAccount.toLowerCase()
+      ? to?.address.toLowerCase() === currentAccount.toLowerCase()
       : false,
     // Include the receipt if it exists
     receipts: operationReceipt ? [operationReceipt] : undefined,
@@ -313,28 +313,27 @@ function groupSimilarOperations(
 }
 
 function categorizeOperations(
-  operations: SimplifiedOperation[],
-  _currentAccount?: string
+  operations: SimplifiedOperation[]
 ): CategorizedOperations {
   const main: SimplifiedOperation[] = [];
   const otherRoot: SimplifiedOperation[] = [];
-
+  const otherOperations: SimplifiedOperation[] = [];
   // First pass: separate operations
   for (const op of operations) {
+    console.log('opd', op.metadata.depth);
     if (op.isFromCurrentAccount || op.isToCurrentAccount) {
       main.push(op);
-    } else {
+    } else if (op.metadata.depth === 0) {
       otherRoot.push(op);
+    } else {
+      otherOperations.push(op);
     }
   }
 
-  // Calculate asset totals for mainOperations
   const assetsTotalFrom: Array<{ assetId: string; amount: BN }> = [];
   const assetsTotalTo: Array<{ assetId: string; amount: BN }> = [];
 
-  // Aggregate assets across all main operations
   for (const op of main) {
-    console.log('op', op);
     if (op.isFromCurrentAccount) {
       assetsTotalFrom.push(...(op.assets || []));
     } else {
@@ -342,7 +341,6 @@ function categorizeOperations(
     }
   }
 
-  // Group similar operations in each category
   const groupedMain = groupSimilarOperations(main);
   return {
     mainOperations: groupedMain,

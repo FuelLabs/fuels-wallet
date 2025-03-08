@@ -1,5 +1,4 @@
 import { Box } from '@fuel-ui/react';
-import { useEffect, useMemo, useState } from 'react';
 import { useAccounts } from '~/systems/Account';
 import type { CategorizedOperations } from '../../types';
 import { TxOperationsGroup } from '../TxContent/TxOperationsSimple/TxOperationsGroup';
@@ -11,55 +10,23 @@ type TxOperationsListProps = {
 
 export function TxOperations({ operations }: TxOperationsListProps) {
   const { account } = useAccounts();
-  const [showAllDepths, _setShowAllDepths] = useState(false);
-
-  const mainOperationsToShow = useMemo(() => {
-    return operations.mainOperations.filter(
-      (operation) => showAllDepths || operation.metadata.depth === 0
-    );
-  }, [operations.mainOperations, showAllDepths]);
-
-  const otherOperationsToShow = useMemo(() => {
-    return operations.otherRootOperations.filter(
-      (operation) => showAllDepths || operation.metadata.depth === 0
-    );
-  }, [operations.otherRootOperations, showAllDepths]);
-
-  const intermediateOperations = useMemo(() => {
-    return [
-      ...operations.mainOperations.filter(
-        (operation) => operation.metadata.depth !== 0
-      ),
-      ...operations.otherRootOperations.filter(
-        (operation) => operation.metadata.depth !== 0
-      ),
-    ];
-  }, [operations.mainOperations, operations.otherRootOperations]);
-
-  useEffect(() => {
-    // This was a button toggle, to show all depths when there are no root main operations
-    if (mainOperationsToShow.length === 0) {
-      // setShowAllDepths(true);
-    }
-  }, [mainOperationsToShow]);
 
   return (
     <Box.Stack gap="$2">
-      <TxOperationsDrawer operations={mainOperationsToShow} />
+      <TxOperationsDrawer operations={operations.mainOperations} />
 
       <TxOperationsGroup
         title={`Operations not related to ${account?.name}`}
-        operations={otherOperationsToShow}
+        operations={operations.otherRootOperations}
         showNesting={false}
-        numberLabel={`${otherOperationsToShow.length}`}
+        numberLabel={`${operations.otherRootOperations.length}`}
       />
-
-      {intermediateOperations.length > 0 && (
+      {operations.otherOperations && (
         <TxOperationsGroup
           title="Intermediate contract calls"
-          operations={intermediateOperations}
+          operations={operations.otherOperations}
           showNesting={true}
-          numberLabel={`${intermediateOperations.length}`}
+          numberLabel={`${operations.otherOperations.length}`}
         />
       )}
     </Box.Stack>
