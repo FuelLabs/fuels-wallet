@@ -3,21 +3,18 @@ import type { SimplifiedOperation } from '../../types';
 import { TxOperation } from '../TxOperation';
 import { GroupedOperations } from './GroupedOperations';
 import { operationsStyles as styles } from './TxOperationsStyles';
+
 type TxOperationsDrawerProps = {
   operations: SimplifiedOperation[];
 };
 
 export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
-  const operationsInitiator = operations[0]?.from;
-  const operationsRecipient = operations[0]?.to;
-
-  const isTwoWayTx = operations.every(
-    (operation) =>
-      (operation.from?.address === operationsInitiator?.address ||
-        operation.to?.address === operationsInitiator?.address) &&
-      (operation.to?.address === operationsRecipient?.address ||
-        operation.from?.address === operationsRecipient?.address)
-  );
+  // Check if this is a user -> contract -> user flow
+  // Only group operations when a user sends to a contract and receives back
+  const isUserContractUserFlow =
+    operations.length > 1 &&
+    operations.some((op) => op.isFromCurrentAccount && op.to?.type === 0) &&
+    operations.some((op) => op.isToCurrentAccount && op.from?.type === 0);
 
   const renderOperations = () => {
     if (operations.length === 0) {
@@ -30,15 +27,10 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
       );
     }
 
-    if (operations.length > 1 && isTwoWayTx) {
-      return (
-        <GroupedOperations
-          operations={operations}
-          operationsInitiator={operationsInitiator}
-          operationsRecipient={operationsRecipient}
-        />
-      );
+    if (isUserContractUserFlow) {
+      return <GroupedOperations operations={operations} />;
     }
+
     return (
       <Box.VStack css={styles.container}>
         {operations.map((operation, index) => (

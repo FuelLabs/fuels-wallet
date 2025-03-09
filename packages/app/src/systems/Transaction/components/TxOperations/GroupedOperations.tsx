@@ -10,20 +10,10 @@ import { operationsStyles as styles } from './TxOperationsStyles';
 
 type GroupedOperationsProps = {
   operations: SimplifiedOperation[];
-  operationsInitiator: SimplifiedOperation['from'];
-  operationsRecipient: SimplifiedOperation['to'];
 };
 function sumAssets(operations: SimplifiedOperation[]): AssetFlow[] {
   const incomingAssets: Record<string, BN> = {};
   const outgoingAssets: Record<string, BN> = {};
-
-  let fromAddress = '';
-  let toAddress = '';
-  if (operations.length > 0) {
-    const firstOp = operations[0];
-    fromAddress = firstOp.from?.address || '';
-    toAddress = firstOp.to?.address || '';
-  }
 
   for (const op of operations) {
     if (!op.assets?.length) continue;
@@ -44,35 +34,42 @@ function sumAssets(operations: SimplifiedOperation[]): AssetFlow[] {
   const assetFlows: AssetFlow[] = [];
 
   for (const [assetId, amount] of Object.entries(incomingAssets)) {
+    const fromOp = operations.find(
+      (op) =>
+        !op.isFromCurrentAccount &&
+        op.assets?.some((a) => a.assetId === assetId)
+    );
+
     assetFlows.push({
       assetId,
       amount,
-      from: fromAddress,
-      to: toAddress,
+      from: fromOp?.from?.address || '',
+      to: fromOp?.to?.address || '',
       type: 'in',
     });
   }
 
   for (const [assetId, amount] of Object.entries(outgoingAssets)) {
+    const toOp = operations.find(
+      (op) =>
+        op.isFromCurrentAccount && op.assets?.some((a) => a.assetId === assetId)
+    );
+
     assetFlows.push({
       assetId,
       amount,
-      from: toAddress,
-      to: fromAddress,
+      from: toOp?.from?.address || '',
+      to: toOp?.to?.address || '',
       type: 'out',
     });
   }
 
   return assetFlows;
 }
-export function GroupedOperations({
-  operations,
-  operationsInitiator,
-  operationsRecipient,
-}: GroupedOperationsProps) {
+
+export function GroupedOperations({ operations }: GroupedOperationsProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const assetSummary = useMemo(() => sumAssets(operations), [operations]);
-
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -84,20 +81,19 @@ export function GroupedOperations({
     direction: 'in' | 'out'
   ) {
     const assetsForDirection = assetFlows.filter(
-      (asset) => asset.type === direction
+      (asset) => asset.type !== direction
     );
 
-    const isOutgoing = direction === 'out';
+    const userToContractOp = operations.find((op) => op.isFromCurrentAccount);
+
     return {
       type:
         assetsForDirection.length === 0
           ? TxCategory.CONTRACTCALL
           : TxCategory.SEND,
-      from: direction === 'in' ? operationsInitiator : operationsRecipient,
-      to: direction === 'in' ? operationsRecipient : operationsInitiator,
+      from: userToContractOp?.from,
+      to: userToContractOp?.to,
       assets: assetsForDirection,
-      isFromCurrentAccount: isOutgoing,
-      isToCurrentAccount: !isOutgoing,
       metadata: {
         depth: 0,
         operationCount: assetsForDirection.length,

@@ -104,8 +104,8 @@ export type SimplifiedOperation = {
   type: TxCategory;
   from: SimplifiedAddress;
   to: SimplifiedAddress;
-  isFromCurrentAccount: boolean;
-  isToCurrentAccount: boolean;
+  isFromCurrentAccount?: boolean;
+  isToCurrentAccount?: boolean;
   assets?: Array<{
     amount: BN;
     assetId: string;
