@@ -92,7 +92,7 @@ export function GroupedOperations({ operations }: GroupedOperationsProps) {
           ? TxCategory.CONTRACTCALL
           : TxCategory.SEND,
       from: userToContractOp?.from,
-      to: userToContractOp?.to,
+      to: direction === 'in' ? userToContractOp?.to : userToContractOp?.from,
       assets: assetsForDirection,
       metadata: {
         depth: 0,
