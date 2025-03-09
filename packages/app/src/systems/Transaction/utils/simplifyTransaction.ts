@@ -17,11 +17,6 @@ import { TxCategory } from '../types';
 import type { CategorizedOperations, SimplifiedTransaction } from '../types';
 import type { AssetFlow } from '../types';
 
-type TransactionRequestWithOrigin = TransactionRequest & {
-  origin?: string;
-  favIconUrl?: string;
-};
-
 type ParsedReceiptData = {
   indent: number;
   arrow: string;
@@ -324,6 +319,7 @@ function getOperationDepth(
   if (receiptIndex !== -1) {
     depth = parsedReceipts[receiptIndex].indent;
   }
+  console.log('depth', depth);
   return depth;
 }
 
@@ -342,32 +338,16 @@ export function simplifyTransaction(
 
   const categorizedOperations = categorizeOperations(operations);
 
-  const requestWithOrigin = request as TransactionRequestWithOrigin;
-  const origin = requestWithOrigin?.origin;
-  const favicon = requestWithOrigin?.favIconUrl;
-
   const simplifiedTransaction = {
     id: summary.id,
     operations,
     categorizedOperations,
-    timestamp: summary.time ? new Date(summary.time) : undefined,
     fee: {
       total: new BN(summary.fee || 0),
       network: new BN(summary.fee || 0).sub(new BN(request?.tip || 0)),
       tip: new BN(request?.tip || 0),
       gasUsed: new BN(summary.gasUsed || 0),
       gasPrice: new BN(0),
-    },
-    origin: origin
-      ? {
-          name: origin,
-          favicon,
-          url: origin,
-        }
-      : undefined,
-    original: {
-      summary,
-      request,
     },
   };
   return simplifiedTransaction;

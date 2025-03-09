@@ -132,17 +132,7 @@ export type SimplifiedTransaction = {
   id: string;
   operations: SimplifiedOperation[];
   categorizedOperations: CategorizedOperations;
-  timestamp?: Date;
   fee: SimplifiedFee;
-  origin?: {
-    name: string;
-    favicon?: string;
-    url?: string;
-  };
-  original: {
-    summary: TransactionSummary;
-    request?: TransactionRequest;
-  };
 };
 
 export interface AssetFlow {
@@ -151,19 +141,4 @@ export interface AssetFlow {
   from: string;
   to: string;
   type: 'in' | 'out'; // from perspective of current user
-}
-
-export interface SimplifiedAssetFlows {
-  assetsIn: AssetFlow[];
-  assetsOut: AssetFlow[];
-  fees: {
-    gasUsed: BN;
-    networkFee: BN;
-    tip: BN;
-    otherFees: AssetFlow[]; // Other fees paid in various assets
-  };
-  contractInteractions: Array<{
-    contractId: string;
-    functionName?: string;
-  }>;
 }
