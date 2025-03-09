@@ -1,71 +1,16 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon, Text } from '@fuel-ui/react';
-import { BN } from 'fuels';
 import { useMemo, useState } from 'react';
 import { MotionBox } from '~/systems/Core/components/Motion';
 import type { AssetFlow, SimplifiedOperation } from '../../types';
 import { TxCategory } from '../../types';
+import { sumAssets } from '../../utils/simplifyTransaction';
 import { TxOperation } from '../TxOperation';
 import { operationsStyles as styles } from './TxOperationsStyles';
 
 type GroupedOperationsProps = {
   operations: SimplifiedOperation[];
 };
-function sumAssets(operations: SimplifiedOperation[]): AssetFlow[] {
-  const incomingAssets: Record<string, BN> = {};
-  const outgoingAssets: Record<string, BN> = {};
-
-  for (const op of operations) {
-    if (!op.assets?.length) continue;
-
-    for (const asset of op.assets) {
-      const { assetId, amount } = asset;
-      const direction = op.isFromCurrentAccount
-        ? outgoingAssets
-        : incomingAssets;
-
-      if (!direction[assetId]) {
-        direction[assetId] = new BN(0);
-      }
-      direction[assetId] = direction[assetId].add(amount);
-    }
-  }
-
-  const assetFlows: AssetFlow[] = [];
-
-  for (const [assetId, amount] of Object.entries(incomingAssets)) {
-    const fromOp = operations.find(
-      (op) =>
-        !op.isFromCurrentAccount &&
-        op.assets?.some((a) => a.assetId === assetId)
-    );
-
-    assetFlows.push({
-      assetId,
-      amount,
-      from: fromOp?.from?.address || '',
-      to: fromOp?.to?.address || '',
-      type: 'in',
-    });
-  }
-
-  for (const [assetId, amount] of Object.entries(outgoingAssets)) {
-    const toOp = operations.find(
-      (op) =>
-        op.isFromCurrentAccount && op.assets?.some((a) => a.assetId === assetId)
-    );
-
-    assetFlows.push({
-      assetId,
-      amount,
-      from: toOp?.from?.address || '',
-      to: toOp?.to?.address || '',
-      type: 'out',
-    });
-  }
-
-  return assetFlows;
-}
 
 export function GroupedOperations({ operations }: GroupedOperationsProps) {
   const [isExpanded, setIsExpanded] = useState(false);

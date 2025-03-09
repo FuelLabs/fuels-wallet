@@ -16,7 +16,6 @@ import type {
   TransactionSummary,
 } from 'fuels';
 import type { OperationFunctionCall } from 'fuels';
-import type { ReactNode } from 'react';
 
 export enum TxCategory {
   SEND = 'send',
@@ -112,6 +111,7 @@ export type SimplifiedOperation = {
   }>;
   metadata: ContractCallMetadata;
   assetAmount?: AssetFuelAmount;
+  receipts?: Receipt[];
 };
 
 export type SimplifiedFee = {
