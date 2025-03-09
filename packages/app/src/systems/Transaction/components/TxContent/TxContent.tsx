@@ -153,11 +153,11 @@ function TxContentInfo({
           <Box.VStack align="flex-start" css={styles.feeWrapper}>
             <Box.HStack gap="$2" align="center">
               <Box css={styles.feeIconWrapper}>
-                <Icon icon="CurrencyCent" css={styles.feeIcon} />
+                <Icon icon="CurrencyCent" css={styles.feeIcon} size={16} />
               </Box>
               <Text css={styles.title}>Fee (network)</Text>
             </Box.HStack>
-            <TxFee fee={transaction?.fee.total} title=" " />
+            <TxFee fee={transaction?.fee.total} />
           </Box.VStack>
         )}
         {showDetails &&
@@ -194,7 +194,6 @@ export const TxContent = {
 
 const styles = {
   content: cssObj({
-    padding: '$1',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -205,8 +204,7 @@ const styles = {
     color: '$gray12',
   }),
   feeWrapper: cssObj({
-    border: '1px solid $gray7',
-    padding: '$2',
+    padding: '$2 2px',
     borderRadius: '10px',
     'html[class="fuel_dark-theme"] &': {
       border: '1px solid $gray3',
@@ -215,6 +213,20 @@ const styles = {
   feeContainer: cssObj({
     py: '$4',
     pl: '$2',
+  }),
+  feeIconWrapper: cssObj({
+    borderRadius: '$full',
+    border: '1px solid $intentsBase11',
+    ml: '$4',
+    mr: '10px',
+    my: '$2',
+  }),
+  feeIcon: cssObj({
+    color: '$intentsBase11',
+    m: '2px',
+    '& svg': {
+      strokeWidth: '2px',
+    },
   }),
   icon: cssObj({
     border: '1.5px solid $gray9',
@@ -251,19 +263,5 @@ const styles = {
     fontWeight: '$medium',
     lineHeight: '$tight',
     mb: '$1',
-  }),
-  feeIconWrapper: cssObj({
-    borderRadius: '$full',
-    border: '1px solid $intentsBase11',
-    ml: '$3',
-    mr: '$2',
-    my: '$2',
-  }),
-  feeIcon: cssObj({
-    color: '$intentsBase11',
-    m: '2px',
-    '& svg': {
-      strokeWidth: '2px',
-    },
   }),
 };

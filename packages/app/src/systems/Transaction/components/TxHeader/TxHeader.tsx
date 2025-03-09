@@ -36,8 +36,10 @@ export const TxHeader: TxHeaderComponent = ({ status, id, type }) => {
       <Box css={styles.header}>
         <HStack align="center" justify="between" gap="$2">
           <Box.Flex grow="1" gap="$2">
-            <Text fontSize="sm">ID: </Text>
-            <Text fontSize="sm" color="intentsBase12">
+            <Text fontSize="sm" css={styles.headerRowTitle}>
+              ID:
+            </Text>
+            <Text fontSize="sm" css={styles.headerRowValue}>
               {shortAddress(id)}
             </Text>
           </Box.Flex>
@@ -73,8 +75,10 @@ export const TxHeader: TxHeaderComponent = ({ status, id, type }) => {
           </HStack>
         </HStack>
         <HStack align="center" gap="$2">
-          <Text fontSize="sm">Status: </Text>
-          <Text fontSize="sm" color="intentsBase12">
+          <Text fontSize="sm" css={styles.headerRowTitle}>
+            Status:{' '}
+          </Text>
+          <Text fontSize="sm" css={styles.headerRowValue}>
             {status}
           </Text>
           <Text
@@ -85,8 +89,10 @@ export const TxHeader: TxHeaderComponent = ({ status, id, type }) => {
           />
         </HStack>
         <HStack align="center" gap="$2">
-          <Text fontSize="sm">Type: </Text>
-          <Text fontSize="sm" color="intentsBase12">
+          <Text fontSize="sm" css={styles.headerRowTitle}>
+            Type:{' '}
+          </Text>
+          <Text fontSize="sm" css={styles.headerRowValue}>
             {type}
           </Text>
         </HStack>
@@ -97,7 +103,6 @@ export const TxHeader: TxHeaderComponent = ({ status, id, type }) => {
 
 const styles = {
   root: cssObj({
-    margin: '$2 $1 $3', // To match the card as the main wallet padding cannot be changed now
     fontWeight: '$normal',
     borderRadius: '10px',
     border: 'none',
@@ -120,10 +125,18 @@ const styles = {
       boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
     },
   }),
+  headerRowTitle: cssObj({
+    minWidth: '50px',
+  }),
+  headerRowValue: cssObj({
+    color: '$textHeading',
+    fontWeight: '$medium',
+    textTransform: 'capitalize',
+  }),
   circle: cssObj({
     borderRadius: '100%',
-    width: 6,
-    height: 6,
+    width: 8,
+    height: 8,
     cursor: 'default',
 
     [`&[data-status="${TransactionStatus.success}"]`]: {

@@ -1,9 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
 
 export const styles = {
-  detailItem: (active = false, pointer = false, title = false) =>
+  detailItem: (active = false, hasCheckbox = false, title = false) =>
     cssObj({
-      padding: title ? '$3 $4' : '$3 $2',
+      padding: hasCheckbox ? '$3 $4' : '$3 $4 $3 $14',
       flexDirection: title ? 'row' : 'column',
       alignItems: 'flex-start',
       boxSizing: 'border-box',
@@ -12,7 +12,7 @@ export const styles = {
       columnGap: title ? '$4' : '$6',
       gap: title ? undefined : '$1',
       position: 'relative',
-      cursor: pointer ? 'pointer' : 'auto',
+      cursor: hasCheckbox ? 'pointer' : 'auto',
       backgroundColor: '$cardBg',
       borderRadius: '8px',
       'html[class="fuel_light-theme"] &': {

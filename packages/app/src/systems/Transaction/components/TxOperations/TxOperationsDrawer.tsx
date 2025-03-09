@@ -30,6 +30,7 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
       );
     }
 
+    // here we should have both single or twoWayTx
     if (operations.length > 1 && isTwoWayTx) {
       return (
         <GroupedOperations

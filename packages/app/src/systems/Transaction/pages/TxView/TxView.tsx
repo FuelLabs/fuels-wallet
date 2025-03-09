@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Layout, scrollable } from '~/systems/Core';
+import { Layout, coreStyles } from '~/systems/Core';
 import { useNetworks } from '~/systems/Network';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxStatusAlert } from '../../components';
@@ -25,8 +25,8 @@ export function TxView() {
       title="Transaction"
       isLoading={ctx.isFetching || ctx.isFetchingResult}
     >
-      <Layout.TopBar onBack={() => navigate(-1)} isTxScreen />
-      <Layout.Content>
+      <Layout.TopBar onBack={() => navigate(-1)} />
+      <Layout.Content css={styles.content} noScroll>
         {ctx.shouldShowAlert && (
           <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
         )}
@@ -43,3 +43,15 @@ export function TxView() {
     </Layout>
   );
 }
+
+const styles = {
+  content: cssObj({
+    ...coreStyles.scrollable('$intentsBase3'),
+    borderTop: '1px solid $gray6',
+    backgroundColor: '$intentsBase3',
+    padding: '$2 10px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '$2',
+  }),
+};

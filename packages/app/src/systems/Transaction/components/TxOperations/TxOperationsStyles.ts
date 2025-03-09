@@ -29,7 +29,7 @@ export const operationsStyles = {
   }),
   container: cssObj({
     padding: '2px',
-    gap: '2px',
+    gap: '$2',
   }),
   cardStyle: cssObj({
     width: '100%',

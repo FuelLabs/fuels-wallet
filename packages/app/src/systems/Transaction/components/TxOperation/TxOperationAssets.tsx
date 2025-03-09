@@ -96,7 +96,7 @@ export function TxOperationAssets({
                 <Box.Flex gap="$2" align="center">
                   <Text
                     as="span"
-                    className="amount-value"
+                    color="textHeading"
                     aria-label="amount-container"
                   >
                     {!assetAmount.isNft ? (
@@ -107,7 +107,7 @@ export function TxOperationAssets({
                             units: assetAmount.decimals || 0,
                             precision: assetAmount.decimals || 0,
                           },
-                        })}
+                        })}{' '}
                         {assetAmount.symbol || 'Unknown'}
                       </>
                     ) : (
@@ -119,7 +119,7 @@ export function TxOperationAssets({
                   {baseAsset?.rate &&
                     assetAmount.amount &&
                     assetAmount.assetId === baseAsset.assetId && (
-                      <Text color="gray8">
+                      <Text color="textSubtext">
                         (
                         {
                           convertToUsd(
@@ -144,7 +144,7 @@ export function TxOperationAssets({
 const styles = {
   amountContainer: cssObj({
     fontWeight: '$semibold',
-    color: '$gray12',
+    color: '$textHeading',
     fontSize: '$sm',
     whiteSpace: 'nowrap',
     overflow: 'hidden',

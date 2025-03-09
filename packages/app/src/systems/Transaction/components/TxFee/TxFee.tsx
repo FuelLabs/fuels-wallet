@@ -73,13 +73,15 @@ export const TxFee: TxFeeComponent = ({
       css={styles.detailItem(!!checked, !!onChecked, !!title)}
       onClick={() => onChecked?.(true)}
     >
-      <Text
-        color="intentsBase12"
-        css={styles.title}
-        aria-label={`fee title:${title || 'Network'}`}
-      >
-        {title || 'Fee (network)'}
-      </Text>
+      {title ? (
+        <Text
+          color="intentsBase12"
+          css={styles.title}
+          aria-label={`fee title:${title || 'Network'}`}
+        >
+          {title || 'Fee (network)'}
+        </Text>
+      ) : null}
       <HStack gap="$1">
         <AnimatePresence>
           {!ready ? (

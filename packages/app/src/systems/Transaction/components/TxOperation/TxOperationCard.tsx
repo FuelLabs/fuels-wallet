@@ -118,6 +118,7 @@ export function TxOperationCard({
                 size="sm"
                 hash={fuelFromAddress}
                 aria-label={fuelFromAddress}
+                css={styles.avatar}
               />
             </Box.Flex>
             <Box.Flex
@@ -236,13 +237,13 @@ const styles = {
   }),
   name: cssObj({
     fontWeight: '$semibold',
-    color: '$gray12',
+    color: '$textHeading',
     mr: '$1',
   }),
   address: cssObj({
     fontWeight: '$medium',
     fontSize: '$sm',
-    color: '$gray11',
+    color: '$textSubText',
   }),
   blue: cssObj({
     fontSize: '$sm',
@@ -254,7 +255,7 @@ const styles = {
   }),
   amountContainer: cssObj({
     fontWeight: '$semibold',
-    color: '$gray12',
+    color: '$textHeading',
     fontSize: '$sm',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
@@ -262,5 +263,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '$1',
+  }),
+  avatar: cssObj({
+    // apply opacity to make the avatar color less alive and more opaque
+    opacity: 0.6,
   }),
 };
