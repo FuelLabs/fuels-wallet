@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.50.2
+
+### Patch Changes
+
+- [#1866](https://github.com/FuelLabs/fuels-wallet/pull/1866) [`4c201edf`](https://github.com/FuelLabs/fuels-wallet/commit/4c201edfd39b57dd0cae37da84a780e66afd99fa) Thanks [@helciofranco](https://github.com/helciofranco)! - fix: improve precision handling for USD conversion with really low rates (e.g. 0.0000007427)
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.50.2
+  - @fuels/playwright-utils@0.50.2
+
 ## 0.50.1
 
 ### Patch Changes
