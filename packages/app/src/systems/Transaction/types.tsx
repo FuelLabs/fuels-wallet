@@ -9,11 +9,9 @@ import type {
   OutputContract,
   OutputContractCreated,
   Receipt,
-  ReceiptType,
   TransactionRequestInput,
   TransactionRequestLike,
 } from 'fuels';
-import type { OperationFunctionCall } from 'fuels';
 
 export enum TxCategory {
   SEND = 'send',
@@ -52,45 +50,8 @@ export enum OperationDirection {
   unknown = 'Unknown',
 }
 
-export type GroupedAssets = {
-  [assetId: string]: {
-    amount: BN;
-    assetId: string;
-    assetAmount?: AssetFuelAmount;
-  };
-};
-
-type IdenticalOpsGroup = {
-  operation: SimplifiedOperation;
-  count: number;
-  instances: SimplifiedOperation[];
-};
-
 export type ContractCallMetadata = {
-  contractId?: string;
-  functionName?: string;
-  functionData?: OperationFunctionCall;
-  amount?: BN;
-  assetId?: string;
   depth?: number;
-  receiptType?: ReceiptType;
-  assetAmount?: AssetFuelAmount;
-  operationCount?: number;
-  groupedAssets?: Record<string, SimplifiedOperation['assets']>;
-  childOperations?: SimplifiedOperation[];
-  identicalOps?: Array<IdenticalOpsGroup>;
-  direction?: 'in' | 'out';
-};
-
-export type SwapMetadata = {
-  isSwap: boolean;
-  receiveAmount: string;
-  receiveAssetId: string;
-  totalAmount?: BN;
-  operationCount?: number;
-  receipts?: Receipt[];
-  depth?: number;
-  parentReceiptId?: string;
 };
 
 export type SimplifiedAddress = {
@@ -144,5 +105,4 @@ export interface AssetFlow {
   amount: BN;
   from: string;
   to: string;
-  type: 'in' | 'out'; // from perspective of current user
 }
