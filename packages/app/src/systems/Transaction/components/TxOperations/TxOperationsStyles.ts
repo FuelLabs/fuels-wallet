@@ -60,11 +60,16 @@ export const operationsStyles = {
     display: 'flex',
     flexDirection: 'column',
     padding: '2px',
-    gap: '2px', // In the Design, it looks like they are touching, but that is not a border, but a shadow, so we need to add a gap
+    gap: '2px',
   }),
   chevron: cssObj({
-    transition: 'all 0.2s ease',
-    display: 'inline-block',
+    transition: 'transform 0.3s ease',
+    'html[class="fuel_dark-theme"] &': {
+      color: '$gray12',
+    },
+    '&[data-expanded=true]': {
+      transform: 'rotate(-180deg)',
+    },
   }),
   contentCol: cssObj({
     display: 'flex',

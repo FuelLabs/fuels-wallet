@@ -9,13 +9,11 @@ type TxOperationsGroupProps = {
   title: string;
   operations: SimplifiedOperation[];
   showNesting?: boolean;
-  numberLabel?: string;
 };
 
 export function TxOperationsGroup({
   title,
   operations,
-  numberLabel,
 }: TxOperationsGroupProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -36,7 +34,6 @@ export function TxOperationsGroup({
         justify="space-between"
       >
         <Box.Flex gap="$2" align="center">
-          <Text css={styles.numberLabel}>{numberLabel}</Text>
           <Text fontSize="sm" css={styles.title}>
             {title}
           </Text>
@@ -47,7 +44,7 @@ export function TxOperationsGroup({
           data-expanded={isExpanded}
         />
       </Box.Flex>
-      <Box css={styles.container}>
+      <Box>
         <MotionBox
           animate={{
             height: isExpanded ? 'auto' : 0,
@@ -87,7 +84,6 @@ const styles = {
       border: '1px solid $gray3',
     },
   }),
-  container: cssObj({}),
   header: cssObj({
     display: 'flex',
     gap: '$1',
@@ -110,22 +106,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '2px',
-  }),
-  numberLabel: cssObj({
-    backgroundColor: '$gray1',
-    borderRadius: '$full',
-    color: '$gray12',
-    border: '1.5px solid $gray8',
-    width: '20px',
-    height: '20px',
-    minWidth: '20px',
-    minHeight: '20px',
-    padding: '0',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '13px',
-    fontWeight: '600',
   }),
   chevron: cssObj({
     transition: 'transform 0.3s ease',

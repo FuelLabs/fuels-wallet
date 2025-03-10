@@ -24,8 +24,6 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
       );
     }
 
-    // return <GroupedOperations operations={operations[0]} />;
-
     return (
       <Box.VStack>
         {operations.map((operation, index) => (

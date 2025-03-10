@@ -19,14 +19,12 @@ export function TxOperations({ operations }: TxOperationsListProps) {
         title={`Operations not related to ${account?.name}`}
         operations={operations.notRelatedToCurrentAccount}
         showNesting={false}
-        numberLabel={`${operations.notRelatedToCurrentAccount.length}`}
       />
       {operations.intermediateContractCalls && (
         <TxOperationsGroup
           title="Intermediate contract calls"
           operations={operations.intermediateContractCalls}
           showNesting={true}
-          numberLabel={`${operations.intermediateContractCalls.length}`}
         />
       )}
     </Box.Stack>
