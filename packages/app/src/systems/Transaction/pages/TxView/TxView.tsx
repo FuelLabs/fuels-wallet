@@ -27,21 +27,19 @@ export function TxView() {
       isLoading={ctx.isFetching || ctx.isFetchingResult}
     >
       <Layout.TopBar onBack={() => navigate(-1)} />
-      <Layout.Content css={styles.content}>
-        <Box css={styles.contentInner}>
-          {ctx.shouldShowAlert && (
-            <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
-          )}
-          {txResult && (
-            <FormProvider {...form}>
-              <TxContent.Info
-                tx={txResult}
-                isLoading={ctx.isFetching}
-                showDetails={ctx.shouldShowTxFee}
-              />
-            </FormProvider>
-          )}
-        </Box>
+      <Layout.Content css={styles.content} noScroll>
+        {ctx.shouldShowAlert && (
+          <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
+        )}
+        {txResult && (
+          <FormProvider {...form}>
+            <TxContent.Info
+              tx={txResult}
+              isLoading={ctx.isFetching}
+              showDetails={ctx.shouldShowTxFee}
+            />
+          </FormProvider>
+        )}
       </Layout.Content>
     </Layout>
   );
@@ -49,15 +47,19 @@ export function TxView() {
 
 const styles = {
   content: cssObj({
+    ...coreStyles.scrollable('$intentsBase3'),
     borderTop: '1px solid $gray6',
-    backgroundColor: '$intentsBase3',
-    padding: '$2 10px',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     gap: '$2',
+    backgroundColor: '$intentsBase3',
+    padding: '$2 0 $2 $3',
+    overflowY: 'scroll !important',
+    '&::-webkit-scrollbar': {
+      width: '$3',
+      backgroundColor: 'transparent',
+    },
   }),
-  contentInner: cssObj({
-    ...coreStyles.scrollable('$intentsBase3'),
-    height: '100%',
-  }),
+  contentInner: cssObj({}),
 };
