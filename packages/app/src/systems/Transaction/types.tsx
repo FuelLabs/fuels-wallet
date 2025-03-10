@@ -128,12 +128,6 @@ export type SimplifiedFee = {
 
 export type CategorizedOperations = {
   mainOperations: SimplifiedOperation[];
-  otherRootOperations: SimplifiedOperation[];
-  otherOperations: SimplifiedOperation[];
-};
-
-export type CategorizedV2Operations = {
-  mainOperations: SimplifiedOperation[];
   intermediateContractCalls: SimplifiedOperation[];
   notRelatedToCurrentAccount: SimplifiedOperation[];
 };
@@ -142,7 +136,6 @@ export type SimplifiedTransaction = {
   id: string;
   operations: SimplifiedOperation[];
   categorizedOperations: CategorizedOperations;
-  categorizedV2Operations: CategorizedV2Operations;
   fee: SimplifiedFee;
 };
 

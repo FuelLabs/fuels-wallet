@@ -15,7 +15,7 @@ import {
 } from 'fuels';
 import type { SimplifiedOperation } from '../types';
 import { TxCategory } from '../types';
-import type { CategorizedOperations, SimplifiedTransaction } from '../types';
+import type { SimplifiedTransaction } from '../types';
 import type { AssetFlow } from '../types';
 
 type ParsedReceiptData = {
@@ -161,152 +161,6 @@ function transformOperations(
   return operations;
 }
 
-function findIdenticalOperations(operations: SimplifiedOperation[]): {
-  identicalGroups: SimplifiedOperation[];
-  remainingOps: SimplifiedOperation[];
-} {
-  const processed = new Set<string>();
-  const identicalGroups: SimplifiedOperation[] = [];
-  const remainingOps: SimplifiedOperation[] = [];
-
-  for (const [index, op] of operations.entries()) {
-    const opKey = `${op.type}-${op.from.address}-${op.to.address}-${op.metadata?.depth}-${op.metadata?.functionName}`;
-    if (processed.has(opKey)) continue;
-
-    const identicals = operations.filter((other, otherIndex) => {
-      if (index === otherIndex) return false;
-      return (
-        op.type === other.type &&
-        op.from.address === other.from.address &&
-        op.to.address === other.to.address &&
-        op.metadata?.depth === other.metadata?.depth &&
-        // op.metadata?.functionName === other.metadata?.functionName &&
-        JSON.stringify(op.assets?.map((a) => a.assetId)) ===
-          JSON.stringify(other.assets?.map((a) => a.assetId))
-      );
-    });
-
-    if (identicals.length > 0) {
-      const combinedAssets = [...(op.assets || [])].map((asset) => ({
-        assetId: asset.assetId,
-        amount: identicals.reduce((sum, other) => {
-          const otherAsset = other.assets?.find(
-            (a) => a.assetId === asset.assetId
-          );
-          return sum.add(otherAsset?.amount || new BN(0));
-        }, asset.amount),
-      }));
-
-      const groupedOp: SimplifiedOperation = {
-        ...op,
-        assets: combinedAssets,
-        metadata: {
-          ...op.metadata,
-          identicalOps: [
-            {
-              operation: op,
-              count: identicals.length + 1,
-              instances: [op, ...identicals],
-            },
-          ],
-        },
-      };
-
-      identicalGroups.push(groupedOp);
-
-      processed.add(opKey);
-      for (const identical of identicals) {
-        const identicalKey = `${identical.type}-${identical.from.address}-${identical.to.address}-${identical.metadata?.depth}-${identical.metadata?.functionName}`;
-        processed.add(identicalKey);
-      }
-    } else {
-      remainingOps.push(op);
-    }
-  }
-
-  return { identicalGroups, remainingOps };
-}
-
-function groupSimilarOperations(
-  operations: SimplifiedOperation[]
-): SimplifiedOperation[] {
-  const { identicalGroups, remainingOps } = findIdenticalOperations(operations);
-
-  const baseGroups = remainingOps.reduce(
-    (acc, op) => {
-      const key = `${op.type}-${op.from.address}-${op.to.address}-${op.metadata?.depth}`;
-      if (!acc[key]) {
-        acc[key] = {
-          ...op,
-          metadata: {
-            ...op.metadata,
-            operationCount: 1,
-            groupedAssets: {},
-            childOperations: [op],
-          },
-        };
-      } else {
-        acc[key].metadata.operationCount! += 1;
-        acc[key].metadata.childOperations!.push(op);
-
-        for (const asset of op.assets || []) {
-          const existing = acc[key].metadata.groupedAssets![asset.assetId];
-          if (existing) {
-            if (existing[0]) {
-              existing[0].amount = existing[0].amount.add(asset.amount);
-            } else {
-              existing[0] = { amount: asset.amount, assetId: asset.assetId };
-            }
-          } else {
-            acc[key].metadata.groupedAssets![asset.assetId] = [
-              { amount: asset.amount, assetId: asset.assetId },
-            ];
-          }
-        }
-      }
-      return acc;
-    },
-    {} as Record<string, SimplifiedOperation>
-  );
-
-  return [...identicalGroups, ...Object.values(baseGroups)];
-}
-
-function categorizeOperations(
-  operations: SimplifiedOperation[]
-): CategorizedOperations {
-  const main: SimplifiedOperation[] = [];
-  const otherRoot: SimplifiedOperation[] = [];
-  const otherOperations: SimplifiedOperation[] = [];
-
-  for (const op of operations) {
-    if (op.isFromCurrentAccount || op.isToCurrentAccount) {
-      main.push(op);
-    } else if (op.metadata.depth === 0) {
-      otherRoot.push(op);
-    } else {
-      otherOperations.push(op);
-    }
-  }
-
-  const assetsTotalFrom: Array<{ assetId: string; amount: BN }> = [];
-  const assetsTotalTo: Array<{ assetId: string; amount: BN }> = [];
-
-  for (const op of main) {
-    if (op.isFromCurrentAccount) {
-      assetsTotalFrom.push(...(op.assets || []));
-    } else {
-      assetsTotalTo.push(...(op.assets || []));
-    }
-  }
-
-  const groupedMain = groupSimilarOperations(main);
-  return {
-    mainOperations: groupedMain,
-    otherRootOperations: groupSimilarOperations(otherRoot),
-    otherOperations: groupSimilarOperations(otherOperations),
-  };
-}
 function getOperationDepth(
   operation: SimplifiedOperation,
   parsedReceipts: ParsedReceiptData[]
@@ -334,15 +188,12 @@ export function simplifyTransaction(
     parsedReceipts
   );
 
-  const categorizedV2 = categorizeOperationsV2(operations);
-
-  const categorizedOperations = categorizeOperations(operations);
+  const categorizedOperations = categorizeOperationsV2(operations);
 
   const simplifiedTransaction = {
     id: summary.id,
     operations,
     categorizedOperations,
-    categorizedV2Operations: categorizedV2,
     fee: {
       total: new BN(summary.fee || 0),
       network: new BN(summary.fee || 0).sub(new BN(request?.tip || 0)),
@@ -351,7 +202,6 @@ export function simplifyTransaction(
       gasPrice: new BN(0),
     },
   };
-  console.log('simplifiedTransaction', simplifiedTransaction);
   return simplifiedTransaction;
 }
 
