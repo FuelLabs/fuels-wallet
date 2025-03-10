@@ -9,9 +9,6 @@ type TxOperationsDrawerProps = {
 };
 
 export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
-  // Check if this is a user -> contract -> user flow
-  // Only group operations when a user sends to a contract and receives back
-
   const renderOperations = () => {
     if (!operations?.length) {
       // TODO add a loading state
