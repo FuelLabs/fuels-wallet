@@ -1,4 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
+import { Box } from '@fuel-ui/react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Layout, coreStyles } from '~/systems/Core';
@@ -26,19 +27,21 @@ export function TxView() {
       isLoading={ctx.isFetching || ctx.isFetchingResult}
     >
       <Layout.TopBar onBack={() => navigate(-1)} />
-      <Layout.Content css={styles.content} noScroll>
-        {ctx.shouldShowAlert && (
-          <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
-        )}
-        {txResult && (
-          <FormProvider {...form}>
-            <TxContent.Info
-              tx={txResult}
-              isLoading={ctx.isFetching}
-              showDetails={ctx.shouldShowTxFee}
-            />
-          </FormProvider>
-        )}
+      <Layout.Content css={styles.content}>
+        <Box css={styles.contentInner}>
+          {ctx.shouldShowAlert && (
+            <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
+          )}
+          {txResult && (
+            <FormProvider {...form}>
+              <TxContent.Info
+                tx={txResult}
+                isLoading={ctx.isFetching}
+                showDetails={ctx.shouldShowTxFee}
+              />
+            </FormProvider>
+          )}
+        </Box>
       </Layout.Content>
     </Layout>
   );
@@ -46,12 +49,15 @@ export function TxView() {
 
 const styles = {
   content: cssObj({
-    ...coreStyles.scrollable('$intentsBase3'),
     borderTop: '1px solid $gray6',
     backgroundColor: '$intentsBase3',
     padding: '$2 10px',
     display: 'flex',
     flexDirection: 'column',
     gap: '$2',
+  }),
+  contentInner: cssObj({
+    ...coreStyles.scrollable('$intentsBase3'),
+    height: '100%',
   }),
 };

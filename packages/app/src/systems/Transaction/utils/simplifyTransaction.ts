@@ -586,7 +586,40 @@ export function getMainOperations(
   });
   if (transferOperationsNotGrouped.length > 0) {
     // @TODO: group transfers
-    mainOperations.push(...transferOperationsNotGrouped);
+    if (transferOperationsNotGrouped.length === 1) {
+      mainOperations.push(...transferOperationsNotGrouped);
+    } else {
+      const groupedEqualTransfers = transferOperationsNotGrouped.reduce(
+        (acc, op) => {
+          return {
+            // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
+            ...acc,
+            [`${op.from.address}-${op.to.address}`]: [
+              ...(acc[op.from.address + op.to.address] || []),
+              op,
+            ],
+          };
+        },
+        {} as Record<string, SimplifiedOperation[]>
+      );
+
+      for (const [, ops] of Object.entries(groupedEqualTransfers)) {
+        const assetsFromTo = Object.entries(onlySumAssets(ops)).map(
+          ([assetId, amount]) => ({ assetId, amount })
+        );
+
+        const groupedTransferOperation = {
+          ...ops[0],
+          assets: assetsFromTo,
+          operations: [...ops],
+          metadata: {
+            depth: 0,
+          },
+        };
+
+        mainOperations.push(groupedTransferOperation);
+      }
+    }
   }
 
   return mainOperations;
