@@ -104,16 +104,6 @@ const styles = {
     gap: '$2',
     color: '$gray12',
   }),
-  operationCount: cssObj({
-    marginTop: '$2',
-    marginLeft: '$2',
-    marginBottom: '$3',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '$1',
-    justifyContent: 'center',
-    cursor: 'pointer',
-  }),
   expandedOperations: cssObj({
     display: 'flex',
     flexDirection: 'column',

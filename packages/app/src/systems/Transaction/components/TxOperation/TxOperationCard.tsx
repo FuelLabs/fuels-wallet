@@ -15,7 +15,7 @@ export type TxOperationCardProps = {
 };
 
 export function TxOperationCard({ operation }: TxOperationCardProps) {
-  const { metadata, assets, assetsToFrom } = operation;
+  const { assets, assetsToFrom } = operation;
   const { accounts } = useAccounts();
   const baseAsset = useBaseAsset();
 
@@ -56,7 +56,7 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
   );
 
   return (
-    <Box css={styles.contentCol(metadata.direction)}>
+    <Box css={styles.contentCol}>
       <Box
         css={cssObj({
           display: 'grid',
@@ -197,6 +197,7 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
                 size="sm"
                 hash={fuelFromAddress}
                 aria-label={fuelFromAddress}
+                css={styles.avatar}
               />
             </Box.Flex>
             <Box.Flex
@@ -207,9 +208,9 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
               aria-label="To address"
             >
               <Text as="span" fontSize="sm" css={styles.name}>
-                {accountTo?.name || 'Unknown'}
+                {accountFrom?.name || 'Unknown'}
               </Text>
-              {isToContract && (
+              {isFromContract && (
                 <Box css={styles.badge}>
                   <Text fontSize="sm" color="gray11">
                     Contract
@@ -218,7 +219,7 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
               )}
               <FuelAddress
                 address={fuelFromAddress}
-                isContract={isToContract}
+                isContract={isFromContract}
                 css={styles.address}
               />
             </Box.Flex>
@@ -230,16 +231,15 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
 }
 
 const styles = {
-  contentCol: (direction: 'in' | 'out' | undefined) =>
-    cssObj({
-      display: 'flex',
-      backgroundColor: '$bodyBg',
-      'html[class="fuel_dark-theme"] &': {
-        bg: '$gray3',
-      },
-      flex: 1,
-      padding: `${direction === 'out' ? '0' : '$4'} $4 ${direction === 'in' ? '0' : '$4'}`,
-    }),
+  contentCol: cssObj({
+    display: 'flex',
+    backgroundColor: '$bodyBg',
+    'html[class="fuel_dark-theme"] &': {
+      bg: '$gray3',
+    },
+    flex: 1,
+    padding: '$4 $4 $4',
+  }),
   spacer: cssObj({
     minHeight: '14px',
     width: '2px',
@@ -272,17 +272,6 @@ const styles = {
     gap: '$1',
     color: '$indigo10',
     lineHeight: 'normal',
-  }),
-  amountContainer: cssObj({
-    fontWeight: '$semibold',
-    color: '$textHeading',
-    fontSize: '$sm',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '$1',
   }),
   avatar: cssObj({
     // apply opacity to make the avatar color less alive and more opaque

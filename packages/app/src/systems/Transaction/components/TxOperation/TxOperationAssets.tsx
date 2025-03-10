@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Badge, Box, Icon, Image, Text } from '@fuel-ui/react';
+import { Avatar, Box, Icon, Image, Text } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import type { AssetFuelData } from '@fuel-wallet/types';
 import { bn } from 'fuels';
@@ -152,9 +152,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '$1',
-  }),
-  assetNft: cssObj({
-    padding: '$0 $1',
   }),
   asset: cssObj({
     alignItems: 'center',
