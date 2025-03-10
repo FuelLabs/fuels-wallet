@@ -1,58 +1,129 @@
 import { cssObj } from '@fuel-ui/css';
-import { Card } from '@fuel-ui/react';
-import type { AssetData } from '@fuel-wallet/types';
-import { type Operation, type TransactionStatus, getAssetFuel } from 'fuels';
-import { AssetsAmount } from '~/systems/Asset';
-import type { Maybe } from '~/systems/Core';
-
-import { useAssetsAmount } from '../../hooks/useAssetsAmount';
-import { FunctionCalls } from '../FunctionCalls';
-import { TxFromTo } from '../TxFromTo/TxFromTo';
+import { Box, Icon, Text } from '@fuel-ui/react';
+import { useState } from 'react';
+import { MotionBox } from '~/systems/Core';
+import type { SimplifiedOperation } from '../../types';
+import { TxOperationCard } from './TxOperationCard';
 
 export type TxOperationProps = {
-  operation?: Operation;
-  status?: Maybe<TransactionStatus>;
-  assets?: Maybe<AssetData[]>;
-  isLoading?: boolean;
+  operation: SimplifiedOperation;
+  isChild?: boolean;
 };
 
-export function TxOperation({
-  operation,
-  status,
-  isLoading,
-}: TxOperationProps) {
-  const { from, to, assetsSent, calls } = operation ?? {};
-  const amounts = useAssetsAmount({
-    operationsCoin: assetsSent,
-  });
+export function TxOperation({ operation, isChild = false }: TxOperationProps) {
+  const [isExpanded, _setIsExpanded] = useState(false);
+  const isGrouped = !!operation.operations?.length;
+
   return (
-    <Card css={styles.root} className="TxOperation">
-      <TxFromTo
-        from={from}
-        to={to}
-        status={status}
-        isLoading={isLoading}
-        operationName={operation?.name}
-      />
-      {!!amounts?.length && <AssetsAmount amounts={amounts} />}
-      {!!calls?.length && <FunctionCalls calls={calls} />}
-    </Card>
+    <Box.Stack gap="$2" css={styles.root}>
+      <Box.Flex css={styles.container} data-child={isChild}>
+        <Box.Flex css={styles.cardStyle}>
+          <TxOperationCard operation={operation} />
+        </Box.Flex>
+      </Box.Flex>
+      {isGrouped && (
+        <>
+          <Box.Flex
+            as="button"
+            onClick={() => _setIsExpanded(!isExpanded)}
+            css={styles.header}
+            justify="center"
+          >
+            <Text fontSize="sm" css={styles.toggle}>
+              <Icon
+                icon={isExpanded ? 'ArrowsDiagonalMinimize2' : 'ArrowsDiagonal'}
+                css={styles.chevron}
+                data-expanded={isExpanded}
+              />
+              {isExpanded ? 'Collapse' : 'Expand'}
+              <Text fontSize="sm" css={cssObj({ color: '$gray11' })}>
+                {!isExpanded && `(+${operation.operations?.length} operations)`}
+              </Text>
+            </Text>
+          </Box.Flex>
+          <MotionBox
+            initial={{
+              height: isExpanded ? 'auto' : 0,
+              opacity: isExpanded ? 1 : 0,
+            }}
+            animate={{
+              height: isExpanded ? 'auto' : 0,
+              opacity: isExpanded ? 1 : 0,
+            }}
+            transition={{
+              duration: 0.3,
+              ease: 'easeInOut',
+              opacity: { duration: 0.2 },
+            }}
+            css={styles.expandedOperations}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {operation.operations?.map((operation, index) => (
+              <Box.Flex
+                key={`${operation.type}-${operation.from?.address || ''}-${operation.to?.address || ''}-${index}`}
+                css={styles.cardStyle}
+              >
+                <TxOperation operation={operation} isChild />
+              </Box.Flex>
+            ))}
+          </MotionBox>
+        </>
+      )}
+    </Box.Stack>
   );
 }
 
-TxOperation.Loader = () => (
-  <Card css={styles.root}>
-    <TxFromTo isLoading={true} />
-    <AssetsAmount.Loader />
-  </Card>
-);
-
 const styles = {
   root: cssObj({
-    borderRadius: '$md',
-    overflow: 'hidden',
-    position: 'relative',
+    width: '100%',
+  }),
+  container: cssObj({
+    padding: '2px',
+    gap: '$2',
+    '&[data-child="true"]': {
+      padding: 0,
+    },
+  }),
+  header: cssObj({
+    display: 'flex',
+    cursor: 'pointer',
+    width: '100%',
+    bg: 'transparent',
+    padding: '0 $4',
+    alignItems: 'center',
+    border: 'none',
+    minHeight: '36px',
+  }),
+  chevron: cssObj({
+    transition: 'all 0.2s ease',
+    display: 'inline-block',
+  }),
+  toggle: cssObj({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '$2',
+    color: '$gray12',
+  }),
+  operationCount: cssObj({
+    marginTop: '$2',
+    marginLeft: '$2',
+    marginBottom: '$3',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '$1',
+    justifyContent: 'center',
+    cursor: 'pointer',
+  }),
+  expandedOperations: cssObj({
     display: 'flex',
     flexDirection: 'column',
+    padding: '2px',
+    gap: '2px',
+  }),
+  cardStyle: cssObj({
+    width: '100%',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
   }),
 };

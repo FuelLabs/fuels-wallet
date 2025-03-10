@@ -1,49 +1,50 @@
-import { Alert, Box } from '@fuel-ui/react';
-import type { AssetData } from '@fuel-wallet/types';
-import type { Operation, TransactionStatus } from 'fuels';
-import type { Maybe } from '~/systems/Core';
+import { Box } from '@fuel-ui/react';
+import { useAccounts } from '~/systems/Account';
+import type { CategorizedOperations } from '../../types';
+import { TxOperationsGroup } from '../TxContent/TxOperationsSimple/TxOperationsGroup';
+import { TxOperationsDrawer } from './TxOperationsDrawer';
 
-import { useNetworks } from '~/systems/Network';
-import { TxOperation } from '../TxOperation/TxOperation';
-
-export type TxOperationsProps = {
-  operations?: Operation[];
-  status?: Maybe<TransactionStatus>;
-  isLoading?: boolean;
+type TxOperationsListProps = {
+  operations: CategorizedOperations;
 };
 
-export function TxOperations({
-  operations,
-  status,
-  isLoading,
-}: TxOperationsProps) {
-  if (operations?.length === 0) {
-    return (
-      <Alert status="info">
-        <Alert.Description>
-          No operations found in this transaction
-        </Alert.Description>
-      </Alert>
-    );
-  }
+export function TxOperations({ operations }: TxOperationsListProps) {
+  const { account } = useAccounts();
 
   return (
-    <Box.Stack gap="$4">
-      {operations?.map((operation, index) => (
-        <TxOperation
-          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-          key={index}
-          operation={operation}
-          status={status}
-          isLoading={isLoading}
+    <Box.Stack gap="$2">
+      <TxOperationsDrawer operations={operations.mainOperations} />
+
+      <TxOperationsGroup
+        title={`Operations not related to ${account?.name}`}
+        operations={operations.notRelatedToCurrentAccount}
+        showNesting={false}
+      />
+      {operations.intermediateContractCalls && (
+        <TxOperationsGroup
+          title="Intermediate contract calls"
+          operations={operations.intermediateContractCalls}
+          showNesting={true}
         />
-      ))}
+      )}
     </Box.Stack>
   );
 }
 
-TxOperations.Loader = () => (
-  <Box.Stack gap="$4">
-    <TxOperation.Loader />
-  </Box.Stack>
-);
+TxOperations.Loader = function TxOperationsLoader() {
+  return (
+    <Box.Stack gap="$1">
+      {[1, 2].map((i) => (
+        <Box
+          key={i}
+          css={{
+            height: '80px',
+            backgroundColor: '$gray2',
+            borderRadius: '$md',
+            animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }}
+        />
+      ))}
+    </Box.Stack>
+  );
+};
