@@ -1,73 +1,73 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon, Text } from '@fuel-ui/react';
 import { useState } from 'react';
-import { MotionBox, animations } from '~/systems/Core';
-import { useAssetsAmount } from '../../hooks/useAssetsAmount';
+import { MotionBox } from '~/systems/Core';
 import type { SimplifiedOperation } from '../../types';
-import { IdenticalOperations } from './IdenticalOperations';
 import { TxOperationCard } from './TxOperationCard';
 
 export type TxOperationProps = {
   operation: SimplifiedOperation;
+  isChild?: boolean;
 };
 
-export function TxOperation({ operation }: TxOperationProps) {
-  const { metadata, assets } = operation;
-  const amounts = useAssetsAmount({
-    operationsCoin: assets,
-  });
-  const [isExpanded, setIsExpanded] = useState(false);
+export function TxOperation({ operation, isChild = false }: TxOperationProps) {
+  const [isExpanded, _setIsExpanded] = useState(false);
 
-  const identicalOps = operation.metadata?.identicalOps || [];
+  const isGrouped = !!operation.operations?.length;
+  console.log('isChild', isChild);
   return (
     <Box.Stack gap="$2" css={styles.root}>
-      {identicalOps.length > 1 && (
-        <IdenticalOperations
-          count={identicalOps.length}
-          instances={identicalOps.map((op) => op.operation)}
-        />
-      )}
-      {identicalOps.length <= 1 && (
+      <Box.Flex css={styles.container} data-child={isChild}>
+        <Box.Flex css={styles.cardStyle}>
+          <TxOperationCard operation={operation} css={styles.card} />
+        </Box.Flex>
+      </Box.Flex>
+      {isGrouped && (
         <>
-          <TxOperationCard
-            operation={operation}
-            assetsAmount={amounts}
-            css={styles.card}
-          />
-          {metadata.childOperations && metadata.childOperations.length > 1 && (
-            <MotionBox
-              {...animations.fadeIn()}
-              css={styles.operationCount}
-              onClick={() => setIsExpanded(!isExpanded)}
-            >
+          <Box.Flex
+            as="button"
+            onClick={() => _setIsExpanded(!isExpanded)}
+            css={styles.header}
+            justify="center"
+          >
+            <Text fontSize="sm" css={styles.toggle}>
               <Icon
-                icon={isExpanded ? 'ArrowsMinimize' : 'ArrowsMaximize'}
-                size={20}
+                icon={isExpanded ? 'ArrowsDiagonalMinimize2' : 'ArrowsDiagonal'}
+                css={styles.chevron}
+                data-expanded={isExpanded}
               />
-              <Text fontSize="sm" color="gray12" as="span">
-                {isExpanded ? 'Collapse' : 'Expand'}
+              {isExpanded ? 'Collapse' : 'Expand'}
+              <Text fontSize="sm" css={cssObj({ color: '$gray11' })}>
+                {!isExpanded && `(+${operation.operations?.length} operations)`}
               </Text>
-              {isExpanded ? null : (
-                <Text fontSize="sm" color="gray11" as="span">
-                  (+{metadata.operationCount} operations)
-                </Text>
-              )}
-            </MotionBox>
-          )}
-          {isExpanded && (
-            <MotionBox
-              {...animations.slideInTop()}
-              css={styles.expandedOperations}
-            >
-              {metadata.childOperations?.map((op, idx) => (
-                <TxOperationCard
-                  key={`${op.type}-${op.from.address}-${op.to.address}-${idx}`}
-                  operation={op}
-                  assetsAmount={[]}
-                />
-              ))}
-            </MotionBox>
-          )}
+            </Text>
+          </Box.Flex>
+          <MotionBox
+            initial={{
+              height: isExpanded ? 'auto' : 0,
+              opacity: isExpanded ? 1 : 0,
+            }}
+            animate={{
+              height: isExpanded ? 'auto' : 0,
+              opacity: isExpanded ? 1 : 0,
+            }}
+            transition={{
+              duration: 0.3,
+              ease: 'easeInOut',
+              opacity: { duration: 0.2 },
+            }}
+            css={styles.expandedOperations}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {operation.operations?.map((operation, index) => (
+              <Box.Flex
+                key={`${operation.type}-${operation.from?.address || ''}-${operation.to?.address || ''}-${index}`}
+                css={styles.cardStyle}
+              >
+                <TxOperation operation={operation} isChild />
+              </Box.Flex>
+            ))}
+          </MotionBox>
         </>
       )}
     </Box.Stack>
@@ -78,8 +78,35 @@ const styles = {
   root: cssObj({
     width: '100%',
   }),
+  container: cssObj({
+    padding: '2px',
+    gap: '$2',
+    '&[data-child="true"]': {
+      padding: 0,
+    },
+  }),
   card: cssObj({
     // borderRadius: '8px',
+  }),
+  header: cssObj({
+    display: 'flex',
+    cursor: 'pointer',
+    width: '100%',
+    bg: 'transparent',
+    padding: '0 $4',
+    alignItems: 'center',
+    border: 'none',
+    minHeight: '36px',
+  }),
+  chevron: cssObj({
+    transition: 'all 0.2s ease',
+    display: 'inline-block',
+  }),
+  toggle: cssObj({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '$2',
+    color: '$gray12',
   }),
   operationCount: cssObj({
     marginTop: '$2',
@@ -94,10 +121,13 @@ const styles = {
   expandedOperations: cssObj({
     display: 'flex',
     flexDirection: 'column',
+    padding: '2px',
+    gap: '2px', // In the Design, it looks like they are touching, but that is not a border, but a shadow, so we need to add a gap
+  }),
+  cardStyle: cssObj({
+    width: '100%',
     borderRadius: '8px',
-    boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
-    padding: '0',
-    margin: '0 0 4px',
     overflow: 'hidden',
+    boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
   }),
 };

@@ -147,7 +147,7 @@ function TxContentInfo({
     <>
       {getHeader()}
       <Box css={styles.content}>
-        <TxOperations operations={transaction.categorizedOperations} />
+        <TxOperations operations={transaction.categorizedV2Operations} />
         {isLoading && !showDetails && <TxFee.Loader />}
         {showDetails && !fees && (
           <Box.VStack align="flex-start" css={styles.feeWrapper}>

@@ -28,7 +28,7 @@ export const operationsStyles = {
     fontSize: '13px',
   }),
   container: cssObj({
-    padding: '2px',
+    padding: '1px',
     gap: '$2',
   }),
   cardStyle: cssObj({
@@ -65,5 +65,62 @@ export const operationsStyles = {
   chevron: cssObj({
     transition: 'all 0.2s ease',
     display: 'inline-block',
+  }),
+  contentCol: cssObj({
+    display: 'flex',
+    backgroundColor: '$bodyBg',
+    'html[class="fuel_dark-theme"] &': {
+      bg: '$gray3',
+    },
+    flex: 1,
+    padding: '$4 $4 $4',
+  }),
+  spacer: cssObj({
+    minHeight: '14px',
+    width: '2px',
+    height: '100%',
+    backgroundColor: '$gray6',
+    borderRadius: '$lg',
+  }),
+  iconCol: cssObj({
+    padding: '2px 0',
+  }),
+  badge: cssObj({
+    padding: '2px $1',
+    backgroundColor: '$gray3',
+    borderRadius: '$md',
+  }),
+  name: cssObj({
+    fontWeight: '$semibold',
+    color: '$textHeading',
+    mr: '$1',
+  }),
+  address: cssObj({
+    fontWeight: '$medium',
+    fontSize: '$sm',
+    color: '$textSubText',
+  }),
+  blue: cssObj({
+    fontSize: '$sm',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '$1',
+    color: '$indigo10',
+    lineHeight: 'normal',
+  }),
+  amountContainer: cssObj({
+    fontWeight: '$semibold',
+    color: '$textHeading',
+    fontSize: '$sm',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '$1',
+  }),
+  avatar: cssObj({
+    // apply opacity to make the avatar color less alive and more opaque
+    opacity: 0.6,
   }),
 };
