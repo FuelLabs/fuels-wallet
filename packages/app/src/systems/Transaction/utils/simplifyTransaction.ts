@@ -8,7 +8,6 @@ import type {
 } from 'fuels';
 import {
   BN,
-  type OperationFunctionCall,
   OperationName,
   ReceiptType,
   type TransactionResultReceipt,
@@ -16,7 +15,6 @@ import {
 import type { SimplifiedOperation } from '../types';
 import { TxCategory } from '../types';
 import type { SimplifiedTransaction } from '../types';
-import type { AssetFlow } from '../types';
 
 type ParsedReceiptData = {
   indent: number;
@@ -70,7 +68,7 @@ function transformOperation(
   currentAccount?: string,
   parsedReceipts?: ParsedReceiptData[]
 ): SimplifiedOperation {
-  const { name, from, to, assetsSent = [], calls = [] } = operation;
+  const { from, to, assetsSent = [] } = operation;
 
   const operationReceipt = operation.receipts?.[0];
   const operationType = getOperationType(operation);
@@ -98,20 +96,6 @@ function transformOperation(
     );
   }
 
-  if (name === OperationName.contractCall && calls.length > 0) {
-    const call = calls[0] as OperationFunctionCall;
-    baseOperation.metadata = {
-      ...baseOperation.metadata,
-      contractId: to?.address,
-      functionName: call.functionName,
-      functionData: call,
-      amount: call.amount ? new BN(call.amount) : undefined,
-      assetId: call.assetId,
-
-      receiptType: operation.receipts?.[0]?.type,
-    };
-  }
-
   if (assetsSent.length > 0) {
     baseOperation.assets = assetsSent.map((asset) => ({
       amount: new BN(asset.amount),
@@ -129,32 +113,7 @@ function transformOperations(
 ): SimplifiedOperation[] {
   if (!summary.operations) return [];
 
-  const allReceipts = summary.receipts || [];
   const operations = summary.operations.map((op) => {
-    const operationReceipt = op.receipts?.[0];
-    if (!operationReceipt)
-      return transformOperation(op, currentAccount, parsedReceipts);
-
-    // TODO Check if we can remove
-    const receiptIndex = allReceipts.findIndex((r) => {
-      const pcMatch =
-        'pc' in r && 'pc' in operationReceipt
-          ? r.pc === operationReceipt.pc
-          : true;
-
-      const isMatch =
-        'is' in r && 'is' in operationReceipt
-          ? r.is === operationReceipt.is
-          : true;
-
-      return r.type === operationReceipt.type && pcMatch && isMatch;
-    });
-
-    if (receiptIndex === -1) {
-      console.warn('Could not find operation receipt in full receipt list');
-      return transformOperation(op, currentAccount, parsedReceipts);
-    }
-
     return transformOperation(op, currentAccount, parsedReceipts);
   });
 
@@ -205,67 +164,9 @@ export function simplifyTransaction(
   return simplifiedTransaction;
 }
 
-export function sumAssets(operations: SimplifiedOperation[]): AssetFlow[] {
-  const incomingAssets: Record<string, BN> = {};
-  const outgoingAssets: Record<string, BN> = {};
-
-  for (const op of operations) {
-    if (!op.assets?.length) continue;
-
-    for (const asset of op.assets) {
-      const { assetId, amount } = asset;
-      const direction = op.isFromCurrentAccount
-        ? outgoingAssets
-        : incomingAssets;
-
-      if (!direction[assetId]) {
-        direction[assetId] = new BN(0);
-      }
-      direction[assetId] = direction[assetId].add(amount);
-    }
-  }
-
-  const assetFlows: AssetFlow[] = [];
-
-  for (const [assetId, amount] of Object.entries(incomingAssets)) {
-    const fromOp = operations.find(
-      (op) =>
-        !op.isFromCurrentAccount &&
-        op.assets?.some((a) => a.assetId === assetId)
-    );
-
-    assetFlows.push({
-      assetId,
-      amount,
-      from: fromOp?.from?.address || '',
-      to: fromOp?.to?.address || '',
-      type: 'in',
-    });
-  }
-
-  for (const [assetId, amount] of Object.entries(outgoingAssets)) {
-    const toOp = operations.find(
-      (op) =>
-        op.isFromCurrentAccount && op.assets?.some((a) => a.assetId === assetId)
-    );
-
-    assetFlows.push({
-      assetId,
-      amount,
-      from: toOp?.from?.address || '',
-      to: toOp?.to?.address || '',
-      type: 'out',
-    });
-  }
-
-  return assetFlows;
-}
-
 export function groupOpsFromCurrentAccountToContract(
   operations: SimplifiedOperation[]
 ): Record<string, SimplifiedOperation[]> {
-  // contract call only depth 0
-  // transfer any depth
   const groupedFromAccountToContract = operations
     .filter((op) => {
       const isRootContractCall =
@@ -312,7 +213,6 @@ export function groupOpsFromContractToCurrentAccount(
   return groupedFromContractToAccount;
 }
 
-// @TODO: should remove the other function
 export function onlySumAssets(
   operations?: SimplifiedOperation[]
 ): Record<string, BN> {
