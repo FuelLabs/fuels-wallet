@@ -179,7 +179,7 @@ function findIdenticalOperations(operations: SimplifiedOperation[]): {
         op.from.address === other.from.address &&
         op.to.address === other.to.address &&
         op.metadata?.depth === other.metadata?.depth &&
-        op.metadata?.functionName === other.metadata?.functionName &&
+        // op.metadata?.functionName === other.metadata?.functionName &&
         JSON.stringify(op.assets?.map((a) => a.assetId)) ===
           JSON.stringify(other.assets?.map((a) => a.assetId))
       );
@@ -328,7 +328,6 @@ export function simplifyTransaction(
   request?: TransactionRequest,
   currentAccount?: string
 ): SimplifiedTransaction {
-  console.log('summary', summary);
   const parsedReceipts = parseReceipts(summary.receipts);
   const operations = transformOperations(
     summary,
@@ -336,12 +335,15 @@ export function simplifyTransaction(
     parsedReceipts
   );
 
+  const categorizedV2 = categorizeOperationsV2(operations);
+
   const categorizedOperations = categorizeOperations(operations);
 
   const simplifiedTransaction = {
     id: summary.id,
     operations,
     categorizedOperations,
+    categorizedV2Operations: categorizedV2,
     fee: {
       total: new BN(summary.fee || 0),
       network: new BN(summary.fee || 0).sub(new BN(request?.tip || 0)),
@@ -407,4 +409,185 @@ export function sumAssets(operations: SimplifiedOperation[]): AssetFlow[] {
   }
 
   return assetFlows;
+}
+
+export function groupOpsFromCurrentAccountToContract(
+  operations: SimplifiedOperation[]
+): Record<string, SimplifiedOperation[]> {
+  // contract call only depth 0
+  // transfer any depth
+  const groupedFromAccountToContract = operations
+    .filter((op) => {
+      const isRootContractCall =
+        op.type === TxCategory.CONTRACTCALL && op.metadata.depth === 0;
+      const isTransfer = op.type === TxCategory.SEND && op.to.type === 0;
+
+      return op.isFromCurrentAccount && (isRootContractCall || isTransfer);
+    })
+    .reduce(
+      (acc, op) => {
+        return {
+          // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
+          ...acc,
+          [op.from.address]: [...(acc[op.from.address] || []), op],
+        };
+      },
+      {} as Record<string, SimplifiedOperation[]>
+    );
+
+  return groupedFromAccountToContract;
+}
+
+export function groupOpsFromContractToCurrentAccount(
+  operations: SimplifiedOperation[]
+): Record<string, SimplifiedOperation[]> {
+  const groupedFromContractToAccount = operations
+    .filter(
+      (op) =>
+        op.isToCurrentAccount &&
+        op.type === TxCategory.SEND &&
+        op.from.type === 0
+    )
+    .reduce(
+      (acc, op) => {
+        return {
+          // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
+          ...acc,
+          [op.from.address]: [...(acc[op.from.address] || []), op],
+        };
+      },
+      {} as Record<string, SimplifiedOperation[]>
+    );
+
+  return groupedFromContractToAccount;
+}
+
+// @TODO: should remove the other function
+export function onlySumAssets(
+  operations?: SimplifiedOperation[]
+): Record<string, BN> {
+  const assets: Record<string, BN> = {};
+
+  for (const op of operations || []) {
+    if (!op.assets?.length) continue;
+
+    for (const asset of op.assets) {
+      const { assetId, amount } = asset;
+      assets[assetId] = (assets[assetId] || new BN(0)).add(amount);
+    }
+  }
+
+  return assets;
+}
+
+export function categorizeOperationsV2(inputOperations: SimplifiedOperation[]) {
+  const intermediateContractCalls = [];
+  const notRelatedToCurrentAccount = [];
+  const remainingOps = [];
+
+  for (const op of inputOperations) {
+    if (op.type === TxCategory.CONTRACTCALL && (op.metadata.depth || 0) > 0) {
+      intermediateContractCalls.push(op);
+    } else if (!op.isFromCurrentAccount && !op.isToCurrentAccount) {
+      notRelatedToCurrentAccount.push(op);
+    } else {
+      remainingOps.push(op);
+    }
+  }
+
+  const mainOperations = getMainOperations(remainingOps);
+
+  return {
+    mainOperations,
+    intermediateContractCalls,
+    notRelatedToCurrentAccount,
+  };
+}
+
+export function getMainOperations(
+  operations: SimplifiedOperation[]
+): SimplifiedOperation[] {
+  const groupedFromAccountToContract =
+    groupOpsFromCurrentAccountToContract(operations);
+  const groupedFromContractToAccount =
+    groupOpsFromContractToCurrentAccount(operations);
+
+  const mainOperations: SimplifiedOperation[] = [];
+
+  for (const [fromAccount, opsFromAccount] of Object.entries(
+    groupedFromAccountToContract
+  )) {
+    const contractAddress = opsFromAccount[0].to.address;
+    const opsToCurrentAccount = groupedFromContractToAccount[contractAddress];
+
+    const assetsFromTo = Object.entries(onlySumAssets(opsFromAccount)).map(
+      ([assetId, amount]) => ({ assetId, amount })
+    );
+    const assetsToFrom = Object.entries(onlySumAssets(opsToCurrentAccount)).map(
+      ([assetId, amount]) => ({ assetId, amount })
+    );
+
+    const hasAssetsComingBack = assetsToFrom.some((a) => a.amount.gt(0));
+
+    const isContractCallSendingFunds = opsFromAccount.some((op) => {
+      const hasAssets = Object.values(onlySumAssets([op])).some((a) => a.gt(0));
+      return op.type === TxCategory.CONTRACTCALL && hasAssets;
+    });
+    const isTransfer = opsFromAccount.some((op) => op.type === TxCategory.SEND);
+    const isTypeContractCall = isContractCallSendingFunds || !isTransfer;
+    const baseOperation = {
+      type: isTypeContractCall ? TxCategory.CONTRACTCALL : TxCategory.SEND,
+      from: {
+        address: fromAccount,
+        type: 1,
+      },
+      to: {
+        address: contractAddress,
+        type: 0,
+      },
+      isFromCurrentAccount: true,
+      isToCurrentAccount: false,
+      assets: assetsFromTo,
+      metadata: {
+        depth: 0,
+      },
+    };
+
+    if (hasAssetsComingBack) {
+      const mainOperation: SimplifiedOperation = {
+        ...baseOperation,
+        assetsToFrom,
+        operations: [...opsFromAccount, ...opsToCurrentAccount],
+      };
+      mainOperations.push(mainOperation);
+    } else {
+      const mainOperation: SimplifiedOperation = {
+        ...baseOperation,
+        operations: [...opsFromAccount],
+      };
+      mainOperations.push(mainOperation);
+    }
+  }
+
+  const transferOperationsNotGrouped = operations.filter((op) => {
+    if (op.type !== TxCategory.SEND) return false;
+
+    const isAlreadyGrouped = mainOperations.find((mainOp) => {
+      const isFromSameAccount = mainOp.from.address === op.from.address;
+      const isToSameAccount = mainOp.to.address === op.to.address;
+
+      const isSendingBack =
+        mainOp.to.address === op.from.address &&
+        mainOp.from.address === op.to.address;
+
+      return (isFromSameAccount && isToSameAccount) || isSendingBack;
+    });
+    return !isAlreadyGrouped;
+  });
+  if (transferOperationsNotGrouped.length > 0) {
+    // @TODO: group transfers
+    mainOperations.push(...transferOperationsNotGrouped);
+  }
+
+  return mainOperations;
 }

@@ -109,9 +109,14 @@ export type SimplifiedOperation = {
     amount: BN;
     assetId: string;
   }>;
+  assetsToFrom?: Array<{
+    amount: BN;
+    assetId: string;
+  }>;
   metadata: ContractCallMetadata;
   assetAmount?: AssetFuelAmount;
   receipts?: Receipt[];
+  operations?: SimplifiedOperation[];
 };
 
 export type SimplifiedFee = {
