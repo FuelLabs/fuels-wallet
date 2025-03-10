@@ -210,10 +210,6 @@ const styles = {
       border: '1px solid $gray3',
     },
   }),
-  feeContainer: cssObj({
-    py: '$4',
-    pl: '$2',
-  }),
   feeIconWrapper: cssObj({
     borderRadius: '$full',
     border: '1px solid $intentsBase11',
@@ -228,18 +224,6 @@ const styles = {
       strokeWidth: '2px',
     },
   }),
-  icon: cssObj({
-    border: '1.5px solid $gray9',
-    borderRadius: '50%',
-    width: '20px',
-    height: '20px',
-    boxSizing: 'border-box',
-    '& svg': {
-      width: '16px',
-      height: '16px',
-      strokeWidth: '2.5px',
-    },
-  }),
   alert: cssObj({
     '& .fuel_Alert-content': {
       gap: '$1',
@@ -250,18 +234,5 @@ const styles = {
     '& .fuel_Icon': {
       mt: '-2px',
     },
-  }),
-  header: cssObj({
-    backgroundColor: '$bodyBg',
-    borderTop: '1px solid $gray7',
-    borderBottom: '1px solid $gray7',
-    padding: '$3 $4',
-  }),
-  reviewTxWarningTitle: cssObj({
-    color: '$textHeading',
-    fontSize: '$sm',
-    fontWeight: '$medium',
-    lineHeight: '$tight',
-    mb: '$1',
   }),
 };
