@@ -12,14 +12,13 @@ export type TxOperationProps = {
 
 export function TxOperation({ operation, isChild = false }: TxOperationProps) {
   const [isExpanded, _setIsExpanded] = useState(false);
-
   const isGrouped = !!operation.operations?.length;
-  console.log('isChild', isChild);
+
   return (
     <Box.Stack gap="$2" css={styles.root}>
       <Box.Flex css={styles.container} data-child={isChild}>
         <Box.Flex css={styles.cardStyle}>
-          <TxOperationCard operation={operation} css={styles.card} />
+          <TxOperationCard operation={operation} />
         </Box.Flex>
       </Box.Flex>
       {isGrouped && (
@@ -85,9 +84,6 @@ const styles = {
       padding: 0,
     },
   }),
-  card: cssObj({
-    // borderRadius: '8px',
-  }),
   header: cssObj({
     display: 'flex',
     cursor: 'pointer',
@@ -122,7 +118,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     padding: '2px',
-    gap: '2px', // In the Design, it looks like they are touching, but that is not a border, but a shadow, so we need to add a gap
+    gap: '2px',
   }),
   cardStyle: cssObj({
     width: '100%',

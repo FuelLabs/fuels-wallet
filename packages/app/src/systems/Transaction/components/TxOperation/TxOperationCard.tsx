@@ -1,55 +1,23 @@
-import { type ThemeUtilsCSS, cssObj } from '@fuel-ui/css';
+import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Icon, Text } from '@fuel-ui/react';
-import type { AssetFuelAmount, AssetFuelData } from '@fuel-wallet/types';
 import { Address, isB256 } from 'fuels';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { FuelAddress, useAccounts } from '~/systems/Account';
-import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { MotionBox } from '~/systems/Core/components/Motion';
-import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { useAssetsAmount } from '../../hooks/useAssetsAmount';
+import { useBaseAsset } from '../../hooks/useBaseAsset';
 import { type SimplifiedOperation, TxCategory } from '../../types';
 import { getOperationText } from '../../utils/simplifyTransaction';
 import { TxOperationAssets } from './TxOperationAssets';
 
 export type TxOperationCardProps = {
   operation: SimplifiedOperation;
-  css?: ThemeUtilsCSS;
 };
 
-export function TxOperationCard({ operation, css }: TxOperationCardProps) {
+export function TxOperationCard({ operation }: TxOperationCardProps) {
   const { metadata, assets, assetsToFrom } = operation;
   const { accounts } = useAccounts();
-  const provider = useProvider();
-  const [baseAsset, setBaseAsset] = useState<AssetFuelData | undefined>();
-  const _hasAssetsComingBack = useMemo(
-    () => operation.assetsToFrom?.some((a) => a.amount.gt(0)),
-    [operation.assetsToFrom]
-  );
-
-  // Fetch base asset info for USD conversion
-  useEffect(() => {
-    let abort = false;
-    const getBaseAsset = async () => {
-      const [baseAssetId, chainId] = await Promise.all([
-        provider?.getBaseAssetId(),
-        provider?.getChainId(),
-      ]);
-      if (abort || baseAssetId == null || chainId == null) return;
-      const baseAsset = await AssetsCache.getInstance().getAsset({
-        chainId: chainId,
-        assetId: baseAssetId,
-        dbAssets: [],
-        save: false,
-      });
-      if (abort) return;
-      setBaseAsset(baseAsset);
-    };
-    getBaseAsset();
-    return () => {
-      abort = true;
-    };
-  }, [provider]);
+  const baseAsset = useBaseAsset();
 
   const amounts = useAssetsAmount({
     operationsCoin: assets,
@@ -88,7 +56,7 @@ export function TxOperationCard({ operation, css }: TxOperationCardProps) {
   );
 
   return (
-    <Box css={styles.contentCol(metadata.direction)} style={css}>
+    <Box css={styles.contentCol(metadata.direction)}>
       <Box
         css={cssObj({
           display: 'grid',

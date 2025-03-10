@@ -1,11 +1,9 @@
 import { Box, RadioGroupItem, Text } from '@fuel-ui/react';
 import { type BN, DEFAULT_PRECISION } from 'fuels';
-import { type FC, useEffect, useMemo, useState } from 'react';
+import { type FC, useMemo } from 'react';
 
-import type { AssetFuelData } from '@fuel-wallet/types';
-import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
-import { useProvider } from '~/systems/Network/hooks/useProvider';
+import { useBaseAsset } from '../../hooks/useBaseAsset';
 import { TxFee } from './TxFee';
 import { TxFeeLoader } from './TxFeeLoader';
 import { styles } from './styles';
@@ -23,30 +21,7 @@ export const TxFeeRadio: TxFeeRadioComponent = ({
   checked,
   title,
 }: TxFeeRadioProps) => {
-  const provider = useProvider();
-  const [baseAsset, setBaseAsset] = useState<AssetFuelData | undefined>();
-  useEffect(() => {
-    let abort = false;
-    const getBaseAsset = async () => {
-      const [baseAssetId, chainId] = await Promise.all([
-        provider?.getBaseAssetId(),
-        provider?.getChainId(),
-      ]);
-      if (abort || baseAssetId == null || chainId == null) return;
-      const baseAsset = await AssetsCache.getInstance().getAsset({
-        chainId: chainId,
-        assetId: baseAssetId,
-        dbAssets: [],
-        save: false,
-      });
-      if (abort) return;
-      setBaseAsset(baseAsset);
-    };
-    getBaseAsset();
-    return () => {
-      abort = true;
-    };
-  }, [provider]);
+  const baseAsset = useBaseAsset();
 
   const feeInUsd = useMemo(() => {
     if (baseAsset?.rate == null || fee == null) return '$0';
