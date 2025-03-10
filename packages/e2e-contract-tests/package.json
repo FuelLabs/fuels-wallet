@@ -15,7 +15,7 @@
     "@fuels/connectors": "0.39.0-pr-458-101889b",
     "@fuels/react": "0.39.0-pr-458-101889b",
     "@tanstack/react-query": "5.28.4",
-    "fuels": "0.98.0",
+    "fuels": "pr-3735",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-error-boundary": "^4.0.11",

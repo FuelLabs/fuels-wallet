@@ -1,17 +1,27 @@
 import { cssObj } from '@fuel-ui/css';
 
 export const styles = {
-  detailItem: (active = false, pointer = false, title = false) =>
+  detailItem: (active = false, hasCheckbox = false, title = false) =>
     cssObj({
-      padding: title ? '$3 $4' : '$2 $6',
+      padding: hasCheckbox ? '$3 $4' : '$3 $4 $3 $14',
       flexDirection: title ? 'row' : 'column',
-      justifyContent: 'space-between',
-      alignItems: title ? 'center' : 'flex-start',
+      alignItems: 'flex-start',
+      boxSizing: 'border-box',
+      width: '100%',
       display: 'flex',
       columnGap: title ? '$4' : '$6',
       gap: title ? undefined : '$1',
       position: 'relative',
-      cursor: pointer ? 'pointer' : 'auto',
+      cursor: hasCheckbox ? 'pointer' : 'auto',
+      backgroundColor: '$cardBg',
+      borderRadius: '8px',
+      'html[class="fuel_light-theme"] &': {
+        boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
+      },
+      'html[class="fuel_dark-theme"] &': {
+        backgroundColor: '$gray2',
+        border: '1px solid $gray3',
+      },
 
       ...(active && {
         '&::after': {
@@ -46,5 +56,30 @@ export const styles = {
     fontWeight: '600',
     wordWrap: 'break-word',
     minWidth: 0,
+  }),
+  option: cssObj({
+    alignItems: 'center',
+    backgroundColor: '$cardBg',
+    border: '1px solid $gray5',
+    borderRadius: '10px',
+    color: '$gray1',
+    cursor: 'pointer',
+    fontSize: '13px',
+    gap: '$3',
+    justifyContent: 'space-between',
+    padding: '$3',
+    transition: 'all 0.2s ease',
+
+    '&:hover': {
+      backgroundColor: '$gray3',
+    },
+  }),
+  optionContent: cssObj({
+    color: '$gray12',
+  }),
+  optionLabel: cssObj({
+    color: '$gray12',
+    fontSize: '13px',
+    fontWeight: '$medium',
   }),
 };

@@ -13,9 +13,9 @@ export function NetworkStatus({ network }: { network: NetworkData }) {
       css={{
         display: 'inline-flex',
         alignItems: 'center',
-        color: network.isSelected ? '$intentsPrimary11' : '$intentsBase8',
-        fontSize: '16px',
-        height: '$4',
+        color: network.isSelected ? '$intentsPrimary10' : '$intentsBase8',
+        fontSize: '22px',
+        mt: '2px',
       }}
     >
       ●
@@ -81,6 +81,7 @@ const styles = {
     minHeight: '52px',
     boxSizing: 'border-box',
     background: '$cardBg',
+    color: '$textHeading',
 
     '&:hover': {
       cursor: 'pointer',

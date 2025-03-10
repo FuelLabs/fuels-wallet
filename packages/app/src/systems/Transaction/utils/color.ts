@@ -4,13 +4,13 @@ import { TransactionStatus } from 'fuels';
 export const getTxStatusColor = (status?: TransactionStatus): Colors => {
   switch (status) {
     case TransactionStatus.submitted:
-      return 'intentsWarning9';
+      return 'intentsWarning7';
     case TransactionStatus.success:
-      return 'intentsPrimary9';
+      return 'intentsPrimary11';
     case TransactionStatus.failure:
-      return 'intentsError9';
+      return 'intentsError7';
     default:
-      return 'intentsBase9';
+      return 'intentsBase7';
   }
 };
 

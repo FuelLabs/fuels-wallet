@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button } from '@fuel-ui/react';
+import { Box, Button } from '@fuel-ui/react';
 import type { NetworkData } from '@fuel-wallet/types';
 import { forwardRef } from 'react';
 
@@ -19,14 +19,16 @@ export const NetworkDropdown = forwardRef<HTMLDivElement, NetworkDropdownProps>(
         {...(props as any)}
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         ref={ref as any}
-        size="xs"
+        size="sm"
         css={styles.trigger}
         aria-label="Selected Network"
         isDisabled={isDisabled}
         rightIcon={isDisabled ? null : 'ChevronDown'}
       >
-        {selected && <NetworkStatus network={selected} />}
-        {selected?.name}
+        <Box.Flex direction="row" align="center" gap="$2">
+          {selected && <NetworkStatus network={selected} />}
+          {selected?.name}
+        </Box.Flex>
       </Button>
     );
   }
@@ -39,11 +41,13 @@ const styles = {
     px: '$3',
     pr: '$2',
     border: '1px solid $border',
-    color: '$intentsBase10',
+    color: '$textHeading',
     borderRadius: '$default',
     background: 'transparent',
     display: 'inline-flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
 
     '&:not([aria-disabled="true"])': {
       '&:hover': {
@@ -65,6 +69,9 @@ const styles = {
     '&[aria-disabled="true"]': {
       opacity: 1,
       cursor: 'default',
+      backgroundColor: 'transparent',
+      borderColor: '$border',
+      color: '$intentsBase10',
     },
   }),
 };

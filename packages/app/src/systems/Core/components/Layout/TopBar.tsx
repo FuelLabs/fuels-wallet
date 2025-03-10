@@ -22,23 +22,34 @@ type TopBarProps = {
   type?: TopBarType;
   onBack?: () => void;
   children?: ReactNode;
+  isTxScreen?: boolean;
 };
 
 // ----------------------------------------------------------------------------
 // TopBar used inside Application
 // ----------------------------------------------------------------------------
 
-function InternalTopBar({ onBack }: TopBarProps) {
+function InternalTopBar({ onBack, isTxScreen: inputIsTxScreen }: TopBarProps) {
   const navigate = useNavigate();
   const overlay = useOverlay();
-  const { isLoading, title, isHome } = useLayoutContext();
+  const {
+    isLoading,
+    title,
+    isHome,
+    isTxScreen: ctxIsTxScreen,
+  } = useLayoutContext();
   const { selectedNetwork, handlers } = useNetworks();
   const { hasErrorsToReport } = useReportError();
+  const isTxScreen = inputIsTxScreen || ctxIsTxScreen;
 
   return (
     <Box.Flex as="nav" css={styles.root}>
-      <Box.Flex css={styles.container} data-home={isHome}>
-        {!isHome ? (
+      <Box.Flex
+        css={styles.container}
+        data-home={isHome}
+        data-txscreen={isTxScreen}
+      >
+        {!isHome && !isTxScreen ? (
           <>
             <IconButton
               icon={<Icon icon="ChevronLeft" color="intentsBase8" />}
@@ -52,30 +63,34 @@ function InternalTopBar({ onBack }: TopBarProps) {
           </>
         ) : (
           <>
-            <FuelLogo size={30} />
+            <FuelLogo size={36} />
             {isLoading && <Spinner aria-label="Spinner" />}
+
             {selectedNetwork && !isLoading && (
               <NetworkDropdown
                 selected={selectedNetwork}
                 onPress={handlers.openNetworks}
+                isDisabled={!!isTxScreen}
               />
             )}
           </>
         )}
       </Box.Flex>
-      <Box.Stack direction="row" gap="$2" css={styles.menuContainer}>
-        {hasErrorsToReport && <Text css={styles.badge}>●</Text>}
-        <IconButton
-          iconSize={20}
-          icon={<Icon icon="Menu2" />}
-          aria-label="Menu"
-          variant="link"
-          css={styles.topbarIcon}
-          onPress={() => {
-            overlay.open({ modal: 'sidebar' });
-          }}
-        />
-      </Box.Stack>
+      {!isTxScreen && (
+        <Box.Stack direction="row" gap="$2" css={styles.menuContainer}>
+          {hasErrorsToReport && <Text css={styles.badge}>●</Text>}
+          <IconButton
+            iconSize={20}
+            icon={<Icon icon="Menu2" />}
+            aria-label="Menu"
+            variant="link"
+            css={styles.topbarIcon}
+            onPress={() => {
+              overlay.open({ modal: 'sidebar' });
+            }}
+          />
+        </Box.Stack>
+      )}
     </Box.Flex>
   );
 }
@@ -85,23 +100,68 @@ function InternalTopBar({ onBack }: TopBarProps) {
 // ----------------------------------------------------------------------------
 
 function ExternalTopBar() {
-  const { isLoading, title, isHome } = useLayoutContext();
-  const { selectedNetwork, handlers } = useNetworks();
+  const { isLoading, title, isHome, warning } = useLayoutContext();
+  const { selectedNetwork } = useNetworks();
 
   return (
-    <Box.Flex as="nav" css={styles.root} data-home={isHome}>
-      <Box.Flex css={{ alignItems: 'center', gap: '$5', flex: 1 }}>
-        {isLoading && <Spinner aria-label="Spinner" />}
-        {!isLoading && <Text css={styles.title}>{title}</Text>}
+    <Box.Stack
+      as="nav"
+      justify="center"
+      css={{
+        ...styles.root,
+        gap: '0',
+        py: '0',
+        minHeight: '72px',
+        alignItems: 'flex-start',
+        backgroundColor: '$cardBg',
+        borderBottom: '1px solid $gray6',
+      }}
+      data-home={isHome}
+    >
+      <Box.Flex css={{ width: '100%' }}>
+        <Box.Flex css={{ flex: 1, minWidth: 0 }}>
+          {isLoading && <Spinner aria-label="Spinner" />}
+          {!isLoading && (
+            <Text
+              css={{
+                ...styles.title,
+                fontWeight: '$semibold',
+              }}
+            >
+              {title}
+            </Text>
+          )}
+        </Box.Flex>
+        {selectedNetwork && (
+          <Box.Flex css={{ flexShrink: 0 }}>
+            <Text
+              as="span"
+              css={{
+                color: '$intentsPrimary10',
+                fontSize: '$xs',
+                mr: '$1',
+              }}
+            >
+              ●
+            </Text>
+            <Text
+              css={{
+                ...styles.title,
+                fontWeight: '$medium',
+              }}
+            >
+              {selectedNetwork.name}
+            </Text>
+          </Box.Flex>
+        )}
       </Box.Flex>
-      {selectedNetwork && (
-        <NetworkDropdown
-          selected={selectedNetwork}
-          onPress={handlers.openNetworks}
-          isDisabled
-        />
+      {warning && (
+        <Box css={styles.warning}>
+          <Icon icon="InfoCircle" stroke={2} size={16} />
+          {warning}
+        </Box>
       )}
-    </Box.Flex>
+    </Box.Stack>
   );
 }
 
@@ -123,7 +183,6 @@ export function TopBar({ type = TopBarType.internal, ...props }: TopBarProps) {
 
 const styles = {
   root: cssObj({
-    py: '$2',
     px: '$5',
     gap: '$3',
     alignItems: 'center',
@@ -151,7 +210,7 @@ const styles = {
     },
   }),
   title: cssObj({
-    textSize: 'lg',
+    fontSize: '$sm',
     fontWeight: '$normal',
     color: '$intentsBase12',
   }),
@@ -163,6 +222,9 @@ const styles = {
     flex: 1,
 
     '&[data-home="true"]': {
+      pl: '$0',
+    },
+    '&[data-txscreen="true"]': {
       pl: '$0',
     },
   }),
@@ -178,5 +240,13 @@ const styles = {
       {
         transform: 'scale(0.97) translateY(-50%)',
       },
+  }),
+  warning: cssObj({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '$1',
+    fontSize: 'calc($sm - 1px)',
+    color: '$gray11',
+    lineHeight: '$tight',
   }),
 };

@@ -1,4 +1,4 @@
-import { Card, HStack, Text } from '@fuel-ui/react';
+import { Box, HStack, Text } from '@fuel-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { type BN, DEFAULT_PRECISION } from 'fuels';
 import { type FC, useEffect, useMemo, useState } from 'react';
@@ -69,17 +69,19 @@ export const TxFee: TxFeeComponent = ({
   const ready = !!fee && !!feeInUsd;
 
   return (
-    <Card
+    <Box
       css={styles.detailItem(!!checked, !!onChecked, !!title)}
       onClick={() => onChecked?.(true)}
     >
-      <Text
-        color="intentsBase12"
-        css={styles.title}
-        aria-label={`fee title:${title || 'Network'}`}
-      >
-        {title || 'Fee (network)'}
-      </Text>
+      {title ? (
+        <Text
+          color="intentsBase12"
+          css={styles.title}
+          aria-label={`fee title:${title || 'Network'}`}
+        >
+          {title || 'Fee (network)'}
+        </Text>
+      ) : null}
       <HStack gap="$1">
         <AnimatePresence>
           {!ready ? (
@@ -123,7 +125,7 @@ export const TxFee: TxFeeComponent = ({
           )
         </MotionText>
       </HStack>
-    </Card>
+    </Box>
   );
 };
 
