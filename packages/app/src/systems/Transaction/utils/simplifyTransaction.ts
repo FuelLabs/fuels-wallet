@@ -1,3 +1,4 @@
+import type { AssetFuelAmount } from '@fuel-wallet/types';
 import type {
   Operation,
   Receipt,
@@ -73,7 +74,6 @@ function transformOperation(
 
   const operationReceipt = operation.receipts?.[0];
   const operationType = getOperationType(operation);
-
   const baseOperation = {
     type: operationType,
     from: from ? { address: from.address, type: from.type } : undefined,
@@ -122,7 +122,7 @@ function transformOperation(
   return baseOperation;
 }
 
-export function transformOperations(
+function transformOperations(
   summary: TransactionSummary,
   currentAccount?: string,
   parsedReceipts?: ParsedReceiptData[]
@@ -135,6 +135,7 @@ export function transformOperations(
     if (!operationReceipt)
       return transformOperation(op, currentAccount, parsedReceipts);
 
+    // TODO Check if we can remove
     const receiptIndex = allReceipts.findIndex((r) => {
       const pcMatch =
         'pc' in r && 'pc' in operationReceipt
@@ -279,7 +280,6 @@ function categorizeOperations(
   const otherOperations: SimplifiedOperation[] = [];
 
   for (const op of operations) {
-    console.log('opd', op.metadata.depth);
     if (op.isFromCurrentAccount || op.isToCurrentAccount) {
       main.push(op);
     } else if (op.metadata.depth === 0) {
@@ -319,7 +319,6 @@ function getOperationDepth(
   if (receiptIndex !== -1) {
     depth = parsedReceipts[receiptIndex].indent;
   }
-  console.log('depth', depth);
   return depth;
 }
 
@@ -352,6 +351,7 @@ export function simplifyTransaction(
       gasPrice: new BN(0),
     },
   };
+  console.log('simplifiedTransaction', simplifiedTransaction);
   return simplifiedTransaction;
 }
 
@@ -591,3 +591,23 @@ export function getMainOperations(
 
   return mainOperations;
 }
+export const getOperationText = (
+  isContract: boolean,
+  isTransfer: boolean,
+  assetsAmount?: AssetFuelAmount[]
+) => {
+  if (isContract) {
+    if (assetsAmount && assetsAmount.length > 0) {
+      return 'Calls contract (sending funds)';
+    }
+    return 'Calls contract';
+  }
+  if (isTransfer) {
+    // If all sent assets are NFTs, return 'Sends NFT'
+    if (assetsAmount?.every((asset) => asset.isNft)) {
+      return `Sends NFT${assetsAmount?.length > 1 ? 's' : ''}`;
+    }
+    return 'Sends token';
+  }
+  return 'Unknown';
+};

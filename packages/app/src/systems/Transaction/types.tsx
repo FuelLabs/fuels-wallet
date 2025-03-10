@@ -10,10 +10,8 @@ import type {
   OutputContractCreated,
   Receipt,
   ReceiptType,
-  TransactionRequest,
   TransactionRequestInput,
   TransactionRequestLike,
-  TransactionSummary,
 } from 'fuels';
 import type { OperationFunctionCall } from 'fuels';
 
@@ -24,6 +22,7 @@ export enum TxCategory {
   SCRIPT = 'script',
   PREDICATE = 'predicate',
   CONTRACTCREATED = 'contractcreated',
+  ROUNDEDTRIP = 'roundedtrip',
 }
 
 export type TxRecipientAddress = {
@@ -133,10 +132,17 @@ export type CategorizedOperations = {
   otherOperations: SimplifiedOperation[];
 };
 
+export type CategorizedV2Operations = {
+  mainOperations: SimplifiedOperation[];
+  intermediateContractCalls: SimplifiedOperation[];
+  notRelatedToCurrentAccount: SimplifiedOperation[];
+};
+
 export type SimplifiedTransaction = {
   id: string;
   operations: SimplifiedOperation[];
   categorizedOperations: CategorizedOperations;
+  categorizedV2Operations: CategorizedV2Operations;
   fee: SimplifiedFee;
 };
 

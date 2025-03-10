@@ -1,32 +1,36 @@
 import { Box } from '@fuel-ui/react';
 import { useAccounts } from '~/systems/Account';
-import type { CategorizedOperations } from '../../types';
+import type {
+  CategorizedOperations,
+  CategorizedV2Operations,
+} from '../../types';
 import { TxOperationsGroup } from '../TxContent/TxOperationsSimple/TxOperationsGroup';
 import { TxOperationsDrawer } from './TxOperationsDrawer';
 
 type TxOperationsListProps = {
-  operations: CategorizedOperations;
+  operations: CategorizedV2Operations;
 };
 
 export function TxOperations({ operations }: TxOperationsListProps) {
   const { account } = useAccounts();
 
+  console.log('!operations', operations);
   return (
     <Box.Stack gap="$2">
       <TxOperationsDrawer operations={operations.mainOperations} />
 
       <TxOperationsGroup
         title={`Operations not related to ${account?.name}`}
-        operations={operations.otherRootOperations}
+        operations={operations.notRelatedToCurrentAccount}
         showNesting={false}
-        numberLabel={`${operations.otherRootOperations.length}`}
+        numberLabel={`${operations.notRelatedToCurrentAccount.length}`}
       />
-      {operations.otherOperations && (
+      {operations.intermediateContractCalls && (
         <TxOperationsGroup
           title="Intermediate contract calls"
-          operations={operations.otherOperations}
+          operations={operations.intermediateContractCalls}
           showNesting={true}
-          numberLabel={`${operations.otherOperations.length}`}
+          numberLabel={`${operations.intermediateContractCalls.length}`}
         />
       )}
     </Box.Stack>

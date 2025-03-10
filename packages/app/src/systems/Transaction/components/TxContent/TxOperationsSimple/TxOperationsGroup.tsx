@@ -63,7 +63,7 @@ export function TxOperationsGroup({
                   key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
                   css={styles.cardStyle}
                 >
-                  <TxOperation operation={operation} />
+                  <TxOperation operation={operation} isChild />
                 </Box.Flex>
               )
           )}
