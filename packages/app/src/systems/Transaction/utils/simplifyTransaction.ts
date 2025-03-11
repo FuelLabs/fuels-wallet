@@ -70,7 +70,9 @@ function transformOperation(
 ): SimplifiedOperation {
   const { from, to, assetsSent = [] } = operation;
 
-  const operationReceipt = operation.receipts?.[0];
+  const operationReceipt = (operation as Operation & { receipts?: Receipt[] })
+    .receipts?.[0]; // Needed while fuels types are not updated
+
   const operationType = getOperationType(operation);
   const baseOperation = {
     type: operationType,

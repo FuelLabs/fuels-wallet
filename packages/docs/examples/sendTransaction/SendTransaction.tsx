@@ -45,9 +45,7 @@ export function SendTransaction() {
       console.log('Transaction ID', transactionId);
       /* sendTransaction:end */
 
-      setTransactionId(
-        typeof transactionId === 'string' ? transactionId : transactionId.id
-      );
+      setTransactionId(transactionId);
     }
   );
 
