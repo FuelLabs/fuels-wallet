@@ -6,13 +6,9 @@ import { operationsStyles as styles } from './TxOperationsStyles';
 
 type TxOperationsDrawerProps = {
   operations: SimplifiedOperation[];
-  isLoading: boolean;
 };
 
-export function TxOperationsDrawer({
-  operations,
-  isLoading,
-}: TxOperationsDrawerProps) {
+export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
   const renderOperations = () => {
     if (!operations?.length) {
       return (
@@ -28,8 +24,8 @@ export function TxOperationsDrawer({
       <Box.VStack>
         {operations.map((operation, index) => (
           <MotionBox
-            initial={{ height: 0 }}
-            animate={{ height: 'auto' }}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, ease: 'easeIn' }}
             key={JSON.stringify(operation)}
           >
@@ -45,7 +41,7 @@ export function TxOperationsDrawer({
 
   return (
     <Box css={styles.drawer} data-expanded={false}>
-      {!isLoading && renderOperations()}
+      {renderOperations()}
     </Box>
   );
 }

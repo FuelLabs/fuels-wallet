@@ -2,7 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import {
   Alert,
   Box,
-  CardList,
+  Card,
   ContentLoader,
   Copyable,
   Icon,
@@ -54,14 +54,13 @@ const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
 };
 
 const LoaderHeader = () => (
-  <CardList.Item
-    css={{ padding: '$2 !important' }}
-    aria-label="Loading Transaction"
-  >
-    <ContentLoader width={300} height={40} viewBox="0 0 300 40">
-      <rect x="20" y="10" rx="4" ry="4" width="92" height="20" />
+  <Card css={{ height: 84 }}>
+    <ContentLoader width={'100%'} height={'100%'} viewBox="0 0 300 84">
+      <rect x="16" y="15" width="50" height="15" rx="4" />
+      <rect x="16" y="35" width="50" height="15" rx="4" />
+      <rect x="16" y="55" width="50" height="15" rx="4" />
     </ContentLoader>
-  </CardList.Item>
+  </Card>
 );
 
 function TxContentLoader() {

@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useAccounts } from '~/systems/Account';
 import { Layout, coreStyles } from '~/systems/Core';
 import { useNetworks } from '~/systems/Network';
 import type { SendFormValues } from '~/systems/Send/hooks';
@@ -13,12 +14,17 @@ export function TxView() {
   const networks = useNetworks();
   const providerUrl = networks?.selectedNetwork?.url;
   const navigate = useNavigate();
-  const { txResult, ...ctx } = useTxResult({
+  const {
+    txResult,
+    isLoading: isTxLoading,
+    ...ctx
+  } = useTxResult({
     providerUrl,
     txId: txIdQueryParam,
     waitProviderUrl: true,
   });
   const form = useForm<SendFormValues>();
+  const { isLoading: isAccountsLoading } = useAccounts();
 
   return (
     <Layout
@@ -30,10 +36,13 @@ export function TxView() {
         {ctx.shouldShowAlert && (
           <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
         )}
-        {!txResult && <TxContent.Loader />}
-        {txResult && (
+        {isAccountsLoading || isTxLoading ? (
+          <TxContent.Loader />
+        ) : (
           <FormProvider {...form}>
-            <TxContent.Info tx={txResult} showDetails={ctx.shouldShowTxFee} />
+            {txResult && (
+              <TxContent.Info tx={txResult} showDetails={ctx.shouldShowTxFee} />
+            )}
           </FormProvider>
         )}
       </Layout.Content>

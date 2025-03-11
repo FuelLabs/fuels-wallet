@@ -1,6 +1,5 @@
-import { Box } from '@fuel-ui/react';
+import { Box, ContentLoader } from '@fuel-ui/react';
 import { useAccounts } from '~/systems/Account';
-import { MotionStack, animations } from '~/systems/Core';
 import type { CategorizedOperations } from '../../types';
 import { TxOperationsGroup } from '../TxContent/TxOperationsSimple/TxOperationsGroup';
 import { TxOperationsDrawer } from './TxOperationsDrawer';
@@ -10,14 +9,11 @@ type TxOperationsListProps = {
 };
 
 export function TxOperations({ operations }: TxOperationsListProps) {
-  const { account, isLoading } = useAccounts();
+  const { account } = useAccounts();
 
   return (
     <Box.Stack gap="$2">
-      <TxOperationsDrawer
-        operations={operations.mainOperations}
-        isLoading={isLoading}
-      />
+      <TxOperationsDrawer operations={operations.mainOperations} />
 
       <TxOperationsGroup
         title={`Operations not related to ${account?.name}`}
@@ -37,18 +33,14 @@ export function TxOperations({ operations }: TxOperationsListProps) {
 
 TxOperations.Loader = function TxOperationsLoader() {
   return (
-    <MotionStack {...animations.slideInTop()} gap="$4">
-      {[1, 2, 3].map((i) => (
-        <Box
-          key={i}
-          css={{
-            height: '80px',
-            backgroundColor: '$gray2',
-            borderRadius: '$md',
-            animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-          }}
-        />
-      ))}
-    </MotionStack>
+    <ContentLoader
+      width={350}
+      height={286}
+      backgroundColor="#f3f3f3"
+      foregroundColor="#ecebeb"
+    >
+      <rect x="0" y="10" rx="3" ry="3" width="322" height="137" />
+      <rect x="0" y="160" rx="3" ry="3" width="322" height="66" />
+    </ContentLoader>
   );
 };
