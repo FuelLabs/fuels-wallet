@@ -1,17 +1,20 @@
 import { Box, Text } from '@fuel-ui/react';
+import { MotionBox } from '~/systems/Core';
 import type { SimplifiedOperation } from '../../types';
 import { TxOperation } from '../TxOperation';
-// import { GroupedOperations } from './GroupedOperations';
 import { operationsStyles as styles } from './TxOperationsStyles';
 
 type TxOperationsDrawerProps = {
   operations: SimplifiedOperation[];
+  isLoading: boolean;
 };
 
-export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
+export function TxOperationsDrawer({
+  operations,
+  isLoading,
+}: TxOperationsDrawerProps) {
   const renderOperations = () => {
     if (!operations?.length) {
-      // TODO add a loading state
       return (
         <Box css={styles.header}>
           <Text fontSize="sm" css={styles.title}>
@@ -24,12 +27,17 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
     return (
       <Box.VStack>
         {operations.map((operation, index) => (
-          <Box.Flex key={JSON.stringify(operation)}>
+          <MotionBox
+            initial={{ height: 0 }}
+            animate={{ height: 'auto' }}
+            transition={{ duration: 0.3, ease: 'easeIn' }}
+            key={JSON.stringify(operation)}
+          >
             <TxOperation
               key={`${operation.type}-${operation?.from?.address || ''}-${operation?.to?.address || ''}-${index}`}
               operation={operation}
             />
-          </Box.Flex>
+          </MotionBox>
         ))}
       </Box.VStack>
     );
@@ -37,7 +45,7 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
 
   return (
     <Box css={styles.drawer} data-expanded={false}>
-      {renderOperations()}
+      {!isLoading && renderOperations()}
     </Box>
   );
 }

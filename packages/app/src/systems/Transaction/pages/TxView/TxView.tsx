@@ -1,5 +1,4 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box } from '@fuel-ui/react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Layout, coreStyles } from '~/systems/Core';
@@ -31,13 +30,10 @@ export function TxView() {
         {ctx.shouldShowAlert && (
           <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
         )}
+        {!txResult && <TxContent.Loader />}
         {txResult && (
           <FormProvider {...form}>
-            <TxContent.Info
-              tx={txResult}
-              isLoading={ctx.isFetching}
-              showDetails={ctx.shouldShowTxFee}
-            />
+            <TxContent.Info tx={txResult} showDetails={ctx.shouldShowTxFee} />
           </FormProvider>
         )}
       </Layout.Content>

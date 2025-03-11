@@ -1,5 +1,6 @@
 import { Box } from '@fuel-ui/react';
 import { useAccounts } from '~/systems/Account';
+import { MotionStack, animations } from '~/systems/Core';
 import type { CategorizedOperations } from '../../types';
 import { TxOperationsGroup } from '../TxContent/TxOperationsSimple/TxOperationsGroup';
 import { TxOperationsDrawer } from './TxOperationsDrawer';
@@ -9,11 +10,14 @@ type TxOperationsListProps = {
 };
 
 export function TxOperations({ operations }: TxOperationsListProps) {
-  const { account } = useAccounts();
+  const { account, isLoading } = useAccounts();
 
   return (
     <Box.Stack gap="$2">
-      <TxOperationsDrawer operations={operations.mainOperations} />
+      <TxOperationsDrawer
+        operations={operations.mainOperations}
+        isLoading={isLoading}
+      />
 
       <TxOperationsGroup
         title={`Operations not related to ${account?.name}`}
@@ -33,8 +37,8 @@ export function TxOperations({ operations }: TxOperationsListProps) {
 
 TxOperations.Loader = function TxOperationsLoader() {
   return (
-    <Box.Stack gap="$1">
-      {[1, 2].map((i) => (
+    <MotionStack {...animations.slideInTop()} gap="$4">
+      {[1, 2, 3].map((i) => (
         <Box
           key={i}
           css={{
@@ -45,6 +49,6 @@ TxOperations.Loader = function TxOperationsLoader() {
           }}
         />
       ))}
-    </Box.Stack>
+    </MotionStack>
   );
 };

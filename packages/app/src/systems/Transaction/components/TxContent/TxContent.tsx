@@ -79,7 +79,6 @@ export type TxContentInfoProps = {
   tx: TransactionSummary;
   txStatus?: Maybe<TransactionStatus>;
   showDetails?: boolean;
-  isLoading?: boolean;
   errors?: GroupedErrors;
   fees?: {
     baseFee?: BN;
@@ -94,7 +93,6 @@ function TxContentInfo({
   txStatus,
   footer,
   showDetails,
-  isLoading,
   errors,
   fees,
   txRequest,
@@ -148,7 +146,6 @@ function TxContentInfo({
       {getHeader()}
       <Box css={styles.content}>
         <TxOperations operations={transaction.categorizedOperations} />
-        {isLoading && !showDetails && <TxFee.Loader />}
         {showDetails && !fees && (
           <Box.VStack align="flex-start" css={styles.feeWrapper}>
             <Box.HStack gap="$2" align="center">
