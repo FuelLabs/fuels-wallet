@@ -126,9 +126,14 @@ function getOperationDepth(
 ) {
   let depth = 0;
 
-  const receiptIndex = parsedReceipts.findIndex(
-    (r) => r.data.id === operation.receipts[0].id
+  // biome-ignore lint/suspicious/noExplicitAny: Type mismatch, id is sometimes available.
+  const receiptIndex = parsedReceipts.findIndex((r: any) =>
+    operation.receipts?.some(
+      // biome-ignore lint/suspicious/noExplicitAny: Type mismatch, id is sometimes available.
+      (operationReceipt: any) => operationReceipt.id === r.data.id
+    )
   );
+
   if (receiptIndex !== -1) {
     depth = parsedReceipts[receiptIndex].indent;
   }
