@@ -485,7 +485,7 @@ export class TxService {
           // If this is the last attempt and we still don't have funds, we cannot move forward
           if (
             attempts === maxAttempts &&
-            error.code === ErrorCode.NOT_ENOUGH_FUNDS
+            error.code === ErrorCode.FUNDS_TOO_LOW
           ) {
             throw e;
           }
