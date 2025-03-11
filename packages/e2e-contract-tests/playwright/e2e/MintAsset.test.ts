@@ -140,10 +140,7 @@ test.describe('Mint Assets', () => {
     expect
       .poll(
         async () => {
-          const amountContainer = getByAriaLabel(
-            walletNotificationPage,
-            'amount-container'
-          );
+          const amountContainer = page.getByLabel('amount-container').first();
           return (await amountContainer.innerText()).replace('\n', ' ');
         },
         { timeout: 10000 }
