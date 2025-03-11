@@ -54,7 +54,7 @@ export function TransactionRequest() {
     };
   }, [txSummarySimulated, proposedTxRequest]);
 
-  const isLoadingInfo = useMemo<boolean>(() => {
+  const _isLoadingInfo = useMemo<boolean>(() => {
     return status('loading') || status('sending') || isLoadingAssets;
   }, [status, isLoadingAssets]);
 
@@ -89,9 +89,7 @@ export function TransactionRequest() {
               showDetails
               tx={txSummarySimulated}
               txRequest={proposedTxRequest}
-              isLoading={isLoadingInfo}
               errors={errors.simulateTxErrors}
-              isConfirm
               fees={fees}
             />
           )}

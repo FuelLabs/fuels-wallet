@@ -20,7 +20,6 @@ export const TxApprove = () => {
           <TxContent.Info
             showDetails
             tx={ctx.txSummarySimulated}
-            isLoading={isLoading}
             errors={ctx.errors.simulateTxErrors}
             footer={
               ctx.status('failed') && (
