@@ -136,14 +136,21 @@ test.describe('Mint Assets', () => {
       window.scrollTo(0, document.body.scrollHeight)
     );
 
+    // await page.pause();
     // test mint amount is correct
-    expect
+    await expect
       .poll(
         async () => {
-          const amountContainer = page.getByLabel('amount-container').first();
+          const amountContainer = walletNotificationPage
+            .getByLabel('amount-container')
+            .first();
           return (await amountContainer.innerText()).replace('\n', ' ');
         },
-        { timeout: 10000 }
+        {
+          timeout: 10000,
+          message:
+            'Waiting for correct amount to appear in wallet notification',
+        }
       )
       .toBe(`1.2345 ${symbol}`);
 
@@ -154,6 +161,7 @@ test.describe('Mint Assets', () => {
     await fuelWalletTestHelper.walletApprove();
     await waitSuccessTransaction(page);
     const postMintBalanceTkn = await fuelWallet.getBalance(assetId);
+    console.log(preMintBalanceTkn, postMintBalanceTkn);
     expect(
       Number.parseFloat(
         postMintBalanceTkn
