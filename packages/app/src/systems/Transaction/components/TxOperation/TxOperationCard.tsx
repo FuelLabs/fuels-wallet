@@ -3,11 +3,13 @@ import { Avatar, Box, Icon, Text } from '@fuel-ui/react';
 import { Address, isB256 } from 'fuels';
 import { useMemo } from 'react';
 import { FuelAddress, useAccounts } from '~/systems/Account';
+import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadata';
 import { MotionBox } from '~/systems/Core/components/Motion';
 import { useAssetsAmount } from '../../hooks/useAssetsAmount';
 import { useBaseAsset } from '../../hooks/useBaseAsset';
 import { type SimplifiedOperation, TxCategory } from '../../types';
 import { getOperationText } from '../../utils/simplifyTransaction';
+import { TxRecipientContractLogo } from '../TxRecipientCard/TxRecipientContractLogo';
 import { TxOperationAssets } from './TxOperationAssets';
 
 export type TxOperationCardProps = {
@@ -55,6 +57,9 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
     [operation.assetsToFrom]
   );
 
+  const fromContractMetadata = useContractMetadata(operation.from.address);
+  const toContractMetadata = useContractMetadata(operation.to.address);
+
   return (
     <Box css={styles.contentCol}>
       <Box
@@ -70,13 +75,23 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
         })}
       >
         <Box.Flex justify={'flex-start'} align={'center'} css={styles.iconCol}>
-          <Avatar.Generated
-            role="img"
-            size="sm"
-            hash={fuelFromAddress}
-            aria-label={fuelFromAddress}
-            css={styles.avatar}
-          />
+          <Box css={styles.icon}>
+            {isFromContract ? (
+              <TxRecipientContractLogo
+                name={fromContractMetadata?.name}
+                image={fromContractMetadata?.image}
+                size={36}
+              />
+            ) : (
+              <Avatar.Generated
+                role="img"
+                size={36}
+                hash={fuelFromAddress}
+                aria-label={fuelFromAddress}
+                css={styles.avatar}
+              />
+            )}
+          </Box>
         </Box.Flex>
         <Box.Flex
           justify={'flex-start'}
@@ -129,13 +144,23 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
         </Box>
 
         <Box.Flex justify={'flex-start'} align={'center'} css={styles.iconCol}>
-          <Avatar.Generated
-            role="img"
-            size="sm"
-            hash={fuelToAddress}
-            aria-label={fuelToAddress}
-            css={styles.avatar}
-          />
+          <Box css={styles.icon}>
+            {isToContract ? (
+              <TxRecipientContractLogo
+                name={toContractMetadata?.name}
+                image={toContractMetadata?.image}
+                size={36}
+              />
+            ) : (
+              <Avatar.Generated
+                role="img"
+                size={36}
+                hash={fuelToAddress}
+                aria-label={fuelToAddress}
+                css={styles.avatar}
+              />
+            )}
+          </Box>
         </Box.Flex>
         <Box.Flex
           justify={'flex-start'}
@@ -193,13 +218,23 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
               align={'center'}
               css={styles.iconCol}
             >
-              <Avatar.Generated
-                role="img"
-                size="sm"
-                hash={fuelFromAddress}
-                aria-label={fuelFromAddress}
-                css={styles.avatar}
-              />
+              <Box css={styles.icon}>
+                {isFromContract ? (
+                  <TxRecipientContractLogo
+                    name={fromContractMetadata?.name}
+                    image={fromContractMetadata?.image}
+                    size={36}
+                  />
+                ) : (
+                  <Avatar.Generated
+                    role="img"
+                    size={36}
+                    hash={fuelFromAddress}
+                    aria-label={fuelFromAddress}
+                    css={styles.avatar}
+                  />
+                )}
+              </Box>
             </Box.Flex>
             <Box.Flex
               justify={'flex-start'}
@@ -275,7 +310,13 @@ const styles = {
     lineHeight: 'normal',
   }),
   avatar: cssObj({
-    // apply opacity to make the avatar color less alive and more opaque
     opacity: 0.6,
   }),
-};
+  icon: cssObj({
+    height: 36,
+    width: 36,
+    borderRadius: '$full',
+    overflow: 'hidden',
+    flexShrink: 0,
+  }),
+} as const;
