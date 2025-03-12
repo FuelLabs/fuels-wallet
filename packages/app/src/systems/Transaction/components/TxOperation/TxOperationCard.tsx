@@ -134,6 +134,7 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
             size="sm"
             hash={fuelToAddress}
             aria-label={fuelToAddress}
+            css={styles.avatar}
           />
         </Box.Flex>
         <Box.Flex
