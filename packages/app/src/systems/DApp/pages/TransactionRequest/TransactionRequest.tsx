@@ -3,7 +3,7 @@ import { Button } from '@fuel-ui/react';
 import { bn } from 'fuels';
 import { useMemo } from 'react';
 import { useAssets } from '~/systems/Asset';
-import { Layout } from '~/systems/Core';
+import { Layout, coreStyles } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { TxContent, getGasLimitFromTxRequest } from '~/systems/Transaction';
 import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
@@ -62,7 +62,7 @@ export function TransactionRequest() {
     return (
       <Layout title={title} warning={txRequest.warning} noBorder>
         <Layout.TopBar type={TopBarType.external} />
-        <Layout.Content css={styles.content}>
+        <Layout.Content css={styles.content} noScroll>
           <TxContent.Loader />
         </Layout.Content>
       </Layout>
@@ -81,7 +81,7 @@ export function TransactionRequest() {
     >
       <AutoSubmit />
 
-      <Layout title={title} warning={txRequest.warning} noBorder>
+      <Layout title={title} warning={txRequest.warning}>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
           {shouldShowTxSimulated && txSummarySimulated && (
@@ -149,6 +149,19 @@ const styles = {
     },
     '& h4': {
       m: '$0',
+    },
+    ...coreStyles.scrollable('$intentsBase3'),
+    borderTop: '1px solid $gray6',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '$2',
+    backgroundColor: '$intentsBase3',
+    padding: '$2 0 $2 $3',
+    overflowY: 'scroll !important',
+    '&::-webkit-scrollbar': {
+      width: '$3',
+      backgroundColor: 'transparent',
     },
   }),
   approveUrlTag: cssObj({
