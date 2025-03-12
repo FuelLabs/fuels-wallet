@@ -66,5 +66,4 @@ const styles = {
       backgroundColor: 'transparent',
     },
   }),
-  contentInner: cssObj({}),
 };
