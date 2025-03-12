@@ -11,7 +11,7 @@ export type TxOperationProps = {
 };
 
 export function TxOperation({ operation, isChild = false }: TxOperationProps) {
-  const [isExpanded, _setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const isGrouped = !!operation.operations?.length;
 
   return (
@@ -25,7 +25,11 @@ export function TxOperation({ operation, isChild = false }: TxOperationProps) {
         <>
           <Box.Flex
             as="button"
-            onClick={() => _setIsExpanded(!isExpanded)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setIsExpanded(!isExpanded);
+            }}
             css={styles.header}
             justify="center"
           >
@@ -56,7 +60,6 @@ export function TxOperation({ operation, isChild = false }: TxOperationProps) {
               opacity: { duration: 0.2 },
             }}
             css={styles.expandedOperations}
-            onClick={(e) => e.stopPropagation()}
           >
             {operation.operations?.map((operation, index) => (
               <Box.Flex
