@@ -85,9 +85,19 @@ export const TxApprove = () => {
 const styles = {
   wrapper: cssObj({
     flex: 1,
+    ...coreStyles.scrollable('$intentsBase3'),
+    borderTop: '1px solid $gray6',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    gap: '$0',
+    gap: '$2',
+    backgroundColor: '$intentsBase3',
+    padding: '$2 0 $2 $3',
+    overflowY: 'scroll !important',
+    '&::-webkit-scrollbar': {
+      width: '$3',
+      backgroundColor: 'transparent',
+    },
   }),
   description: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
