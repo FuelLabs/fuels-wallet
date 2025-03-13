@@ -1,5 +1,14 @@
-import type { Account, AccountWithBalance } from '@fuel-wallet/types';
-import type { Provider, TransactionRequest, WalletLocked } from 'fuels';
+import type {
+  Account,
+  AccountWithBalance,
+  FuelProviderConfig,
+} from '@fuel-wallet/types';
+import type {
+  TransactionRequest,
+  TransactionSummary,
+  TransactionSummaryJson,
+  WalletLocked,
+} from 'fuels';
 import { clone } from 'ramda';
 
 import {
@@ -10,12 +19,14 @@ import {
   TransactionResponse,
   TransactionStatus,
   assembleTransactionSummary,
+  assembleTransactionSummaryFromJson,
   bn,
+  deserializeProviderCache,
   getTransactionSummary,
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
 } from 'fuels';
-import { WalletLockedCustom, db } from '~/systems/Core';
+import { WalletLockedCustom, db, delay } from '~/systems/Core';
 
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
@@ -45,7 +56,7 @@ export type TxInputs = {
     cursors: string[];
   };
   request: {
-    providerUrl: string;
+    providerConfig: FuelProviderConfig;
     transactionRequest: TransactionRequest;
     address?: string;
     origin?: string;
@@ -59,6 +70,8 @@ export type TxInputs = {
       fastTip?: BN;
       maxGasLimit?: BN;
     };
+    transactionState?: 'funded' | undefined;
+    transactionSummary?: TransactionSummaryJson;
   };
   send: {
     address?: string;
@@ -68,10 +81,12 @@ export type TxInputs = {
   };
   simulateTransaction: {
     transactionRequest: TransactionRequest;
-    providerUrl?: string;
+    providerConfig?: FuelProviderConfig;
     skipCustomFee?: boolean;
     tip?: BN;
     gasLimit?: BN;
+    transactionState?: 'funded' | undefined;
+    transactionSummary?: TransactionSummaryJson;
   };
   setCustomFees: {
     tip?: BN;
@@ -191,12 +206,20 @@ export class TxService {
   static async simulateTransaction({
     skipCustomFee,
     transactionRequest: inputTransactionRequest,
-    providerUrl,
+    providerConfig,
     tip: inputCustomTip,
     gasLimit: inputCustomGasLimit,
+    transactionState,
+    transactionSummary,
   }: TxInputs['simulateTransaction']) {
+    // await delay(4000);
+    // console.log(`asd providerConfig`, providerConfig);
+    // if (providerConfig?.cache) {
+    //   const providerCache = deserializeProviderCache(providerConfig?.cache);
+    //   console.log(`asd providerCache`, providerCache);
+    // }
     const [provider, account] = await Promise.all([
-      createProvider(providerUrl || ''),
+      createProvider(providerConfig?.url || ''),
       AccountService.getCurrentAccount(),
     ]);
 
@@ -218,7 +241,8 @@ export class TxService {
       then outputting a proposedTxRequest, which will be the one to go for approval
       */
       const proposedTxRequest = clone(inputTransactionRequest);
-      if (!skipCustomFee) {
+
+      if (!skipCustomFee && transactionState !== 'funded') {
         // if the user has inputted a custom tip, we set it to the proposedTxRequest
         if (inputCustomTip) {
           proposedTxRequest.tip = inputCustomTip;
@@ -260,11 +284,20 @@ export class TxService {
         inputs: transaction.inputs,
       });
 
-      const txSummary = await getTransactionSummaryFromRequest({
-        provider,
-        transactionRequest: proposedTxRequest,
-        abiMap,
-      });
+      let txSummary: TransactionSummary<void>;
+      if (transactionSummary) {
+        const summary = await assembleTransactionSummaryFromJson({
+          transactionSummary,
+          provider,
+        });
+        txSummary = summary;
+      } else {
+        txSummary = await getTransactionSummaryFromRequest({
+          provider,
+          transactionRequest: proposedTxRequest,
+          abiMap,
+        });
+      }
 
       // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
       const feeAdaptedToSdkDiff = txSummary.fee.add(1);
@@ -485,7 +518,7 @@ export class TxService {
           // If this is the last attempt and we still don't have funds, we cannot move forward
           if (
             attempts === maxAttempts &&
-            error.code === ErrorCode.NOT_ENOUGH_FUNDS
+            error.code === ErrorCode.INSUFFICIENT_FUNDS_OR_MAX_COINS
           ) {
             throw e;
           }

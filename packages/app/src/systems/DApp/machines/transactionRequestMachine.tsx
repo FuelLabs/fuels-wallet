@@ -257,41 +257,21 @@ export const transactionRequestMachine = createMachine(
       })),
       assignTxRequestData: assign({
         input: (ctx, ev) => {
-          const {
-            transactionRequest,
-            origin,
-            providerUrl,
-            title,
-            favIconUrl,
-            skipCustomFee,
-            account,
-            address,
-            fees,
-          } = ev.input || {};
-
-          if (!providerUrl) {
-            throw new Error('providerUrl is required');
+          if (!ev.input?.providerConfig) {
+            throw new Error('providerConfig is required');
           }
-          if (!account?.address && !address) {
+          if (!ev.input?.account?.address && !ev.input?.address) {
             throw new Error('account or address is required');
           }
-          if (!transactionRequest) {
+          if (!ev.input?.transactionRequest) {
             throw new Error('transaction is required');
           }
-          if (ctx.input.isOriginRequired && !origin) {
+          if (ctx.input.isOriginRequired && !ev.input?.origin) {
             throw new Error('origin is required');
           }
 
           return {
-            transactionRequest,
-            origin,
-            account,
-            address,
-            providerUrl,
-            title,
-            favIconUrl,
-            skipCustomFee,
-            fees,
+            ...ev.input,
           };
         },
         fees: (_ctx, ev) => {
