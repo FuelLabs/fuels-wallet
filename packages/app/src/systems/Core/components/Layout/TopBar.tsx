@@ -144,7 +144,7 @@ function ExternalTopBar() {
 // TopBar used for Send Transaction Approval
 // ----------------------------------------------------------------------------
 
-function TxApproveTopBar() {
+function TxApproveTopBar(_props: TopBarProps) {
   const { selectedNetwork } = useNetworks();
   const { isLoading, title } = useLayoutContext();
   const { warning, handlers } = useTransactionRequest();
