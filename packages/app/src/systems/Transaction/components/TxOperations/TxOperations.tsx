@@ -33,12 +33,7 @@ export function TxOperations({ operations }: TxOperationsListProps) {
 
 TxOperations.Loader = function TxOperationsLoader() {
   return (
-    <ContentLoader
-      width={350}
-      height={286}
-      backgroundColor="#f3f3f3"
-      foregroundColor="#ecebeb"
-    >
+    <ContentLoader width={350} height={286}>
       <rect x="0" y="10" rx="3" ry="3" width="322" height="137" />
       <rect x="0" y="160" rx="3" ry="3" width="322" height="66" />
     </ContentLoader>

@@ -34,7 +34,7 @@ export function ViewActivity() {
     <Layout title="History" isLoading={isFetching || isLoadingAccounts}>
       <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
       <Layout.Content>
-        <Box.Stack gap="$4">
+        <Box.Stack gap="$4" css={{ padding: '$2 0' }}>
           {selectedNetwork?.bridgeUrl && (
             <Alert status="info" hideIcon>
               <Text css={styles.bridgeAlertText}>
