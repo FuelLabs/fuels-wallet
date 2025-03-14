@@ -102,6 +102,7 @@ export function SendSelect({
     tip,
     form.setValue,
     isSendingBaseAssetId,
+    handlers.recalculateFromAmount,
   ]);
 
   const assetSelectItems = balances?.map((b) => ({
