@@ -6,16 +6,19 @@ import { useNavigate } from 'react-router-dom';
  * Because of some cycle-dependency error here, is not
  * possible to just import by using ~/systems/Network
  */
-import { NetworkDropdown } from '~/systems/Network/components';
+import { NetworkDropdown, NetworkStatus } from '~/systems/Network/components';
 import { useNetworks } from '~/systems/Network/hooks';
 import { useOverlay } from '~/systems/Overlay';
 
+import { useTransactionRequest } from '~/systems/DApp';
 import { useReportError } from '~/systems/Error';
 import { useLayoutContext } from './Layout';
 
 export enum TopBarType {
   internal = 0,
   external = 1,
+  txApprove = 2,
+  txView = 3,
 }
 
 type TopBarProps = {
@@ -100,67 +103,155 @@ function InternalTopBar({ onBack, isTxScreen: inputIsTxScreen }: TopBarProps) {
 // ----------------------------------------------------------------------------
 
 function ExternalTopBar() {
-  const { isLoading, title, isHome, warning } = useLayoutContext();
+  const { isLoading, title } = useLayoutContext();
   const { selectedNetwork } = useNetworks();
+  const { warning } = useTransactionRequest();
 
   return (
-    <Box.Stack
-      as="nav"
-      justify="center"
-      css={{
-        ...styles.root,
-        gap: '0',
-        py: '0',
-        minHeight: '72px',
-        alignItems: 'flex-start',
-        backgroundColor: '$cardBg',
-        borderBottom: '1px solid $gray6',
-      }}
-      data-home={isHome}
-    >
-      <Box.Flex css={{ width: '100%' }}>
-        <Box.Flex css={{ flex: 1, minWidth: 0 }}>
-          {isLoading && <Spinner aria-label="Spinner" />}
-          {!isLoading && (
-            <Text
-              css={{
-                ...styles.title,
-                fontWeight: '$semibold',
-              }}
-            >
-              {title}
-            </Text>
-          )}
+    <Box>
+      <Box.Stack css={styles.root}>
+        {}
+        <Box.Flex css={styles.container} data-txscreen>
+          <Box.Flex css={styles.leftSection}>
+            {isLoading && <Spinner />}
+            {!isLoading && (
+              <Text css={{ ...styles.title, fontWeight: '$bold' }}>
+                {title}
+              </Text>
+            )}
+          </Box.Flex>
+          <Box.Flex css={styles.rightSection}>
+            {selectedNetwork && (
+              <NetworkStatus network={selectedNetwork} size="$sm" />
+            )}
+            <Text css={styles.title}>{selectedNetwork?.name}</Text>
+          </Box.Flex>
         </Box.Flex>
-        {selectedNetwork && (
-          <Box.Flex css={{ flexShrink: 0 }}>
-            <Text
-              as="span"
-              css={{
-                color: '$intentsPrimary10',
-                fontSize: '$xs',
-                mr: '$1',
-              }}
-            >
-              ●
-            </Text>
-            <Text
-              css={{
-                ...styles.title,
-                fontWeight: '$medium',
-              }}
-            >
-              {selectedNetwork.name}
-            </Text>
+      </Box.Stack>
+      <Box css={{ borderBottom: '1px solid $gray6' }}>
+        {warning && (
+          <Box.Flex justify="center" css={styles.warning}>
+            <Icon icon="InfoCircle" stroke={2} size={16} />
+            {warning}
           </Box.Flex>
         )}
+      </Box>
+    </Box>
+  );
+}
+
+// ----------------------------------------------------------------------------
+// TopBar used for Send Transaction Approval
+// ----------------------------------------------------------------------------
+
+function TxApproveTopBar() {
+  const { selectedNetwork } = useNetworks();
+  const { isLoading, title } = useLayoutContext();
+  const { warning, handlers } = useTransactionRequest();
+  const overlay = useOverlay();
+
+  const handleReject = () => {
+    handlers.closeDialog();
+    handlers.reset();
+    handlers.reject();
+  };
+
+  return (
+    <Box>
+      <Box.Stack css={styles.root}>
+        <Box.Flex css={styles.container}>
+          <Box.Flex css={styles.leftSection}>
+            <IconButton
+              icon={<Icon icon="ChevronLeft" color="intentsBase8" />}
+              aria-label="Back"
+              variant="link"
+              css={styles.backIcon}
+              onPress={handleReject}
+            />
+
+            {isLoading && <Spinner />}
+            {!isLoading && (
+              <Text css={{ ...styles.title, fontWeight: '$bold' }}>
+                {title}
+              </Text>
+            )}
+          </Box.Flex>
+          <Box.Flex css={styles.rightSection}>
+            {selectedNetwork && (
+              <NetworkStatus network={selectedNetwork} size="$sm" />
+            )}
+            <Text css={styles.title}>{selectedNetwork?.name}</Text>
+            <IconButton
+              iconSize={20}
+              icon={<Icon icon="Menu2" />}
+              aria-label="Menu"
+              variant="link"
+              css={styles.menuIcon}
+              onPress={() => {
+                handleReject();
+                overlay.open({ modal: 'sidebar' });
+              }}
+            />
+          </Box.Flex>
+        </Box.Flex>
+      </Box.Stack>
+      <Box css={{ borderBottom: '1px solid $gray6' }}>
+        {warning && (
+          <Box.Flex justify="center" css={styles.warning}>
+            <Icon icon="InfoCircle" stroke={2} size={16} />
+            {warning}
+          </Box.Flex>
+        )}
+      </Box>
+    </Box>
+  );
+}
+
+// ----------------------------------------------------------------------------
+// TopBar used for Transaction View
+// ----------------------------------------------------------------------------
+
+function TxViewTopBar({ onBack }: TopBarProps) {
+  const navigate = useNavigate();
+  const overlay = useOverlay();
+  const { selectedNetwork } = useNetworks();
+  const { isLoading, title } = useLayoutContext();
+
+  return (
+    <Box.Stack css={styles.root}>
+      <Box.Flex css={styles.container}>
+        <Box.Flex css={styles.leftSection}>
+          <IconButton
+            icon={<Icon icon="ChevronLeft" color="intentsBase8" />}
+            aria-label="Back"
+            variant="link"
+            css={styles.backIcon}
+            onPress={() => (onBack ? onBack() : navigate(-1))}
+          />
+
+          {isLoading && <Spinner />}
+
+          {!isLoading && (
+            <Text css={{ ...styles.title, fontWeight: '$bold' }}>{title}</Text>
+          )}
+        </Box.Flex>
+        <Box.Flex css={styles.rightSection}>
+          {selectedNetwork && (
+            <NetworkStatus network={selectedNetwork} size="$sm" />
+          )}
+          <Text css={styles.title}>{selectedNetwork?.name}</Text>
+          <IconButton
+            iconSize={20}
+            icon={<Icon icon="Menu2" />}
+            aria-label="Menu"
+            variant="link"
+            css={styles.menuIcon}
+            onPress={() => {
+              overlay.open({ modal: 'sidebar' });
+            }}
+          />
+        </Box.Flex>
       </Box.Flex>
-      {warning && (
-        <Box css={styles.warning}>
-          <Icon icon="InfoCircle" stroke={2} size={16} />
-          {warning}
-        </Box>
-      )}
     </Box.Stack>
   );
 }
@@ -170,11 +261,16 @@ function ExternalTopBar() {
 // ----------------------------------------------------------------------------
 
 export function TopBar({ type = TopBarType.internal, ...props }: TopBarProps) {
-  return type === TopBarType.external ? (
-    <ExternalTopBar />
-  ) : (
-    <InternalTopBar {...props} />
-  );
+  switch (type) {
+    case TopBarType.external:
+      return <ExternalTopBar />;
+    case TopBarType.txApprove:
+      return <TxApproveTopBar {...props} />;
+    case TopBarType.txView:
+      return <TxViewTopBar {...props} />;
+    default:
+      return <InternalTopBar {...props} />;
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -188,6 +284,8 @@ const styles = {
     alignItems: 'center',
     minHeight: '50px',
     transition: 'none',
+    backgroundColor: '$cardBg',
+    borderBottom: '1px solid $gray6',
   }),
   menuContainer: cssObj({
     position: 'relative',
@@ -211,7 +309,6 @@ const styles = {
   }),
   title: cssObj({
     fontSize: '$sm',
-    fontWeight: '$normal',
     color: '$intentsBase12',
   }),
   container: cssObj({
@@ -220,6 +317,8 @@ const styles = {
     gap: '$3',
     alignItems: 'center',
     flex: 1,
+    width: '100%',
+    justifyContent: 'space-between',
 
     '&[data-home="true"]': {
       pl: '$0',
@@ -227,6 +326,14 @@ const styles = {
     '&[data-txscreen="true"]': {
       pl: '$0',
     },
+  }),
+  leftSection: cssObj({
+    alignItems: 'center',
+    gap: '$2',
+  }),
+  rightSection: cssObj({
+    alignItems: 'center',
+    gap: '$2',
   }),
   backIcon: cssObj({
     position: 'absolute',
@@ -241,6 +348,14 @@ const styles = {
         transform: 'scale(0.97) translateY(-50%)',
       },
   }),
+  network: cssObj({
+    fontSize: '$sm',
+    color: '$intentsBase11',
+  }),
+  menuIcon: cssObj({
+    px: '$0 !important',
+    color: '$intentsBase8 !important',
+  }),
   warning: cssObj({
     display: 'flex',
     alignItems: 'center',
@@ -248,5 +363,8 @@ const styles = {
     fontSize: 'calc($sm - 1px)',
     color: '$gray11',
     lineHeight: '$tight',
+    backgroundColor: '$intentsInfo4',
+    width: '100%',
+    minHeight: '40px',
   }),
 };

@@ -2,6 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Dialog } from '@fuel-ui/react';
 import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
+import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { coreStyles } from '~/systems/Core/styles';
 import { useTransactionRequest } from '~/systems/DApp';
 import { TxContent } from '../../components/TxContent/TxContent';
@@ -14,7 +15,7 @@ export const TxApprove = () => {
 
   return (
     <Box css={styles.wrapper}>
-      <Layout.TopBar isTxScreen />
+      <Layout.TopBar type={TopBarType.txApprove} />
       <Dialog.Description as="div" css={styles.description}>
         {ctx.shouldShowTxSimulated && ctx.txSummarySimulated && (
           <TxContent.Info
@@ -92,21 +93,15 @@ const styles = {
     flexDirection: 'column',
     gap: '$2',
     backgroundColor: '$intentsBase3',
-    padding: '$2 0 $2 $3',
-    overflowY: 'scroll !important',
-    '&::-webkit-scrollbar': {
-      width: '$3',
-      backgroundColor: 'transparent',
-    },
   }),
   description: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
     overflowY: 'auto !important',
-    padding: '0',
+    padding: '0 $2 0 $2',
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    gap: '$0',
+    gap: '$2',
     backgroundColor: '$intentsBase3',
   }),
   footer: cssObj({

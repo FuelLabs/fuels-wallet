@@ -60,8 +60,9 @@ export function TransactionRequest() {
 
   if (!defaultValues) {
     return (
-      <Layout title={title} warning={txRequest.warning} noBorder>
+      <Layout title={title}>
         <Layout.TopBar type={TopBarType.external} />
+
         <Layout.Content css={styles.content} noScroll>
           <TxContent.Loader />
         </Layout.Content>
@@ -81,9 +82,9 @@ export function TransactionRequest() {
     >
       <AutoSubmit />
 
-      <Layout title={title} warning={txRequest.warning}>
+      <Layout title={title} isLoading={isLoading}>
         <Layout.TopBar type={TopBarType.external} />
-        <Layout.Content css={styles.content}>
+        <Layout.Content css={styles.content} noScroll>
           {shouldShowTxSimulated && txSummarySimulated && (
             <TxContent.Info
               showDetails
@@ -142,14 +143,6 @@ const styles = {
     mt: '$4',
   }),
   content: cssObj({
-    '& h2': {
-      m: '$0',
-      fontSize: '$sm',
-      color: '$intentsBase12',
-    },
-    '& h4': {
-      m: '$0',
-    },
     ...coreStyles.scrollable('$intentsBase3'),
     borderTop: '1px solid $gray6',
     height: '100%',

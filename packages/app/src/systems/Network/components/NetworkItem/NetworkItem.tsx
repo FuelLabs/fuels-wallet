@@ -6,15 +6,21 @@ import { forwardRef } from 'react';
 
 import { NetworkRemoveDialog } from '../NetworkRemoveDialog/NetworkRemoveDialog';
 
-export function NetworkStatus({ network }: { network: NetworkData }) {
+export function NetworkStatus({
+  network,
+  size = '22px',
+}: {
+  network: NetworkData;
+  size?: string;
+}) {
   return (
     <Text
       as="span"
       css={{
         display: 'inline-flex',
         alignItems: 'center',
-        color: network.isSelected ? '$intentsPrimary10' : '$intentsBase8',
-        fontSize: '22px',
+        color: network.isSelected ? '$brand' : '$intentsBase8',
+        fontSize: size,
         mt: '2px',
       }}
     >

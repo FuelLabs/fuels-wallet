@@ -19,7 +19,6 @@ type Context = {
   isHome?: boolean;
   isTxScreen?: boolean;
   title?: string;
-  warning?: string;
   ref?: React.RefObject<HTMLDivElement>;
 };
 
@@ -68,7 +67,6 @@ export const Layout: LayoutComponent = ({
   isPublic,
   isLoading,
   title,
-  warning,
   children,
   noBorder,
   isCentered,
@@ -80,7 +78,7 @@ export const Layout: LayoutComponent = ({
 
   return (
     <>
-      <ctx.Provider value={{ isLoading, title, warning, isHome, ref }}>
+      <ctx.Provider value={{ isLoading, title, isHome, ref }}>
         <Helmet>
           <title>{titleText}</title>
         </Helmet>

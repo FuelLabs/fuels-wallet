@@ -3,6 +3,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAccounts } from '~/systems/Account';
 import { Layout, coreStyles } from '~/systems/Core';
+import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { useNetworks } from '~/systems/Network';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxStatusAlert } from '../../components';
@@ -31,7 +32,7 @@ export function TxView() {
       title="Transaction"
       isLoading={ctx.isFetching || ctx.isFetchingResult}
     >
-      <Layout.TopBar onBack={() => navigate(-1)} />
+      <Layout.TopBar type={TopBarType.txView} onBack={() => navigate(-1)} />
       <Layout.Content css={styles.content} noScroll>
         {ctx.shouldShowAlert && (
           <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
