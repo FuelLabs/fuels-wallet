@@ -58,6 +58,8 @@ const selectors = {
   favIconUrl: (state: TransactionRequestState) =>
     state.context.input.favIconUrl,
   sendingTx: (state: TransactionRequestState) => state.matches('sendingTx'),
+  isLoadingFees: (state: TransactionRequestState) =>
+    state.hasTag('loadingFees'),
 };
 
 type UseTransactionRequestOpts = {
@@ -110,6 +112,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const shouldShowTxSimulated = !shouldShowTxExecuted && !!txSummarySimulated;
   const shouldDisableApproveBtn =
     shouldShowTxSimulated && errors.hasSimulateTxErrors;
+  const isLoadingFees = useSelector(service, selectors.isLoadingFees);
 
   function closeDialog() {
     reset();
@@ -172,6 +175,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     shouldShowTxSimulated,
     shouldShowTxExecuted,
     proposedTxRequest,
+    isLoadingFees,
     handlers: {
       request,
       reset,

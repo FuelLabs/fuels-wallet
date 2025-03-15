@@ -97,6 +97,7 @@ export type TxContentInfoProps = {
     fastTip?: BN;
   };
   txRequest?: TransactionRequest;
+  isLoadingFees?: boolean;
 };
 
 function TxContentInfo({
@@ -109,6 +110,7 @@ function TxContentInfo({
   errors,
   fees,
   txRequest,
+  isLoadingFees,
 }: TxContentInfoProps) {
   const { getValues } = useFormContext<SendFormValues>();
 
@@ -147,6 +149,8 @@ function TxContentInfo({
     return <ConfirmHeader />;
   }
 
+  console.log('asd isLoading', isLoading);
+
   return (
     <Box.Stack gap="$4">
       {getHeader()}
@@ -155,7 +159,7 @@ function TxContentInfo({
         status={status}
         isLoading={isLoading}
       />
-      {isLoading && !showDetails && <TxFee.Loader />}
+      {(isLoading || isLoadingFees) && !showDetails && <TxFee.Loader />}
       {showDetails && !fees?.baseFee && <TxFee fee={tx?.fee} />}
       {showDetails &&
         fees?.baseFee &&

@@ -203,7 +203,6 @@ export class PopUpService {
   }
 
   async sendTransaction(input: MessageInputs['sendTransaction']) {
-    console.log('sendTransaction', input);
     return this.client.request('sendTransaction', input);
   }
 

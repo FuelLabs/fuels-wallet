@@ -31,6 +31,7 @@ export function TransactionRequest() {
     errors,
     executedStatus,
     proposedTxRequest,
+    isLoadingFees,
   } = txRequest;
   const { isLoading: isLoadingAssets } = useAssets();
 
@@ -54,19 +55,20 @@ export function TransactionRequest() {
     };
   }, [txSummarySimulated, proposedTxRequest]);
 
-  const isLoadingInfo = useMemo<boolean>(() => {
+  const _isLoadingInfo = useMemo<boolean>(() => {
     return status('loading') || status('sending') || isLoadingAssets;
   }, [status, isLoadingAssets]);
 
   if (!defaultValues) {
-    return (
-      <Layout title={title} noBorder>
-        <Layout.TopBar type={TopBarType.external} />
-        <Layout.Content css={styles.content}>
-          <TxContent.Loader />
-        </Layout.Content>
-      </Layout>
-    );
+    return null;
+    // return (
+    //   <Layout title={title} noBorder>
+    //     <Layout.TopBar type={TopBarType.external} />
+    //     <Layout.Content css={styles.content}>
+    //       <TxContent.Loader />
+    //     </Layout.Content>
+    //   </Layout>
+    // );
   }
 
   return (
@@ -89,10 +91,11 @@ export function TransactionRequest() {
               showDetails
               tx={txSummarySimulated}
               txRequest={proposedTxRequest}
-              isLoading={isLoadingInfo}
+              // isLoading={isLoadingInfo}
               errors={errors.simulateTxErrors}
               isConfirm
               fees={fees}
+              isLoadingFees={isLoadingFees}
             />
           )}
           {shouldShowTxExecuted && (

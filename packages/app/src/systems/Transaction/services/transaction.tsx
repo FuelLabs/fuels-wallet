@@ -16,6 +16,7 @@ import {
   type BN,
   ErrorCode,
   FuelError,
+  Provider,
   TransactionResponse,
   TransactionStatus,
   assembleTransactionSummary,
@@ -213,72 +214,67 @@ export class TxService {
     transactionSummary,
   }: TxInputs['simulateTransaction']) {
     // await delay(4000);
-    // console.log(`asd providerConfig`, providerConfig);
-    // if (providerConfig?.cache) {
-    //   const providerCache = deserializeProviderCache(providerConfig?.cache);
-    //   console.log(`asd providerCache`, providerCache);
-    // }
-    const [provider, account] = await Promise.all([
-      createProvider(providerConfig?.url || ''),
-      AccountService.getCurrentAccount(),
-    ]);
+    // debugger;
+    const provider = new Provider(providerConfig?.url || '', {
+      cache: providerConfig?.cache,
+    });
 
     if (!inputTransactionRequest) {
       throw new Error('Missing transaction request');
     }
-    if (!account) {
-      throw new Error('Missing context for transaction request');
-    }
-
-    const wallet = new WalletLockedCustom(account.address, provider);
-    const initialMaxFee = inputTransactionRequest.maxFee;
-    const initialGasLimit = getGasLimitFromTxRequest(inputTransactionRequest);
 
     try {
-      let baseFee: BN | undefined;
       /*
-      we'll work always based on the first inputted transactioRequest, then cloning it and manipulating
+      we'll work always based on the first inputted transactionRequest, then cloning it and manipulating
       then outputting a proposedTxRequest, which will be the one to go for approval
       */
       const proposedTxRequest = clone(inputTransactionRequest);
 
-      if (!skipCustomFee && transactionState !== 'funded') {
-        // if the user has inputted a custom tip, we set it to the proposedTxRequest
-        if (inputCustomTip) {
-          proposedTxRequest.tip = inputCustomTip;
+      if (!skipCustomFee) {
+        const account = await AccountService.getCurrentAccount();
+        if (!account) {
+          throw new Error('Missing context for transaction request');
         }
-        // if the user has inputted a custom gas Limit, we set it to the proposedTxRequest
-        if (inputCustomGasLimit) {
-          setGasLimitToTxRequest(proposedTxRequest, inputCustomGasLimit);
-        } else {
-          // if the user has not inputted a custom gas Limit, we increase the original one in 20% to avoid OutOfGas errors
-          setGasLimitToTxRequest(
-            proposedTxRequest,
-            initialGasLimit.mul(12).div(10)
-          );
-        }
-        const { maxFee } = await provider.estimateTxGasAndFee({
-          transactionRequest: proposedTxRequest,
-        });
+        const wallet = new WalletLockedCustom(account.address, provider);
+        const initialMaxFee = inputTransactionRequest.maxFee;
 
-        // if the maxFee is greater than the initial maxFee, we set it to the new maxFee, and refund the transaction
-        if (maxFee.gt(initialMaxFee)) {
-          proposedTxRequest.maxFee = maxFee;
-          const txCost = await wallet.getTransactionCost(proposedTxRequest, {
-            estimateTxDependencies: true,
-          });
-          await wallet.fund(proposedTxRequest, {
-            estimatedPredicates: txCost.estimatedPredicates,
-            addedSignatures: txCost.addedSignatures,
-            gasPrice: txCost.gasPrice,
-            updateMaxFee: txCost.updateMaxFee,
-            requiredQuantities: [],
-          });
-        }
+        if (
+          inputCustomTip ||
+          inputCustomGasLimit ||
+          transactionState !== 'funded'
+        ) {
+          // if the user has inputted a custom tip, we set it to the proposedTxRequest
+          if (inputCustomTip) {
+            proposedTxRequest.tip = inputCustomTip;
+          }
+          // if the user has inputted a custom gas Limit, we set it to the proposedTxRequest
+          if (inputCustomGasLimit) {
+            setGasLimitToTxRequest(proposedTxRequest, inputCustomGasLimit);
+          }
 
-        baseFee = proposedTxRequest.maxFee.sub(proposedTxRequest.tip ?? bn(0));
+          const { maxFee } = await provider.estimateTxGasAndFee({
+            transactionRequest: proposedTxRequest,
+          });
+          // if the maxFee is greater than the initial maxFee, we set it to the new maxFee, and refund the transaction
+          if (maxFee.gt(initialMaxFee)) {
+            proposedTxRequest.maxFee = maxFee;
+            const txCost = await wallet.getTransactionCost(proposedTxRequest, {
+              estimateTxDependencies: true,
+            });
+            await wallet.fund(proposedTxRequest, {
+              estimatedPredicates: txCost.estimatedPredicates,
+              addedSignatures: txCost.addedSignatures,
+              gasPrice: txCost.gasPrice,
+              updateMaxFee: txCost.updateMaxFee,
+              requiredQuantities: [],
+            });
+          }
+        }
       }
 
+      const baseFee = proposedTxRequest.maxFee.sub(
+        proposedTxRequest.tip ?? bn(0)
+      );
       const transaction = proposedTxRequest.toTransaction();
       const abiMap = await getAbiMap({
         inputs: transaction.inputs,

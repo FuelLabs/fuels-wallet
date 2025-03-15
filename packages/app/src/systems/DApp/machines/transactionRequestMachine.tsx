@@ -50,7 +50,7 @@ type MachineContext = {
   };
 };
 
-type PrepareInputForSimulateTransactionReturn = {
+type PrepareFeeInputForSimulateTransactionReturn = {
   estimated: {
     regularTip: BN;
     fastTip: BN;
@@ -70,8 +70,8 @@ type MachineServices = {
   send: {
     data: TransactionSummary;
   };
-  prepareInputForSimulateTransaction: {
-    data: PrepareInputForSimulateTransactionReturn;
+  prepareFeeInputForSimulateTransaction: {
+    data: PrepareFeeInputForSimulateTransactionReturn;
   };
   simulateTransaction: {
     data: SimulateTransactionReturn;
@@ -89,7 +89,6 @@ type MachineEvents =
 
 export const transactionRequestMachine = createMachine(
   {
-    /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAYgCUBRAZQoBUBtABgF1FQAHAe1lwBddO+NiAAeiACwAmADQgAnogCskxQDoAjAHYAnIoBsi7YyONJ6gL7nZaLHkJFVuCABswJKrQCCZBi2FcefkFhMQRJAGY9DRVGU0lNQ3F1cQAOWQUEZTUtXQMjEzNLawwcAmJVOH4MfnwoAEl8Plx0ZwAxMDcIQTBHfAA3TgBrHptS+wrYKvQa+sb+FvawBAIBzGmBfCZmLf9uJuCkUUQ9FPVVRnETzRTGFMjtE-SldXDVSUZw2Mk9bV1fopAozs5QAZmBeGMoJ5MJhOABXfC8EhdQi9AbDVRAsoOMEQuxQmHwxHLfqcNZBTYsHaHAL7ISHULqJmSVSXYx6DnaSQpRSpJ4IU6s37aF6Re7clIArHjXGQ6GwhFIlE9FZDEYlYE48FywmKkmrdaCLb0dSsGl7CkhRBM9QstkPTnc3lpeRKcRqb6SLnxXl6dQpSRSjXY1Q8VBw5zrWq0ABO6HwsCwFOR3TRasxwfGYYjUagsfjicwFP1ZMNlO2fnNgQ2VoQ6j0mhZjbyH004nCvz0-MU4TO1z04R7eg+4iSgasgMz5QA7ugmrVPOx2DHOH0WiRPAAFTdkADyADUKNSOBaawzEO8UikNJp1EZR2OdN2DKojH7nQ3e8kg7YQ7P51CS4rmuzjkBQABSFAAMK+GaJ7VgcoChJe15aHeFyjraT6ugg4RmEKvzGIosSDrcP5jOUsBgPgEAEHmIgpqiqoYtKlHUbR0YiCW5IbMalbwXStYRHcqinColzqIoCTuvylwet84iaAkHwXIwSnkZqobsXRtAMcqaYsVODhUTROlcaqPFGlSpq7Ah9JIRe4QiWJvqSdJijdoo14Ng8jD1pIqSNpKE6sQ4vAiFQcIwnAsAkFBAAyu40MeIC0pa55hEpmispoBhSLovLJB5OFeYwGj6PWmhqbcvziBpIbha0c6uBAJC0GQACaAD6ngAOKeHUAByKVpWeDl1g2TbfIYrbtp2smCtyA7DuEmiRHokjjsUv7jI1zWQHFiXJfxqWnohRwTY2qjNjNq1zQ8-LvGVba-LaV6ueElgTvgnAQHAwihbZgkZQAtF2OEg2owrQzD2gpHo9XjE4rhA+l42SSyG3Ef5sTtv53apKoBh+qtXonKYCMhUZExTDMDRNAsHSo2NF2YddUk6JtWMPt2KjlcO2hrbEXIpHVVM7aC2r4vKRK8Mz52hCkcOqJ8lxtp8fnGJo3a2vzty2rE9ZeYjlG4OGkYzPmCZJizo0K9aSTXlI6E-JrZgE68a26P6vwdtokQmw4-4zIuy6ri08v2Rdd6Sa+Vzq22fngxkiiGK+SupP7Xp+YogdaaZnGR0Jm0skyjbfDotXhATLJvkygXJKtFjixRYURVFmAxUXGUKdlvYqKKnz6C6Kc3ETFUNtVSvaGL22t6oe24C13foxV5w8oLDZZWtI8SAkKs-D8qSDpE+iz5OEsOMqK8XdyRg3g8imGC8a3iN2OisowfpVQ8Nxts3c9NIgn2hAG+yE9CKRVraRQg9GDD35OEDs0QIHwwCloAM8MvrmCAA */
     predictableActionArguments: true,
     tsTypes: {} as import('./transactionRequestMachine.typegen').Typegen0,
     schema: {
@@ -109,37 +108,16 @@ export const transactionRequestMachine = createMachine(
           START: [
             {
               cond: (_ctx, event) =>
-                event.input?.fees?.maxGasLimit != null &&
-                event.input?.fees?.fastTip != null &&
-                event.input?.fees?.regularTip != null,
+                event.input?.skipCustomFee ||
+                (event.input?.fees?.maxGasLimit != null &&
+                  event.input?.fees?.fastTip != null &&
+                  event.input?.fees?.regularTip != null),
               actions: ['assignTxRequestData'],
               target: 'simulatingTransaction',
             },
             {
               actions: ['assignTxRequestData'],
-              target: 'prepareInputForSimulateTransaction',
-            },
-          ],
-        },
-      },
-      prepareInputForSimulateTransaction: {
-        tags: ['loading'],
-        invoke: {
-          src: 'prepareInputForSimulateTransaction',
-          data: {
-            input: (ctx: MachineContext) => ({
-              address: ctx.input.address,
-              account: ctx.input.account,
-            }),
-          },
-          onDone: [
-            {
-              cond: FetchMachine.hasError,
-              target: 'failed',
-            },
-            {
-              actions: ['assignPreflightData'],
-              target: 'simulatingTransaction',
+              target: 'simulatingTransactionEvaluatingFirstFees',
             },
           ],
         },
@@ -156,6 +134,44 @@ export const transactionRequestMachine = createMachine(
             {
               target: 'waitingApproval',
               actions: ['assignSimulateResult', 'assignSimulateTxErrors'],
+            },
+          ],
+        },
+      },
+      simulatingTransactionEvaluatingFirstFees: {
+        entry: ['openDialog'],
+        tags: ['loading'],
+        invoke: {
+          src: 'simulateTransaction',
+          data: {
+            input: (ctx: MachineContext) => ctx.input,
+          },
+          onDone: [
+            {
+              target: 'prepareFeeInputForSimulateTransaction',
+              actions: ['assignSimulateResult', 'assignSimulateTxErrors'],
+            },
+          ],
+        },
+      },
+      prepareFeeInputForSimulateTransaction: {
+        tags: ['loadingFees'],
+        invoke: {
+          src: 'prepareFeeInputForSimulateTransaction',
+          data: {
+            input: (ctx: MachineContext) => ({
+              address: ctx.input.address,
+              account: ctx.input.account,
+            }),
+          },
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              target: 'failed',
+            },
+            {
+              actions: ['assignFeeInputForSimulate'],
+              target: 'waitingApproval',
             },
           ],
         },
@@ -246,7 +262,7 @@ export const transactionRequestMachine = createMachine(
   {
     actions: {
       reset: assign(() => ({})),
-      assignPreflightData: assign((ctx, ev) => ({
+      assignFeeInputForSimulate: assign((ctx, ev) => ({
         account: ev.data.account,
         fees: {
           ...ctx.fees,
@@ -335,10 +351,10 @@ export const transactionRequestMachine = createMachine(
       }),
     },
     services: {
-      prepareInputForSimulateTransaction: FetchMachine.create<
+      prepareFeeInputForSimulateTransaction: FetchMachine.create<
         { address?: string; account?: AccountWithBalance },
         {
-          estimated: PrepareInputForSimulateTransactionReturn['estimated'];
+          estimated: PrepareFeeInputForSimulateTransactionReturn['estimated'];
           account: AccountWithBalance;
         }
       >({
