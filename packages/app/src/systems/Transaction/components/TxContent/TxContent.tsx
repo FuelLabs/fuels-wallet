@@ -149,7 +149,8 @@ function TxContentInfo({
     return <ConfirmHeader />;
   }
 
-  console.log('asd isLoading', isLoading);
+  console.log('asd isLoadingFees', isLoadingFees);
+  console.log('asd showDetails', showDetails);
 
   return (
     <Box.Stack gap="$4">
@@ -159,7 +160,8 @@ function TxContentInfo({
         status={status}
         isLoading={isLoading}
       />
-      {(isLoading || isLoadingFees) && !showDetails && <TxFee.Loader />}
+      <TxFee.Loader />
+      {isLoadingFees || (isLoading && !showDetails && <TxFee.Loader />)}
       {showDetails && !fees?.baseFee && <TxFee fee={tx?.fee} />}
       {showDetails &&
         fees?.baseFee &&
