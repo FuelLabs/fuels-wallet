@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import type { BN } from 'fuels';
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { FormProvider as Provider, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { formatGasLimit } from '~/systems/Transaction';
@@ -87,6 +87,11 @@ export function FormProvider({
     defaultValues,
     context,
   });
+
+  useEffect(() => {
+    if (!defaultValues) return;
+    form.setValue('fees', defaultValues?.fees);
+  }, [form, defaultValues]);
 
   return (
     <form

@@ -124,7 +124,7 @@ export const transactionRequestMachine = createMachine(
       },
       simulatingTransaction: {
         entry: ['openDialog'],
-        tags: ['loading'],
+        // tags: ['loading'],
         invoke: {
           src: 'simulateTransaction',
           data: {
@@ -140,7 +140,7 @@ export const transactionRequestMachine = createMachine(
       },
       simulatingTransactionEvaluatingFirstFees: {
         entry: ['openDialog'],
-        tags: ['loading'],
+        // tags: ['loading'],
         invoke: {
           src: 'simulateTransaction',
           data: {
@@ -177,7 +177,7 @@ export const transactionRequestMachine = createMachine(
         },
       },
       changingCustomFees: {
-        tags: ['loading'],
+        // tags: ['loading'],
         on: {
           SET_CUSTOM_FEES: {
             actions: ['assignCustomFees'],
