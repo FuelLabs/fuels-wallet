@@ -66,5 +66,9 @@ const styles = {
       width: '$3',
       backgroundColor: 'transparent',
     },
+
+    'html[class="fuel_dark-theme"] &': {
+      backgroundColor: '#111',
+    },
   }),
 };

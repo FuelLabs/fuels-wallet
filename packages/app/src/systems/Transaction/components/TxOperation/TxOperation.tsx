@@ -95,7 +95,6 @@ const styles = {
     padding: '0 $4',
     alignItems: 'center',
     border: 'none',
-    minHeight: '36px',
   }),
   chevron: cssObj({
     transition: 'all 0.2s ease',

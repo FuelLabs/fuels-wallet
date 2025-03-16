@@ -93,6 +93,10 @@ const styles = {
     flexDirection: 'column',
     gap: '$2',
     backgroundColor: '$intentsBase3',
+
+    'html[class="fuel_dark-theme"] &': {
+      backgroundColor: '#111',
+    },
   }),
   description: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
@@ -102,7 +106,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '$2',
-    backgroundColor: '$intentsBase3',
   }),
   footer: cssObj({
     p: '$4 $5',
