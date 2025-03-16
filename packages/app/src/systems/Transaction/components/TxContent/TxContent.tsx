@@ -200,8 +200,10 @@ const styles = {
     color: '$gray12',
   }),
   feeWrapper: cssObj({
-    padding: '$2 2px',
+    padding: '$2',
     borderRadius: '10px',
+    border: '1px solid $gray7',
+
     'html[class="fuel_dark-theme"] &': {
       border: '1px solid $gray3',
     },
