@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, ContentLoader, Icon, Image } from '@fuel-ui/react';
+import { Box, Icon, Image } from '@fuel-ui/react';
 import { memo, useEffect, useRef, useState } from 'react';
 import { NFTImageLoading } from '~/systems/Account/components/BalanceNFTs/NFTImageLoading';
 import { shortAddress } from '~/systems/Core';
