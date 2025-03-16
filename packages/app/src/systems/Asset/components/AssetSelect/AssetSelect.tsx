@@ -52,13 +52,13 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
         const name = asset.metadata.name;
         return typeof name === 'string' && name.trim()
           ? name.trim()
-          : shortAddress(asset.assetId);
+          : 'Unknown';
       }
 
-      return asset.name?.trim() || shortAddress(asset.assetId);
+      return asset.name?.trim() || 'Unknown';
     } catch (error) {
       console.warn('Error getting asset name:', error);
-      return shortAddress(asset?.assetId);
+      return 'Unknown';
     }
   }
 
