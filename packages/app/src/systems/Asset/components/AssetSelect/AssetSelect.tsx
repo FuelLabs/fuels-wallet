@@ -32,8 +32,34 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
   }
 
   function getImageUrl(asset?: AssetSelectInput) {
-    if (!asset?.metadata?.image) return asset?.icon;
-    return asset.metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/');
+    try {
+      if (!asset?.metadata?.image) return asset?.icon;
+      const imageUrl = asset.metadata.image;
+      return typeof imageUrl === 'string'
+        ? imageUrl.replace('ipfs://', 'https://ipfs.io/ipfs/')
+        : asset?.icon;
+    } catch (error) {
+      console.warn('Error getting NFT image URL:', error);
+      return asset?.icon;
+    }
+  }
+
+  function getName(asset?: AssetSelectInput) {
+    try {
+      if (!asset) return 'Unknown';
+
+      if (asset.isNft && asset.metadata?.name) {
+        const name = asset.metadata.name;
+        return typeof name === 'string' && name.trim()
+          ? name.trim()
+          : shortAddress(asset.assetId);
+      }
+
+      return asset.name?.trim() || shortAddress(asset.assetId);
+    } catch (error) {
+      console.warn('Error getting asset name:', error);
+      return shortAddress(asset?.assetId);
+    }
   }
 
   return (
@@ -84,7 +110,7 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
                   />
                 )}
                 <Text as="span" className="asset-name">
-                  {assetAmount.name || shortAddress(assetAmount?.assetId)}
+                  {getName(assetAmount)}
                 </Text>
               </>
             )}
@@ -114,7 +140,7 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
         {(items || []).map((item) => {
           const assetId = item.assetId?.toString();
           const itemAsset = items?.find((a) => a.assetId === assetId);
-          const { name, symbol, icon, isNft } = itemAsset || {};
+          const { symbol, icon, isNft } = itemAsset || {};
 
           return (
             <Dropdown.MenuItem
@@ -129,13 +155,13 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
                   />
                 </Box>
               ) : icon ? (
-                <Avatar size="xsm" name={name || ''} src={icon} />
+                <Avatar size="xsm" name={getName(itemAsset)} src={icon} />
               ) : (
                 <Avatar.Generated size="sm" hash={assetId || ''} />
               )}
               <Box className="asset-info">
                 <Text as="span" className="asset-name">
-                  {name || 'Unknown'}
+                  {getName(itemAsset)}
                   {isNft && (
                     <Badge
                       variant="ghost"
