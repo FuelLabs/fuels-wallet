@@ -11,6 +11,7 @@ import {
 } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { memo, useState } from 'react';
+import { NFTImage } from '~/systems/Account/components/BalanceNFTs/NFTImage';
 import type { Maybe } from '~/systems/Core';
 import { coreStyles, shortAddress } from '~/systems/Core';
 
@@ -28,6 +29,11 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
 
   function handleClear() {
     onSelect(null);
+  }
+
+  function getImageUrl(asset?: AssetSelectInput) {
+    if (!asset?.metadata?.image) return asset?.icon;
+    return asset.metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/');
   }
 
   return (
@@ -55,30 +61,33 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
           }
         >
           <Box.Flex css={styles.input}>
-            {assetAmount &&
-              (assetAmount.name ? (
-                <>
+            {assetAmount && (
+              <>
+                {assetAmount.isNft ? (
+                  <Box css={styles.nftPreview}>
+                    <NFTImage
+                      assetId={assetAmount.assetId || ''}
+                      image={getImageUrl(assetAmount)}
+                    />
+                  </Box>
+                ) : assetAmount.name ? (
                   <Avatar
                     name={assetAmount?.name}
                     src={assetAmount?.icon}
                     css={{ height: 18, width: 18 }}
                   />
-                  <Text as="span" className="asset-name">
-                    {assetAmount?.name}
-                  </Text>
-                </>
-              ) : (
-                <>
+                ) : (
                   <Avatar.Generated
                     hash={assetAmount.assetId || ''}
                     css={{ height: 14, width: 14 }}
                     size="xsm"
                   />
-                  <Text as="span" className="asset-name">
-                    {shortAddress(assetAmount?.assetId)}
-                  </Text>
-                </>
-              ))}
+                )}
+                <Text as="span" className="asset-name">
+                  {assetAmount.name || shortAddress(assetAmount?.assetId)}
+                </Text>
+              </>
+            )}
             {!assetAmount && (
               <Text as="span" css={styles.placeholder}>
                 Select one asset
@@ -112,7 +121,14 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
               key={item.assetId?.toString()}
               textValue={item.assetId?.toString()}
             >
-              {icon ? (
+              {isNft ? (
+                <Box css={styles.nftPreview}>
+                  <NFTImage
+                    assetId={assetId || ''}
+                    image={getImageUrl(itemAsset)}
+                  />
+                </Box>
+              ) : icon ? (
                 <Avatar size="xsm" name={name || ''} src={icon} />
               ) : (
                 <Avatar.Generated size="sm" hash={assetId || ''} />
@@ -241,5 +257,14 @@ const styles = {
     ml: '$2',
     fontSize: '$sm',
     lineHeight: 'normal',
+  }),
+  nftPreview: cssObj({
+    '&': {
+      width: '30px',
+      height: '30px',
+    },
+    '.fuel_Box': {
+      minHeight: 'unset !important',
+    },
   }),
 };
