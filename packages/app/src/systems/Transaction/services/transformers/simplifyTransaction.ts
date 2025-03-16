@@ -4,17 +4,15 @@ import type {
   Receipt,
   TransactionRequest,
   TransactionResult,
+  TransactionResultReceipt,
   TransactionSummary,
 } from 'fuels';
+import { BN, OperationName, ReceiptType } from 'fuels';
 import {
-  BN,
-  OperationName,
-  ReceiptType,
-  type TransactionResultReceipt,
-} from 'fuels';
-import type { SimplifiedOperation } from '../types';
-import { TxCategory } from '../types';
-import type { SimplifiedTransaction } from '../types';
+  type SimplifiedOperation,
+  type SimplifiedTransaction,
+  TxCategory,
+} from '../../types';
 
 type ParsedReceiptData = {
   indent: number;

@@ -1,8 +1,8 @@
 import type { TransactionRequest, TransactionSummary } from 'fuels';
 import { useMemo } from 'react';
 import { useAccounts } from '~/systems/Account';
+import { simplifyTransaction } from '../services/transformers/simplifyTransaction';
 import type { SimplifiedTransaction } from '../types';
-import { simplifyTransaction } from '../utils/simplifyTransaction';
 
 type UseSimplifiedTransactionProps = {
   tx: TransactionSummary;

@@ -7,8 +7,8 @@ import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadat
 import { MotionBox } from '~/systems/Core/components/Motion';
 import { useAssetsAmount } from '../../hooks/useAssetsAmount';
 import { useBaseAsset } from '../../hooks/useBaseAsset';
+import { getOperationText } from '../../services/transformers/simplifyTransaction';
 import { type SimplifiedOperation, TxCategory } from '../../types';
-import { getOperationText } from '../../utils/simplifyTransaction';
 import { TxRecipientContractLogo } from '../TxRecipientCard/TxRecipientContractLogo';
 import { TxOperationAssets } from './TxOperationAssets';
 
