@@ -170,7 +170,9 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
           aria-label="To address"
         >
           <Text as="span" fontSize="sm" css={styles.name}>
-            {accountTo?.name || 'Unknown'}
+            {isToContract
+              ? toContractMetadata?.name
+              : accountTo?.name || 'Unknown'}
           </Text>
           {isToContract && (
             <Box css={styles.badge}>
