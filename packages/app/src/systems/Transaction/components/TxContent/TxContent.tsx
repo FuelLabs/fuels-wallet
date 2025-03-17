@@ -24,6 +24,7 @@ import {
 } from '~/systems/Transaction';
 import { useSimplifiedTransaction } from '../../hooks/useSimplifiedTransaction';
 import { TxFee } from '../TxFee';
+import { TxFeeSection } from '../TxFee/TxFeeSection';
 import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
 import { TxHeader } from '../TxHeader';
 import { TxOperations } from '../TxOperations';
@@ -73,7 +74,7 @@ function TxContentLoader() {
     <MotionStack {...animations.slideInTop()} gap="$4">
       <LoaderHeader />
       <TxOperations.Loader />
-      <TxFee.Loader />
+      <TxFeeSection isLoading />
     </MotionStack>
   );
 }
@@ -151,28 +152,16 @@ function TxContentInfo({
       <Box css={styles.content}>
         <TxOperations operations={transaction.categorizedOperations} />
         {showDetails && !fees && (
-          <Box.VStack align="flex-start" css={styles.feeWrapper}>
-            <Box.HStack gap="$2" align="center">
-              <Box css={styles.feeIconWrapper}>
-                <Icon icon="CurrencyCent" css={styles.feeIcon} size={16} />
-              </Box>
-              <Text css={styles.title}>Fee (network)</Text>
-            </Box.HStack>
+          <TxFeeSection>
             <TxFee fee={transaction?.fee.total} />
-          </Box.VStack>
+          </TxFeeSection>
         )}
         {showDetails &&
           fees?.baseFee &&
           txRequestGasLimit &&
           fees?.regularTip &&
           fees?.fastTip && (
-            <Box css={styles.feeWrapper}>
-              <Box.HStack gap="$2" align="center">
-                <Box css={styles.feeIconWrapper}>
-                  <Icon icon="CurrencyCent" css={styles.feeIcon} />
-                </Box>
-                <Text css={styles.title}>Fee (network)</Text>
-              </Box.HStack>
+            <TxFeeSection>
               <TxFeeOptions
                 initialAdvanced={initialAdvanced}
                 baseFee={fees.baseFee}
@@ -180,7 +169,7 @@ function TxContentInfo({
                 regularTip={fees.regularTip}
                 fastTip={fees.fastTip}
               />
-            </Box>
+            </TxFeeSection>
           )}
       </Box>
       {footer}
@@ -198,29 +187,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-  }),
-  title: cssObj({
-    fontSize: '$sm',
-    fontWeight: '$medium',
-    color: '$gray12',
-  }),
-  feeWrapper: cssObj({
-    padding: '$2',
-    borderRadius: '10px',
-  }),
-  feeIconWrapper: cssObj({
-    borderRadius: '$full',
-    border: '1px solid $intentsBase11',
-    ml: '$4',
-    mr: '10px',
-    my: '$2',
-  }),
-  feeIcon: cssObj({
-    color: '$intentsBase11',
-    m: '2px',
-    '& svg': {
-      strokeWidth: '2px',
-    },
   }),
   alert: cssObj({
     '& .fuel_Alert-content': {
