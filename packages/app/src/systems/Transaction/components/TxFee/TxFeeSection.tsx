@@ -1,11 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, HStack, Icon, Text } from '@fuel-ui/react';
+import { Box, Icon, Text } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
-import { TxFee } from './TxFee';
 import { TxFeeLoader } from './TxFeeLoader';
 
 export type TxFeeSectionProps = {
-  children: ReactNode;
+  children?: ReactNode;
   isLoading?: boolean;
 };
 

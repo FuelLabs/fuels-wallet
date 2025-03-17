@@ -24,6 +24,7 @@ import {
 } from '~/systems/Transaction';
 import { useSimplifiedTransaction } from '../../hooks/useSimplifiedTransaction';
 import { TxFee } from '../TxFee';
+import { TxFeeLoader } from '../TxFee/TxFeeLoader';
 import { TxFeeSection } from '../TxFee/TxFeeSection';
 import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
 import { TxHeader } from '../TxHeader';
