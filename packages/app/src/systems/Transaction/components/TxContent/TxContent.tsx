@@ -56,9 +56,14 @@ const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
 const LoaderHeader = () => (
   <Card css={{ height: 84 }}>
     <ContentLoader width={'100%'} height={'100%'} viewBox="0 0 300 84">
-      <rect x="16" y="15" width="50" height="15" rx="4" />
-      <rect x="16" y="35" width="50" height="15" rx="4" />
-      <rect x="16" y="55" width="50" height="15" rx="4" />
+      <rect x="16" y="15" width="15" height="15" rx="4" />
+      <rect x="80" y="15" width="130" height="15" rx="4" />
+
+      <rect x="16" y="35" width="55" height="15" rx="4" />
+      <rect x="80" y="35" width="90" height="15" rx="4" />
+
+      <rect x="16" y="55" width="35" height="15" rx="4" />
+      <rect x="80" y="55" width="60" height="15" rx="4" />
     </ContentLoader>
   </Card>
 );
