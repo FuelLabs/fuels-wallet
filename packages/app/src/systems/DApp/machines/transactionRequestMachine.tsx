@@ -429,7 +429,6 @@ export const transactionRequestMachine = createMachine(
           }
 
           const simulatedInfo = await TxService.simulateTransaction(input);
-          console.log('asd simulateTransaction simulatedInfo', simulatedInfo);
           return simulatedInfo;
         },
       }),
