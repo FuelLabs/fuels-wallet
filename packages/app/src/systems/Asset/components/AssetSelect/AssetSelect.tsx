@@ -90,7 +90,7 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
             {assetAmount && (
               <>
                 {assetAmount.isNft ? (
-                  <Box css={styles.nftPreview}>
+                  <Box css={styles.nftPreviewSelected}>
                     <NFTImage
                       assetId={assetAmount.assetId || ''}
                       image={getImageUrl(assetAmount)}
@@ -292,6 +292,17 @@ const styles = {
     '.fuel_Box': {
       minHeight: 'unset !important',
       borderRadius: '10px',
+      backgroundColor: '$intentsBase1',
+    },
+  }),
+  nftPreviewSelected: cssObj({
+    '&': {
+      width: '18px',
+      height: '18px',
+    },
+    '.fuel_Box': {
+      minHeight: 'unset !important',
+      borderRadius: '$sm',
       backgroundColor: '$intentsBase1',
     },
   }),
