@@ -201,9 +201,6 @@ export const TxFeeOptions = ({
                 });
                 onRecalculate?.(option.tip);
               }}
-              css={cssObj({
-                gap: '0',
-              })}
             >
               {options.map((option) => (
                 <TxFeeRadio
