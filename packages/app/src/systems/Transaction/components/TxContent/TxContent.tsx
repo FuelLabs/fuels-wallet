@@ -149,9 +149,6 @@ function TxContentInfo({
     return <ConfirmHeader />;
   }
 
-  console.log('asd isLoadingFees', isLoadingFees);
-  console.log('asd showDetails', showDetails);
-
   return (
     <Box.Stack gap="$4">
       {getHeader()}
@@ -160,8 +157,8 @@ function TxContentInfo({
         status={status}
         isLoading={isLoading}
       />
-      <TxFee.Loader />
-      {isLoadingFees || (isLoading && !showDetails && <TxFee.Loader />)}
+      {/* @TODO: we need to fix the <TxFee.Loader /> when completing the work on tx simple view */}
+      {(isLoadingFees || (isLoading && !showDetails)) && <TxFee.Loader />}
       {showDetails && !fees?.baseFee && <TxFee fee={tx?.fee} />}
       {showDetails &&
         fees?.baseFee &&

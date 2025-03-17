@@ -51,9 +51,7 @@ const schema = yup
               name: 'max',
               test: (value, ctx) => {
                 const { maxGasLimit } = ctx.options.context as SchemaOptions;
-                if (!maxGasLimit) return false;
-
-                if (value?.lte(maxGasLimit)) {
+                if (!maxGasLimit || value?.lte(maxGasLimit)) {
                   return true;
                 }
 
@@ -88,10 +86,15 @@ export function FormProvider({
     context,
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!defaultValues) return;
     form.setValue('fees', defaultValues?.fees);
-  }, [form, defaultValues]);
+  }, [
+    form,
+    defaultValues?.fees.gasLimit.amount.toHex(),
+    defaultValues?.fees.tip.amount.toHex(),
+  ]);
 
   return (
     <form

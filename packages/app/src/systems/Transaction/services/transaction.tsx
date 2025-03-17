@@ -79,6 +79,7 @@ export type TxInputs = {
     account?: Account;
     transactionRequest: TransactionRequest;
     providerUrl?: string;
+    providerConfig?: FuelProviderConfig;
   };
   simulateTransaction: {
     transactionRequest: TransactionRequest;
@@ -176,8 +177,11 @@ export class TxService {
     address,
     transactionRequest,
     providerUrl = '',
+    providerConfig,
   }: TxInputs['send']) {
-    const provider = await createProvider(providerUrl);
+    const provider = await createProvider(
+      providerUrl || providerConfig?.url || ''
+    );
     const wallet = new WalletLockedCustom(
       (account?.address?.toString() || address) as string,
       provider
@@ -223,6 +227,7 @@ export class TxService {
       throw new Error('Missing transaction request');
     }
 
+    let baseFee: BN | undefined = undefined;
     try {
       /*
       we'll work always based on the first inputted transactionRequest, then cloning it and manipulating
@@ -270,11 +275,10 @@ export class TxService {
             });
           }
         }
+
+        baseFee = proposedTxRequest.maxFee.sub(proposedTxRequest.tip ?? bn(0));
       }
 
-      const baseFee = proposedTxRequest.maxFee.sub(
-        proposedTxRequest.tip ?? bn(0)
-      );
       const transaction = proposedTxRequest.toTransaction();
       const abiMap = await getAbiMap({
         inputs: transaction.inputs,

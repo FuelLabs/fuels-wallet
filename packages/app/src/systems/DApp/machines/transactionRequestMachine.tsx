@@ -1,4 +1,7 @@
-import type { Account, AccountWithBalance } from '@fuel-wallet/types';
+import type {
+  AccountWithBalance,
+  FuelProviderConfig,
+} from '@fuel-wallet/types';
 import type { BN, TransactionRequest, TransactionSummary } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
@@ -26,6 +29,7 @@ type MachineContext = {
     favIconUrl?: string;
     isOriginRequired?: boolean;
     providerUrl?: string;
+    providerConfig?: FuelProviderConfig;
     transactionRequest?: TransactionRequest;
     address?: string;
     account?: AccountWithBalance;
@@ -70,7 +74,7 @@ type MachineServices = {
   send: {
     data: TransactionSummary;
   };
-  prepareFeeInputForSimulateTransaction: {
+  prepareFeeInputs: {
     data: PrepareFeeInputForSimulateTransactionReturn;
   };
   simulateTransaction: {
@@ -109,6 +113,7 @@ export const transactionRequestMachine = createMachine(
             {
               cond: (_ctx, event) =>
                 event.input?.skipCustomFee ||
+                // has informed custom fees
                 (event.input?.fees?.maxGasLimit != null &&
                   event.input?.fees?.fastTip != null &&
                   event.input?.fees?.regularTip != null),
@@ -123,8 +128,36 @@ export const transactionRequestMachine = createMachine(
         },
       },
       simulatingTransaction: {
+        on: {
+          SET_CUSTOM_FEES: {
+            actions: ['assignCustomFees'],
+            target: 'changingCustomFees',
+          },
+        },
         entry: ['openDialog'],
         // tags: ['loading'],
+        invoke: {
+          src: 'simulateTransaction',
+          data: {
+            input: (ctx: MachineContext) => ctx.input,
+          },
+          onDone: [
+            {
+              target: 'waitingApproval',
+              actions: ['assignSimulateResult', 'assignSimulateTxErrors'],
+            },
+          ],
+        },
+      },
+      simulatingTransactionLoading: {
+        on: {
+          SET_CUSTOM_FEES: {
+            actions: ['assignCustomFees'],
+            target: 'changingCustomFees',
+          },
+        },
+        entry: ['openDialog'],
+        tags: ['loading'],
         invoke: {
           src: 'simulateTransaction',
           data: {
@@ -148,16 +181,16 @@ export const transactionRequestMachine = createMachine(
           },
           onDone: [
             {
-              target: 'prepareFeeInputForSimulateTransaction',
+              target: 'prepareFeeInputs',
               actions: ['assignSimulateResult', 'assignSimulateTxErrors'],
             },
           ],
         },
       },
-      prepareFeeInputForSimulateTransaction: {
+      prepareFeeInputs: {
         tags: ['loadingFees'],
         invoke: {
-          src: 'prepareFeeInputForSimulateTransaction',
+          src: 'prepareFeeInputs',
           data: {
             input: (ctx: MachineContext) => ({
               address: ctx.input.address,
@@ -177,7 +210,7 @@ export const transactionRequestMachine = createMachine(
         },
       },
       changingCustomFees: {
-        // tags: ['loading'],
+        tags: ['loading'],
         on: {
           SET_CUSTOM_FEES: {
             actions: ['assignCustomFees'],
@@ -186,7 +219,7 @@ export const transactionRequestMachine = createMachine(
         },
         after: {
           1000: {
-            target: 'simulatingTransaction',
+            target: 'simulatingTransactionLoading',
           },
         },
       },
@@ -198,6 +231,10 @@ export const transactionRequestMachine = createMachine(
           REJECT: {
             actions: [assignErrorMessage('User rejected the transaction!')],
             target: 'failed',
+          },
+          SET_CUSTOM_FEES: {
+            actions: ['assignCustomFees'],
+            target: 'changingCustomFees',
           },
         },
       },
@@ -239,6 +276,10 @@ export const transactionRequestMachine = createMachine(
           CLOSE: {
             target: 'failed',
           },
+          SET_CUSTOM_FEES: {
+            actions: ['assignCustomFees'],
+            target: 'changingCustomFees',
+          },
         },
       },
       done: {
@@ -252,10 +293,6 @@ export const transactionRequestMachine = createMachine(
       RESET: {
         actions: ['reset'],
         target: 'idle',
-      },
-      SET_CUSTOM_FEES: {
-        actions: ['assignCustomFees'],
-        target: 'changingCustomFees',
       },
     },
   },
@@ -308,6 +345,8 @@ export const transactionRequestMachine = createMachine(
             ...ctx.input,
             tip,
             gasLimit,
+            // clean possible previous initial txSummary coming from ts-sdk
+            transactionSummary: undefined,
           };
         },
       }),
@@ -351,7 +390,7 @@ export const transactionRequestMachine = createMachine(
       }),
     },
     services: {
-      prepareFeeInputForSimulateTransaction: FetchMachine.create<
+      prepareFeeInputs: FetchMachine.create<
         { address?: string; account?: AccountWithBalance },
         {
           estimated: PrepareFeeInputForSimulateTransactionReturn['estimated'];
@@ -361,6 +400,7 @@ export const transactionRequestMachine = createMachine(
         showError: false,
         maxAttempts: 1,
         async fetch({ input }) {
+          console.log('asd prepareFeeInputs', input);
           const [estimated, acc] = await Promise.all([
             TxService.estimateGasLimitAndDefaultTips(),
             input?.account ||
@@ -383,11 +423,13 @@ export const transactionRequestMachine = createMachine(
       >({
         showError: false,
         async fetch({ input }) {
+          console.log('asd simulateTransaction', input);
           if (!input?.transactionRequest) {
             throw new Error('Invalid simulateTransaction input');
           }
 
           const simulatedInfo = await TxService.simulateTransaction(input);
+          console.log('asd simulateTransaction simulatedInfo', simulatedInfo);
           return simulatedInfo;
         },
       }),
@@ -398,11 +440,12 @@ export const transactionRequestMachine = createMachine(
         showError: true,
         maxAttempts: 1,
         async fetch(params) {
+          console.log('asd send', params);
           const { input } = params;
           if (
             (!input?.account && !input?.address) ||
             !input?.transactionRequest ||
-            !input?.providerUrl
+            (!input?.providerUrl && !input?.providerConfig)
           ) {
             throw new Error('Invalid approveTx input');
           }
