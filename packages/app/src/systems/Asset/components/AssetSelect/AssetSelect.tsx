@@ -291,6 +291,8 @@ const styles = {
     },
     '.fuel_Box': {
       minHeight: 'unset !important',
+      borderRadius: '10px',
+      backgroundColor: '$intentsBase1',
     },
   }),
 };
