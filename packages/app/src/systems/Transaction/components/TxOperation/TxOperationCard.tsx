@@ -197,7 +197,7 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
               <Icon icon="CircleArrowDown" size={20} />
             </Box.Flex>
             <Box.Flex justify={'flex-start'} align={'center'} css={styles.blue}>
-              Sends token
+              Sends funds
             </Box.Flex>
 
             <Box.Flex justify={'center'}>
