@@ -24,7 +24,6 @@ import {
 } from '~/systems/Transaction';
 import { useSimplifiedTransaction } from '../../hooks/useSimplifiedTransaction';
 import { TxFee } from '../TxFee';
-import { TxFeeLoader } from '../TxFee/TxFeeLoader';
 import { TxFeeSection } from '../TxFee/TxFeeSection';
 import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
 import { TxHeader } from '../TxHeader';
@@ -70,10 +69,14 @@ const LoaderHeader = () => (
   </Card>
 );
 
-function TxContentLoader() {
+type TxContentLoaderProps = {
+  showHeaderLoader?: boolean;
+};
+
+function TxContentLoader({ showHeaderLoader = true }: TxContentLoaderProps) {
   return (
     <MotionStack {...animations.slideInTop()} gap="$4">
-      <LoaderHeader />
+      {showHeaderLoader && <LoaderHeader />}
       <TxOperations.Loader />
       <TxFeeSection isLoading />
     </MotionStack>

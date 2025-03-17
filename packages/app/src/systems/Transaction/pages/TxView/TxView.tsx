@@ -38,7 +38,7 @@ export function TxView() {
           <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
         )}
         {isAccountsLoading || isTxLoading ? (
-          <TxContent.Loader />
+          <TxContent.Loader showHeaderLoader />
         ) : (
           <FormProvider {...form}>
             {txResult && (

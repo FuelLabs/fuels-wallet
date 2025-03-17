@@ -64,7 +64,7 @@ export function TransactionRequest() {
         <Layout.TopBar type={TopBarType.external} />
 
         <Layout.Content css={styles.content} noScroll>
-          <TxContent.Loader />
+          <TxContent.Loader showHeaderLoader={false} />
         </Layout.Content>
       </Layout>
     );
