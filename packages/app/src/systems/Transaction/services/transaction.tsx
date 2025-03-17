@@ -227,8 +227,8 @@ export class TxService {
       throw new Error('Missing transaction request');
     }
 
-    let baseFee: BN | undefined = undefined;
     try {
+      let baseFee: BN | undefined = undefined;
       /*
       we'll work always based on the first inputted transactionRequest, then cloning it and manipulating
       then outputting a proposedTxRequest, which will be the one to go for approval
