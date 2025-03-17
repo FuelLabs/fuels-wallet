@@ -115,7 +115,7 @@ function ExternalTopBar() {
           <Box.Flex css={styles.leftSection}>
             {isLoading && <Spinner />}
             {!isLoading && (
-              <Text css={{ ...styles.title, fontWeight: '$bold' }}>
+              <Text css={{ ...styles.title, fontWeight: '$semibold' }}>
                 {title}
               </Text>
             )}
@@ -171,7 +171,7 @@ function TxApproveTopBar(_props: TopBarProps) {
 
             {isLoading && <Spinner />}
             {!isLoading && (
-              <Text css={{ ...styles.title, fontWeight: '$bold' }}>
+              <Text css={{ ...styles.title, fontWeight: '$semibold' }}>
                 {title}
               </Text>
             )}
@@ -232,7 +232,9 @@ function TxViewTopBar({ onBack }: TopBarProps) {
           {isLoading && <Spinner />}
 
           {!isLoading && (
-            <Text css={{ ...styles.title, fontWeight: '$bold' }}>{title}</Text>
+            <Text css={{ ...styles.title, fontWeight: '$semibold' }}>
+              {title}
+            </Text>
           )}
         </Box.Flex>
         <Box.Flex css={styles.rightSection}>
@@ -308,7 +310,7 @@ const styles = {
     },
   }),
   title: cssObj({
-    fontSize: '$sm',
+    fontSize: '13px',
     color: '$intentsBase12',
   }),
   container: cssObj({
@@ -349,7 +351,7 @@ const styles = {
       },
   }),
   network: cssObj({
-    fontSize: '$sm',
+    fontSize: '13px',
     color: '$intentsBase11',
   }),
   menuIcon: cssObj({
