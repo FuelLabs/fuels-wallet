@@ -678,7 +678,6 @@ test.describe('FuelWallet Extension', () => {
         const receiverWallet = Wallet.generate({
           provider,
         });
-        bn(100_000_000);
         // Add some coins to the account
         await seedWallet(senderAccount.address, bn(100_000_000));
         // Create transfer
@@ -712,10 +711,11 @@ test.describe('FuelWallet Extension', () => {
           approveTransactionPage,
           senderAccount.address.toString()
         );
-
         await hasAriaLabel(approveTransactionPage, 'Confirm Transaction');
-        await getButtonByText(approveTransactionPage, /Submit/i).click();
-
+        const submitBtn = getButtonByText(approveTransactionPage, /Submit/i);
+        await expect(submitBtn).toBeEnabled({ timeout: 10000 });
+        await approveTransactionPage.waitForLoadState('networkidle');
+        await submitBtn.click({ timeout: 10000, force: true });
         await expect(transferStatus).resolves.toBe('success');
         const balance = await receiverWallet.getBalance();
         expect(balance.toNumber()).toBe(AMOUNT_TRANSFER);

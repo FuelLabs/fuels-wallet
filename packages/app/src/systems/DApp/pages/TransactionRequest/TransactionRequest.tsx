@@ -31,6 +31,7 @@ export function TransactionRequest() {
     executedStatus,
     proposedTxRequest,
     isLoadingFees,
+    isSimulating,
   } = txRequest;
   const defaultValues = useMemo<TransactionRequestFormData | undefined>(() => {
     if (!txSummarySimulated || !proposedTxRequest) return undefined;
@@ -108,14 +109,14 @@ export function TransactionRequest() {
             <Button
               onPress={handlers.reject}
               variant="ghost"
-              isDisabled={isLoading || status('sending')}
+              isDisabled={status('sending')}
             >
               Reject
             </Button>
             <Button
               type="submit"
               intent="primary"
-              isLoading={isLoading || status('sending')}
+              isLoading={isLoading || status('sending') || isSimulating}
               isDisabled={shouldDisableApproveBtn}
             >
               Submit

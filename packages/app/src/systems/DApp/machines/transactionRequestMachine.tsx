@@ -135,7 +135,7 @@ export const transactionRequestMachine = createMachine(
           },
         },
         entry: ['openDialog'],
-        // tags: ['loading'],
+        tags: ['simulating'],
         invoke: {
           src: 'simulateTransaction',
           data: {
@@ -157,7 +157,7 @@ export const transactionRequestMachine = createMachine(
           },
         },
         entry: ['openDialog'],
-        tags: ['loading'],
+        tags: ['loading', 'simulating'],
         invoke: {
           src: 'simulateTransaction',
           data: {
@@ -173,7 +173,7 @@ export const transactionRequestMachine = createMachine(
       },
       simulatingTransactionEvaluatingFirstFees: {
         entry: ['openDialog'],
-        // tags: ['loading'],
+        tags: ['simulating'],
         invoke: {
           src: 'simulateTransaction',
           data: {
