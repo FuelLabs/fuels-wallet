@@ -42,7 +42,7 @@ export const getFuelAssetByAssetId = async (input: {
   chainId?: number;
 }) => {
   // create a reduce that will iterate the assets using promise and return the asset that matches the assetId froming from getAssetFuelCurrentChain
-  const assetToReturn = await input.assets.reduce(
+  const assetToReturn = await input.assets?.reduce(
     async (acc, asset) => {
       const assetFuel = await getAssetFuelCurrentChain({
         asset,
