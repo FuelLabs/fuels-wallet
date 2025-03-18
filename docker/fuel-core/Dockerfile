@@ -39,8 +39,8 @@ RUN jq '.coins = input' \
 
 # update local state_config with testnet consensus parameters
 RUN jq '.consensus_parameters = input' \
-    state_config.json latest_consensus_parameters.json > tmp.json \
-    && mv tmp.json state_config.json
+    chain_config.json latest_consensus_parameters.json > tmp.json \
+    && mv tmp.json chain_config.json
 
 # expose fuel node port
 EXPOSE ${FUEL_CORE_PORT}
