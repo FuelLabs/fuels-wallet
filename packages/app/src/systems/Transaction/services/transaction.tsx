@@ -134,7 +134,7 @@ export type TxInputs = {
   };
 };
 
-const AMOUNT_SUB_PER_TX_RETRY = 200_000;
+const AMOUNT_SUB_PER_TX_RETRY = 300_000;
 const TXS_PER_PAGE = 50;
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
@@ -476,7 +476,7 @@ export class TxService {
     const provider = await createProvider(network.url);
     const wallet = new WalletLockedCustom(account.address, provider);
 
-    const maxAttempts = 10;
+    const maxAttempts = 20;
     let attempts = 0;
 
     while (attempts < maxAttempts) {
