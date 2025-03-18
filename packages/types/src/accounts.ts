@@ -12,7 +12,14 @@ export interface CoinAsset extends Coin {
   asset?: AssetFuelData;
 }
 
+export enum AccountType {
+  IMPORTED = 'imported',
+  DERIVED = 'derived',
+  READ_ONLY = 'read-only',
+}
+
 export type Account = {
+  type: AccountType;
   name: string;
   address: string;
   vaultId?: number;

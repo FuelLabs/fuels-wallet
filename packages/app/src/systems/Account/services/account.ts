@@ -16,6 +16,22 @@ import { readFromOPFS } from '~/systems/Core/utils/opfs';
 import { getUniqueString } from '~/systems/Core/utils/string';
 import { getTestNoDexieDbData } from '../utils/getTestNoDexieDbData';
 
+export enum AccountType {
+  IMPORTED = 'imported',
+  DERIVED = 'derived',
+  READ_ONLY = 'read-only',
+}
+
+export type WalletAccount = {
+  type: AccountType;
+  name: string;
+  address: string;
+  vaultId?: number;
+  publicKey: string;
+  isHidden?: boolean;
+  isCurrent?: boolean;
+};
+
 export type AccountInputs = {
   addAccount: {
     data: {
@@ -58,6 +74,7 @@ export class AccountService {
         ...input.data,
         isCurrent: count === 0,
         isHidden: !!input.data.isHidden,
+        type: 'default' as AccountType,
       };
       await db.accounts.add(account);
       return db.accounts.get({
@@ -486,6 +503,23 @@ export class AccountService {
   static existsAccountWithName(accounts: Account[], name = '') {
     return accounts.filter((account) => {
       return account.name === name;
+    });
+  }
+
+  static async addReadOnlyAccount(address: string): Promise<Account> {
+    return db.transaction('rw', db.accounts, async () => {
+      const count = await db.accounts.count();
+      const account: Account = {
+        type: AccountType.READ_ONLY,
+        name: `Read-only ${address.slice(0, 6)}`,
+        address,
+        publicKey: '',
+        isHidden: false,
+        isCurrent: count === 0,
+      };
+
+      await db.accounts.add(account);
+      return account;
     });
   }
 }

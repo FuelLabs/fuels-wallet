@@ -31,6 +31,12 @@ export const MOCK_ACCOUNTS = [
       '0x7b3ba517cbb646dc4e9c3ecd2d973be361bb48f408286f2fd05db62de2b36422',
     publicKey: '0x00',
   },
+  {
+    name: 'Account 5 (Read-Only)',
+    address: '0x000000000000000000000000000000000000dEaD',
+    publicKey: '0x00',
+    isReadOnly: true,
+  },
 ];
 
 export async function createMockAccount() {
@@ -63,7 +69,7 @@ export async function createMockAccount() {
   /**
    * Add account on database
    * */
-  const account = await AccountService.addAccount({
+  const _account = await AccountService.addAccount({
     data: {
       name: 'Account 1',
       address: walletAccount.address.toAddress(),
@@ -76,5 +82,5 @@ export async function createMockAccount() {
    */
   Storage.setItem('isLogged', true);
 
-  return { account, password, manager };
+  return { account: walletAccount, password, manager };
 }
