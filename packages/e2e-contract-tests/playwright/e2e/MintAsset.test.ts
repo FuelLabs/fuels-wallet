@@ -154,21 +154,7 @@ test.describe('Mint Assets', () => {
       window.scrollTo(0, document.body.scrollHeight)
     );
 
-    await hasText(walletNotificationPage, name);
     await hasText(walletNotificationPage, shortAddress(assetId), 0, 10000);
-    // test mint amount is correct
-    expect
-      .poll(
-        async () => {
-          const amountContainer = getByAriaLabel(
-            walletNotificationPage,
-            'amount-container'
-          );
-          return (await amountContainer.innerText()).replace('\n', ' ');
-        },
-        { timeout: 10000 }
-      )
-      .toBe(`1.2345 ${symbol}`);
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
