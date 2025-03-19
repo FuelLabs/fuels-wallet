@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Dialog } from '@fuel-ui/react';
+import { Box, Button, Dialog, Icon } from '@fuel-ui/react';
 import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
@@ -16,6 +16,18 @@ export const TxApprove = () => {
   return (
     <Box css={styles.wrapper}>
       <Layout.TopBar type={TopBarType.txApprove} />
+      <Box css={{ borderBottom: '1px solid $gray6' }}>
+        <Box.Flex css={styles.reviewTxBadge}>
+          <Icon icon="InfoCircle" stroke={2} size={16} />
+          Double-check transaction details before submit.
+        </Box.Flex>
+        {/* {warning && (
+          <Box.Flex justify="center" css={styles.warning}>
+            <Icon icon="InfoCircle" stroke={2} size={16} />
+            {warning}
+          </Box.Flex>
+        )} */}
+      </Box>
       <Dialog.Description as="div" css={styles.description}>
         {ctx.shouldShowTxSimulated && ctx.txSummarySimulated && (
           <TxContent.Info
@@ -91,7 +103,6 @@ const styles = {
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    gap: '$2',
     backgroundColor: '$intentsBase3',
 
     'html[class="fuel_dark-theme"] &': {
@@ -106,6 +117,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '$2',
+    mt: '$2',
   }),
   footer: cssObj({
     p: '$4 $5',
@@ -113,5 +125,17 @@ const styles = {
   }),
   footerButton: cssObj({
     mt: '$4',
+  }),
+  reviewTxBadge: cssObj({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '$1',
+    fontSize: 'calc($sm - 1px)',
+    color: '$gray11',
+    lineHeight: '$tight',
+    backgroundColor: '$intentsInfo4',
+    width: '100%',
+    minHeight: '40px',
+    pl: '$4',
   }),
 };
