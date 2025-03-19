@@ -21,7 +21,6 @@ export function NetworkStatus({
         alignItems: 'center',
         color: network.isSelected ? '$brand' : '$intentsBase8',
         fontSize: size,
-        mt: '2px',
       }}
     >
       ●

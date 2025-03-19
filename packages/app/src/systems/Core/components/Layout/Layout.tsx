@@ -17,7 +17,6 @@ import { TopBar } from './TopBar';
 type Context = {
   isLoading?: boolean;
   isHome?: boolean;
-  isTxScreen?: boolean;
   title?: string;
   ref?: React.RefObject<HTMLDivElement>;
 };

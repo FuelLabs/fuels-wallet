@@ -2,7 +2,6 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Dialog, Icon } from '@fuel-ui/react';
 import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
-import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { coreStyles } from '~/systems/Core/styles';
 import { useTransactionRequest } from '~/systems/DApp';
 import { TxContent } from '../../components/TxContent/TxContent';
@@ -12,21 +11,22 @@ export const TxApprove = () => {
   const { isLoading: isLoadingAssets } = useAssets();
   const isLoading =
     ctx.status('loading') || ctx.status('sending') || isLoadingAssets;
+  const { handlers } = useTransactionRequest();
+
+  const handleReject = () => {
+    handlers.closeDialog();
+    handlers.reset();
+    handlers.reject();
+  };
 
   return (
     <Box css={styles.wrapper}>
-      <Layout.TopBar type={TopBarType.txApprove} />
+      <Layout.TopBar hideMenu onBack={handleReject} />
       <Box css={{ borderBottom: '1px solid $gray6' }}>
         <Box.Flex css={styles.reviewTxBadge}>
           <Icon icon="InfoCircle" stroke={2} size={16} />
           Double-check transaction details before submit.
         </Box.Flex>
-        {/* {warning && (
-          <Box.Flex justify="center" css={styles.warning}>
-            <Icon icon="InfoCircle" stroke={2} size={16} />
-            {warning}
-          </Box.Flex>
-        )} */}
       </Box>
       <Dialog.Description as="div" css={styles.description}>
         {ctx.shouldShowTxSimulated && ctx.txSummarySimulated && (
@@ -74,7 +74,7 @@ export const TxApprove = () => {
             <Button
               variant="ghost"
               isDisabled={isLoading}
-              onPress={ctx.handlers.closeDialog}
+              onPress={handleReject}
               css={styles.footerButton}
             >
               Back

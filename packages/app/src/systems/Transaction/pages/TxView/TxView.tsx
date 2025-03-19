@@ -32,7 +32,7 @@ export function TxView() {
       title="Transaction"
       isLoading={ctx.isFetching || ctx.isFetchingResult}
     >
-      <Layout.TopBar type={TopBarType.txView} onBack={() => navigate(-1)} />
+      <Layout.TopBar onBack={() => navigate(-1)} />
       <Layout.Content css={styles.content} noScroll>
         {ctx.shouldShowAlert && (
           <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />

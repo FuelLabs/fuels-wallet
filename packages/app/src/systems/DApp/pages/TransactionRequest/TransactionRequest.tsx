@@ -66,7 +66,7 @@ export function TransactionRequest() {
       <AutoSubmit />
 
       <Layout title={title} isLoading={isLoading}>
-        <Layout.TopBar type={TopBarType.external} />
+        <Layout.TopBar hideMenu hideBackArrow />
         <Layout.Content css={styles.content} noScroll>
           {shouldShowTxSimulated && txSummarySimulated && (
             <TxContent.Info

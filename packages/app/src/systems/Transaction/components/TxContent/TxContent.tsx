@@ -110,8 +110,8 @@ function TxContentInfo({
   isLoadingFees,
   isLoading,
 }: TxContentInfoProps) {
-  const { getValues } = useFormContext<SendFormValues>();
-
+  const formContext = useFormContext<SendFormValues>();
+  const { getValues } = formContext || {};
   const status = txStatus || tx?.status || txStatus;
   const hasErrors = Boolean(Object.keys(errors || {}).length);
   const isExecuted = !!tx?.id && status; // Added status check to ensure the tx is executed, as TX.id is now always present.
@@ -126,8 +126,8 @@ function TxContentInfo({
     if (!fees?.regularTip || !fees?.fastTip) return false;
 
     try {
-      const tipAmount = getValues('fees.tip.amount');
-      const gasLimitAmount = getValues('fees.gasLimit.amount');
+      const tipAmount = getValues?.('fees.tip.amount');
+      const gasLimitAmount = getValues?.('fees.gasLimit.amount');
       if (!tipAmount || !gasLimitAmount) return false;
 
       const isFeeAmountTheRegularTip = tipAmount.eq(fees.regularTip);

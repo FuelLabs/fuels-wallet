@@ -184,7 +184,6 @@ const styles = {
     alignItems: 'center',
     py: '$4',
     px: '$4',
-    borderTop: '1px solid $border',
     borderBottom: '1px solid $border',
   }),
   accountChange: cssObj({
