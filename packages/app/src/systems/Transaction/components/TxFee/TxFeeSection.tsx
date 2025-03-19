@@ -29,7 +29,6 @@ const styles = {
     color: '$gray12',
   }),
   feeWrapper: cssObj({
-    padding: '$2',
     borderRadius: '10px',
     width: '100%',
   }),
