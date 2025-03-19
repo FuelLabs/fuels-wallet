@@ -56,6 +56,9 @@ export function TxRecipientContractLogo({
         borderRadius: '$full',
         width: size,
         height: size,
+        'html[class="fuel_dark-theme"] &': {
+          backgroundColor: '$gray1',
+        },
       })}
     >
       <Icon icon={Icon.is('Code')} size={22} />
