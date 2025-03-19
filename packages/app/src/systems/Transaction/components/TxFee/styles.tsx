@@ -1,9 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
 
 export const styles = {
-  detailItem: (active = false, hasCheckbox = false, title = false) =>
+  detailItem: (_active = false, hasCheckbox = false, title = false) =>
     cssObj({
-      padding: hasCheckbox ? '$3 $4' : '$3 $4 $3 $14',
+      padding: hasCheckbox ? '$3 $4' : '$3',
       flexDirection: title ? 'row' : 'column',
       alignItems: 'flex-start',
       boxSizing: 'border-box',
@@ -15,31 +15,17 @@ export const styles = {
       cursor: hasCheckbox ? 'pointer' : 'auto',
       backgroundColor: '$cardBg',
       borderRadius: '8px',
-      'html[class="fuel_light-theme"] &': {
-        boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
+      border: '1px solid $inputBaseBorder',
+      '&:hover': {
+        borderColor: '$inputActiveBorder',
       },
-      'html[class="fuel_dark-theme"] &': {
-        backgroundColor: '$gray2',
-        border: '1px solid $gray3',
+      '&:focus-visible': {
+        borderColor: '$intentsBase5',
+        outline: 'none',
       },
-
-      ...(active && {
-        '&::after': {
-          position: 'absolute',
-          display: 'block',
-          content: '""',
-          top: 0,
-          left: 0,
-          width: '3px',
-          height: '100%',
-          background: '$intentsPrimary11',
-          borderRadius: '$md 0 0 $md',
-        },
-      }),
     }),
   title: cssObj({
     fontSize: '$sm',
-    lineHeight: '20px',
     fontWeight: '$medium',
     textWrap: 'nowrap',
   }),
