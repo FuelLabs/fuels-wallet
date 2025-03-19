@@ -22,11 +22,11 @@
     "ts:check": "tsc --noEmit"
   },
   "peerDependencies": {
-    "fuels": ">=0.98.0"
+    "fuels": ">=0.100.0"
   },
   "devDependencies": {
     "dexie": "4.0.9",
-    "fuels": "0.98.0",
+    "fuels": "0.100.0",
     "json-rpc-2.0": "1.7.0",
     "tsup": "^7.2.0"
   }

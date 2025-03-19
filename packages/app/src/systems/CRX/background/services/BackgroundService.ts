@@ -310,7 +310,14 @@ export class BackgroundService {
       );
     }
 
-    const { address: _address, provider, transaction, skipCustomFee } = input;
+    const {
+      address: _address,
+      provider,
+      transaction,
+      skipCustomFee,
+      transactionState,
+      transactionSummary,
+    } = input;
 
     const popupService = await PopUpService.open(
       origin,
@@ -327,6 +334,8 @@ export class BackgroundService {
       title,
       favIconUrl,
       skipCustomFee,
+      transactionState,
+      transactionSummary,
     });
     popupService.destroy();
     return signedMessage;
