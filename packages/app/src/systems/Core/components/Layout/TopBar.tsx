@@ -99,11 +99,8 @@ const styles = {
     alignItems: 'center',
     minHeight: '54px',
     transition: 'none',
-    backgroundColor: '$cardBg',
+    backgroundColor: '$bodyBg',
     borderBottom: '1px solid $gray6',
-    '&[data-home="true"]': {
-      backgroundColor: '$bodyBg',
-    },
   }),
   menuContainer: cssObj({
     position: 'relative',
