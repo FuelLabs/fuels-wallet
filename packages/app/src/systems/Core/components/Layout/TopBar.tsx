@@ -1,6 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, FuelLogo, Icon, IconButton, Spinner, Text } from '@fuel-ui/react';
-import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 /**
  * Because of some cycle-dependency error here, is not
@@ -31,8 +30,8 @@ export function TopBar({ onBack, hideMenu, hideBackArrow }: TopBarProps) {
   const { hasErrorsToReport } = useReportError();
 
   return (
-    <Box.Flex as="nav" css={styles.root}>
-      <Box.Flex css={styles.container} data-home={isHome}>
+    <Box.Flex as="nav" css={styles.root} data-home={isHome}>
+      <Box.Flex css={styles.container}>
         {!isHome ? (
           <>
             {!hideBackArrow && (
@@ -96,13 +95,15 @@ export function TopBar({ onBack, hideMenu, hideBackArrow }: TopBarProps) {
 const styles = {
   root: cssObj({
     px: '$4',
-    py: '$1',
     gap: '$3',
     alignItems: 'center',
-    minHeight: '50px',
+    minHeight: '54px',
     transition: 'none',
     backgroundColor: '$cardBg',
     borderBottom: '1px solid $gray6',
+    '&[data-home="true"]': {
+      backgroundColor: '$bodyBg',
+    },
   }),
   menuContainer: cssObj({
     position: 'relative',
