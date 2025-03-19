@@ -13,6 +13,9 @@ jobs:
   tests-jest:
     name: Jest Tests [Shard ${{ matrix.shard }}]
     runs-on: buildjet-8vcpu-ubuntu-2204-arm
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     strategy:
       fail-fast: false
       matrix:
