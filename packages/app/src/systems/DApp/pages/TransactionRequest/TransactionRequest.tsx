@@ -33,6 +33,7 @@ export function TransactionRequest() {
     proposedTxRequest,
     isLoadingFees,
     isSimulating,
+    input,
   } = txRequest;
   const defaultValues = useMemo<TransactionRequestFormData | undefined>(() => {
     if (!txSummarySimulated || !proposedTxRequest) return undefined;
@@ -82,6 +83,7 @@ export function TransactionRequest() {
               fees={fees}
               isLoadingFees={isLoadingFees}
               isLoading={isLoading}
+              txAccount={input?.address}
             />
           )}
           {shouldShowTxExecuted && txSummaryExecuted && (
@@ -101,6 +103,7 @@ export function TransactionRequest() {
                   </Button>
                 )
               }
+              txAccount={input?.address}
             />
           )}
         </Layout.Content>

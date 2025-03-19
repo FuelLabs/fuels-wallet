@@ -97,6 +97,7 @@ export type TxContentInfoProps = {
   txRequest?: TransactionRequest;
   isLoadingFees?: boolean;
   isLoading?: boolean;
+  txAccount?: string;
 };
 
 function TxContentInfo({
@@ -109,6 +110,7 @@ function TxContentInfo({
   txRequest,
   isLoadingFees,
   isLoading,
+  txAccount,
 }: TxContentInfoProps) {
   const formContext = useFormContext<SendFormValues>();
   const { getValues } = formContext || {};
@@ -120,6 +122,7 @@ function TxContentInfo({
   const { transaction } = useSimplifiedTransaction({
     tx,
     txRequest,
+    txAccount,
   });
 
   const initialAdvanced = useMemo(() => {

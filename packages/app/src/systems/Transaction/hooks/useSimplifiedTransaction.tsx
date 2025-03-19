@@ -7,17 +7,19 @@ import type { SimplifiedTransaction } from '../types';
 type UseSimplifiedTransactionProps = {
   tx: TransactionSummary;
   txRequest?: TransactionRequest;
+  txAccount?: string;
 };
 
 export function useSimplifiedTransaction({
   tx,
   txRequest,
+  txAccount,
 }: UseSimplifiedTransactionProps) {
   const { account } = useAccounts();
 
   const transaction = useMemo<SimplifiedTransaction>(() => {
-    return simplifyTransaction(tx, txRequest, account?.address);
-  }, [tx, txRequest, account?.address]);
+    return simplifyTransaction(tx, txRequest, txAccount || account?.address);
+  }, [tx, txRequest, account?.address, txAccount]);
 
   return {
     transaction,
