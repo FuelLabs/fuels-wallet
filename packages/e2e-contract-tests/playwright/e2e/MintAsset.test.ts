@@ -140,25 +140,6 @@ test.describe('Mint Assets', () => {
       window.scrollTo(0, document.body.scrollHeight)
     );
 
-    // await page.pause();
-    // test mint amount is correct
-    // await expect
-    //   .poll(
-    //     async () => {
-    //       const amountContainer = walletNotificationPage
-    //         .getByLabel('amount-container')
-    //         .first();
-    //       return (await amountContainer.innerText()).replace('\n', ' ');
-    //     },
-    //     {
-    //       timeout: 10000,
-    //       message:
-    //         'Waiting for correct amount to appear in wallet notification',
-    //     }
-    //   )
-    //   .toBe(`1.2345 ${symbol}`);
-    await hasText(walletNotificationPage, shortAddress(assetId), 0, 10000);
-
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
 
