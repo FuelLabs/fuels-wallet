@@ -16,6 +16,7 @@ import type {
 } from 'fuels';
 import { type ReactNode, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useAccounts } from '~/systems/Account';
 import { type Maybe, MotionStack, animations } from '~/systems/Core';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import {
@@ -112,6 +113,7 @@ function TxContentInfo({
   isLoading,
   txAccount,
 }: TxContentInfoProps) {
+  const { account: currentAccount } = useAccounts();
   const formContext = useFormContext<SendFormValues>();
   const { getValues } = formContext || {};
   const status = txStatus || tx?.status || txStatus;
@@ -119,10 +121,12 @@ function TxContentInfo({
   const isExecuted = !!tx?.id && status; // Added status check to ensure the tx is executed, as TX.id is now always present.
   const txRequestGasLimit = getGasLimitFromTxRequest(txRequest);
 
+  const account = txAccount || currentAccount?.address;
+
   const { transaction } = useSimplifiedTransaction({
     tx,
     txRequest,
-    txAccount,
+    txAccount: account,
   });
 
   const initialAdvanced = useMemo(() => {
@@ -163,8 +167,7 @@ function TxContentInfo({
       <Box css={styles.content}>
         <TxOperations
           operations={transaction.categorizedOperations}
-          // status={status}
-          // isLoading={isLoading}
+          txAccount={account}
         />
         {(isLoadingFees || (isLoading && !showDetails)) && <TxFee.Loader />}
         {showDetails && !fees?.baseFee && (

@@ -6,17 +6,18 @@ import { TxOperationsDrawer } from './TxOperationsDrawer';
 
 type TxOperationsListProps = {
   operations: CategorizedOperations;
+  txAccount?: string;
 };
 
-export function TxOperations({ operations }: TxOperationsListProps) {
-  const { account } = useAccounts();
+export function TxOperations({ operations, txAccount }: TxOperationsListProps) {
+  const { findAccount } = useAccounts();
 
   return (
     <Box.Stack gap="$2">
       <TxOperationsDrawer operations={operations.mainOperations} />
 
       <TxOperationsGroup
-        title={`Operations not related to ${account?.name}`}
+        title={`Operations not related to ${findAccount(txAccount)?.name}`}
         operations={operations.notRelatedToCurrentAccount}
         showNesting={false}
       />

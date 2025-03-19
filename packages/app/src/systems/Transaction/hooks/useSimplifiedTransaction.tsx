@@ -15,11 +15,9 @@ export function useSimplifiedTransaction({
   txRequest,
   txAccount,
 }: UseSimplifiedTransactionProps) {
-  const { account } = useAccounts();
-
   const transaction = useMemo<SimplifiedTransaction>(() => {
-    return simplifyTransaction(tx, txRequest, txAccount || account?.address);
-  }, [tx, txRequest, account?.address, txAccount]);
+    return simplifyTransaction(tx, txRequest, txAccount);
+  }, [tx, txRequest, txAccount]);
 
   return {
     transaction,
