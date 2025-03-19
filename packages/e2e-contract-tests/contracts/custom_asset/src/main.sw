@@ -18,6 +18,7 @@ use standards::src20::SRC20;
 use standards::src3::SRC3;
 use std::{
     call_frames::msg_asset_id,
+    constants::DEFAULT_SUB_ID,
     context::msg_amount,
     hash::Hash,
     storage::storage_string::*,
@@ -63,7 +64,11 @@ impl SRC20 for Contract {
 
 impl SRC3 for Contract {
     #[storage(read, write)]
-    fn mint(recipient: Identity, sub_id: SubId, amount: u64) {
+    fn mint(recipient: Identity, sub_id: Option<SubId>, amount: u64) {
+        let sub_id = match sub_id {
+            Some(s) => s,
+            None => DEFAULT_SUB_ID,
+        };
         _mint(storage.total_assets, storage.total_supply, recipient, sub_id, amount);
     }
 
@@ -164,7 +169,7 @@ impl CustomBehavior for Contract {
         storage.balances.insert((sender, asset_id), new_balance);
         transfer(sender, asset_id, half_amount);
         let external_contract = abi(SRC3, contract_id.bits());
-        external_contract.mint(recipient, sub_id, amount);
+        external_contract.mint(recipient, Some(sub_id), amount);
 
         new_balance
     }
