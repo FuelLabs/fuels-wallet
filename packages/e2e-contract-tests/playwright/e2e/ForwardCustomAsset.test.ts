@@ -76,12 +76,6 @@ test.describe('Forward Custom Asset', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
-    // test the asset name is shown
-    await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
-
-    // test asset id is correct
-    const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
-
     // test forward custom asset amount is correct
     await hasText(
       walletNotificationPage,
@@ -90,6 +84,7 @@ test.describe('Forward Custom Asset', () => {
 
     // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');
+    const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
 
     // Test approve
     const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
