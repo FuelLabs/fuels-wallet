@@ -40,6 +40,11 @@ export const TxFeeRadio: TxFeeRadioComponent = ({
         checked={checked}
         label={title}
         labelCSS={styles.optionLabel}
+        css={{
+          width: '14px',
+          height: '14px',
+          mt: '2px',
+        }}
       />
 
       <Text css={styles.optionContent}>

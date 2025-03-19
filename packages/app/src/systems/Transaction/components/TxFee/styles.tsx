@@ -79,7 +79,8 @@ export const styles = {
   }),
   optionLabel: cssObj({
     color: '$gray12',
-    fontSize: '13px',
+    fontSize: '$sm !important',
     fontWeight: '$medium',
+    ml: '4px',
   }),
 };
