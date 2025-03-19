@@ -5,5 +5,5 @@ license = "Apache-2.0"
 name = "custom_asset"
 
 [dependencies]
-standards = { git = "https://github.com/FuelLabs/sway-standards", tag = "v0.4.1" }
-sway_libs = { git = "https://github.com/FuelLabs/sway-libs", tag = "v0.21.0" }
+standards = { git = "https://github.com/FuelLabs/sway-standards", tag = "v0.7.0" }
+sway_libs = { git = "https://github.com/FuelLabs/sway-libs", tag = "v0.25.0" }
