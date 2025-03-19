@@ -5,6 +5,7 @@
  **/
 
 import { cssObj } from '@fuel-ui/css';
+import { HStack, VStack } from '@fuel-ui/react';
 import type { BN } from 'fuels';
 import { DEFAULT_DECIMAL_UNITS, bn, format } from 'fuels';
 import { useEffect, useState } from 'react';
@@ -51,12 +52,21 @@ export function createAmount(text: string, units = 0) {
 
   let amount: BN | undefined;
   if (isZeroUnits) {
-    const textWithoutDecimals = textAmountFixed
-      .replaceAll(',', '')
-      .split('.')[0];
-    amount = bn(textWithoutDecimals);
+    const integerPart = textAmountFixed.replaceAll(',', '').split('.')?.[0];
+    amount = bn(integerPart);
   } else {
-    amount = bn.parseUnits(textAmountFixed.replaceAll(',', ''), units);
+    // get value after fraction, remove extra decimals
+    const textWithoutComma = textAmountFixed.replaceAll(',', '');
+    const textIntegerPart = textWithoutComma.split('.')[0];
+    const fractionWithoutExtraDecimals = textWithoutComma
+      .split('.')?.[1]
+      ?.slice(0, units);
+    const textWithoutExtraDecimals = textIntegerPart
+      ? `${textIntegerPart}${
+          fractionWithoutExtraDecimals ? `.${fractionWithoutExtraDecimals}` : ''
+        }`
+      : '';
+    amount = bn.parseUnits(textWithoutExtraDecimals, units);
   }
 
   return {
@@ -72,6 +82,7 @@ export type InputAmountProps = Omit<InputProps, 'size'> & {
   units?: number;
   balancePrecision?: number;
   asset?: { name?: string; icon?: string; address?: string };
+  amountInUsd?: string;
   assetTooltip?: string;
   hiddenMaxButton?: boolean;
   hiddenBalance?: boolean;
@@ -102,6 +113,7 @@ export const InputAmount: InputAmountComponent = ({
   inputProps,
   asset,
   assetTooltip,
+  amountInUsd = '$0',
   onClickAsset,
   ...props
 }) => {
@@ -222,22 +234,35 @@ export const InputAmount: InputAmountComponent = ({
           </Input.ElementRight>
         )}
       </Flex>
-      <Box.Flex gap={'$2'}>
-        {!hiddenBalance && (
-          <Tooltip
-            content={formatAmount({ amount: balance, options: formatOpts })}
-            sideOffset={-5}
-          >
-            <Text
-              fontSize="sm"
-              aria-label={`Balance: ${formattedBalance}`}
-              color="textSubtext"
+      {!hiddenBalance && (
+        <VStack gap="0">
+          <Box css={styles.dashedHorizontalSeparator} />
+
+          <HStack justify="between" css={styles.inputAmountBalances}>
+            {!!amountInUsd && (
+              <Text
+                fontSize="sm"
+                aria-label={`${asset?.name} value converted to USD`}
+                color="textSubtext"
+              >
+                {amountInUsd}
+              </Text>
+            )}
+            <Tooltip
+              content={formatAmount({ amount: balance, options: formatOpts })}
+              sideOffset={-5}
             >
-              Balance: {formattedBalance}
-            </Text>
-          </Tooltip>
-        )}
-      </Box.Flex>
+              <Text
+                fontSize="sm"
+                aria-label={`Balance: ${formattedBalance}`}
+                color="textSubtext"
+              >
+                Balance: {formattedBalance}
+              </Text>
+            </Tooltip>
+          </HStack>
+        </VStack>
+      )}
     </Input>
   );
 };
@@ -323,5 +348,24 @@ const styles = {
     borderRadius: '$full',
     width: '$5',
     height: '$5',
+  }),
+  inputAmountBalances: cssObj({
+    width: '100%',
+    justifyContent: 'space-between',
+    gap: '$1',
+    alignItems: 'center',
+    whiteSpace: 'nowrap',
+    lineHeight: '$tight',
+    fontSize: '$sm',
+    fontWeight: '$normal',
+  }),
+  dashedHorizontalSeparator: cssObj({
+    width: '100%',
+    height: 0,
+    backgroundColor: '$intentsBase8',
+    // Only one side of the border should be visible, to avoid extra "thickness"
+    borderTop: '1px dashed $intentsBase8',
+    my: '$2',
+    color: 'textSubtext',
   }),
 };

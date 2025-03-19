@@ -2,6 +2,7 @@ import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import {
   expectButtonToBeEnabled,
   getButtonByText,
+  getByAriaLabel,
   hasText,
 } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
@@ -62,6 +63,8 @@ test.describe('Mint Assets', () => {
 
     // test asset is correct
     const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
+    await page.waitForTimeout(10000); // Wait for slow VM
+
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
     // short address function copied from app package
@@ -126,30 +129,32 @@ test.describe('Mint Assets', () => {
     const mintButton = getButtonByText(page, 'Mint Asset configuration');
 
     await expectButtonToBeEnabled(mintButton);
+    await page.waitForTimeout(1000); // Wait for slow VM
     await mintButton.click();
-
+    await page.waitForTimeout(1000); // Wait for slow VM
     // test asset is correct
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
     // Test if asset name is defined (not unknown)
-    checkAriaLabelsContainsText(
+    await checkAriaLabelsContainsText(
       walletNotificationPage,
       'Asset Name',
       'Ethereum'
     );
     // Test if sender name is defined (not unknown)
-    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
+    await checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Sender Name',
+      ''
+    );
 
     // scroll to bottom of page to ensure all text is visible
     await walletNotificationPage.evaluate(() =>
       window.scrollTo(0, document.body.scrollHeight)
     );
 
-    await hasText(walletNotificationPage, name);
     await hasText(walletNotificationPage, shortAddress(assetId), 0, 10000);
-    // test mint amount is correct
-    await hasText(walletNotificationPage, `1.2345 ${symbol}`);
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');

@@ -14,5 +14,5 @@ export function AmountVisibility({
   units,
 }: AmountVisibilityProps) {
   const { formatted } = formatBalance(value, units);
-  return <>{visibility ? formatted.display : '•••••'}</>;
+  return visibility ? formatted.display : '•••••';
 }

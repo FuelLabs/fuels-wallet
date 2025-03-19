@@ -1,14 +1,8 @@
 import type { Account } from '@fuel-wallet/types';
+import { expectButtonToBeEnabled } from '@fuels/playwright-utils';
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium, expect } from '@playwright/test';
-import {
-  type Bech32Address,
-  Provider,
-  Wallet,
-  bn,
-  fromBech32,
-  toB256,
-} from 'fuels';
+import { Provider, Wallet, bn } from 'fuels';
 
 import {
   getButtonByText,
@@ -33,7 +27,7 @@ test.describe('SendTransaction', () => {
     const { accounts } = await mockData(page);
     account = accounts[0];
     await seedWallet(account.address, bn(100_000_000));
-    provider = await Provider.create(process.env.VITE_FUEL_PROVIDER_URL);
+    provider = new Provider(process.env.VITE_FUEL_PROVIDER_URL);
   });
 
   test('Send transaction', async () => {
@@ -62,9 +56,13 @@ test.describe('SendTransaction', () => {
     await getInputByName(page, 'amount').fill('0.001');
 
     // Submit transaction
-    await getButtonByText(page, 'Review').click();
 
-    await getButtonByText(page, 'Approve').click();
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
+
+    await getButtonByText(page, 'Submit').click();
     await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
@@ -92,11 +90,15 @@ test.describe('SendTransaction', () => {
     await getInputByName(page, 'amount').fill('0.001');
 
     // Submit transaction
-    await getButtonByText(page, 'Review').click();
+    // make sure the button is enabled
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
 
     // Approve transaction
     await hasText(page, '0.001 ETH');
-    await getButtonByText(page, 'Approve').click();
+    await getButtonByText(page, 'Submit').click();
 
     // Wait for transaction to be confirmed
     await hasText(page, 'success');
@@ -131,11 +133,15 @@ test.describe('SendTransaction', () => {
     await hasText(page, 'Balance: 1,000,000.000');
 
     // Submit transaction
-    await getButtonByText(page, 'Review').click();
+
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
 
     // Approve transaction
     await hasText(page, `0.01 ${ALT_ASSET.symbol}`);
-    await getButtonByText(page, 'Approve').click();
+    await getButtonByText(page, 'Submit').click();
 
     // Wait for transaction to be confirmed
     await hasText(page, 'success');
@@ -161,13 +167,15 @@ test.describe('SendTransaction', () => {
 
     // Waiting button change to Review in order to ensure that fee amount is updated
     await page.waitForSelector('button:has-text("Review")');
-    await page.waitForTimeout(1000);
 
-    await getButtonByText(page, 'Review').click();
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
 
     await hasText(page, '0.001 ETH');
 
-    await getButtonByText(page, 'Approve').click();
+    await getButtonByText(page, 'Submit').click();
     await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
@@ -198,13 +206,15 @@ test.describe('SendTransaction', () => {
 
     // Waiting button change to Review in order to change fee amount
     await page.waitForSelector('button:has-text("Review")');
-    await page.waitForTimeout(1000);
 
-    await getButtonByText(page, 'Review').click();
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
 
     await hasText(page, '0.001 ETH');
 
-    await getButtonByText(page, 'Approve').click();
+    await getButtonByText(page, 'Submit').click();
     await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
@@ -231,22 +241,38 @@ test.describe('SendTransaction', () => {
 
     // Waiting button change to Review in order to ensure that fee amount is updated
     await page.waitForSelector('button:has-text("Review")');
-    await page.waitForTimeout(1000);
 
     // Selecting and extracting regular fee amount
+    await expect
+      .poll(
+        async () => {
+          return await getByAriaLabel(page, 'fee value:Regular').isVisible();
+        },
+        { timeout: 10000 }
+      )
+      .toBeTruthy();
     const regularFeeComponent = getByAriaLabel(page, 'fee value:Regular');
     await regularFeeComponent.click();
 
     // Waiting button change to Review in order to ensure that fee amount is updated
     await page.waitForSelector('button:has-text("Review")');
-    await page.waitForTimeout(1000);
 
-    await getButtonByText(page, 'Review').click();
+    const btnLocatorBeforeApprv = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocatorBeforeApprv);
+    await btnLocatorBeforeApprv.click();
 
     // Waiting button change to Approve in order to get updated fee amount
-    await page.waitForSelector('button:has-text("Approve")');
-    await page.waitForTimeout(1000);
+    await page.waitForSelector('button:has-text("Submit")');
 
+    await expect
+      .poll(
+        async () => {
+          return await getButtonByText(page, 'Back').isVisible();
+        },
+        { timeout: 10000 }
+      )
+      .toBeTruthy();
     // Going back to select other fee value
     await getButtonByText(page, 'Back').click();
 
@@ -256,22 +282,37 @@ test.describe('SendTransaction', () => {
 
     // Waiting button change to Review in order to change fee amount
     await page.waitForSelector('button:has-text("Review")');
-    await page.waitForTimeout(1000);
 
-    await getButtonByText(page, 'Review').click();
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
 
     // Waiting button change to Approve in order to get updated fee amount
-    await page.waitForSelector('button:has-text("Approve")');
-    await page.waitForTimeout(1000);
+    await page.waitForSelector('button:has-text("Submit")');
 
     await hasText(page, '0.001 ETH');
 
-    await page.waitForTimeout(1000);
-    await getButtonByText(page, 'Approve').click();
+    await expect
+      .poll(
+        async () => {
+          return await getButtonByText(page, 'Submit').isEnabled();
+        },
+        { timeout: 10000 }
+      )
+      .toBeTruthy();
+    await getButtonByText(page, 'Submit').click();
     await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
-    await hasText(page, 'success');
+    await expect
+      .poll(
+        async () => {
+          return await hasText(page, 'success');
+        },
+        { timeout: 10000 }
+      )
+      .toBeTruthy();
   });
 
   test('Send max amount transaction', async () => {
@@ -305,17 +346,30 @@ test.describe('SendTransaction', () => {
     // Fee values change
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    const maxAmountAfterFee = await getInputByName(page, 'amount').inputValue();
-
     // Submit transaction
-    await getButtonByText(page, 'Review').click();
+
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    const maxAmountAfterFee = await getInputByName(page, 'amount').inputValue();
+    await btnLocator.click();
 
     // Approve transaction
     await hasText(page, `${maxAmountAfterFee} ETH`);
-    await getButtonByText(page, 'Approve').click();
+    await getButtonByText(page, 'Submit').click();
     await hasText(page, `${maxAmountAfterFee} ETH`);
 
     // Wait for transaction to be confirmed
     await hasText(page, 'success');
+  });
+
+  test('Send transaction to an asset address should fail', async () => {
+    const assetAddress = await provider.getBaseAssetId();
+    await visit(page, '/send');
+    await getInputByName(page, 'address').fill(assetAddress);
+    await getInputByName(page, 'amount').fill('0.001');
+    await expect(
+      page.getByText("You can't send to Asset address")
+    ).toBeVisible();
   });
 });

@@ -1,3 +1,4 @@
+import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Form, HStack, Input, Text, VStack } from '@fuel-ui/react';
 import { AnimatePresence } from 'framer-motion';
 import { type BN, bn } from 'fuels';
@@ -20,6 +21,7 @@ type TxFeeOptionsProps = {
   gasLimit: BN;
   regularTip: BN;
   fastTip: BN;
+  onRecalculate?: (tip: BN) => void;
 };
 
 export const TxFeeOptions = ({
@@ -28,6 +30,7 @@ export const TxFeeOptions = ({
   gasLimit: gasLimitInput,
   regularTip,
   fastTip,
+  onRecalculate,
 }: TxFeeOptionsProps) => {
   const { control, setValue, getValues } = useFormContext<SendFormValues>();
   const [isAdvanced, setIsAdvanced] = useState(initialAdvanced);
@@ -44,10 +47,20 @@ export const TxFeeOptions = ({
     name: 'fees.gasLimit',
   });
 
+  const advancedFee = baseFee.add(tip.value.amount);
+
   const options = useMemo(() => {
     return [
-      { name: 'Regular', fee: baseFee.add(regularTip), tip: regularTip },
-      { name: 'Fast', fee: baseFee.add(fastTip), tip: fastTip },
+      {
+        name: 'Regular',
+        fee: baseFee.add(regularTip),
+        tip: regularTip,
+      },
+      {
+        name: 'Fast',
+        fee: baseFee.add(fastTip),
+        tip: fastTip,
+      },
     ];
   }, [baseFee, regularTip, fastTip]);
 
@@ -86,11 +99,7 @@ export const TxFeeOptions = ({
       <AnimatePresence mode="popLayout">
         {isAdvanced ? (
           <MotionStack {...animations.slideInTop()} key="advanced" gap="$3">
-            <TxFee
-              title="Fee + Tip"
-              fee={baseFee.add(tip.value.amount)}
-              checked
-            />
+            <TxFee title="Fee + Tip" fee={advancedFee} checked />
 
             <VStack gap="$1">
               <HStack gap="$3">
@@ -181,6 +190,7 @@ export const TxFeeOptions = ({
                     amount: option.tip,
                     text: formatTip(option.tip),
                   });
+                  onRecalculate?.(option.tip);
                 }}
               />
             ))}
@@ -193,7 +203,17 @@ export const TxFeeOptions = ({
           direction="column"
           layout
         >
-          <Button size="xs" variant="link" onPress={toggle}>
+          <Button
+            size="xs"
+            variant="link"
+            onPress={toggle}
+            css={cssObj({
+              fontSize: '12px',
+              lineHeight: '16px',
+              fontWeight: '$medium',
+              textDecoration: 'underline',
+            })}
+          >
             Use {isAdvanced ? 'regular options' : 'custom fees'}
           </Button>
         </MotionFlex>

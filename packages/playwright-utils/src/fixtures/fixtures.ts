@@ -9,7 +9,7 @@ export const test = base.extend<{
   pathToExtension: string;
   fuelWalletVersion: string;
 }>({
-  fuelWalletVersion: '0.21.0',
+  fuelWalletVersion: '0.42.3',
   pathToExtension: async ({ fuelWalletVersion }, use) => {
     const fuelPath = await downloadFuel(fuelWalletVersion);
     await use(fuelPath);

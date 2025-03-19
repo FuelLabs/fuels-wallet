@@ -2,8 +2,11 @@ import { FuelWalletTestHelper, seedWallet } from '@fuels/playwright-utils';
 import type { BrowserContext, Page } from '@playwright/test';
 import {
   type BNInput,
+  type ChangeTransactionRequestOutput,
   Mnemonic,
+  OutputType,
   Provider,
+  ScriptTransactionRequest,
   Wallet,
   type WalletUnlocked,
   bn,
@@ -32,8 +35,8 @@ export const testSetup = async ({
   for (const p of pages) {
     if (p !== page) await p.close();
   }
-  const fuelProvider = await Provider.create(VITE_FUEL_PROVIDER_URL!);
-  const chainName = fuelProvider.getChain().name;
+  const fuelProvider = new Provider(VITE_FUEL_PROVIDER_URL!);
+  const chainName = (await fuelProvider.getChain()).name;
   const masterWallet = Wallet.fromMnemonic(VITE_MASTER_WALLET_MNEMONIC!);
   masterWallet.connect(fuelProvider);
 
@@ -66,7 +69,7 @@ export const testSetup = async ({
     fuelExtensionId: extensionId,
     fuelProvider: {
       url: fuelProvider.url,
-      chainId: fuelProvider.getChainId(),
+      chainId: await fuelProvider.getChainId(),
     },
     chainName,
     mnemonic: randomMnemonic,
@@ -78,6 +81,45 @@ export const testSetup = async ({
   return { fuelWallet, fuelWalletTestHelper, masterWallet };
 };
 
+// export const transferMaxBalance = async ({
+//   fromWallet,
+//   toWallet,
+// }: {
+//   fromWallet: WalletUnlocked;
+//   toWallet: WalletUnlocked;
+// }) => {
+//   if (!fromWallet || !toWallet) return;
+
+//   const MAX_ATTEMPTS = 10;
+//   const trySendMax = async (attempt = 1) => {
+//     if (attempt > MAX_ATTEMPTS) return;
+
+//     try {
+//       const remainingBalance = await fromWallet.getBalance();
+//       const nextSubTry = bn(attempt * 10_000);
+
+//       if (nextSubTry.lt(remainingBalance)) {
+//         const targetAmount = remainingBalance.sub(nextSubTry);
+//         const amountToSend = targetAmount.gt(0) ? targetAmount : bn(1);
+
+//         const txResponse = await fromWallet.transfer(
+//           toWallet.address,
+//           amountToSend
+//         );
+//         await txResponse.waitForResult();
+//         console.log(
+//           `asd Success sending ${amountToSend?.format()} back to ${toWallet.address.toB256()}`
+//         );
+//       }
+//     } catch (e) {
+//       console.log('error sending remaining balance', e.message);
+//       await trySendMax(attempt + 1);
+//     }
+//   };
+
+//   await trySendMax();
+// };
+
 export const transferMaxBalance = async ({
   fromWallet,
   toWallet,
@@ -85,34 +127,39 @@ export const transferMaxBalance = async ({
   fromWallet: WalletUnlocked;
   toWallet: WalletUnlocked;
 }) => {
-  if (!fromWallet || !toWallet) return;
+  if (!fromWallet || !toWallet) {
+    return;
+  }
+  const provider = fromWallet.provider;
 
-  const MAX_ATTEMPTS = 10;
-  const trySendMax = async (attempt = 1) => {
-    if (attempt > MAX_ATTEMPTS) return;
+  const {
+    consensusParameters: {
+      txParameters: { maxInputs },
+    },
+  } = await provider.getChain();
 
-    try {
-      const remainingBalance = await fromWallet.getBalance();
-      const nextSubTry = bn(attempt * 10_000);
+  const baseAssetId = await provider.getBaseAssetId();
+  const { coins } = await fromWallet.getCoins(baseAssetId);
 
-      if (nextSubTry.lt(remainingBalance)) {
-        const targetAmount = remainingBalance.sub(nextSubTry);
-        const amountToSend = targetAmount.gt(0) ? targetAmount : bn(1);
+  if (coins.length > Number(maxInputs.toString())) {
+    throw new Error('Impossible to determine maximum spendable amount');
+  }
 
-        const txResponse = await fromWallet.transfer(
-          toWallet.address,
-          amountToSend
-        );
-        await txResponse.waitForResult();
-        console.log(
-          `asd Success sending ${amountToSend?.format()} back to ${toWallet.address.toB256()}`
-        );
-      }
-    } catch (e) {
-      console.log('error sending remaining balance', e.message);
-      await trySendMax(attempt + 1);
-    }
-  };
+  const request = new ScriptTransactionRequest();
 
-  await trySendMax();
+  request.addResources(coins);
+
+  await request.estimateAndFund(fromWallet);
+
+  const changeOutput = request.outputs.find(
+    (output) =>
+      output.type === OutputType.Change && output.assetId === baseAssetId
+  ) as ChangeTransactionRequestOutput;
+
+  changeOutput.to = toWallet.address.toB256();
+
+  const tx = await fromWallet.sendTransaction(request, {
+    estimateTxDependencies: false,
+  });
+  await tx.waitForResult();
 };

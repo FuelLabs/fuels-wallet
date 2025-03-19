@@ -4,6 +4,7 @@ import { expectStateMatch, mockVault } from '~/systems/Core/__tests__/utils';
 
 import { AccountService } from '../services';
 
+import { mockServer } from '~/systems/Core/__tests__/utils/msw';
 import type { ImportAccountMachineService } from './importAccountMachine';
 import { importAccountMachine } from './importAccountMachine';
 
@@ -15,14 +16,17 @@ const machine = importAccountMachine.withContext({}).withConfig({
 
 describe('importAccountMachine', () => {
   let service: ImportAccountMachineService;
+  const server = mockServer();
+  beforeAll(() => server.listen());
+  afterEach(() => {
+    server.resetHandlers();
+    service?.stop();
+  });
+  afterAll(() => server.close());
 
   beforeEach(async () => {
     await mockVault();
     service = interpret(machine).start();
-  });
-
-  afterEach(() => {
-    service.stop();
   });
 
   describe('import', () => {

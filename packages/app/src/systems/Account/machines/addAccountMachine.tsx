@@ -1,4 +1,3 @@
-import { toast } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { createMachine } from 'xstate';
@@ -56,11 +55,7 @@ export const addAccountMachine = createMachine(
               target: 'failed',
             },
             {
-              actions: [
-                'notifyUpdateAccounts',
-                'redirectToHome',
-                'showSuccessNotification',
-              ],
+              actions: ['notifyUpdateAccounts', 'redirectToHome'],
               target: 'idle',
             },
           ],
@@ -74,14 +69,10 @@ export const addAccountMachine = createMachine(
   {
     actions: {
       notifyUpdateAccounts: () => {
-        store.updateAccounts();
+        store.refreshAccounts();
       },
       redirectToHome() {
         store.closeOverlay();
-      },
-      showSuccessNotification: (_, ev) => {
-        const { name } = ev.data;
-        toast.success(` ${name || 'Account'} created`);
       },
     },
     services: {

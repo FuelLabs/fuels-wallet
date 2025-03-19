@@ -75,7 +75,7 @@ export const TxApprove = () => {
               isDisabled={ctx.shouldDisableApproveBtn}
               onPress={ctx.handlers.approve}
             >
-              Approve
+              Submit
             </Button>
           </>
         )}

@@ -45,9 +45,7 @@ const selectors = {
 };
 
 const listenerAccountFetcher = () => {
-  store.send(Services.accounts, {
-    type: 'REFRESH_ACCOUNT',
-  });
+  store.refreshAccounts({ skipLoading: true });
 };
 
 export function useAccounts() {
@@ -82,14 +80,6 @@ export function useAccounts() {
   function status(status: keyof typeof AccountStatus) {
     return accountStatus === status;
   }
-
-  store.useUpdateMachineConfig(Services.accounts, {
-    actions: {
-      refreshApplication() {
-        window.location.reload();
-      },
-    },
-  });
 
   useEffect(() => {
     if (shouldListen.current) {

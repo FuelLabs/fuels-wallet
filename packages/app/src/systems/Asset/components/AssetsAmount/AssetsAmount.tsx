@@ -1,11 +1,21 @@
-import { cx } from '@fuel-ui/css';
-import { Avatar, Box, Copyable, Grid, Text } from '@fuel-ui/react';
+import {
+  Avatar,
+  Badge,
+  Box,
+  Copyable,
+  Grid,
+  Text,
+  Tooltip,
+  VStack,
+} from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
-import type { FC } from 'react';
+import { type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { formatAmount, shortAddress } from '~/systems/Core';
 import type { InsufficientInputAmountError } from '~/systems/Transaction';
 
+import { useTruncation } from '~/systems/Core/hooks/useTruncation';
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { AssetsAmountLoader } from './AssetsAmountLoader';
 import { styles } from './styles';
 
@@ -83,7 +93,6 @@ type AssetsAmountItemProps = {
 };
 
 const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
-  const assetAmountClass = cx('asset_amount');
   const {
     name = '',
     symbol,
@@ -91,9 +100,24 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
     assetId,
     decimals,
     amount,
+    isNft,
+    rate,
   } = assetAmount || {};
+  const amountInUsd = useMemo(() => {
+    if (amount == null || rate == null || decimals == null) return '$0';
+    return convertToUsd(bn(amount), decimals, rate).formatted;
+  }, [amount, rate, decimals]);
+
+  const formatted = formatAmount({
+    amount,
+    options: { units: decimals || 0, precision: decimals || 0 },
+  });
+
+  const { ref: refAmount, open: openAmount } = useTruncation<HTMLSpanElement>();
+  const { ref: refInUsd, open: openInUsd } = useTruncation<HTMLSpanElement>();
+
   return (
-    <Grid key={assetId} css={styles.root} className={assetAmountClass}>
+    <Grid key={assetId} css={styles.root}>
       <Box.Flex css={styles.asset}>
         {icon ? (
           <Avatar name={name} src={icon} />
@@ -103,19 +127,39 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
         <Text as="span" aria-label="Asset Name">
           {name || 'Unknown'}
         </Text>
+        {isNft && (
+          <Badge variant="ghost" intent="primary" css={styles.assetNft}>
+            NFT
+          </Badge>
+        )}
       </Box.Flex>
       <Copyable value={assetId} css={styles.address}>
         <Text fontSize="xs" css={{ mt: '$1' }}>
           {shortAddress(assetId)}
         </Text>
       </Copyable>
-      <Box.Flex css={styles.amount}>
-        {formatAmount({
-          amount,
-          options: { units: decimals || 0, precision: decimals || 0 },
-        })}{' '}
-        {symbol}
+
+      <Box.Flex aria-label="amount-container" css={styles.amountContainer}>
+        <Tooltip content={formatted} delayDuration={0} open={openAmount}>
+          <Text
+            as="span"
+            ref={refAmount}
+            css={styles.amountValue}
+            color="inherit"
+          >
+            {formatted}
+          </Text>
+        </Tooltip>
+        <Text as="span" color="inherit" css={styles.amountSymbol}>
+          {symbol}
+        </Text>
       </Box.Flex>
+
+      <Tooltip content={amountInUsd} delayDuration={0} open={openInUsd}>
+        <Text as="span" ref={refInUsd} css={styles.amountInUsd}>
+          {amountInUsd}
+        </Text>
+      </Tooltip>
     </Grid>
   );
 };

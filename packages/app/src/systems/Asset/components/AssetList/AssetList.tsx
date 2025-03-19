@@ -5,6 +5,7 @@ import { memo, useMemo, useState } from 'react';
 
 import { AssetItem } from '../AssetItem';
 
+import { UnknownAssetsButton } from '~/systems/Asset/components/UnknownAssetsButton/UnknownAssetsButton';
 import type { AssetListEmptyProps } from './AssetListEmpty';
 import { AssetListEmpty } from './AssetListEmpty';
 import { AssetListLoading } from './AssetListLoading';
@@ -55,13 +56,15 @@ export const AssetList: AssetListComponent = ({
           showActions={showActions}
           onRemove={onRemove}
           onEdit={onEdit}
+          shouldShowCopyAssetAddress={true}
         />
       ))}
-      {!!(!isLoading && unknownLength) && (
-        <Button size="xs" variant="link" onPress={toggle}>
-          {showUnknown ? 'Hide' : 'Show'} unknown assets ({unknownLength})
-        </Button>
-      )}
+      <UnknownAssetsButton
+        showUnknown={showUnknown}
+        unknownLength={unknownLength}
+        isLoading={!!isLoading}
+        toggle={toggle}
+      />
     </CardList>
   );
 };

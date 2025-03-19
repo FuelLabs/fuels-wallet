@@ -1,4 +1,3 @@
-import { toast } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import { Signer } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
@@ -53,11 +52,7 @@ export const importAccountMachine = createMachine(
               target: 'idle',
             },
             {
-              actions: [
-                'notifyUpdateAccounts',
-                'redirectToHome',
-                'showSuccessNotification',
-              ],
+              actions: ['notifyUpdateAccounts', 'redirectToHome'],
               target: 'idle',
             },
           ],
@@ -68,13 +63,10 @@ export const importAccountMachine = createMachine(
   {
     actions: {
       notifyUpdateAccounts: () => {
-        store.updateAccounts();
+        store.refreshAccounts();
       },
       redirectToHome() {
         store.closeOverlay();
-      },
-      showSuccessNotification: () => {
-        toast.success('Account imported successfully!');
       },
     },
     services: {

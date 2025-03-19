@@ -1,0 +1,1 @@
+export const BALANCE_NFTS_TAB_HEIGHT = 244;

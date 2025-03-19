@@ -1,8 +1,4 @@
-import type {
-  ICreateChange,
-  IDeleteChange,
-  IUpdateChange,
-} from 'dexie-observable/api';
+import type { ProviderCacheJson } from 'fuels';
 import type {
   EventMessage,
   MessageTypes,
@@ -10,6 +6,38 @@ import type {
   ResponseMessage,
   UIEventMessage,
 } from './connector';
+
+export enum DatabaseChangeType {
+  Create = 'create',
+  Update = 'update',
+  Delete = 'delete',
+}
+
+// Define the change event interfaces since Dexie doesn't export them
+export interface ICreateChange<T = unknown, Y = unknown> {
+  type: DatabaseChangeType.Create;
+  table: string;
+  key: T;
+  obj: Y;
+  source?: string;
+}
+
+export interface IUpdateChange<T = unknown, Y = unknown> {
+  type: DatabaseChangeType.Update;
+  table: string;
+  key: T;
+  mods: Y; //{ [keyPath: string]: unknown | undefined } ;
+  obj: Y;
+  source?: string;
+}
+
+export interface IDeleteChange<T = unknown, Y = unknown> {
+  type: DatabaseChangeType.Delete;
+  table: string;
+  key: T;
+  oldObj: Y;
+  source?: string;
+}
 
 export type CommunicationEventArg<T> = T extends MessageTypes.request
   ? RequestMessage
@@ -23,19 +51,8 @@ export type CommunicationEventArg<T> = T extends MessageTypes.request
           ? string
           : unknown;
 
-export type DatabaseEvents = ['delete', 'create', 'update'];
-export type DatabaseObservableEvent<T extends Array<string>> =
-  `${T[number]}:${DatabaseEvents[number]}`;
-
-export type DatabaseEventArg<T extends string> = T extends `${string}:create`
-  ? ICreateChange
-  : T extends `${string}:update`
-    ? IUpdateChange
-    : T extends `${string}:delete`
-      ? IDeleteChange
-      : unknown;
-
 export type FuelProviderConfig = {
   id?: string;
   url: string;
+  cache?: ProviderCacheJson;
 };

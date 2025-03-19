@@ -6,27 +6,24 @@ import {
   Button,
   CardList,
   Copyable,
-  Heading,
+  HStack,
   Icon,
   IconButton,
   Text,
   Tooltip,
+  VStack,
 } from '@fuel-ui/react';
 import { type FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  AmountVisibility,
-  Pages,
-  formatBalance,
-  shortAddress,
-} from '~/systems/Core';
-import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
+import { Pages, shortAddress } from '~/systems/Core';
 
 import { AssetRemoveDialog } from '../AssetRemoveDialog';
 
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
 import type { BNInput } from 'fuels';
+import { useTruncation } from '~/systems/Core/hooks/useTruncation';
 import useFuelAsset from '../../hooks/useFuelAsset';
+import { AssetItemAmount } from './AssetItemAmount';
 import { AssetItemLoader } from './AssetItemLoader';
 
 export type AssetItemProps = {
@@ -36,6 +33,8 @@ export type AssetItemProps = {
   showActions?: boolean;
   onRemove?: (assetId: string) => void;
   onEdit?: (assetId: string) => void;
+  shouldShowAddAssetBtn?: boolean;
+  shouldShowCopyAssetAddress?: boolean;
 };
 
 type AssetItemComponent = FC<AssetItemProps> & {
@@ -49,10 +48,10 @@ export const AssetItem: AssetItemComponent = ({
   showActions,
   onRemove,
   onEdit,
+  shouldShowAddAssetBtn,
+  shouldShowCopyAssetAddress,
 }) => {
   const navigate = useNavigate();
-  const { visibility } = useBalanceVisibility();
-
   const fuelAssetFromInputAsset = useFuelAsset({ asset: inputAsset });
   const asset = useMemo(() => {
     if (!inputFuelAsset && !inputAsset && !fuelAssetFromInputAsset)
@@ -68,12 +67,14 @@ export const AssetItem: AssetItemComponent = ({
     );
   }, [inputFuelAsset, inputAsset, fuelAssetFromInputAsset]);
 
+  const { assetId, name, symbol, icon, decimals, isCustom } = asset ?? {};
+
+  const { ref, open } = useTruncation<HTMLHeadingElement>();
+
   if (!asset) return null;
 
-  const { assetId, name, symbol, icon, decimals, isCustom } = asset;
-
   function getLeftEl() {
-    if (assetId) {
+    if (assetId && shouldShowCopyAssetAddress) {
       return (
         <Copyable
           value={assetId}
@@ -119,25 +120,13 @@ export const AssetItem: AssetItemComponent = ({
     }
 
     if (amount) {
-      const { original, tooltip } = formatBalance(amount, decimals);
-
       return (
-        <Tooltip
-          content={original.display}
-          delayDuration={0}
-          open={visibility && tooltip ? undefined : false}
-        >
-          <Text
-            css={{ fontSize: '$sm', fontWeight: '$normal', textAlign: 'right' }}
-          >
-            <AmountVisibility
-              value={amount}
-              units={decimals}
-              visibility={visibility}
-            />{' '}
-            {symbol}
-          </Text>
-        </Tooltip>
+        <AssetItemAmount
+          amount={amount}
+          decimals={decimals}
+          rate={inputFuelAsset?.rate}
+          symbol={symbol}
+        />
       );
     }
 
@@ -162,64 +151,74 @@ export const AssetItem: AssetItemComponent = ({
   );
 
   return (
-    <CardList.Item rightEl={getRightEl()} css={{ alignItems: 'center' }}>
-      {icon ? (
-        <Avatar
-          name={name || ''}
-          src={icon}
-          css={{ height: 36, width: 36, borderRadius: '$full' }}
-        />
-      ) : (
-        <Avatar.Generated
-          hash={assetId || ''}
-          css={{ height: 36, width: 36 }}
-        />
-      )}
-      <Box.Flex direction="column">
-        <Heading as="h6" css={styles.assetName}>
-          <Box.Flex>
-            {name || 'Unknown'}
-            {asset.suspicious ? (
-              <Tooltip content={suspiciousTooltipContent}>
-                <Icon
-                  css={styles.assetSuspicious}
-                  icon={Icon.is('AlertTriangle')}
-                />
-              </Tooltip>
-            ) : (
-              ''
-            )}
-            {asset.isNft && (
-              <Badge variant="ghost" intent="primary" css={styles.assetNft}>
-                NFT
-              </Badge>
-            )}
-            {(!name || asset.indexed) && !asset.isNft && (
-              <Button
-                size="xs"
-                intent="primary"
-                variant="link"
-                onPress={() => goToAsset(asset)}
-                css={styles.addAssetBtn}
-              >
-                (Add)
-              </Button>
-            )}
-          </Box.Flex>
-        </Heading>
-        <Box.Flex direction="row">
-          {symbol ? (
-            <>
-              <Text css={styles.assetSymbol}>{symbol}</Text>
-              {getLeftEl()}
-            </>
-          ) : (
-            <Copyable value={assetId || ''} css={styles.unknownAssetId}>
-              {shortAddress(assetId)}
-            </Copyable>
+    <CardList.Item
+      rightEl={getRightEl()}
+      css={{
+        alignItems: 'center',
+        '& > .fuel_Box-flex:first-child': { minWidth: 140 },
+      }}
+    >
+      <Box css={styles.icon}>
+        {icon ? (
+          <Avatar
+            name={name || ''}
+            src={icon}
+            css={{ height: 36, width: 36 }}
+          />
+        ) : (
+          <Avatar.Generated hash={assetId || ''} size={36} />
+        )}
+      </Box>
+
+      <VStack gap="0" css={styles.assetContainer}>
+        <HStack gap="0" align="center">
+          <Tooltip content={name} delayDuration={0} open={open}>
+            <Text
+              as="h6"
+              ref={ref}
+              color="textHeading"
+              fontSize="base"
+              css={styles.assetName}
+            >
+              {name || 'Unknown'}
+            </Text>
+          </Tooltip>
+          {!!asset.suspicious && (
+            <Tooltip content={suspiciousTooltipContent}>
+              <Icon
+                css={styles.assetSuspicious}
+                icon={Icon.is('AlertTriangle')}
+              />
+            </Tooltip>
           )}
-        </Box.Flex>
-      </Box.Flex>
+          {asset.isNft && (
+            <Badge variant="ghost" intent="primary" css={styles.assetNft}>
+              NFT
+            </Badge>
+          )}
+          {shouldShowAddAssetBtn && (
+            <Button
+              size="xs"
+              intent="primary"
+              variant="link"
+              onPress={() => goToAsset(asset)}
+              css={styles.addAssetBtn}
+            >
+              (Add)
+            </Button>
+          )}
+        </HStack>
+        {symbol ? (
+          <HStack align="center" gap="0">
+            <Text css={styles.assetSymbol}>{symbol}</Text>
+            {getLeftEl()}
+          </HStack>
+        ) : (
+          <Copyable value={assetId || ''} css={styles.unknownAssetId}>
+            {shortAddress(assetId)}
+          </Copyable>
+        )}
+      </VStack>
     </CardList.Item>
   );
 };
@@ -227,9 +226,23 @@ export const AssetItem: AssetItemComponent = ({
 AssetItem.Loader = AssetItemLoader;
 
 const styles = {
+  icon: cssObj({
+    height: 36,
+    width: 36,
+    borderRadius: '$full',
+    overflow: 'hidden',
+    flexShrink: 0,
+  }),
+  assetContainer: cssObj({
+    minWidth: 0,
+  }),
   assetName: cssObj({
-    margin: 0,
-    textSize: 'base',
+    fontWeight: '$medium',
+    fontFamily: '$heading',
+    letterSpacing: '$normal',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   }),
   assetIdCopy: cssObj({
     marginLeft: 2,
@@ -237,6 +250,9 @@ const styles = {
   assetSymbol: cssObj({
     textSize: 'sm',
     fontWeight: '$normal',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   }),
   assetSuspicious: cssObj({
     marginLeft: 5,
@@ -259,6 +275,7 @@ const styles = {
     '.fuel_Button': {
       px: '$1 !important',
       color: '$intentsBase8 !important',
+      height: 44,
     },
 
     '.fuel_Button:hover': {

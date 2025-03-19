@@ -197,7 +197,7 @@ export class NetworkService {
 
   static async getChainInfo(input: NetworkInputs['getChainInfo']) {
     const provider = await createProvider(input.providerUrl);
-    return provider.getChain();
+    return await provider.getChain();
   }
 
   static async getNodeInfo(input: NetworkInputs['getNodeInfo']) {
@@ -229,8 +229,8 @@ export class NetworkService {
 
       if (!networkByChainId || !networkByUrl) {
         const provider = await createProvider(url);
-        const providerName = provider.getChain().name;
-        const providerChainId = provider.getChainId();
+        const providerName = (await provider.getChain()).name;
+        const providerChainId = await provider.getChainId();
 
         if (providerChainId !== chainId) {
           throw new Error(
@@ -308,7 +308,7 @@ export class NetworkService {
 
       if (!networkByUrl) {
         const provider = await createProvider(url);
-        const providerName = provider.getChain().name;
+        const providerName = (await provider.getChain()).name;
         const providerChainId = await provider.getChainId();
 
         await NetworkService.validateNetworkVersion({
@@ -353,8 +353,12 @@ export class NetworkService {
       name,
       url,
     });
-    if (network) {
-      throw new Error('Network with Name or URL already exists');
+
+    if (network?.url === url) {
+      throw new Error('Network with same URL already exists');
+    }
+    if (network?.name === name) {
+      throw new Error('Network with same Name already exists');
     }
   }
 

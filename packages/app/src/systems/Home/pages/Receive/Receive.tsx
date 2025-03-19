@@ -1,9 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
+import { Address } from 'fuels';
 import { useNavigate } from 'react-router-dom';
 import { useAccounts } from '~/systems/Account';
 import { Layout, MotionFlex, Pages, animations } from '~/systems/Core';
 
-import { Address } from 'fuels';
 import { ReceiverQRCode } from '../../components/QRCode';
 import { UserAddressCard } from '../../components/UserAddressCard';
 
@@ -17,10 +17,10 @@ export function Receive() {
         {account?.address && (
           <MotionFlex {...animations.slideInTop()} css={styles.contentWrapper}>
             <UserAddressCard
-              address={Address.fromDynamicInput(account?.address).toB256()}
+              address={Address.fromDynamicInput(account?.address).toChecksum()}
             />
             <ReceiverQRCode
-              address={Address.fromDynamicInput(account?.address).toB256()}
+              address={Address.fromDynamicInput(account?.address).toChecksum()}
             />
           </MotionFlex>
         )}

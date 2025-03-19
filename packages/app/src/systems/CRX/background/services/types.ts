@@ -3,7 +3,8 @@ import type {
   FuelProviderConfig,
   NetworkData,
 } from '@fuel-wallet/types';
-import type { AbiMap, SelectNetworkArguments } from 'fuels';
+import type { AbiMap } from 'fuels';
+import type { TransactionSummaryJson } from 'fuels';
 
 export type MessageInputs = {
   signMessage: {
@@ -20,6 +21,9 @@ export type MessageInputs = {
     favIconUrl?: string;
     provider: FuelProviderConfig;
     transaction: string;
+    skipCustomFee?: boolean;
+    transactionState?: 'funded' | undefined;
+    transactionSummary?: TransactionSummaryJson;
   };
   addAssets: {
     assets: AssetData[];

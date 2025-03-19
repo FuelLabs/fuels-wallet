@@ -2,20 +2,23 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BNInput } from 'fuels';
 import { Address, type Provider, bn, isB256 } from 'fuels';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { useAccounts } from '~/systems/Account';
+import type { AccountsMachineState } from '~/systems/Account';
 import { Pages } from '~/systems/Core';
 import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
 
+import { Services } from '~/store';
+import { store } from '~/store';
+import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { formatGasLimit } from '~/systems/Transaction';
 import { sendMachine } from '../machines/sendMachine';
-import type { SendMachineState } from '../machines/sendMachine';
+import type { MachineContext, SendMachineState } from '../machines/sendMachine';
 
 export enum SendStatus {
   loading = 'loading',
@@ -42,12 +45,18 @@ const selectors = {
   readyToSend(state: SendMachineState) {
     return state.matches('readyToSend');
   },
+  account(state: AccountsMachineState) {
+    return state.context.account;
+  },
   error(state: SendMachineState) {
     if (state.context.error?.includes('Gas limit')) {
       return '';
     }
 
     return state.context.error;
+  },
+  input(state: SendMachineState) {
+    return state.context.input;
   },
   status(txStatus?: TxRequestStatus) {
     return useCallback(
@@ -101,9 +110,10 @@ const schemaFactory = (provider?: Provider) =>
             return false;
           }
 
+          const baseAssetId = await provider?.getBaseAssetId();
+
           const isSendingBaseAssetId =
-            asset &&
-            provider?.getBaseAssetId().toLowerCase() === asset.toLowerCase();
+            asset && baseAssetId?.toLowerCase() === asset.toLowerCase();
           if (isSendingBaseAssetId) {
             // It means "baseFee" is being calculated
             if (!baseFee) {
@@ -130,14 +140,31 @@ const schemaFactory = (provider?: Provider) =>
                 message: 'Address is not a valid',
               });
             }
-            const standardizedAddress = Address.fromString(value).toString();
-            const accountType =
-              await provider?.getAddressType(standardizedAddress);
+            const accountType = await provider?.getAddressType(
+              Address.fromDynamicInput(value).toB256()
+            );
             if (accountType !== 'Account') {
               return ctx.createError({
                 message: `You can't send to ${accountType} address`,
               });
             }
+
+            const assetCached = await AssetsCache.getInstance().getAsset({
+              chainId: await provider.getChainId(),
+              assetId: value,
+              dbAssets: [],
+              save: false,
+            });
+
+            if (
+              assetCached &&
+              AssetsCache.getInstance().assetIsValid(assetCached)
+            ) {
+              return ctx.createError({
+                message: `You can't send to Asset address`,
+              });
+            }
+
             return true;
           } catch (error) {
             console.error(error);
@@ -251,8 +278,41 @@ const DEFAULT_VALUES: SendFormValues = {
 export function useSend() {
   const navigate = useNavigate();
   const txRequest = useTransactionRequest();
-  const { account } = useAccounts();
   const provider = useProvider();
+
+  const account = store.useSelector(Services.accounts, selectors.account);
+  const callTransactionRequest = useRef<(ctx: MachineContext) => void>();
+
+  callTransactionRequest.current = (ctx: MachineContext) => {
+    const {
+      providerUrl,
+      transactionRequest,
+      address,
+      baseFee,
+      regularTip,
+      fastTip,
+      maxGasLimit,
+    } = ctx;
+    if (!providerUrl || !transactionRequest || !address) {
+      throw new Error('Params are required');
+    }
+
+    txRequest.handlers.request({
+      providerConfig: {
+        url: providerUrl,
+      },
+      transactionRequest,
+      account,
+      address,
+      fees: {
+        baseFee,
+        regularTip,
+        fastTip,
+        maxGasLimit,
+      },
+      skipCustomFee: true,
+    });
+  };
 
   const service = useInterpret(() =>
     sendMachine.withConfig({
@@ -261,31 +321,7 @@ export function useSend() {
           navigate(Pages.index());
         },
         callTransactionRequest(ctx) {
-          const {
-            providerUrl,
-            transactionRequest,
-            address,
-            baseFee,
-            regularTip,
-            fastTip,
-            maxGasLimit,
-          } = ctx;
-          if (!providerUrl || !transactionRequest || !address) {
-            throw new Error('Params are required');
-          }
-
-          txRequest.handlers.request({
-            providerUrl,
-            transactionRequest,
-            address,
-            fees: {
-              baseFee,
-              regularTip,
-              fastTip,
-              maxGasLimit,
-            },
-            skipCustomFee: true,
-          });
+          callTransactionRequest.current?.(ctx);
         },
       },
     })
@@ -326,7 +362,11 @@ export function useSend() {
   const fastTip = useSelector(service, selectors.fastTip);
   const sendStatusSelector = selectors.status(txRequest.txStatus);
   const sendStatus = useSelector(service, sendStatusSelector);
-  const readyToSend = useSelector(service, selectors.readyToSend);
+  const readyToSend =
+    useSelector(service, selectors.readyToSend) &&
+    !!account &&
+    !!callTransactionRequest.current;
+  const input = useSelector(service, selectors.input);
 
   const balanceAssetSelected = useMemo<BN>(() => {
     const asset = account?.balances?.find(
@@ -356,14 +396,19 @@ export function useSend() {
   function tryAgain() {
     txRequest.handlers.tryAgain();
   }
-
   useEffect(() => {
-    const { unsubscribe } = form.watch(() => {
+    const { unsubscribe } = form.watch((_data, { name: _, type }) => {
       const { address, asset, amount } = form.getValues();
       if (address) {
         form.trigger('address');
       }
       if (!address || !asset || amount == null || amount?.eq(0)) {
+        return;
+      }
+
+      // skip the form trigger if the user is not directly changing the form.
+      // this is to avoid the form being used to control start of flows, other than user typing.
+      if (type !== 'change') {
         return;
       }
 
@@ -392,6 +437,27 @@ export function useSend() {
     service.send,
   ]);
 
+  const recalculateFromTip = (tip: BN) => {
+    service.send('SET_INPUT', { input: { ...input, tip } });
+    form.trigger('amount');
+  };
+
+  const recalculateFromAmount = (amount: BN) => {
+    let previousInput = input;
+    if (!input) {
+      const { address, asset, fees } = form.getValues();
+      previousInput = {
+        to: address,
+        assetId: asset,
+        amount,
+        tip: fees.tip.amount,
+        gasLimit: fees.gasLimit.amount,
+      };
+    }
+    service.send('SET_INPUT', { input: { ...previousInput, amount } });
+    form.trigger('amount');
+  };
+
   return {
     form,
     baseFee,
@@ -413,6 +479,8 @@ export function useSend() {
       submit,
       goHome,
       tryAgain,
+      recalculateFromTip,
+      recalculateFromAmount,
     },
   };
 }

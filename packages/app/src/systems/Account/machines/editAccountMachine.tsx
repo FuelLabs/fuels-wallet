@@ -97,7 +97,7 @@ export const editAccountMachine = createMachine(
         account: (_, ev) => ev.data,
       }),
       notifyUpdateAccounts: () => {
-        store.updateAccounts();
+        store.refreshAccounts({ skipLoading: true });
       },
       redirectToList() {
         store.openAccountList();

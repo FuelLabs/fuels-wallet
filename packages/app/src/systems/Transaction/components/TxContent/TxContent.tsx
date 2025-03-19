@@ -97,6 +97,7 @@ export type TxContentInfoProps = {
     fastTip?: BN;
   };
   txRequest?: TransactionRequest;
+  isLoadingFees?: boolean;
 };
 
 function TxContentInfo({
@@ -109,6 +110,7 @@ function TxContentInfo({
   errors,
   fees,
   txRequest,
+  isLoadingFees,
 }: TxContentInfoProps) {
   const { getValues } = useFormContext<SendFormValues>();
 
@@ -155,8 +157,9 @@ function TxContentInfo({
         status={status}
         isLoading={isLoading}
       />
-      {isLoading && !showDetails && <TxFee.Loader />}
-      {showDetails && !fees && <TxFee fee={tx?.fee} />}
+      {/* @TODO: we need to fix the <TxFee.Loader /> when completing the work on tx simple view */}
+      {(isLoadingFees || (isLoading && !showDetails)) && <TxFee.Loader />}
+      {showDetails && !fees?.baseFee && <TxFee fee={tx?.fee} />}
       {showDetails &&
         fees?.baseFee &&
         txRequestGasLimit &&

@@ -2,7 +2,6 @@ import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
 import { bn } from 'fuels';
 import { useMemo } from 'react';
-import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { TxContent, getGasLimitFromTxRequest } from '~/systems/Transaction';
@@ -31,9 +30,9 @@ export function TransactionRequest() {
     errors,
     executedStatus,
     proposedTxRequest,
+    isLoadingFees,
+    isSimulating,
   } = txRequest;
-  const { isLoading: isLoadingAssets } = useAssets();
-
   const defaultValues = useMemo<TransactionRequestFormData | undefined>(() => {
     if (!txSummarySimulated || !proposedTxRequest) return undefined;
 
@@ -55,19 +54,8 @@ export function TransactionRequest() {
   }, [txSummarySimulated, proposedTxRequest]);
 
   const isLoadingInfo = useMemo<boolean>(() => {
-    return status('loading') || status('sending') || isLoadingAssets;
-  }, [status, isLoadingAssets]);
-
-  if (!defaultValues) {
-    return (
-      <Layout title={title} noBorder>
-        <Layout.TopBar type={TopBarType.external} />
-        <Layout.Content css={styles.content}>
-          <TxContent.Loader />
-        </Layout.Content>
-      </Layout>
-    );
-  }
+    return status('loading') || status('sending');
+  }, [status]);
 
   return (
     <FormProvider
@@ -93,6 +81,7 @@ export function TransactionRequest() {
               errors={errors.simulateTxErrors}
               isConfirm
               fees={fees}
+              isLoadingFees={isLoadingFees}
             />
           )}
           {shouldShowTxExecuted && (
@@ -120,17 +109,17 @@ export function TransactionRequest() {
             <Button
               onPress={handlers.reject}
               variant="ghost"
-              isDisabled={isLoading || status('sending')}
+              isDisabled={status('sending')}
             >
               Reject
             </Button>
             <Button
               type="submit"
               intent="primary"
-              isLoading={isLoading || status('sending')}
+              isLoading={isLoading || status('sending') || isSimulating}
               isDisabled={shouldDisableApproveBtn}
             >
-              Approve
+              Submit
             </Button>
           </Layout.BottomBar>
         )}

@@ -12,10 +12,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fuels/connectors": "0.35.1",
-    "@fuels/react": "0.35.1",
+    "@fuels/connectors": "0.39.0-pr-458-101889b",
+    "@fuels/react": "0.39.0-pr-458-101889b",
     "@tanstack/react-query": "5.28.4",
-    "fuels": "0.96.1",
+    "fuels": "0.100.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-error-boundary": "^4.0.11",
@@ -36,6 +36,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "typescript": "^5.2.2",
-    "vite": "4.5.3"
+    "vite": "4.5.5"
   }
 }

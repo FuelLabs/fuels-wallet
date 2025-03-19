@@ -91,6 +91,15 @@ test.describe('RecoverWallet', () => {
 
       /** Confirm Mnemonic */
       const words = WORDS_24.split(' ');
+      await expect
+        .poll(
+          async () => {
+            const _locator = await page.locator('input').all();
+            return _locator.length;
+          },
+          { timeout: 1000 }
+        )
+        .toBeGreaterThanOrEqual(words.length);
       const inputs = await page.locator('input').all();
       words.forEach((word, i) => {
         expect(inputs[i]).toHaveValue(word);
@@ -139,10 +148,23 @@ test.describe('RecoverWallet', () => {
       await getButtonByText(page, /Paste/i).click();
 
       /** Confirm the auto-selected mnemonic size */
-      expect(format).toHaveValue('15');
+      await expect
+        .poll(async () =>
+          (await getByAriaLabel(page, 'Select format')).inputValue()
+        )
+        .toBe('15');
 
       /** Confirm Mnemonic */
       const words = WORDS_13.split(' ');
+      await expect
+        .poll(
+          async () => {
+            const _locator = await page.locator('input').all();
+            return _locator.length;
+          },
+          { timeout: 1000 }
+        )
+        .toBeGreaterThanOrEqual(12);
       const inputs = await page.locator('input').all();
       words.forEach((word, i) => {
         expect(inputs[i]).toHaveValue(word);

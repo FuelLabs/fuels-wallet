@@ -25,6 +25,12 @@ test.describe('ReportError', () => {
     });
   }
 
+  test.beforeEach(async () => {
+    await page.evaluate(async () => {
+      await window.fuelDB.errors.clear();
+    });
+  });
+
   test('should show Error page when there is a unhandled js error in React', async () => {
     await visit(page, '/');
     await page.evaluate(() => {
@@ -42,19 +48,20 @@ test.describe('ReportError', () => {
     await getByAriaLabel(page, 'Send error reports').click();
     await expect(page.getByText(/Unexpected error/)).toHaveCount(0);
 
-    await page.waitForTimeout(2000);
-    const errorsAfterReporting = await getPageErrors(page);
-    expect(errorsAfterReporting.length).toBe(0);
+    await expect
+      .poll(async () => (await getPageErrors(page)).length, {
+        timeout: 10000,
+      })
+      .toBe(0);
   });
 
   test('should show Review Error in menu when there is a error in the database', async () => {
     await visit(page, '/');
     await page.evaluate(async () => {
-      await window.fuelDB.errors.clear();
       await window.fuelDB.errors.add({
         id: '12345',
         error: {
-          name: 'React error',
+          name: 'React$ error',
           message: 'Test Error',
           stack: 'Line error 1',
         },
@@ -77,12 +84,11 @@ test.describe('ReportError', () => {
   test('should be able to ignore a error', async () => {
     await visit(page, '/');
     await page.evaluate(async () => {
-      await window.fuelDB.errors.clear();
       await window.fuelDB.errors.add({
         id: '12345',
         error: {
-          name: 'React error',
-          message: 'Test Error',
+          name: 'React$ error',
+          message: 'Test$ Error',
           stack: 'Line error 1',
         },
         extra: {
@@ -99,21 +105,24 @@ test.describe('ReportError', () => {
     page.locator(`[data-key="hasErrors"]`).click();
     await hasText(page, /Unexpected error/i);
 
+    expect((await getPageErrors(page)).length).toBe(1);
     // report error
     await getByAriaLabel(page, 'Ignore error(s)').click();
     await expect(page.getByText(/Unexpected error/i)).toHaveCount(0);
 
-    const errorsAfterReporting = await getPageErrors(page);
-    expect(errorsAfterReporting.length).toBe(1);
+    await expect
+      .poll(async () => (await getPageErrors(page)).length, {
+        timeout: 10000,
+      })
+      .toBe(1);
   });
   test('should be able to dismiss all errors', async () => {
     await visit(page, '/');
     await page.evaluate(async () => {
-      await window.fuelDB.errors.clear();
       await window.fuelDB.errors.add({
         id: '12345',
         error: {
-          name: 'React error',
+          name: 'React$ error',
           message: 'Test Error',
           stack: 'Line error 1',
         },
@@ -138,17 +147,19 @@ test.describe('ReportError', () => {
     ).click();
     await expect(page.getByText(/Unexpected error/i)).toHaveCount(0);
 
-    const errorsAfterReporting = await getPageErrors(page);
-    expect(errorsAfterReporting.length).toBe(0);
+    await expect
+      .poll(async () => (await getPageErrors(page)).length, {
+        timeout: 10000,
+      })
+      .toBe(0);
   });
   test('should hide when the single error is dismissed', async () => {
     await visit(page, '/');
     await page.evaluate(async () => {
-      await window.fuelDB.errors.clear();
       await window.fuelDB.errors.add({
         id: '12345',
         error: {
-          name: 'React error',
+          name: 'React$ error',
           message: 'Test Error',
           stack: 'Line error 1',
         },
@@ -170,15 +181,17 @@ test.describe('ReportError', () => {
     await getByAriaLabel(page, 'Dismiss error').click();
     await expect(page.getByText(/Unexpected error/i)).toHaveCount(0);
 
-    const errorsAfterReporting = await getPageErrors(page);
-    expect(errorsAfterReporting.length).toBe(0);
+    await expect
+      .poll(async () => (await getPageErrors(page)).length, {
+        timeout: 10000,
+      })
+      .toBe(0);
   });
   test('should detect and capture global errors', async () => {
-    await visit(page, '/');
     await page.evaluate(async () => {
-      await window.fuelDB.errors.clear();
-      console.error(new Error('Test Error'));
+      console.error(new Error('New Error'));
     });
+    await visit(page, '/');
     await reload(page);
     await getByAriaLabel(page, 'Menu').click();
     page.locator(`[data-key="hasErrors"]`).click();
@@ -191,11 +204,10 @@ test.describe('ReportError', () => {
   test('should deduplicate errors', async () => {
     await visit(page, '/');
     await page.evaluate(async () => {
-      await window.fuelDB.errors.clear();
       await window.fuelDB.errors.add({
         id: '12345',
         error: {
-          name: 'React error',
+          name: 'React$ error',
           message: 'Test Error',
           stack: 'Line error 1',
         },
@@ -208,9 +220,9 @@ test.describe('ReportError', () => {
         },
       });
       await window.fuelDB.errors.add({
-        id: '12345',
+        id: '123456',
         error: {
-          name: 'React error',
+          name: 'React$ error',
           message: 'Test Error',
           stack: 'Line error 1',
         },
@@ -230,5 +242,30 @@ test.describe('ReportError', () => {
     await reload(page);
     const errorsAfterReporting = await getPageErrors(page);
     expect(errorsAfterReporting.length).toBe(1);
+  });
+  test('should not show ignored errors', async () => {
+    await visit(page, '/');
+
+    await page.evaluate(async () => {
+      await window.fuelDB.errors.add({
+        id: '12345',
+        error: {
+          name: 'React Error',
+          message: 'React Error',
+          stack: 'Line error 1',
+        },
+        extra: {
+          timestamp: Date.now(),
+          location: 'http://localhost:3000',
+          pathname: '/',
+          hash: '#',
+          counts: 0,
+        },
+      });
+    });
+    await getByAriaLabel(page, 'Menu').click();
+    expect(
+      await page.locator(`[data-key="hasErrors"]`).isVisible()
+    ).toBeFalsy();
   });
 });

@@ -56,30 +56,32 @@ test.describe('Forward Eth', () => {
 
     const forwardEthButton = getButtonByText(page, 'Forward ETH');
     await expectButtonToBeEnabled(forwardEthButton);
+    await page.waitForTimeout(1000); // Wait for slow VM
     await forwardEthButton.click();
+    await page.waitForTimeout(1000); // Wait for slow VM
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
-    // Test if asset name is defined (not unknown)
-    checkAriaLabelsContainsText(
+    await checkAriaLabelsContainsText(
       walletNotificationPage,
       'Asset Name',
       'Ethereum'
     );
     // Test if sender name is defined (not unknown)
-    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
-
-    // test the asset name is shown
+    await checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Sender Name',
+      ''
+    );
     await hasText(walletNotificationPage, 'Ethereum');
 
     // test asset id is correct
-    await hasText(walletNotificationPage, shortAddress(await getBaseAssetId()));
+    const baseAssetId = await getBaseAssetId();
+    await hasText(walletNotificationPage, shortAddress(baseAssetId));
 
     // test forward eth amount is correct
     await hasText(walletNotificationPage, `${forwardEthAmount} ETH`);
-
-    // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');
 
     // test to and from addresses
@@ -94,10 +96,13 @@ test.describe('Forward Eth', () => {
     await fuelWalletTestHelper.walletApprove();
     await waitSuccessTransaction(page);
     const postDepositBalanceEth = await fuelWallet.getBalance();
-    expect(
-      Number.parseFloat(
-        preDepositBalanceEth.sub(postDepositBalanceEth).format({ precision: 4 })
-      )
-    ).toBe(Number.parseFloat(forwardEthAmount));
+
+    const difference = preDepositBalanceEth
+      .sub(postDepositBalanceEth)
+      .format({ precision: 4 });
+
+    expect(Number.parseFloat(difference)).toBe(
+      Number.parseFloat(forwardEthAmount)
+    );
   });
 });

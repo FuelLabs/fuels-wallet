@@ -180,7 +180,7 @@ export const applyDbVersioning = (db: Dexie) => {
       const accounts = await accountsTable.toArray();
       const updatedAccounts = accounts.map((account) => ({
         ...account,
-        address: Address.fromString(account.address).toChecksum(),
+        address: Address.fromDynamicInput(account.address).toString(),
       }));
       await accountsTable.clear();
       await accountsTable.bulkAdd(updatedAccounts);
@@ -229,6 +229,20 @@ export const applyDbVersioning = (db: Dexie) => {
     transactionsCursors: '++id, address, size, providerUrl, endCursor',
     assets: '&name, &symbol',
     indexedAssets: 'key',
+    abis: '&contractId',
+    errors: '&id',
+  });
+
+  // DB VERSION 28
+  // add fetchedAt column to indexedAssets table
+  db.version(28).stores({
+    vaults: 'key',
+    accounts: '&address, &name',
+    networks: '&id, &url, &name, chainId',
+    connections: 'origin',
+    transactionsCursors: '++id, address, size, providerUrl, endCursor',
+    assets: '&name, &symbol',
+    indexedAssets: 'key, fetchedAt',
     abis: '&contractId',
     errors: '&id',
   });

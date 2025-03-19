@@ -30,6 +30,35 @@ jest.mock('react-dom/test-utils', () => {
   };
 });
 
+// Replace chromeStorage
+jest.mock('./src/systems/Core/services/chromeStorage', () => {
+  return {
+    chromeStorage: {
+      accounts: {
+        get: jest.fn(),
+        getAll: jest.fn(),
+        set: jest.fn(),
+        remove: jest.fn(),
+        clear: jest.fn(),
+      },
+      networks: {
+        get: jest.fn(),
+        getAll: jest.fn(),
+        set: jest.fn(),
+        remove: jest.fn(),
+        clear: jest.fn(),
+      },
+      vaults: {
+        get: jest.fn(),
+        getAll: jest.fn(),
+        set: jest.fn(),
+        remove: jest.fn(),
+        clear: jest.fn(),
+      },
+    },
+  };
+});
+
 console.warn = jest.fn();
 
 const noop = () => {};
@@ -52,27 +81,3 @@ if (process.env.CI) {
     logErrorsBeforeRetry: true,
   });
 }
-
-const _mockNetworks = [
-  {
-    asset_id: 'TKN',
-    name: 'Token',
-    type: 'token',
-    symbol: 'TKN',
-    decimals: 9,
-  },
-  {
-    asset_id: 'ETH',
-    name: 'Ethereum',
-    type: 'token',
-    symbol: 'ETH',
-    decimals: 18,
-  },
-  {
-    asset_id: 'Fuel',
-    name: 'Fuel',
-    type: 'token',
-    symbol: 'Fuel',
-    decimals: 9,
-  },
-];

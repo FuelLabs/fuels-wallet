@@ -26,9 +26,6 @@ const selectors = {
   proposedTxRequest(state: TransactionRequestState) {
     return state.context.response?.proposedTxRequest;
   },
-  isLoadingAccounts(state: TransactionRequestState) {
-    return state.matches('fetchingAccount');
-  },
   errors(state: TransactionRequestState) {
     if (!state.context.errors) return {};
     const simulateTxErrors = state.context.errors?.simulateTxErrors;
@@ -36,34 +33,34 @@ const selectors = {
     const txApproveError = state.context.errors?.txApproveError;
     return { txApproveError, simulateTxErrors, hasSimulateTxErrors };
   },
-  status(externalLoading?: boolean) {
-    return useCallback(
-      (state: TransactionRequestState) => {
-        const isLoading = state.hasTag('loading');
-        const isClosed = state.matches('done') || state.matches('failed');
+  status() {
+    return useCallback((state: TransactionRequestState) => {
+      const isLoading = state.hasTag('loading');
+      const isClosed = state.matches('done') || state.matches('failed');
 
-        if (state.matches('idle')) return TxRequestStatus.idle;
-        if (externalLoading || isLoading) return TxRequestStatus.loading;
-        if (state.matches('txFailed')) return TxRequestStatus.failed;
-        if (state.matches('txSuccess')) return TxRequestStatus.success;
-        if (state.matches('sendingTx')) return TxRequestStatus.sending;
-        if (isClosed) return TxRequestStatus.inactive;
-        return TxRequestStatus.waitingApproval;
-      },
-      [externalLoading]
-    );
+      if (state.matches('idle')) return TxRequestStatus.idle;
+      if (isLoading) return TxRequestStatus.loading;
+      if (state.matches('txFailed')) return TxRequestStatus.failed;
+      if (state.matches('txSuccess')) return TxRequestStatus.success;
+      if (state.matches('sendingTx')) return TxRequestStatus.sending;
+      if (isClosed) return TxRequestStatus.inactive;
+      return TxRequestStatus.waitingApproval;
+    }, []);
   },
   title(state: TransactionRequestState) {
     if (state.matches('txSuccess')) return 'Transaction sent';
     if (state.matches('txFailed')) return 'Transaction failed';
     if (state.matches('sendingTx')) return 'Sending transaction';
-    return 'Approve Transaction';
+    return 'Review Transaction';
   },
   origin: (state: TransactionRequestState) => state.context.input.origin,
   originTitle: (state: TransactionRequestState) => state.context.input.title,
   favIconUrl: (state: TransactionRequestState) =>
     state.context.input.favIconUrl,
   sendingTx: (state: TransactionRequestState) => state.matches('sendingTx'),
+  isLoadingFees: (state: TransactionRequestState) =>
+    state.hasTag('loadingFees'),
+  isSimulating: (state: TransactionRequestState) => state.hasTag('simulating'),
 };
 
 type UseTransactionRequestOpts = {
@@ -95,12 +92,11 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     },
   });
 
-  const isLoadingAccounts = useSelector(service, selectors.isLoadingAccounts);
   const account = useSelector(service, selectors.account);
   const ctx = useSelector(service, selectors.context);
   const errors = useSelector(service, selectors.errors);
   const providerUrl = ctx.input.providerUrl;
-  const txStatusSelector = selectors.status(isLoadingAccounts);
+  const txStatusSelector = selectors.status();
   const txStatus = useSelector(service, txStatusSelector);
   const title = useSelector(service, selectors.title);
   const txSummarySimulated = useSelector(service, selectors.txSummarySimulated);
@@ -116,8 +112,10 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     !!txSummaryExecuted && (status('success') || status('failed'));
   const shouldShowTxSimulated = !shouldShowTxExecuted && !!txSummarySimulated;
   const shouldDisableApproveBtn =
-    shouldShowTxSimulated && errors.hasSimulateTxErrors;
-
+    !status('waitingApproval') ||
+    (shouldShowTxSimulated && errors.hasSimulateTxErrors);
+  const isLoadingFees = useSelector(service, selectors.isLoadingFees);
+  const isSimulating = useSelector(service, selectors.isSimulating);
   function closeDialog() {
     reset();
     overlay.close();
@@ -179,6 +177,8 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     shouldShowTxSimulated,
     shouldShowTxExecuted,
     proposedTxRequest,
+    isLoadingFees,
+    isSimulating,
     handlers: {
       request,
       reset,

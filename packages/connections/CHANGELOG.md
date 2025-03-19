@@ -1,5 +1,59 @@
 # @fuel-wallet/connections
 
+## 0.50.2
+
+## 0.50.1
+
+## 0.50.0
+
+## 0.49.0
+
+### Minor Changes
+
+- [#1774](https://github.com/FuelLabs/fuels-wallet/pull/1774) [`32950ceb`](https://github.com/FuelLabs/fuels-wallet/commit/32950cebefc5e207f6c746bed10aa4daa72cef62) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fuel SDK updated to 0.98.0, breaking changes (e.g. Provide.create, async provider calls, removal of AbstractAddress) are covered. Read [here](https://github.com/fuellabs/fuels-ts/releases/tag/v0.98.0) for more info.
+
+### Patch Changes
+
+- [#1774](https://github.com/FuelLabs/fuels-wallet/pull/1774) [`32950ceb`](https://github.com/FuelLabs/fuels-wallet/commit/32950cebefc5e207f6c746bed10aa4daa72cef62) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Gasless transactions are now supported via the `skipCustomFee` param
+
+## 0.48.3
+
+## 0.48.2
+
+## 0.48.1
+
+## 0.48.0
+
+## 0.47.1
+
+## 0.47.0
+
+## 0.46.1
+
+## 0.46.0
+
+## 0.45.0
+
+## 0.44.1
+
+## 0.44.0
+
+## 0.43.0
+
+## 0.42.3
+
+## 0.42.2
+
+## 0.42.1
+
+## 0.42.0
+
+### Patch Changes
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Upgrade Dexie to V4
+
+## 0.41.1
+
 ## 0.41.0
 
 ## 0.40.1

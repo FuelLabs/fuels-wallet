@@ -5,16 +5,7 @@ import { executeContentScript } from '../../scripts/executeContentScript';
 executeContentScript();
 
 chrome.runtime.onInstalled.addListener(async (object) => {
-  const { shouldRecoverWelcomeFromError } = await chrome.storage.local.get(
-    'shouldRecoverWelcomeFromError'
-  );
-
-  chrome.storage.local.remove('shouldRecoverWelcomeFromError');
-
-  if (
-    shouldRecoverWelcomeFromError ||
-    object.reason === chrome.runtime.OnInstalledReason.INSTALL
-  ) {
+  if (object.reason === chrome.runtime.OnInstalledReason.INSTALL) {
     chrome.tabs.create({ url: welcomeLink() });
   }
 });

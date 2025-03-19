@@ -19,6 +19,7 @@ import { overlayEvents } from '../Overlay/events';
 import { unlockMachine } from '../Unlock';
 import { unlockEvents } from '../Unlock/events';
 
+import { contractsMachine } from '../Contract/machines/contractsMachine';
 import type { StoreMachines } from './types';
 import { Services } from './types';
 
@@ -33,6 +34,7 @@ export const store = store$
   .addMachine(Services.accounts, () => accountsMachine)
   .addMachine(Services.networks, () => networksMachine)
   .addMachine(Services.assets, () => assetsMachine)
+  .addMachine(Services.contracts, () => contractsMachine)
   .addMachine(Services.unlock, () => unlockMachine)
   .addMachine(Services.msgRequest, () => messageRequestMachine)
   .addMachine(Services.connectRequest, () => connectRequestMachine)

@@ -158,7 +158,9 @@ export class VaultServer extends EventEmitter {
     address,
     providerUrl,
   }: VaultInputs['signTransaction']): Promise<string> {
-    const wallet = await this.manager.getWallet(Address.fromString(address));
+    const wallet = await this.manager.getWallet(
+      Address.fromDynamicInput(address)
+    );
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
     const provider = await createProvider(providerUrl);
     wallet.connect(provider);
@@ -170,7 +172,9 @@ export class VaultServer extends EventEmitter {
     message,
     address,
   }: VaultInputs['signMessage']): Promise<string> {
-    const wallet = await this.manager.getWallet(Address.fromString(address));
+    const wallet = await this.manager.getWallet(
+      Address.fromDynamicInput(address)
+    );
     const signature = wallet.signMessage(message);
     return signature;
   }
@@ -208,13 +212,6 @@ export class VaultServer extends EventEmitter {
 
   async reload() {
     chrome.runtime.reload();
-  }
-
-  async resetAndReload() {
-    const storage = new IndexedDBStorage();
-    const manager = new WalletManager({ storage });
-    this.manager = manager;
-    return this.reload();
   }
 }
 

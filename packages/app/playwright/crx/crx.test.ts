@@ -1,5 +1,5 @@
 import type { NetworkData, Account as WalletAccount } from '@fuel-wallet/types';
-import { type Locator, type Page, expect } from '@playwright/test';
+import { type Locator, Page, expect } from '@playwright/test';
 
 import {
   delay,
@@ -10,7 +10,6 @@ import {
   hasText,
   reload,
   seedWallet,
-  visit,
   waitAriaLabel,
 } from '../commons';
 import {
@@ -44,7 +43,7 @@ import {
   waitWalletToLoad,
 } from './utils';
 
-export const NETWORK_IGNITION = {
+const NETWORK_IGNITION = {
   id: '1',
   name: 'Ignition',
   url: 'https://mainnet.fuel.network/v1/graphql',
@@ -53,7 +52,7 @@ export const NETWORK_IGNITION = {
   bridgeUrl: 'https://app.fuel.network/bridge',
   isSelected: true,
 };
-export const NETWORK_TESTNET = {
+const NETWORK_TESTNET = {
   id: '2',
   name: 'Fuel Sepolia Testnet',
   url: 'https://testnet.fuel.network/v1/graphql',
@@ -63,7 +62,7 @@ export const NETWORK_TESTNET = {
   bridgeUrl: 'https://app-testnet.fuel.network/bridge',
   isSelected: false,
 };
-export const NETWORK_DEVNET = {
+const NETWORK_DEVNET = {
   id: '3',
   name: 'Fuel Sepolia Devnet',
   url: 'https://devnet.fuel.network/v1/graphql',
@@ -73,7 +72,7 @@ export const NETWORK_DEVNET = {
   isSelected: false,
 };
 
-export const DEFAULT_NETWORKS: Array<
+const DEFAULT_NETWORKS: Array<
   NetworkData & { faucetUrl?: string; bridgeUrl?: string; hidden?: boolean }
 > = [NETWORK_IGNITION, NETWORK_TESTNET, NETWORK_DEVNET];
 
@@ -91,15 +90,17 @@ test.describe('FuelWallet Extension', () => {
     extensionId,
   }) => {
     const popupPage = await context.newPage();
-    await popupPage.goto(`chrome-extension://${extensionId}/popup.html`);
-    const page = await context.waitForEvent('page', {
+    const pagePromise = context.waitForEvent('page', {
       predicate: (page) => page.url().includes('sign-up'),
+      timeout: 10_000,
     });
+    await popupPage.goto(`chrome-extension://${extensionId}/popup.html`);
+    const page = await pagePromise;
     expect(page.url()).toContain('sign-up');
   });
 
   test('SDK operations', async ({ context, baseURL, extensionId }) => {
-    const provider = await Provider.create(process.env.VITE_FUEL_PROVIDER_URL);
+    const provider = new Provider(process.env.VITE_FUEL_PROVIDER_URL);
     // Use a single instance of the page to avoid
     // multiple waiting times, and window.fuel checking.
     const blankPage = await context.newPage();
@@ -298,6 +299,7 @@ test.describe('FuelWallet Extension', () => {
       });
       const connectPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
+        timeout: 10_000,
       });
 
       await expect
@@ -359,6 +361,7 @@ test.describe('FuelWallet Extension', () => {
         );
         const selectNetworkPage = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
+          timeout: 10_000,
         });
         await hasText(selectNetworkPage, 'Switching To');
         await hasText(selectNetworkPage, network.name);
@@ -386,6 +389,7 @@ test.describe('FuelWallet Extension', () => {
 
         const selectNetworkPage = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
+          timeout: 10_000,
         });
 
         await hasText(selectNetworkPage, 'Review the Network to be added:');
@@ -468,8 +472,20 @@ test.describe('FuelWallet Extension', () => {
       // we need to reconnect the accounts to continue the tests
       await connectAccounts();
     });
+    await test.step('wait for initial connection', async () => {
+      await expect
+        .poll(
+          async () => {
+            return blankPage.evaluate(async () => {
+              return window.fuel.isConnected();
+            });
+          },
+          { timeout: 5000 }
+        )
+        .toBeTruthy();
+    });
 
-    await test.step('window.fuel.on("connection")', async () => {
+    await test.step('window.fuel.on("connection") disconnection', async () => {
       const onDeleteConnection = blankPage.evaluate(() => {
         return new Promise((resolve) => {
           window.fuel.on(window.fuel.events.connection, (isConnected) => {
@@ -579,6 +595,7 @@ test.describe('FuelWallet Extension', () => {
         );
         const signMessageRequest = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
+          timeout: 10_000,
         });
         // Confirm signature
         await hasText(signMessageRequest, message);
@@ -661,7 +678,6 @@ test.describe('FuelWallet Extension', () => {
         const receiverWallet = Wallet.generate({
           provider,
         });
-        bn(100_000_000);
         // Add some coins to the account
         await seedWallet(senderAccount.address, bn(100_000_000));
         // Create transfer
@@ -674,18 +690,32 @@ test.describe('FuelWallet Extension', () => {
         // Wait for approve transaction page to show
         const approveTransactionPage = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
+          timeout: 10_000,
         });
 
         // Approve transaction
-        await hasText(approveTransactionPage, /0\.0000001.ETH/i);
+        await expect
+          .poll(
+            async () => {
+              const element = await waitAriaLabel(
+                approveTransactionPage,
+                'amount-container'
+              );
+              const content = await element.textContent();
+              return /0\.0000001\s*ETH/i.test(content);
+            },
+            { timeout: 15000 }
+          )
+          .toBeTruthy();
         await waitAriaLabel(
           approveTransactionPage,
           senderAccount.address.toString()
         );
-
         await hasAriaLabel(approveTransactionPage, 'Confirm Transaction');
-        await getButtonByText(approveTransactionPage, /Approve/i).click();
-
+        const submitBtn = getButtonByText(approveTransactionPage, /Submit/i);
+        await expect(submitBtn).toBeEnabled({ timeout: 10000 });
+        await approveTransactionPage.waitForLoadState('networkidle');
+        await submitBtn.click({ timeout: 10000, force: true });
         await expect(transferStatus).resolves.toBe('success');
         const balance = await receiverWallet.getBalance();
         expect(balance.toNumber()).toBe(AMOUNT_TRANSFER);
@@ -767,6 +797,7 @@ test.describe('FuelWallet Extension', () => {
 
       const addAssetPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
+        timeout: 10_000,
       });
       await hasText(addAssetPage, 'Review the Assets to be added:');
       await getButtonByText(addAssetPage, /add assets/i).click();
@@ -790,6 +821,7 @@ test.describe('FuelWallet Extension', () => {
 
       const addAssetPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
+        timeout: 10_000,
       });
       await hasText(addAssetPage, 'Review the Assets to be added:');
       await getButtonByText(addAssetPage, /add assets/i).click();
@@ -855,20 +887,19 @@ test.describe('FuelWallet Extension', () => {
       // delay to avoid the page to listen the event from above swithAccount wrong event
       await delay(1000);
 
-      const onChangeAccountPromise = blankPage.evaluate(() => {
+      // Watch for result
+      const currentAccountEventResult = blankPage.evaluate(() => {
         return new Promise((resolve) => {
           window.fuel.on(window.fuel.events.currentAccount, (account) => {
             resolve(account);
           });
         });
       });
-
       // Switch to account 1
       const currentAccount = await switchAccount(popupPage, 'Account 1');
 
       // Check result
-      const currentAccountEventResult = await onChangeAccountPromise;
-      expect(currentAccountEventResult).toEqual(currentAccount.address);
+      expect(await currentAccountEventResult).toEqual(currentAccount.address);
     });
 
     await test.step('window.fuel.on("currentAccount") should be null when not connected', async () => {

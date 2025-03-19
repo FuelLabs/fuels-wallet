@@ -7,6 +7,7 @@ export type AssetData = Asset & {
   indexed?: boolean;
   suspicious?: boolean;
   isNft?: boolean;
+  verified?: boolean;
 };
 
 export type AssetAmount = AssetData & {
@@ -14,12 +15,18 @@ export type AssetAmount = AssetData & {
 };
 
 export type AssetFuelData = AssetFuel & {
-  // override icon to don't be required
   icon?: string;
   isCustom?: boolean;
   indexed?: boolean;
   suspicious?: boolean;
+  collection?: string;
+  rate?: number;
   isNft?: boolean;
+  verified?: boolean;
+  metadata?: {
+    name?: string;
+    image?: string;
+  };
 };
 
 export type AssetFuelAmount = AssetFuelData & {

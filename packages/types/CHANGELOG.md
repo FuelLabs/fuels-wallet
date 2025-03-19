@@ -1,5 +1,75 @@
 # @fuel-wallet/types
 
+## 0.50.2
+
+## 0.50.1
+
+## 0.50.0
+
+## 0.49.0
+
+### Minor Changes
+
+- [#1774](https://github.com/FuelLabs/fuels-wallet/pull/1774) [`32950ceb`](https://github.com/FuelLabs/fuels-wallet/commit/32950cebefc5e207f6c746bed10aa4daa72cef62) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fuel SDK updated to 0.98.0, breaking changes (e.g. Provide.create, async provider calls, removal of AbstractAddress) are covered. Read [here](https://github.com/fuellabs/fuels-ts/releases/tag/v0.98.0) for more info.
+
+### Patch Changes
+
+- [#1774](https://github.com/FuelLabs/fuels-wallet/pull/1774) [`32950ceb`](https://github.com/FuelLabs/fuels-wallet/commit/32950cebefc5e207f6c746bed10aa4daa72cef62) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Gasless transactions are now supported via the `skipCustomFee` param
+
+## 0.48.3
+
+## 0.48.2
+
+### Patch Changes
+
+- [#1840](https://github.com/FuelLabs/fuels-wallet/pull/1840) [`8efb01fc`](https://github.com/FuelLabs/fuels-wallet/commit/8efb01fc631d3d351880ab7cd3aab690a980fd37) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: bump version
+
+## 0.48.1
+
+## 0.48.0
+
+### Patch Changes
+
+- [#1788](https://github.com/FuelLabs/fuels-wallet/pull/1788) [`fd1e342a`](https://github.com/FuelLabs/fuels-wallet/commit/fd1e342a81041aa6fed925df9c45449cb3946e00) Thanks [@arthurgeron](https://github.com/arthurgeron)! - feat: show token value converted to USD
+
+## 0.47.1
+
+## 0.47.0
+
+## 0.46.1
+
+## 0.46.0
+
+### Minor Changes
+
+- [#1749](https://github.com/FuelLabs/fuels-wallet/pull/1749) [`9cb81db2`](https://github.com/FuelLabs/fuels-wallet/commit/9cb81db28009f9879f31eefefe0e08f806bae5f2) Thanks [@helciofranco](https://github.com/helciofranco)! - Add contract logos and names to the transaction screen for better UX.
+
+## 0.45.0
+
+## 0.44.1
+
+## 0.44.0
+
+## 0.43.0
+
+## 0.42.3
+
+## 0.42.2
+
+## 0.42.1
+
+## 0.42.0
+
+### Patch Changes
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Upgrade Dexie to V4
+
+## 0.41.1
+
+### Patch Changes
+
+- [#1648](https://github.com/FuelLabs/fuels-wallet/pull/1648) [`e63d6eba`](https://github.com/FuelLabs/fuels-wallet/commit/e63d6ebaecf68340e2b0cd690056cea2bd317b29) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: improve nft support + dont allow sending funds to assetId address
+
 ## 0.41.0
 
 ### Minor Changes

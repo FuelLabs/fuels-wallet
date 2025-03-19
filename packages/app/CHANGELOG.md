@@ -1,5 +1,325 @@
 # fuels-wallet
 
+## 0.50.2
+
+### Patch Changes
+
+- [#1866](https://github.com/FuelLabs/fuels-wallet/pull/1866) [`4c201edf`](https://github.com/FuelLabs/fuels-wallet/commit/4c201edfd39b57dd0cae37da84a780e66afd99fa) Thanks [@helciofranco](https://github.com/helciofranco)! - fix: improve precision handling for USD conversion with really low rates (e.g. 0.0000007427)
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.50.2
+  - @fuels/playwright-utils@0.50.2
+
+## 0.50.1
+
+### Patch Changes
+
+- [#1852](https://github.com/FuelLabs/fuels-wallet/pull/1852) [`52a635aa`](https://github.com/FuelLabs/fuels-wallet/commit/52a635aaa176c7cca169ad50e5ae3d80643eec4c) Thanks [@arthurgeron](https://github.com/arthurgeron)! - test: improve timeout handling and page navigation in e2e tests
+
+- [#1863](https://github.com/FuelLabs/fuels-wallet/pull/1863) [`f82963e1`](https://github.com/FuelLabs/fuels-wallet/commit/f82963e1c0cc47b715085a5a95cacebdc9573a94) Thanks [@helciofranco](https://github.com/helciofranco)! - fix: improve precision handling for USD conversion with low rates (e.g. $0.0123)
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.50.1
+  - @fuels/playwright-utils@0.50.1
+
+## 0.50.0
+
+### Minor Changes
+
+- [#1794](https://github.com/FuelLabs/fuels-wallet/pull/1794) [`23369813`](https://github.com/FuelLabs/fuels-wallet/commit/23369813cc0cb40d369f72ab4e4c387301efd13d) Thanks [@arthurgeron](https://github.com/arthurgeron)! - feat: performance improvement from rework on send transaction machine flows
+
+### Patch Changes
+
+- [#1848](https://github.com/FuelLabs/fuels-wallet/pull/1848) [`9fbe9625`](https://github.com/FuelLabs/fuels-wallet/commit/9fbe9625ec6f8c0c85311ba52e3a6cb971cd9019) Thanks [@arthurgeron](https://github.com/arthurgeron)! - chore: remove label in loading state
+
+- [#1850](https://github.com/FuelLabs/fuels-wallet/pull/1850) [`195eca55`](https://github.com/FuelLabs/fuels-wallet/commit/195eca55e191e37b303bf9b3828d2ebebd96a76d) Thanks [@helciofranco](https://github.com/helciofranco)! - chore: remove 'Account created' toast.
+
+- [#1850](https://github.com/FuelLabs/fuels-wallet/pull/1850) [`195eca55`](https://github.com/FuelLabs/fuels-wallet/commit/195eca55e191e37b303bf9b3828d2ebebd96a76d) Thanks [@helciofranco](https://github.com/helciofranco)! - fix: image size for assets with and without an icon.
+
+- Updated dependencies [[`23369813`](https://github.com/FuelLabs/fuels-wallet/commit/23369813cc0cb40d369f72ab4e4c387301efd13d)]:
+  - @fuels/playwright-utils@0.50.0
+  - @fuel-wallet/connections@0.50.0
+
+## 0.49.0
+
+### Minor Changes
+
+- [#1774](https://github.com/FuelLabs/fuels-wallet/pull/1774) [`32950ceb`](https://github.com/FuelLabs/fuels-wallet/commit/32950cebefc5e207f6c746bed10aa4daa72cef62) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fuel SDK updated to 0.98.0, breaking changes (e.g. Provide.create, async provider calls, removal of AbstractAddress) are covered. Read [here](https://github.com/fuellabs/fuels-ts/releases/tag/v0.98.0) for more info.
+
+### Patch Changes
+
+- [#1774](https://github.com/FuelLabs/fuels-wallet/pull/1774) [`32950ceb`](https://github.com/FuelLabs/fuels-wallet/commit/32950cebefc5e207f6c746bed10aa4daa72cef62) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Gasless transactions are now supported via the `skipCustomFee` param
+
+- [#1799](https://github.com/FuelLabs/fuels-wallet/pull/1799) [`118f4f44`](https://github.com/FuelLabs/fuels-wallet/commit/118f4f4467f1ce8bb267e18a207c298c50c061b9) Thanks [@arthurgeron](https://github.com/arthurgeron)! - feat: send common errors automatically, instead of asking user to review
+
+- Updated dependencies [[`32950ceb`](https://github.com/FuelLabs/fuels-wallet/commit/32950cebefc5e207f6c746bed10aa4daa72cef62), [`32950ceb`](https://github.com/FuelLabs/fuels-wallet/commit/32950cebefc5e207f6c746bed10aa4daa72cef62)]:
+  - @fuel-wallet/connections@0.49.0
+  - @fuels/playwright-utils@0.49.0
+
+## 0.48.3
+
+### Patch Changes
+
+- Updated dependencies [[`58797edd`](https://github.com/FuelLabs/fuels-wallet/commit/58797eddf31deb94c89da335423ca73d4f852627)]:
+  - @fuels/playwright-utils@0.48.3
+  - @fuel-wallet/connections@0.48.3
+
+## 0.48.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.48.2
+  - @fuels/playwright-utils@0.48.2
+
+## 0.48.1
+
+### Patch Changes
+
+- [#1829](https://github.com/FuelLabs/fuels-wallet/pull/1829) [`72366976`](https://github.com/FuelLabs/fuels-wallet/commit/723669768e9f3a28643364e42ebc0fa49f66385b) Thanks [@arthurgeron](https://github.com/arthurgeron)! - fix: nft list getting cut off
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.48.1
+  - @fuels/playwright-utils@0.48.1
+
+## 0.48.0
+
+### Major Changes
+
+- [#1784](https://github.com/FuelLabs/fuels-wallet/pull/1784) [`b3aa7cec`](https://github.com/FuelLabs/fuels-wallet/commit/b3aa7cec50bd141d336528062e60026688464373) Thanks [@Dhanraj30](https://github.com/Dhanraj30)! - chore: make address checksummed on Receive Page
+
+### Minor Changes
+
+- [#1810](https://github.com/FuelLabs/fuels-wallet/pull/1810) [`5ab72e4f`](https://github.com/FuelLabs/fuels-wallet/commit/5ab72e4f868d1499517d60ad9c8855be163b5c81) Thanks [@arthurgeron](https://github.com/arthurgeron)! - feat: prevent users from importing public keys as private
+
+### Patch Changes
+
+- [#1788](https://github.com/FuelLabs/fuels-wallet/pull/1788) [`fd1e342a`](https://github.com/FuelLabs/fuels-wallet/commit/fd1e342a81041aa6fed925df9c45449cb3946e00) Thanks [@arthurgeron](https://github.com/arthurgeron)! - feat: show token value converted to USD
+
+- [#1814](https://github.com/FuelLabs/fuels-wallet/pull/1814) [`44cb7823`](https://github.com/FuelLabs/fuels-wallet/commit/44cb7823a43c78a36358927a9caee7152d12b196) Thanks [@nelitow](https://github.com/nelitow)! - Audit package updates
+
+- [#1813](https://github.com/FuelLabs/fuels-wallet/pull/1813) [`1bca7e3c`](https://github.com/FuelLabs/fuels-wallet/commit/1bca7e3cc5e339b855cca2e2b8e3c3af1cbbd157) Thanks [@arthurgeron](https://github.com/arthurgeron)! - feat: use adf version of pnpm
+
+- [#1802](https://github.com/FuelLabs/fuels-wallet/pull/1802) [`37a5c22b`](https://github.com/FuelLabs/fuels-wallet/commit/37a5c22b69ba48eabf20e033f166b3c5228cff98) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: upgrade checkout action to v4 + remove chainInfo machine
+
+- [#1805](https://github.com/FuelLabs/fuels-wallet/pull/1805) [`f653d59f`](https://github.com/FuelLabs/fuels-wallet/commit/f653d59f1678c04641dea923a7ac9ed02e365d47) Thanks [@arthurgeron](https://github.com/arthurgeron)! - fix: jest unit tests
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.48.0
+  - @fuels/playwright-utils@0.48.0
+
+## 0.47.1
+
+### Patch Changes
+
+- [#1760](https://github.com/FuelLabs/fuels-wallet/pull/1760) [`5399a354`](https://github.com/FuelLabs/fuels-wallet/commit/5399a3544f3203df689649e2d5bc4bd7a0ded988) Thanks [@Dhanraj30](https://github.com/Dhanraj30)! - Fixing display of long recipient names
+
+- [#1783](https://github.com/FuelLabs/fuels-wallet/pull/1783) [`5680b65b`](https://github.com/FuelLabs/fuels-wallet/commit/5680b65b8bf09c42eadc4a5342bdae905c577351) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: make send screen flows more stable by relying less on form changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.47.1
+  - @fuels/playwright-utils@0.47.1
+
+## 0.47.0
+
+### Minor Changes
+
+- [#1764](https://github.com/FuelLabs/fuels-wallet/pull/1764) [`d81ee482`](https://github.com/FuelLabs/fuels-wallet/commit/d81ee48208e5329144d87c5f84b9a37da7c2a036) Thanks [@helciofranco](https://github.com/helciofranco)! - Add current account connection status to the header
+
+- [#1762](https://github.com/FuelLabs/fuels-wallet/pull/1762) [`2460beef`](https://github.com/FuelLabs/fuels-wallet/commit/2460beef713767c8af178075e85630fba3468c52) Thanks [@helciofranco](https://github.com/helciofranco)! - Add a separate NFTs tab to the home screen.
+
+- [#1710](https://github.com/FuelLabs/fuels-wallet/pull/1710) [`4c530078`](https://github.com/FuelLabs/fuels-wallet/commit/4c530078ca2d252e7f5f8db9ffb779c775e5122b) Thanks [@nelitow](https://github.com/nelitow)! - Improve handling of custom assets.
+
+### Patch Changes
+
+- [#1778](https://github.com/FuelLabs/fuels-wallet/pull/1778) [`6ddb0014`](https://github.com/FuelLabs/fuels-wallet/commit/6ddb0014464f9e536c32b4b5eeedccaa93c6befb) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: review button entering on loading state after getting ready to approve
+
+- [#1725](https://github.com/FuelLabs/fuels-wallet/pull/1725) [`28628cbd`](https://github.com/FuelLabs/fuels-wallet/commit/28628cbda88d249c67a49fa0ed44fbf1d6e83267) Thanks [@nelitow](https://github.com/nelitow)! - Allow editing network name when adding.
+
+- [#1778](https://github.com/FuelLabs/fuels-wallet/pull/1778) [`6ddb0014`](https://github.com/FuelLabs/fuels-wallet/commit/6ddb0014464f9e536c32b4b5eeedccaa93c6befb) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: remove intentional longer loading states to avoid blinking.
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.47.0
+  - @fuels/playwright-utils@0.47.0
+
+## 0.46.1
+
+### Patch Changes
+
+- [#1753](https://github.com/FuelLabs/fuels-wallet/pull/1753) [`22975202`](https://github.com/FuelLabs/fuels-wallet/commit/22975202ae37ca941f27df825bdea11905cf3ddb) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: remove comment
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.46.1
+  - @fuels/playwright-utils@0.46.1
+
+## 0.46.0
+
+### Minor Changes
+
+- [#1749](https://github.com/FuelLabs/fuels-wallet/pull/1749) [`9cb81db2`](https://github.com/FuelLabs/fuels-wallet/commit/9cb81db28009f9879f31eefefe0e08f806bae5f2) Thanks [@helciofranco](https://github.com/helciofranco)! - Add contract logos and names to the transaction screen for better UX.
+
+### Patch Changes
+
+- [#1748](https://github.com/FuelLabs/fuels-wallet/pull/1748) [`cc953d4f`](https://github.com/FuelLabs/fuels-wallet/commit/cc953d4f62402895970140d243a3832a374aaa46) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: clean opfs when logging out
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.46.0
+  - @fuels/playwright-utils@0.46.0
+
+## 0.45.0
+
+### Minor Changes
+
+- [#1741](https://github.com/FuelLabs/fuels-wallet/pull/1741) [`197d1758`](https://github.com/FuelLabs/fuels-wallet/commit/197d1758701392bf7ab9efc97fbed3ca8d9ac567) Thanks [@nelitow](https://github.com/nelitow)! - Update @fuels packages to implement localStorage fix.
+
+### Patch Changes
+
+- [#1718](https://github.com/FuelLabs/fuels-wallet/pull/1718) [`7fcfee7d`](https://github.com/FuelLabs/fuels-wallet/commit/7fcfee7d8fb53259a8abd2f3843c951fcb03e865) Thanks [@nelitow](https://github.com/nelitow)! - Update E2E setup
+
+- [#1742](https://github.com/FuelLabs/fuels-wallet/pull/1742) [`4bd6e86b`](https://github.com/FuelLabs/fuels-wallet/commit/4bd6e86b370d17692da72ff91c2b28cb64a21c2c) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: add OPFS backup
+
+- Updated dependencies [[`197d1758`](https://github.com/FuelLabs/fuels-wallet/commit/197d1758701392bf7ab9efc97fbed3ca8d9ac567)]:
+  - @fuels/playwright-utils@0.45.0
+  - @fuel-wallet/connections@0.45.0
+
+## 0.44.1
+
+### Patch Changes
+
+- [#1713](https://github.com/FuelLabs/fuels-wallet/pull/1713) [`ed5aaddc`](https://github.com/FuelLabs/fuels-wallet/commit/ed5aaddc225d5aa6817b0f637d1a979d5ef77095) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - refactor: accountMachine should not handle isLogged operations and should not have parallel states running
+
+- [#1713](https://github.com/FuelLabs/fuels-wallet/pull/1713) [`ed5aaddc`](https://github.com/FuelLabs/fuels-wallet/commit/ed5aaddc225d5aa6817b0f637d1a979d5ef77095) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - set isLogged when opening the db
+
+- [#1713](https://github.com/FuelLabs/fuels-wallet/pull/1713) [`ed5aaddc`](https://github.com/FuelLabs/fuels-wallet/commit/ed5aaddc225d5aa6817b0f637d1a979d5ef77095) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: cleaning now waits for localStorage
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.44.1
+  - @fuels/playwright-utils@0.44.1
+
+## 0.44.0
+
+### Minor Changes
+
+- [#1700](https://github.com/FuelLabs/fuels-wallet/pull/1700) [`be181de6`](https://github.com/FuelLabs/fuels-wallet/commit/be181de610d15f18efa977e183d449ae3f871c54) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: implemented recoverWallet method and in case of disaster recover it
+
+- [#1700](https://github.com/FuelLabs/fuels-wallet/pull/1700) [`be181de6`](https://github.com/FuelLabs/fuels-wallet/commit/be181de610d15f18efa977e183d449ae3f871c54) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: synchronize db with chrome storage
+
+- [#1700](https://github.com/FuelLabs/fuels-wallet/pull/1700) [`be181de6`](https://github.com/FuelLabs/fuels-wallet/commit/be181de610d15f18efa977e183d449ae3f871c54) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: create new database and table (outside of react) to identify if only dexiedb database is breaking
+
+- [#1700](https://github.com/FuelLabs/fuels-wallet/pull/1700) [`be181de6`](https://github.com/FuelLabs/fuels-wallet/commit/be181de610d15f18efa977e183d449ae3f871c54) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: report to sentry when there's a recover happening
+
+### Patch Changes
+
+- [#1695](https://github.com/FuelLabs/fuels-wallet/pull/1695) [`89454569`](https://github.com/FuelLabs/fuels-wallet/commit/8945456956dcf4117d1ca0f01ab91c504bb1095e) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed setup page not finding some local assets
+
+- [#1691](https://github.com/FuelLabs/fuels-wallet/pull/1691) [`33f3d77a`](https://github.com/FuelLabs/fuels-wallet/commit/33f3d77ac8b5bf53be33963e1df3e1a03450b731) Thanks [@nelitow](https://github.com/nelitow)! - ### Changed
+
+  Updated nanoid to the latest versions for better performance and security.
+
+- [#1692](https://github.com/FuelLabs/fuels-wallet/pull/1692) [`473067c9`](https://github.com/FuelLabs/fuels-wallet/commit/473067c9c3c442b3f51f28c10b99edd1827f1cad) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Updated Biome to 1.9.4 and fixed lint errors.
+
+- [#1639](https://github.com/FuelLabs/fuels-wallet/pull/1639) [`b0b5f2f5`](https://github.com/FuelLabs/fuels-wallet/commit/b0b5f2f529fe0c9844fa35d41c8f18d0978ca151) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed wallet not loading correctly in local environment on Chrome 130+
+
+- [#1704](https://github.com/FuelLabs/fuels-wallet/pull/1704) [`55606980`](https://github.com/FuelLabs/fuels-wallet/commit/55606980a9204d6f21fbb8c290b9b1c6ba2e7dcf) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: reduce reported data to sentry
+
+- [#1696](https://github.com/FuelLabs/fuels-wallet/pull/1696) [`8b68c21e`](https://github.com/FuelLabs/fuels-wallet/commit/8b68c21e39e7b5b0fbb9791c7d306d536a6d37ad) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fix exception when injecting content in the hello page
+
+- [#1695](https://github.com/FuelLabs/fuels-wallet/pull/1695) [`89454569`](https://github.com/FuelLabs/fuels-wallet/commit/8945456956dcf4117d1ca0f01ab91c504bb1095e) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Upgrade Vite to V6 major
+
+- [#1694](https://github.com/FuelLabs/fuels-wallet/pull/1694) [`cfcf2209`](https://github.com/FuelLabs/fuels-wallet/commit/cfcf220966cafc9bf7cd8861f0421a7560315365) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: update 'dev:crx' script to use default env
+
+- Updated dependencies [[`473067c9`](https://github.com/FuelLabs/fuels-wallet/commit/473067c9c3c442b3f51f28c10b99edd1827f1cad), [`55606980`](https://github.com/FuelLabs/fuels-wallet/commit/55606980a9204d6f21fbb8c290b9b1c6ba2e7dcf)]:
+  - @fuels/playwright-utils@0.44.0
+  - @fuel-wallet/connections@0.44.0
+
+## 0.43.0
+
+### Minor Changes
+
+- [#1690](https://github.com/FuelLabs/fuels-wallet/pull/1690) [`ae328042`](https://github.com/FuelLabs/fuels-wallet/commit/ae32804241da0ea017a768a6b9bef90e6d7015f6) Thanks [@helciofranco](https://github.com/helciofranco)! - Allow pasting passwords in the "Confirm Password" step during wallet creation.
+
+- [#1681](https://github.com/FuelLabs/fuels-wallet/pull/1681) [`6121fab6`](https://github.com/FuelLabs/fuels-wallet/commit/6121fab6af755256edddff189aa43c27ca7c5efa) Thanks [@helciofranco](https://github.com/helciofranco)! - Show asset name, decimals and NFT badge when approving a transaction.
+
+### Patch Changes
+
+- [#1680](https://github.com/FuelLabs/fuels-wallet/pull/1680) [`21eb5cd8`](https://github.com/FuelLabs/fuels-wallet/commit/21eb5cd8699002d7d46c57432f6c9e3cfa89ea03) Thanks [@helciofranco](https://github.com/helciofranco)! - Fixed amount display for large values when reviewing a transaction request.
+
+- [#1684](https://github.com/FuelLabs/fuels-wallet/pull/1684) [`882f3ea3`](https://github.com/FuelLabs/fuels-wallet/commit/882f3ea36ae4167e4b8c563e2c3734b01dbf0c17) Thanks [@helciofranco](https://github.com/helciofranco)! - Fire event to dApps when editing connections on the Fuel Wallet.
+
+- [#1683](https://github.com/FuelLabs/fuels-wallet/pull/1683) [`a7e6e48b`](https://github.com/FuelLabs/fuels-wallet/commit/a7e6e48bb0eec410b38a262486a3f2860466a738) Thanks [@helciofranco](https://github.com/helciofranco)! - Fix feedback when user has insufficient ETH to cover fees.
+
+- [#1685](https://github.com/FuelLabs/fuels-wallet/pull/1685) [`771962b6`](https://github.com/FuelLabs/fuels-wallet/commit/771962b6d1c41a3985523524e17961d625e85c3b) Thanks [@helciofranco](https://github.com/helciofranco)! - Reset auto-lock timer if the Wallet is opened.
+
+- [#1683](https://github.com/FuelLabs/fuels-wallet/pull/1683) [`a7e6e48b`](https://github.com/FuelLabs/fuels-wallet/commit/a7e6e48bb0eec410b38a262486a3f2860466a738) Thanks [@helciofranco](https://github.com/helciofranco)! - Fix large amounts breaking the UI on the homescreen.
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.43.0
+  - @fuels/playwright-utils@0.43.0
+
+## 0.42.3
+
+### Patch Changes
+
+- [#1672](https://github.com/FuelLabs/fuels-wallet/pull/1672) [`e187dc50`](https://github.com/FuelLabs/fuels-wallet/commit/e187dc50a03fd0e42b7ab85a792b97b9fb23a021) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: change title/button text of Approve transaction screen
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.42.3
+  - @fuels/playwright-utils@0.42.3
+
+## 0.42.2
+
+### Patch Changes
+
+- [#1667](https://github.com/FuelLabs/fuels-wallet/pull/1667) [`45de3e1f`](https://github.com/FuelLabs/fuels-wallet/commit/45de3e1f1fa5bd8638c39622f49f6a64a2e74d1d) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - fix wallet reset when fetch account returns undefined
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.42.2
+  - @fuels/playwright-utils@0.42.2
+
+## 0.42.1
+
+### Patch Changes
+
+- [#1657](https://github.com/FuelLabs/fuels-wallet/pull/1657) [`2e3fa771`](https://github.com/FuelLabs/fuels-wallet/commit/2e3fa7712050ff5ebb8c136543dde4b027da3cc1) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: hotfix for not allowing send to ANY asset address
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.42.1
+  - @fuels/playwright-utils@0.42.1
+
+## 0.42.0
+
+### Minor Changes
+
+- [#1655](https://github.com/FuelLabs/fuels-wallet/pull/1655) [`4e3be5dc`](https://github.com/FuelLabs/fuels-wallet/commit/4e3be5dc04b7f0214d2a368994df5f886dccdce2) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Support SRC-7, 9 nft asset data.
+
+### Patch Changes
+
+- [#1655](https://github.com/FuelLabs/fuels-wallet/pull/1655) [`4e3be5dc`](https://github.com/FuelLabs/fuels-wallet/commit/4e3be5dc04b7f0214d2a368994df5f886dccdce2) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fetch and display NFT data directly from indexer.
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed IndexDB randomly rejecting TXs and or failing to open
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Remove manual reload of wallet on integrity check fail
+
+- [#1655](https://github.com/FuelLabs/fuels-wallet/pull/1655) [`4e3be5dc`](https://github.com/FuelLabs/fuels-wallet/commit/4e3be5dc04b7f0214d2a368994df5f886dccdce2) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixes intermittent long loading state on the wallet
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Upgrade Dexie to V4
+
+- [#1646](https://github.com/FuelLabs/fuels-wallet/pull/1646) [`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed error where Dexie would allow insertion of entries with duplicate primary keys/ids.
+
+- Updated dependencies [[`8c9edd37`](https://github.com/FuelLabs/fuels-wallet/commit/8c9edd3785d77a510519d1a50b290e8c67a17b21)]:
+  - @fuels/playwright-utils@0.42.0
+  - @fuel-wallet/connections@0.42.0
+
+## 0.41.1
+
+### Patch Changes
+
+- [#1648](https://github.com/FuelLabs/fuels-wallet/pull/1648) [`e63d6eba`](https://github.com/FuelLabs/fuels-wallet/commit/e63d6ebaecf68340e2b0cd690056cea2bd317b29) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: improve nft support + dont allow sending funds to assetId address
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.41.1
+  - @fuels/playwright-utils@0.41.1
+
 ## 0.41.0
 
 ### Minor Changes

@@ -11,6 +11,7 @@ import {
 } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { memo, useState } from 'react';
+import { NFTImage } from '~/systems/Account/components/BalanceNFTs/NFTImage';
 import type { Maybe } from '~/systems/Core';
 import { coreStyles, shortAddress } from '~/systems/Core';
 
@@ -28,6 +29,37 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
 
   function handleClear() {
     onSelect(null);
+  }
+
+  function getImageUrl(asset?: AssetSelectInput) {
+    try {
+      if (!asset?.metadata?.image) return asset?.icon;
+      const imageUrl = asset.metadata.image;
+      return typeof imageUrl === 'string'
+        ? imageUrl.replace('ipfs://', 'https://ipfs.io/ipfs/')
+        : asset?.icon;
+    } catch (error) {
+      console.warn('Error getting NFT image URL:', error);
+      return asset?.icon;
+    }
+  }
+
+  function getName(asset?: AssetSelectInput) {
+    try {
+      if (!asset) return 'Unknown';
+
+      if (asset.isNft && asset.metadata?.name) {
+        const name = asset.metadata.name;
+        return typeof name === 'string' && name.trim()
+          ? name.trim()
+          : 'Unknown';
+      }
+
+      return asset.name?.trim() || 'Unknown';
+    } catch (error) {
+      console.warn('Error getting asset name:', error);
+      return 'Unknown';
+    }
   }
 
   return (
@@ -57,29 +89,29 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
           <Box.Flex css={styles.input}>
             {assetAmount && (
               <>
-                {assetAmount.name ? (
-                  <>
-                    <Avatar
-                      name={assetAmount?.name}
-                      src={assetAmount?.icon}
-                      css={{ height: 18, width: 18 }}
+                {assetAmount.isNft ? (
+                  <Box css={styles.nftPreviewSelected}>
+                    <NFTImage
+                      assetId={assetAmount.assetId || ''}
+                      image={getImageUrl(assetAmount)}
                     />
-                    <Text as="span" className="asset-name">
-                      {assetAmount?.name}
-                    </Text>
-                  </>
+                  </Box>
+                ) : assetAmount.name ? (
+                  <Avatar
+                    name={assetAmount?.name}
+                    src={assetAmount?.icon}
+                    css={{ height: 18, width: 18 }}
+                  />
                 ) : (
-                  <>
-                    <Avatar.Generated
-                      hash={assetAmount.assetId || ''}
-                      css={{ height: 14, width: 14 }}
-                      size="xsm"
-                    />
-                    <Text as="span" className="asset-name">
-                      {shortAddress(assetAmount?.assetId)}
-                    </Text>
-                  </>
+                  <Avatar.Generated
+                    hash={assetAmount.assetId || ''}
+                    css={{ height: 14, width: 14 }}
+                    size="xsm"
+                  />
                 )}
+                <Text as="span" className="asset-name">
+                  {getName(assetAmount)}
+                </Text>
               </>
             )}
             {!assetAmount && (
@@ -108,21 +140,28 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
         {(items || []).map((item) => {
           const assetId = item.assetId?.toString();
           const itemAsset = items?.find((a) => a.assetId === assetId);
-          const { name, symbol, icon, isNft } = itemAsset || {};
+          const { symbol, icon, isNft } = itemAsset || {};
 
           return (
             <Dropdown.MenuItem
               key={item.assetId?.toString()}
               textValue={item.assetId?.toString()}
             >
-              {icon ? (
-                <Avatar size="xsm" name={name || ''} src={icon} />
+              {isNft ? (
+                <Box css={styles.nftPreview}>
+                  <NFTImage
+                    assetId={assetId || ''}
+                    image={getImageUrl(itemAsset)}
+                  />
+                </Box>
+              ) : icon ? (
+                <Avatar size="xsm" name={getName(itemAsset)} src={icon} />
               ) : (
                 <Avatar.Generated size="sm" hash={assetId || ''} />
               )}
               <Box className="asset-info">
                 <Text as="span" className="asset-name">
-                  {name || 'Unknown'}
+                  {getName(itemAsset)}
                   {isNft && (
                     <Badge
                       variant="ghost"
@@ -244,5 +283,27 @@ const styles = {
     ml: '$2',
     fontSize: '$sm',
     lineHeight: 'normal',
+  }),
+  nftPreview: cssObj({
+    '&': {
+      width: '30px',
+      height: '30px',
+    },
+    '.fuel_Box': {
+      minHeight: 'unset !important',
+      borderRadius: '10px',
+      backgroundColor: '$intentsBase1',
+    },
+  }),
+  nftPreviewSelected: cssObj({
+    '&': {
+      width: '18px',
+      height: '18px',
+    },
+    '.fuel_Box': {
+      minHeight: 'unset !important',
+      borderRadius: '$sm',
+      backgroundColor: '$intentsBase1',
+    },
   }),
 };

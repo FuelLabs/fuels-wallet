@@ -146,8 +146,11 @@ export const networksMachine = createMachine(
           },
           onDone: [
             {
-              target: 'idle',
+              target: 'waitingAddNetwork',
               cond: FetchMachine.hasError,
+              actions: assign({
+                error: (_, ev) => ev.data,
+              }),
             },
             {
               actions: [
@@ -319,7 +322,7 @@ export const networksMachine = createMachine(
         },
       }),
       notifyUpdateAccounts: () => {
-        store.updateAccounts();
+        store.refreshAccounts();
       },
       assignChainInfo: assign({
         chainInfoToAdd: (_, ev) => {

@@ -21,7 +21,7 @@ import {
 
 import { Address } from 'fuels';
 import type { MockData } from '../mocks';
-import { WALLET_PASSWORD, mockData } from '../mocks';
+import { PRIVATE_KEY, WALLET_PASSWORD, mockData } from '../mocks';
 
 test.describe('New Accounts', () => {
   let browser: Browser;
@@ -40,18 +40,61 @@ test.describe('New Accounts', () => {
     await reload(page);
   });
 
+  test('should not be able to import public address as a private key', async () => {
+    await getByAriaLabel(page, 'Accounts').click();
+    await getByAriaLabel(page, 'Import from private key').click();
+    await getByAriaLabel(page, 'Private Key').fill(PRIVATE_KEY);
+    await expect
+      .poll(
+        async () => {
+          return await getElementByText(
+            page,
+            'This is a public key, please insert a private key instead.'
+          ).isVisible();
+        },
+        { timeout: 10000 }
+      )
+      .toBeFalsy();
+    await getByAriaLabel(page, 'Private Key').fill(
+      '0xC425c5D0d1685Dd52BFD10A4e5C7612ea50794Cb2e675c4aa94F1E1291712ef5'
+    );
+    await expect
+      .poll(
+        async () => {
+          return await getElementByText(
+            page,
+            'This is a public key, please insert a private key instead.'
+          ).isVisible();
+        },
+        { timeout: 10000 }
+      )
+      .toBeTruthy();
+  });
+
   test('should be able to switch between accounts', async () => {
     await visit(page, '/wallet');
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
-    await hasText(page, data.accounts[0].name);
-    await hasText(page, data.accounts[1].name);
-    await getByAriaLabel(page, data.accounts[1].name).click({
-      position: {
-        x: 10,
-        y: 10,
-      },
-    });
+    await expect(
+      page.getByRole('heading', { name: data.accounts[0].name, exact: true })
+    ).toBeVisible();
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[1].name,
+        exact: true,
+      })
+    ).toBeVisible();
+    await page
+      .getByRole('heading', {
+        name: data.accounts[1].name,
+        exact: true,
+      })
+      .click({
+        position: {
+          x: 10,
+          y: 10,
+        },
+      });
     await waitUrl(page, '/wallet');
     await hasText(page, /Assets/i);
     const address = data.accounts[1].address.toString();
@@ -62,7 +105,12 @@ test.describe('New Accounts', () => {
     await visit(page, '/wallet');
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
-    await hasText(page, data.accounts[0].name);
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[0].name,
+        exact: true,
+      })
+    ).toBeVisible();
     await getByAriaLabel(
       page,
       `Account Actions ${data.accounts[0].name}`
@@ -82,7 +130,12 @@ test.describe('New Accounts', () => {
     await visit(page, '/wallet');
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
-    await hasText(page, data.accounts[0].name);
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[0].name,
+        exact: true,
+      })
+    ).toBeVisible();
     await getByAriaLabel(
       page,
       `Account Actions ${data.accounts[0].name}`
@@ -100,8 +153,18 @@ test.describe('New Accounts', () => {
     await visit(page, '/wallet');
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
-    await hasText(page, data.accounts[0].name);
-    await hasText(page, data.accounts[1].name);
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[0].name,
+        exact: true,
+      })
+    ).toBeVisible();
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[1].name,
+        exact: true,
+      })
+    ).toBeVisible();
     await getByAriaLabel(
       page,
       `Account Actions ${data.accounts[1].name}`
@@ -110,7 +173,12 @@ test.describe('New Accounts', () => {
     await hasText(page, 'Show hidden accounts');
     await page.getByText(data.accounts[1].name).isHidden();
     await getByAriaLabel(page, 'Toggle hidden accounts').click();
-    await hasText(page, data.accounts[1].name);
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[1].name,
+        exact: true,
+      })
+    ).toBeVisible();
     await getByAriaLabel(
       page,
       `Account Actions ${data.accounts[1].name}`
@@ -123,8 +191,18 @@ test.describe('New Accounts', () => {
     await visit(page, '/wallet');
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
-    await hasText(page, data.accounts[0].name);
-    await hasText(page, data.accounts[1].name);
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[0].name,
+        exact: true,
+      })
+    ).toBeVisible();
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[1].name,
+        exact: true,
+      })
+    ).toBeVisible();
     await getByAriaLabel(
       page,
       `Account Actions ${data.accounts[1].name}`
@@ -143,7 +221,12 @@ test.describe('New Accounts', () => {
     await visit(page, '/wallet');
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
-    await hasText(page, data.accounts[0].name);
+    await expect(
+      page.getByRole('heading', {
+        name: data.accounts[0].name,
+        exact: true,
+      })
+    ).toBeVisible();
     await getByAriaLabel(
       page,
       `Account Actions ${data.accounts[0].name}`
@@ -184,15 +267,15 @@ test.describe('Existing Accounts', () => {
   test('can add accounts using correct derivation path after importing from private key', async () => {
     // at this point 2 accounts have already been created
     const fuelAddress1 =
-      'fuel1kfnz04g7k8wjw22s03s3kk46wxr63he3v5v6kyrv76m7wzh7x9jqvqffua';
+      '0xb26627d51eb1dd2729507c611b5aba7187a8df316519ab106cf6b7e70afe3164';
     const fuelAddress2 =
-      'fuel1kyxzyv5z39fuxnr6k9ncxujxn4y07fu6pf73vslmemgpex325vrsytpqks';
+      '0xb10c2232828953c34c7ab1678372469d48ff279a0a7d1643fbced01c9a2aa307';
     const fuelAddress3 =
-      'fuel152720qgc5wthxu4g7a2g6s7xy9d8wjgtffl489k706xyd2fas0wqyv0vsw';
+      '0xa2bca78118a3977372a8f7548d43c6215a77490b4a7f5396de7e8c46a93d83dc';
     const fuelPrivKey =
       '0x7f802a2a277872af1204140bd2c77c2193309c366e3c71ff1c4c31cea0a53f38';
     const fuelAddPriv =
-      'fuel1szu0uagadwpgl0fuz2thrtzn7artghvhexg5d9at4t76nzeesqasrdmjxy';
+      '0x80b8fe751d6b828fbd3c129771ac53f746b45d97c9914697abaafda98b39803b';
 
     // import account from private key
     await createAccountFromPrivateKey(page, fuelPrivKey, 'Account 3');

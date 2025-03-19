@@ -2,7 +2,7 @@ import baseDefaultConfig from '@fuel-ui/test-utils/config';
 import type { JestConfigWithTsJest } from 'ts-jest';
 import { defaultsESM as tsjPreset } from 'ts-jest/presets';
 
-import { getPublicEnvs } from './load.envs';
+import { getPublicEnvs } from './load.envs.cts';
 import pkg from './package.json';
 
 const { globals, preset, ...baseConfig } = baseDefaultConfig;
@@ -25,6 +25,7 @@ const config: JestConfigWithTsJest = {
       {
         ...tsjPreset[1],
         useESM: true,
+        isolatedModules: true,
         diagnostics: {
           ignoreCodes: [1343],
           warnOnly: true,
@@ -44,9 +45,8 @@ const config: JestConfigWithTsJest = {
   transformIgnorePatterns: [`/node_modules/(?!${esModules})`],
   testTimeout: 10000,
   forceExit: false,
-  detectOpenHandles: true,
+  detectOpenHandles: !process.env.CI,
   modulePathIgnorePatterns: ['/dist/', 'playwright', 'uuid/dist/esm-browser'],
-  maxWorkers: 1,
   rootDir: __dirname,
   displayName: pkg.name,
   setupFilesAfterEnv: [
@@ -68,6 +68,9 @@ const config: JestConfigWithTsJest = {
     '^uuid$': require.resolve('uuid'),
     '^@web3modal/core$': require.resolve('@web3modal/core'),
   },
+  collectCoverageFrom: [],
+
+  cache: true,
 };
 
 export default config;

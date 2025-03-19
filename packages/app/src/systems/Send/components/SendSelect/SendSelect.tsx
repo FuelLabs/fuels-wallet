@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Form, Input, Text } from '@fuel-ui/react';
+import { Box, Form, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -14,6 +14,7 @@ import {
 
 import { useController, useWatch } from 'react-hook-form';
 import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
+import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
 import type { UseSendReturn } from '../../hooks';
 
@@ -33,11 +34,13 @@ export function SendSelect({
   errorMessage,
   warningMessage,
   provider,
+  handlers,
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
   const isAmountFocused = useRef<boolean>(false);
   const baseFeeRef = useRef<BN | null>(baseFee);
   const tipRef = useRef<BN>(tip);
+  const [baseAssetId, setBaseAssetId] = useState('');
 
   const { field: amount, fieldState: amountFieldState } = useController({
     control: form.control,
@@ -48,18 +51,32 @@ export function SendSelect({
     control: form.control,
     name: 'asset',
   });
+  const selectedAsset = useMemo(
+    () => balances?.find((a) => a.asset?.assetId === assetId),
+    [assetId, balances]
+  );
 
-  const decimals = useMemo(() => {
-    const selectedAsset = balances?.find((a) => a.asset?.assetId === assetId);
-    return selectedAsset?.asset?.decimals;
-  }, [assetId, balances]);
+  const decimals = selectedAsset?.asset?.decimals;
+  const rate = selectedAsset?.asset?.rate;
+  const amountInUsd = useMemo(() => {
+    if (amount.value == null || rate == null || decimals == null) return '$0';
+    return convertToUsd(bn(amount.value), decimals, rate).formatted;
+  }, [amount.value, rate, decimals]);
+
+  useEffect(() => {
+    let abort = false;
+    provider?.getBaseAssetId().then((_assetId) => {
+      if (abort) return;
+      setBaseAssetId(_assetId);
+    });
+    return () => {
+      abort = true;
+    };
+  }, [provider]);
 
   const isSendingBaseAssetId = useMemo(() => {
-    return (
-      assetId &&
-      provider?.getBaseAssetId().toLowerCase() === assetId.toLowerCase()
-    );
-  }, [provider, assetId]);
+    return assetId && baseAssetId.toLowerCase() === assetId.toLowerCase();
+  }, [baseAssetId, assetId]);
 
   useEffect(() => {
     if (
@@ -74,7 +91,9 @@ export function SendSelect({
       const maxFee = baseFee.add(tip).add(1);
       if (maxFee.gt(balanceAssetSelected)) return;
 
-      form.setValue('amount', balanceAssetSelected.sub(maxFee));
+      const newAmount = balanceAssetSelected.sub(maxFee);
+      form.setValue('amount', newAmount);
+      handlers.recalculateFromAmount(newAmount);
     }
   }, [
     watchMax,
@@ -155,6 +174,7 @@ export function SendSelect({
               balance={balanceAssetSelected}
               value={amount.value}
               units={decimals}
+              amountInUsd={amountInUsd}
               onChange={(val) => {
                 if (isAmountFocused.current) {
                   setWatchMax(false);
@@ -167,6 +187,7 @@ export function SendSelect({
                   setWatchMax(true);
                 } else {
                   form.setValue('amount', balanceAssetSelected);
+                  handlers.recalculateFromAmount(balanceAssetSelected);
                 }
               }}
               inputProps={{
@@ -203,6 +224,7 @@ export function SendSelect({
                 gasLimit={gasLimit}
                 regularTip={regularTip}
                 fastTip={fastTip}
+                onRecalculate={handlers.recalculateFromTip}
               />
             </MotionStack>
           )}
@@ -233,6 +255,7 @@ const styles = {
     color: '$intentsBase12',
     fontSize: '$md',
     fontWeight: '$normal',
+    width: '48px',
   }),
   addressRow: cssObj({
     flex: 1,

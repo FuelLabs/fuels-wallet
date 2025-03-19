@@ -4,6 +4,7 @@ import { assign, createMachine } from 'xstate';
 
 import { db } from '~/systems/Core/utils/database';
 import { ErrorProcessorService } from '~/systems/Error/services/ErrorProcessorService';
+import { getErrorIgnoreData } from '~/systems/Error/utils/getErrorIgnoreData';
 import { ReportErrorService } from '../services';
 
 export type ErrorMachineContext = {
@@ -80,7 +81,7 @@ export const reportErrorMachine = createMachine(
               sendBack('CHECK_FOR_ERRORS');
             };
 
-            db.errors.hook('creating', handleDBChange);
+            db.errors.hook('creating').subscribe(handleDBChange);
             return () => {
               abort = true;
               db.errors.hook('creating').unsubscribe(handleDBChange);
@@ -124,6 +125,9 @@ export const reportErrorMachine = createMachine(
               target: 'idle',
             },
           ],
+          onError: {
+            target: 'idle',
+          },
         },
       },
       reporting: {
@@ -175,7 +179,13 @@ export const reportErrorMachine = createMachine(
       checkForErrors: async (context) => {
         await context.errorProcessorService.processErrors();
         const hasErrors = await context.reportErrorService.checkForErrors();
-        const errors = await context.reportErrorService.getErrors();
+        const errors = (await context.reportErrorService.getErrors()).filter(
+          (e) => !getErrorIgnoreData(e?.error)?.action
+        );
+        await context.reportErrorService.handleAndRemoveOldIgnoredErrors(
+          errors
+        );
+
         return {
           hasErrors,
           errors,

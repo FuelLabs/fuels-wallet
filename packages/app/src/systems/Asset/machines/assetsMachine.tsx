@@ -179,13 +179,13 @@ export const assetsMachine = createMachine(
         toast.success('Asset added successfully');
       },
       notifyUpdateAccounts: () => {
-        store.updateAccounts();
+        store.refreshAccounts({ skipLoading: true });
       },
     },
     services: {
       setListedAssets: FetchMachine.create<null, void>({
         showError: true,
-        async fetch() {
+        fetch: async () => {
           await AssetService.setListedAssets();
         },
       }),

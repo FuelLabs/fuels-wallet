@@ -1,14 +1,15 @@
 import { cssObj } from '@fuel-ui/css';
 
 export const styles = {
-  detailItem: (active = false, pointer = false) =>
+  detailItem: (active = false, pointer = false, title = false) =>
     cssObj({
-      padding: '$3 $4',
-      flexDirection: 'row',
+      padding: title ? '$3 $4' : '$2 $6',
+      flexDirection: title ? 'row' : 'column',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: title ? 'center' : 'flex-start',
       display: 'flex',
-      columnGap: '$4',
+      columnGap: title ? '$4' : '$6',
+      gap: title ? undefined : '$1',
       position: 'relative',
       cursor: pointer ? 'pointer' : 'auto',
 
@@ -28,12 +29,21 @@ export const styles = {
     }),
   title: cssObj({
     fontSize: '$sm',
-    fontWeight: '$normal',
+    lineHeight: '20px',
+    fontWeight: '$medium',
     textWrap: 'nowrap',
   }),
   amount: cssObj({
     fontSize: '$sm',
-    fontWeight: '$normal',
+    lineHeight: '20px',
+    fontWeight: '$medium',
+    wordWrap: 'break-word',
+    minWidth: 0,
+  }),
+  usd: cssObj({
+    fontSize: '$sm',
+    lineHeight: '20px',
+    fontWeight: '600',
     wordWrap: 'break-word',
     minWidth: 0,
   }),
