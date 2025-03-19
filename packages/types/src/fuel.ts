@@ -1,3 +1,4 @@
+import type { ProviderCacheJson } from 'fuels';
 import type {
   EventMessage,
   MessageTypes,
@@ -53,4 +54,5 @@ export type CommunicationEventArg<T> = T extends MessageTypes.request
 export type FuelProviderConfig = {
   id?: string;
   url: string;
+  cache?: ProviderCacheJson;
 };

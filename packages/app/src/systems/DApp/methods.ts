@@ -50,15 +50,16 @@ export class RequestMethods extends ExtensionPageConnection {
 
   async sendTransaction(input: MessageInputs['sendTransaction']) {
     const {
-      origin,
       address,
       provider,
       transaction,
+      origin,
       title,
       favIconUrl,
       skipCustomFee,
+      transactionState,
+      transactionSummary,
     } = input;
-    const providerUrl = provider.url;
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
 
     const state = await store
@@ -66,10 +67,12 @@ export class RequestMethods extends ExtensionPageConnection {
         origin,
         transactionRequest,
         address,
-        providerUrl,
+        providerConfig: provider,
         title,
         favIconUrl,
         skipCustomFee,
+        transactionState,
+        transactionSummary,
       })
       .waitForState(Services.txRequest, {
         ...WAIT_FOR_CONFIG,

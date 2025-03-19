@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import type { BN } from 'fuels';
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { FormProvider as Provider, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { formatGasLimit } from '~/systems/Transaction';
@@ -51,9 +51,7 @@ const schema = yup
               name: 'max',
               test: (value, ctx) => {
                 const { maxGasLimit } = ctx.options.context as SchemaOptions;
-                if (!maxGasLimit) return false;
-
-                if (value?.lte(maxGasLimit)) {
+                if (!maxGasLimit || value?.lte(maxGasLimit)) {
                   return true;
                 }
 
@@ -87,6 +85,16 @@ export function FormProvider({
     defaultValues,
     context,
   });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!defaultValues) return;
+    form.setValue('fees', defaultValues?.fees);
+  }, [
+    form,
+    defaultValues?.fees.gasLimit.amount.toHex(),
+    defaultValues?.fees.tip.amount.toHex(),
+  ]);
 
   return (
     <form

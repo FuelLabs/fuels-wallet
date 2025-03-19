@@ -95,6 +95,8 @@ export type TxContentInfoProps = {
     fastTip?: BN;
   };
   txRequest?: TransactionRequest;
+  isLoadingFees?: boolean;
+  isLoading?: boolean;
 };
 
 function TxContentInfo({
@@ -105,6 +107,8 @@ function TxContentInfo({
   errors,
   fees,
   txRequest,
+  isLoadingFees,
+  isLoading,
 }: TxContentInfoProps) {
   const { getValues } = useFormContext<SendFormValues>();
 
@@ -154,8 +158,13 @@ function TxContentInfo({
     <>
       {getHeader()}
       <Box css={styles.content}>
-        <TxOperations operations={transaction.categorizedOperations} />
-        {showDetails && !fees && (
+        <TxOperations
+          operations={transaction.categorizedOperations}
+          // status={status}
+          // isLoading={isLoading}
+        />
+        {(isLoadingFees || (isLoading && !showDetails)) && <TxFee.Loader />}
+        {showDetails && !fees?.baseFee && (
           <TxFeeSection>
             <TxFee fee={transaction?.fee.total} />
           </TxFeeSection>

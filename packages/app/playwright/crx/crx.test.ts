@@ -678,7 +678,6 @@ test.describe('FuelWallet Extension', () => {
         const receiverWallet = Wallet.generate({
           provider,
         });
-        bn(100_000_000);
         // Add some coins to the account
         await seedWallet(senderAccount.address, bn(100_000_000));
         // Create transfer
@@ -694,9 +693,32 @@ test.describe('FuelWallet Extension', () => {
           timeout: 10_000,
         });
 
-        // Amount no longer always visible as TX doesnt come from current account.
-        await getButtonByText(approveTransactionPage, /Submit/i).click();
+        // // Amount no longer always visible as TX doesnt come from current account.
+        // await getButtonByText(approveTransactionPage, /Submit/i).click();
 
+        // Approve transaction
+        await expect
+          .poll(
+            async () => {
+              const element = await waitAriaLabel(
+                approveTransactionPage,
+                'amount-container'
+              );
+              const content = await element.textContent();
+              return /0\.0000001\s*ETH/i.test(content);
+            },
+            { timeout: 15000 }
+          )
+          .toBeTruthy();
+        await waitAriaLabel(
+          approveTransactionPage,
+          senderAccount.address.toString()
+        );
+        await hasAriaLabel(approveTransactionPage, 'Confirm Transaction');
+        const submitBtn = getButtonByText(approveTransactionPage, /Submit/i);
+        await expect(submitBtn).toBeEnabled({ timeout: 10000 });
+        await approveTransactionPage.waitForLoadState('networkidle');
+        await submitBtn.click({ timeout: 10000, force: true });
         await expect(transferStatus).resolves.toBe('success');
         const balance = await receiverWallet.getBalance();
         expect(balance.toNumber()).toBe(AMOUNT_TRANSFER);

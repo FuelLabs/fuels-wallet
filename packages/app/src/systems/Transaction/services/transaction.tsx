@@ -1,5 +1,14 @@
-import type { Account, AccountWithBalance } from '@fuel-wallet/types';
-import type { Provider, TransactionRequest, WalletLocked } from 'fuels';
+import type {
+  Account,
+  AccountWithBalance,
+  FuelProviderConfig,
+} from '@fuel-wallet/types';
+import type {
+  TransactionRequest,
+  TransactionSummary,
+  TransactionSummaryJson,
+  WalletLocked,
+} from 'fuels';
 import { clone } from 'ramda';
 
 import {
@@ -7,15 +16,18 @@ import {
   type BN,
   ErrorCode,
   FuelError,
+  Provider,
   TransactionResponse,
   TransactionStatus,
   assembleTransactionSummary,
+  assembleTransactionSummaryFromJson,
   bn,
+  deserializeProviderCache,
   getTransactionSummary,
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
 } from 'fuels';
-import { WalletLockedCustom, db } from '~/systems/Core';
+import { WalletLockedCustom, db, delay } from '~/systems/Core';
 
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
@@ -45,7 +57,7 @@ export type TxInputs = {
     cursors: string[];
   };
   request: {
-    providerUrl: string;
+    providerConfig: FuelProviderConfig;
     transactionRequest: TransactionRequest;
     address?: string;
     origin?: string;
@@ -59,19 +71,24 @@ export type TxInputs = {
       fastTip?: BN;
       maxGasLimit?: BN;
     };
+    transactionState?: 'funded' | undefined;
+    transactionSummary?: TransactionSummaryJson;
   };
   send: {
     address?: string;
     account?: Account;
     transactionRequest: TransactionRequest;
     providerUrl?: string;
+    providerConfig?: FuelProviderConfig;
   };
   simulateTransaction: {
     transactionRequest: TransactionRequest;
-    providerUrl?: string;
+    providerConfig?: FuelProviderConfig;
     skipCustomFee?: boolean;
     tip?: BN;
     gasLimit?: BN;
+    transactionState?: 'funded' | undefined;
+    transactionSummary?: TransactionSummaryJson;
   };
   setCustomFees: {
     tip?: BN;
@@ -117,7 +134,7 @@ export type TxInputs = {
   };
 };
 
-const AMOUNT_SUB_PER_TX_RETRY = 200_000;
+const AMOUNT_SUB_PER_TX_RETRY = 300_000;
 const TXS_PER_PAGE = 50;
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
@@ -160,8 +177,11 @@ export class TxService {
     address,
     transactionRequest,
     providerUrl = '',
+    providerConfig,
   }: TxInputs['send']) {
-    const provider = await createProvider(providerUrl);
+    const provider = await createProvider(
+      providerUrl || providerConfig?.url || ''
+    );
     const wallet = new WalletLockedCustom(
       (account?.address?.toString() || address) as string,
       provider
@@ -191,65 +211,69 @@ export class TxService {
   static async simulateTransaction({
     skipCustomFee,
     transactionRequest: inputTransactionRequest,
-    providerUrl,
+    providerConfig,
     tip: inputCustomTip,
     gasLimit: inputCustomGasLimit,
+    transactionState,
+    transactionSummary,
   }: TxInputs['simulateTransaction']) {
-    const [provider, account] = await Promise.all([
-      createProvider(providerUrl || ''),
-      AccountService.getCurrentAccount(),
-    ]);
+    // await delay(4000);
+    // debugger;
+    const provider = new Provider(providerConfig?.url || '', {
+      cache: providerConfig?.cache,
+    });
 
     if (!inputTransactionRequest) {
       throw new Error('Missing transaction request');
     }
-    if (!account) {
-      throw new Error('Missing context for transaction request');
-    }
-
-    const wallet = new WalletLockedCustom(account.address, provider);
-    const initialMaxFee = inputTransactionRequest.maxFee;
-    const initialGasLimit = getGasLimitFromTxRequest(inputTransactionRequest);
 
     try {
-      let baseFee: BN | undefined;
+      let baseFee: BN | undefined = undefined;
       /*
-      we'll work always based on the first inputted transactioRequest, then cloning it and manipulating
+      we'll work always based on the first inputted transactionRequest, then cloning it and manipulating
       then outputting a proposedTxRequest, which will be the one to go for approval
       */
       const proposedTxRequest = clone(inputTransactionRequest);
-      if (!skipCustomFee) {
-        // if the user has inputted a custom tip, we set it to the proposedTxRequest
-        if (inputCustomTip) {
-          proposedTxRequest.tip = inputCustomTip;
-        }
-        // if the user has inputted a custom gas Limit, we set it to the proposedTxRequest
-        if (inputCustomGasLimit) {
-          setGasLimitToTxRequest(proposedTxRequest, inputCustomGasLimit);
-        } else {
-          // if the user has not inputted a custom gas Limit, we increase the original one in 20% to avoid OutOfGas errors
-          setGasLimitToTxRequest(
-            proposedTxRequest,
-            initialGasLimit.mul(12).div(10)
-          );
-        }
-        const { maxFee } = await provider.estimateTxGasAndFee({
-          transactionRequest: proposedTxRequest,
-        });
 
-        // if the maxFee is greater than the initial maxFee, we set it to the new maxFee, and refund the transaction
-        if (maxFee.gt(initialMaxFee)) {
-          proposedTxRequest.maxFee = maxFee;
-          const txCost = await wallet.getTransactionCost(proposedTxRequest, {
-            estimateTxDependencies: true,
+      if (!skipCustomFee) {
+        const account = await AccountService.getCurrentAccount();
+        if (!account) {
+          throw new Error('Missing context for transaction request');
+        }
+        const wallet = new WalletLockedCustom(account.address, provider);
+        const initialMaxFee = inputTransactionRequest.maxFee;
+
+        if (
+          inputCustomTip ||
+          inputCustomGasLimit ||
+          transactionState !== 'funded'
+        ) {
+          // if the user has inputted a custom tip, we set it to the proposedTxRequest
+          if (inputCustomTip) {
+            proposedTxRequest.tip = inputCustomTip;
+          }
+          // if the user has inputted a custom gas Limit, we set it to the proposedTxRequest
+          if (inputCustomGasLimit) {
+            setGasLimitToTxRequest(proposedTxRequest, inputCustomGasLimit);
+          }
+
+          const { maxFee } = await provider.estimateTxGasAndFee({
+            transactionRequest: proposedTxRequest,
           });
-          await wallet.fund(proposedTxRequest, {
-            estimatedPredicates: txCost.estimatedPredicates,
-            addedSignatures: txCost.addedSignatures,
-            gasPrice: txCost.gasPrice,
-            updateMaxFee: txCost.updateMaxFee,
-            requiredQuantities: [],
-          });
+          // if the maxFee is greater than the initial maxFee, we set it to the new maxFee, and refund the transaction
+          if (maxFee.gt(initialMaxFee)) {
+            proposedTxRequest.maxFee = maxFee;
+            const txCost = await wallet.getTransactionCost(proposedTxRequest, {
+              estimateTxDependencies: true,
+            });
+            await wallet.fund(proposedTxRequest, {
+              estimatedPredicates: txCost.estimatedPredicates,
+              addedSignatures: txCost.addedSignatures,
+              gasPrice: txCost.gasPrice,
+              updateMaxFee: txCost.updateMaxFee,
+              requiredQuantities: [],
+            });
+          }
         }
 
         baseFee = proposedTxRequest.maxFee.sub(proposedTxRequest.tip ?? bn(0));
@@ -260,11 +284,20 @@ export class TxService {
         inputs: transaction.inputs,
       });
 
-      const txSummary = await getTransactionSummaryFromRequest({
-        provider,
-        transactionRequest: proposedTxRequest,
-        abiMap,
-      });
+      let txSummary: TransactionSummary<void>;
+      if (transactionSummary) {
+        const summary = await assembleTransactionSummaryFromJson({
+          transactionSummary,
+          provider,
+        });
+        txSummary = summary;
+      } else {
+        txSummary = await getTransactionSummaryFromRequest({
+          provider,
+          transactionRequest: proposedTxRequest,
+          abiMap,
+        });
+      }
 
       // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
       const feeAdaptedToSdkDiff = txSummary.fee.add(1);
@@ -443,7 +476,7 @@ export class TxService {
     const provider = await createProvider(network.url);
     const wallet = new WalletLockedCustom(account.address, provider);
 
-    const maxAttempts = 10;
+    const maxAttempts = 20;
     let attempts = 0;
 
     while (attempts < maxAttempts) {
@@ -485,7 +518,7 @@ export class TxService {
           // If this is the last attempt and we still don't have funds, we cannot move forward
           if (
             attempts === maxAttempts &&
-            error.code === ErrorCode.FUNDS_TOO_LOW
+            error.code === ErrorCode.INSUFFICIENT_FUNDS_OR_MAX_COINS
           ) {
             throw e;
           }

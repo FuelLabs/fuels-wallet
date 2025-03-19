@@ -70,6 +70,9 @@ const selectors = {
   favIconUrl: (state: TransactionRequestState) =>
     state.context.input.favIconUrl,
   sendingTx: (state: TransactionRequestState) => state.matches('sendingTx'),
+  isLoadingFees: (state: TransactionRequestState) =>
+    state.hasTag('loadingFees'),
+  isSimulating: (state: TransactionRequestState) => state.hasTag('simulating'),
 };
 
 type UseTransactionRequestOpts = {
@@ -121,8 +124,10 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     !!txSummaryExecuted && (status('success') || status('failed'));
   const shouldShowTxSimulated = !shouldShowTxExecuted && !!txSummarySimulated;
   const shouldDisableApproveBtn =
-    shouldShowTxSimulated && errors.hasSimulateTxErrors;
-
+    !status('waitingApproval') ||
+    (shouldShowTxSimulated && errors.hasSimulateTxErrors);
+  const isLoadingFees = useSelector(service, selectors.isLoadingFees);
+  const isSimulating = useSelector(service, selectors.isSimulating);
   function closeDialog() {
     reset();
     overlay.close();
@@ -185,6 +190,8 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     shouldShowTxExecuted,
     proposedTxRequest,
     warning: useSelector(service, selectors.warning),
+    isLoadingFees,
+    isSimulating,
     handlers: {
       request,
       reset,
