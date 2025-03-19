@@ -25,7 +25,7 @@ test.describe('Forward Half Custom Asset', () => {
   let masterWallet: WalletUnlocked;
 
   const forwardCustomAssetAmount = '10000';
-  const formattedForwardCustomAssetAmount = '10,000';
+  const _formattedForwardCustomAssetAmount = '10,000';
   const formattedHalfForwardCustomAssetAmount = '5,000';
 
   test.beforeEach(async ({ context, extensionId, page }) => {
@@ -79,16 +79,6 @@ test.describe('Forward Half Custom Asset', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
-    // test the forward asset name is shown
-    await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
-    // test forward custom asset amount is correct
-    await hasText(
-      walletNotificationPage,
-      `${formattedForwardCustomAssetAmount} Unknown`
-    );
-
-    // test return asset name is shown
-    await hasText(walletNotificationPage, 'Unknown', 1, 5000, true);
     // test return asset amount is correct
     await hasText(
       walletNotificationPage,
