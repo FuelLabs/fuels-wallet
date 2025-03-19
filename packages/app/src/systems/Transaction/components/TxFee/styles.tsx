@@ -45,17 +45,15 @@ export const styles = {
   }),
   amount: cssObj({
     fontSize: '$sm',
-    lineHeight: '20px',
     fontWeight: '$medium',
     wordWrap: 'break-word',
     minWidth: 0,
   }),
   usd: cssObj({
     fontSize: '$sm',
-    lineHeight: '20px',
-    fontWeight: '600',
+    fontWeight: '$semibold',
     wordWrap: 'break-word',
-    minWidth: 0,
+    color: '$textHeading',
   }),
   option: cssObj({
     alignItems: 'center',

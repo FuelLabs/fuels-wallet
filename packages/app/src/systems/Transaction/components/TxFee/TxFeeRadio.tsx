@@ -1,4 +1,4 @@
-import { Box, RadioGroupItem, Text } from '@fuel-ui/react';
+import { Box, HStack, RadioGroupItem, Text } from '@fuel-ui/react';
 import { type BN, DEFAULT_PRECISION } from 'fuels';
 import { type FC, useMemo } from 'react';
 
@@ -47,14 +47,21 @@ export const TxFeeRadio: TxFeeRadioComponent = ({
         }}
       />
 
-      <Text css={styles.optionContent}>
-        {fee
-          ? `${fee.format({
-              minPrecision: DEFAULT_PRECISION,
-              precision: DEFAULT_PRECISION,
-            })} ETH`
-          : '--'}
-      </Text>
+      <Box.Flex css={{ marginLeft: 'auto' }}>
+        <HStack gap="$1">
+          <Text css={styles.usd}>{feeInUsd}</Text>
+          <Text css={styles.amount}>
+            (
+            {fee
+              ? `${fee.format({
+                  minPrecision: DEFAULT_PRECISION,
+                  precision: DEFAULT_PRECISION,
+                })} ETH`
+              : '--'}
+            )
+          </Text>
+        </HStack>
+      </Box.Flex>
     </Box.Flex>
   );
 };
