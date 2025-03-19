@@ -35,6 +35,7 @@ export const Pages = {
   settings: route('/settings'),
   settingsChangePassword: route('/settings/change-password'),
   settingsConnectedApps: route('/settings/connected-apps'),
+  settingsSetLockTimeout: route('/settings/set-lock'), // added
   send: route('/send'),
   sendConfirm: route('/send/confirm'),
   accounts: route('/accounts'),
