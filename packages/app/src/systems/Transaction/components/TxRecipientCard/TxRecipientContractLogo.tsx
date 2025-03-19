@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Icon, Image } from '@fuel-ui/react';
+import { Box, Icon, Image } from '@fuel-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { getProjectImage } from '~/systems/Ecosystem/utils/getProjectImage';
 
@@ -47,7 +47,20 @@ export function TxRecipientContractLogo({
     );
   }
 
-  return <Icon icon={Icon.is('Code')} size={20} />;
+  return (
+    <Box.Flex
+      justify="center"
+      align="center"
+      css={cssObj({
+        backgroundColor: '$gray3',
+        borderRadius: '$full',
+        width: size,
+        height: size,
+      })}
+    >
+      <Icon icon={Icon.is('Code')} size={22} />
+    </Box.Flex>
+  );
 }
 
 const styles = {
