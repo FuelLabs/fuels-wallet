@@ -53,18 +53,6 @@ const selectors = {
     if (state.matches('sendingTx')) return 'Sending transaction';
     return 'Review Transaction';
   },
-  warning(state: TransactionRequestState) {
-    if (
-      !state.matches('txSuccess') &&
-      !state.matches('txFailed') &&
-      !state.matches('sendingTx') &&
-      !state.matches('idle') &&
-      !state.matches('done')
-    ) {
-      return 'Double-check transaction details before submit.';
-    }
-    return '';
-  },
   origin: (state: TransactionRequestState) => state.context.input.origin,
   originTitle: (state: TransactionRequestState) => state.context.input.title,
   favIconUrl: (state: TransactionRequestState) =>
@@ -189,7 +177,6 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     shouldShowTxSimulated,
     shouldShowTxExecuted,
     proposedTxRequest,
-    warning: useSelector(service, selectors.warning),
     isLoadingFees,
     isSimulating,
     handlers: {

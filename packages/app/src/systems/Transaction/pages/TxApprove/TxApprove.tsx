@@ -3,7 +3,7 @@ import { Box, Button, Dialog, Icon } from '@fuel-ui/react';
 import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
-import { useTransactionRequest } from '~/systems/DApp';
+import { TxRequestStatus, useTransactionRequest } from '~/systems/DApp';
 import { TxContent } from '../../components/TxContent/TxContent';
 
 export const TxApprove = () => {
@@ -11,6 +11,8 @@ export const TxApprove = () => {
   const { isLoading: isLoadingAssets } = useAssets();
   const isLoading =
     ctx.status('loading') || ctx.status('sending') || isLoadingAssets;
+  const shouldShowReviewAlert =
+    !ctx.status(TxRequestStatus.success) && !ctx.status(TxRequestStatus.failed);
   const { handlers } = useTransactionRequest();
 
   const handleReject = () => {
@@ -22,12 +24,14 @@ export const TxApprove = () => {
   return (
     <Box css={styles.wrapper}>
       <Layout.TopBar hideMenu onBack={handleReject} />
-      <Box css={{ borderBottom: '1px solid $gray6' }}>
-        <Box.Flex css={styles.reviewTxBadge}>
-          <Icon icon="InfoCircle" stroke={2} size={16} />
-          Double-check transaction details before submit.
-        </Box.Flex>
-      </Box>
+      {shouldShowReviewAlert && (
+        <Box css={{ borderBottom: '1px solid $gray6' }}>
+          <Box.Flex css={styles.reviewTxBadge}>
+            <Icon icon="InfoCircle" stroke={2} size={16} />
+            Double-check transaction details before submit.
+          </Box.Flex>
+        </Box>
+      )}
       <Dialog.Description as="div" css={styles.description}>
         {ctx.shouldShowTxSimulated && ctx.txSummarySimulated && (
           <TxContent.Info

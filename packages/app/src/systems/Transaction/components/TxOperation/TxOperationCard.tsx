@@ -165,7 +165,6 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
         <Box.Flex
           justify={'flex-start'}
           align={'center'}
-          gap="$1"
           wrap="wrap"
           aria-label="To address"
         >
@@ -241,7 +240,6 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
             <Box.Flex
               justify={'flex-start'}
               align={'center'}
-              gap="$1"
               wrap="wrap"
               aria-label="To address"
             >
@@ -296,7 +294,7 @@ const styles = {
   name: cssObj({
     fontWeight: '$semibold',
     color: '$textHeading',
-    mr: '$1',
+    mr: '$2',
   }),
   address: cssObj({
     fontWeight: '$medium',

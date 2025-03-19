@@ -3,7 +3,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAccounts } from '~/systems/Account';
 import { Layout, coreStyles } from '~/systems/Core';
-import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { useNetworks } from '~/systems/Network';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxStatusAlert } from '../../components';

@@ -3,7 +3,6 @@ import { Button } from '@fuel-ui/react';
 import { bn } from 'fuels';
 import { useMemo } from 'react';
 import { Layout, coreStyles } from '~/systems/Core';
-import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { TxContent, getGasLimitFromTxRequest } from '~/systems/Transaction';
 import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
