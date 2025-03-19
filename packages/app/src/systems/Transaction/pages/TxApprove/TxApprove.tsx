@@ -5,6 +5,7 @@ import { Layout } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 import { TxRequestStatus, useTransactionRequest } from '~/systems/DApp';
 import { TxContent } from '../../components/TxContent/TxContent';
+import { TxReviewAlert } from '../../components/TxReviewAlert/TxReviewAlert';
 
 export const TxApprove = () => {
   const ctx = useTransactionRequest();
@@ -24,14 +25,7 @@ export const TxApprove = () => {
   return (
     <Box css={styles.wrapper}>
       <Layout.TopBar hideMenu onBack={handleReject} />
-      {shouldShowReviewAlert && (
-        <Box css={{ borderBottom: '1px solid $gray6' }}>
-          <Box.Flex css={styles.reviewTxBadge}>
-            <Icon icon="InfoCircle" stroke={2} size={16} />
-            Double-check transaction details before submit.
-          </Box.Flex>
-        </Box>
-      )}
+      {shouldShowReviewAlert && <TxReviewAlert />}
       <Dialog.Description as="div" css={styles.description}>
         {ctx.shouldShowTxSimulated && ctx.txSummarySimulated && (
           <TxContent.Info
@@ -129,17 +123,5 @@ const styles = {
   }),
   footerButton: cssObj({
     mt: '$4',
-  }),
-  reviewTxBadge: cssObj({
-    display: 'flex',
-    alignItems: 'center',
-    gap: '$1',
-    fontSize: 'calc($sm - 1px)',
-    color: '$gray11',
-    lineHeight: '$tight',
-    backgroundColor: '$intentsInfo4',
-    width: '100%',
-    minHeight: '40px',
-    pl: '$4',
   }),
 };

@@ -96,6 +96,7 @@ export function TopBar({ onBack, hideMenu, hideBackArrow }: TopBarProps) {
 const styles = {
   root: cssObj({
     px: '$4',
+    py: '$1',
     gap: '$3',
     alignItems: 'center',
     minHeight: '50px',
@@ -137,16 +138,11 @@ const styles = {
   }),
   container: cssObj({
     position: 'relative',
-    pl: '$6',
-    gap: '$3',
+    pl: '$0',
+    gap: '$2',
     alignItems: 'center',
     flex: 1,
     width: '100%',
-    justifyContent: 'space-between',
-
-    '&[data-home="true"]': {
-      pl: '$0',
-    },
   }),
   leftSection: cssObj({
     alignItems: 'center',
@@ -157,17 +153,8 @@ const styles = {
     gap: '$2',
   }),
   backIcon: cssObj({
-    position: 'absolute',
-    top: '50%',
-    left: '$0',
     px: '$2 !important',
     width: '$4 !important',
-    transform: 'translateY(-50%)',
-
-    '&:not([aria-disabled=true]):active, &:not([aria-disabled=true])[aria-pressed=true]':
-      {
-        transform: 'scale(0.97) translateY(-50%)',
-      },
   }),
   network: cssObj({
     fontSize: '13px',

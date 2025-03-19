@@ -5,7 +5,9 @@ import { useMemo } from 'react';
 import { Layout, coreStyles } from '~/systems/Core';
 import { TxContent, getGasLimitFromTxRequest } from '~/systems/Transaction';
 import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
+import { TxReviewAlert } from '~/systems/Transaction/components/TxReviewAlert/TxReviewAlert';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
+import { TxRequestStatus } from '../../machines/transactionRequestMachine';
 import { AutoSubmit } from './TransactionRequest.AutoSubmit';
 import {
   FormProvider,
@@ -52,6 +54,9 @@ export function TransactionRequest() {
     };
   }, [txSummarySimulated, proposedTxRequest]);
 
+  const shouldShowReviewAlert =
+    !status(TxRequestStatus.success) && !status(TxRequestStatus.failed);
+
   return (
     <FormProvider
       onSubmit={handlers.approve}
@@ -66,6 +71,7 @@ export function TransactionRequest() {
 
       <Layout title={title} isLoading={isLoading}>
         <Layout.TopBar hideMenu hideBackArrow />
+        {shouldShowReviewAlert && <TxReviewAlert />}
         <Layout.Content css={styles.content} noScroll>
           {shouldShowTxSimulated && txSummarySimulated && (
             <TxContent.Info
