@@ -1,5 +1,11 @@
 # @fuel-wallet/connections
 
+## 0.51.0
+
+### Patch Changes
+
+- [#1870](https://github.com/FuelLabs/fuels-wallet/pull/1870) [`01202223`](https://github.com/FuelLabs/fuels-wallet/commit/012022232d70a2c2e5cd51a99725d8dafd85a9ed) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: upgrade to fuels 0.100.0 + optimize transaction approval screen
+
 ## 0.50.2
 
 ## 0.50.1

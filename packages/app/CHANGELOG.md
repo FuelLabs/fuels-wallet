@@ -1,5 +1,21 @@
 # fuels-wallet
 
+## 0.51.0
+
+### Minor Changes
+
+- [#1787](https://github.com/FuelLabs/fuels-wallet/pull/1787) [`180153bb`](https://github.com/FuelLabs/fuels-wallet/commit/180153bb2bdb884cf2cef6abc4e0a422c93cc262) Thanks [@nelitow](https://github.com/nelitow)! - New transaction summary view
+
+### Patch Changes
+
+- [#1871](https://github.com/FuelLabs/fuels-wallet/pull/1871) [`5b5bfde9`](https://github.com/FuelLabs/fuels-wallet/commit/5b5bfde95aa9eac92865094f935f555266fc9cdd) Thanks [@nelitow](https://github.com/nelitow)! - Show NFT images in the asset list.
+
+- [#1870](https://github.com/FuelLabs/fuels-wallet/pull/1870) [`01202223`](https://github.com/FuelLabs/fuels-wallet/commit/012022232d70a2c2e5cd51a99725d8dafd85a9ed) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: upgrade to fuels 0.100.0 + optimize transaction approval screen
+
+- Updated dependencies [[`01202223`](https://github.com/FuelLabs/fuels-wallet/commit/012022232d70a2c2e5cd51a99725d8dafd85a9ed)]:
+  - @fuels/playwright-utils@0.51.0
+  - @fuel-wallet/connections@0.51.0
+
 ## 0.50.2
 
 ### Patch Changes
