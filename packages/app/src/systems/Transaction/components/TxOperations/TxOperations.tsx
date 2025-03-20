@@ -34,7 +34,14 @@ export function TxOperations({ operations, txAccount }: TxOperationsListProps) {
 
 TxOperations.Loader = function TxOperationsLoader() {
   return (
-    <Card css={{ height: 168, padding: '$2' }}>
+    <Card
+      css={{
+        height: 152,
+        padding: '$2',
+        borderRadius: '10px',
+        border: '1px solid $gray3',
+      }}
+    >
       <ContentLoader width={'100%'} height={'100%'}>
         {/* Account 1 */}
         <circle cx="30" cy="30" r="20" />

@@ -693,9 +693,6 @@ test.describe('FuelWallet Extension', () => {
           timeout: 10_000,
         });
 
-        // // Amount no longer always visible as TX doesnt come from current account.
-        // await getButtonByText(approveTransactionPage, /Submit/i).click();
-
         // Approve transaction
         await expect
           .poll(

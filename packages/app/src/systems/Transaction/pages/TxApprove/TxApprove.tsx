@@ -32,6 +32,7 @@ export const TxApprove = () => {
             showDetails
             tx={ctx.txSummarySimulated}
             errors={ctx.errors.simulateTxErrors}
+            isSimulating={ctx.isSimulating}
             footer={
               ctx.status('failed') && (
                 <Button
