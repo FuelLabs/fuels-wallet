@@ -1,6 +1,6 @@
 import { useSelector } from '@xstate/react';
 import { TransactionStatus } from 'fuels';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Services, store } from '~/store';
 import { useOverlay } from '~/systems/Overlay';
 import type { TxInputs } from '~/systems/Transaction/services';
@@ -46,6 +46,13 @@ const selectors = {
       if (isClosed) return TxRequestStatus.inactive;
       return TxRequestStatus.waitingApproval;
     }, []);
+  },
+  shouldDisableApproveBtn(state: TransactionRequestState) {
+    // Check if state is in waitingApproval and there are no simulation errors
+    const isWaitingApproval = state.matches('waitingApproval');
+    const hasSimulateTxErrors = Boolean(state.context.errors?.simulateTxErrors);
+
+    return !isWaitingApproval || hasSimulateTxErrors;
   },
   title(state: TransactionRequestState) {
     if (state.matches('txSuccess')) return 'Transaction sent';
@@ -111,9 +118,10 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const shouldShowTxExecuted =
     !!txSummaryExecuted && (status('success') || status('failed'));
   const shouldShowTxSimulated = !shouldShowTxExecuted;
-  const shouldDisableApproveBtn =
-    !status('waitingApproval') ||
-    (shouldShowTxSimulated && errors.hasSimulateTxErrors);
+  const shouldDisableApproveBtn = useSelector(
+    service,
+    selectors.shouldDisableApproveBtn
+  );
   const isLoadingFees = useSelector(service, selectors.isLoadingFees);
   const isSimulating = useSelector(service, selectors.isSimulating);
   function closeDialog() {
