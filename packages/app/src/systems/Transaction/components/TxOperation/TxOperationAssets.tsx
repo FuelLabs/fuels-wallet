@@ -37,7 +37,7 @@ function TxNFTImage({ assetId, image }: { assetId: string; image: string }) {
     <Box css={styles.nftImageWrapper}>
       <Image
         ref={imgRef}
-        src={image}
+        src={image.replace('ipfs://', 'https://ipfs.io/ipfs/')}
         alt={shortAddress(assetId)}
         css={{ width: '100%', height: '100%', objectFit: 'cover' }}
         onError={() => setFallback(true)}
