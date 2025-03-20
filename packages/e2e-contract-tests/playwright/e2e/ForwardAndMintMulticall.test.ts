@@ -86,7 +86,6 @@ test.describe('Forward and Mint Multicall', () => {
     // Test approve
     const preDepositBalanceEth = await fuelWallet.getBalance();
     const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
-    await page.waitForTimeout(5000);
     await fuelWalletTestHelper.walletApprove();
     await waitSuccessTransaction(page);
     const postDepositBalanceEth = await fuelWallet.getBalance();

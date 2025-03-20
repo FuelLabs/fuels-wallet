@@ -95,7 +95,6 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
     // Test approve
     const preDepositBalanceEth = await fuelWallet.getBalance();
     const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
-    await page.waitForTimeout(5000);
     await fuelWalletTestHelper.walletApprove();
     await waitSuccessTransaction(page);
     const postDepositBalanceEth = await fuelWallet.getBalance();

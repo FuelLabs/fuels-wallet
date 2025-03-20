@@ -76,7 +76,6 @@ test.describe('Forward Eth', () => {
 
     // Test approve
     const preDepositBalanceEth = await fuelWallet.getBalance();
-    await page.waitForTimeout(5000);
     await fuelWalletTestHelper.walletApprove();
     await waitSuccessTransaction(page);
     const postDepositBalanceEth = await fuelWallet.getBalance();
