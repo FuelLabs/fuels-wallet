@@ -40,6 +40,7 @@ export const styles = {
     fontWeight: '$semibold',
     wordWrap: 'break-word',
     color: '$textHeading',
+    ml: '$3',
   }),
   option: cssObj({
     alignItems: 'center',
@@ -64,7 +65,7 @@ export const styles = {
   optionLabel: cssObj({
     color: '$gray12',
     fontSize: '$sm !important',
-    fontWeight: '$medium',
+    fontWeight: '$semibold',
     ml: '4px',
   }),
 };

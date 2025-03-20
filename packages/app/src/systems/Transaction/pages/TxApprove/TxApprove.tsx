@@ -104,7 +104,7 @@ const styles = {
     backgroundColor: '$intentsBase3',
 
     'html[class="fuel_dark-theme"] &': {
-      backgroundColor: '#111',
+      backgroundColor: '$bodyBg',
     },
   }),
   description: cssObj({

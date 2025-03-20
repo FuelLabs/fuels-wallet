@@ -137,7 +137,6 @@ const styles = {
   }),
   content: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
-    borderTop: '1px solid $gray6',
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -151,7 +150,7 @@ const styles = {
     },
 
     'html[class="fuel_dark-theme"] &': {
-      backgroundColor: '#111',
+      backgroundColor: '$bodyBg',
     },
   }),
   approveUrlTag: cssObj({

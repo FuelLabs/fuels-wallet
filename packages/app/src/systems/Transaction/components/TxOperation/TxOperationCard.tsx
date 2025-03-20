@@ -170,16 +170,9 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
         >
           <Text as="span" fontSize="sm" css={styles.name}>
             {isToContract
-              ? toContractMetadata?.name
+              ? toContractMetadata?.name || 'Unknown'
               : accountTo?.name || 'Unknown'}
           </Text>
-          {isToContract && (
-            <Box css={styles.badge}>
-              <Text fontSize="sm" color="gray11">
-                Contract
-              </Text>
-            </Box>
-          )}
           <FuelAddress
             address={fuelToAddress}
             isContract={isToContract}
@@ -303,11 +296,16 @@ const styles = {
   }),
   blue: cssObj({
     fontSize: '$sm',
+    fontWeight: '$semibold',
     display: 'flex',
     alignItems: 'center',
     gap: '$1',
     color: '$indigo10',
     lineHeight: 'normal',
+
+    'html[class="fuel_dark-theme"] &': {
+      color: '$indigo11',
+    },
   }),
   avatar: cssObj({
     opacity: 0.6,

@@ -39,7 +39,7 @@ const styles = {
   feeIconWrapper: cssObj({
     borderRadius: '$full',
     border: '1px solid $intentsBase11',
-    ml: '$4',
+    ml: '$6',
     mr: '10px',
     my: '$2',
   }),

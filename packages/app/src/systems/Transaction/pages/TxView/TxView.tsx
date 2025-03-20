@@ -67,7 +67,7 @@ const styles = {
     },
 
     'html[class="fuel_dark-theme"] &': {
-      backgroundColor: '#111',
+      backgroundColor: '$bodyBg',
     },
   }),
 };

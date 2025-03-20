@@ -12,7 +12,7 @@ export type TxOperationProps = {
 
 export function TxOperation({ operation, isChild = false }: TxOperationProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const isGrouped = !!operation.operations?.length;
+  const isGrouped = (operation.operations?.length || 0) > 1;
 
   return (
     <Box.Stack gap="$2" css={styles.root}>
