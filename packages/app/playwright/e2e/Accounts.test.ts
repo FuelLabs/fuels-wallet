@@ -40,6 +40,26 @@ test.describe('New Accounts', () => {
     await reload(page);
   });
 
+  test('should be able to add a read-only account', async () => {
+    await visit(page, '/wallet');
+    await getByAriaLabel(page, 'Accounts').click();
+
+    await getButtonByText(page, 'Add read-only account').click();
+
+    await getInputByName(page, 'Public address').fill(
+      '0x000000000000000000000000000000000000dEaD'
+    );
+
+    await getButtonByText(page, 'Add Account').click();
+
+    await expect(page.getByText(/Account 5 \(Read-Only\)/i)).toBeVisible();
+
+    await page.getByText(/Account 5 \(Read-Only\)/i).click();
+
+    const sendButton = await getButtonByText(page, 'Send Transaction');
+    await expect(sendButton).toBeDisabled();
+  });
+
   test('should not be able to import public address as a private key', async () => {
     await getByAriaLabel(page, 'Accounts').click();
     await getByAriaLabel(page, 'Import from private key').click();

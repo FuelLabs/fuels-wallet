@@ -22,10 +22,15 @@ type MachineServices = {
   };
 };
 
-export type EditAccountMachineEvents = {
-  type: 'UPDATE_ACCOUNT';
-  input: AccountInputs['updateAccount'];
-};
+export type EditAccountMachineEvents =
+  | {
+      type: 'UPDATE_ACCOUNT';
+      input: AccountInputs['updateAccount'];
+    }
+  | {
+      type: 'ADD_READONLY_ACCOUNT';
+      input: { address: string };
+    };
 
 export const editAccountMachine = createMachine(
   {
@@ -44,6 +49,9 @@ export const editAccountMachine = createMachine(
           UPDATE_ACCOUNT: {
             target: 'updatingAccount',
           },
+          ADD_READONLY_ACCOUNT: {
+            target: 'addingReadOnlyAccount',
+          },
         },
       },
       fetchingAccount: {
@@ -51,7 +59,7 @@ export const editAccountMachine = createMachine(
         invoke: {
           src: 'fetchAccount',
           data: {
-            input: (ctx: MachineContext, _: EditAccountMachineEvents) => ({
+            input: (ctx: MachineContext) => ({
               address: ctx.address,
             }),
           },
@@ -59,11 +67,9 @@ export const editAccountMachine = createMachine(
             actions: ['assignAccount'],
             target: 'idle',
           },
-          onError: [
-            {
-              target: 'failed',
-            },
-          ],
+          onError: {
+            target: 'failed',
+          },
         },
       },
       updatingAccount: {
@@ -71,8 +77,26 @@ export const editAccountMachine = createMachine(
         invoke: {
           src: 'updateAccount',
           data: {
-            input: (_: MachineContext, ev: EditAccountMachineEvents) =>
-              ev.input,
+            input: (_, ev: EditAccountMachineEvents) => ev.input,
+          },
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              target: 'failed',
+            },
+            {
+              actions: ['notifyUpdateAccounts', 'redirectToList'],
+              target: 'idle',
+            },
+          ],
+        },
+      },
+      addingReadOnlyAccount: {
+        tags: ['loading'],
+        invoke: {
+          src: 'addReadOnlyAccount',
+          data: {
+            input: (_, ev: EditAccountMachineEvents) => ev.input,
           },
           onDone: [
             {
@@ -104,35 +128,35 @@ export const editAccountMachine = createMachine(
       },
     },
     services: {
-      fetchAccount: FetchMachine.create<
-        AccountInputs['fetchAccount'],
-        Account | undefined
-      >({
+      fetchAccount: FetchMachine.create({
         showError: true,
         maxAttempts: 1,
-        async fetch({ input }) {
+        async fetch({ input }: { input: { address: string } }) {
           if (!input?.address) return undefined;
           return AccountService.fetchAccount(input);
         },
       }),
-      updateAccount: FetchMachine.create<
-        AccountInputs['updateAccount'],
-        Account | undefined
-      >({
+      updateAccount: FetchMachine.create({
+        showError: true,
+        maxAttempts: 1,
+        async fetch({
+          input,
+        }: { input: { address: string; data: Partial<Account> } }) {
+          if (!input?.data.name?.trim()) return undefined;
+          return AccountService.updateAccount(input);
+        },
+      }),
+      addReadOnlyAccount: FetchMachine.create({
         showError: true,
         maxAttempts: 1,
         async fetch({ input }) {
-          if (!input?.data.name?.trim()) {
-            throw new Error('Name cannot be empty');
-          }
-          const { name } = input.data;
-
-          if (await AccountService.checkAccountNameExists(name)) {
-            throw new Error('Account name already exists');
-          }
-
-          return AccountService.updateAccount({
-            ...input,
+          return AccountService.addAccount({
+            data: {
+              name: 'Read-Only Account',
+              address: (input as { address: string }).address,
+              publicKey: '',
+              isHidden: false,
+            },
           });
         },
       }),
