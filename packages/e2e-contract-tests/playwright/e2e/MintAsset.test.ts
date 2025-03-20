@@ -81,6 +81,7 @@ test.describe('Mint Assets', () => {
     );
 
     const preMintBalanceTkn = await fuelWallet.getBalance(assetId);
+    await page.waitForTimeout(5000);
     await fuelWalletTestHelper.walletApprove();
     await waitSuccessTransaction(page);
     const postMintBalanceTkn = await fuelWallet.getBalance(assetId);
@@ -151,6 +152,7 @@ test.describe('Mint Assets', () => {
     await hasText(walletNotificationPage, 'Fee (network)');
 
     const preMintBalanceTkn = await fuelWallet.getBalance(assetId);
+    await page.waitForTimeout(5000);
     await fuelWalletTestHelper.walletApprove();
     await waitSuccessTransaction(page);
     const postMintBalanceTkn = await fuelWallet.getBalance(assetId);

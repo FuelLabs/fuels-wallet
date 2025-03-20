@@ -99,6 +99,7 @@ test.describe('Forward Custom Asset', () => {
 
     // Test approve
     const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
+    await page.waitForTimeout(5000);
     await fuelWalletTestHelper.walletApprove();
     await waitSuccessTransaction(page);
     const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
