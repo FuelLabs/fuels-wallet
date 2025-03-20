@@ -12,9 +12,9 @@ import '../../load.envs.js';
 import { calculateAssetId, getBaseAssetId } from '../../src/utils';
 import { testSetup, transferMaxBalance } from '../utils';
 
-import { EXTERNAL_CONTRACT_ID } from './config';
+import { EXTERNAL_CONTRACT_ID, MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import { connect, waitSuccessTransaction } from './utils';
+import { checkAddresses, connect, waitSuccessTransaction } from './utils';
 
 useLocalCRX();
 
@@ -85,6 +85,12 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
+
+    await checkAddresses(
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
+      walletNotificationPage
+    );
 
     // Test approve
     const preDepositBalanceEth = await fuelWallet.getBalance();
