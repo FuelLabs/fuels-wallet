@@ -86,7 +86,7 @@ function TxContentLoader({ showHeaderLoader = true }: TxContentLoaderProps) {
 
 export type TxContentInfoProps = {
   footer?: ReactNode;
-  tx: TransactionSummary;
+  tx?: TransactionSummary;
   txStatus?: Maybe<TransactionStatus>;
   showDetails?: boolean;
   errors?: GroupedErrors;
@@ -99,6 +99,7 @@ export type TxContentInfoProps = {
   isLoadingFees?: boolean;
   isLoading?: boolean;
   txAccount?: string;
+  isSimulating?: boolean;
 };
 
 function TxContentInfo({
@@ -112,6 +113,7 @@ function TxContentInfo({
   isLoadingFees,
   isLoading,
   txAccount,
+  isSimulating,
 }: TxContentInfoProps) {
   const { account: currentAccount } = useAccounts();
   const formContext = useFormContext<SendFormValues>();
@@ -165,31 +167,37 @@ function TxContentInfo({
     <>
       {getHeader()}
       <Box css={styles.content}>
-        <TxOperations
-          operations={transaction.categorizedOperations}
-          txAccount={account}
-        />
-        {(isLoadingFees || (isLoading && !showDetails)) && <TxFee.Loader />}
-        {showDetails && !fees?.baseFee && (
-          <TxFeeSection>
-            <TxFee fee={transaction?.fee.total} />
-          </TxFeeSection>
-        )}
-        {showDetails &&
-          fees?.baseFee &&
-          txRequestGasLimit &&
-          fees?.regularTip &&
-          fees?.fastTip && (
+        {/* <TxContent.Loader showHeaderLoader={false} /> */}
+        {isSimulating && !tx && <TxContent.Loader showHeaderLoader={false} />}
+        {!!transaction && (
+          <>
+            <TxOperations
+              operations={transaction.categorizedOperations}
+              txAccount={account}
+            />
             <TxFeeSection>
-              <TxFeeOptions
-                initialAdvanced={initialAdvanced}
-                baseFee={fees.baseFee}
-                gasLimit={txRequestGasLimit}
-                regularTip={fees.regularTip}
-                fastTip={fees.fastTip}
-              />
+              {(isLoadingFees || (isLoading && !showDetails)) && (
+                <TxFee.Loader />
+              )}
+              {showDetails && !fees?.baseFee && (
+                <TxFee fee={transaction?.fee.total} />
+              )}
+              {showDetails &&
+                fees?.baseFee &&
+                txRequestGasLimit &&
+                fees?.regularTip &&
+                fees?.fastTip && (
+                  <TxFeeOptions
+                    initialAdvanced={initialAdvanced}
+                    baseFee={fees.baseFee}
+                    gasLimit={txRequestGasLimit}
+                    regularTip={fees.regularTip}
+                    fastTip={fees.fastTip}
+                  />
+                )}
             </TxFeeSection>
-          )}
+          </>
+        )}
       </Box>
       {footer}
     </>

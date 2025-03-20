@@ -13,7 +13,7 @@ export function Receive() {
   return (
     <Layout title="Receive">
       <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
-      <Layout.Content>
+      <Layout.Content css={styles.content}>
         {account?.address && (
           <MotionFlex {...animations.slideInTop()} css={styles.contentWrapper}>
             <UserAddressCard
@@ -30,6 +30,9 @@ export function Receive() {
 }
 
 const styles = {
+  content: cssObj({
+    mt: '$4',
+  }),
   contentWrapper: cssObj({
     height: '100%',
     flexDirection: 'column',

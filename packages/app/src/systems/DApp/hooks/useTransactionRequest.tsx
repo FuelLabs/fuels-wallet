@@ -110,7 +110,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const shouldShowActions = !status('success');
   const shouldShowTxExecuted =
     !!txSummaryExecuted && (status('success') || status('failed'));
-  const shouldShowTxSimulated = !shouldShowTxExecuted && !!txSummarySimulated;
+  const shouldShowTxSimulated = !shouldShowTxExecuted;
   const shouldDisableApproveBtn =
     !status('waitingApproval') ||
     (shouldShowTxSimulated && errors.hasSimulateTxErrors);

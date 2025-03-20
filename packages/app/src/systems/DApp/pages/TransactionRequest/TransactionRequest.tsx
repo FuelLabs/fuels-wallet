@@ -74,7 +74,7 @@ export function TransactionRequest() {
         <Layout.TopBar hideMenu hideBackArrow />
         {shouldShowReviewAlert && <TxReviewAlert />}
         <Layout.Content css={styles.content} noScroll>
-          {shouldShowTxSimulated && txSummarySimulated && (
+          {shouldShowTxSimulated && (
             <TxContent.Info
               showDetails
               tx={txSummarySimulated}
@@ -84,6 +84,7 @@ export function TransactionRequest() {
               isLoadingFees={isLoadingFees}
               isLoading={isLoading}
               txAccount={input?.address}
+              isSimulating={isSimulating}
             />
           )}
           {shouldShowTxExecuted && txSummaryExecuted && (

@@ -141,10 +141,11 @@ function getOperationDepth(
 }
 
 export function simplifyTransaction(
-  summary: TransactionSummary | TransactionResult,
+  summary?: TransactionSummary | TransactionResult,
   request?: TransactionRequest,
   currentAccount?: string
-): SimplifiedTransaction {
+): SimplifiedTransaction | undefined {
+  if (!summary) return undefined;
   const parsedReceipts = parseReceipts(summary.receipts);
   const operations = transformOperations(
     summary,
