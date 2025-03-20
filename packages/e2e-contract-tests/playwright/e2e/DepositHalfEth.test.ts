@@ -11,8 +11,14 @@ import { bn } from 'fuels';
 import '../../load.envs.js';
 import { testSetup, transferMaxBalance } from '../utils';
 
+import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import { connect, waitSuccessTransaction } from './utils';
+import {
+  checkAddresses,
+  checkAriaLabelsContainsText,
+  connect,
+  waitSuccessTransaction,
+} from './utils';
 
 useLocalCRX();
 
@@ -50,18 +56,42 @@ test.describe('Deposit Half ETH', () => {
 
     const depositHalfButton = getButtonByText(page, 'Deposit Half ETH', true);
     await expectButtonToBeEnabled(depositHalfButton);
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1000); // Wait for slow VM
     await depositHalfButton.click();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1000); // Wait for slow VM
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
+    // Test if asset name is defined (not unknown)
+    await checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Asset Name',
+      'Ethereum'
+    );
+    // Test if sender name is defined (not unknown)
+    await checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Sender Name',
+      ''
+    );
+
+    // test forward eth amount is correct
     await hasText(walletNotificationPage, `${depositAmount} ETH`);
 
+    // test return eth amount is correct
     await hasText(walletNotificationPage, `${halfDepositAmount} ETH`);
 
+    // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
+
+    // test to and from addresses
+    await checkAddresses(
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
+      walletNotificationPage
+    );
+    // As operations are now grouped, a single checkAddresses is enough
 
     const preDepositBalanceEth = await fuelWallet.getBalance();
 

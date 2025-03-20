@@ -14,7 +14,7 @@ import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import { connect, waitSuccessTransaction } from './utils';
+import { checkAddresses, connect, waitSuccessTransaction } from './utils';
 
 useLocalCRX();
 
@@ -64,6 +64,7 @@ test.describe('Forward and Mint Multicall', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
+    // test forward eth amount is correct
     await hasText(walletNotificationPage, `${depositAmount} ETH`);
 
     // test mint asset name is shown
@@ -75,6 +76,12 @@ test.describe('Forward and Mint Multicall', () => {
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
+
+    await checkAddresses(
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
+      walletNotificationPage
+    );
 
     // Test approve
     const preDepositBalanceEth = await fuelWallet.getBalance();

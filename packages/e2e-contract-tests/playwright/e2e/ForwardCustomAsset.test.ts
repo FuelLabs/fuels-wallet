@@ -16,7 +16,7 @@ import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import { connect, waitSuccessTransaction } from './utils';
+import { checkAddresses, connect, waitSuccessTransaction } from './utils';
 
 useLocalCRX();
 
@@ -76,6 +76,12 @@ test.describe('Forward Custom Asset', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
+    // test the asset name is shown
+    await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
+
+    // test asset id is correct
+    const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
+
     // test forward custom asset amount is correct
     await hasText(
       walletNotificationPage,
@@ -84,7 +90,12 @@ test.describe('Forward Custom Asset', () => {
 
     // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
+
+    await checkAddresses(
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
+      walletNotificationPage
+    );
 
     // Test approve
     const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
