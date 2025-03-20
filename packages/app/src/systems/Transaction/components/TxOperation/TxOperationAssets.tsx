@@ -5,6 +5,7 @@ import type { AssetFuelData } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import { useEffect, useRef, useState } from 'react';
 import { formatAmount, shortAddress } from '~/systems/Core';
+import { MotionBox } from '~/systems/Core/components/Motion';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 
 type TxOperationAssetsProps = {
@@ -86,7 +87,12 @@ export function TxOperationAssets({
   if (!nonEmptyAmounts.length) return null;
 
   return (
-    <Box css={cssObj({ marginBottom: '$3' })}>
+    <MotionBox
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: 'auto' }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      css={cssObj({ marginBottom: '$3', overflow: 'hidden' })}
+    >
       <Box.Stack gap="$1">
         {nonEmptyAmounts.map((assetAmount) => (
           <Box.Flex css={styles.asset} key={assetAmount.assetId}>
@@ -137,7 +143,7 @@ export function TxOperationAssets({
           </Box.Flex>
         ))}
       </Box.Stack>
-    </Box>
+    </MotionBox>
   );
 }
 

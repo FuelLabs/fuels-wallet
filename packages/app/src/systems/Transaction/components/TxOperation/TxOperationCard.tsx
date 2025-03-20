@@ -133,13 +133,7 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
         </Box.Flex>
         <Box>
           {shouldShowAssetAmount && (
-            <MotionBox
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, ease: 'easeIn' }}
-            >
-              <TxOperationAssets amounts={amounts} baseAsset={baseAsset} />
-            </MotionBox>
+            <TxOperationAssets amounts={amounts} baseAsset={baseAsset} />
           )}
         </Box>
 
@@ -196,16 +190,10 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
               <Box css={styles.spacer} />
             </Box.Flex>
             <Box>
-              <MotionBox
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, ease: 'easeIn' }}
-              >
-                <TxOperationAssets
-                  amounts={amountsToFrom}
-                  baseAsset={baseAsset}
-                />
-              </MotionBox>
+              <TxOperationAssets
+                amounts={amountsToFrom}
+                baseAsset={baseAsset}
+              />
             </Box>
             <Box.Flex
               justify={'flex-start'}
