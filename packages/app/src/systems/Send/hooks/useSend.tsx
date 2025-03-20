@@ -298,7 +298,9 @@ export function useSend() {
     }
 
     txRequest.handlers.request({
-      providerUrl,
+      providerConfig: {
+        url: providerUrl,
+      },
       transactionRequest,
       account,
       address,

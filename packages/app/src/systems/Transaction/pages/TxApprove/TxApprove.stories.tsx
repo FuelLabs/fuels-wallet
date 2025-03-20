@@ -29,7 +29,9 @@ const Template: StoryFn<typeof TxApprove> = (_args, { loaded }) => {
       address,
       account,
       transactionRequest,
-      providerUrl: network?.url,
+      providerConfig: {
+        url: network?.url,
+      },
     });
   }, []);
 
