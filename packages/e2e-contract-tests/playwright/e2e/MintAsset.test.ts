@@ -20,6 +20,7 @@ import { testSetup, transferMaxBalance } from '../utils';
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
 import {
+  checkAddresses,
   checkAriaLabelsContainsText,
   connect,
   waitSuccessTransaction,
@@ -72,6 +73,12 @@ test.describe('Mint Assets', () => {
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
+
+    await checkAddresses(
+      { address: fuelWallet.address.toString(), isContract: false },
+      { address: MAIN_CONTRACT_ID, isContract: true },
+      walletNotificationPage
+    );
 
     const preMintBalanceTkn = await fuelWallet.getBalance(assetId);
     await fuelWalletTestHelper.walletApprove();
@@ -147,7 +154,6 @@ test.describe('Mint Assets', () => {
     await fuelWalletTestHelper.walletApprove();
     await waitSuccessTransaction(page);
     const postMintBalanceTkn = await fuelWallet.getBalance(assetId);
-    console.log(preMintBalanceTkn, postMintBalanceTkn);
     expect(
       Number.parseFloat(
         postMintBalanceTkn
