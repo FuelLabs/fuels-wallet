@@ -7,7 +7,6 @@ import { Pages } from '../../types';
 
 import type { LayoutProps } from './Layout';
 import { Layout } from './Layout';
-import { TopBarType } from './TopBar';
 
 export default {
   component: Layout,
@@ -81,14 +80,14 @@ export const WithBottom = (args: LayoutProps) => (
 
 export const External = (args: LayoutProps) => (
   <Layout {...args} title="Connect App">
-    <Layout.TopBar type={TopBarType.external} />
+    <Layout.TopBar />
     <Layout.Content>This is a content</Layout.Content>
   </Layout>
 );
 
 export const ExternalLoading = (args: LayoutProps) => (
   <Layout {...args} isLoading title="Connect App">
-    <Layout.TopBar type={TopBarType.external} />
+    <Layout.TopBar />
     <Layout.Content>This is a content</Layout.Content>
   </Layout>
 );

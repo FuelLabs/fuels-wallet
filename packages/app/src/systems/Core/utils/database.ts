@@ -69,11 +69,6 @@ export class FuelDB extends Dexie {
     // users losing funds in case of no backup
     // if has account, save to chrome storage
     if (accounts.length && vaults.length && networks.length) {
-      console.log('saving data to chrome storage', {
-        accounts,
-        vaults: vaults.length,
-        networks,
-      });
       for (const account of accounts) {
         await chromeStorage.accounts.set({
           key: account.address,

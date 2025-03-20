@@ -15,4 +15,7 @@
   "typescript.suggest.paths": true,
   "typescript.suggest.enabled": true,
   "typescript.suggest.completeFunctionCalls": true,
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
 }

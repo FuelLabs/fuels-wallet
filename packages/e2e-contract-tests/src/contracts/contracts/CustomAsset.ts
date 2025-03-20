@@ -5,12 +5,12 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 /*
-  Fuels version: 0.98.0
-  Forc version: 0.65.2
-  Fuel-Core version: 0.38.0
+  Fuels version: 0.100.0
+  Forc version: 0.67.0
+  Fuel-Core version: 0.41.9
 */
 
-import { Contract, Interface } from "fuels";
+import { Contract as __Contract, Interface } from "fuels";
 import type {
   Provider,
   Account,
@@ -26,10 +26,12 @@ import type {
 
 import type { Option, Enum } from "./common";
 
-export enum BurnErrorInput { NotEnoughCoins = 'NotEnoughCoins' };
-export enum BurnErrorOutput { NotEnoughCoins = 'NotEnoughCoins' };
+export enum BurnErrorInput { NotEnoughCoins = 'NotEnoughCoins', ZeroAmount = 'ZeroAmount' };
+export enum BurnErrorOutput { NotEnoughCoins = 'NotEnoughCoins', ZeroAmount = 'ZeroAmount' };
 export type IdentityInput = Enum<{ Address: AddressInput, ContractId: ContractIdInput }>;
 export type IdentityOutput = Enum<{ Address: AddressOutput, ContractId: ContractIdOutput }>;
+export enum MintErrorInput { ZeroAmount = 'ZeroAmount' };
+export enum MintErrorOutput { ZeroAmount = 'ZeroAmount' };
 
 export type AddressInput = { bits: string };
 export type AddressOutput = AddressInput;
@@ -37,6 +39,8 @@ export type AssetIdInput = { bits: string };
 export type AssetIdOutput = AssetIdInput;
 export type ContractIdInput = { bits: string };
 export type ContractIdOutput = ContractIdInput;
+export type TotalSupplyEventInput = { asset: AssetIdInput, supply: BigNumberish, sender: IdentityInput };
+export type TotalSupplyEventOutput = { asset: AssetIdOutput, supply: BN, sender: IdentityOutput };
 
 const abi = {
   "programType": "contract",
@@ -94,19 +98,29 @@ const abi = {
       "metadataTypeId": 2
     },
     {
+      "type": "enum sway_libs::asset::errors::MintError",
+      "concreteTypeId": "dff9dfec998a49b40f1c4b09567400f0e712aaf939c08f7d07bc5c63116e1084",
+      "metadataTypeId": 3
+    },
+    {
+      "type": "struct standards::src20::TotalSupplyEvent",
+      "concreteTypeId": "f255d5cc2114d1b6bc34bef4c28d4b60caccffd9a672ed16b79ea217e1c4a8a3",
+      "metadataTypeId": 6
+    },
+    {
       "type": "struct std::asset_id::AssetId",
       "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974",
-      "metadataTypeId": 6
+      "metadataTypeId": 8
     },
     {
       "type": "struct std::contract_id::ContractId",
       "concreteTypeId": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54",
-      "metadataTypeId": 9
+      "metadataTypeId": 11
     },
     {
       "type": "struct std::string::String",
       "concreteTypeId": "9a7f1d3e963c10e0a4ea70a8e20a4813d1dc5682e28f74cb102ae50d32f7f98c",
-      "metadataTypeId": 10
+      "metadataTypeId": 12
     },
     {
       "type": "u64",
@@ -124,11 +138,11 @@ const abi = {
       "components": [
         {
           "name": "Address",
-          "typeId": 5
+          "typeId": 7
         },
         {
           "name": "ContractId",
-          "typeId": 9
+          "typeId": 11
         }
       ]
     },
@@ -142,11 +156,11 @@ const abi = {
         },
         {
           "name": "Some",
-          "typeId": 3
+          "typeId": 4
         }
       ],
       "typeParameters": [
-        3
+        4
       ]
     },
     {
@@ -156,20 +170,52 @@ const abi = {
         {
           "name": "NotEnoughCoins",
           "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "ZeroAmount",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        }
+      ]
+    },
+    {
+      "type": "enum sway_libs::asset::errors::MintError",
+      "metadataTypeId": 3,
+      "components": [
+        {
+          "name": "ZeroAmount",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
         }
       ]
     },
     {
       "type": "generic T",
-      "metadataTypeId": 3
-    },
-    {
-      "type": "raw untyped ptr",
       "metadataTypeId": 4
     },
     {
+      "type": "raw untyped ptr",
+      "metadataTypeId": 5
+    },
+    {
+      "type": "struct standards::src20::TotalSupplyEvent",
+      "metadataTypeId": 6,
+      "components": [
+        {
+          "name": "asset",
+          "typeId": 8
+        },
+        {
+          "name": "supply",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "sender",
+          "typeId": 0
+        }
+      ]
+    },
+    {
       "type": "struct std::address::Address",
-      "metadataTypeId": 5,
+      "metadataTypeId": 7,
       "components": [
         {
           "name": "bits",
@@ -179,7 +225,7 @@ const abi = {
     },
     {
       "type": "struct std::asset_id::AssetId",
-      "metadataTypeId": 6,
+      "metadataTypeId": 8,
       "components": [
         {
           "name": "bits",
@@ -189,11 +235,11 @@ const abi = {
     },
     {
       "type": "struct std::bytes::Bytes",
-      "metadataTypeId": 7,
+      "metadataTypeId": 9,
       "components": [
         {
           "name": "buf",
-          "typeId": 8
+          "typeId": 10
         },
         {
           "name": "len",
@@ -203,11 +249,11 @@ const abi = {
     },
     {
       "type": "struct std::bytes::RawBytes",
-      "metadataTypeId": 8,
+      "metadataTypeId": 10,
       "components": [
         {
           "name": "ptr",
-          "typeId": 4
+          "typeId": 5
         },
         {
           "name": "cap",
@@ -217,7 +263,7 @@ const abi = {
     },
     {
       "type": "struct std::contract_id::ContractId",
-      "metadataTypeId": 9,
+      "metadataTypeId": 11,
       "components": [
         {
           "name": "bits",
@@ -227,11 +273,11 @@ const abi = {
     },
     {
       "type": "struct std::string::String",
-      "metadataTypeId": 10,
+      "metadataTypeId": 12,
       "components": [
         {
           "name": "bytes",
-          "typeId": 7
+          "typeId": 9
         }
       ]
     }
@@ -357,7 +403,7 @@ const abi = {
         },
         {
           "name": "sub_id",
-          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "concreteTypeId": "0c2beb9013490c4f753f2757dfe2d8340b22ce3827d596d81d249b7038033cb6"
         },
         {
           "name": "amount",
@@ -497,6 +543,14 @@ const abi = {
       "concreteTypeId": "3acdc2adac8e0589c5864525e0edc9dc61a9571a4d09c3c57b58ea76d33f4b46"
     },
     {
+      "logId": "17462098202904023478",
+      "concreteTypeId": "f255d5cc2114d1b6bc34bef4c28d4b60caccffd9a672ed16b79ea217e1c4a8a3"
+    },
+    {
+      "logId": "16139176946940135860",
+      "concreteTypeId": "dff9dfec998a49b40f1c4b09567400f0e712aaf939c08f7d07bc5c63116e1084"
+    },
+    {
       "logId": "877053556485065807",
       "concreteTypeId": "0c2beb9013490c4f753f2757dfe2d8340b22ce3827d596d81d249b7038033cb6"
     }
@@ -507,7 +561,7 @@ const abi = {
 
 const storageSlots: StorageSlot[] = [
   {
-    "key": "93b67ee4f0f76b71456fb4385c86aec15689e1ce5f6f6ac63b71716afa052998",
+    "key": "ad0db2b0fc00bf54d2d0159d8639f4a8f48be8403564992aaaac00d69daa3137",
     "value": "0000000000000000000000000000000000000000000000000000000000000000"
   }
 ];
@@ -519,7 +573,7 @@ export class CustomAssetInterface extends Interface {
 
 }
 
-export class CustomAsset extends Contract {
+export class CustomAsset extends __Contract {
   static readonly abi = abi;
   static readonly storageSlots = storageSlots;
 

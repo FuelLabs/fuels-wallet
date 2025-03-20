@@ -2,10 +2,11 @@ import type { ContentLoaderProps } from '@fuel-ui/react';
 import { Card } from '@fuel-ui/react';
 
 import { TxFeeAmountLoader } from './TxFeeAmountLoader';
-import { styles } from './styles';
 
 export const TxFeeLoader = (props: ContentLoaderProps) => (
-  <Card css={styles.detailItem()}>
+  <Card
+    css={{ padding: '$2', borderRadius: '10px', border: '1px solid $gray3' }}
+  >
     <TxFeeAmountLoader {...props} />
   </Card>
 );

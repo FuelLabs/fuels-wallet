@@ -30,7 +30,9 @@ export const mint = async ({
   const { waitForResult } = await invokeScope.call();
   const result = await waitForResult();
   if (result.transactionResult.isStatusSuccess) {
-    toast.success('Transaction successful.');
+    toast.success('Transaction successful.', {
+      duration: 10000,
+    });
   }
 };
 
@@ -50,7 +52,9 @@ export const deposit = async ({
     .call();
   const result = await waitForResult();
   if (result.transactionResult.isStatusSuccess) {
-    toast.success('Transaction successful.');
+    toast.success('Transaction successful.', {
+      duration: 10000,
+    });
   }
 };
 
@@ -70,7 +74,9 @@ export const depositHalf = async ({
     .call();
   const result = await waitForResult();
   if (result.transactionResult.isStatusSuccess) {
-    toast.success('Transaction successful.');
+    toast.success('Transaction successful.', {
+      duration: 10000,
+    });
   }
 };
 
@@ -99,7 +105,9 @@ export const depositHalfAndMint = async ({
     .call();
   const result = await waitForResult();
   if (result.transactionResult.isStatusSuccess) {
-    toast.success('Transaction successful.');
+    toast.success('Transaction successful.', {
+      duration: 10000,
+    });
   }
 };
 
@@ -137,7 +145,9 @@ export const depositHalfAndExternalMint = async ({
   const result = await waitForResult();
 
   if (result.transactionResult.isStatusSuccess) {
-    toast.success('Transaction successful.');
+    toast.success('Transaction successful.', {
+      duration: 10000,
+    });
   }
 };
 
@@ -171,7 +181,9 @@ export const depositAndMintMultiCall = async ({
     .call();
   const result = await waitForResult();
   if (result.transactionResult.isStatusSuccess) {
-    toast.success('Transaction successful.');
+    toast.success('Transaction successful.', {
+      duration: 10000,
+    });
   }
 };
 
