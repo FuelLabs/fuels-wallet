@@ -380,16 +380,25 @@ export function getMainOperations(
 
   return mainOperations;
 }
-export const getOperationText = (
-  isContract: boolean,
-  isTransfer: boolean,
-  assetsAmount?: AssetFuelAmount[]
-) => {
+export const getOperationText = ({
+  isContract,
+  isTransfer,
+  assetsAmount,
+  hasMessageOut,
+}: {
+  isContract: boolean;
+  isTransfer: boolean;
+  assetsAmount?: AssetFuelAmount[];
+  hasMessageOut?: boolean;
+}) => {
   if (isContract) {
     if (assetsAmount && assetsAmount.length > 0) {
       return 'Calls contract (sending funds)';
     }
     return 'Calls contract';
+  }
+  if (hasMessageOut) {
+    return 'Withdraws to Ethereum network';
   }
   if (isTransfer) {
     return 'Sends funds';

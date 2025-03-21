@@ -1,9 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Icon, Text } from '@fuel-ui/react';
-import { Address, isB256 } from 'fuels';
+import { Address, bn, isB256 } from 'fuels';
 import { useMemo } from 'react';
-import { FuelAddress, useAccounts } from '~/systems/Account';
+import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadata';
+import { isValidEthAddress } from '~/systems/Core';
 import { MotionBox } from '~/systems/Core/components/Motion';
 import { useAssetsAmount } from '../../hooks/useAssetsAmount';
 import { useBaseAsset } from '../../hooks/useBaseAsset';
@@ -31,6 +32,11 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
   const isContract = operation.type === TxCategory.CONTRACTCALL;
   const isTransfer = operation.type === TxCategory.SEND;
 
+  const hasMessageOut = useMemo(
+    () => operation.receipts?.some((r) => r.type === 10),
+    [operation.receipts]
+  );
+
   const accountFrom = accounts?.find(
     (acc) => acc.address.toLowerCase() === operation.from.address.toLowerCase()
   );
@@ -47,6 +53,10 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
   const fuelToAddress = isValidToAddress
     ? Address.fromString(operation.to.address).toString()
     : '';
+  const ethToAddress =
+    hasMessageOut && isValidEthAddress(operation.to.address)
+      ? bn(operation.to.address).toHex(20)
+      : '';
 
   const shouldShowAssetAmount = amounts && amounts.length > 0;
 
@@ -125,7 +135,12 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
           <Icon icon="CircleArrowDown" size={20} />
         </Box.Flex>
         <Box.Flex justify={'flex-start'} align={'center'} css={styles.blue}>
-          {getOperationText(isContract, isTransfer, amounts)}
+          {getOperationText({
+            isContract,
+            isTransfer,
+            assetsAmount: amounts,
+            hasMessageOut,
+          })}
         </Box.Flex>
 
         <Box.Flex justify={'center'}>
@@ -145,12 +160,16 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
                 image={toContractMetadata?.image}
                 size={36}
               />
+            ) : hasMessageOut ? (
+              <Box css={styles.ethAvatar}>
+                <Icon icon="CurrencyEthereum" size={20} stroke={1} />
+              </Box>
             ) : (
               <Avatar.Generated
                 role="img"
                 size={36}
-                hash={fuelToAddress}
-                aria-label={fuelToAddress}
+                hash={ethToAddress || fuelToAddress}
+                aria-label={ethToAddress || fuelToAddress}
                 css={styles.avatar}
               />
             )}
@@ -167,11 +186,15 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
               ? toContractMetadata?.name || 'Unknown'
               : accountTo?.name || 'Unknown'}
           </Text>
-          <FuelAddress
-            address={fuelToAddress}
-            isContract={isToContract}
-            css={styles.address}
-          />
+          {ethToAddress ? (
+            <EthAddress address={ethToAddress} css={styles.address} />
+          ) : (
+            <FuelAddress
+              address={fuelToAddress}
+              isContract={isToContract}
+              css={styles.address}
+            />
+          )}
         </Box.Flex>
         {hasAssetsComingBack && (
           <>
@@ -304,5 +327,16 @@ const styles = {
     borderRadius: '$full',
     overflow: 'hidden',
     flexShrink: 0,
+  }),
+  ethAvatar: cssObj({
+    height: 34,
+    width: 34,
+    borderRadius: '$full',
+    overflow: 'hidden',
+    flexShrink: 0,
+    border: '1px solid $gray6',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   }),
 } as const;

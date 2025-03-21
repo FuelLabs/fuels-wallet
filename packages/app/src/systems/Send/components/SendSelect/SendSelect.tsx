@@ -105,10 +105,19 @@ export function SendSelect({
     handlers.recalculateFromAmount,
   ]);
 
-  const assetSelectItems = balances?.map((b) => ({
-    assetId: b.assetId,
-    ...b.asset,
-  }));
+  const assetSelectItems = balances
+    ?.map((b) => ({
+      assetId: b.assetId,
+      ...b.asset,
+    }))
+    .sort((a, b) => {
+      if (a.verified !== b.verified) return b.verified ? 1 : -1;
+      if (a.isNft !== b.isNft) return b.isNft ? 1 : -1;
+      if (a.collection !== b.collection)
+        return (a.collection || '').localeCompare(b.collection || '');
+      if (a.name !== b.name) return (a.name || '').localeCompare(b.name || '');
+      return (a.assetId || '').localeCompare(b.assetId || '');
+    });
 
   return (
     <MotionContent {...animations.slideInTop()}>

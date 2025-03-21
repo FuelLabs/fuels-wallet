@@ -163,11 +163,7 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
                 <Text as="span" className="asset-name">
                   {getName(itemAsset)}
                   {isNft && (
-                    <Badge
-                      variant="ghost"
-                      intent="primary"
-                      css={styles.assetNft}
-                    >
+                    <Badge variant="outlined" css={styles.assetNft}>
                       NFT
                     </Badge>
                   )}

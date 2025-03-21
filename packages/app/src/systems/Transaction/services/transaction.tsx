@@ -217,8 +217,6 @@ export class TxService {
     transactionState,
     transactionSummary,
   }: TxInputs['simulateTransaction']) {
-    // await delay(4000);
-    // debugger;
     const provider = new Provider(providerConfig?.url || '', {
       cache: providerConfig?.cache,
     });
