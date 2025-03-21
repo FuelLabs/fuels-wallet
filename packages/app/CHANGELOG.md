@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.51.1
+
+### Patch Changes
+
+- [#1879](https://github.com/FuelLabs/fuels-wallet/pull/1879) [`abb9a79f`](https://github.com/FuelLabs/fuels-wallet/commit/abb9a79f22cf1814ee16788b78723cf3b8567fbb) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: show Withdraw operation when it has MESSAGE_OUT receipt + improve order of assets in Send Page
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.51.1
+  - @fuels/playwright-utils@0.51.1
+
 ## 0.51.0
 
 ### Minor Changes
