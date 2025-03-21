@@ -111,7 +111,7 @@ const styles = {
   description: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
     overflowY: 'auto !important',
-    padding: '0 $2 0 $2',
+    padding: '0 $2 0 $3',
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
