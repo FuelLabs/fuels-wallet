@@ -1,5 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Form, Input, Text } from '@fuel-ui/react';
+import type { AssetFuelData } from '@fuel-wallet/types';
 import { motion } from 'framer-motion';
 import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -14,6 +15,7 @@ import {
 
 import { useController, useWatch } from 'react-hook-form';
 import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
+import { formatAmount } from '~/systems/Core/utils';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
 import type { UseSendReturn } from '../../hooks';
@@ -21,6 +23,10 @@ import type { UseSendReturn } from '../../hooks';
 const MotionContent = motion(Layout.Content);
 
 type SendSelectProps = UseSendReturn & { warningMessage?: string };
+
+interface ExtendedAssetFuelData extends AssetFuelData {
+  totalSupply?: BN;
+}
 
 export function SendSelect({
   form,
@@ -106,10 +112,43 @@ export function SendSelect({
   ]);
 
   const assetSelectItems = balances
-    ?.map((b) => ({
-      assetId: b.assetId,
-      ...b.asset,
-    }))
+    ?.map((b) => {
+      const showBalance =
+        !b.asset?.isNft &&
+        !(
+          b.amount &&
+          (b.asset as ExtendedAssetFuelData).totalSupply &&
+          bn(b.amount).eq(1) &&
+          bn((b.asset as ExtendedAssetFuelData).totalSupply!).eq(1)
+        );
+
+      let formattedBalance: string | undefined;
+      if (showBalance && b.amount) {
+        const amount = formatAmount({
+          amount: bn(b.amount),
+          options: { units: b.asset?.decimals || 0 },
+        });
+
+        let usdValue = '';
+        if (b.asset?.rate) {
+          const usd = convertToUsd(
+            bn(b.amount),
+            b.asset.decimals || 0,
+            b.asset.rate
+          );
+          usdValue = `(${usd.formatted}) `;
+        }
+
+        formattedBalance = `${usdValue}${amount}`;
+      }
+
+      return {
+        assetId: b.assetId,
+        ...b.asset,
+        balance: showBalance && b.amount ? bn(b.amount) : undefined,
+        formattedBalance,
+      };
+    })
     .sort((a, b) => {
       if (a.verified !== b.verified) return b.verified ? 1 : -1;
       if (a.isNft !== b.isNft) return b.isNft ? 1 : -1;
