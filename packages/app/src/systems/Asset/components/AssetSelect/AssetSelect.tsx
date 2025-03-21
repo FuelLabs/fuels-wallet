@@ -10,12 +10,15 @@ import {
   Text,
 } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
+import type { BN } from 'fuels';
 import { memo, useState } from 'react';
 import { NFTImage } from '~/systems/Account/components/BalanceNFTs/NFTImage';
 import type { Maybe } from '~/systems/Core';
 import { coreStyles, shortAddress } from '~/systems/Core';
 
-export type AssetSelectInput = Partial<AssetFuelAmount>;
+export type AssetSelectInput = Partial<AssetFuelAmount> & {
+  formattedBalance?: string;
+};
 
 export type AssetSelectProps = {
   items?: Maybe<AssetSelectInput[]>;
@@ -172,6 +175,13 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
                   {symbol || shortAddress(assetId)}
                 </Text>
               </Box>
+              <Box>
+                {itemAsset?.formattedBalance && (
+                  <Text as="span" className="asset-balance">
+                    {itemAsset.formattedBalance}
+                  </Text>
+                )}
+              </Box>
             </Dropdown.MenuItem>
           );
         })}
@@ -262,14 +272,18 @@ const styles = {
     '.asset-info': {
       flex: 1,
       mr: '$3',
-    },
-    '.asset-name, .asset-symbol': {
-      display: 'block',
-      fontSize: '$sm',
-      lineHeight: '$tight',
-    },
-    '.asset-name': {
-      mb: '2px',
+      '.asset-name': {
+        display: 'flex',
+        alignItems: 'center',
+        color: '$intentsBase12',
+        fontSize: '$sm',
+        fontWeight: '$normal',
+        lineHeight: 'normal',
+      },
+      '.asset-symbol, .asset-balance': {
+        color: '$intentsBase10',
+        fontSize: '$xs',
+      },
     },
   }),
   dropdownRoot: cssObj({
