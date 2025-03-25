@@ -37,9 +37,12 @@ export const useAssetsAmount = (params: UseAmountAmountParams) => {
 
             if (!assetCached) return null;
 
+            const rate = (assetCached.rate as number) ?? 0;
+
             return {
               ...assetCached,
               amount: operationCoin.amount,
+              rate,
             };
           })
         );

@@ -47,10 +47,7 @@ function TxNFTImage({ assetId, image }: { assetId: string; image: string }) {
   );
 }
 
-export function TxOperationAssets({
-  amounts,
-  baseAsset,
-}: TxOperationAssetsProps) {
+export function TxOperationAssets({ amounts }: TxOperationAssetsProps) {
   const getAssetImage = (asset: AssetFuelAmount) => {
     if (asset.isNft && asset.metadata?.image) {
       return (
@@ -122,21 +119,19 @@ export function TxOperationAssets({
                       </Text>
                     )}
                   </Text>
-                  {baseAsset?.rate &&
-                    assetAmount.amount &&
-                    assetAmount.assetId === baseAsset.assetId && (
-                      <Text color="textSubtext">
-                        (
-                        {
-                          convertToUsd(
-                            bn(assetAmount.amount),
-                            assetAmount.decimals,
-                            baseAsset.rate
-                          ).formatted
-                        }
-                        )
-                      </Text>
-                    )}
+                  {assetAmount.rate && assetAmount.amount && (
+                    <Text color="textSubtext">
+                      (
+                      {
+                        convertToUsd(
+                          bn(assetAmount.amount),
+                          assetAmount.decimals,
+                          assetAmount.rate
+                        ).formatted
+                      }
+                      )
+                    </Text>
+                  )}
                 </Box.Flex>
               </Box.Flex>
             </Box>
