@@ -1,21 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Avatar,
-  Box,
-  Button,
-  Heading,
-  Icon,
-  Text,
-  Tooltip,
-} from '@fuel-ui/react';
+import { Avatar, Box, Button, Heading, Icon, Text } from '@fuel-ui/react';
 import type { AccountWithBalance } from '@fuel-wallet/types';
-import { type ReactNode, useMemo } from 'react';
+import type { ReactNode } from 'react';
 import { FuelAddress } from '~/systems/Account';
-import { VisibilityButton, formatBalance } from '~/systems/Core';
+import { VisibilityButton } from '~/systems/Core';
 
 import { useAccounts } from '../../hooks';
 
-import { DEFAULT_DECIMAL_UNITS } from 'fuels';
 import { INTL_FORMATTER } from '~/systems/Asset/constants';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
@@ -44,8 +35,6 @@ export type BalanceWidgetProps = {
   onChangeVisibility?: (visibility: boolean) => void;
 };
 
-const decimals = DEFAULT_DECIMAL_UNITS;
-
 export function BalanceWidget({
   account,
   isLoading,
@@ -54,9 +43,6 @@ export function BalanceWidget({
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
   const totalBalanceInUsd = account?.totalBalanceInUsd ?? 0;
-  const { tooltip } = useMemo(() => {
-    return formatBalance(account?.balance, decimals);
-  }, [account]);
 
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
@@ -101,20 +87,14 @@ export function BalanceWidget({
         <>
           <Text className="label">Total balance</Text>
           <Box.Flex>
-            <Tooltip
-              content={`$${totalBalanceInUsd}`}
-              delayDuration={0}
-              open={visibility && tooltip ? undefined : false}
+            <Text
+              aria-hidden={visibility}
+              aria-label="Total balance in USD"
+              data-account-name={account.name}
+              className="value"
             >
-              <Text
-                aria-hidden={visibility}
-                aria-label="Total balance in USD"
-                data-account-name={account.name}
-                className="value"
-              >
-                {visibility ? totalValue : '$•••••'}
-              </Text>
-            </Tooltip>
+              {visibility ? totalValue : '$•••••'}
+            </Text>
             <VisibilityButton
               aria-label={visibility ? 'Hide balance' : 'Show balance'}
               visibility={visibility}
