@@ -35,7 +35,7 @@ export function TermsOfUse() {
             }}
           />
           <Form.Label htmlFor="agreeTerms">
-            I Agree to the Terms Of Use Agreement
+            I agree to the Terms of Use Agreement
           </Form.Label>
         </Form.Control>
         <Box.Flex gap="$2" css={styles.footer}>

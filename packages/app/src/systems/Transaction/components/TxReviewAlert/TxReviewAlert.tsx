@@ -9,7 +9,7 @@ export const TxReviewAlert = () => {
     >
       <Box.Flex css={styles.reviewTxBadge}>
         <Icon icon="InfoCircle" stroke={2} size={16} />
-        Double-check transaction details before submit.
+        Please double-check all transaction details before submitting.
       </Box.Flex>
     </Box>
   );

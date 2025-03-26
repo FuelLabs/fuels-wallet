@@ -25,9 +25,9 @@ export enum SignUpType {
 
 export const ERRORS = {
   seedPhraseMatchError:
-    "The Seed Phrase doesn't match. Check the phrase for typos or missing words",
+    "The seed phrases don't match. Please verify each word carefully.",
   seedPhraseInvalidError:
-    'The Seed Phrase is not valid. Check the words for typos or missing words',
+    'This seed phrase appears to be invalid. Please check each word carefully.',
 };
 
 type FormValues = {
@@ -253,7 +253,7 @@ export const signUpMachine = createMachine(
           throw new Error('Invalid password');
         }
         if (!data.mnemonic) {
-          throw new Error('Invalid mnemonic');
+          throw new Error('Invalid seed phrase');
         }
         const account = await SignUpService.create({ data });
         return account;

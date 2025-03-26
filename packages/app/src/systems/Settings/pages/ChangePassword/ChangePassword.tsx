@@ -108,8 +108,8 @@ export function ChangePassword() {
           <Box.Flex css={styles.wrapper}>
             <Alert status="warning">
               <Alert.Description>
-                If you lose your password and your Seed Phrase, all your funds
-                can be lost forever.
+                If you lose both your password and seed phrase, your funds may
+                be permanently lost.
               </Alert.Description>
             </Alert>
             <Focus.Scope contain autoFocus>

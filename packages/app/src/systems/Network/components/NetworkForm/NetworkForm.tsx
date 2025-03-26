@@ -72,7 +72,7 @@ export function NetworkForm({
             control={control}
             name="name"
             label={
-              <HelperIcon message="Customize the network name to avoid conflicts">
+              <HelperIcon message="Customize the network name to avoid naming conflicts">
                 Network Name
               </HelperIcon>
             }
@@ -106,7 +106,7 @@ export function NetworkForm({
             isRequired
             isInvalid={Boolean(formState.errors?.url)}
             label={
-              <HelperIcon message="The provider URL of your network">
+              <HelperIcon message="Enter the provider URL for your network">
                 URL
               </HelperIcon>
             }
@@ -114,7 +114,7 @@ export function NetworkForm({
               <MotionInput {...animations.slideInTop()}>
                 <Input.Field
                   aria-label="Network URL"
-                  placeholder="https://node.fuel.network/graphql"
+                  placeholder="Enter your network's provider URL"
                   {...field}
                 />
               </MotionInput>
@@ -127,7 +127,7 @@ export function NetworkForm({
             isDisabled={!!isEditing || !!isLoading}
             isInvalid={Boolean(formState.errors?.chainId)}
             label={
-              <HelperIcon message="To enhance the security of network identification, we ask you to inform the chainId manually.">
+              <HelperIcon message="For enhanced security, please enter the chain ID manually.">
                 Chain ID
               </HelperIcon>
             }
@@ -137,7 +137,7 @@ export function NetworkForm({
                   {...field}
                   id="network-chain-id"
                   aria-label="Chain ID"
-                  placeholder="Enter Chain ID"
+                  placeholder="Enter the network's chain ID"
                 />
               </MotionInput>
             )}
@@ -176,7 +176,7 @@ export function NetworkForm({
                   {...field}
                   id="search-network-name"
                   aria-label="Network name"
-                  placeholder="Name of your network..."
+                  placeholder="Enter a name for your network"
                 />
               </Input>
             )}
@@ -193,7 +193,7 @@ export function NetworkForm({
                   {...field}
                   id="search-network-url"
                   aria-label="Explorer URL"
-                  placeholder="https://explorer.fuel.network/graphql"
+                  placeholder="Enter the explorer URL (e.g., https://explorer.fuel.network/graphql)"
                 />
               </MotionInput>
             )}
