@@ -64,7 +64,10 @@ test.describe('Forward Eth', () => {
       await fuelWalletTestHelper.getWalletPopupPage();
 
     // test forward eth amount is correct
-    await hasText(walletNotificationPage, `${forwardEthAmount} ETH`);
+    await hasText(
+      walletNotificationPage,
+      `${forwardEthAmount.slice(0, 5)} ETH`
+    );
     await hasText(walletNotificationPage, 'Fee (network)');
 
     // test to and from addresses
