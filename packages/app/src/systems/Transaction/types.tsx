@@ -109,4 +109,7 @@ export interface AssetFlow {
 
 export type AssetAmountWithRate = AssetFuelAmount & {
   rate?: number;
+  formattedAmount?: string;
+  fullFormattedAmount?: string;
+  formattedUsd?: string;
 };
