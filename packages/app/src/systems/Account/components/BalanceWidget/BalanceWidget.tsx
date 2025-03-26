@@ -3,12 +3,10 @@ import {
   Avatar,
   Box,
   Button,
-  HStack,
   Heading,
   Icon,
   Text,
   Tooltip,
-  VStack,
 } from '@fuel-ui/react';
 import type { AccountWithBalance } from '@fuel-wallet/types';
 import { type ReactNode, useMemo } from 'react';
@@ -56,7 +54,7 @@ export function BalanceWidget({
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
   const totalBalanceInUsd = account?.totalBalanceInUsd ?? 0;
-  const { original, tooltip } = useMemo(() => {
+  const { tooltip } = useMemo(() => {
     return formatBalance(account?.balance, decimals);
   }, [account]);
 
@@ -104,13 +102,13 @@ export function BalanceWidget({
           <Text className="label">Total balance</Text>
           <Box.Flex>
             <Tooltip
-              content={original.display}
+              content={`$${totalBalanceInUsd}`}
               delayDuration={0}
               open={visibility && tooltip ? undefined : false}
             >
               <Text
                 aria-hidden={visibility}
-                aria-label={`${account.balanceSymbol} conversion rate to USD`}
+                aria-label="Total balance in USD"
                 data-account-name={account.name}
                 className="value"
               >
