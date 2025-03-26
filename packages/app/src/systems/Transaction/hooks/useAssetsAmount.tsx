@@ -46,7 +46,7 @@ export const useAssetsAmount = (params: UseAmountAmountParams) => {
                 amount: operationCoin.amount,
                 options: {
                   units: assetCached.decimals || 0,
-                  precision: Math.min(assetCached.decimals || 0, 4),
+                  precision: Math.min(assetCached.decimals || 0, 3),
                 },
               });
 

@@ -99,7 +99,7 @@ export function TxOperationAssets({ amounts }: TxOperationAssetsProps) {
         amount: assetAmount.amount,
         options: {
           units: assetAmount.decimals || 0,
-          precision: Math.min(assetAmount.decimals || 0, 4),
+          precision: Math.min(assetAmount.decimals || 0, 3),
         },
       });
 
