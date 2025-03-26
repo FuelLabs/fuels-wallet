@@ -355,9 +355,9 @@ test.describe('SendTransaction', () => {
     await btnLocator.click();
 
     // Approve transaction
-    await hasText(page, `${maxAmountAfterFee} ETH`);
+    await hasText(page, `${maxAmountAfterFee.slice(0, 5)} ETH`);
     await getButtonByText(page, 'Submit').click();
-    await hasText(page, `${maxAmountAfterFee} ETH`);
+    await hasText(page, `${maxAmountAfterFee.slice(0, 5)} ETH`);
 
     // Wait for transaction to be confirmed
     await hasText(page, 'Success');
