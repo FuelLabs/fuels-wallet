@@ -41,7 +41,11 @@ export function TxView() {
         ) : (
           <FormProvider {...form}>
             {txResult && (
-              <TxContent.Info tx={txResult} showDetails={ctx.shouldShowTxFee} />
+              <TxContent.Info
+                tx={txResult}
+                showDetails={ctx.shouldShowTxFee}
+                isPastTense={true}
+              />
             )}
           </FormProvider>
         )}

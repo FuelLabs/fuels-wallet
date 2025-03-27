@@ -8,9 +8,14 @@ import { TxOperationCard } from './TxOperationCard';
 export type TxOperationProps = {
   operation: SimplifiedOperation;
   isChild?: boolean;
+  isPastTense?: boolean;
 };
 
-export function TxOperation({ operation, isChild = false }: TxOperationProps) {
+export function TxOperation({
+  operation,
+  isChild = false,
+  isPastTense = false,
+}: TxOperationProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const isGrouped = (operation.operations?.length || 0) > 1;
 
@@ -18,7 +23,7 @@ export function TxOperation({ operation, isChild = false }: TxOperationProps) {
     <Box.Stack gap="$2" css={styles.root}>
       <Box.Flex css={styles.container} data-child={isChild}>
         <Box.Flex css={styles.cardStyle}>
-          <TxOperationCard operation={operation} />
+          <TxOperationCard operation={operation} isPastTense={isPastTense} />
         </Box.Flex>
       </Box.Flex>
       {isGrouped && (

@@ -13,9 +13,13 @@ import { TxOperationAssets } from './TxOperationAssets';
 
 export type TxOperationCardProps = {
   operation: SimplifiedOperation;
+  isPastTense?: boolean;
 };
 
-export function TxOperationCard({ operation }: TxOperationCardProps) {
+export function TxOperationCard({
+  operation,
+  isPastTense = false,
+}: TxOperationCardProps) {
   const { assets, assetsToFrom } = operation;
   const { accounts } = useAccounts();
 
@@ -137,6 +141,7 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
             isTransfer,
             assetsAmount: amounts,
             hasMessageOut,
+            isPastTense,
           })}
         </Box.Flex>
 

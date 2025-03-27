@@ -64,6 +64,7 @@ export const TxApprove = () => {
                 </Button>
               )
             }
+            isPastTense={true}
           />
         )}
       </Dialog.Description>

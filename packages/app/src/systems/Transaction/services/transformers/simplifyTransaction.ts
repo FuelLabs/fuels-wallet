@@ -380,28 +380,35 @@ export function getMainOperations(
 
   return mainOperations;
 }
+
 export const getOperationText = ({
   isContract,
   isTransfer,
   assetsAmount,
   hasMessageOut,
+  isPastTense = false,
 }: {
   isContract: boolean;
   isTransfer: boolean;
   assetsAmount?: AssetFuelAmount[];
   hasMessageOut?: boolean;
+  isPastTense?: boolean;
 }) => {
   if (isContract) {
     if (assetsAmount && assetsAmount.length > 0) {
-      return 'Calls contract (sending funds)';
+      return isPastTense
+        ? 'Called contract (sent funds)'
+        : 'Calling contract (sending funds)';
     }
-    return 'Calls contract';
+    return isPastTense ? 'Called contract' : 'Calling contract';
   }
   if (hasMessageOut) {
-    return 'Withdraws to Ethereum network';
+    return isPastTense
+      ? 'Withdrew to Ethereum network'
+      : 'Withdrawing to Ethereum network';
   }
   if (isTransfer) {
-    return 'Sends funds';
+    return isPastTense ? 'Sent funds' : 'Sending funds';
   }
   return '';
 };
