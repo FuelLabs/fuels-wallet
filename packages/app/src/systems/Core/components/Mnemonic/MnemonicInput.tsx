@@ -16,7 +16,7 @@ export function MnemonicInput({
       value={value}
       onPaste={(ev) => onPaste(ev, index)}
       onChange={(ev) => onChange(ev.target.value, index)}
-      aria-label={value || 'Type your text'}
+      aria-label={value || 'Enter word here'}
     />
   );
 }

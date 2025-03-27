@@ -18,9 +18,7 @@ describe('ImportAccountForm', () => {
     render(<Content />);
     const label = screen.getByLabelText('Private Key');
     expect(label).toBeDefined();
-    const placeholder = screen.getByPlaceholderText(
-      'Enter the private key to import from'
-    );
+    const placeholder = screen.getByPlaceholderText('Enter your private key');
     expect(placeholder).toBeDefined();
   });
 });

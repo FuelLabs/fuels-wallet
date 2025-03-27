@@ -28,17 +28,17 @@ export function ResetDialog() {
       <Dialog.Description as="div" css={styles.description}>
         <Box.Stack gap="$4">
           <Text>
-            If you lost your password, the only way to recover your wallet is to
-            reset the Fuel Wallet extension, select &quot;I already have a
-            wallet&quot; and use your secret Seed Phrase.
+            If you've lost your password, the only way to recover your wallet is
+            to reset the Fuel Wallet extension, select "I already have a
+            wallet", and enter your seed phrase.
           </Text>
           <Text>
-            Make sure you have backed up your Seed Phrase before proceeding.
+            Please ensure you have backed up your seed phrase before proceeding.
           </Text>
           <Alert status="warning">
             <Alert.Description>
-              By resetting your wallet you will remove all data stored on this
-              device, including Seed Phrase, accounts,
+              By resetting your wallet, you will remove all data stored on this
+              device, including your seed phrase and accounts.
             </Alert.Description>
           </Alert>
           <Form.Control css={{ flexDirection: 'row' }}>
@@ -51,7 +51,7 @@ export function ResetDialog() {
               }}
             />
             <Form.Label htmlFor="confirmReset">
-              I understand the risks
+              I understand and accept the risks
             </Form.Label>
           </Form.Control>
         </Box.Stack>

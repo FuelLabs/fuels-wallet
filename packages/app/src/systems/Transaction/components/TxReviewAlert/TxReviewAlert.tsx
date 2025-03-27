@@ -27,6 +27,6 @@ const styles = {
     backgroundColor: '$intentsInfo4',
     width: '100%',
     minHeight: '40px',
-    pl: '$4',
+    pl: '$3',
   }),
 };

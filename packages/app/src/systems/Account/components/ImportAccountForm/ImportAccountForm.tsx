@@ -30,7 +30,7 @@ export const ImportAccountForm = ({
               id="search-private-key"
               type="password"
               aria-label="Private Key"
-              placeholder="Enter the private key to import from"
+              placeholder="Enter your private key"
             />
           </Input>
         )}
@@ -41,7 +41,7 @@ export const ImportAccountForm = ({
         isRequired
         isInvalid={Boolean(formState.errors?.name)}
         label={
-          <HelperIcon message="The name for your new account">
+          <HelperIcon message="Choose a name for your new account">
             Account Name
           </HelperIcon>
         }
@@ -51,7 +51,7 @@ export const ImportAccountForm = ({
               {...field}
               id="search-account-name"
               aria-label="Account Name"
-              placeholder="Type account name"
+              placeholder="Enter account name"
             />
           </Input>
         )}
