@@ -176,7 +176,7 @@ export function NetworkForm({
                   {...field}
                   id="search-network-name"
                   aria-label="Network name"
-                  placeholder="Enter a name for your network"
+                  placeholder="Enter the name of the network"
                 />
               </Input>
             )}
@@ -193,7 +193,7 @@ export function NetworkForm({
                   {...field}
                   id="search-network-url"
                   aria-label="Explorer URL"
-                  placeholder="Enter the explorer URL (e.g., https://explorer.fuel.network/graphql)"
+                  placeholder="e.g., https://explorer.fuel.network/graphql"
                 />
               </MotionInput>
             )}

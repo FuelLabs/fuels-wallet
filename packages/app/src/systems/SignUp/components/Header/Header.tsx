@@ -19,6 +19,7 @@ export function Header({ title, subtitle }: HeaderProps) {
             margin: 0,
             color: '$intentsBase11',
             fontSize: '$lg',
+            mt: '$2',
           }}
         >
           {subtitle}
