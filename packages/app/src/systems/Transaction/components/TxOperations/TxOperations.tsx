@@ -27,14 +27,12 @@ export function TxOperations({
       <TxOperationsGroup
         title={`Operations not related to ${findAccount(txAccount)?.name}`}
         operations={operations.notRelatedToCurrentAccount}
-        showNesting={false}
         isPastTense={isPastTense}
       />
       {operations.intermediateContractCalls && (
         <TxOperationsGroup
           title="Intermediate contract calls"
           operations={operations.intermediateContractCalls}
-          showNesting={true}
         />
       )}
     </Box.Stack>

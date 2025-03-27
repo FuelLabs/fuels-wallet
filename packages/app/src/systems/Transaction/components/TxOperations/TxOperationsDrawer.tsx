@@ -6,9 +6,13 @@ import { operationsStyles as styles } from './TxOperationsStyles';
 
 type TxOperationsDrawerProps = {
   operations: SimplifiedOperation[];
+  isPastTense?: boolean;
 };
 
-export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
+export function TxOperationsDrawer({
+  operations,
+  isPastTense = false,
+}: TxOperationsDrawerProps) {
   const renderOperations = () => {
     if (!operations?.length) {
       return (
@@ -32,6 +36,7 @@ export function TxOperationsDrawer({ operations }: TxOperationsDrawerProps) {
             <TxOperation
               key={`${operation.type}-${operation?.from?.address || ''}-${operation?.to?.address || ''}-${index}`}
               operation={operation}
+              isPastTense={isPastTense}
             />
           </MotionBox>
         ))}

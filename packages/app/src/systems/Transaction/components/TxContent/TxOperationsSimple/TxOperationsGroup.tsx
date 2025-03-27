@@ -8,12 +8,13 @@ import { TxOperation } from '../../TxOperation';
 type TxOperationsGroupProps = {
   title: string;
   operations: SimplifiedOperation[];
-  showNesting?: boolean;
+  isPastTense?: boolean;
 };
 
 export function TxOperationsGroup({
   title,
   operations,
+  isPastTense = false,
 }: TxOperationsGroupProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -60,7 +61,11 @@ export function TxOperationsGroup({
                   key={`${operation.type}-${operation.from}-${operation.to}-${index}`}
                   css={styles.cardStyle}
                 >
-                  <TxOperation operation={operation} isChild />
+                  <TxOperation
+                    operation={operation}
+                    isChild
+                    isPastTense={isPastTense}
+                  />
                 </Box.Flex>
               )
           )}
