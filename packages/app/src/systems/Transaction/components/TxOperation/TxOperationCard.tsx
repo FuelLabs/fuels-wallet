@@ -141,7 +141,7 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
             isTransfer,
             assetsAmount: amounts,
             hasMessageOut,
-            isHistoryView,
+            isPastTense: isHistoryView,
           })}
         </Box.Flex>
 
