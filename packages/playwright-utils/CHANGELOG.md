@@ -1,5 +1,11 @@
 # @fuels/playwright-utils
 
+## 0.52.0
+
+### Minor Changes
+
+- [#1886](https://github.com/FuelLabs/fuels-wallet/pull/1886) [`b080e659`](https://github.com/FuelLabs/fuels-wallet/commit/b080e65952f69936bd73b49b79615f17f625c73d) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: update copies through the application
+
 ## 0.51.1
 
 ## 0.51.0
