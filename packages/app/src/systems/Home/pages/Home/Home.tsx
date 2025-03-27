@@ -45,8 +45,8 @@ export function Home() {
             <Tabs.Trigger value="assets" aria-label="Assets">
               Assets
             </Tabs.Trigger>
-            <Tabs.Trigger value="nft" aria-label="NFT">
-              NFT
+            <Tabs.Trigger value="nft" aria-label="NFTs">
+              NFTs
             </Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content value="assets" css={styles.assetsList}>

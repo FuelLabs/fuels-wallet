@@ -39,7 +39,7 @@ export function WelcomeScreen() {
             <Box.Stack className="text">
               <Heading as="h3">Import seed phrase</Heading>
               <Heading as="h4">
-                Restore an existing wallet using your seed-phrase.
+                Restore an existing wallet using your seed phrase.
               </Heading>
             </Box.Stack>
             <Box.Centered className="icon">

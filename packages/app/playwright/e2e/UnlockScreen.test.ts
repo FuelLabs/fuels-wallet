@@ -18,9 +18,9 @@ test.describe('UnlockScreen', () => {
   test('UnLock and Lock wallet screen', async () => {
     await getByAriaLabel(page, 'Menu').click();
     await page.getByText(/Lock Wallet/i).click();
-    await hasText(page, 'Unlock your wallet to continue');
+    await hasText(page, 'Enter your password to unlock your wallet');
     await reload(page);
-    await hasText(page, 'Unlock your wallet to continue');
+    await hasText(page, 'Enter your password to unlock your wallet');
     await getByAriaLabel(page, 'Your Password').fill(WALLET_PASSWORD);
     await getByAriaLabel(page, 'Unlock wallet').click();
     await hasText(page, /assets/i);
@@ -31,7 +31,7 @@ test.describe('UnlockScreen', () => {
   test('UnLock and Lock wallet screen without reload page', async () => {
     await getByAriaLabel(page, 'Menu').click();
     await page.getByText(/Lock Wallet/i).click();
-    await hasText(page, 'Unlock your wallet to continue');
+    await hasText(page, 'Enter your password to unlock your wallet');
     await getByAriaLabel(page, 'Your Password').fill(WALLET_PASSWORD);
     await getByAriaLabel(page, 'Unlock wallet').click();
     await hasText(page, /assets/i);
@@ -41,7 +41,7 @@ test.describe('UnlockScreen', () => {
     // Lock wallet first
     await getByAriaLabel(page, 'Menu').click();
     await page.getByText(/Lock Wallet/i).click();
-    await hasText(page, 'Unlock your wallet to continue');
+    await hasText(page, 'Enter your password to unlock your wallet');
 
     await page.getByText('Forgot password?').click();
     await hasText(page, /Reset wallet/i);

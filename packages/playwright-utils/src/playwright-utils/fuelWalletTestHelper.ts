@@ -77,7 +77,7 @@ export class FuelWalletTestHelper {
     await enterPassword.fill(password);
     const confirmPassword = getByAriaLabel(signupPage, 'Confirm Password');
     await confirmPassword.fill(password);
-    const toFinish = getButtonByText(signupPage, 'Next: Finish set-up');
+    const toFinish = getButtonByText(signupPage, 'Next: Finish setup');
     await toFinish.click();
 
     await signupPage

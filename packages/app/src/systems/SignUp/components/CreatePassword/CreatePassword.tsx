@@ -114,7 +114,7 @@ export function CreatePassword({
             <ControlledField
               control={control}
               name="confirmPassword"
-              label="Confirm password"
+              label="Confirm Password"
               render={({ field }) => (
                 <InputPassword
                   {...field}
@@ -139,7 +139,7 @@ export function CreatePassword({
               isDisabled={!isValid}
               isLoading={isLoading}
             >
-              Next: Finish set-up
+              Next: Finish setup
             </Button>
           </Box.Flex>
         </MotionStack>

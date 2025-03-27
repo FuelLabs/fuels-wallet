@@ -232,7 +232,7 @@ export const TxFeeOptions = ({
               textDecoration: 'underline',
             })}
           >
-            Use {isAdvanced ? 'regular options' : 'custom fees'}
+            Use {isAdvanced ? 'standard options' : 'custom fees'}
           </Button>
         </MotionFlex>
       </AnimatePresence>
