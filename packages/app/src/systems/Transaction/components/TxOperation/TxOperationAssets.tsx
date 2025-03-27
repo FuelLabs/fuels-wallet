@@ -1,16 +1,16 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Icon, Image, Text } from '@fuel-ui/react';
+import { Avatar, Box, Icon, Image, Text, Tooltip } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
-import type { AssetFuelData } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import { useEffect, useRef, useState } from 'react';
 import { formatAmount, shortAddress } from '~/systems/Core';
 import { MotionBox } from '~/systems/Core/components/Motion';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
+import type { AssetAmountWithRate } from '../../types';
 
 type TxOperationAssetsProps = {
-  amounts: AssetFuelAmount[];
-  baseAsset?: AssetFuelData;
+  amounts: (AssetFuelAmount | AssetAmountWithRate)[];
+  baseAsset?: AssetFuelAmount;
 };
 
 function TxNFTImage({ assetId, image }: { assetId: string; image: string }) {
@@ -47,10 +47,7 @@ function TxNFTImage({ assetId, image }: { assetId: string; image: string }) {
   );
 }
 
-export function TxOperationAssets({
-  amounts,
-  baseAsset,
-}: TxOperationAssetsProps) {
+export function TxOperationAssets({ amounts }: TxOperationAssetsProps) {
   const getAssetImage = (asset: AssetFuelAmount) => {
     if (asset.isNft && asset.metadata?.image) {
       return (
@@ -86,6 +83,72 @@ export function TxOperationAssets({
 
   if (!nonEmptyAmounts.length) return null;
 
+  const renderAmount = (assetAmount: AssetFuelAmount | AssetAmountWithRate) => {
+    if (assetAmount.isNft) {
+      return (
+        <Text as="span" className="nft-name">
+          {assetAmount.metadata?.name ||
+            `NFT ${shortAddress(assetAmount.assetId)}`}
+        </Text>
+      );
+    }
+
+    const formattedAmount =
+      (assetAmount as AssetAmountWithRate).formattedAmount ||
+      formatAmount({
+        amount: assetAmount.amount,
+        options: {
+          units: assetAmount.decimals || 0,
+          precision: Math.min(assetAmount.decimals || 0, 3),
+        },
+      });
+
+    const fullFormattedAmount =
+      (assetAmount as AssetAmountWithRate).fullFormattedAmount ||
+      formatAmount({
+        amount: assetAmount.amount,
+        options: {
+          units: assetAmount.decimals || 0,
+          precision: assetAmount.decimals || 0,
+        },
+      });
+
+    return (
+      <>
+        {fullFormattedAmount !== formattedAmount ? (
+          <Tooltip content={fullFormattedAmount} delayDuration={0}>
+            <Text as="span">
+              {formattedAmount} {assetAmount.symbol || 'Unknown'}
+            </Text>
+          </Tooltip>
+        ) : (
+          <Text as="span">
+            {formattedAmount} {assetAmount.symbol || 'Unknown'}
+          </Text>
+        )}
+      </>
+    );
+  };
+
+  const renderUsdValue = (
+    assetAmount: AssetFuelAmount | AssetAmountWithRate
+  ) => {
+    if (assetAmount.isNft) return null;
+
+    const usdValue =
+      (assetAmount as AssetAmountWithRate).formattedUsd ||
+      (assetAmount.rate &&
+        convertToUsd(
+          bn(assetAmount.amount),
+          assetAmount.decimals,
+          assetAmount.rate as number
+        ).formatted);
+
+    if (!usdValue) return null;
+
+    return <Text color="textSubtext">({usdValue})</Text>;
+  };
+
   return (
     <MotionBox
       initial={{ opacity: 0, height: 0 }}
@@ -96,7 +159,7 @@ export function TxOperationAssets({
       <Box.Stack gap="$1">
         {nonEmptyAmounts.map((assetAmount) => (
           <Box.Flex css={styles.asset} key={assetAmount.assetId}>
-            {getAssetImage(assetAmount)}
+            {getAssetImage(assetAmount as AssetFuelAmount)}
             <Box css={styles.amountContainer}>
               <Box.Flex direction="column">
                 <Box.Flex gap="$2" align="center">
@@ -105,38 +168,9 @@ export function TxOperationAssets({
                     color="textHeading"
                     aria-label="amount-container"
                   >
-                    {!assetAmount.isNft ? (
-                      <>
-                        {formatAmount({
-                          amount: assetAmount.amount,
-                          options: {
-                            units: assetAmount.decimals || 0,
-                            precision: assetAmount.decimals || 0,
-                          },
-                        })}{' '}
-                        {assetAmount.symbol || 'Unknown'}
-                      </>
-                    ) : (
-                      <Text as="span" className="nft-name">
-                        {assetAmount.metadata?.name}
-                      </Text>
-                    )}
+                    {renderAmount(assetAmount)}
                   </Text>
-                  {baseAsset?.rate &&
-                    assetAmount.amount &&
-                    assetAmount.assetId === baseAsset.assetId && (
-                      <Text color="textSubtext">
-                        (
-                        {
-                          convertToUsd(
-                            bn(assetAmount.amount),
-                            assetAmount.decimals,
-                            baseAsset.rate
-                          ).formatted
-                        }
-                        )
-                      </Text>
-                    )}
+                  {renderUsdValue(assetAmount)}
                 </Box.Flex>
               </Box.Flex>
             </Box>
@@ -158,6 +192,10 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '$1',
+
+    '.fuel_Tooltip': {
+      display: 'inline-block',
+    },
   }),
   asset: cssObj({
     alignItems: 'center',

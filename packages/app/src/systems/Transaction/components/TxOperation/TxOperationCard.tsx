@@ -7,7 +7,6 @@ import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadat
 import { isValidEthAddress } from '~/systems/Core';
 import { useTransactionView } from '../../context/TransactionViewContext';
 import { useAssetsAmount } from '../../hooks/useAssetsAmount';
-import { useBaseAsset } from '../../hooks/useBaseAsset';
 import { getOperationText } from '../../services/transformers/simplifyTransaction';
 import { type SimplifiedOperation, TxCategory } from '../../types';
 import { TxRecipientContractLogo } from '../TxRecipientCard/TxRecipientContractLogo';
@@ -21,7 +20,6 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
   const { isHistoryView } = useTransactionView();
   const { assets, assetsToFrom } = operation;
   const { accounts } = useAccounts();
-  const baseAsset = useBaseAsset();
 
   const amounts = useAssetsAmount({
     operationsCoin: assets,
@@ -149,9 +147,7 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
           <Box css={styles.spacer} />
         </Box.Flex>
         <Box>
-          {shouldShowAssetAmount && (
-            <TxOperationAssets amounts={amounts} baseAsset={baseAsset} />
-          )}
+          {shouldShowAssetAmount && <TxOperationAssets amounts={amounts} />}
         </Box>
 
         <Box.Flex justify={'flex-start'} align={'center'} css={styles.iconCol}>
@@ -215,10 +211,7 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
               <Box css={styles.spacer} />
             </Box.Flex>
             <Box>
-              <TxOperationAssets
-                amounts={amountsToFrom}
-                baseAsset={baseAsset}
-              />
+              <TxOperationAssets amounts={amountsToFrom} />
             </Box>
             <Box.Flex
               justify={'flex-start'}
