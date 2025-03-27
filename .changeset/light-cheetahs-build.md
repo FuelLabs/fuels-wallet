@@ -3,4 +3,4 @@
 "fuels-wallet": minor
 ---
 
-Update copy
+fix: update copies through the application
