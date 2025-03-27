@@ -2,4 +2,4 @@
 "fuels-wallet": patch
 ---
 
-Updated copy.
+feat: update transaction copy to consider past/present tense
