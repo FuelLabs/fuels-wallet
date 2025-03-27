@@ -5,7 +5,6 @@ import { useMemo } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadata';
 import { isValidEthAddress } from '~/systems/Core';
-import { useTransactionView } from '../../context/TransactionViewContext';
 import { useAssetsAmount } from '../../hooks/useAssetsAmount';
 import { getOperationText } from '../../services/transformers/simplifyTransaction';
 import { type SimplifiedOperation, TxCategory } from '../../types';
