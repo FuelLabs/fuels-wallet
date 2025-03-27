@@ -385,29 +385,29 @@ export const getOperationText = ({
   isTransfer,
   assetsAmount,
   hasMessageOut,
-  isHistoryView = false,
+  isPastTense = false,
 }: {
   isContract: boolean;
   isTransfer: boolean;
   assetsAmount?: AssetFuelAmount[];
   hasMessageOut?: boolean;
-  isHistoryView?: boolean;
+  isPastTense?: boolean;
 }) => {
   if (isContract) {
     if (assetsAmount && assetsAmount.length > 0) {
-      return isHistoryView
+      return isPastTense
         ? 'Called contract (sending funds)'
         : 'Calling contract (sending funds)';
     }
-    return isHistoryView ? 'Called contract' : 'Calling contract';
+    return isPastTense ? 'Called contract' : 'Calling contract';
   }
   if (hasMessageOut) {
-    return isHistoryView
+    return isPastTense
       ? 'Withdrew to Ethereum network'
       : 'Withdrawing to Ethereum network';
   }
   if (isTransfer) {
-    return isHistoryView ? 'Sent funds' : 'Sending funds';
+    return isPastTense ? 'Sent funds' : 'Sending funds';
   }
   return '';
 };
