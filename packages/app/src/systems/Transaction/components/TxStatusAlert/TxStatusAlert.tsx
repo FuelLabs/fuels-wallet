@@ -40,9 +40,9 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
     >
       <Alert.Description>
         {txStatus === TransactionStatus.submitted &&
-          'Your transaction is still pending, you can close this window if you want.'}
+          'Your transaction is pending. You may close this window if you wish.'}
         {txStatus === TransactionStatus.failure &&
-          'Sorry, something wrong happened with your transaction.'}
+          'Sorry, there was an error processing your transaction.'}
         {error}
         {txId && href && (
           <Link
@@ -51,7 +51,7 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
             css={{ ...styles.link, color: `$${txColor}` }}
             href={href}
           >
-            Show on Fuel Explorer
+            View on Fuel Explorer
           </Link>
         )}
       </Alert.Description>

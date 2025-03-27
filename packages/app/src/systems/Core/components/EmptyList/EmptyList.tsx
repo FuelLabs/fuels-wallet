@@ -16,7 +16,7 @@ export function EmptyList({ label }: EmptyListProps) {
         src={relativeUrl(`/empty_activity_${theme}.png`)}
         width={231}
         height={175}
-        alt="No assets"
+        alt="Empty list"
       />
       <Heading as="h3">{label}</Heading>
     </Box.Stack>

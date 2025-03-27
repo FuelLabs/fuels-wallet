@@ -54,7 +54,7 @@ export const TxFee: TxFeeComponent = ({
           css={styles.title}
           aria-label={`fee title:${title || 'Network'}`}
         >
-          {title || 'Fee (network)'}
+          {title || 'Network Fee'}
         </Text>
       ) : null}
       <HStack gap="$1">

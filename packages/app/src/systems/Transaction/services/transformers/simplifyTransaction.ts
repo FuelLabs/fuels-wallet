@@ -403,5 +403,5 @@ export const getOperationText = ({
   if (isTransfer) {
     return 'Sends funds';
   }
-  return 'Unknown';
+  return '';
 };

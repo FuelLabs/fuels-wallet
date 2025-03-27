@@ -9,7 +9,7 @@ export const TxReviewAlert = () => {
     >
       <Box.Flex css={styles.reviewTxBadge}>
         <Icon icon="InfoCircle" stroke={2} size={16} />
-        Double-check transaction details before submit.
+        Double-check transaction details before submission
       </Box.Flex>
     </Box>
   );
@@ -27,6 +27,6 @@ const styles = {
     backgroundColor: '$intentsInfo4',
     width: '100%',
     minHeight: '40px',
-    pl: '$4',
+    pl: '$3',
   }),
 };

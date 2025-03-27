@@ -31,8 +31,8 @@ export function NetworkRemoveDialog({
       <AlertDialog.Content>
         <AlertDialog.Heading>Are you sure?</AlertDialog.Heading>
         <AlertDialog.Description>
-          This action cannot be undone. {network.name} will be permanently
-          deleted.
+          This action cannot be undone. {network.name} network will be
+          permanently deleted.
         </AlertDialog.Description>
         <AlertDialog.Footer>
           <AlertDialog.Cancel>

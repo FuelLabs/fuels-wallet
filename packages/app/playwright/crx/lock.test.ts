@@ -74,7 +74,7 @@ test.describe('Lock FuelWallet after inactivity', () => {
       await getButtonByText(page, /Next: Seed Phrase/i).click();
 
       /** Copy Mnemonic */
-      await hasText(page, /Write down seed phrase/i);
+      await hasText(page, /Write Down Your Seed Phrase/i);
       await getButtonByText(page, /Copy/i).click();
       const savedCheckbox = getByAriaLabel(page, 'Confirm Saved');
       await savedCheckbox.click();
@@ -127,7 +127,7 @@ test.describe('Lock FuelWallet after inactivity', () => {
       const page = await context.newPage();
       await page.waitForTimeout(65_000);
       await page.goto(`chrome-extension://${extensionId}/popup.html`);
-      await hasText(page, 'Unlock your wallet to continue');
+      await hasText(page, 'Enter your password to unlock your wallet');
     });
   });
 });

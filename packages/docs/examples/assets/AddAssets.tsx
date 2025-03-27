@@ -77,7 +77,7 @@ export function AddAssets() {
                       ],
                     })
                   }
-                  placeholder="Type your assetId (0x...)"
+                  placeholder="Enter your asset ID (0x...)"
                 />
               </Input>
               <Box.Flex gap="$2">
@@ -87,7 +87,7 @@ export function AddAssets() {
                     onBlur={(e) =>
                       onChangeAsset(index, { ...asset, name: e.target.value })
                     }
-                    placeholder="Type your asset Name"
+                    placeholder="Enter your asset name"
                   />
                 </Input>
                 <Input isDisabled={!fuel} css={styles.input}>
@@ -96,7 +96,7 @@ export function AddAssets() {
                     onBlur={(e) =>
                       onChangeAsset(index, { ...asset, symbol: e.target.value })
                     }
-                    placeholder="Type your asset Symbol"
+                    placeholder="Enter your asset symbol"
                   />
                 </Input>
                 <Input isDisabled={!fuel} css={styles.input}>
@@ -114,7 +114,7 @@ export function AddAssets() {
                         ],
                       });
                     }}
-                    placeholder="Type your asset Decimals"
+                    placeholder="Enter your asset decimals"
                   />
                 </Input>
               </Box.Flex>
@@ -124,7 +124,7 @@ export function AddAssets() {
                   onBlur={(e) =>
                     onChangeAsset(index, { ...asset, icon: e.target.value })
                   }
-                  placeholder="Type your asset imageUrl"
+                  placeholder="Enter your asset image URL"
                 />
               </Input>
             </Box.Stack>

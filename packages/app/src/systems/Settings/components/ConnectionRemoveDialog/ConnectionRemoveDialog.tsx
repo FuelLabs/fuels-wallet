@@ -37,8 +37,8 @@ export function ConnectionRemoveDialog({
         <Box.Stack className="fuel_AlertDialog-description">
           <Text className="from">{connection.origin}</Text>
           <Text className="message">
-            You will lose the connection of all your accounts with this website.
-            Are you sure you want to disconnect?
+            You will lose the connection between all your accounts and this
+            website. Are you sure you want to disconnect?
           </Text>
         </Box.Stack>
         <AlertDialog.Footer>

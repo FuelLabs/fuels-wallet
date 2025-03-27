@@ -22,7 +22,7 @@ const loadWallet = async (page: Page, _browser: Browser) => {
     await page.getByRole('button', { name: 'Next: Your password' }).click();
     await page.getByPlaceholder('Type your password').fill('qwe123QWE!@#');
     await page.getByPlaceholder('Confirm your password').fill('qwe123QWE!@#');
-    await page.getByRole('button', { name: 'Next: Finish set-up' }).click();
+    await page.getByRole('button', { name: 'Next: Finish setup' }).click();
     await hasText(page, /Wallet created successfully/i);
     await page.goto('http://localhost:3000/#/wallet');
     await waitAriaLabel(page, 'Account 1 selected');
