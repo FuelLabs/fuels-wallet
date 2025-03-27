@@ -7,6 +7,7 @@ import { useNetworks } from '~/systems/Network';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxStatusAlert } from '../../components';
 import { TxContent } from '../../components/TxContent/TxContent';
+import { TransactionViewContext } from '../../context/TransactionViewContext';
 import { useTxResult } from '../../hooks';
 
 export function TxView() {
@@ -27,26 +28,31 @@ export function TxView() {
   const { isLoading: isAccountsLoading } = useAccounts();
 
   return (
-    <Layout
-      title="Transaction"
-      isLoading={ctx.isFetching || ctx.isFetchingResult}
-    >
-      <Layout.TopBar onBack={() => navigate(-1)} />
-      <Layout.Content css={styles.content} noScroll>
-        {ctx.shouldShowAlert && (
-          <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
-        )}
-        {isAccountsLoading || isTxLoading ? (
-          <TxContent.Loader showHeaderLoader />
-        ) : (
-          <FormProvider {...form}>
-            {txResult && (
-              <TxContent.Info tx={txResult} showDetails={ctx.shouldShowTxFee} />
-            )}
-          </FormProvider>
-        )}
-      </Layout.Content>
-    </Layout>
+    <TransactionViewContext.Provider value={{ isHistoryView: true }}>
+      <Layout
+        title="Transaction"
+        isLoading={ctx.isFetching || ctx.isFetchingResult}
+      >
+        <Layout.TopBar onBack={() => navigate(-1)} />
+        <Layout.Content css={styles.content} noScroll>
+          {ctx.shouldShowAlert && (
+            <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
+          )}
+          {isAccountsLoading || isTxLoading ? (
+            <TxContent.Loader showHeaderLoader />
+          ) : (
+            <FormProvider {...form}>
+              {txResult && (
+                <TxContent.Info
+                  tx={txResult}
+                  showDetails={ctx.shouldShowTxFee}
+                />
+              )}
+            </FormProvider>
+          )}
+        </Layout.Content>
+      </Layout>
+    </TransactionViewContext.Provider>
   );
 }
 

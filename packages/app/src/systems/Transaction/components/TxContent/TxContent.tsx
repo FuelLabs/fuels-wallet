@@ -167,7 +167,6 @@ function TxContentInfo({
     <>
       {getHeader()}
       <Box css={styles.content}>
-        {/* <TxContent.Loader showHeaderLoader={false} /> */}
         {isSimulating && !tx && <TxContent.Loader showHeaderLoader={false} />}
         {!!transaction && (
           <>

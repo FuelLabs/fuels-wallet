@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadata';
 import { isValidEthAddress } from '~/systems/Core';
-import { MotionBox } from '~/systems/Core/components/Motion';
+import { useTransactionView } from '../../context/TransactionViewContext';
 import { useAssetsAmount } from '../../hooks/useAssetsAmount';
 import { useBaseAsset } from '../../hooks/useBaseAsset';
 import { getOperationText } from '../../services/transformers/simplifyTransaction';
@@ -18,6 +18,7 @@ export type TxOperationCardProps = {
 };
 
 export function TxOperationCard({ operation }: TxOperationCardProps) {
+  const { isHistoryView } = useTransactionView();
   const { assets, assetsToFrom } = operation;
   const { accounts } = useAccounts();
   const baseAsset = useBaseAsset();
@@ -140,6 +141,7 @@ export function TxOperationCard({ operation }: TxOperationCardProps) {
             isTransfer,
             assetsAmount: amounts,
             hasMessageOut,
+            isHistoryView,
           })}
         </Box.Flex>
 
