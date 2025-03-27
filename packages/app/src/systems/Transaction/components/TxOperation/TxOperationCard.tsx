@@ -16,7 +16,6 @@ export type TxOperationCardProps = {
 };
 
 export function TxOperationCard({ operation }: TxOperationCardProps) {
-  const { isHistoryView } = useTransactionView();
   const { assets, assetsToFrom } = operation;
   const { accounts } = useAccounts();
 
