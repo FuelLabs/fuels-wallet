@@ -7,19 +7,28 @@ import { TxOperationsDrawer } from './TxOperationsDrawer';
 type TxOperationsListProps = {
   operations: CategorizedOperations;
   txAccount?: string;
+  isPastTense?: boolean;
 };
 
-export function TxOperations({ operations, txAccount }: TxOperationsListProps) {
+export function TxOperations({
+  operations,
+  txAccount,
+  isPastTense = false,
+}: TxOperationsListProps) {
   const { findAccount } = useAccounts();
 
   return (
     <Box.Stack gap="$2">
-      <TxOperationsDrawer operations={operations.mainOperations} />
+      <TxOperationsDrawer
+        operations={operations.mainOperations}
+        isPastTense={isPastTense}
+      />
 
       <TxOperationsGroup
         title={`Operations not related to ${findAccount(txAccount)?.name}`}
         operations={operations.notRelatedToCurrentAccount}
         showNesting={false}
+        isPastTense={isPastTense}
       />
       {operations.intermediateContractCalls && (
         <TxOperationsGroup

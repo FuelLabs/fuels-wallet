@@ -46,6 +46,7 @@ export function TxView() {
                 <TxContent.Info
                   tx={txResult}
                   showDetails={ctx.shouldShowTxFee}
+                  isPastTense={true}
                 />
               )}
             </FormProvider>

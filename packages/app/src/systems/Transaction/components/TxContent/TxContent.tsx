@@ -100,6 +100,7 @@ export type TxContentInfoProps = {
   isLoading?: boolean;
   txAccount?: string;
   isSimulating?: boolean;
+  isPastTense?: boolean;
 };
 
 function TxContentInfo({
@@ -114,6 +115,7 @@ function TxContentInfo({
   isLoading,
   txAccount,
   isSimulating,
+  isPastTense = false,
 }: TxContentInfoProps) {
   const { account: currentAccount } = useAccounts();
   const formContext = useFormContext<SendFormValues>();
@@ -173,6 +175,7 @@ function TxContentInfo({
             <TxOperations
               operations={transaction.categorizedOperations}
               txAccount={account}
+              isPastTense={isPastTense}
             />
             <TxFeeSection>
               {(isLoadingFees || (isLoading && !showDetails)) && (

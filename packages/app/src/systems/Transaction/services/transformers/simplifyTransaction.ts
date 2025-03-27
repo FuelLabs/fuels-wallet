@@ -380,6 +380,7 @@ export function getMainOperations(
 
   return mainOperations;
 }
+
 export const getOperationText = ({
   isContract,
   isTransfer,
@@ -396,7 +397,7 @@ export const getOperationText = ({
   if (isContract) {
     if (assetsAmount && assetsAmount.length > 0) {
       return isPastTense
-        ? 'Called contract (sending funds)'
+        ? 'Called contract (sent funds)'
         : 'Calling contract (sending funds)';
     }
     return isPastTense ? 'Called contract' : 'Calling contract';
