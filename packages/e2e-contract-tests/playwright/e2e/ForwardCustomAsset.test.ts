@@ -11,21 +11,12 @@ import { bn } from 'fuels';
 import '../../load.envs';
 import { CustomAsset } from '../../src/contracts/contracts';
 import type { IdentityInput } from '../../src/contracts/contracts/CustomAssetAbi';
-import {
-  calculateAssetId,
-  getBaseAssetId,
-  shortAddress,
-} from '../../src/utils';
+import { calculateAssetId, getBaseAssetId } from '../../src/utils';
 import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import {
-  checkAddresses,
-  checkAriaLabelsContainsText,
-  connect,
-  waitSuccessTransaction,
-} from './utils';
+import { checkAddresses, connect, waitSuccessTransaction } from './utils';
 
 useLocalCRX();
 
@@ -85,28 +76,17 @@ test.describe('Forward Custom Asset', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
-    // Test if asset name is defined (not unknown)
-    await checkAriaLabelsContainsText(
-      walletNotificationPage,
-      'Asset Name',
-      'Ethereum'
-    );
-    // Test if sender name is defined (not unknown)
-    await checkAriaLabelsContainsText(
-      walletNotificationPage,
-      'Sender Name',
-      ''
-    );
-
     // test the asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
 
     // test asset id is correct
     const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
-    await hasText(walletNotificationPage, shortAddress(assetId));
 
     // test forward custom asset amount is correct
-    await hasText(walletNotificationPage, formattedForwardCustomAssetAmount);
+    await hasText(
+      walletNotificationPage,
+      `${formattedForwardCustomAssetAmount} Unknown`
+    );
 
     // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');

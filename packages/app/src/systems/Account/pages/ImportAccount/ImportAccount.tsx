@@ -35,7 +35,7 @@ export const ImportAccount = () => {
           css={cssObj({ margin: '$2 0' })}
         >
           <Alert.Description>
-            Imported accounts using a private key are not recoverable via your
+            Accounts imported using a private key are not recoverable via your
             wallet's seed phrase.
           </Alert.Description>
         </Alert>

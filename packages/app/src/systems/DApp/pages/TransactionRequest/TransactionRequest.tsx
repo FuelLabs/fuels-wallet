@@ -2,11 +2,12 @@ import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
 import { bn } from 'fuels';
 import { useMemo } from 'react';
-import { Layout } from '~/systems/Core';
-import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
+import { Layout, coreStyles } from '~/systems/Core';
 import { TxContent, getGasLimitFromTxRequest } from '~/systems/Transaction';
 import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
+import { TxReviewAlert } from '~/systems/Transaction/components/TxReviewAlert/TxReviewAlert';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
+import { TxRequestStatus } from '../../machines/transactionRequestMachine';
 import { AutoSubmit } from './TransactionRequest.AutoSubmit';
 import {
   FormProvider,
@@ -32,6 +33,7 @@ export function TransactionRequest() {
     proposedTxRequest,
     isLoadingFees,
     isSimulating,
+    input,
   } = txRequest;
   const defaultValues = useMemo<TransactionRequestFormData | undefined>(() => {
     if (!txSummarySimulated || !proposedTxRequest) return undefined;
@@ -53,9 +55,8 @@ export function TransactionRequest() {
     };
   }, [txSummarySimulated, proposedTxRequest]);
 
-  const isLoadingInfo = useMemo<boolean>(() => {
-    return status('loading') || status('sending');
-  }, [status]);
+  const shouldShowReviewAlert =
+    !status(TxRequestStatus.success) && !status(TxRequestStatus.failed);
 
   return (
     <FormProvider
@@ -69,22 +70,24 @@ export function TransactionRequest() {
     >
       <AutoSubmit />
 
-      <Layout title={title} noBorder>
-        <Layout.TopBar type={TopBarType.external} />
-        <Layout.Content css={styles.content}>
+      <Layout title={title} isLoading={isLoading}>
+        <Layout.TopBar hideMenu hideBackArrow />
+        {shouldShowReviewAlert && <TxReviewAlert />}
+        <Layout.Content css={styles.content} noScroll>
           {shouldShowTxSimulated && (
             <TxContent.Info
               showDetails
               tx={txSummarySimulated}
               txRequest={proposedTxRequest}
-              isLoading={isLoadingInfo}
               errors={errors.simulateTxErrors}
-              isConfirm
               fees={fees}
               isLoadingFees={isLoadingFees}
+              isLoading={isLoading}
+              txAccount={input?.address}
+              isSimulating={isSimulating}
             />
           )}
-          {shouldShowTxExecuted && (
+          {shouldShowTxExecuted && txSummaryExecuted && (
             <TxContent.Info
               showDetails
               tx={txSummaryExecuted}
@@ -101,6 +104,7 @@ export function TransactionRequest() {
                   </Button>
                 )
               }
+              txAccount={input?.address}
             />
           )}
         </Layout.Content>
@@ -133,13 +137,21 @@ const styles = {
     mt: '$4',
   }),
   content: cssObj({
-    '& h2': {
-      m: '$0',
-      fontSize: '$sm',
-      color: '$intentsBase12',
+    ...coreStyles.scrollable('$intentsBase3'),
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '$2',
+    backgroundColor: '$intentsBase3',
+    padding: '$2 0 $2 $3',
+    overflowY: 'scroll !important',
+    '&::-webkit-scrollbar': {
+      width: '$3',
+      backgroundColor: 'transparent',
     },
-    '& h4': {
-      m: '$0',
+
+    'html[class="fuel_dark-theme"] &': {
+      backgroundColor: '$bodyBg',
     },
   }),
   approveUrlTag: cssObj({

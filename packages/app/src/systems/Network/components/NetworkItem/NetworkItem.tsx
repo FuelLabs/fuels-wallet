@@ -6,16 +6,21 @@ import { forwardRef } from 'react';
 
 import { NetworkRemoveDialog } from '../NetworkRemoveDialog/NetworkRemoveDialog';
 
-export function NetworkStatus({ network }: { network: NetworkData }) {
+export function NetworkStatus({
+  network,
+  size = '22px',
+}: {
+  network: NetworkData;
+  size?: string;
+}) {
   return (
     <Text
       as="span"
       css={{
         display: 'inline-flex',
         alignItems: 'center',
-        color: network.isSelected ? '$intentsPrimary11' : '$intentsBase8',
-        fontSize: '16px',
-        height: '$4',
+        color: network.isSelected ? '$brand' : '$intentsBase8',
+        fontSize: size,
       }}
     >
       ●
@@ -81,6 +86,7 @@ const styles = {
     minHeight: '52px',
     boxSizing: 'border-box',
     background: '$cardBg',
+    color: '$textHeading',
 
     '&:hover': {
       cursor: 'pointer',

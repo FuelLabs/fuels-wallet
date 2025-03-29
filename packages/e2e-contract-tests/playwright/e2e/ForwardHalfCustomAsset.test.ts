@@ -10,22 +10,13 @@ import { bn } from 'fuels';
 
 import '../../load.envs';
 import type { IdentityInput } from '../../src/contracts/contracts/CustomAssetAbi';
-import {
-  calculateAssetId,
-  getBaseAssetId,
-  shortAddress,
-} from '../../src/utils';
+import { calculateAssetId, getBaseAssetId } from '../../src/utils';
 import { testSetup, transferMaxBalance } from '../utils';
 
 import { CustomAsset } from '../../src/contracts/contracts';
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import {
-  checkAddresses,
-  checkAriaLabelsContainsText,
-  connect,
-  waitSuccessTransaction,
-} from './utils';
+import { checkAddresses, connect, waitSuccessTransaction } from './utils';
 
 useLocalCRX();
 test.describe('Forward Half Custom Asset', () => {
@@ -34,7 +25,7 @@ test.describe('Forward Half Custom Asset', () => {
   let masterWallet: WalletUnlocked;
 
   const forwardCustomAssetAmount = '10000';
-  const formattedForwardCustomAssetAmount = '10,000';
+  const _formattedForwardCustomAssetAmount = '10,000';
   const formattedHalfForwardCustomAssetAmount = '5,000';
 
   test.beforeEach(async ({ context, extensionId, page }) => {
@@ -88,33 +79,10 @@ test.describe('Forward Half Custom Asset', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
-    // Test if asset name is defined (not unknown)
-    await checkAriaLabelsContainsText(
-      walletNotificationPage,
-      'Asset Name',
-      'Ethereum'
-    );
-    // Test if sender name is defined (not unknown)
-    await checkAriaLabelsContainsText(
-      walletNotificationPage,
-      'Sender Name',
-      ''
-    );
-    // test the forward asset name is shown
-    await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
-    // test forward asset id is correct
-    await hasText(walletNotificationPage, shortAddress(assetId));
-    // test forward custom asset amount is correct
-    await hasText(walletNotificationPage, formattedForwardCustomAssetAmount);
-
-    // test return asset name is shown
-    await hasText(walletNotificationPage, 'Unknown', 1, 5000, true);
-    // test return asset id is shown
-    await hasText(walletNotificationPage, shortAddress(assetId), 1);
     // test return asset amount is correct
     await hasText(
       walletNotificationPage,
-      formattedHalfForwardCustomAssetAmount
+      `${formattedHalfForwardCustomAssetAmount} Unknown`
     );
 
     // test gas fee is correct
@@ -124,11 +92,6 @@ test.describe('Forward Half Custom Asset', () => {
     await checkAddresses(
       { address: fuelWallet.address.toString(), isContract: false },
       { address: MAIN_CONTRACT_ID, isContract: true },
-      walletNotificationPage
-    );
-    await checkAddresses(
-      { address: MAIN_CONTRACT_ID, isContract: true },
-      { address: fuelWallet.address.toString(), isContract: false },
       walletNotificationPage
     );
 

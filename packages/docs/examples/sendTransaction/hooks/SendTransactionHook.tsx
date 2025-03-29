@@ -75,7 +75,7 @@ export function SendTransactionHook() {
             variant="ghost"
             css={styles.feedbackTag}
           >
-            Transaction ID: {data}
+            Transaction ID: {typeof data === 'string' ? data : data.id}
           </Tag>
         )}
       </Box.Stack>

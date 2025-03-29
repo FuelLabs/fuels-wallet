@@ -102,12 +102,22 @@ export function SendSelect({
     tip,
     form.setValue,
     isSendingBaseAssetId,
+    handlers.recalculateFromAmount,
   ]);
 
-  const assetSelectItems = balances?.map((b) => ({
-    assetId: b.assetId,
-    ...b.asset,
-  }));
+  const assetSelectItems = balances
+    ?.map((b) => ({
+      assetId: b.assetId,
+      ...b.asset,
+    }))
+    .sort((a, b) => {
+      if (a.verified !== b.verified) return b.verified ? 1 : -1;
+      if (a.isNft !== b.isNft) return b.isNft ? 1 : -1;
+      if (a.collection !== b.collection)
+        return (a.collection || '').localeCompare(b.collection || '');
+      if (a.name !== b.name) return (a.name || '').localeCompare(b.name || '');
+      return (a.assetId || '').localeCompare(b.assetId || '');
+    });
 
   return (
     <MotionContent {...animations.slideInTop()}>
@@ -154,7 +164,7 @@ export function SendSelect({
                     {...field}
                     id="search-address"
                     aria-label="Address Input"
-                    placeholder="Enter a fuel address"
+                    placeholder="Enter a Fuel address"
                   />
                 </Input>
               )}
@@ -215,7 +225,7 @@ export function SendSelect({
           regularTip &&
           fastTip && (
             <MotionStack {...animations.slideInTop()} gap="$3">
-              <Text as="span" css={styles.title}>
+              <Text as="span" css={styles.titleFee}>
                 Fee (network)
               </Text>
               <TxFeeOptions
@@ -256,6 +266,12 @@ const styles = {
     fontSize: '$md',
     fontWeight: '$normal',
     width: '48px',
+  }),
+  titleFee: cssObj({
+    pt: '$2',
+    color: '$intentsBase12',
+    fontSize: '$md',
+    fontWeight: '$normal',
   }),
   addressRow: cssObj({
     flex: 1,

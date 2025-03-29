@@ -89,3 +89,4 @@ playwright-results
 playwright-html
 
 packages/e2e-contract-tests/src/contract-ids.json
+.vscode/settings.json

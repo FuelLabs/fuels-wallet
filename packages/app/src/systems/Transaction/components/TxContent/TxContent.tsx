@@ -2,12 +2,11 @@ import { cssObj } from '@fuel-ui/css';
 import {
   Alert,
   Box,
-  CardList,
+  Card,
   ContentLoader,
   Copyable,
   Icon,
   Text,
-  VStack,
 } from '@fuel-ui/react';
 import type {
   BN,
@@ -17,17 +16,19 @@ import type {
 } from 'fuels';
 import { type ReactNode, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
-import type { Maybe } from '~/systems/Core';
-import { MotionStack, animations } from '~/systems/Core';
+import { useAccounts } from '~/systems/Account';
+import { type Maybe, MotionStack, animations } from '~/systems/Core';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import {
   type GroupedErrors,
-  TxFee,
-  TxHeader,
-  TxOperations,
   getGasLimitFromTxRequest,
 } from '~/systems/Transaction';
+import { useSimplifiedTransaction } from '../../hooks/useSimplifiedTransaction';
+import { TxFee } from '../TxFee';
+import { TxFeeSection } from '../TxFee/TxFeeSection';
 import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
+import { TxHeader } from '../TxHeader';
+import { TxOperations } from '../TxOperations';
 
 const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
   return (
@@ -54,42 +55,40 @@ const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
   );
 };
 
-const ConfirmHeader = () => (
-  <Alert status="warning" css={styles.alert} aria-label="Confirm Transaction">
-    <Alert.Description>
-      Carefully check if all the details in your transaction are correct
-    </Alert.Description>
-  </Alert>
-);
-
 const LoaderHeader = () => (
-  <CardList.Item
-    css={{ padding: '$2 !important' }}
-    aria-label="Loading Transaction"
-  >
-    <ContentLoader width={300} height={40} viewBox="0 0 300 40">
-      <rect x="20" y="10" rx="4" ry="4" width="92" height="20" />
+  <Card css={{ height: 84 }}>
+    <ContentLoader width={'100%'} height={'100%'} viewBox="0 0 300 84">
+      <rect x="16" y="15" width="15" height="15" rx="4" />
+      <rect x="80" y="15" width="130" height="15" rx="4" />
+
+      <rect x="16" y="35" width="55" height="15" rx="4" />
+      <rect x="80" y="35" width="90" height="15" rx="4" />
+
+      <rect x="16" y="55" width="35" height="15" rx="4" />
+      <rect x="80" y="55" width="60" height="15" rx="4" />
     </ContentLoader>
-  </CardList.Item>
+  </Card>
 );
 
-function TxContentLoader() {
+type TxContentLoaderProps = {
+  showHeaderLoader?: boolean;
+};
+
+function TxContentLoader({ showHeaderLoader = true }: TxContentLoaderProps) {
   return (
     <MotionStack {...animations.slideInTop()} gap="$4">
-      <LoaderHeader />
+      {showHeaderLoader && <LoaderHeader />}
       <TxOperations.Loader />
-      <TxFee.Loader />
+      <TxFeeSection isLoading />
     </MotionStack>
   );
 }
 
 export type TxContentInfoProps = {
   footer?: ReactNode;
-  tx?: Maybe<TransactionSummary>;
+  tx?: TransactionSummary;
   txStatus?: Maybe<TransactionStatus>;
   showDetails?: boolean;
-  isLoading?: boolean;
-  isConfirm?: boolean;
   errors?: GroupedErrors;
   fees?: {
     baseFee?: BN;
@@ -98,6 +97,10 @@ export type TxContentInfoProps = {
   };
   txRequest?: TransactionRequest;
   isLoadingFees?: boolean;
+  isLoading?: boolean;
+  txAccount?: string;
+  isSimulating?: boolean;
+  isPastTense?: boolean;
 };
 
 function TxContentInfo({
@@ -105,79 +108,101 @@ function TxContentInfo({
   txStatus,
   footer,
   showDetails,
-  isLoading,
-  isConfirm,
   errors,
   fees,
   txRequest,
   isLoadingFees,
+  isLoading,
+  txAccount,
+  isSimulating,
+  isPastTense = false,
 }: TxContentInfoProps) {
-  const { getValues } = useFormContext<SendFormValues>();
-
+  const { account: currentAccount } = useAccounts();
+  const formContext = useFormContext<SendFormValues>();
+  const { getValues } = formContext || {};
   const status = txStatus || tx?.status || txStatus;
   const hasErrors = Boolean(Object.keys(errors || {}).length);
-  const isExecuted = !!tx?.id;
+  const isExecuted = !!tx?.id && status; // Added status check to ensure the tx is executed, as TX.id is now always present.
   const txRequestGasLimit = getGasLimitFromTxRequest(txRequest);
+
+  const account = txAccount || currentAccount?.address;
+
+  const { transaction } = useSimplifiedTransaction({
+    tx,
+    txRequest,
+    txAccount: account,
+  });
 
   const initialAdvanced = useMemo(() => {
     if (!fees?.regularTip || !fees?.fastTip) return false;
 
-    // it will start as advanced if the transaction tip is not equal to the regular tip and fast tip
-    const isFeeAmountTheRegularTip = getValues('fees.tip.amount').eq(
-      fees.regularTip
-    );
-    const isFeeAmountTheFastTip = getValues('fees.tip.amount').eq(fees.fastTip);
-    // it will start as advanced if the gasLimit if different from the tx gasLimit
-    const isGasLimitTheTxRequestGasLimit = getValues('fees.gasLimit.amount').eq(
-      txRequestGasLimit
-    );
+    try {
+      const tipAmount = getValues?.('fees.tip.amount');
+      const gasLimitAmount = getValues?.('fees.gasLimit.amount');
+      if (!tipAmount || !gasLimitAmount) return false;
 
-    return (
-      (!isFeeAmountTheRegularTip && !isFeeAmountTheFastTip) ||
-      !isGasLimitTheTxRequestGasLimit
-    );
+      const isFeeAmountTheRegularTip = tipAmount.eq(fees.regularTip);
+      const isFeeAmountTheFastTip = tipAmount.eq(fees.fastTip);
+      const isGasLimitTheTxRequestGasLimit =
+        gasLimitAmount.eq(txRequestGasLimit);
+
+      return (
+        (!isFeeAmountTheRegularTip && !isFeeAmountTheFastTip) ||
+        !isGasLimitTheTxRequestGasLimit
+      );
+    } catch (_) {
+      return false;
+    }
   }, [getValues, fees, txRequestGasLimit]);
 
   function getHeader() {
     if (hasErrors) return <ErrorHeader errors={errors} />;
-    if (isConfirm) return <ConfirmHeader />;
     if (isExecuted)
       return (
         <TxHeader id={tx?.id} type={tx?.type} status={status || undefined} />
       );
 
-    return <ConfirmHeader />;
+    return null;
   }
 
   return (
-    <Box.Stack gap="$4">
+    <>
       {getHeader()}
-      <TxOperations
-        operations={tx?.operations}
-        status={status}
-        isLoading={isLoading}
-      />
-      {/* @TODO: we need to fix the <TxFee.Loader /> when completing the work on tx simple view */}
-      {(isLoadingFees || (isLoading && !showDetails)) && <TxFee.Loader />}
-      {showDetails && !fees?.baseFee && <TxFee fee={tx?.fee} />}
-      {showDetails &&
-        fees?.baseFee &&
-        txRequestGasLimit &&
-        fees?.regularTip &&
-        fees?.fastTip && (
-          <VStack gap="$3">
-            <Text as="span">Fee (network)</Text>
-            <TxFeeOptions
-              initialAdvanced={initialAdvanced}
-              baseFee={fees.baseFee}
-              gasLimit={txRequestGasLimit}
-              regularTip={fees.regularTip}
-              fastTip={fees.fastTip}
+      <Box css={styles.content}>
+        {isSimulating && !tx && <TxContent.Loader showHeaderLoader={false} />}
+        {!!transaction && (
+          <>
+            <TxOperations
+              operations={transaction.categorizedOperations}
+              txAccount={account}
+              isPastTense={isPastTense}
             />
-          </VStack>
+            <TxFeeSection>
+              {(isLoadingFees || (isLoading && !showDetails)) && (
+                <TxFee.Loader />
+              )}
+              {showDetails && !fees?.baseFee && (
+                <TxFee fee={transaction?.fee.total} />
+              )}
+              {showDetails &&
+                fees?.baseFee &&
+                txRequestGasLimit &&
+                fees?.regularTip &&
+                fees?.fastTip && (
+                  <TxFeeOptions
+                    initialAdvanced={initialAdvanced}
+                    baseFee={fees.baseFee}
+                    gasLimit={txRequestGasLimit}
+                    regularTip={fees.regularTip}
+                    fastTip={fees.fastTip}
+                  />
+                )}
+            </TxFeeSection>
+          </>
         )}
+      </Box>
       {footer}
-    </Box.Stack>
+    </>
   );
 }
 
@@ -187,10 +212,10 @@ export const TxContent = {
 };
 
 const styles = {
-  fees: cssObj({
-    color: '$intentsBase12',
-    fontSize: '$md',
-    fontWeight: '$normal',
+  content: cssObj({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   }),
   alert: cssObj({
     '& .fuel_Alert-content': {

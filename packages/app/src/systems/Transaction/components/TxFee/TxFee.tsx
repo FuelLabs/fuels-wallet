@@ -1,13 +1,11 @@
-import { Card, HStack, Text } from '@fuel-ui/react';
+import { Box, HStack, Text } from '@fuel-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { type BN, DEFAULT_PRECISION } from 'fuels';
-import { type FC, useEffect, useMemo, useState } from 'react';
+import { type FC, useMemo } from 'react';
 
-import type { AssetFuelData } from '@fuel-wallet/types';
-import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
-import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { TxFeeAmountLoader } from '~/systems/Transaction/components/TxFee/TxFeeAmountLoader';
+import { useBaseAsset } from '../../hooks/useBaseAsset';
 import { TxFeeLoader } from './TxFeeLoader';
 import { styles } from './styles';
 
@@ -35,30 +33,7 @@ export const TxFee: TxFeeComponent = ({
   onChecked,
   title,
 }: TxFeeProps) => {
-  const provider = useProvider();
-  const [baseAsset, setBaseAsset] = useState<AssetFuelData | undefined>();
-  useEffect(() => {
-    let abort = false;
-    const getBaseAsset = async () => {
-      const [baseAssetId, chainId] = await Promise.all([
-        provider?.getBaseAssetId(),
-        provider?.getChainId(),
-      ]);
-      if (abort || baseAssetId == null || chainId == null) return;
-      const baseAsset = await AssetsCache.getInstance().getAsset({
-        chainId: chainId,
-        assetId: baseAssetId,
-        dbAssets: [],
-        save: false,
-      });
-      if (abort) return;
-      setBaseAsset(baseAsset);
-    };
-    getBaseAsset();
-    return () => {
-      abort = true;
-    };
-  }, [provider]);
+  const baseAsset = useBaseAsset();
 
   const feeInUsd = useMemo(() => {
     if (baseAsset?.rate == null || fee == null) return '$0';
@@ -69,17 +44,19 @@ export const TxFee: TxFeeComponent = ({
   const ready = !!fee && !!feeInUsd;
 
   return (
-    <Card
+    <Box
       css={styles.detailItem(!!checked, !!onChecked, !!title)}
       onClick={() => onChecked?.(true)}
     >
-      <Text
-        color="intentsBase12"
-        css={styles.title}
-        aria-label={`fee title:${title || 'Network'}`}
-      >
-        {title || 'Fee (network)'}
-      </Text>
+      {title ? (
+        <Text
+          color="intentsBase12"
+          css={styles.title}
+          aria-label={`fee title:${title || 'Network'}`}
+        >
+          {title || 'Network Fee'}
+        </Text>
+      ) : null}
       <HStack gap="$1">
         <AnimatePresence>
           {!ready ? (
@@ -123,7 +100,7 @@ export const TxFee: TxFeeComponent = ({
           )
         </MotionText>
       </HStack>
-    </Card>
+    </Box>
   );
 };
 

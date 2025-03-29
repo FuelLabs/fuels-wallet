@@ -187,7 +187,7 @@ test.describe('FuelWallet Extension', () => {
       await getButtonByText(page, /Next: Seed Phrase/i).click();
 
       /** Copy Mnemonic */
-      await hasText(page, /Write down seed phrase/i);
+      await hasText(page, /Write Down Your Seed Phrase/i);
       await getButtonByText(page, /Copy/i).click();
       const savedCheckbox = getByAriaLabel(page, 'Confirm Saved');
       await savedCheckbox.click();

@@ -33,80 +33,110 @@ export const TxHeader: TxHeaderComponent = ({ status, id, type }) => {
 
   return (
     <Card css={styles.root}>
-      <HStack align="center" justify="between" gap="$2">
-        <Box.Flex grow="1" gap="$2">
-          <Text fontSize="sm">ID: </Text>
-          <Text fontSize="sm" color="intentsBase12">
-            {shortAddress(id)}
-          </Text>
-        </Box.Flex>
-        <HStack align="center">
-          <Copyable
-            value={id || ''}
-            iconProps={{
-              icon: Icon.is('Copy'),
-              'aria-label': 'Copy Transaction ID',
-            }}
-            tooltipMessage="Copy Transaction ID"
-          />
-          {href && (
-            <>
-              <Copyable
-                value={href}
-                tooltipMessage="Copy Transaction Link"
-                iconProps={{
-                  icon: Icon.is('Link'),
-                  'aria-label': 'Copy Transaction Link',
-                }}
-              />
-              <Tooltip content="View on Explorer">
-                <Icon
-                  css={styles.icon}
-                  icon={Icon.is('ExternalLink')}
-                  onClick={openExplorer}
-                  aria-label="View on Explorer"
+      <Box css={styles.header}>
+        <HStack align="center" justify="between" gap="$2">
+          <Box.Flex grow="1" gap="$2">
+            <Text fontSize="sm" css={styles.headerRowTitle}>
+              ID:
+            </Text>
+            <Text fontSize="sm" css={styles.headerRowValue}>
+              {shortAddress(id)}
+            </Text>
+          </Box.Flex>
+          <HStack align="center">
+            <Copyable
+              value={id || ''}
+              iconProps={{
+                icon: Icon.is('Copy'),
+                'aria-label': 'Copy Transaction ID',
+              }}
+              tooltipMessage="Copy Transaction ID"
+            />
+            {href && (
+              <>
+                <Copyable
+                  value={href}
+                  tooltipMessage="Copy Transaction Link"
+                  iconProps={{
+                    icon: Icon.is('Link'),
+                    'aria-label': 'Copy Transaction Link',
+                  }}
                 />
-              </Tooltip>
-            </>
-          )}
+                <Tooltip content="View on Explorer">
+                  <Icon
+                    css={styles.icon}
+                    icon={Icon.is('ExternalLink')}
+                    onClick={openExplorer}
+                    aria-label="View on Explorer"
+                  />
+                </Tooltip>
+              </>
+            )}
+          </HStack>
         </HStack>
-      </HStack>
-      <HStack align="center" gap="$2">
-        <Text fontSize="sm">Status: </Text>
-        <Text fontSize="sm" color="intentsBase12">
-          {status}
-        </Text>
-        <Text
-          as="span"
-          aria-label="Status Circle"
-          css={styles.circle}
-          data-status={status}
-        />
-      </HStack>
-      <HStack align="center" gap="$2">
-        <Text fontSize="sm">Type: </Text>
-        <Text fontSize="sm" color="intentsBase12">
-          {type}
-        </Text>
-      </HStack>
+        <HStack align="center" gap="$2">
+          <Text fontSize="sm" css={styles.headerRowTitle}>
+            Status:{' '}
+          </Text>
+          <Text fontSize="sm" css={styles.headerRowValue}>
+            {status}
+          </Text>
+          <Text
+            as="span"
+            aria-label="Status Circle"
+            css={styles.circle}
+            data-status={status}
+          />
+        </HStack>
+        <HStack align="center" gap="$2">
+          <Text fontSize="sm" css={styles.headerRowTitle}>
+            Type:{' '}
+          </Text>
+          <Text fontSize="sm" css={styles.headerRowValue}>
+            {type}
+          </Text>
+        </HStack>
+      </Box>
     </Card>
   );
 };
 
 const styles = {
   root: cssObj({
-    px: '$4',
-    py: '$3',
     fontWeight: '$normal',
-
+    borderRadius: '10px',
+    border: 'none',
+    backgroundColor: '$gray5',
+    padding: '2px',
     '.fuel_copyable-icon': {
       color: '$brand !important',
     },
+    'html[class="fuel_dark-theme"] &': {
+      backgroundColor: '$gray2',
+      border: '1px solid $gray3',
+    },
+  }),
+  header: cssObj({
+    px: '$4',
+    py: '$3',
+    backgroundColor: '$cardBg',
+    borderRadius: '8px',
+    'html[class="fuel_light-theme"] &': {
+      boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
+    },
+  }),
+  headerRowTitle: cssObj({
+    minWidth: '50px',
+  }),
+  headerRowValue: cssObj({
+    color: '$textHeading',
+    fontWeight: '$medium',
+    textTransform: 'capitalize',
   }),
   circle: cssObj({
     borderRadius: '100%',
-    width: 6,
-    height: 6,
+    width: 8,
+    height: 8,
     cursor: 'default',
 
     [`&[data-status="${TransactionStatus.success}"]`]: {

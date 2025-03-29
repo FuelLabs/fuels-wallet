@@ -81,6 +81,13 @@ export function useAccounts() {
     return accountStatus === status;
   }
 
+  function findAccount(address?: string) {
+    if (!address) return undefined;
+    return accounts?.find(
+      (acc) => acc.address.toLowerCase() === address.toLowerCase()
+    );
+  }
+
   useEffect(() => {
     if (shouldListen.current) {
       shouldListen.current = false;
@@ -103,6 +110,7 @@ export function useAccounts() {
     canHideAccounts,
     hasHiddenAccounts,
     isLoading: status('loading'),
+    findAccount,
     handlers: {
       closeDialog,
       goToList: store.openAccountList,

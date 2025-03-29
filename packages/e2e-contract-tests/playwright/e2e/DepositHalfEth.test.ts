@@ -9,7 +9,6 @@ import type { WalletUnlocked } from 'fuels';
 import { bn } from 'fuels';
 
 import '../../load.envs.js';
-import { getBaseAssetId, shortAddress } from '../../src/utils';
 import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
@@ -64,34 +63,9 @@ test.describe('Deposit Half ETH', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
-    // Test if asset name is defined (not unknown)
-    await checkAriaLabelsContainsText(
-      walletNotificationPage,
-      'Asset Name',
-      'Ethereum'
-    );
-    // Test if sender name is defined (not unknown)
-    await checkAriaLabelsContainsText(
-      walletNotificationPage,
-      'Sender Name',
-      ''
-    );
-
-    // test forward asset name is shown
-    await hasText(walletNotificationPage, 'Ethereum');
-    // test forward asset id is shown
-    await hasText(walletNotificationPage, shortAddress(await getBaseAssetId()));
     // test forward eth amount is correct
     await hasText(walletNotificationPage, `${depositAmount} ETH`);
 
-    // test return asset name is shown
-    await hasText(walletNotificationPage, 'Ethereum', 1);
-    // test return asset id is shown
-    await hasText(
-      walletNotificationPage,
-      shortAddress(await getBaseAssetId()),
-      1
-    );
     // test return eth amount is correct
     await hasText(walletNotificationPage, `${halfDepositAmount} ETH`);
 
@@ -104,11 +78,7 @@ test.describe('Deposit Half ETH', () => {
       { address: MAIN_CONTRACT_ID, isContract: true },
       walletNotificationPage
     );
-    await checkAddresses(
-      { address: MAIN_CONTRACT_ID, isContract: true },
-      { address: fuelWallet.address.toString(), isContract: false },
-      walletNotificationPage
-    );
+    // As operations are now grouped, a single checkAddresses is enough
 
     const preDepositBalanceEth = await fuelWallet.getBalance();
 

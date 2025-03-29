@@ -63,25 +63,11 @@ test.describe('Forward Eth', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
-    await checkAriaLabelsContainsText(
-      walletNotificationPage,
-      'Asset Name',
-      'Ethereum'
-    );
-    // Test if sender name is defined (not unknown)
-    await checkAriaLabelsContainsText(
-      walletNotificationPage,
-      'Sender Name',
-      ''
-    );
-    await hasText(walletNotificationPage, 'Ethereum');
-
-    // test asset id is correct
-    const baseAssetId = await getBaseAssetId();
-    await hasText(walletNotificationPage, shortAddress(baseAssetId));
-
     // test forward eth amount is correct
-    await hasText(walletNotificationPage, `${forwardEthAmount} ETH`);
+    await hasText(
+      walletNotificationPage,
+      `${forwardEthAmount.slice(0, 5)} ETH`
+    );
     await hasText(walletNotificationPage, 'Fee (network)');
 
     // test to and from addresses

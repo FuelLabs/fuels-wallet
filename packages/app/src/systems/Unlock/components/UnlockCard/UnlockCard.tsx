@@ -60,7 +60,9 @@ export function UnlockCard({
               >
                 {headerText}
               </Heading>
-              <Text fontSize="sm">Unlock your wallet to continue</Text>
+              <Text fontSize="sm">
+                Enter your password to unlock your wallet
+              </Text>
             </Box>
             <UnlockForm form={form} />
           </Box.Stack>

@@ -50,7 +50,7 @@ export function AssetForm({ form, isEditing }: AssetFormProps) {
       <ControlledField
         control={control}
         name="assetId"
-        label="AssetId"
+        label="Asset ID"
         isRequired
         isInvalid={Boolean(formState.errors?.assetId)}
         render={({ field }) => (
@@ -79,7 +79,7 @@ export function AssetForm({ form, isEditing }: AssetFormProps) {
               min={0}
               max={19}
               aria-label="Asset decimals"
-              placeholder="Number of decimals ex. 9"
+              placeholder="Number of decimals (e.g., 9)"
             />
           </Input>
         )}

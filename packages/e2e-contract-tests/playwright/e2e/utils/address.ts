@@ -11,41 +11,19 @@ export const checkAddresses = async (
   fromPosition = 0,
   toPosition = 0
 ) => {
-  const fromArticle = page
-    .getByRole('article')
-    .filter({
-      has: page
-        .getByRole('paragraph')
-        .getByText(`From${from.isContract ? ' (Contract)' : ''}`, {
-          exact: true,
-        }),
-      hasNotText: 'To',
-    })
-    .nth(fromPosition);
+  const fromArticle = page.getByLabel('From address').nth(fromPosition);
 
   const fromShortAddress = shortAddress(from.address);
-  const fromAddressText = fromArticle
-    .getByRole('paragraph')
-    .getByText(fromShortAddress, { exact: true });
+
+  // from address text is fromArticle > div > div > p
+  const fromAddressText = fromArticle.locator('div').locator('p');
   await expect(fromAddressText).toHaveText(fromShortAddress, {
     useInnerText: true,
   });
 
-  const toArticle = page
-    .getByRole('article')
-    .filter({
-      has: page
-        .getByRole('paragraph')
-        .getByText(`To${to.isContract ? ' (Contract)' : ''}`, {
-          exact: true,
-        }),
-      hasNotText: 'From',
-    })
-    .nth(toPosition);
+  const toArticle = page.getByLabel('To address').nth(toPosition);
   const toShortAddress = shortAddress(to.address);
-  const toAddressText = toArticle
-    .getByRole('paragraph')
-    .getByText(toShortAddress, { exact: true });
+  const toAddressText = toArticle.locator('div').locator('p');
   await expect(toAddressText).toHaveText(toShortAddress, {
     useInnerText: true,
   });

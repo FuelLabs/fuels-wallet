@@ -1,5 +1,47 @@
 # fuels-wallet
 
+## 0.52.0
+
+### Minor Changes
+
+- [#1886](https://github.com/FuelLabs/fuels-wallet/pull/1886) [`b080e659`](https://github.com/FuelLabs/fuels-wallet/commit/b080e65952f69936bd73b49b79615f17f625c73d) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: update copies through the application
+
+### Patch Changes
+
+- [#1891](https://github.com/FuelLabs/fuels-wallet/pull/1891) [`205822f1`](https://github.com/FuelLabs/fuels-wallet/commit/205822f18b38f19e0204023d62f5cfcc455fd0fa) Thanks [@nelitow](https://github.com/nelitow)! - feat: update transaction copy to consider past/present tense
+
+- [#1885](https://github.com/FuelLabs/fuels-wallet/pull/1885) [`7523b819`](https://github.com/FuelLabs/fuels-wallet/commit/7523b819522befeaac7a605c469498d3642892f8) Thanks [@nelitow](https://github.com/nelitow)! - Add USD values for known tokens.
+
+- Updated dependencies [[`b080e659`](https://github.com/FuelLabs/fuels-wallet/commit/b080e65952f69936bd73b49b79615f17f625c73d)]:
+  - @fuels/playwright-utils@0.52.0
+  - @fuel-wallet/connections@0.52.0
+
+## 0.51.1
+
+### Patch Changes
+
+- [#1879](https://github.com/FuelLabs/fuels-wallet/pull/1879) [`abb9a79f`](https://github.com/FuelLabs/fuels-wallet/commit/abb9a79f22cf1814ee16788b78723cf3b8567fbb) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: show Withdraw operation when it has MESSAGE_OUT receipt + improve order of assets in Send Page
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.51.1
+  - @fuels/playwright-utils@0.51.1
+
+## 0.51.0
+
+### Minor Changes
+
+- [#1787](https://github.com/FuelLabs/fuels-wallet/pull/1787) [`180153bb`](https://github.com/FuelLabs/fuels-wallet/commit/180153bb2bdb884cf2cef6abc4e0a422c93cc262) Thanks [@nelitow](https://github.com/nelitow)! - New transaction summary view
+
+### Patch Changes
+
+- [#1871](https://github.com/FuelLabs/fuels-wallet/pull/1871) [`5b5bfde9`](https://github.com/FuelLabs/fuels-wallet/commit/5b5bfde95aa9eac92865094f935f555266fc9cdd) Thanks [@nelitow](https://github.com/nelitow)! - Show NFT images in the asset list.
+
+- [#1870](https://github.com/FuelLabs/fuels-wallet/pull/1870) [`01202223`](https://github.com/FuelLabs/fuels-wallet/commit/012022232d70a2c2e5cd51a99725d8dafd85a9ed) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: upgrade to fuels 0.100.0 + optimize transaction approval screen
+
+- Updated dependencies [[`01202223`](https://github.com/FuelLabs/fuels-wallet/commit/012022232d70a2c2e5cd51a99725d8dafd85a9ed)]:
+  - @fuels/playwright-utils@0.51.0
+  - @fuel-wallet/connections@0.51.0
+
 ## 0.50.2
 
 ### Patch Changes

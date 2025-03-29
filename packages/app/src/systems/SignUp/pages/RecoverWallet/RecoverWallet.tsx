@@ -12,7 +12,7 @@ export function RecoverWallet() {
     <Layout title="Recovering Wallet" isPublic>
       <MnemonicWrite
         title="Recover wallet"
-        subtitle="Write your existing seed-phrase to restore your wallet."
+        subtitle="Enter your existing seed phrase to restore your wallet."
         step={2}
         error={error || context.error}
         canProceed={!hasError}

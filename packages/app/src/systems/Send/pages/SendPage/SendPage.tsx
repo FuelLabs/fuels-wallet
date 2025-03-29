@@ -82,5 +82,6 @@ const styles = {
       backgroundColor: 'transparent',
     },
     flex: 1,
+    pt: '$3',
   }),
 };
