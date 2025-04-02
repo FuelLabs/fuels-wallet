@@ -107,6 +107,7 @@ export class AccountService {
 
     try {
       const provider = await createProvider(providerUrl!);
+      await provider.init();
       const balances = await getBalances(provider, account.address);
       const assetsAmountsInUsd: Record<
         string,
@@ -495,6 +496,12 @@ export class AccountService {
 // ----------------------------------------------------------------------------
 
 async function getBalances(provider: Provider, address: string) {
+  // biome-ignore lint/complexity/useLiteralKeys: <explanation>
+  provider['features'] = {
+    // biome-ignore lint/complexity/useLiteralKeys: <explanation>
+    ...provider['features'],
+    balancePagination: false,
+  };
   const { balances } = await provider.getBalances(address);
   return balances;
 }
