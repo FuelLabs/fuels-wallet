@@ -1,5 +1,17 @@
 # fuels-wallet
 
+## 0.53.0
+
+### Minor Changes
+
+- [#1892](https://github.com/FuelLabs/fuels-wallet/pull/1892) [`61d27822`](https://github.com/FuelLabs/fuels-wallet/commit/61d27822053d35647d1cd775f5ec4ae855e36b59) Thanks [@nelitow](https://github.com/nelitow)! - Adjust balance feature for accounts with over 100 assets.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.53.0
+  - @fuels/playwright-utils@0.53.0
+
 ## 0.52.0
 
 ### Minor Changes

@@ -1,5 +1,7 @@
 # @fuels/playwright-utils
 
+## 0.53.0
+
 ## 0.52.0
 
 ### Minor Changes
