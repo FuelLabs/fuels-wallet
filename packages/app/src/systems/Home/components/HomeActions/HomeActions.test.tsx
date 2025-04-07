@@ -21,7 +21,7 @@ describe('HomeActions', () => {
   });
 
   it("should show 'Send' and 'Receive' button disabled", async () => {
-    render(<HomeActions isDisabled />, { wrapper: TestWrapper });
+    render(<HomeActions />, { wrapper: TestWrapper });
     expect(await screen.findByLabelText('Send Button')).toHaveAttribute(
       'aria-disabled'
     );

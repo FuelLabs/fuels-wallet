@@ -3,13 +3,11 @@ import { Box, Button, Icon, Tooltip } from '@fuel-ui/react';
 import { useAccounts } from '~/systems/Account';
 
 export type HomeActionsProps = {
-  isDisabled?: boolean;
   receiveAction?: () => void;
   sendAction?: () => void;
 };
 
 export const HomeActions = ({
-  isDisabled,
   receiveAction = () => {},
   sendAction = () => {},
 }: HomeActionsProps) => {
@@ -21,7 +19,7 @@ export const HomeActions = ({
       intent="primary"
       aria-label="Send Button"
       onPress={sendAction}
-      isDisabled={isLoading || isDisabled || !hasBalance}
+      isDisabled={isLoading || !hasBalance}
       css={{ ...styles.button }}
     >
       Send
@@ -37,7 +35,7 @@ export const HomeActions = ({
       )}
       <Button
         leftIcon={<Icon icon="Qrcode" />}
-        isDisabled={isDisabled}
+        isDisabled={isLoading}
         onPress={receiveAction}
         variant="ghost"
         css={styles.button}
