@@ -2,11 +2,12 @@ import { cssObj } from '@fuel-ui/css';
 import { Dialog } from '@fuel-ui/react';
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { EditAccount, Logout } from '~/systems/Account';
+import { AddReadOnlyAccount } from '~/systems/Account/components/ReadOnlyAccount/AddReadOnlyAccount';
 import { Accounts } from '~/systems/Account/pages/Accounts';
 import { ExportAccount } from '~/systems/Account/pages/ExportAccount';
 import { ImportAccount } from '~/systems/Account/pages/ImportAccount';
 import { AddNetwork, Networks, UpdateNetwork } from '~/systems/Network/pages';
-import { useOverlay } from '~/systems/Overlay';
+import { OverlayDialogTopbar, useOverlay } from '~/systems/Overlay';
 import { ViewSeedPhrase } from '~/systems/Settings/pages';
 import { TxApprove } from '~/systems/Transaction';
 import { ResetDialog } from '~/systems/Unlock/components/ResetDialog';
@@ -23,6 +24,18 @@ export function OverlayDialog() {
         {overlay.is('accounts.export') && <ExportAccount />}
         {overlay.is('accounts.edit') && <EditAccount />}
         {overlay.is('accounts.logout') && <Logout />}
+        {overlay.is('accounts.addReadOnly') && (
+          <>
+            <OverlayDialogTopbar onClose={() => overlay.open('accounts.list')}>
+              Add Read-Only Account
+            </OverlayDialogTopbar>
+            <Dialog.Description as="div" css={styles.description}>
+              <AddReadOnlyAccount
+                onClose={() => overlay.open('accounts.list')}
+              />
+            </Dialog.Description>
+          </>
+        )}
         {overlay.is('reset') && <ResetDialog />}
 
         {/* Networks */}
