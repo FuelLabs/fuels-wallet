@@ -24,7 +24,7 @@ test.describe('SendTransaction', () => {
     browser = await chromium.launch();
     page = await browser.newPage();
     await visit(page, '/');
-    const { accounts } = await mockData(page, 2);
+    const { accounts } = await mockData(page);
     account = accounts[0];
     await seedWallet(account.address, bn(100_000_000));
     provider = new Provider(process.env.VITE_FUEL_PROVIDER_URL);
