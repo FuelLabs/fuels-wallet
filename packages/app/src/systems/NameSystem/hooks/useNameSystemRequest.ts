@@ -47,7 +47,6 @@ export function useNameSystemRequest() {
   const isOpenDropdown = useSelector(service, selectors.isOpenDropdown);
 
   function resolverDomain(input: Omit<NameSystemInput['resolver'], 'chainId'>) {
-    console.log('2', network);
     if (!network) throw new Error('Network not available');
     service.send('RESOLVE_DOMAIN', { ...input, chainId: network.chainId });
   }
