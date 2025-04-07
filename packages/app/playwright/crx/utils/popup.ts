@@ -6,7 +6,14 @@ import type { MockData } from '../../mocks';
 
 export async function getAccountByName(popupPage: Page, name: string) {
   const accounts = await getWalletAccounts(popupPage);
-  return accounts.find((account) => account.name === name);
+  
+  // Added check to throw an error if account is not found
+  const account = accounts.find((account) => account.name === name);
+  if (!account) {
+    throw new Error(`Account with name "${name}" not found`);
+  }
+
+  return account;
 }
 
 export async function getWalletAccounts(popupPage: Page) {
@@ -20,8 +27,6 @@ export async function getWalletAccounts(popupPage: Page) {
 export async function switchAccount(popupPage: Page, name: string) {
   let account = await getAccountByName(popupPage, name);
 
-  // If account is already selected return it
-  // to avoid unnecessary changes
   if (account.isCurrent) {
     return account;
   }
@@ -30,7 +35,6 @@ export async function switchAccount(popupPage: Page, name: string) {
   await getByAriaLabel(popupPage, 'Accounts').click();
 
   await hasText(popupPage, name);
-  // Add position to click on the element and not on copy button
   await popupPage.waitForTimeout(5000);
   await getByAriaLabel(popupPage, name).click();
 
@@ -44,7 +48,6 @@ export async function switchAccount(popupPage: Page, name: string) {
     )
     .toBeTruthy();
 
-  // Return account to be used on tests
   account = await getAccountByName(popupPage, name);
 
   return account;
@@ -52,11 +55,10 @@ export async function switchAccount(popupPage: Page, name: string) {
 
 export async function hideAccount(popupPage: Page, name: string) {
   await getByAriaLabel(popupPage, 'Accounts').click();
-  // Add position to click on the element and not on copy button
   await getByAriaLabel(popupPage, `Account Actions ${name}`).click();
   await getByAriaLabel(popupPage, `Hide ${name}`).click();
   await hasText(popupPage, 'Show hidden accounts');
-  await popupPage.getByText(name).isHidden();
+  await popupPage.locator(`text=${name}`).isHidden();
 
   await getByAriaLabel(popupPage, 'Close dialog').click();
 }
@@ -97,11 +99,11 @@ export async function createAccountFromPrivateKey(
 export async function getClipboardText(popupPage: Page): Promise<string> {
   try {
     const text = await popupPage.evaluate(() => navigator.clipboard.readText());
-    console.log('Clipboard text:', text); // log the text to the console
+    console.log('Clipboard text:', text);
     return text;
   } catch (error) {
     console.error('Failed to read clipboard contents:', error);
-    return ''; // Return empty string or handle the error as needed
+    return '';
   }
 }
 
@@ -112,10 +114,7 @@ export async function getAddressForAccountNumber(
 ): Promise<string> {
   await getByAriaLabel(popupPage, 'Accounts').click();
 
-  // Construct the XPath selector dynamically based on the order of the account in the list
   const xpathSelector = `/html/body/div[2]/div/div/div/div/article[${accountNumber}]/div[1]/div[2]/div/div/button`;
-
-  // Click on the element
   await popupPage.click(`xpath=${xpathSelector}`);
 
   await getByAriaLabel(popupPage, accountName).click({
