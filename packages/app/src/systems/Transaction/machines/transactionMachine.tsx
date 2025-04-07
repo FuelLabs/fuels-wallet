@@ -5,7 +5,10 @@ import { assign, createMachine } from 'xstate';
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
+import NameSystemService from '~/systems/NameSystem/services/nameSystem';
+import { getDomainByOperations } from '~/systems/NameSystem/utils/getDomainByOperations';
 import { TxService } from '../services';
+import type { TransactionResultWithDomain } from '../types';
 
 export const TRANSACTION_ERRORS = {
   INVALID_ID: 'Invalid transaction ID',
@@ -23,7 +26,7 @@ type MachineContext = {
 type MachineServices = {
   getTransaction: {
     data: {
-      txResult: TransactionResult;
+      txResult: TransactionResultWithDomain;
       txResponse: TransactionResponse;
     };
   };
@@ -164,8 +167,12 @@ export const transactionMachine = createMachine(
             txId: input.txId,
           });
 
+          const operationsWithDomain = await getDomainByOperations(
+            txResult.operations
+          );
+
           return {
-            txResult,
+            txResult: { ...txResult, operations: operationsWithDomain },
             txResponse,
           };
         },

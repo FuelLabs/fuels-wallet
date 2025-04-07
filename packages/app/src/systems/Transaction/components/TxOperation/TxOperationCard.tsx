@@ -184,7 +184,7 @@ export function TxOperationCard({
           <Text as="span" fontSize="sm" css={styles.name}>
             {isToContract
               ? toContractMetadata?.name || 'Unknown'
-              : accountTo?.name || 'Unknown'}
+              : operation?.to?.domain || accountTo?.name || 'Unknown'}
           </Text>
           {ethToAddress ? (
             <EthAddress address={ethToAddress} css={styles.address} />

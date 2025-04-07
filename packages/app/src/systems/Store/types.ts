@@ -11,6 +11,7 @@ import type {
   TransactionRequestMachine,
 } from '../DApp';
 import type { ReportErrorMachine } from '../Error';
+import type { NameSystemRequestMachine } from '../NameSystem/machines/nameSystemRequetMachine';
 import type { NetworksMachine } from '../Network';
 import type { OverlayMachine } from '../Overlay';
 import type { UnlockMachine } from '../Unlock';
@@ -29,6 +30,7 @@ export enum Services {
   addAssetRequest = 'addAssetRequest',
   reportError = 'reportError',
   selectNetworkRequest = 'selectNetworkRequest',
+  nameSystemRequest = 'nameSystemRequest',
 }
 
 export type StoreMachines = {
@@ -44,6 +46,7 @@ export type StoreMachines = {
   addAssetRequest: AddAssetMachine;
   reportError: ReportErrorMachine;
   selectNetworkRequest: SelectNetworkRequestMachine;
+  nameSystemRequest: NameSystemRequestMachine;
 };
 
 export type Store = StoreClass<StoreMachines>;

@@ -17,6 +17,7 @@ import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
 import type { UseSendReturn } from '../../hooks';
+import { AddressField } from '../AddressField';
 
 const MotionContent = motion(Layout.Content);
 
@@ -148,28 +149,7 @@ export function SendSelect({
           <Text as="span" css={styles.title}>
             To
           </Text>
-          <Box css={styles.addressRow}>
-            <ControlledField
-              isRequired
-              name="address"
-              control={form.control}
-              warning={warningMessage}
-              isInvalid={
-                Boolean(form.formState.errors?.address) &&
-                !form.formState.isValidating
-              }
-              render={({ field }) => (
-                <Input size="sm">
-                  <Input.Field
-                    {...field}
-                    id="search-address"
-                    aria-label="Address Input"
-                    placeholder="Enter a Fuel address"
-                  />
-                </Input>
-              )}
-            />
-          </Box>
+          <AddressField warningMessage={warningMessage} />
         </Box.Flex>
         <Box.Stack gap="$3">
           <Text as="span" css={styles.title}>
@@ -272,16 +252,6 @@ const styles = {
     color: '$intentsBase12',
     fontSize: '$md',
     fontWeight: '$normal',
-  }),
-  addressRow: cssObj({
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-
-    '.error-msg': {
-      fontSize: '$sm',
-      color: '$intentsError9',
-    },
   }),
   alert: cssObj({
     fontSize: '$sm',

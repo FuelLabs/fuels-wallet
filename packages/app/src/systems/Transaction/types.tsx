@@ -6,12 +6,17 @@ import type {
   CoinTransactionRequestInput,
   CoinTransactionRequestOutput,
   InputContract,
+  Operation,
+  OperationTransactionAddress,
   OutputContract,
   OutputContractCreated,
   Receipt,
   TransactionRequestInput,
   TransactionRequestLike,
+  TransactionResult,
+  TransactionSummary,
 } from 'fuels';
+import type { Maybe } from '../Core';
 
 export enum TxCategory {
   SEND = 'send',
@@ -56,6 +61,7 @@ export type ContractCallMetadata = {
 
 export type SimplifiedAddress = {
   address: string;
+  domain?: Maybe<string>;
   type: number; // 0 for contract, 1 for account
 };
 
@@ -112,4 +118,23 @@ export type AssetAmountWithRate = AssetFuelAmount & {
   formattedAmount?: string;
   fullFormattedAmount?: string;
   formattedUsd?: string;
+};
+
+export type OperationWithDomain = Operation & {
+  to?: OperationTransactionAddress & {
+    domain?: string | null;
+    address?: string;
+  };
+  from?: OperationTransactionAddress & {
+    domain?: string | null;
+    address?: string;
+  };
+};
+
+export type TransactionResultWithDomain = TransactionResult & {
+  operations: OperationWithDomain[];
+};
+
+export type TransactionSummaryWithDomain = TransactionSummary & {
+  operations: OperationWithDomain[];
 };

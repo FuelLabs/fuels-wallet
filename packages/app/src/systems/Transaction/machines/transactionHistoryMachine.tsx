@@ -1,12 +1,18 @@
-import type { TransactionResult } from 'fuels';
+import type {
+  Operation,
+  OperationTransactionAddress,
+  TransactionResult,
+} from 'fuels';
 import { isB256 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
+import NameSystemService from '~/systems/NameSystem/services/nameSystem';
+import { getDomainByOperations } from '~/systems/NameSystem/utils/getDomainByOperations';
 import { type TxInputs, TxService } from '../services';
-import type { TransactionCursor } from '../types';
+import type { TransactionCursor, TransactionResultWithDomain } from '../types';
 
 const TRANSACTION_HISTORY_ERRORS = {
   INVALID_ADDRESS: 'Invalid address',
@@ -16,7 +22,7 @@ const TRANSACTION_HISTORY_ERRORS = {
 type MachineContext = {
   walletAddress: string;
   error?: string;
-  transactionHistory?: TransactionResult[];
+  transactionHistory?: TransactionResultWithDomain[];
   currentCursor?: TransactionCursor;
   cursors: TransactionCursor[];
 };
@@ -24,7 +30,7 @@ type MachineContext = {
 type MachineServices = {
   getTransactionHistory: {
     data: {
-      transactionHistory: TransactionResult[];
+      transactionHistory: TransactionResultWithDomain[];
     };
   };
   getAllCursors: {
@@ -311,7 +317,15 @@ export const transactionHistoryMachine = createMachine(
             providerUrl: selectedNetwork?.url,
             pagination,
           });
-          return { transactionHistory };
+
+          const txHistoryWithDomain = await Promise.all(
+            transactionHistory.map(async (tx) => ({
+              ...tx,
+              operations: await getDomainByOperations(tx.operations),
+            }))
+          );
+
+          return { transactionHistory: txHistoryWithDomain };
         },
       }),
       getCachedCursors: FetchMachine.create<
