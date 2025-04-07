@@ -199,7 +199,7 @@ const styles = {
     fontFamily: '$sans',
   }),
   domain: cssObj({
-    color: '$white !important',
+    color: '$inputBaseColor !important',
     fontFamily: '$sans',
   }),
 };
