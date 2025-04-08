@@ -200,7 +200,7 @@ export class TxService {
     const validationResult = await TxService.validateTransactionRequest(
       transactionRequest,
       provider,
-      expectedSummary // Pass the expected summary from what we're showing the user
+      expectedSummary
     );
 
     if (!validationResult.isValid) {
@@ -214,10 +214,6 @@ export class TxService {
     return txSent;
   }
 
-  /**
-   * Validates a transaction request by performing a dry run and comparing
-   * This prevents attacks where the user sees one transaction but signs another
-   */
   static async validateTransactionRequest(
     transactionRequest: TransactionRequestLike,
     provider: Provider,
@@ -239,10 +235,9 @@ export class TxService {
           abiMap,
         });
 
-        const deepEqual = (a: TransactionSummary, b: TransactionSummary) =>
-          JSON.stringify(a) === JSON.stringify(b);
-
-        if (deepEqual(displayedSummary, actualSummary)) {
+        if (
+          JSON.stringify(displayedSummary) === JSON.stringify(actualSummary)
+        ) {
           return { isValid: true };
         }
 
