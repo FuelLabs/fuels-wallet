@@ -126,7 +126,9 @@ export const NameSystemInput = forwardRef<
               className="input-name-system"
             >
               <Box.Flex direction="row" gap={2} align="center">
-                <Text css={styles.domainText}>{domain}</Text>
+                <Text css={styles.domainText} color="inputBaseColor">
+                  {domain}
+                </Text>
                 <Text css={styles.domainText}>
                   {shortAddress(address ?? '')}
                 </Text>
