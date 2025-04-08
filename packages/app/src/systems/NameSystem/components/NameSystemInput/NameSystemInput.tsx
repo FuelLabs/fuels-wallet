@@ -126,8 +126,10 @@ export const NameSystemInput = forwardRef<
               className="input-name-system"
             >
               <Box.Flex direction="row" gap={2} align="center">
-                <Text css={styles.domain}>{domain}</Text>
-                <Text css={styles.text}>{shortAddress(address ?? '')}</Text>
+                <Text css={styles.domainText}>{domain}</Text>
+                <Text css={styles.domainText}>
+                  {shortAddress(address ?? '')}
+                </Text>
               </Box.Flex>
             </NameSystemAvatar>
           ) : (
@@ -159,8 +161,10 @@ export const NameSystemInput = forwardRef<
         <Dropdown.MenuItem css={styles.dropdownMenuItem} key={address}>
           <NameSystemAvatar resolver={address!} onSelect={handleSelect}>
             <Box.Flex direction="column">
-              <Text css={styles.domain}>{domain}</Text>
-              <Text css={styles.text} fontSize="xs">
+              <Text css={styles.domainText} className="domain">
+                {domain}
+              </Text>
+              <Text css={styles.domainText} fontSize="xs">
                 {shortAddress(address ?? '')}
               </Text>
             </Box.Flex>
@@ -188,6 +192,11 @@ const styles = {
   }),
   dropdownMenuItem: cssObj({
     padding: '0 $2',
+
+    '.domain': {
+      marginBottom: '2px',
+      color: '$inputBaseColor !important',
+    },
   }),
   input: cssObj({
     display: 'flex',
@@ -204,11 +213,8 @@ const styles = {
     transform: 'translateY(-50%)',
     zIndex: 99999,
   }),
-  text: cssObj({
+  domainText: cssObj({
     fontFamily: '$sans',
-  }),
-  domain: cssObj({
-    color: '$inputBaseColor !important',
-    fontFamily: '$sans',
+    lineHeight: '$tight',
   }),
 };
