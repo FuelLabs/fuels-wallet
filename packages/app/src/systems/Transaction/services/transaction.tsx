@@ -5,6 +5,7 @@ import type {
 } from '@fuel-wallet/types';
 import type {
   TransactionRequest,
+  TransactionRequestLike,
   TransactionSummary,
   TransactionSummaryJson,
   WalletLocked,
@@ -22,10 +23,10 @@ import {
   assembleTransactionSummary,
   assembleTransactionSummaryFromJson,
   bn,
-  deserializeProviderCache,
   getTransactionSummary,
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
+  transactionRequestify,
 } from 'fuels';
 import { WalletLockedCustom, db, delay } from '~/systems/Core';
 
@@ -186,9 +187,84 @@ export class TxService {
       (account?.address?.toString() || address) as string,
       provider
     );
+    const abiMap = await getAbiMap({
+      inputs: transactionRequest.toTransaction().inputs,
+    });
+
+    const expectedSummary = await getTransactionSummaryFromRequest({
+      provider,
+      transactionRequest,
+      abiMap,
+    });
+
+    const validationResult = await TxService.validateTransactionRequest(
+      transactionRequest,
+      provider,
+      expectedSummary // Pass the expected summary from what we're showing the user
+    );
+
+    if (!validationResult.isValid) {
+      throw new Error(
+        `Transaction validation failed: ${validationResult.error}. This could be a potential attack where the transaction you're seeing differs from what you're actually signing.`
+      );
+    }
+
     const txSent = await wallet.sendTransaction(transactionRequest);
 
     return txSent;
+  }
+
+  /**
+   * Validates a transaction request by performing a dry run and comparing
+   * This prevents attacks where the user sees one transaction but signs another
+   */
+  static async validateTransactionRequest(
+    transactionRequest: TransactionRequestLike,
+    provider: Provider,
+    displayedSummary: TransactionSummary
+  ) {
+    try {
+      const txRequest = transactionRequestify(transactionRequest);
+
+      try {
+        await provider.dryRun(txRequest);
+
+        const abiMap = await getAbiMap({
+          inputs: txRequest.toTransaction().inputs,
+        });
+
+        const actualSummary = await getTransactionSummaryFromRequest({
+          provider,
+          transactionRequest: txRequest,
+          abiMap,
+        });
+
+        const deepEqual = (a: TransactionSummary, b: TransactionSummary) =>
+          JSON.stringify(a) === JSON.stringify(b);
+
+        if (deepEqual(displayedSummary, actualSummary)) {
+          return { isValid: true };
+        }
+
+        return { isValid: false };
+      } catch (validationError) {
+        return {
+          isValid: false,
+          error:
+            validationError instanceof Error
+              ? validationError.message
+              : 'Transaction validation failed',
+        };
+      }
+    } catch (error) {
+      return {
+        isValid: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Unknown error during validation',
+      };
+    }
   }
 
   static async fetch({ txId, providerUrl = '' }: TxInputs['fetch']) {
