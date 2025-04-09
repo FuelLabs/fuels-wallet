@@ -1,5 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Dialog } from '@fuel-ui/react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAssets } from '~/systems/Asset';
 import { Layout, Pages } from '~/systems/Core';
@@ -22,7 +23,9 @@ export const TxApprove = () => {
     handlers.closeDialog();
     handlers.reset();
     handlers.reject();
-    navigate(Pages.wallet());
+    if (ctx.txSummaryExecuted) {
+      navigate(Pages.wallet());
+    }
   };
 
   return (
