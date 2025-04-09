@@ -7,6 +7,7 @@ import {
   type InputElementProps,
   Spinner,
   Text,
+  Tooltip,
 } from '@fuel-ui/react';
 import debounce from 'lodash.debounce';
 import type React from 'react';
@@ -38,18 +39,17 @@ export const NameSystemInput = forwardRef<
   const isName = useMemo(() => isValidDomain(inputValue), [inputValue]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  const debouncedResolver = useMemo(
-    () =>
-      debounce(async (name: string) => {
-        const address = await resolver(name);
-        if (address) {
-          onError(null);
-          setDomain({ domain: name, address });
-        } else {
-          onError('No resolver for domain provided');
-          reset();
-        }
-      }, 600),
+  const debouncedResolver = useCallback(
+    debounce(async (name: string) => {
+      const address = await resolver(name);
+      if (address) {
+        onError(null);
+        setDomain({ domain: name, address });
+      } else {
+        onError('No resolver for domain provided');
+        reset();
+      }
+    }, 600),
     [resolver]
   );
 
@@ -75,6 +75,9 @@ export const NameSystemInput = forwardRef<
     const isDomain = value.startsWith('@');
     if (isDomain) {
       return handleDomainChange(value);
+    }
+    if (domain) {
+      reset();
     }
 
     onChange(value);
@@ -114,7 +117,8 @@ export const NameSystemInput = forwardRef<
       isOpen={isOpenDropdown}
       onOpenChange={toggleDropdown}
       popoverProps={{
-        arrowClassName: 'address-arrow',
+        arrowClassName: 'arrow',
+        sideOffset: 0,
       }}
     >
       <Dropdown.Trigger asChild>
@@ -124,14 +128,12 @@ export const NameSystemInput = forwardRef<
               resolver={address!}
               onClear={handleClear}
               className="input-name-system"
+              avatarSize={20}
             >
               <Box.Flex direction="row" gap={2} align="center">
-                <Text css={styles.domainText} color="inputBaseColor">
-                  {domain}
-                </Text>
-                <Text css={styles.domainText}>
-                  {shortAddress(address ?? '')}
-                </Text>
+                <Tooltip content={shortAddress(address ?? '')}>
+                  <Text css={styles.domainText}>{domain}</Text>
+                </Tooltip>
               </Box.Flex>
             </NameSystemAvatar>
           ) : (
@@ -163,12 +165,10 @@ export const NameSystemInput = forwardRef<
         <Dropdown.MenuItem css={styles.dropdownMenuItem} key={address}>
           <NameSystemAvatar resolver={address!} onSelect={handleSelect}>
             <Box.Flex direction="column">
-              <Text css={styles.domainText} className="domain">
+              <Text css={styles.domainText} className="domain" fontSize="sm">
                 {domain}
               </Text>
-              <Text css={styles.domainText} fontSize="xs">
-                {shortAddress(address ?? '')}
-              </Text>
+              <Text css={styles.domainText}>{shortAddress(address ?? '')}</Text>
             </Box.Flex>
           </NameSystemAvatar>
         </Dropdown.MenuItem>
@@ -183,17 +183,22 @@ const styles = {
     flex: 1,
     display: 'flex',
 
-    '.address-arrow': {
+    '.arrow': {
       display: 'none !important',
     },
   }),
   dropdownMenu: cssObj({
     width: 250,
-    border: '1px solid $border',
+    // boxShadow: '$md',
     padding: '$1 0',
+    '.fuel_MenuListItem': {
+      // py: '$2',
+      px: '$3',
+      height: 'auto',
+    },
   }),
   dropdownMenuItem: cssObj({
-    padding: '0 $2',
+    py: '$1',
 
     '.domain': {
       marginBottom: '2px',
