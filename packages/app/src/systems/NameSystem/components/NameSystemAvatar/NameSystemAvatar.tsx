@@ -7,6 +7,7 @@ interface NameSystemAvatarProps
   onSelect?: (resolver: string) => void;
   onClear?: () => void;
   children: React.ReactNode;
+  avatarSize?: number;
 }
 
 export function NameSystemAvatar({
@@ -14,12 +15,13 @@ export function NameSystemAvatar({
   onSelect,
   onClear,
   children,
+  avatarSize = 30,
   ...props
 }: NameSystemAvatarProps) {
   return (
     <Box.Flex onClick={() => onSelect?.(resolver)} css={styles.root} {...props}>
       <Box.Flex css={styles.content}>
-        <Avatar.Generated hash={resolver} size={20} />
+        <Avatar.Generated hash={resolver} size={avatarSize} />
         {children}
       </Box.Flex>
       {onClear && (
