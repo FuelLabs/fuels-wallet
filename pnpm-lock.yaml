@@ -182,8 +182,8 @@ importers:
   packages/app:
     dependencies:
       '@bako-id/sdk':
-        specifier: 0.0.17
-        version: 0.0.17(fuels@0.100.0(vitest@3.0.5(@types/debug@4.1.12)(@types/node@22.10.1)(jiti@2.3.3)(jsdom@20.0.3(bufferutil@4.0.8)(utf-8-validate@5.0.10))(msw@1.3.2(typescript@5.2.2))(terser@5.37.0)(yaml@2.6.1)))
+        specifier: 0.0.18
+        version: 0.0.18(fuels@0.100.0(vitest@3.0.5(@types/debug@4.1.12)(@types/node@22.10.1)(jiti@2.3.3)(jsdom@20.0.3(bufferutil@4.0.8)(utf-8-validate@5.0.10))(msw@1.3.2(typescript@5.2.2))(terser@5.37.0)(yaml@2.6.1)))
       '@fontsource/source-code-pro':
         specifier: 5.0.13
         version: 5.0.13
@@ -210,7 +210,7 @@ importers:
         version: link:../playwright-utils
       '@fuels/react-xstore':
         specifier: 0.20.0
-        version: 0.20.0(@types/react@18.3.3)(@types/ws@8.5.12)(@xstate/react@3.2.2(@types/react@18.3.3)(react@18.3.1)(xstate@4.38.2))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(ws@8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10))(xstate@4.38.2)
+        version: 0.20.0(@types/react@18.3.3)(@types/ws@8.5.12)(@xstate/react@3.2.2(@types/react@18.3.3)(react@18.3.1)(xstate@4.38.2))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(xstate@4.38.2)
       '@hookform/resolvers':
         specifier: 3.9.0
         version: 3.9.0(react-hook-form@7.47.0(react@18.3.1))
@@ -394,7 +394,7 @@ importers:
         version: 4.1.0(vite@6.1.2(@types/node@22.10.1)(jiti@2.3.3)(terser@5.37.0)(yaml@2.6.1))
       '@xstate/inspect':
         specifier: 0.8.0
-        version: 0.8.0(@types/ws@8.5.12)(ws@8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10))(xstate@4.38.2)
+        version: 0.8.0(@types/ws@8.5.12)(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(xstate@4.38.2)
       jszip:
         specifier: 3.10.1
         version: 3.10.1
@@ -1988,8 +1988,8 @@ packages:
     resolution: {integrity: sha512-vN5p+1kl59GVKMvTHt55NzzmYVxprfJD+ql7U9NFIfKCBkYE55LYtS+WtPlaYOyzydrKI8Nezd+aZextrd+FMA==}
     engines: {node: '>=6.9.0'}
 
-  '@bako-id/sdk@0.0.17':
-    resolution: {integrity: sha512-lXHz9Ayf4UA7phv68zuWI2g1HzJEK/7CU9sKCBpMhcpmqBk2lZPpBUUWHf9JnoE822OcUD/UMdeRvificzpyFQ==}
+  '@bako-id/sdk@0.0.18':
+    resolution: {integrity: sha512-+Tsl4l/Jr9FQg9jpuNdnAZhBKE5w97ka2j9MjTze4tC1Qkgamq4b+o1/VBY7KRzff+QrKt7FlQ9AluMdvwYvjw==}
     peerDependencies:
       fuels: 0.100.0
 
@@ -2474,9 +2474,9 @@ packages:
     resolution: {integrity: sha512-U/75ihXsoWg+9Mg4lXuNxdDD+jEABf2dYvf/T7pTcrqVx8BMZOZ8czp9tLJoZDfLaYAyvSKE6lP7iqqFYve1kg==}
     engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
 
-  '@fuel-ts/errors@0.90.0':
-    resolution: {integrity: sha512-iKYCS4cgWHV40Kr0c2+4kboUtebz9Vi8DHld6QWdeTh2khjhptZf7LrhgTh3gepAEaMF48x4F+3LZNd4Ia3wmg==}
-    engines: {node: ^18.18.2 || ^20.0.0}
+  '@fuel-ts/errors@0.100.2':
+    resolution: {integrity: sha512-iFHyY+/bMNGQFXB5q/U9OjAejWfltYhAGze29BIH5yH1ECWt20FuS04z7zPu9ZXF9YX6ZnNyen8AibSCFcCbfg==}
+    engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
 
   '@fuel-ts/hasher@0.100.0':
     resolution: {integrity: sha512-Tkoln8shIisJH1/p/fWQYtex/L4IYKmE3RemUMlR4K8QQ2LIYOebRON5UA090wLY4DitSkThFgwWNaWh21nYNw==}
@@ -2517,9 +2517,9 @@ packages:
     engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
     hasBin: true
 
-  '@fuel-ts/versions@0.90.0':
-    resolution: {integrity: sha512-oXXDleRAK1MLHuhveyfAUNQkHG9bISHtuvAGbjHYtaUVjI/k0o9ii9HLjlvRnFvc7G57CzIsnm6wSnoPaYBfhg==}
-    engines: {node: ^18.18.2 || ^20.0.0}
+  '@fuel-ts/versions@0.100.2':
+    resolution: {integrity: sha512-pVl0aRmAJMPeADeaVXOSJu7iXa8MWyX24R6Qha3JVuuL+oBUFBKN89ccbjNfKjvNr7YeGhXMSsvD/l0xx4T9AQ==}
+    engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
     hasBin: true
 
   '@fuel-ui/css@0.23.3':
@@ -16800,9 +16800,9 @@ snapshots:
       '@babel/helper-string-parser': 7.25.9
       '@babel/helper-validator-identifier': 7.25.9
 
-  '@bako-id/sdk@0.0.17(fuels@0.100.0(vitest@3.0.5(@types/debug@4.1.12)(@types/node@22.10.1)(jiti@2.3.3)(jsdom@20.0.3(bufferutil@4.0.8)(utf-8-validate@5.0.10))(msw@1.3.2(typescript@5.2.2))(terser@5.37.0)(yaml@2.6.1)))':
+  '@bako-id/sdk@0.0.18(fuels@0.100.0(vitest@3.0.5(@types/debug@4.1.12)(@types/node@22.10.1)(jiti@2.3.3)(jsdom@20.0.3(bufferutil@4.0.8)(utf-8-validate@5.0.10))(msw@1.3.2(typescript@5.2.2))(terser@5.37.0)(yaml@2.6.1)))':
     dependencies:
-      '@fuel-ts/errors': 0.90.0
+      '@fuel-ts/errors': 0.100.2
       fuels: 0.100.0(vitest@3.0.5(@types/debug@4.1.12)(@types/node@22.10.1)(jiti@2.3.3)(jsdom@20.0.3(bufferutil@4.0.8)(utf-8-validate@5.0.10))(msw@1.3.2(typescript@5.2.2))(terser@5.37.0)(yaml@2.6.1))
       tai64: 1.0.0
 
@@ -17795,9 +17795,9 @@ snapshots:
     dependencies:
       '@fuel-ts/versions': 0.100.0
 
-  '@fuel-ts/errors@0.90.0':
+  '@fuel-ts/errors@0.100.2':
     dependencies:
-      '@fuel-ts/versions': 0.90.0
+      '@fuel-ts/versions': 0.100.2
 
   '@fuel-ts/hasher@0.100.0(vitest@3.0.5(@types/debug@4.1.12)(@types/node@20.12.11)(jiti@2.3.3)(jsdom@20.0.3(bufferutil@4.0.8)(utf-8-validate@5.0.10))(terser@5.37.0)(yaml@2.6.1))':
     dependencies:
@@ -18190,7 +18190,7 @@ snapshots:
       chalk: 4.1.2
       cli-table: 0.3.11
 
-  '@fuel-ts/versions@0.90.0':
+  '@fuel-ts/versions@0.100.2':
     dependencies:
       chalk: 4.1.2
       cli-table: 0.3.11
@@ -18501,10 +18501,10 @@ snapshots:
 
   '@fuels/local-storage@0.26.0': {}
 
-  '@fuels/react-xstore@0.20.0(@types/react@18.3.3)(@types/ws@8.5.12)(@xstate/react@3.2.2(@types/react@18.3.3)(react@18.3.1)(xstate@4.38.2))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(ws@8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10))(xstate@4.38.2)':
+  '@fuels/react-xstore@0.20.0(@types/react@18.3.3)(@types/ws@8.5.12)(@xstate/react@3.2.2(@types/react@18.3.3)(react@18.3.1)(xstate@4.38.2))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(xstate@4.38.2)':
     dependencies:
       '@fuels/local-storage': 0.20.0
-      '@xstate/inspect': 0.8.0(@types/ws@8.5.12)(ws@8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10))(xstate@4.38.2)
+      '@xstate/inspect': 0.8.0(@types/ws@8.5.12)(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(xstate@4.38.2)
       '@xstate/react': 3.2.2(@types/react@18.3.3)(react@18.3.1)(xstate@4.38.2)
       fast-equals: 5.0.1
       jotai: 2.7.1(@types/react@18.3.3)(react@18.3.1)
@@ -25257,10 +25257,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@xstate/inspect@0.8.0(@types/ws@8.5.12)(ws@8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10))(xstate@4.38.2)':
+  '@xstate/inspect@0.8.0(@types/ws@8.5.12)(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(xstate@4.38.2)':
     dependencies:
       fast-safe-stringify: 2.1.1
-      ws: 8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       xstate: 4.38.2
     optionalDependencies:
       '@types/ws': 8.5.12
