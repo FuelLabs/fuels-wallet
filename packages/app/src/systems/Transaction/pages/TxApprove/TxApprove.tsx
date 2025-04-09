@@ -1,7 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Dialog, Icon } from '@fuel-ui/react';
+import { Box, Button, Dialog } from '@fuel-ui/react';
+import { useNavigate } from 'react-router-dom';
 import { useAssets } from '~/systems/Asset';
-import { Layout } from '~/systems/Core';
+import { Layout, Pages } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 import { TxRequestStatus, useTransactionRequest } from '~/systems/DApp';
 import { TxContent } from '../../components/TxContent/TxContent';
@@ -10,6 +11,7 @@ import { TxReviewAlert } from '../../components/TxReviewAlert/TxReviewAlert';
 export const TxApprove = () => {
   const ctx = useTransactionRequest();
   const { isLoading: isLoadingAssets } = useAssets();
+  const navigate = useNavigate();
   const isLoading =
     ctx.status('loading') || ctx.status('sending') || isLoadingAssets;
   const shouldShowReviewAlert =
@@ -20,6 +22,7 @@ export const TxApprove = () => {
     handlers.closeDialog();
     handlers.reset();
     handlers.reject();
+    navigate(Pages.wallet());
   };
 
   return (
