@@ -41,12 +41,12 @@ export const NameSystemInput = forwardRef<
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const debouncedResolver = useCallback(
     debounce(async (name: string) => {
-      const address = await resolver(name);
+      const { address, error } = await resolver(name);
       if (address) {
         onError(null);
         setDomain({ domain: name, address });
       } else {
-        onError('No resolver for domain provided');
+        onError(error || 'No resolver for domain provided');
         reset();
       }
     }, 600),

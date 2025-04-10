@@ -16,12 +16,25 @@ const client = new BakoIDClient();
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export default class NameSystemService {
   static async resolverDomain(params: NameSystemInput['resolver']) {
-    const domain = await client.resolver(params.domain, params.chainId);
-    return domain;
+    try {
+      const address = await client.resolver(params.domain, params.chainId);
+      return { address, error: null };
+    } catch {
+      return {
+        address: null,
+        error: 'Domain resolver is currently unavailable',
+      };
+    }
   }
 
   static async resolverAddress(params: NameSystemInput['name']) {
-    const response = await client.name(params.address, params.chainId);
-    return response ? `@${response}` : null;
+    try {
+      const response = await client.name(params.address, params.chainId);
+      const domain = response ? `@${response}` : null;
+
+      return { domain, error: null };
+    } catch {
+      return { domain: null, error: 'Error on resolver address' };
+    }
   }
 }

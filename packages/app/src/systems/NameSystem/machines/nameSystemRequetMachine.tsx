@@ -157,17 +157,17 @@ export const nameSystemRequestMachine = createMachine(
         if (context.chainId === null) {
           throw new Error('ChainId not available');
         }
-        const address = await NameSystemService.resolverAddress({
+        const { domain } = await NameSystemService.resolverAddress({
           address: context.address!,
           chainId: context.chainId,
         });
-        return address;
+        return domain;
       },
       resolverDomain: async (context) => {
         if (context.chainId === null) {
           throw new Error('ChainId not available');
         }
-        const address = await NameSystemService.resolverDomain({
+        const { address } = await NameSystemService.resolverDomain({
           domain: context.name!,
           chainId: context.chainId,
         });

@@ -8,15 +8,15 @@ export const getDomainByOperations = async (
 ): Promise<OperationWithDomain[]> => {
   return await Promise.all(
     operations.map(async (operation) => {
-      const to = operation.to?.address;
       const currentNetwork = await NetworkService.getSelectedNetwork();
+      const chainId = currentNetwork?.chainId!;
       const toDomain = await NameSystemService.resolverAddress({
-        address: to!,
-        chainId: currentNetwork?.chainId!,
+        address: operation.to?.address!,
+        chainId,
       });
       const fromDomain = await NameSystemService.resolverAddress({
         address: operation.from?.address!,
-        chainId: currentNetwork?.chainId!,
+        chainId,
       });
 
       return {
@@ -24,13 +24,13 @@ export const getDomainByOperations = async (
         to: operation.to
           ? {
               ...operation.to,
-              domain: toDomain,
+              domain: toDomain?.domain,
             }
           : undefined,
         from: operation.from
           ? {
               ...operation.from,
-              domain: fromDomain,
+              domain: fromDomain?.domain,
             }
           : undefined,
       };
