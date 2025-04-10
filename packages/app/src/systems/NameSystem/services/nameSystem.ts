@@ -1,12 +1,12 @@
 import { BakoIDClient } from '@bako-id/sdk';
 
 export type NameSystemInput = {
-  resolver: {
+  resolverDomain: {
     domain: string;
     chainId: number;
   };
-  name: {
-    address: string;
+  resolverAddreses: {
+    addresses: string[];
     chainId: number;
   };
 };
@@ -15,7 +15,7 @@ const client = new BakoIDClient();
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export default class NameSystemService {
-  static async resolverDomain(params: NameSystemInput['resolver']) {
+  static async resolverDomain(params: NameSystemInput['resolverDomain']) {
     try {
       const address = await client.resolver(params.domain, params.chainId);
       return { address, error: null };
@@ -27,14 +27,13 @@ export default class NameSystemService {
     }
   }
 
-  static async resolverAddress(params: NameSystemInput['name']) {
+  static async resolverAddresses(params: NameSystemInput['resolverAddreses']) {
     try {
-      const response = await client.name(params.address, params.chainId);
-      const domain = response ? `@${response}` : null;
+      const domains = await client.names(params.addresses, params.chainId);
 
-      return { domain, error: null };
+      return { domains, error: null };
     } catch {
-      return { domain: null, error: 'Error on resolver address' };
+      return { domains: null, error: 'Error on resolver address' };
     }
   }
 }
