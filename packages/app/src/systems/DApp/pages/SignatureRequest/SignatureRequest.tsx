@@ -1,14 +1,27 @@
 import { Box, Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
+import { type HashableMessage, hexlify } from 'fuels';
 import { AccountInfo } from '~/systems/Account';
 import { ConnectInfo, Layout, coreStyles } from '~/systems/Core';
 
 import { useSignatureRequest } from '../../hooks';
+
+function formatMessage(message: HashableMessage): string {
+  if (typeof message === 'string') {
+    return message;
+  }
+  if (message.personalSign) {
+    return `Personal Sign: ${hexlify(message.personalSign)}`;
+  }
+  return 'Invalid message format';
+}
 
 export function SignatureRequest() {
   const { handlers, account, origin, message, isLoading, title, favIconUrl } =
     useSignatureRequest();
 
   if (!origin || !message || !account) return null;
+
+  const formattedMessage = formatMessage(message as HashableMessage);
 
   return (
     <>
@@ -49,7 +62,7 @@ export function SignatureRequest() {
                         textIndent: '-0.25em',
                       }}
                     >
-                      {message}
+                      {formattedMessage}
                     </Text>
                   </div>
                 </Flex>
