@@ -1,5 +1,6 @@
 import { Box, Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
-import { type HashableMessage, hexlify } from 'fuels';
+import type { HashableMessage } from 'fuels';
+import { arrayify } from 'fuels';
 import { AccountInfo } from '~/systems/Account';
 import { ConnectInfo, Layout, coreStyles } from '~/systems/Core';
 
@@ -10,7 +11,15 @@ function formatMessage(message: HashableMessage): string {
     return message;
   }
   if (message.personalSign) {
-    return `Personal Sign: ${hexlify(message.personalSign)}`;
+    try {
+      const bytes = arrayify(message.personalSign);
+      const jsonStr = new TextDecoder().decode(bytes);
+      const jsonObj = JSON.parse(jsonStr);
+      return JSON.stringify(jsonObj, null, 2);
+    } catch (e) {
+      console.error('Error parsing JSON:', e);
+      return 'Invalid JSON format';
+    }
   }
   return 'Invalid message format';
 }
@@ -60,6 +69,7 @@ export function SignatureRequest() {
                         whiteSpace: 'pre-wrap',
                         wordBreak: 'break-word',
                         textIndent: '-0.25em',
+                        fontFamily: 'monospace',
                       }}
                     >
                       {formattedMessage}
