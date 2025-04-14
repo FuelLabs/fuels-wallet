@@ -162,7 +162,7 @@ export function TxOperationAssets({ amounts }: TxOperationAssetsProps) {
             {getAssetImage(assetAmount as AssetFuelAmount)}
             <Box css={styles.amountContainer}>
               <Box.Flex direction="column">
-                <Box.Flex gap="$2" align="center" wrap="wrap">
+                <Box.Flex gap="$1 $2" align="center" wrap="wrap">
                   <Text
                     as="span"
                     color="textHeading"
