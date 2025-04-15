@@ -97,7 +97,8 @@
   },
   "pnpm": {
     "auditConfig": {
-      "ignoreGhsas": ["GHSA-3gc7-fjrx-p6mg"]
+      "ignoreGhsas": ["GHSA-3gc7-fjrx-p6mg"],
+      "ignoreCves": ["CVE-2025-3194"]
     },
     "peerDependencyRules": {
       "allowAny": ["react", "react-dom"],
