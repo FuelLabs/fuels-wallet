@@ -73,8 +73,8 @@ export const TxApprove = () => {
           />
         )}
       </Dialog.Description>
-      <Dialog.Footer css={styles.footer}>
-        {ctx.shouldShowActions && (
+      {ctx.shouldShowActions && (
+        <Dialog.Footer css={styles.footer}>
           <>
             <Button
               variant="ghost"
@@ -94,8 +94,8 @@ export const TxApprove = () => {
               Submit
             </Button>
           </>
-        )}
-      </Dialog.Footer>
+        </Dialog.Footer>
+      )}
     </Box>
   );
 };
