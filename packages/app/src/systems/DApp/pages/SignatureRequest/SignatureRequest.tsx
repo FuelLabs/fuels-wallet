@@ -6,22 +6,34 @@ import { ConnectInfo, Layout, coreStyles } from '~/systems/Core';
 
 import { useSignatureRequest } from '../../hooks';
 
-function formatMessage(message: HashableMessage): string {
-  if (typeof message === 'string') {
-    return message;
+function formatMessage(message: HashableMessage): {
+  formattedMessage: string;
+  isValid: boolean;
+} {
+  if (!message) {
+    return { formattedMessage: 'No message provided', isValid: false };
   }
+
+  if (typeof message === 'string') {
+    return { formattedMessage: message, isValid: true };
+  }
+
   if (message.personalSign) {
     try {
       const bytes = arrayify(message.personalSign);
       const jsonStr = new TextDecoder().decode(bytes);
       const jsonObj = JSON.parse(jsonStr);
-      return JSON.stringify(jsonObj, null, 2);
+      return {
+        formattedMessage: JSON.stringify(jsonObj, null, 2),
+        isValid: true,
+      };
     } catch (e) {
       console.error('Error parsing JSON:', e);
-      return 'Invalid JSON format';
+      return { formattedMessage: 'Invalid JSON format', isValid: false };
     }
   }
-  return 'Invalid message format';
+
+  return { formattedMessage: 'Invalid message format', isValid: false };
 }
 
 export function SignatureRequest() {
@@ -30,7 +42,9 @@ export function SignatureRequest() {
 
   if (!origin || !message || !account) return null;
 
-  const formattedMessage = formatMessage(message as HashableMessage);
+  const { formattedMessage, isValid } = formatMessage(
+    message as HashableMessage
+  );
 
   return (
     <>
@@ -70,12 +84,18 @@ export function SignatureRequest() {
                         wordBreak: 'break-word',
                         textIndent: '-0.25em',
                         fontFamily: 'monospace',
+                        color: isValid ? 'inherit' : '$red10',
                       }}
                     >
                       {formattedMessage}
                     </Text>
                   </div>
                 </Flex>
+                {!isValid && (
+                  <Text css={{ color: '$red10', marginTop: '$2' }}>
+                    Cannot sign this message due to invalid format
+                  </Text>
+                )}
               </Card.Body>
             </Card>
           </Box.Flex>
@@ -89,6 +109,7 @@ export function SignatureRequest() {
             aria-label="Sign"
             onPress={handlers.sign}
             isLoading={isLoading}
+            isDisabled={!isValid}
           >
             Sign
           </Button>
