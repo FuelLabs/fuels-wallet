@@ -2,4 +2,4 @@
 "fuels-wallet": minor
 ---
 
-Improve the visualization of very large amounts in the transaction operations view.
+fix: on transaction screen, very large amounts will not be cut anymore.
