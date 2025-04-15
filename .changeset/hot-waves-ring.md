@@ -2,4 +2,4 @@
 "fuels-wallet": minor
 ---
 
-Now the wallet navigates back to home when clicking back after sending an asset.
+feat: Now the wallet navigates back to home when clicking back after sending a transaction.
