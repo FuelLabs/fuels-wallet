@@ -75,25 +75,23 @@ export const TxApprove = () => {
       </Dialog.Description>
       {ctx.shouldShowActions && (
         <Dialog.Footer css={styles.footer}>
-          <>
-            <Button
-              variant="ghost"
-              isDisabled={isLoading}
-              onPress={handleReject}
-              css={styles.footerButton}
-            >
-              Back
-            </Button>
-            <Button
-              intent="primary"
-              isLoading={isLoading}
-              isDisabled={ctx.shouldDisableApproveBtn}
-              onPress={ctx.handlers.approve}
-              css={styles.footerButton}
-            >
-              Submit
-            </Button>
-          </>
+          <Button
+            variant="ghost"
+            isDisabled={isLoading}
+            onPress={handleReject}
+            css={styles.footerButton}
+          >
+            Back
+          </Button>
+          <Button
+            intent="primary"
+            isLoading={isLoading}
+            isDisabled={ctx.shouldDisableApproveBtn}
+            onPress={ctx.handlers.approve}
+            css={styles.footerButton}
+          >
+            Submit
+          </Button>
         </Dialog.Footer>
       )}
     </Box>
