@@ -2,4 +2,4 @@
 "fuels-wallet": minor
 ---
 
-Fixes audit vulnerabilities.
+chore: Fixes audit vulnerabilities.
