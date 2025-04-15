@@ -338,7 +338,7 @@ export function useSend() {
   );
   const form = useForm<SendFormValues>({
     resolver,
-    mode: 'all',
+    mode: 'onSubmit',
     defaultValues: DEFAULT_VALUES,
     context: {
       balances: account?.balances,
@@ -346,7 +346,6 @@ export function useSend() {
       gasLimit,
       maxGasLimit,
     },
-    delayError: 1000,
   });
 
   const tip = useWatch({
