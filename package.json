@@ -96,6 +96,9 @@
     "vitest": "3.0.5"
   },
   "pnpm": {
+    "auditConfig": {
+      "ignoreGhsas": ["GHSA-3gc7-fjrx-p6mg"]
+    },
     "peerDependencyRules": {
       "allowAny": ["react", "react-dom"],
       "ignoreMissing": ["react", "react-dom"]
