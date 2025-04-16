@@ -35,11 +35,7 @@ export function Home() {
           isLoading={isLoading}
           onChangeVisibility={setVisibility}
         />
-        <HomeActions
-          receiveAction={goToReceive}
-          sendAction={sendAction}
-          isDisabled={isLoading}
-        />
+        <HomeActions receiveAction={goToReceive} sendAction={sendAction} />
         <Tabs defaultValue="assets" variant="link" css={styles.assets}>
           <Tabs.List>
             <Tabs.Trigger value="assets" aria-label="Assets">
