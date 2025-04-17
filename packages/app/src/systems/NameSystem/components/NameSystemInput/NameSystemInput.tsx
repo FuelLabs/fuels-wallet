@@ -53,9 +53,11 @@ export const NameSystemInput = forwardRef<
     [resolver]
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     return () => {
       debouncedResolver.cancel();
+      reset();
     };
   }, [debouncedResolver]);
 
@@ -107,7 +109,7 @@ export const NameSystemInput = forwardRef<
   }, [onChange]);
 
   const showHandle = useMemo(
-    () => isName && address && status === 'selected',
+    () => isName && !!address && status === 'selected',
     [isName, address, status]
   );
 
@@ -128,7 +130,6 @@ export const NameSystemInput = forwardRef<
               resolver={address!}
               onClear={handleClear}
               className="input-name-system"
-              avatarSize={20}
             >
               <Box.Flex direction="row" gap={2} align="center">
                 <Tooltip content={shortAddress(address ?? '')}>
@@ -189,10 +190,8 @@ const styles = {
   }),
   dropdownMenu: cssObj({
     width: 250,
-    // boxShadow: '$md',
     padding: '$1 0',
     '.fuel_MenuListItem': {
-      // py: '$2',
       px: '$3',
       height: 'auto',
     },
@@ -211,6 +210,11 @@ const styles = {
 
     '.input-name-system': {
       padding: '0 $3 !important',
+
+      '.fuel_Avatar': {
+        width: '20px',
+        height: '20px',
+      },
     },
   }),
   inputLoader: cssObj({

@@ -1,5 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, type FlexProps, Icon, IconButton } from '@fuel-ui/react';
+import {
+  type AvatarProps,
+  Box,
+  type FlexProps,
+  Icon,
+  IconButton,
+} from '@fuel-ui/react';
+import { BakoIdAvatar } from '../BakoIdAvatar';
 
 interface NameSystemAvatarProps
   extends Omit<FlexProps, 'onClick' | 'onSelect'> {
@@ -7,7 +14,7 @@ interface NameSystemAvatarProps
   onSelect?: (resolver: string) => void;
   onClear?: () => void;
   children: React.ReactNode;
-  avatarSize?: number;
+  avatarSize?: AvatarProps['size'];
 }
 
 export function NameSystemAvatar({
@@ -15,13 +22,13 @@ export function NameSystemAvatar({
   onSelect,
   onClear,
   children,
-  avatarSize = 30,
+  avatarSize = 'sm',
   ...props
 }: NameSystemAvatarProps) {
   return (
     <Box.Flex onClick={() => onSelect?.(resolver)} css={styles.root} {...props}>
       <Box.Flex css={styles.content}>
-        <Avatar.Generated hash={resolver} size={avatarSize} />
+        <BakoIdAvatar name={resolver} size={avatarSize} />
         {children}
       </Box.Flex>
       {onClear && (
