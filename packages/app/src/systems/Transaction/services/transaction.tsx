@@ -30,6 +30,7 @@ import {
 } from 'fuels';
 import { WalletLockedCustom, db, delay } from '~/systems/Core';
 
+import { isDeepStrictEqual } from 'node:util';
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
@@ -81,6 +82,7 @@ export type TxInputs = {
     transactionRequest: TransactionRequest;
     providerUrl?: string;
     providerConfig?: FuelProviderConfig;
+    displayedSummary?: TransactionSummary;
   };
   simulateTransaction: {
     transactionRequest: TransactionRequest;
@@ -138,6 +140,47 @@ export type TxInputs = {
 const AMOUNT_SUB_PER_TX_RETRY = 300_000;
 const TXS_PER_PAGE = 50;
 
+const compareTransactionSummaries = ({
+  summary1,
+  summary2,
+}: {
+  summary1: TransactionSummary;
+  summary2: TransactionSummary;
+}): boolean => {
+  const operations1 = summary1.operations;
+  const operations2 = summary2.operations;
+  console.log('summary1', summary1);
+  console.log('summary2', summary2);
+  if (operations1.length !== operations2.length) {
+    return false;
+  }
+  for (let i = 0; i < operations1.length; i++) {
+    const operation1 = operations1[i];
+    const operation2 = operations2[i];
+    if (operation1.from?.address !== operation2.from?.address) return false;
+
+    if (operation1.to?.address !== operation2.to?.address) return false;
+
+    const assetsSent1 = operation1.assetsSent || [];
+    const assetsSent2 = operation2.assetsSent || [];
+    if (assetsSent1.length !== assetsSent2.length) return false;
+
+    for (let j = 0; j < assetsSent1.length; j++) {
+      if (!bn(assetsSent1[j].amount).eq(bn(assetsSent2[j].amount)))
+        return false;
+    }
+  }
+
+  const receipts1 = summary1.receipts;
+  const receipts2 = summary2.receipts;
+  if (receipts1.length !== receipts2.length) return false;
+
+  for (let j = 0; j < receipts1.length; j++) {
+    if (receipts1[j].type !== receipts2[j].type) return false;
+  }
+  return true;
+};
+
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class TxService {
   static getTxCursors(input: TxInputs['getTxCursors']) {
@@ -179,6 +222,7 @@ export class TxService {
     transactionRequest,
     providerUrl = '',
     providerConfig,
+    displayedSummary,
   }: TxInputs['send']) {
     const provider = await createProvider(
       providerUrl || providerConfig?.url || ''
@@ -187,79 +231,58 @@ export class TxService {
       (account?.address?.toString() || address) as string,
       provider
     );
-    const abiMap = await getAbiMap({
-      inputs: transactionRequest.toTransaction().inputs,
-    });
 
-    const expectedSummary = await getTransactionSummaryFromRequest({
-      provider,
-      transactionRequest,
-      abiMap,
-    });
+    let summaryToCompare = displayedSummary;
 
-    const validationResult = await TxService.validateTransactionRequest(
-      transactionRequest,
-      provider,
-      expectedSummary
-    );
+    if (!summaryToCompare) {
+      console.log('Generating displayed summary');
+      const abiMap = await getAbiMap({
+        inputs: transactionRequest.toTransaction().inputs,
+      });
 
-    if (!validationResult.isValid) {
+      summaryToCompare = await getTransactionSummaryFromRequest({
+        provider,
+        transactionRequest,
+        abiMap,
+      });
+    }
+
+    try {
+      const validationTxRequest = transactionRequestify(transactionRequest);
+
+      await provider.dryRun(validationTxRequest);
+
+      const validationAbiMap = await getAbiMap({
+        inputs: validationTxRequest.toTransaction().inputs,
+      });
+
+      const validationSummary = await getTransactionSummaryFromRequest({
+        provider,
+        transactionRequest: validationTxRequest,
+        abiMap: validationAbiMap,
+      });
+
+      const isValid = compareTransactionSummaries({
+        summary1: summaryToCompare,
+        summary2: validationSummary,
+      });
+
+      if (!isValid) {
+        console.log('Transaction validation failed');
+        throw new Error(
+          'Transaction validation failed: The transaction you see may not match what will be executed. This could be a potential attack.'
+        );
+      }
+    } catch (validationError) {
+      console.log('Transaction validation failed', validationError);
       throw new Error(
-        `Transaction validation failed: ${validationResult.error}. This could be a potential attack where the transaction you're seeing differs from what you're actually signing.`
+        `Transaction validation failed: ${validationError instanceof Error ? validationError.message : 'Unknown error'}. This could be a potential attack where the transaction you're seeing differs from what you're actually signing.`
       );
     }
 
     const txSent = await wallet.sendTransaction(transactionRequest);
 
     return txSent;
-  }
-
-  static async validateTransactionRequest(
-    transactionRequest: TransactionRequestLike,
-    provider: Provider,
-    displayedSummary: TransactionSummary
-  ) {
-    try {
-      const txRequest = transactionRequestify(transactionRequest);
-
-      try {
-        await provider.dryRun(txRequest);
-
-        const abiMap = await getAbiMap({
-          inputs: txRequest.toTransaction().inputs,
-        });
-
-        const actualSummary = await getTransactionSummaryFromRequest({
-          provider,
-          transactionRequest: txRequest,
-          abiMap,
-        });
-
-        if (
-          JSON.stringify(displayedSummary) === JSON.stringify(actualSummary)
-        ) {
-          return { isValid: true };
-        }
-
-        return { isValid: false };
-      } catch (validationError) {
-        return {
-          isValid: false,
-          error:
-            validationError instanceof Error
-              ? validationError.message
-              : 'Transaction validation failed',
-        };
-      }
-    } catch (error) {
-      return {
-        isValid: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Unknown error during validation',
-      };
-    }
   }
 
   static async fetch({ txId, providerUrl = '' }: TxInputs['fetch']) {
