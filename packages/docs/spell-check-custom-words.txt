@@ -102,3 +102,7 @@ tanstack
 BadgeDeprecated
 tooltip
 useTransactionResult
+Solana
+Solflare
+Solflare's
+untrusted
