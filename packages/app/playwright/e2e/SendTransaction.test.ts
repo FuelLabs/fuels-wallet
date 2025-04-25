@@ -402,5 +402,6 @@ test.describe('SendTransaction', () => {
 
     // Wait for transaction to be confirmed
     await hasText(page, 'Success');
+    await hasText(page, domain);
   });
 });
