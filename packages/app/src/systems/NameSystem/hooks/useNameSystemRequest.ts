@@ -1,13 +1,8 @@
-import { useInterpret, useSelector } from '@xstate/react';
-import { useCallback } from 'react';
+import { useSelector } from '@xstate/react';
 import { Services, store } from '~/store';
 import type { NameSystemInput } from '~/systems/NameSystem/services';
 import { useNetworks } from '~/systems/Network';
-import { useProvider } from '~/systems/Network/hooks/useProvider';
-import {
-  type NameSystemRequestState,
-  nameSystemRequestMachine,
-} from '../machines/nameSystemRequetMachine';
+import type { NameSystemRequestState } from '../machines/nameSystemRequetMachine';
 
 const selectors = {
   name(state: NameSystemRequestState) {
@@ -25,16 +20,16 @@ const selectors = {
   isResolvingDomain(state: NameSystemRequestState) {
     return state.matches('loadingDomain');
   },
-  isResolvingAddress(state: NameSystemRequestState) {
-    return state.matches('loadingAddress');
-  },
 };
 
 export type UseNameSystemRequestReturn = ReturnType<
   typeof useNameSystemRequest
 >;
 
-type SetDomain = NameSystemInput['name'] & NameSystemInput['resolver'];
+type SetDomain = {
+  domain: string;
+  address: string;
+};
 
 export function useNameSystemRequest() {
   const { network } = useNetworks();
@@ -43,16 +38,13 @@ export function useNameSystemRequest() {
   const address = useSelector(service, selectors.address);
   const error = useSelector(service, selectors.error);
   const isResolvingDomain = useSelector(service, selectors.isResolvingDomain);
-  const isResolvingAddress = useSelector(service, selectors.isResolvingAddress);
   const isOpenDropdown = useSelector(service, selectors.isOpenDropdown);
 
-  function resolverDomain(input: Omit<NameSystemInput['resolver'], 'chainId'>) {
+  function resolverDomain(
+    input: Omit<NameSystemInput['resolverDomain'], 'chainId'>
+  ) {
     if (!network) throw new Error('Network not available');
     service.send('RESOLVE_DOMAIN', { ...input, chainId: network.chainId });
-  }
-
-  function resolverAddress(input: Omit<NameSystemInput['name'], 'chainId'>) {
-    service.send('RESOLVE_ADDRESS', { ...input, chainId: network?.chainId });
   }
 
   function retry() {
@@ -73,14 +65,12 @@ export function useNameSystemRequest() {
 
   return {
     resolverDomain,
-    resolverAddress,
     retry,
     reset,
     setDomain,
     domain,
     address,
     error,
-    isResolvingAddress,
     isResolvingDomain,
     toggleDropdown,
     isOpenDropdown,
