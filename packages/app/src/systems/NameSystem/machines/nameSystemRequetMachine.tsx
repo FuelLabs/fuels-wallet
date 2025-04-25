@@ -23,7 +23,6 @@ type MachineService = {
 };
 
 type MachineEvents =
-  | { type: 'RESOLVE_ADDRESS'; address: string; chainId: number }
   | { type: 'RESOLVE_DOMAIN'; domain: string; chainId: number }
   | { type: 'SET_DOMAIN'; domain: string; chainId: number; address: string }
   | { type: 'TOGGLE_DROPDOWN'; open: boolean }
@@ -43,11 +42,6 @@ export const nameSystemRequestMachine = createMachine(
     states: {
       idle: {
         on: {
-          RESOLVE_ADDRESS: {
-            target: 'loadingAddress',
-            cond: 'isValidAddress',
-            actions: 'resolveAddress',
-          },
           RESOLVE_DOMAIN: {
             target: 'loadingDomain',
             cond: 'isValidDomain',
@@ -64,19 +58,6 @@ export const nameSystemRequestMachine = createMachine(
           },
         },
       },
-      loadingAddress: {
-        invoke: {
-          src: 'resolveAddress',
-          onDone: {
-            target: 'idle',
-            actions: 'setName',
-          },
-          onError: {
-            target: 'errorAddress',
-            actions: 'setError',
-          },
-        },
-      },
       loadingDomain: {
         invoke: {
           src: 'resolverDomain',
@@ -88,11 +69,6 @@ export const nameSystemRequestMachine = createMachine(
             target: 'errorDomain',
             actions: 'setError',
           },
-        },
-      },
-      errorAddress: {
-        on: {
-          RETRY: 'loadingAddress',
         },
       },
       errorDomain: {
@@ -111,21 +87,12 @@ export const nameSystemRequestMachine = createMachine(
   },
   {
     guards: {
-      isValidAddress: (_, ev) => isB256(ev.address) && !!ev.chainId,
       isValidDomain: (_, e) => isValidDomain(e.domain),
     },
     actions: {
       resolveDomain: assign({
         name: (_, e) => e.domain,
         chainId: (_, e) => e.chainId,
-      }),
-      resolveAddress: assign({
-        address: (_ctx, e) => e.address,
-        chainId: (_, e) => e.chainId,
-      }),
-      setName: assign({
-        name: (_, e) => String(e.data),
-        error: () => null,
       }),
       setAddress: assign({
         address: (_, e) => String(e.data),
@@ -153,16 +120,6 @@ export const nameSystemRequestMachine = createMachine(
       }),
     },
     services: {
-      resolveAddress: async (context) => {
-        if (context.chainId === null) {
-          throw new Error('ChainId not available');
-        }
-        const { domain } = await NameSystemService.resolverAddress({
-          address: context.address!,
-          chainId: context.chainId,
-        });
-        return domain;
-      },
       resolverDomain: async (context) => {
         if (context.chainId === null) {
           throw new Error('ChainId not available');
