@@ -6,7 +6,7 @@ import type {
   CoinAsset,
 } from '@fuel-wallet/types';
 import * as Sentry from '@sentry/react';
-import { Address, type Provider, bn } from 'fuels';
+import { Address, BN, type Provider, bn } from 'fuels';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { chromeStorage } from '~/systems/Core/services/chromeStorage';
 import type { Maybe } from '~/systems/Core/types';
@@ -107,6 +107,7 @@ export class AccountService {
 
     try {
       const provider = await createProvider(providerUrl!);
+      await provider.init();
       const balances = await getBalances(provider, account.address);
       const assetsAmountsInUsd: Record<
         string,
@@ -495,6 +496,16 @@ export class AccountService {
 // ----------------------------------------------------------------------------
 
 async function getBalances(provider: Provider, address: string) {
-  const { balances } = await provider.getBalances(address);
+  const {
+    balances: { edges },
+  } = await provider.operations.getBalances({
+    first: 10000,
+    filter: { owner: new Address(address).toB256() },
+  });
+
+  const balances = edges.map(({ node }) => ({
+    assetId: node.assetId,
+    amount: new BN(node.amount),
+  }));
   return balances;
 }

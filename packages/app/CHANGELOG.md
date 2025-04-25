@@ -1,5 +1,33 @@
 # fuels-wallet
 
+## 0.54.0
+
+### Minor Changes
+
+- [#1901](https://github.com/FuelLabs/fuels-wallet/pull/1901) [`72a8b10f`](https://github.com/FuelLabs/fuels-wallet/commit/72a8b10f7d52c9ea0e0b75b4da469f4820c5cd07) Thanks [@nelitow](https://github.com/nelitow)! - chore: Fixes audit vulnerabilities.
+
+- [#1898](https://github.com/FuelLabs/fuels-wallet/pull/1898) [`9095d38b`](https://github.com/FuelLabs/fuels-wallet/commit/9095d38bab19936323e55dfe5444f6f632e12fc9) Thanks [@nelitow](https://github.com/nelitow)! - feat: Now the wallet navigates back to home when clicking back after sending a transaction.
+
+- [#1900](https://github.com/FuelLabs/fuels-wallet/pull/1900) [`47ca379c`](https://github.com/FuelLabs/fuels-wallet/commit/47ca379c56705bfd802e82aa9e97f4e057b57d63) Thanks [@nelitow](https://github.com/nelitow)! - fix: on transaction screen, very large amounts will not be cut anymore.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.54.0
+  - @fuels/playwright-utils@0.54.0
+
+## 0.53.0
+
+### Minor Changes
+
+- [#1892](https://github.com/FuelLabs/fuels-wallet/pull/1892) [`61d27822`](https://github.com/FuelLabs/fuels-wallet/commit/61d27822053d35647d1cd775f5ec4ae855e36b59) Thanks [@nelitow](https://github.com/nelitow)! - Adjust balance feature for accounts with over 100 assets.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.53.0
+  - @fuels/playwright-utils@0.53.0
+
 ## 0.52.0
 
 ### Minor Changes
