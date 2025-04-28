@@ -107,9 +107,14 @@ jobs:
 
       - name: Bump and Collect Version
         run: |
+          # Backup changesets for release descriptions
+          cp -r .changeset changesets-backup
           pnpm changeset version
           echo "BUILD_VERSION=$(pnpm -s packages:version)" >> $GITHUB_ENV
           git reset --hard
+          # Restore changesets for release notes generation
+          mkdir -p .changeset
+          cp -r changesets-backup/* .changeset/ || true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
