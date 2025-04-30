@@ -28,7 +28,7 @@ export function NameSystemAvatar({
   return (
     <Box.Flex onClick={() => onSelect?.(resolver)} css={styles.root} {...props}>
       <Box.Flex css={styles.content}>
-        <BakoIdAvatar name={resolver} size={avatarSize} />
+        <BakoIdAvatar name={resolver ?? ''} size={avatarSize} />
         {children}
       </Box.Flex>
       {onClear && (
