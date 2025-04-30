@@ -73,13 +73,7 @@ export function useTxMetadata({
     return getAddress(address);
   }, [opDirection, mainOperation]);
 
-  const toOrFromDomain = useMemo(() => {
-    const domain =
-      opDirection === OperationDirection.to
-        ? mainOperation.to?.domain
-        : mainOperation.from?.domain;
-    return domain;
-  }, [mainOperation, opDirection]);
+  const toDomain = useMemo(() => mainOperation.to?.domain, [mainOperation]);
 
   return {
     toOrFromAddress,
@@ -89,6 +83,6 @@ export function useTxMetadata({
     id,
     operation: mainOperation,
     status,
-    toOrFromDomain,
+    toDomain,
   };
 }

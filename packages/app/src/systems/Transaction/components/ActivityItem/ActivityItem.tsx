@@ -33,7 +33,7 @@ export const ActivityItem: TxItemComponent = ({
     timeFormatted,
     id,
     status,
-    toOrFromDomain,
+    toDomain,
   } = useTxMetadata({ ownerAddress, transaction });
 
   return (
@@ -58,9 +58,9 @@ export const ActivityItem: TxItemComponent = ({
         <Box.Flex css={styles.row}>
           <Box.Flex css={styles.fromToTextWrapper}>
             <Text css={styles.label}>{toOrFromText}</Text>
-            {!!toOrFromAddress && toOrFromDomain ? (
+            {!!toOrFromAddress && toDomain ? (
               <Tooltip content={shortAddress(toOrFromAddress)}>
-                <Text color="accent8">{toOrFromDomain}</Text>
+                <Text color="accent8">{toDomain}</Text>
               </Tooltip>
             ) : (
               <Text>{shortAddress(toOrFromAddress)}</Text>

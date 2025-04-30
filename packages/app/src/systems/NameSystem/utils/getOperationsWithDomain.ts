@@ -15,7 +15,6 @@ export const getOperationsWithDomain = async (
 
   const addresses = operations.reduce<Set<string>>((set, operation) => {
     if (operation.to?.address) set.add(operation.to.address);
-    if (operation.from?.address) set.add(operation.from.address);
     return set;
   }, new Set());
 
@@ -44,12 +43,6 @@ export const getOperationsWithDomain = async (
       ? {
           ...operation.to,
           domain: addressToDomainMap[operation.to.address] || null,
-        }
-      : undefined,
-    from: operation.from
-      ? {
-          ...operation.from,
-          domain: addressToDomainMap[operation.from.address] || null,
         }
       : undefined,
   }));

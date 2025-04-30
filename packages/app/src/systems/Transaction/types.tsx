@@ -125,10 +125,6 @@ export type OperationWithDomain = Operation & {
     domain?: string | null;
     address?: string;
   };
-  from?: OperationTransactionAddress & {
-    domain?: string | null;
-    address?: string;
-  };
 };
 
 export type TransactionResultWithDomain = TransactionResult & {
