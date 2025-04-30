@@ -10,7 +10,7 @@ import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
 import NameSystemService from '~/systems/NameSystem/services/nameSystem';
-import { getDomainByOperations } from '~/systems/NameSystem/utils/getDomainByOperations';
+import { getOperationsWithDomain } from '~/systems/NameSystem/utils/getOperationsWithDomain';
 import { type TxInputs, TxService } from '../services';
 import type { TransactionCursor, TransactionResultWithDomain } from '../types';
 
@@ -321,7 +321,7 @@ export const transactionHistoryMachine = createMachine(
           const txHistoryWithDomain = await Promise.all(
             transactionHistory.map(async (tx) => ({
               ...tx,
-              operations: await getDomainByOperations(tx.operations),
+              operations: await getOperationsWithDomain(tx.operations),
             }))
           );
 

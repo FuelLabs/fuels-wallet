@@ -8,7 +8,7 @@ import { assign, createMachine } from 'xstate';
 import { AccountService } from '~/systems/Account';
 import { FetchMachine, assignErrorMessage, delay } from '~/systems/Core';
 import NameSystemService from '~/systems/NameSystem/services/nameSystem';
-import { getDomainByOperations } from '~/systems/NameSystem/utils/getDomainByOperations';
+import { getOperationsWithDomain } from '~/systems/NameSystem/utils/getOperationsWithDomain';
 import { NetworkService } from '~/systems/Network';
 import type { GroupedErrors, VMApiError } from '~/systems/Transaction';
 import type { TxInputs } from '~/systems/Transaction/services';
@@ -432,7 +432,7 @@ export const transactionRequestMachine = createMachine(
 
           const simulatedInfo = await TxService.simulateTransaction(input);
 
-          const operationsWithDomain = await getDomainByOperations(
+          const operationsWithDomain = await getOperationsWithDomain(
             simulatedInfo.txSummary.operations
           );
 
@@ -464,7 +464,7 @@ export const transactionRequestMachine = createMachine(
           const txResponse = await TxService.send(input);
           const txSummary = await txResponse.getTransactionSummary();
 
-          const operationsWithDomain = await getDomainByOperations(
+          const operationsWithDomain = await getOperationsWithDomain(
             txSummary.operations
           );
 

@@ -3,7 +3,7 @@ import { NetworkService } from '~/systems/Network';
 import type { OperationWithDomain } from '~/systems/Transaction';
 import NameSystemService from '../services/nameSystem';
 
-export const getDomainByOperations = async (
+export const getOperationsWithDomain = async (
   operations: Operation[]
 ): Promise<OperationWithDomain[]> => {
   const currentNetwork = await NetworkService.getSelectedNetwork();

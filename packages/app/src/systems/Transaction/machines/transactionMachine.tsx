@@ -6,7 +6,7 @@ import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
 import NameSystemService from '~/systems/NameSystem/services/nameSystem';
-import { getDomainByOperations } from '~/systems/NameSystem/utils/getDomainByOperations';
+import { getOperationsWithDomain } from '~/systems/NameSystem/utils/getOperationsWithDomain';
 import { TxService } from '../services';
 import type { TransactionResultWithDomain } from '../types';
 
@@ -167,7 +167,7 @@ export const transactionMachine = createMachine(
             txId: input.txId,
           });
 
-          const operationsWithDomain = await getDomainByOperations(
+          const operationsWithDomain = await getOperationsWithDomain(
             txResult.operations
           );
 
