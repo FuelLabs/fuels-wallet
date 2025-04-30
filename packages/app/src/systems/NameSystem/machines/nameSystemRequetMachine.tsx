@@ -1,5 +1,3 @@
-import { isValidDomain } from '@bako-id/sdk';
-import { type Provider, isB256 } from 'fuels';
 import {
   type InterpreterFrom,
   type StateFrom,
@@ -7,7 +5,6 @@ import {
   createMachine,
 } from 'xstate';
 import type { FetchResponse } from '~/systems/Core';
-import NameSystemService from '~/systems/NameSystem/services/nameSystem';
 
 type MachineContext = {
   address: null | string;
@@ -23,11 +20,9 @@ type MachineService = {
 };
 
 type MachineEvents =
-  | { type: 'RESOLVE_DOMAIN'; domain: string; chainId: number }
   | { type: 'SET_DOMAIN'; domain: string; chainId: number; address: string }
   | { type: 'TOGGLE_DROPDOWN'; open: boolean }
-  | { type: 'RESET' }
-  | { type: 'RETRY' };
+  | { type: 'RESET' };
 
 export const nameSystemRequestMachine = createMachine(
   {
@@ -42,11 +37,6 @@ export const nameSystemRequestMachine = createMachine(
     states: {
       idle: {
         on: {
-          RESOLVE_DOMAIN: {
-            target: 'loadingDomain',
-            cond: 'isValidDomain',
-            actions: 'resolveDomain',
-          },
           RESET: {
             actions: 'reset',
           },
@@ -56,24 +46,6 @@ export const nameSystemRequestMachine = createMachine(
           SET_DOMAIN: {
             actions: 'setDomain',
           },
-        },
-      },
-      loadingDomain: {
-        invoke: {
-          src: 'resolverDomain',
-          onDone: {
-            target: 'idle',
-            actions: 'setAddress',
-          },
-          onError: {
-            target: 'errorDomain',
-            actions: 'setError',
-          },
-        },
-      },
-      errorDomain: {
-        on: {
-          RETRY: 'loadingDomain',
         },
       },
     },
@@ -86,24 +58,7 @@ export const nameSystemRequestMachine = createMachine(
     },
   },
   {
-    guards: {
-      isValidDomain: (_, e) => isValidDomain(e.domain),
-    },
     actions: {
-      resolveDomain: assign({
-        name: (_, e) => e.domain,
-        chainId: (_, e) => e.chainId,
-      }),
-      setAddress: assign({
-        address: (_, e) => String(e.data),
-        isDropdownOpen: true,
-        error: () => null,
-      }),
-      setError: assign({
-        name: () => null,
-        isDropdownOpen: false,
-        error: (_, e) => String(e.data),
-      }),
       reset: assign({
         name: null,
         address: null,
@@ -118,18 +73,6 @@ export const nameSystemRequestMachine = createMachine(
         isDropdownOpen: true,
         address: (_, e) => e.address,
       }),
-    },
-    services: {
-      resolverDomain: async (context) => {
-        if (context.chainId === null) {
-          throw new Error('ChainId not available');
-        }
-        const { address } = await NameSystemService.resolverDomain({
-          domain: context.name!,
-          chainId: context.chainId,
-        });
-        return address;
-      },
     },
   }
 );

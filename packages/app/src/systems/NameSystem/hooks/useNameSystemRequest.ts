@@ -11,14 +11,8 @@ const selectors = {
   address(state: NameSystemRequestState) {
     return state.context.address;
   },
-  error(state: NameSystemRequestState) {
-    return state.context.error;
-  },
   isOpenDropdown(state: NameSystemRequestState) {
     return state.context.isDropdownOpen;
-  },
-  isResolvingDomain(state: NameSystemRequestState) {
-    return state.matches('loadingDomain');
   },
 };
 
@@ -36,20 +30,7 @@ export function useNameSystemRequest() {
   const service = store.useService(Services.nameSystemRequest);
   const domain = useSelector(service, selectors.name);
   const address = useSelector(service, selectors.address);
-  const error = useSelector(service, selectors.error);
-  const isResolvingDomain = useSelector(service, selectors.isResolvingDomain);
   const isOpenDropdown = useSelector(service, selectors.isOpenDropdown);
-
-  function resolverDomain(
-    input: Omit<NameSystemInput['resolverDomain'], 'chainId'>
-  ) {
-    if (!network) throw new Error('Network not available');
-    service.send('RESOLVE_DOMAIN', { ...input, chainId: network.chainId });
-  }
-
-  function retry() {
-    service.send('RETRY');
-  }
 
   function toggleDropdown(open: boolean) {
     service.send('TOGGLE_DROPDOWN', { open });
@@ -64,14 +45,10 @@ export function useNameSystemRequest() {
   }
 
   return {
-    resolverDomain,
-    retry,
     reset,
     setDomain,
     domain,
     address,
-    error,
-    isResolvingDomain,
     toggleDropdown,
     isOpenDropdown,
   };
