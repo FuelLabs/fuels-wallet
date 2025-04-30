@@ -62,12 +62,10 @@ export const NameSystemInput = forwardRef<
   }, [debouncedResolver]);
 
   const handleDomainChange = (domain: string) => {
-    if (isValidDomain(domain)) {
-      debouncedResolver(domain);
-      return;
+    const domainWithoutAt = domain.replace('@', '');
+    if (isValidDomain(domain) && domainWithoutAt.length > 2) {
+      return debouncedResolver(domain);
     }
-    onError('No resolver for domain provided');
-    return;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
