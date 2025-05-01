@@ -2,4 +2,4 @@
 "fuels-wallet": minor
 ---
 
-adds bako-id integration
+feat: Add integration with BakoID in "Send" and "TransactionView" screens
