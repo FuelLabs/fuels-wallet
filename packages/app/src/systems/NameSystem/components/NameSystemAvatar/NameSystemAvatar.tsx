@@ -5,6 +5,7 @@ import {
   type FlexProps,
   Icon,
   IconButton,
+  useFuelTheme,
 } from '@fuel-ui/react';
 import { BakoIdAvatar } from '../BakoIdAvatar';
 
@@ -25,9 +26,11 @@ export function NameSystemAvatar({
   avatarSize = 'sm',
   ...props
 }: NameSystemAvatarProps) {
+  const { current } = useFuelTheme();
+
   return (
     <Box.Flex onClick={() => onSelect?.(resolver)} css={styles.root} {...props}>
-      <Box.Flex css={styles.content}>
+      <Box.Flex css={styles.content} data-theme={current}>
         <BakoIdAvatar name={resolver ?? ''} size={avatarSize} />
         {children}
       </Box.Flex>
@@ -57,5 +60,11 @@ const styles = {
     flex: 1,
     gap: '$2',
     alignItems: 'center',
+    '&[data-theme="light"] span': {
+      backgroundColor: '$gray11',
+    },
+    '&[data-theme="dark"] span': {
+      backgroundColor: '$gray2',
+    },
   },
 };
