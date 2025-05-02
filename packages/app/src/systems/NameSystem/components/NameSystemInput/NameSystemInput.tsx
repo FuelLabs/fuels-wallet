@@ -210,8 +210,8 @@ const styles = {
       padding: '0 $3 !important',
 
       '.fuel_Avatar': {
-        width: '20px',
-        height: '20px',
+        width: '24px',
+        height: '24px',
       },
     },
   }),
