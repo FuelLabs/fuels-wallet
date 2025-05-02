@@ -383,6 +383,11 @@ export function useSend() {
   }
 
   function submit() {
+    const values = form.getValues();
+    if (!form.formState.isValid || !values.amount || values.amount.lte(0)) {
+      form.trigger();
+      return;
+    }
     service.send('CONFIRM');
   }
 

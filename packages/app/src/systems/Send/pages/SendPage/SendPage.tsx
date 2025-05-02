@@ -22,6 +22,10 @@ export function SendPage() {
     control: form.control,
     name: 'address',
   });
+  const amount = useWatch({
+    control: form.control,
+    name: 'amount',
+  });
 
   useEffect(() => {
     if (address) {
@@ -60,7 +64,9 @@ export function SendPage() {
               <Button
                 type="submit"
                 intent="primary"
-                isDisabled={!readyToSend || hasFormErrors}
+                isDisabled={
+                  !readyToSend || hasFormErrors || !amount || amount.lte(0)
+                }
                 isLoading={status('loading') || status('loadingTx')}
               >
                 Review
