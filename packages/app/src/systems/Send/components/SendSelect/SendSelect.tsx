@@ -2,7 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Form, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { type BN, bn } from 'fuels';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import {
   ControlledField,
@@ -106,19 +106,24 @@ export function SendSelect({
     handlers.recalculateFromAmount,
   ]);
 
-  const assetSelectItems = balances
-    ?.map((b) => ({
-      assetId: b.assetId,
-      ...b.asset,
-    }))
-    .sort((a, b) => {
-      if (a.verified !== b.verified) return b.verified ? 1 : -1;
-      if (a.isNft !== b.isNft) return b.isNft ? 1 : -1;
-      if (a.collection !== b.collection)
-        return (a.collection || '').localeCompare(b.collection || '');
-      if (a.name !== b.name) return (a.name || '').localeCompare(b.name || '');
-      return (a.assetId || '').localeCompare(b.assetId || '');
-    });
+  const assetSelectItems = useMemo(
+    () =>
+      balances
+        ?.map((b) => ({
+          assetId: b.assetId,
+          ...b.asset,
+        }))
+        .sort((a, b) => {
+          if (a.verified !== b.verified) return b.verified ? 1 : -1;
+          if (a.isNft !== b.isNft) return b.isNft ? 1 : -1;
+          if (a.collection !== b.collection)
+            return (a.collection || '').localeCompare(b.collection || '');
+          if (a.name !== b.name)
+            return (a.name || '').localeCompare(b.name || '');
+          return (a.assetId || '').localeCompare(b.assetId || '');
+        }),
+    [balances]
+  );
 
   return (
     <MotionContent {...animations.slideInTop()}>
@@ -132,17 +137,24 @@ export function SendSelect({
             name="asset"
             control={form.control}
             css={styles.asset}
-            render={({ field }) => (
-              <AssetSelect
-                items={assetSelectItems}
-                selected={field.value}
-                onSelect={(asset) => {
+            render={({ field }) => {
+              const handleAssetSelect = useCallback(
+                (asset?: string | null) => {
                   form.setValue('amount', bn(0));
                   setWatchMax(false);
                   field.onChange(asset);
-                }}
-              />
-            )}
+                },
+                [form.setValue, field.onChange]
+              );
+
+              return (
+                <AssetSelect
+                  items={assetSelectItems}
+                  selected={field.value}
+                  onSelect={handleAssetSelect}
+                />
+              );
+            }}
           />
         </Box.Flex>
         <Box.Flex css={styles.row}>
