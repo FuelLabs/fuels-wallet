@@ -50,6 +50,7 @@ const styles = {
   root: cssObj({
     flex: 1,
     width: '100%',
+    height: '100%',
     justifyItens: 'space-between',
 
     '.fuel_Icon, .fuel_Icon:hover': {
