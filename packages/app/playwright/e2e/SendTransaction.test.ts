@@ -372,4 +372,36 @@ test.describe('SendTransaction', () => {
       page.getByText("You can't send to Asset address")
     ).toBeVisible();
   });
+
+  test('Send transaction to a @domain', async () => {
+    await visit(page, '/send');
+    const domain = '@bakoid';
+
+    // Select asset
+    await getButtonByText(page, 'Select one asset').click();
+    await page.getByText('Ethereum').click();
+
+    // Fill address with domain and select it
+    await getInputByName(page, 'address').fill(domain);
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await page.getByText(domain).click();
+    await page.waitForTimeout(1000);
+
+    // Fill amount
+    await getInputByName(page, 'amount').focus();
+    await getInputByName(page, 'amount').fill('0.001');
+
+    // Submit transaction
+    const btnLocator = getButtonByText(page, 'Review');
+
+    await expectButtonToBeEnabled(btnLocator);
+    await btnLocator.click();
+
+    await getButtonByText(page, 'Submit').click();
+    await hasText(page, '0.001 ETH');
+
+    // Wait for transaction to be confirmed
+    await hasText(page, 'Success');
+    await hasText(page, domain);
+  });
 });

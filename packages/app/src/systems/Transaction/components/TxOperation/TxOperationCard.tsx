@@ -10,6 +10,7 @@ import { getOperationText } from '../../services/transformers/simplifyTransactio
 import { type SimplifiedOperation, TxCategory } from '../../types';
 import { TxRecipientContractLogo } from '../TxRecipientCard/TxRecipientContractLogo';
 import { TxOperationAssets } from './TxOperationAssets';
+import { NameSystemAvatar } from '~/systems/NameSystem/components/NameSystemAvatar/NameSystemAvatar';
 
 export type TxOperationCardProps = {
   operation: SimplifiedOperation;
@@ -93,6 +94,14 @@ export function TxOperationCard({
                 image={fromContractMetadata?.image}
                 size={36}
               />
+            ) : operation?.from?.domain ? (
+              <NameSystemAvatar
+                resolver={operation?.from?.domain}
+                avatarSize={36}
+              >
+                {/* biome-ignore lint/complexity/noUselessFragments: <explanation> */}
+                <></>
+              </NameSystemAvatar>
             ) : (
               <Avatar.Generated
                 role="img"
@@ -164,6 +173,14 @@ export function TxOperationCard({
               <Box css={styles.ethAvatar}>
                 <Icon icon="CurrencyEthereum" size={20} stroke={1} />
               </Box>
+            ) : operation?.to?.domain ? (
+              <NameSystemAvatar
+                resolver={operation?.to?.domain}
+                avatarSize={36}
+              >
+                {/* biome-ignore lint/complexity/noUselessFragments: <explanation> */}
+                <></>
+              </NameSystemAvatar>
             ) : (
               <Avatar.Generated
                 role="img"
@@ -184,7 +201,7 @@ export function TxOperationCard({
           <Text as="span" fontSize="sm" css={styles.name}>
             {isToContract
               ? toContractMetadata?.name || 'Unknown'
-              : accountTo?.name || 'Unknown'}
+              : operation?.to?.domain || accountTo?.name || 'Unknown'}
           </Text>
           {ethToAddress ? (
             <EthAddress address={ethToAddress} css={styles.address} />
@@ -227,6 +244,14 @@ export function TxOperationCard({
                     image={fromContractMetadata?.image}
                     size={36}
                   />
+                ) : operation?.from?.domain ? (
+                  <NameSystemAvatar
+                    resolver={operation?.from?.domain}
+                    avatarSize={36}
+                  >
+                    {/* biome-ignore lint/complexity/noUselessFragments: <explanation> */}
+                    <></>
+                  </NameSystemAvatar>
                 ) : (
                   <Avatar.Generated
                     role="img"
@@ -285,7 +310,7 @@ const styles = {
     borderRadius: '$lg',
   }),
   iconCol: cssObj({
-    padding: '2px 0',
+    // padding: '2px 0',
   }),
   badge: cssObj({
     padding: '2px $1',
@@ -324,6 +349,10 @@ const styles = {
     borderRadius: '$full',
     overflow: 'hidden',
     flexShrink: 0,
+    span: {
+      height: 36,
+      width: 36,
+    },
   }),
   ethAvatar: cssObj({
     height: 34,
