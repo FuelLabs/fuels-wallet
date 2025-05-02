@@ -88,7 +88,7 @@ export const operationsStyles = {
     borderRadius: '$lg',
   }),
   iconCol: cssObj({
-    padding: '2px 0',
+    // padding: '2px 0',
   }),
   badge: cssObj({
     padding: '2px $1',

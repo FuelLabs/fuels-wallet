@@ -20,6 +20,7 @@ import { unlockMachine } from '../Unlock';
 import { unlockEvents } from '../Unlock/events';
 
 import { contractsMachine } from '../Contract/machines/contractsMachine';
+import { nameSystemRequestMachine } from '../NameSystem/machines/nameSystemRequetMachine';
 import type { StoreMachines } from './types';
 import { Services } from './types';
 
@@ -42,6 +43,7 @@ export const store = store$
   .addMachine(Services.addAssetRequest, () => addAssetRequestMachine)
   .addMachine(Services.reportError, () => reportErrorMachine)
   .addMachine(Services.selectNetworkRequest, () => selectNetworkRequestMachine)
+  .addMachine(Services.nameSystemRequest, () => nameSystemRequestMachine)
   .addHandlers(accountEvents)
   .addHandlers(networkEvents)
   .addHandlers(assetEvents)
