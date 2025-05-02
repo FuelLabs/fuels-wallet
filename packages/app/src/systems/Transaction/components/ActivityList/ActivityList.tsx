@@ -3,11 +3,12 @@ import type { TransactionSummary } from 'fuels';
 
 import { ActivityItem } from '../ActivityItem';
 
+import type { TransactionSummaryWithDomain } from '../../types';
 import { ActivityListEmpty } from './ActivityListEmpty';
 import { ActivityListLoading } from './ActivityListLoading';
 
 export interface ActivityListProps {
-  txs: TransactionSummary[];
+  txs: TransactionSummaryWithDomain[];
   providerUrl?: string;
   isLoading?: boolean;
   ownerAddress: string;

@@ -7,6 +7,8 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { AccountService } from '~/systems/Account';
 import { FetchMachine, assignErrorMessage, delay } from '~/systems/Core';
+import NameSystemService from '~/systems/NameSystem/services/nameSystem';
+import { getOperationsWithDomain } from '~/systems/NameSystem/utils/getOperationsWithDomain';
 import { NetworkService } from '~/systems/Network';
 import type { GroupedErrors, VMApiError } from '~/systems/Transaction';
 import type { TxInputs } from '~/systems/Transaction/services';
@@ -430,7 +432,18 @@ export const transactionRequestMachine = createMachine(
           }
 
           const simulatedInfo = await TxService.simulateTransaction(input);
-          return simulatedInfo;
+
+          const operationsWithDomain = await getOperationsWithDomain(
+            simulatedInfo.txSummary.operations
+          );
+
+          return {
+            ...simulatedInfo,
+            txSummary: {
+              ...simulatedInfo.txSummary,
+              operations: operationsWithDomain,
+            },
+          };
         },
       }),
       send: FetchMachine.create<
@@ -452,8 +465,13 @@ export const transactionRequestMachine = createMachine(
           const txResponse = await TxService.send(input);
           const txSummary = await txResponse.getTransactionSummary();
 
+          const operationsWithDomain = await getOperationsWithDomain(
+            txSummary.operations
+          );
+
           return {
             ...txSummary,
+            operations: operationsWithDomain,
             // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
             fee: txSummary.fee.add(1),
           };

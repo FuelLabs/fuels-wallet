@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Card, Copyable, Icon, Text } from '@fuel-ui/react';
+import { Box, Card, Copyable, Icon, Text, Tooltip } from '@fuel-ui/react';
 import type { TransactionSummary } from 'fuels';
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,10 +8,11 @@ import { Pages, shortAddress } from '~/systems/Core';
 import { useTxMetadata } from '../../hooks/useTxMetadata';
 import { TxIcon } from '../TxIcon';
 
+import type { TransactionSummaryWithDomain } from '../../types';
 import { ActivityItemLoader } from './ActivityItemLoader';
 
 export type TxItemProps = {
-  transaction: TransactionSummary;
+  transaction: TransactionSummaryWithDomain;
   ownerAddress: string;
 };
 
@@ -32,6 +33,7 @@ export const ActivityItem: TxItemComponent = ({
     timeFormatted,
     id,
     status,
+    toDomain,
   } = useTxMetadata({ ownerAddress, transaction });
 
   return (
@@ -56,7 +58,13 @@ export const ActivityItem: TxItemComponent = ({
         <Box.Flex css={styles.row}>
           <Box.Flex css={styles.fromToTextWrapper}>
             <Text css={styles.label}>{toOrFromText}</Text>
-            <Text>{!!toOrFromAddress && shortAddress(toOrFromAddress)}</Text>
+            {!!toOrFromAddress && toDomain ? (
+              <Tooltip content={shortAddress(toOrFromAddress)}>
+                <Text color="accent8">{toDomain}</Text>
+              </Tooltip>
+            ) : (
+              <Text>{shortAddress(toOrFromAddress)}</Text>
+            )}
           </Box.Flex>
           {timeFormatted && (
             <Box.Flex css={styles.item}>
