@@ -149,8 +149,6 @@ const compareTransactionSummaries = ({
 }): boolean => {
   const operations1 = summary1.operations;
   const operations2 = summary2.operations;
-  console.log('summary1', summary1);
-  console.log('summary2', summary2);
   if (operations1.length !== operations2.length) {
     return false;
   }
@@ -235,7 +233,6 @@ export class TxService {
     let summaryToCompare = displayedSummary;
 
     if (!summaryToCompare) {
-      console.log('Generating displayed summary');
       const abiMap = await getAbiMap({
         inputs: transactionRequest.toTransaction().inputs,
       });
@@ -268,13 +265,11 @@ export class TxService {
       });
 
       if (!isValid) {
-        console.log('Transaction validation failed');
         throw new Error(
           'Transaction validation failed: The transaction you see may not match what will be executed. This could be a potential attack.'
         );
       }
     } catch (validationError) {
-      console.log('Transaction validation failed', validationError);
       throw new Error(
         `Transaction validation failed: ${validationError instanceof Error ? validationError.message : 'Unknown error'}. This could be a potential attack where the transaction you're seeing differs from what you're actually signing.`
       );
