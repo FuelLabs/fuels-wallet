@@ -10,7 +10,7 @@ import {
   Text,
 } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
-import { memo, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { NFTImage } from '~/systems/Account/components/BalanceNFTs/NFTImage';
 import type { Maybe } from '~/systems/Core';
 import { coreStyles, shortAddress } from '~/systems/Core';
@@ -25,13 +25,17 @@ export type AssetSelectProps = {
 
 function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const assetAmount = items?.find((i) => i.assetId === selected);
 
-  function handleClear() {
+  const assetAmount = useMemo(
+    () => items?.find((i) => i.assetId === selected),
+    [items, selected]
+  );
+
+  const handleClear = useCallback(() => {
     onSelect(null);
-  }
+  }, [onSelect]);
 
-  function getImageUrl(asset?: AssetSelectInput) {
+  const getImageUrl = useCallback((asset?: AssetSelectInput) => {
     try {
       if (!asset?.metadata?.image) return asset?.icon;
       const imageUrl = asset.metadata.image;
@@ -42,9 +46,9 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
       console.warn('Error getting NFT image URL:', error);
       return asset?.icon;
     }
-  }
+  }, []);
 
-  function getName(asset?: AssetSelectInput) {
+  const getName = useCallback((asset?: AssetSelectInput) => {
     try {
       if (!asset) return 'Unknown';
 
@@ -60,7 +64,14 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
       console.warn('Error getting asset name:', error);
       return 'Unknown';
     }
-  }
+  }, []);
+
+  const handleSelect = useCallback(
+    (key: React.Key) => {
+      onSelect(key.toString());
+    },
+    [onSelect]
+  );
 
   return (
     <Dropdown
@@ -134,8 +145,7 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
         autoFocus
         aria-label="Actions"
         css={styles.menu}
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        onAction={(assetId: any) => onSelect(assetId.toString())}
+        onAction={handleSelect}
       >
         {(items || []).map((item) => {
           const assetId = item.assetId?.toString();

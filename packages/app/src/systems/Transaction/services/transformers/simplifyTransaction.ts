@@ -9,8 +9,10 @@ import type {
 } from 'fuels';
 import { BN, OperationName, ReceiptType } from 'fuels';
 import {
+  type OperationWithDomain,
   type SimplifiedOperation,
   type SimplifiedTransaction,
+  type TransactionSummaryWithDomain,
   TxCategory,
 } from '../../types';
 
@@ -62,7 +64,7 @@ function parseReceipts(receipts: Receipt[]) {
 }
 
 function transformOperation(
-  operation: Operation,
+  operation: OperationWithDomain,
   currentAccount?: string,
   parsedReceipts?: ParsedReceiptData[]
 ): SimplifiedOperation {
@@ -75,7 +77,9 @@ function transformOperation(
   const baseOperation = {
     type: operationType,
     from: from ? { address: from.address, type: from.type } : undefined,
-    to: to ? { address: to.address, type: to.type } : undefined,
+    to: to
+      ? { address: to.address, type: to.type, domain: to.domain }
+      : undefined,
     isFromCurrentAccount: currentAccount
       ? from?.address.toLowerCase() === currentAccount.toLowerCase()
       : false,
@@ -107,7 +111,7 @@ function transformOperation(
 }
 
 function transformOperations(
-  summary: TransactionSummary,
+  summary: TransactionSummaryWithDomain,
   currentAccount?: string,
   parsedReceipts?: ParsedReceiptData[]
 ): SimplifiedOperation[] {

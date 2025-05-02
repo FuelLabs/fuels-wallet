@@ -2,7 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Form, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { type BN, bn } from 'fuels';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import {
   ControlledField,
@@ -17,6 +17,7 @@ import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
 import type { UseSendReturn } from '../../hooks';
+import { AddressField } from '../AddressField';
 
 const MotionContent = motion(Layout.Content);
 
@@ -105,19 +106,24 @@ export function SendSelect({
     handlers.recalculateFromAmount,
   ]);
 
-  const assetSelectItems = balances
-    ?.map((b) => ({
-      assetId: b.assetId,
-      ...b.asset,
-    }))
-    .sort((a, b) => {
-      if (a.verified !== b.verified) return b.verified ? 1 : -1;
-      if (a.isNft !== b.isNft) return b.isNft ? 1 : -1;
-      if (a.collection !== b.collection)
-        return (a.collection || '').localeCompare(b.collection || '');
-      if (a.name !== b.name) return (a.name || '').localeCompare(b.name || '');
-      return (a.assetId || '').localeCompare(b.assetId || '');
-    });
+  const assetSelectItems = useMemo(
+    () =>
+      balances
+        ?.map((b) => ({
+          assetId: b.assetId,
+          ...b.asset,
+        }))
+        .sort((a, b) => {
+          if (a.verified !== b.verified) return b.verified ? 1 : -1;
+          if (a.isNft !== b.isNft) return b.isNft ? 1 : -1;
+          if (a.collection !== b.collection)
+            return (a.collection || '').localeCompare(b.collection || '');
+          if (a.name !== b.name)
+            return (a.name || '').localeCompare(b.name || '');
+          return (a.assetId || '').localeCompare(b.assetId || '');
+        }),
+    [balances]
+  );
 
   return (
     <MotionContent {...animations.slideInTop()}>
@@ -131,45 +137,31 @@ export function SendSelect({
             name="asset"
             control={form.control}
             css={styles.asset}
-            render={({ field }) => (
-              <AssetSelect
-                items={assetSelectItems}
-                selected={field.value}
-                onSelect={(asset) => {
+            render={({ field }) => {
+              const handleAssetSelect = useCallback(
+                (asset?: string | null) => {
                   form.setValue('amount', bn(0));
                   setWatchMax(false);
                   field.onChange(asset);
-                }}
-              />
-            )}
+                },
+                [form.setValue, field.onChange]
+              );
+
+              return (
+                <AssetSelect
+                  items={assetSelectItems}
+                  selected={field.value}
+                  onSelect={handleAssetSelect}
+                />
+              );
+            }}
           />
         </Box.Flex>
         <Box.Flex css={styles.row}>
           <Text as="span" css={styles.title}>
             To
           </Text>
-          <Box css={styles.addressRow}>
-            <ControlledField
-              isRequired
-              name="address"
-              control={form.control}
-              warning={warningMessage}
-              isInvalid={
-                Boolean(form.formState.errors?.address) &&
-                !form.formState.isValidating
-              }
-              render={({ field }) => (
-                <Input size="sm">
-                  <Input.Field
-                    {...field}
-                    id="search-address"
-                    aria-label="Address Input"
-                    placeholder="Enter a Fuel address"
-                  />
-                </Input>
-              )}
-            />
-          </Box>
+          <AddressField warningMessage={warningMessage} />
         </Box.Flex>
         <Box.Stack gap="$3">
           <Text as="span" css={styles.title}>
@@ -272,16 +264,6 @@ const styles = {
     color: '$intentsBase12',
     fontSize: '$md',
     fontWeight: '$normal',
-  }),
-  addressRow: cssObj({
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-
-    '.error-msg': {
-      fontSize: '$sm',
-      color: '$intentsError9',
-    },
   }),
   alert: cssObj({
     fontSize: '$sm',
