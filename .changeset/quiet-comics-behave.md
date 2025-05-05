@@ -2,4 +2,4 @@
 "fuels-wallet": minor
 ---
 
-Improved error feedback in the send screen.
+fix: Blinking error feedback in the send screen.
