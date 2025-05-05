@@ -147,6 +147,10 @@ const compareTransactionSummaries = ({
   summary1: TransactionSummary;
   summary2: TransactionSummary;
 }): boolean => {
+  if (summary1.id !== summary2.id) {
+    return false;
+  }
+
   const operations1 = summary1.operations;
   const operations2 = summary2.operations;
   if (operations1.length !== operations2.length) {
