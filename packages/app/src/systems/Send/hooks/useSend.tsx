@@ -92,9 +92,6 @@ const schemaFactory = (provider?: Provider) =>
       asset: yup.string().required('Asset is required'),
       amount: yup
         .mixed<BN>()
-        .test('positive', 'Amount must be greater than 0', (value) => {
-          return value?.gt(0);
-        })
         .test('balance', 'Insufficient funds', async (value, ctx) => {
           const { asset, fees } = ctx.parent as SendFormValues;
           const { balances, baseFee } = ctx.options.context as SchemaOptions;
@@ -386,6 +383,11 @@ export function useSend() {
   }
 
   function submit() {
+    const values = form.getValues();
+    if (!form.formState.isValid || !values.amount || values.amount.lte(0)) {
+      form.trigger();
+      return;
+    }
     service.send('CONFIRM');
   }
 
