@@ -9,7 +9,7 @@ import type {
   TransactionSummaryJson,
   WalletLocked,
 } from 'fuels';
-import { clone } from 'ramda';
+import { clone, equals } from 'ramda';
 
 import {
   Address,
@@ -157,17 +157,8 @@ const compareTransactionSummaries = ({
   for (let i = 0; i < operations1.length; i++) {
     const operation1 = operations1[i];
     const operation2 = operations2[i];
-    if (operation1.from?.address !== operation2.from?.address) return false;
-
-    if (operation1.to?.address !== operation2.to?.address) return false;
-
-    const assetsSent1 = operation1.assetsSent || [];
-    const assetsSent2 = operation2.assetsSent || [];
-    if (assetsSent1.length !== assetsSent2.length) return false;
-
-    for (let j = 0; j < assetsSent1.length; j++) {
-      if (!bn(assetsSent1[j].amount).eq(bn(assetsSent2[j].amount)))
-        return false;
+    if (!equals(operation1, operation2)) {
+      return false;
     }
   }
 
@@ -176,7 +167,9 @@ const compareTransactionSummaries = ({
   if (receipts1.length !== receipts2.length) return false;
 
   for (let j = 0; j < receipts1.length; j++) {
-    if (receipts1[j].type !== receipts2[j].type) return false;
+    if (!equals(receipts1[j], receipts2[j])) {
+      return false;
+    }
   }
   return true;
 };
