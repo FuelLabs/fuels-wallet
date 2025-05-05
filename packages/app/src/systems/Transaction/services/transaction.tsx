@@ -5,7 +5,6 @@ import type {
 } from '@fuel-wallet/types';
 import type {
   TransactionRequest,
-  TransactionRequestLike,
   TransactionSummary,
   TransactionSummaryJson,
   WalletLocked,
@@ -30,7 +29,6 @@ import {
 } from 'fuels';
 import { WalletLockedCustom, db, delay } from '~/systems/Core';
 
-import { isDeepStrictEqual } from 'node:util';
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
