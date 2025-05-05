@@ -230,24 +230,8 @@ export class TxService {
       provider
     );
 
-    let summaryToCompare = displayedSummary;
-
-    if (!summaryToCompare) {
-      const abiMap = await getAbiMap({
-        inputs: transactionRequest.toTransaction().inputs,
-      });
-
-      summaryToCompare = await getTransactionSummaryFromRequest({
-        provider,
-        transactionRequest,
-        abiMap,
-      });
-    }
-
     try {
       const validationTxRequest = transactionRequestify(transactionRequest);
-
-      await provider.dryRun(validationTxRequest);
 
       const validationAbiMap = await getAbiMap({
         inputs: validationTxRequest.toTransaction().inputs,
@@ -259,8 +243,14 @@ export class TxService {
         abiMap: validationAbiMap,
       });
 
+      if (!displayedSummary) {
+        throw new Error(
+          'Transaction validation failed: Missing displayed transaction summary.'
+        );
+      }
+
       const isValid = compareTransactionSummaries({
-        summary1: summaryToCompare,
+        summary1: displayedSummary,
         summary2: validationSummary,
       });
 
