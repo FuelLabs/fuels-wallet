@@ -5,6 +5,7 @@ import type {
 } from '@fuel-wallet/types';
 import type {
   Operation,
+  OperationCoin,
   TransactionRequest,
   TransactionSummary,
   TransactionSummaryJson,
@@ -143,6 +144,7 @@ const cleanOperationDiscardableData = (operation: Operation) => {
   const newOperation = {
     ...operation,
     receipts: undefined,
+    calls: undefined,
     from: {
       ...operation.from,
       domain: undefined,
@@ -151,6 +153,10 @@ const cleanOperationDiscardableData = (operation: Operation) => {
       ...operation.to,
       domain: undefined,
     },
+    assetsSent: operation.assetsSent?.map((asset: OperationCoin) => ({
+      ...asset,
+      amount: asset.amount?.toString(),
+    })),
   };
 
   return newOperation;
