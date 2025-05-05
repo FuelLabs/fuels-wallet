@@ -12,9 +12,3 @@ export const Usage = () => (
     <HomeActions />
   </Box>
 );
-
-export const Disabled = () => (
-  <Box css={{ width: 300 }}>
-    <HomeActions isDisabled />
-  </Box>
-);
