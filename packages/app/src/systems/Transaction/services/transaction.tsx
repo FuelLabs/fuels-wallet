@@ -462,6 +462,10 @@ export class TxService {
       throw new Error('Missing params for transaction request');
     }
 
+    if (amount.lte(0)) {
+      throw new Error('Amount must be greater than 0');
+    }
+
     const [network, account] = await Promise.all([
       NetworkService.getSelectedNetwork(),
       AccountService.getCurrentAccount(),
