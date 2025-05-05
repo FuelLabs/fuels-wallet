@@ -225,15 +225,13 @@ export class TxService {
       provider
     );
 
-    const validationTxRequest = transactionRequestify(transactionRequest);
-
     const validationAbiMap = await getAbiMap({
-      inputs: validationTxRequest.toTransaction().inputs,
+      inputs: transactionRequest.toTransaction().inputs,
     });
 
     const validationSummary = await getTransactionSummaryFromRequest({
       provider,
-      transactionRequest: validationTxRequest,
+      transactionRequest,
       abiMap: validationAbiMap,
     });
 
