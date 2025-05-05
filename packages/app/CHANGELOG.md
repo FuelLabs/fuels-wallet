@@ -1,5 +1,23 @@
 # fuels-wallet
 
+## 0.55.0
+
+### Minor Changes
+
+- [#1904](https://github.com/FuelLabs/fuels-wallet/pull/1904) [`6dea2d0a`](https://github.com/FuelLabs/fuels-wallet/commit/6dea2d0a6f4e58ab848b11756767baa81b7a893e) Thanks [@Vitosoaresp](https://github.com/Vitosoaresp)! - feat: Add integration with BakoID in "Send" and "TransactionView" screens
+
+- [#1894](https://github.com/FuelLabs/fuels-wallet/pull/1894) [`2ed8e18c`](https://github.com/FuelLabs/fuels-wallet/commit/2ed8e18c67f6ef55d63a134e6e14ae4eebcbee93) Thanks [@nelitow](https://github.com/nelitow)! - fix: Blinking error feedback in the send screen.
+
+- [#1897](https://github.com/FuelLabs/fuels-wallet/pull/1897) [`620a358c`](https://github.com/FuelLabs/fuels-wallet/commit/620a358c2e9458a6d4b254b38c3b260901baf969) Thanks [@nelitow](https://github.com/nelitow)! - feat: Added a transaction verification step that makes sure the transaction being viewed is the same as the one being signed.
+
+- [#1899](https://github.com/FuelLabs/fuels-wallet/pull/1899) [`0ca3d69a`](https://github.com/FuelLabs/fuels-wallet/commit/0ca3d69a01209e7a3b7d8d93a14ed82184385925) Thanks [@nelitow](https://github.com/nelitow)! - Enable the signature of HashableMessages
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.55.0
+  - @fuels/playwright-utils@0.55.0
+
 ## 0.54.0
 
 ### Minor Changes
