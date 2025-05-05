@@ -4,6 +4,7 @@ import type {
   FuelProviderConfig,
 } from '@fuel-wallet/types';
 import type {
+  Operation,
   TransactionRequest,
   TransactionSummary,
   TransactionSummaryJson,
@@ -138,6 +139,23 @@ export type TxInputs = {
 const AMOUNT_SUB_PER_TX_RETRY = 300_000;
 const TXS_PER_PAGE = 50;
 
+const cleanOperationDiscardableData = (operation: Operation) => {
+  const newOperation = {
+    ...operation,
+    receipts: undefined,
+    from: {
+      ...operation.from,
+      domain: undefined,
+    },
+    to: {
+      ...operation.to,
+      domain: undefined,
+    },
+  };
+
+  return newOperation;
+};
+
 const compareTransactionSummaries = ({
   summary1,
   summary2,
@@ -155,22 +173,14 @@ const compareTransactionSummaries = ({
     return false;
   }
   for (let i = 0; i < operations1.length; i++) {
-    const operation1 = operations1[i];
-    const operation2 = operations2[i];
+    const operation1 = cleanOperationDiscardableData(clone(operations1[i]));
+    const operation2 = cleanOperationDiscardableData(clone(operations2[i]));
+
     if (!equals(operation1, operation2)) {
       return false;
     }
   }
 
-  const receipts1 = summary1.receipts;
-  const receipts2 = summary2.receipts;
-  if (receipts1.length !== receipts2.length) return false;
-
-  for (let j = 0; j < receipts1.length; j++) {
-    if (!equals(receipts1[j], receipts2[j])) {
-      return false;
-    }
-  }
   return true;
 };
 
