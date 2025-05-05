@@ -230,38 +230,32 @@ export class TxService {
       provider
     );
 
-    try {
-      const validationTxRequest = transactionRequestify(transactionRequest);
+    const validationTxRequest = transactionRequestify(transactionRequest);
 
-      const validationAbiMap = await getAbiMap({
-        inputs: validationTxRequest.toTransaction().inputs,
-      });
+    const validationAbiMap = await getAbiMap({
+      inputs: validationTxRequest.toTransaction().inputs,
+    });
 
-      const validationSummary = await getTransactionSummaryFromRequest({
-        provider,
-        transactionRequest: validationTxRequest,
-        abiMap: validationAbiMap,
-      });
+    const validationSummary = await getTransactionSummaryFromRequest({
+      provider,
+      transactionRequest: validationTxRequest,
+      abiMap: validationAbiMap,
+    });
 
-      if (!displayedSummary) {
-        throw new Error(
-          'Transaction validation failed: Missing displayed transaction summary.'
-        );
-      }
-
-      const isValid = compareTransactionSummaries({
-        summary1: displayedSummary,
-        summary2: validationSummary,
-      });
-
-      if (!isValid) {
-        throw new Error(
-          'Transaction validation failed: The transaction you see may not match what will be executed. This could be a potential attack.'
-        );
-      }
-    } catch (validationError) {
+    if (!displayedSummary) {
       throw new Error(
-        `Transaction validation failed: ${validationError instanceof Error ? validationError.message : 'Unknown error'}. This could be a potential attack where the transaction you're seeing differs from what you're actually signing.`
+        'Internal validation error: Displayed transaction summary is missing.'
+      );
+    }
+
+    const isValid = compareTransactionSummaries({
+      summary1: displayedSummary,
+      summary2: validationSummary,
+    });
+
+    if (!isValid) {
+      throw new Error(
+        'Transaction execution was blocked: The displayed transaction details may differ from the actual execution.'
       );
     }
 
