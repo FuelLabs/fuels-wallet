@@ -1,8 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Form, Input, Text } from '@fuel-ui/react';
+import { Box, Form, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { type BN, bn } from 'fuels';
-import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import {
   ControlledField,
@@ -15,6 +15,7 @@ import {
 import { useController, useWatch } from 'react-hook-form';
 import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
+import { calculateMaxSpendable } from '~/systems/Core/utils/wallet';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
 import type { UseSendReturn } from '../../hooks';
 import { AddressField } from '../AddressField';
@@ -36,6 +37,7 @@ export function SendSelect({
   warningMessage,
   provider,
   handlers,
+  account,
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
   const isAmountFocused = useRef<boolean>(false);
@@ -88,8 +90,8 @@ export function SendSelect({
       baseFeeRef.current = baseFee;
       tipRef.current = tip;
 
-      // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
-      const maxFee = baseFee.add(tip).add(1);
+      // Calculate max with simple fee subtraction
+      const maxFee = baseFee.add(tip).add(1); // Adding 1 for the magic unit
       if (maxFee.gt(balanceAssetSelected)) return;
 
       const newAmount = balanceAssetSelected.sub(maxFee);
@@ -183,11 +185,24 @@ export function SendSelect({
                   amount.onChange(val);
                 }
               }}
-              onClickMax={() => {
+              onClickMax={async () => {
                 if (isSendingBaseAssetId) {
-                  baseFeeRef.current = null; // Workaround just to trigger the watcher when max is clicked and base fee is stable
-                  setWatchMax(true);
+                  if (provider && account?.address && baseAssetId) {
+                    try {
+                      const maxAmount = await calculateMaxSpendable(
+                        account.address,
+                        provider,
+                        baseAssetId
+                      );
+                      form.setValue('amount', maxAmount);
+                      handlers.recalculateFromAmount(maxAmount);
+                    } catch (error) {
+                      console.error('Error calculating max:', error);
+                      // If the new method fails, just display the error without fallback
+                    }
+                  }
                 } else {
+                  // Non-base asset logic
                   form.setValue('amount', balanceAssetSelected);
                   handlers.recalculateFromAmount(balanceAssetSelected);
                 }

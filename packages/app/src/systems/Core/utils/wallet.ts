@@ -1,5 +1,14 @@
 import type { TransactionRequestLike, TransactionResponse } from 'fuels';
-import { WalletLocked, hashMessage, transactionRequestify } from 'fuels';
+import {
+  type BN,
+  OutputType,
+  type Provider,
+  ScriptTransactionRequest,
+  WalletLocked,
+  bn,
+  hashMessage,
+  transactionRequestify,
+} from 'fuels';
 import { VaultService } from '~/systems/Vault';
 
 export class WalletLockedCustom extends WalletLocked {
@@ -52,4 +61,41 @@ export class WalletLockedCustom extends WalletLocked {
       estimateTxDependencies: false,
     });
   }
+}
+
+/**
+ * Calculates the maximum spendable amount for a given account
+ */
+export async function calculateMaxSpendable(
+  accountAddress: string,
+  provider: Provider,
+  assetId: string
+): Promise<BN> {
+  const fromWallet = new WalletLockedCustom(accountAddress, provider);
+
+  const chainData = await provider.getChain();
+  const maxInputs = chainData.consensusParameters.txParameters.maxInputs;
+  const { coins } = await fromWallet.getCoins(assetId);
+
+  if (coins.length === 0) {
+    return bn(0);
+  }
+
+  if (coins.length > Number(maxInputs.toString())) {
+    throw new Error('Too many UTXOs to determine maximum spendable amount');
+  }
+
+  const request = new ScriptTransactionRequest();
+  request.addResources(coins);
+
+  await request.estimateAndFund(fromWallet);
+
+  const changeOutput = request.outputs.find(
+    (output) => output.type === OutputType.Change && output.assetId === assetId
+  );
+
+  const totalAmount = coins.reduce((sum, coin) => sum.add(coin.amount), bn(0));
+  return changeOutput && 'amount' in changeOutput
+    ? totalAmount.sub(changeOutput.amount)
+    : totalAmount;
 }
