@@ -83,6 +83,7 @@ export type TxInputs = {
     providerUrl?: string;
     providerConfig?: FuelProviderConfig;
     displayedSummary?: TransactionSummary;
+    origin?: string;
   };
   simulateTransaction: {
     transactionRequest: TransactionRequest;

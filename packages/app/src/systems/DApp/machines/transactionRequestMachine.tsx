@@ -2,7 +2,12 @@ import type {
   AccountWithBalance,
   FuelProviderConfig,
 } from '@fuel-wallet/types';
-import type { BN, TransactionRequest, TransactionSummary } from 'fuels';
+import type {
+  BN,
+  TransactionRequest,
+  TransactionResponse,
+  TransactionSummary,
+} from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { AccountService } from '~/systems/Account';
@@ -42,6 +47,7 @@ type MachineContext = {
   response?: {
     txSummarySimulated?: TransactionSummary;
     txSummaryExecuted?: TransactionSummary;
+    txResponse?: TransactionResponse;
     proposedTxRequest?: TransactionRequest;
   };
   fees: {
@@ -74,7 +80,7 @@ type SimulateTransactionReturn = {
 
 type MachineServices = {
   send: {
-    data: TransactionSummary;
+    data: TransactionSummary | TransactionResponse;
   };
   prepareFeeInputs: {
     data: PrepareFeeInputForSimulateTransactionReturn;
@@ -354,10 +360,15 @@ export const transactionRequestMachine = createMachine(
         },
       }),
       assignApprovedTx: assign({
-        response: (ctx, ev) => ({
-          ...ctx.response,
-          txSummaryExecuted: ev.data,
-        }),
+        response: (ctx, ev) => {
+          const isTransactionResponse = 'provider' in ev.data;
+          return {
+            ...ctx.response,
+            ...(isTransactionResponse
+              ? { txResponse: ev.data as TransactionResponse }
+              : { txSummaryExecuted: ev.data as TransactionSummary }),
+          };
+        },
       }),
       assignSimulateResult: assign({
         response: (ctx, ev) => ({
@@ -426,7 +437,6 @@ export const transactionRequestMachine = createMachine(
       >({
         showError: false,
         async fetch({ input }) {
-          console.log('asd simulateTransaction', input);
           if (!input?.transactionRequest) {
             throw new Error('Invalid simulateTransaction input');
           }
@@ -462,7 +472,13 @@ export const transactionRequestMachine = createMachine(
           ) {
             throw new Error('Invalid approveTx input');
           }
+
           const txResponse = await TxService.send(input);
+
+          // if it has origin, its a dapp transaction and we need to return the txResponse to connectors
+          if (input.origin) {
+            return txResponse;
+          }
           const txSummary = await txResponse.getTransactionSummary();
 
           const operationsWithDomain = await getOperationsWithDomain(
