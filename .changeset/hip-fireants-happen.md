@@ -2,4 +2,4 @@
 "fuels-wallet": patch
 ---
 
-patch: Fix fee calculation when sending max amount of coin.
+fix: Fix fee calculation when sending max amount of coin.
