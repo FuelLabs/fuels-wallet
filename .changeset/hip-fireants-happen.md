@@ -2,4 +2,4 @@
 "fuels-wallet": patch
 ---
 
-fix: Fix fee calculation when sending max amount of coin.
+fix: Rely on TS-SDK to define fee of a maximum balance transaction
