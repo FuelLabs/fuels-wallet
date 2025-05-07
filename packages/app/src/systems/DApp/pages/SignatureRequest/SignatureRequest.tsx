@@ -1,6 +1,6 @@
 import { Box, Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
 import type { HashableMessage } from 'fuels';
-import { arrayify } from 'fuels';
+import { arrayify, hexlify } from 'fuels';
 import { AccountInfo } from '~/systems/Account';
 import { ConnectInfo, Layout, coreStyles } from '~/systems/Core';
 
@@ -29,7 +29,7 @@ function formatMessage(message: HashableMessage): {
       };
     } catch (e) {
       console.error('Error parsing JSON:', e);
-      return { formattedMessage: 'Invalid JSON format', isValid: false };
+      return { formattedMessage: hexlify(message.personalSign), isValid: true };
     }
   }
 
