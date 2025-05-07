@@ -90,7 +90,26 @@ const schemaFactory = (provider?: Provider) =>
   yup
     .object({
       asset: yup.string().required('Asset is required'),
-      amount: yup.mixed<BN>().required('Amount is required'),
+      amount: yup
+        .mixed<BN>()
+        .test('balance', 'Insufficient funds', async (value, ctx) => {
+          const { asset } = ctx.parent as SendFormValues;
+          const { balances } = ctx.options.context as SchemaOptions;
+
+          const balanceAssetSelected = balances?.find(
+            ({ assetId }) => assetId === asset
+          );
+          if (!balanceAssetSelected?.amount || !value) {
+            return false;
+          }
+
+          if (value.gt(balanceAssetSelected.amount)) {
+            return false;
+          }
+
+          return true;
+        })
+        .required('Amount is required'),
       address: yup
         .string()
         .required('Address is required')
