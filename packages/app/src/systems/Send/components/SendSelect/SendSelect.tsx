@@ -2,7 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Form, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { type BN, bn } from 'fuels';
-import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import {
   ControlledField,
@@ -92,7 +92,7 @@ export function SendSelect({
       const maxFee = baseFee.add(tip).add(1);
       if (maxFee.gt(balanceAssetSelected)) return;
 
-      const newAmount = balanceAssetSelected.sub(maxFee);
+      const newAmount = balanceAssetSelected;
       form.setValue('amount', newAmount);
       handlers.recalculateFromAmount(newAmount);
     }
