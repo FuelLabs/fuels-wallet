@@ -82,6 +82,7 @@ export type TxInputs = {
     transactionRequest: TransactionRequest;
     providerUrl?: string;
     providerConfig?: FuelProviderConfig;
+    displayedSummary?: TransactionSummary;
   };
   simulateTransaction: {
     transactionRequest: TransactionRequest;
@@ -230,6 +231,7 @@ export class TxService {
     transactionRequest,
     providerUrl = '',
     providerConfig,
+    displayedSummary,
   }: TxInputs['send']) {
     const provider = await createProvider(
       providerUrl || providerConfig?.url || ''
@@ -243,12 +245,6 @@ export class TxService {
       inputs: transactionRequest.toTransaction().inputs,
     });
 
-    const originalSummary = await getTransactionSummaryFromRequest({
-      provider,
-      transactionRequest,
-      abiMap,
-    });
-
     await provider.dryRun(transactionRequest);
 
     const afterDryRunSummary = await getTransactionSummaryFromRequest({
@@ -257,15 +253,17 @@ export class TxService {
       abiMap,
     });
 
-    const isValid = compareTransactionSummaries({
-      summary1: originalSummary,
-      summary2: afterDryRunSummary,
-    });
+    if (displayedSummary) {
+      const isDisplayValid = compareTransactionSummaries({
+        summary1: displayedSummary,
+        summary2: afterDryRunSummary,
+      });
 
-    if (!isValid) {
-      throw new Error(
-        'Transaction execution was blocked: The displayed transaction details may differ from the actual execution.'
-      );
+      if (!isDisplayValid) {
+        throw new Error(
+          'Transaction execution was blocked: The displayed transaction details may differ from the actual execution.'
+        );
+      }
     }
 
     const txSent = await wallet.sendTransaction(transactionRequest);
@@ -296,7 +294,6 @@ export class TxService {
     tip: inputCustomTip,
     gasLimit: inputCustomGasLimit,
     transactionState,
-    transactionSummary,
   }: TxInputs['simulateTransaction']) {
     const provider = new Provider(providerConfig?.url || '', {
       cache: providerConfig?.cache,
@@ -363,20 +360,11 @@ export class TxService {
         inputs: transaction.inputs,
       });
 
-      let txSummary: TransactionSummary<void>;
-      if (transactionSummary) {
-        const summary = await assembleTransactionSummaryFromJson({
-          transactionSummary,
-          provider,
-        });
-        txSummary = summary;
-      } else {
-        txSummary = await getTransactionSummaryFromRequest({
-          provider,
-          transactionRequest: proposedTxRequest,
-          abiMap,
-        });
-      }
+      const txSummary = await getTransactionSummaryFromRequest({
+        provider,
+        transactionRequest: proposedTxRequest,
+        abiMap,
+      });
 
       // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
       const feeAdaptedToSdkDiff = txSummary.fee.add(1);
