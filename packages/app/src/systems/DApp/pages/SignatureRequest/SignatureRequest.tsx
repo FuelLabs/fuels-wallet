@@ -1,6 +1,6 @@
 import { Box, Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
 import type { HashableMessage } from 'fuels';
-import { arrayify } from 'fuels';
+import { arrayify, hexlify } from 'fuels';
 import { AccountInfo } from '~/systems/Account';
 import { ConnectInfo, Layout, coreStyles } from '~/systems/Core';
 
@@ -19,17 +19,34 @@ function formatMessage(message: HashableMessage): {
   }
 
   if (message.personalSign) {
-    try {
-      const bytes = arrayify(message.personalSign);
+    const getBytes = () => {
+      if (
+        typeof message.personalSign === 'object' &&
+        !Array.isArray(message.personalSign)
+      ) {
+        return new Uint8Array(Object.values(message.personalSign));
+      }
+      return arrayify(message.personalSign);
+    };
+
+    const tryParseAsText = (bytes: Uint8Array) => {
       const jsonStr = new TextDecoder().decode(bytes);
       const jsonObj = JSON.parse(jsonStr);
-      return {
-        formattedMessage: JSON.stringify(jsonObj, null, 2),
-        isValid: true,
-      };
-    } catch (e) {
-      console.error('Error parsing JSON:', e);
-      return { formattedMessage: 'Invalid JSON format', isValid: false };
+      return JSON.stringify(jsonObj, null, 2);
+    };
+
+    try {
+      const bytes = getBytes();
+      const formattedMessage = tryParseAsText(bytes);
+      return { formattedMessage, isValid: true };
+    } catch {
+      try {
+        const bytes = getBytes();
+        return { formattedMessage: hexlify(bytes), isValid: true };
+      } catch (e) {
+        console.error('Error processing message:', e);
+        return { formattedMessage: 'Invalid message format', isValid: false };
+      }
     }
   }
 
