@@ -82,7 +82,6 @@ export type TxInputs = {
     transactionRequest: TransactionRequest;
     providerUrl?: string;
     providerConfig?: FuelProviderConfig;
-    displayedSummary?: TransactionSummary;
   };
   simulateTransaction: {
     transactionRequest: TransactionRequest;
@@ -231,7 +230,6 @@ export class TxService {
     transactionRequest,
     providerUrl = '',
     providerConfig,
-    displayedSummary,
   }: TxInputs['send']) {
     const provider = await createProvider(
       providerUrl || providerConfig?.url || ''
@@ -241,25 +239,27 @@ export class TxService {
       provider
     );
 
-    const validationAbiMap = await getAbiMap({
+    const abiMap = await getAbiMap({
       inputs: transactionRequest.toTransaction().inputs,
     });
 
-    const validationSummary = await getTransactionSummaryFromRequest({
+    const originalSummary = await getTransactionSummaryFromRequest({
       provider,
       transactionRequest,
-      abiMap: validationAbiMap,
+      abiMap,
     });
 
-    if (!displayedSummary) {
-      throw new Error(
-        'Internal validation error: Displayed transaction summary is missing.'
-      );
-    }
+    await provider.dryRun(transactionRequest);
+
+    const afterDryRunSummary = await getTransactionSummaryFromRequest({
+      provider,
+      transactionRequest,
+      abiMap,
+    });
 
     const isValid = compareTransactionSummaries({
-      summary1: displayedSummary,
-      summary2: validationSummary,
+      summary1: originalSummary,
+      summary2: afterDryRunSummary,
     });
 
     if (!isValid) {
@@ -269,7 +269,6 @@ export class TxService {
     }
 
     const txSent = await wallet.sendTransaction(transactionRequest);
-
     return txSent;
   }
 

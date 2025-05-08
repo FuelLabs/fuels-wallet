@@ -248,7 +248,6 @@ export const transactionRequestMachine = createMachine(
             input: (ctx: MachineContext) => ({
               ...ctx.input,
               transactionRequest: ctx.response?.proposedTxRequest,
-              displayedSummary: ctx.response?.txSummarySimulated,
             }),
           },
           onDone: [
