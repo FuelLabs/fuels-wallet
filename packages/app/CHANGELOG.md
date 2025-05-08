@@ -1,5 +1,17 @@
 # fuels-wallet
 
+## 0.55.1
+
+### Patch Changes
+
+- [#1911](https://github.com/FuelLabs/fuels-wallet/pull/1911) [`e29d09a4`](https://github.com/FuelLabs/fuels-wallet/commit/e29d09a4a329add71c8f830595c22772e75da87d) Thanks [@nelitow](https://github.com/nelitow)! - fix: Rely on TS-SDK to define fee of a maximum balance transaction
+
+- [#1914](https://github.com/FuelLabs/fuels-wallet/pull/1914) [`ee88a271`](https://github.com/FuelLabs/fuels-wallet/commit/ee88a27193886818237a90b99db6415986701170) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: support hashable messages that are bytes only
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.55.1
+  - @fuels/playwright-utils@0.55.1
+
 ## 0.55.0
 
 ### Minor Changes
