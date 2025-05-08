@@ -326,7 +326,7 @@ export class BackgroundService {
     );
 
     const address = Address.fromDynamicInput(_address).toString();
-    const signedMessage = await popupService.sendTransaction({
+    const transactionResponse = await popupService.sendTransaction({
       address,
       provider,
       transaction,
@@ -338,7 +338,7 @@ export class BackgroundService {
       transactionSummary,
     });
     popupService.destroy();
-    return signedMessage;
+    return transactionResponse;
   }
 
   async currentAccount(_: unknown, serverParams: EventOrigin) {

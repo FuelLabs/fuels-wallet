@@ -1,5 +1,9 @@
 import { ExtensionPageConnection } from '@fuel-wallet/connections';
-import { transactionRequestify } from 'fuels';
+import {
+  type TransactionResponse,
+  serializeProviderCache,
+  transactionRequestify,
+} from 'fuels';
 import { IS_CRX } from '~/config';
 import { Services, store } from '~/store';
 import { AccountService } from '~/systems/Account/services/account';
@@ -14,6 +18,34 @@ import { listenToGlobalErrors } from '~/systems/Core/utils/listenToGlobalErrors'
 // so we use a default timeout of 5 minutes
 const WAIT_FOR_CONFIG = {
   timeout: 1000 * 60 * 5,
+};
+
+// @TODO: REMOVE THIS METHOD WHEN UPDATES TO 0.100.5, AS WE HAVE IT ALREADY ON TS-SDK
+export const serializeTransactionResponseJson = async (
+  response: TransactionResponse
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+): Promise<any> => {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  const resp = { ...response } as any;
+  const {
+    id,
+    status,
+    abis,
+    request,
+    provider,
+    gqlTransaction,
+    preConfirmationStatus,
+  } = resp;
+  return {
+    id,
+    status,
+    abis,
+    requestJson: request ? JSON.stringify(request.toJSON()) : undefined,
+    providerUrl: provider.url,
+    providerCache: await serializeProviderCache(provider),
+    gqlTransaction,
+    preConfirmationStatus,
+  };
 };
 
 export class RequestMethods extends ExtensionPageConnection {
@@ -78,6 +110,18 @@ export class RequestMethods extends ExtensionPageConnection {
         ...WAIT_FOR_CONFIG,
         done: 'txSuccess',
       });
+
+    if (state.context.response?.txResponse) {
+      try {
+        return await serializeTransactionResponseJson(
+          state.context.response.txResponse
+        );
+      } catch (error) {
+        console.error('Error serializing transaction response:', error);
+        return state.context.response.txResponse.id;
+      }
+    }
+
     return state.context.response?.txSummaryExecuted?.id;
   }
 
