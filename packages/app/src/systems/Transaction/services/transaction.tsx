@@ -253,17 +253,21 @@ export class TxService {
       abiMap,
     });
 
-    if (displayedSummary) {
-      const isDisplayValid = compareTransactionSummaries({
-        summary1: displayedSummary,
-        summary2: afterDryRunSummary,
-      });
+    if (!displayedSummary) {
+      throw new Error(
+        'Internal validation error: Displayed transaction summary is missing.'
+      );
+    }
 
-      if (!isDisplayValid) {
-        throw new Error(
-          'Transaction execution was blocked: The displayed transaction details may differ from the actual execution.'
-        );
-      }
+    const isDisplayValid = compareTransactionSummaries({
+      summary1: displayedSummary,
+      summary2: afterDryRunSummary,
+    });
+
+    if (!isDisplayValid) {
+      throw new Error(
+        'Transaction execution was blocked: The displayed transaction details may differ from the actual execution.'
+      );
     }
 
     const txSent = await wallet.sendTransaction(transactionRequest);
