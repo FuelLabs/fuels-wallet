@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.55.2
+
+### Patch Changes
+
+- [#1916](https://github.com/FuelLabs/fuels-wallet/pull/1916) [`4b38db67`](https://github.com/FuelLabs/fuels-wallet/commit/4b38db67124a627e478ba302998567c609ab0055) Thanks [@nelitow](https://github.com/nelitow)! - fix: include dryRun before showing transaction on approval screen coming from dapp
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.55.2
+  - @fuels/playwright-utils@0.55.2
+
 ## 0.55.1
 
 ### Patch Changes
