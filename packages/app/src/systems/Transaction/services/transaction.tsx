@@ -82,7 +82,6 @@ export type TxInputs = {
     transactionRequest: TransactionRequest;
     providerUrl?: string;
     providerConfig?: FuelProviderConfig;
-    displayedSummary?: TransactionSummary;
   };
   simulateTransaction: {
     transactionRequest: TransactionRequest;
@@ -140,56 +139,6 @@ export type TxInputs = {
 const AMOUNT_SUB_PER_TX_RETRY = 300_000;
 const TXS_PER_PAGE = 50;
 
-const cleanOperationDiscardableData = (operation: Operation) => {
-  const newOperation = {
-    ...operation,
-    receipts: undefined,
-    calls: undefined,
-    from: {
-      ...operation.from,
-      domain: undefined,
-    },
-    to: {
-      ...operation.to,
-      domain: undefined,
-    },
-    assetsSent: operation.assetsSent?.map((asset: OperationCoin) => ({
-      ...asset,
-      amount: asset.amount?.toString(),
-    })),
-  };
-
-  return newOperation;
-};
-
-const compareTransactionSummaries = ({
-  summary1,
-  summary2,
-}: {
-  summary1: TransactionSummary;
-  summary2: TransactionSummary;
-}): boolean => {
-  if (summary1.id !== summary2.id) {
-    return false;
-  }
-
-  const operations1 = summary1.operations;
-  const operations2 = summary2.operations;
-  if (operations1.length !== operations2.length) {
-    return false;
-  }
-  for (let i = 0; i < operations1.length; i++) {
-    const operation1 = cleanOperationDiscardableData(clone(operations1[i]));
-    const operation2 = cleanOperationDiscardableData(clone(operations2[i]));
-
-    if (!equals(operation1, operation2)) {
-      return false;
-    }
-  }
-
-  return true;
-};
-
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class TxService {
   static getTxCursors(input: TxInputs['getTxCursors']) {
@@ -231,7 +180,6 @@ export class TxService {
     transactionRequest,
     providerUrl = '',
     providerConfig,
-    displayedSummary,
   }: TxInputs['send']) {
     const provider = await createProvider(
       providerUrl || providerConfig?.url || ''
@@ -240,35 +188,6 @@ export class TxService {
       (account?.address?.toString() || address) as string,
       provider
     );
-
-    const abiMap = await getAbiMap({
-      inputs: transactionRequest.toTransaction().inputs,
-    });
-
-    await provider.dryRun(transactionRequest);
-
-    const afterDryRunSummary = await getTransactionSummaryFromRequest({
-      provider,
-      transactionRequest,
-      abiMap,
-    });
-
-    if (!displayedSummary) {
-      throw new Error(
-        'Internal validation error: Displayed transaction summary is missing.'
-      );
-    }
-
-    const isDisplayValid = compareTransactionSummaries({
-      summary1: displayedSummary,
-      summary2: afterDryRunSummary,
-    });
-
-    if (!isDisplayValid) {
-      throw new Error(
-        'Transaction execution was blocked: The displayed transaction details may differ from the actual execution.'
-      );
-    }
 
     const txSent = await wallet.sendTransaction(transactionRequest);
     return txSent;
