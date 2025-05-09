@@ -2,4 +2,4 @@
 "fuels-wallet": patch
 ---
 
-Fix transaction validation logic.
+Remove flawed transaction validation logic.
