@@ -2,4 +2,4 @@
 "fuels-wallet": patch
 ---
 
-Remove flawed transaction validation logic.
+fix: include dryRun before showing transaction on approval screen coming from dapp
