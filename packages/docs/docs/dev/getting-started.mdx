@@ -36,6 +36,74 @@ await fuel.selectConnector('Fuel Wallet');
 await fuel.connect();
 ```
 
+### Configuration Options
+
+The `defaultConnectors` function accepts various configuration options to customize wallet connectivity:
+
+#### Development Mode
+- `devMode`: Enables development-specific connectors.
+
+#### WalletConnect Configuration
+- `wcProjectId`: Required for WalletConnect integration. This should be obtained from the [WalletConnect Dashboard](https://cloud.walletconnect.com/). Without a valid project ID, WalletConnect connectivity won't function properly.
+
+#### Ethereum Integration
+- `ethWagmiConfig`: Configuration for Ethereum integration via wagmi.
+- `ethSkipAutoReconnect`: When set to true, prevents session loss when refreshing the page in certain conditions.
+
+#### Burner Wallet Configuration
+- `burnerWalletConfig.storage`: Custom storage implementation for the burner wallet.
+- `burnerWalletConfig.chainId`: Chain ID for the burner wallet to use.
+
+#### Provider Configuration
+- `fuelProvider`: Allows providing a custom Provider instance.
+- `chainId`: Required. Specifies the target chain ID for all connectors as a numeric value (e.g., 0, 1, 2).
+
+You can use the `CHAIN_IDS` constant from the `fuels` package for standard chain IDs:
+```ts
+import { CHAIN_IDS } from 'fuels';
+
+// Standard chain IDs
+const mainnetChainId = CHAIN_IDS.fuel.mainnet; // 0
+const testnetChainId = CHAIN_IDS.fuel.testnet; // 1
+const devnetChainId = CHAIN_IDS.fuel.devnet;   // 2
+```
+
+#### Solana Integration
+- `solanaConfig`: Configuration object for Solana wallet integrations.
+
+#### Complete Example
+
+```ts
+import { Fuel, Provider, CHAIN_IDS } from 'fuels';
+import { defaultConnectors } from '@fuels/connectors';
+import { wagmiConfig } from './wagmi-config'; // Your wagmi configuration
+
+// Chain and provider details
+const CHAIN_ID = CHAIN_IDS.fuel.mainnet; // 0 for mainnet
+const PROVIDER_URL = 'https://beta-5.fuel.network/graphql';
+
+const fuel = new Fuel({
+  connectors: defaultConnectors({
+    devMode: true,
+    wcProjectId: 'YOUR_WALLETCONNECT_PROJECT_ID',
+    ethWagmiConfig: wagmiConfig,
+    ethSkipAutoReconnect: true,
+    burnerWalletConfig: {
+      storage: window.localStorage,
+      chainId: CHAIN_ID,
+    },
+    chainId: CHAIN_ID,
+    fuelProvider: new Provider(PROVIDER_URL),
+    solanaConfig: {
+      // Solana-specific configuration
+    },
+  }),
+});
+
+await fuel.selectConnector('Fuel Wallet');
+await fuel.connect();
+```
+
 ### Using a custom list
 ```ts
 import { Fuel } from 'fuels';
@@ -72,16 +140,25 @@ Wrap your application with the providers `QueryClientProvider` and `FuelProvider
 
 ```tsx
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
+import { Provider, CHAIN_IDS } from 'fuels';
 import { FuelProvider } from '@fuels/react';
 import { defaultConnectors } from '@fuels/connectors';
 
 const queryClient = new QueryClient();
+const PROVIDER_URL = 'https://beta-5.fuel.network/graphql';
+const CHAIN_ID = CHAIN_IDS.fuel.mainnet; // Using mainnet chain ID
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <FuelProvider fuelConfig={{ connectors: defaultConnectors({ devMode: true }) }}>
+      <FuelProvider fuelConfig={{ 
+        connectors: defaultConnectors({ 
+          devMode: true,
+          wcProjectId: 'YOUR_WALLETCONNECT_PROJECT_ID',
+          chainId: CHAIN_ID,
+          fuelProvider: new Provider(PROVIDER_URL),
+        }) 
+      }}>
         <App />
       </FuelProvider>
     </QueryClientProvider>
