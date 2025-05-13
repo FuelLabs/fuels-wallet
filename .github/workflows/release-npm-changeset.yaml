@@ -11,6 +11,7 @@ concurrency:
 
 env:
   BUILD_VERSION: ""
+  DEBUG: "changesets:*"
 
 jobs:
   check-commit:
@@ -87,6 +88,8 @@ jobs:
     if: needs.check-commit.outputs.is_changeset_pr == 'true'
     runs-on: ubuntu-latest
     environment: npm-deploy
+    outputs:
+      has_published_packages: ${{ steps.debug-published.outputs.has_published_packages }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -106,12 +109,66 @@ jobs:
           npm-token: ${{ secrets.NPM_TOKEN_WALLET }}
 
       - name: Bump and Collect Version
+        id: bump-version
         run: |
+          echo "::group::Changeset Info Before Bump"
+          ls -la .changeset/ || echo "No changesets found"
+          find .changeset -type f -name "*.md" -not -name "README.md" -not -name "config.json" | while read -r file; do
+            echo "Content of changeset $file:"
+            cat "$file"
+            echo "-----------------------"
+          done
+          echo "::endgroup::"
+          
+          echo "::group::Backing up changesets"
+          mkdir -p .changeset-backup
+          cp -r .changeset/* .changeset-backup/ || echo "No changesets to backup"
+          echo "::endgroup::"
+          
+          echo "::group::Running changeset version"
           pnpm changeset version
+          echo "::endgroup::"
+          
           echo "BUILD_VERSION=$(pnpm -s packages:version)" >> $GITHUB_ENV
+          echo "build_version=$(pnpm -s packages:version)" >> $GITHUB_OUTPUT
+          
+          echo "::group::Checking CHANGELOG.md files"
+          find . -name "CHANGELOG.md" -type f | while read -r file; do
+            echo "CHANGELOG found: $file"
+            head -n 20 "$file"
+            echo "-----------------------"
+          done
+          echo "::endgroup::"
+          
+          echo "::group::Restoring changesets for future runs"
+          rm -rf .changeset
+          mkdir -p .changeset
+          cp -r .changeset-backup/* .changeset/ || echo "No changesets to restore"
+          echo "::endgroup::"
+          
           git reset --hard
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEBUG: ${{ env.DEBUG }}
+
+      - name: Preview Release Description
+        run: |
+          echo "::group::Previewing Release Description"
+          echo "Upcoming version: ${{ env.BUILD_VERSION }}"
+          echo "Packages that will be published:"
+          pnpm changeset status
+          find . -name "CHANGELOG.md" -type f | xargs grep -l "## ${{ env.BUILD_VERSION }}" | while read -r file; do
+            echo "Recent changes in $file:"
+            VERSION_LINE=$(grep -n "## ${{ env.BUILD_VERSION }}" "$file" | cut -d':' -f1)
+            NEXT_VERSION_LINE=$(grep -n "## " "$file" | awk -F: '$1 > '"$VERSION_LINE"' {print $1}' | head -n 1)
+            if [ -z "$NEXT_VERSION_LINE" ]; then
+              awk "NR > $VERSION_LINE" "$file"
+            else
+              awk "NR > $VERSION_LINE && NR < $NEXT_VERSION_LINE" "$file"
+            fi
+            echo "-----------------------"
+          done
+          echo "::endgroup::"
 
       - name: Build packages
         run: pnpm build:libs
@@ -119,6 +176,7 @@ jobs:
       - name: Publish to NPM
         id: changesets
         uses: FuelLabs/changesets-action@v2.0.0
+        continue-on-error: true
         with:
           publish: pnpm changeset publish --tag next
           createGithubReleases: aggregate
@@ -126,9 +184,123 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN_WALLET }}
+          DEBUG: ${{ env.DEBUG }}
+
+      - name: Debug Published Outputs
+        id: debug-published
+        run: |
+          echo "::group::Analyzing publish results"
+          echo "Raw changesets output published: ${{ steps.changesets.outputs.published }}"
+          echo "Run output:"
+          echo "${{ toJSON(steps.changesets.outputs) }}"
+          
+          # Create a file to store published packages
+          echo "[]" > published_packages.json
+          
+          # Parse the run output to detect published packages
+          PUBLISHED_LOGS=$(echo "${{ toJSON(steps.changesets.outputs._processedStdout) }}" | sed 's/\\n/\n/g')
+          PACKAGES_PUBLISHED=false
+          
+          if echo "$PUBLISHED_LOGS" | grep -q "New tag:"; then
+            PACKAGES_PUBLISHED=true
+            echo "Found published packages!"
+            
+            # Extract published packages from logs
+            echo "$PUBLISHED_LOGS" | grep -E "Publishing|New tag:" | while read -r line; do
+              if [[ "$line" == *"Publishing"* ]]; then
+                PACKAGE=$(echo "$line" | sed -E 's/.*Publishing ([^ ]+).*/\1/')
+                echo "Detected published package: $PACKAGE"
+              fi
+            done
+          else
+            echo "No packages were published in this run"
+          fi
+          
+          echo "has_published_packages=$PACKAGES_PUBLISHED" >> "$GITHUB_OUTPUT"
+          echo "::endgroup::"
+
+      - name: Install Release Notes Dependencies
+        if: steps.debug-published.outputs.has_published_packages == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+          
+          # Ensure GitHub CLI is installed
+          which gh || (
+            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+            sudo apt-get update
+            sudo apt-get install -y gh
+          )
+
+      - name: Generate and Publish Enhanced Release Notes
+        if: steps.debug-published.outputs.has_published_packages == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ env.BUILD_VERSION }}"
+          
+          # Create release notes markdown
+          cat > release_notes.md << 'EOL'
+          # Release v${{ env.BUILD_VERSION }}
+          
+          ## What's Changed
+          
+          This release includes the following package updates:
+          
+          EOL
+          
+          # Find all packages with CHANGELOG.md entries for this version
+          find . -name "CHANGELOG.md" | xargs grep -l "## $VERSION" | while read -r changelog; do
+            PACKAGE_DIR=$(dirname "$changelog")
+            PACKAGE_NAME=""
+            
+            # Try to get package name from package.json
+            if [ -f "$PACKAGE_DIR/package.json" ]; then
+              PACKAGE_NAME=$(jq -r '.name' "$PACKAGE_DIR/package.json")
+            else
+              # Fallback to directory name
+              PACKAGE_NAME=$(basename "$PACKAGE_DIR")
+            fi
+            
+            echo "### $PACKAGE_NAME" >> release_notes.md
+            echo "" >> release_notes.md
+            
+            # Extract version-specific changes from CHANGELOG.md
+            VERSION_LINE=$(grep -n "## $VERSION" "$changelog" | cut -d':' -f1)
+            NEXT_VERSION_LINE=$(grep -n "## " "$changelog" | awk -F: '$1 > '"$VERSION_LINE"' {print $1}' | head -n 1)
+            
+            if [ -z "$NEXT_VERSION_LINE" ]; then
+              # No next version, so extract all lines after this version
+              sed -n "$((VERSION_LINE+1)),\$p" "$changelog" >> release_notes.md
+            else
+              # Extract lines between this version and next version
+              sed -n "$((VERSION_LINE+1)),$((NEXT_VERSION_LINE-1))p" "$changelog" >> release_notes.md
+            fi
+            
+            echo "" >> release_notes.md
+          done
+          
+          # Add footer
+          cat >> release_notes.md << 'EOL'
+          
+          ## Installation
+          
+          To install or update the Fuel Wallet, download the latest version from the releases assets.
+          
+          For more details, please visit our [documentation](https://docs.fuel.network/docs/wallet/).
+          EOL
+          
+          cat release_notes.md
+          
+          # Update the GitHub release with enhanced notes
+          gh release edit "v$VERSION" --notes-file release_notes.md || (
+            echo "Failed to update release notes. Creating new release..."
+            gh release create "v$VERSION" --notes-file release_notes.md --title "Release v$VERSION"
+          )
 
       - name: Build Fuel Wallet
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.debug-published.outputs.has_published_packages == 'true'
         run: pnpm build:crx
         env:
           ## increase node.js m memory limit for building
@@ -136,7 +308,7 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Build Fuel Wallet Development
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.debug-published.outputs.has_published_packages == 'true'
         run: pnpm build:crx
         env:
           VITE_CRX_RELEASE: false
@@ -146,7 +318,7 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Upload Production artifacts to Sentry
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.debug-published.outputs.has_published_packages == 'true'
         run: |
           pnpm sentry-cli sourcemaps inject --release ${{ env.BUILD_VERSION }} ./dist-crx
           pnpm sentry-cli sourcemaps upload --release ${{ env.BUILD_VERSION }} ./dist-crx
@@ -157,7 +329,7 @@ jobs:
         working-directory: ./packages/app
 
       - name: Upload Development artifacts to Sentry
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.debug-published.outputs.has_published_packages == 'true'
         run: |
           pnpm sentry-cli sourcemaps inject --release ${{ env.BUILD_VERSION }} ./dist-crx-dev
           pnpm sentry-cli sourcemaps upload --release ${{ env.BUILD_VERSION }} ./dist-crx-dev
@@ -168,7 +340,7 @@ jobs:
         working-directory: ./packages/app
 
       - name: Attach Fuel Wallet to release
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.debug-published.outputs.has_published_packages == 'true'
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
