@@ -1,8 +1,7 @@
 import { ExtensionPageConnection } from '@fuel-wallet/connections';
-import { transactionRequestify } from 'fuels';
+import { serializeTransactionResponseJson, transactionRequestify } from 'fuels';
 import { IS_CRX } from '~/config';
 import { Services, store } from '~/store';
-import { AccountService } from '~/systems/Account/services/account';
 import type {
   MessageInputs,
   PopUpServiceInputs,
@@ -59,6 +58,7 @@ export class RequestMethods extends ExtensionPageConnection {
       skipCustomFee,
       transactionState,
       transactionSummary,
+      returnTransactionResponse,
     } = input;
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
 
@@ -78,7 +78,28 @@ export class RequestMethods extends ExtensionPageConnection {
         ...WAIT_FOR_CONFIG,
         done: 'txSuccess',
       });
-    return state.context.response?.txSummaryExecuted?.id;
+
+    const txId =
+      state.context.response?.txResponse?.id ||
+      state.context.response?.txSummaryExecuted?.id;
+
+    if (!returnTransactionResponse) {
+      // it will be always txResponse, but just for safety we check both
+      return txId;
+    }
+
+    if (state.context.response?.txResponse) {
+      try {
+        const serializedTxResponse = await serializeTransactionResponseJson(
+          state.context.response.txResponse
+        );
+        return serializedTxResponse;
+      } catch (error) {
+        console.error('Error serializing transaction response:', error);
+      }
+    }
+
+    return txId;
   }
 
   async addAssets(input: MessageInputs['addAssets']) {
