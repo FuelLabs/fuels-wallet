@@ -28,7 +28,7 @@ jobs:
           echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
       - uses: FuelLabs/github-actions/setups/node@master
         with:
-          node-version: 20.11.0
+          node-version: 20.14.0
           pnpm-version: ${{ env.PNPM_VERSION }}
 
       - uses: FuelLabs/github-actions/setups/docker@master
