@@ -14,7 +14,7 @@ dependencies = ["std"]
 
 [[package]]
 name = "std"
-source = "git+https://github.com/fuellabs/sway?tag=v0.67.0#d821dcb0c7edb1d6e2a772f5a1ccefe38902eaec"
+source = "git+https://github.com/fuellabs/sway?tag=v0.68.1#7e1bc152face6f1ae20b4274d98446100920e573"
 
 [[package]]
 name = "sway_libs"
