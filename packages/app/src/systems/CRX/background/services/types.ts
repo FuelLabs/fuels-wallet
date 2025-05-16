@@ -24,6 +24,7 @@ export type MessageInputs = {
     skipCustomFee?: boolean;
     transactionState?: 'funded' | undefined;
     transactionSummary?: TransactionSummaryJson;
+    returnTransactionResponse?: boolean;
   };
   addAssets: {
     assets: AssetData[];

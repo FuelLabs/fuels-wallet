@@ -1,4 +1,4 @@
-name: Tests E2E
+name: Tests E2E (Stable)
 
 on:
   pull_request:
@@ -23,7 +23,7 @@ jobs:
           echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
       - uses: FuelLabs/github-actions/setups/node@master
         with:
-          node-version: 20.11.0
+          node-version: 20.14.0
           pnpm-version: ${{ env.PNPM_VERSION }}
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
@@ -48,61 +48,6 @@ jobs:
         if: always()
         with:
           name: playwright-app-report-stable
-          path: packages/app/playwright-results
-          retention-days: 30
-
-      - name: Stop Test Node
-        run: pnpm node:clean
-
-  tests-e2e-beta:
-    name: Test (Chrome Beta)
-    timeout-minutes: 15
-    runs-on: buildjet-8vcpu-ubuntu-2204
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-      - name: Extract pnpm version from .tool-versions
-        id: get_pnpm
-        run: |
-          PNPM_VERSION=$(grep '^pnpm' .tool-versions | awk '{print $2}')
-          echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
-      - uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 20.11.0
-          pnpm-version: ${{ env.PNPM_VERSION }}
-      - uses: FuelLabs/github-actions/setups/docker@master
-        with:
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Start Test Node
-        run: pnpm node:up
-
-      - name: Generate .env
-        run: cp packages/app/.env.example packages/app/.env
-
-      - name: Build Application
-        run: pnpm build:app
-        env:
-          ## increase node.js m memory limit for building
-          ## with sourcemaps
-          NODE_OPTIONS: "--max-old-space-size=4096"
-
-      - uses: ./.github/actions/setup-playwright
-        with:
-          browser: "chrome-beta"
-
-      - name: Run E2E Tests
-        run: xvfb-run --auto-servernum -- pnpm test:e2e:beta
-        timeout-minutes: 15
-        env:
-          NODE_ENV: test
-          READONLY_TESTNET_ASSETS_VIEW: ${{ secrets.READONLY_TESTNET_ASSETS_VIEW }}
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-app-report-beta
           path: packages/app/playwright-results
           retention-days: 30
 
