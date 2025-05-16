@@ -1,5 +1,17 @@
 # fuels-wallet
 
+## 0.55.3
+
+### Patch Changes
+
+- [#1920](https://github.com/FuelLabs/fuels-wallet/pull/1920) [`f481b115`](https://github.com/FuelLabs/fuels-wallet/commit/f481b1152d58d5eed62e799c1889bc320e62d4f9) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: update to `fuels@0.100.6`
+
+- [#1920](https://github.com/FuelLabs/fuels-wallet/pull/1920) [`f481b115`](https://github.com/FuelLabs/fuels-wallet/commit/f481b1152d58d5eed62e799c1889bc320e62d4f9) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: wait for preconf before returning tx to dapp
+
+- Updated dependencies [[`f481b115`](https://github.com/FuelLabs/fuels-wallet/commit/f481b1152d58d5eed62e799c1889bc320e62d4f9)]:
+  - @fuels/playwright-utils@0.55.3
+  - @fuel-wallet/connections@0.55.3
+
 ## 0.55.2
 
 ### Patch Changes
