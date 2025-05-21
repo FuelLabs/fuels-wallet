@@ -206,15 +206,6 @@ export class PopUpService {
     return this.client.request('sendTransaction', input);
   }
 
-  async signTransaction(input: MessageInputs['signTransaction']) {
-    const result = await this.client.request('sendTransaction', {
-      ...input,
-      noSendReturnPayload: true,
-    });
-
-    return result;
-  }
-
   async addAssets(input: MessageInputs['addAssets']) {
     return this.client.request('addAssets', input);
   }
