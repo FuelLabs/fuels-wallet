@@ -41,6 +41,7 @@ export class WalletLockedCustom extends WalletLocked {
   async sendTransaction(
     transactionRequestLike: TransactionRequestLike
   ): Promise<TransactionResponse> {
+    console.log('sendTransaction', transactionRequestLike);
     const transactionRequest = transactionRequestify(transactionRequestLike);
     const txRequestToSend =
       await this.populateTransactionWitnessesSignature(transactionRequest);

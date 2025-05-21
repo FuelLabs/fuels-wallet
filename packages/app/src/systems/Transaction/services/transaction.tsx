@@ -75,6 +75,7 @@ export type TxInputs = {
     };
     transactionState?: 'funded' | undefined;
     transactionSummary?: TransactionSummaryJson;
+    noSendReturnPayload?: boolean;
   };
   send: {
     address?: string;
@@ -83,6 +84,7 @@ export type TxInputs = {
     providerUrl?: string;
     providerConfig?: FuelProviderConfig;
     origin?: string;
+    noSendReturnPayload?: boolean;
   };
   simulateTransaction: {
     transactionRequest: TransactionRequest;
@@ -181,16 +183,43 @@ export class TxService {
     transactionRequest,
     providerUrl = '',
     providerConfig,
+    noSendReturnPayload,
   }: TxInputs['send']) {
+    console.log('[TxService] send called with:', {
+      hasAccount: !!account,
+      address: address?.toString(),
+      hasTransaction: !!transactionRequest,
+      providerUrl,
+      configUrl: providerConfig?.url,
+      noSendReturnPayload,
+    });
+
     const provider = await createProvider(
       providerUrl || providerConfig?.url || ''
     );
+    console.log('[TxService] Created provider with URL:', provider.url);
+
     const wallet = new WalletLockedCustom(
       (account?.address?.toString() || address) as string,
       provider
     );
+    console.log(
+      '[TxService] Created wallet with address:',
+      wallet.address.toString()
+    );
 
+    if (noSendReturnPayload) {
+      console.log('[TxService] Signing transaction without broadcasting');
+      const signature = await wallet.signTransaction(transactionRequest);
+      console.log(
+        `[TxService] Got signature: ${signature.substring(0, 20)}...`
+      );
+      return { signedTransaction: signature };
+    }
+
+    console.log('[TxService] Sending transaction (will broadcast)');
     const txSent = await wallet.sendTransaction(transactionRequest);
+    console.log('[TxService] Transaction sent, id:', txSent.id);
     return txSent;
   }
 

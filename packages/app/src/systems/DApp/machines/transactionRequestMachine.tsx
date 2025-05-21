@@ -29,7 +29,7 @@ export enum TxRequestStatus {
   failed = 'failed',
 }
 
-type MachineContext = {
+export type MachineContext = {
   input: {
     origin?: string;
     title?: string;
@@ -43,12 +43,14 @@ type MachineContext = {
     tip?: BN;
     gasLimit?: BN;
     skipCustomFee?: boolean;
+    noSendReturnPayload?: boolean;
   };
   response?: {
     txSummarySimulated?: TransactionSummary;
     txSummaryExecuted?: TransactionSummary;
     txResponse?: TransactionResponse;
     proposedTxRequest?: TransactionRequest;
+    signedTransaction?: string;
   };
   fees: {
     baseFee?: BN;
@@ -248,22 +250,61 @@ export const transactionRequestMachine = createMachine(
       },
       sendingTx: {
         tags: ['loading'],
+        entry: () => console.log('[TxRequestMachine] Entering sendingTx state'),
         invoke: {
           src: 'send',
           data: {
-            input: (ctx: MachineContext) => ({
-              ...ctx.input,
-              transactionRequest: ctx.response?.proposedTxRequest,
-            }),
+            input: (ctx: MachineContext) => {
+              console.log('[TxRequestMachine] Preparing send input:', {
+                hasAddress: !!ctx.input.address,
+                hasProviderUrl: !!ctx.input.providerUrl,
+                hasProviderConfig: !!ctx.input.providerConfig,
+                hasNoSendReturnPayload: !!ctx.input.noSendReturnPayload,
+                hasProposedTxRequest: !!ctx.response?.proposedTxRequest,
+              });
+
+              return {
+                ...ctx.input,
+                transactionRequest: ctx.response?.proposedTxRequest,
+              };
+            },
           },
           onDone: [
             {
               target: 'failed',
-              actions: ['assignTxApproveError'],
+              actions: [
+                (ctx, ev) => {
+                  console.log('[TxRequestMachine] Send failed:', ev.data);
+                  return assign({
+                    errors: (context) => ({
+                      ...context.errors,
+                      txApproveError: ev.data?.error,
+                    }),
+                  })(ctx, ev);
+                },
+              ],
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['assignApprovedTx'],
+              actions: [
+                assign({
+                  response: (ctx, ev) => {
+                    console.log('[TxRequestMachine] Send succeeded:', {
+                      hasSignedTransaction: !!ev.data.signedTransaction,
+                      isTransactionResponse: !ev.data.signedTransaction,
+                      dataType: typeof ev.data,
+                    });
+
+                    return {
+                      ...ctx.response,
+                      txResponse: ev.data.signedTransaction
+                        ? undefined
+                        : ev.data,
+                      signedTransaction: ev.data.signedTransaction,
+                    };
+                  },
+                }),
+              ],
               target: 'txSuccess',
             },
           ],
@@ -381,11 +422,39 @@ export const transactionRequestMachine = createMachine(
         }),
       }),
       assignSimulateTxErrors: assign((ctx, ev) => {
+        // eslint-disable-next-line no-console
+        console.log(
+          '[transactionRequestMachine] assignSimulateTxErrors: ev.data',
+          JSON.stringify(ev.data)
+        );
+        if (ev.data.simulateTxErrors) {
+          // eslint-disable-next-line no-console
+          console.log(
+            '[transactionRequestMachine] assignSimulateTxErrors: HAS simulateTxErrors',
+            JSON.stringify(ev.data.simulateTxErrors)
+          );
+          return {
+            ...ctx,
+            response: {
+              ...ctx.response,
+              txSummarySimulated: undefined,
+              proposedTxRequest: undefined,
+            },
+            errors: {
+              ...ctx.errors,
+              simulateTxErrors: ev.data.simulateTxErrors,
+            },
+          };
+        }
+        // eslint-disable-next-line no-console
+        console.log(
+          '[transactionRequestMachine] assignSimulateTxErrors: NO simulateTxErrors'
+        );
         return {
           ...ctx,
           errors: {
             ...ctx.errors,
-            simulateTxErrors: ev.data.simulateTxErrors,
+            simulateTxErrors: undefined,
           },
         };
       }),
@@ -463,7 +532,14 @@ export const transactionRequestMachine = createMachine(
         showError: true,
         maxAttempts: 1,
         async fetch(params) {
-          console.log('asd send', params);
+          console.log('[TxRequestMachine] Send fetch service called with:', {
+            hasAddress: !!(params.input?.account || params.input?.address),
+            hasTransaction: !!params.input?.transactionRequest,
+            hasProviderUrl: !!params.input?.providerUrl,
+            hasProviderConfig: !!params.input?.providerConfig,
+            noSendReturnPayload: params.input?.noSendReturnPayload,
+          });
+
           const { input } = params;
           if (
             (!input?.account && !input?.address) ||
@@ -472,14 +548,28 @@ export const transactionRequestMachine = createMachine(
           ) {
             throw new Error('Invalid approveTx input');
           }
+
           const txResponse = await TxService.send(input);
+          console.log('[TxRequestMachine] TxService.send response:', {
+            hasSignedTransaction: 'signedTransaction' in txResponse,
+            type: typeof txResponse,
+          });
+
+          // If this is a signed transaction, return it directly
+          if ('signedTransaction' in txResponse) {
+            return txResponse;
+          }
+
+          // Otherwise it's a regular transaction response
           await txResponse.waitForPreConfirmation();
 
           // if it has origin, its a dapp transaction and we need to return the txResponse to connectors
           if (input.origin) {
             return txResponse;
           }
+
           const txSummary = await txResponse.getTransactionSummary();
+          console.log('[TxRequestMachine] Got transaction summary');
 
           const operationsWithDomain = await getOperationsWithDomain(
             txSummary.operations
