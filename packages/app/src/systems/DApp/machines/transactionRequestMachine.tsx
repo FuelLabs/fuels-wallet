@@ -82,7 +82,10 @@ type SimulateTransactionReturn = {
 
 type MachineServices = {
   send: {
-    data: TransactionSummary | TransactionResponse;
+    data:
+      | TransactionSummary
+      | TransactionResponse
+      | { signedTransaction: string };
   };
   prepareFeeInputs: {
     data: PrepareFeeInputForSimulateTransactionReturn;
@@ -273,15 +276,18 @@ export const transactionRequestMachine = createMachine(
             {
               target: 'failed',
               actions: [
-                (ctx, ev) => {
-                  console.log('[TxRequestMachine] Send failed:', ev.data);
-                  return assign({
-                    errors: (context) => ({
-                      ...context.errors,
-                      txApproveError: ev.data?.error,
-                    }),
-                  })(ctx, ev);
-                },
+                assign((context, event) => {
+                  console.log(
+                    '[TxRequestMachine] Send failed, event data (error object):',
+                    event.data
+                  );
+                  return {
+                    errors: {
+                      ...(context.errors || {}),
+                      txApproveError: event.data as VMApiError,
+                    },
+                  };
+                }),
               ],
               cond: FetchMachine.hasError,
             },
@@ -290,17 +296,26 @@ export const transactionRequestMachine = createMachine(
                 assign({
                   response: (ctx, ev) => {
                     console.log('[TxRequestMachine] Send succeeded:', {
-                      hasSignedTransaction: !!ev.data.signedTransaction,
-                      isTransactionResponse: !ev.data.signedTransaction,
+                      hasSignedTransaction: !!(
+                        ev.data as { signedTransaction?: string }
+                      ).signedTransaction,
+                      isTransactionResponse: !(
+                        ev.data as { signedTransaction?: string }
+                      ).signedTransaction,
                       dataType: typeof ev.data,
                     });
 
+                    const data = ev.data as
+                      | TransactionResponse
+                      | { signedTransaction: string };
                     return {
                       ...ctx.response,
-                      txResponse: ev.data.signedTransaction
+                      txResponse: (data as { signedTransaction: string })
+                        .signedTransaction
                         ? undefined
-                        : ev.data,
-                      signedTransaction: ev.data.signedTransaction,
+                        : (data as TransactionResponse),
+                      signedTransaction: (data as { signedTransaction: string })
+                        .signedTransaction,
                     };
                   },
                 }),
@@ -396,17 +411,6 @@ export const transactionRequestMachine = createMachine(
             gasLimit,
             // clean possible previous initial txSummary coming from ts-sdk
             transactionSummary: undefined,
-          };
-        },
-      }),
-      assignApprovedTx: assign({
-        response: (ctx, ev) => {
-          const isTransactionResponse = 'provider' in ev.data;
-          return {
-            ...ctx.response,
-            ...(isTransactionResponse
-              ? { txResponse: ev.data as TransactionResponse }
-              : { txSummaryExecuted: ev.data as TransactionSummary }),
           };
         },
       }),
