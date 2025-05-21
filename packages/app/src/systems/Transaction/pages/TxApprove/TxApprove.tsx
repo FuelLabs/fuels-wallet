@@ -19,25 +19,6 @@ export const TxApprove = () => {
   const { handlers } = useTransactionRequest();
   const isSignOnly = !!ctx.input.noSendReturnPayload;
 
-  // Log simulation errors if present
-  if (ctx.errors?.simulateTxErrors) {
-    // eslint-disable-next-line no-console
-    console.log(
-      '[TxApprove] Simulation Errors:',
-      JSON.stringify(ctx.errors.simulateTxErrors)
-    );
-  }
-  // Log shouldDisableApproveBtn state
-  // eslint-disable-next-line no-console
-  console.log(
-    '[TxApprove] shouldDisableApproveBtn:',
-    ctx.shouldDisableApproveBtn,
-    'isWaitingApproval:',
-    ctx.status('waitingApproval'),
-    'hasSimulateTxErrors:',
-    !!ctx.errors?.simulateTxErrors
-  );
-
   const handleReject = () => {
     handlers.closeDialog();
     handlers.reset();
