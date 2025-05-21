@@ -29,7 +29,7 @@ export enum TxRequestStatus {
   failed = 'failed',
 }
 
-export type MachineContext = {
+type MachineContext = {
   input: {
     origin?: string;
     title?: string;
@@ -253,19 +253,10 @@ export const transactionRequestMachine = createMachine(
       },
       sendingTx: {
         tags: ['loading'],
-        entry: () => console.log('[TxRequestMachine] Entering sendingTx state'),
         invoke: {
           src: 'send',
           data: {
             input: (ctx: MachineContext) => {
-              console.log('[TxRequestMachine] Preparing send input:', {
-                hasAddress: !!ctx.input.address,
-                hasProviderUrl: !!ctx.input.providerUrl,
-                hasProviderConfig: !!ctx.input.providerConfig,
-                hasNoSendReturnPayload: !!ctx.input.noSendReturnPayload,
-                hasProposedTxRequest: !!ctx.response?.proposedTxRequest,
-              });
-
               return {
                 ...ctx.input,
                 transactionRequest: ctx.response?.proposedTxRequest,
@@ -277,10 +268,6 @@ export const transactionRequestMachine = createMachine(
               target: 'failed',
               actions: [
                 assign((context, event) => {
-                  console.log(
-                    '[TxRequestMachine] Send failed, event data (error object):',
-                    event.data
-                  );
                   return {
                     errors: {
                       ...(context.errors || {}),
@@ -295,16 +282,6 @@ export const transactionRequestMachine = createMachine(
               actions: [
                 assign({
                   response: (ctx, ev) => {
-                    console.log('[TxRequestMachine] Send succeeded:', {
-                      hasSignedTransaction: !!(
-                        ev.data as { signedTransaction?: string }
-                      ).signedTransaction,
-                      isTransactionResponse: !(
-                        ev.data as { signedTransaction?: string }
-                      ).signedTransaction,
-                      dataType: typeof ev.data,
-                    });
-
                     const data = ev.data as
                       | TransactionResponse
                       | { signedTransaction: string };
@@ -414,6 +391,17 @@ export const transactionRequestMachine = createMachine(
           };
         },
       }),
+      assignApprovedTx: assign({
+        response: (ctx, ev) => {
+          const isTransactionResponse = 'provider' in ev.data;
+          return {
+            ...ctx.response,
+            ...(isTransactionResponse
+              ? { txResponse: ev.data as TransactionResponse }
+              : { txSummaryExecuted: ev.data as TransactionSummary }),
+          };
+        },
+      }),
       assignSimulateResult: assign({
         response: (ctx, ev) => ({
           ...ctx.response,
@@ -426,17 +414,7 @@ export const transactionRequestMachine = createMachine(
         }),
       }),
       assignSimulateTxErrors: assign((ctx, ev) => {
-        // eslint-disable-next-line no-console
-        console.log(
-          '[transactionRequestMachine] assignSimulateTxErrors: ev.data',
-          JSON.stringify(ev.data)
-        );
         if (ev.data.simulateTxErrors) {
-          // eslint-disable-next-line no-console
-          console.log(
-            '[transactionRequestMachine] assignSimulateTxErrors: HAS simulateTxErrors',
-            JSON.stringify(ev.data.simulateTxErrors)
-          );
           return {
             ...ctx,
             response: {
@@ -450,15 +428,12 @@ export const transactionRequestMachine = createMachine(
             },
           };
         }
-        // eslint-disable-next-line no-console
-        console.log(
-          '[transactionRequestMachine] assignSimulateTxErrors: NO simulateTxErrors'
-        );
+
         return {
           ...ctx,
           errors: {
             ...ctx.errors,
-            simulateTxErrors: undefined,
+            simulateTxErrors: ev.data.simulateTxErrors,
           },
         };
       }),
@@ -536,14 +511,6 @@ export const transactionRequestMachine = createMachine(
         showError: true,
         maxAttempts: 1,
         async fetch(params) {
-          console.log('[TxRequestMachine] Send fetch service called with:', {
-            hasAddress: !!(params.input?.account || params.input?.address),
-            hasTransaction: !!params.input?.transactionRequest,
-            hasProviderUrl: !!params.input?.providerUrl,
-            hasProviderConfig: !!params.input?.providerConfig,
-            noSendReturnPayload: params.input?.noSendReturnPayload,
-          });
-
           const { input } = params;
           if (
             (!input?.account && !input?.address) ||
@@ -552,12 +519,7 @@ export const transactionRequestMachine = createMachine(
           ) {
             throw new Error('Invalid approveTx input');
           }
-
           const txResponse = await TxService.send(input);
-          console.log('[TxRequestMachine] TxService.send response:', {
-            hasSignedTransaction: 'signedTransaction' in txResponse,
-            type: typeof txResponse,
-          });
 
           // If this is a signed transaction, return it directly
           if ('signedTransaction' in txResponse) {
@@ -571,9 +533,7 @@ export const transactionRequestMachine = createMachine(
           if (input.origin) {
             return txResponse;
           }
-
           const txSummary = await txResponse.getTransactionSummary();
-          console.log('[TxRequestMachine] Got transaction summary');
 
           const operationsWithDomain = await getOperationsWithDomain(
             txSummary.operations

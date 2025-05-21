@@ -49,17 +49,6 @@ export class RequestMethods extends ExtensionPageConnection {
   }
 
   async sendTransaction(input: MessageInputs['sendTransaction']) {
-    console.log(
-      '[DApp/methods] sendTransaction (called by PopUpService) with input:',
-      {
-        address: input.address,
-        hasProvider: !!input.provider,
-        providerUrl: input.provider?.url,
-        noSendReturnPayload: input.noSendReturnPayload,
-        returnTransactionResponse: input.returnTransactionResponse,
-      }
-    );
-
     const {
       address,
       provider,
@@ -74,8 +63,6 @@ export class RequestMethods extends ExtensionPageConnection {
       noSendReturnPayload,
     } = input;
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
-
-    console.log('[DApp/methods] Parsed transaction request for machine');
 
     const state = await store
       .requestTransaction({
@@ -95,27 +82,7 @@ export class RequestMethods extends ExtensionPageConnection {
         done: 'txSuccess',
       });
 
-    console.log(
-      '[DApp/methods] Transaction machine has reached txSuccess. Context response:',
-      state.context.response
-    );
-    console.log('[DApp/methods] Machine state details:', {
-      hasSignedTransactionInContext:
-        !!state.context.response?.signedTransaction,
-      signatureLengthInContext:
-        state.context.response?.signedTransaction?.length,
-      actualSignedTransactionInContext:
-        state.context.response?.signedTransaction,
-      txResponseInContext: state.context.response?.txResponse,
-      noSendReturnPayloadFromInput: noSendReturnPayload,
-      returnTransactionResponseFromInput: returnTransactionResponse,
-    });
-
     if (noSendReturnPayload) {
-      console.log(
-        '[DApp/methods] noSendReturnPayload is true. Returning signedTransaction from context:',
-        state.context.response?.signedTransaction
-      );
       return state.context.response?.signedTransaction;
     }
 
@@ -124,10 +91,6 @@ export class RequestMethods extends ExtensionPageConnection {
       state.context.response?.txSummaryExecuted?.id;
 
     if (!returnTransactionResponse) {
-      console.log(
-        '[DApp/methods] returnTransactionResponse is false. Returning txId:',
-        txId
-      );
       return txId;
     }
 
@@ -135,9 +98,6 @@ export class RequestMethods extends ExtensionPageConnection {
       try {
         const serializedTxResponse = await serializeTransactionResponseJson(
           state.context.response.txResponse
-        );
-        console.log(
-          '[DApp/methods] returnTransactionResponse is true. Returning serializedTxResponse.'
         );
         return serializedTxResponse;
       } catch (error) {
@@ -148,7 +108,6 @@ export class RequestMethods extends ExtensionPageConnection {
       }
     }
 
-    console.log('[DApp/methods] Fallback. Returning txId:', txId);
     return txId;
   }
 
@@ -174,16 +133,8 @@ export class RequestMethods extends ExtensionPageConnection {
   }
 
   async signTransaction(input: MessageInputs['signTransaction']) {
-    console.log('[DApp/methods] signTransaction called with:', {
-      address: input.address,
-      hasProvider: !!input.provider,
-      providerUrl: input.provider?.url,
-    });
-
     const { address, provider, transaction, origin, title, favIconUrl } = input;
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
-
-    console.log('[DApp/methods] Parsed transaction request');
 
     const state = await store
       .requestTransaction({
@@ -200,11 +151,6 @@ export class RequestMethods extends ExtensionPageConnection {
         ...WAIT_FOR_CONFIG,
         done: 'txSuccess',
       });
-
-    console.log('[DApp/methods] Transaction machine state:', {
-      hasSignedTransaction: !!state.context.response?.signedTransaction,
-      signatureLength: state.context.response?.signedTransaction?.length,
-    });
 
     return state.context.response?.signedTransaction;
   }

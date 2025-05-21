@@ -203,29 +203,15 @@ export class PopUpService {
   }
 
   async sendTransaction(input: MessageInputs['sendTransaction']) {
-    console.log('[PopUpService] sendTransaction called with input:', {
-      address: input.address,
-      hasProvider: !!input.provider,
-      providerUrl: input.provider?.url,
-      noSendReturnPayload: input.noSendReturnPayload,
-    });
     return this.client.request('sendTransaction', input);
   }
 
   async signTransaction(input: MessageInputs['signTransaction']) {
-    console.log('[PopUpService] signTransaction called with input:', {
-      address: input.address,
-      hasProvider: !!input.provider,
-      providerUrl: input.provider?.url,
-    });
-
-    // Use sendTransaction with noSendReturnPayload flag
     const result = await this.client.request('sendTransaction', {
       ...input,
       noSendReturnPayload: true,
     });
 
-    console.log('[PopUpService] signTransaction result:', result);
     return result;
   }
 

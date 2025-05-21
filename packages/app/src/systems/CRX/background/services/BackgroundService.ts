@@ -302,7 +302,6 @@ export class BackgroundService {
     const favIconUrl = serverParams.favIconUrl;
     const selectedNetwork = await NetworkService.getSelectedNetwork();
 
-    console.log('sendTransaction', input);
     if (selectedNetwork?.url !== input.provider.url) {
       throw new Error(
         [
@@ -349,26 +348,15 @@ export class BackgroundService {
     input: Exclude<MessageInputs['signTransaction'], 'origin'>,
     serverParams: EventOrigin
   ) {
-    console.log('[BackgroundService] signTransaction called with input:', {
-      address: input.address,
-      hasProvider: !!input.provider,
-      providerUrl: input.provider?.url,
-    });
-
     await this.requireAccountConnection(serverParams.connection, input.address);
     const origin = serverParams.origin;
     const title = serverParams.title;
     const favIconUrl = serverParams.favIconUrl;
     const selectedNetwork = await NetworkService.getSelectedNetwork();
 
-    // Make sure we have a valid provider URL
     if (!input.provider || !input.provider.url) {
-      console.log(
-        '[BackgroundService] Adding missing provider URL:',
-        selectedNetwork?.url
-      );
       input.provider = {
-        url: selectedNetwork?.url || '', // Add fallback empty string
+        url: selectedNetwork?.url || '',
       };
     }
 
@@ -380,9 +368,6 @@ export class BackgroundService {
 
     const address = Address.fromDynamicInput(input.address).toString();
 
-    console.log(
-      '[BackgroundService] Calling popupService.sendTransaction with noSendReturnPayload=true'
-    );
     const result = await popupService.sendTransaction({
       address,
       provider: input.provider,
@@ -393,8 +378,6 @@ export class BackgroundService {
       skipCustomFee: true,
       noSendReturnPayload: true, // Flag to just sign, not broadcast
     });
-
-    console.log('[BackgroundService] signTransaction result:', result);
 
     popupService.destroy();
     return result;
