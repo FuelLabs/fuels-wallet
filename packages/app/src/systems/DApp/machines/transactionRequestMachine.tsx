@@ -391,17 +391,6 @@ export const transactionRequestMachine = createMachine(
           };
         },
       }),
-      assignApprovedTx: assign({
-        response: (ctx, ev) => {
-          const isTransactionResponse = 'provider' in ev.data;
-          return {
-            ...ctx.response,
-            ...(isTransactionResponse
-              ? { txResponse: ev.data as TransactionResponse }
-              : { txSummaryExecuted: ev.data as TransactionSummary }),
-          };
-        },
-      }),
       assignSimulateResult: assign({
         response: (ctx, ev) => ({
           ...ctx.response,
@@ -435,18 +424,6 @@ export const transactionRequestMachine = createMachine(
             ...ctx.errors,
             simulateTxErrors: ev.data.simulateTxErrors,
           },
-        };
-      }),
-      assignTxApproveError: assign((ctx, ev) => {
-        return {
-          ...ctx,
-          errors: {
-            ...ctx.errors,
-            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-            txApproveError: (ev.data as any)?.error,
-          },
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          error: (ev.data as any)?.error,
         };
       }),
     },
