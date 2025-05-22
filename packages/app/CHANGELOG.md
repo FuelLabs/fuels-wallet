@@ -322,7 +322,7 @@
 
 ### Patch Changes
 
-- [#1570](https://github.com/FuelLabs/fuels-wallet/pull/1570) [`8e42400c`](https://github.com/FuelLabs/fuels-wallet/commit/8e42400c42e90fd1f7a42724fe5e217f5e058316) Thanks [@nelitow](https://github.com/nelitow)! - Improve account name colision verification
+- [#1570](https://github.com/FuelLabs/fuels-wallet/pull/1570) [`8e42400c`](https://github.com/FuelLabs/fuels-wallet/commit/8e42400c42e90fd1f7a42724fe5e217f5e058316) Thanks [@nelitow](https://github.com/nelitow)! - Improve account name collision verification
 
 - Updated dependencies []:
   - @fuel-wallet/connections@0.37.0
@@ -679,7 +679,7 @@
 
 ### Minor Changes
 
-- [#1397](https://github.com/FuelLabs/fuels-wallet/pull/1397) [`3966aa92`](https://github.com/FuelLabs/fuels-wallet/commit/3966aa929608520869486043e633a32156d93c19) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - Improved error handling and including location informations to support better understanding about the causes of erros
+- [#1397](https://github.com/FuelLabs/fuels-wallet/pull/1397) [`3966aa92`](https://github.com/FuelLabs/fuels-wallet/commit/3966aa929608520869486043e633a32156d93c19) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - Improved error handling and including location information to support better understanding about the causes of errors
 
 - [#1385](https://github.com/FuelLabs/fuels-wallet/pull/1385) [`d49b9efe`](https://github.com/FuelLabs/fuels-wallet/commit/d49b9efe8b3133b67d748cc7a7dc3b0f506555f1) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - Support for Bech32 addresses has been removed and replaced with b256 (hex) addresses throughout the wallet screen components. All addresses, both existing and new, will now be displayed in the b256 format.
 
@@ -984,7 +984,7 @@
 
 - [#1043](https://github.com/FuelLabs/fuels-wallet/pull/1043) [`1bf46d6`](https://github.com/FuelLabs/fuels-wallet/commit/1bf46d63ec2ffa3d571a1bc0350955ca2b54f645) Thanks [@matt-user](https://github.com/matt-user)! - Throw an error when asset name is undefined
 
-- [#1048](https://github.com/FuelLabs/fuels-wallet/pull/1048) [`f010e4e`](https://github.com/FuelLabs/fuels-wallet/commit/f010e4ec21c32120cc464d27b31d3eb6b044754e) Thanks [@luizstacio](https://github.com/luizstacio)! - Update fuel-ui pacakge
+- [#1048](https://github.com/FuelLabs/fuels-wallet/pull/1048) [`f010e4e`](https://github.com/FuelLabs/fuels-wallet/commit/f010e4ec21c32120cc464d27b31d3eb6b044754e) Thanks [@luizstacio](https://github.com/luizstacio)! - Update fuel-ui package
 
 - Updated dependencies []:
   - @fuel-wallet/sdk@0.14.2
@@ -1010,7 +1010,7 @@
 
 ### Patch Changes
 
-- [#1034](https://github.com/FuelLabs/fuels-wallet/pull/1034) [`020dc09`](https://github.com/FuelLabs/fuels-wallet/commit/020dc09150dbc67b3b8274365162edf29542082d) Thanks [@luizstacio](https://github.com/luizstacio)! - Clean assets from database when reseting wallet
+- [#1034](https://github.com/FuelLabs/fuels-wallet/pull/1034) [`020dc09`](https://github.com/FuelLabs/fuels-wallet/commit/020dc09150dbc67b3b8274365162edf29542082d) Thanks [@luizstacio](https://github.com/luizstacio)! - Clean assets from database when resetting wallet
 
 - Updated dependencies [[`9458253`](https://github.com/FuelLabs/fuels-wallet/commit/94582534fb7303d88ef2523c54ae3d336ab693a8)]:
   - @fuel-wallet/types@0.14.0
