@@ -418,7 +418,7 @@
 ### Minor Changes
 
 - [#571](https://github.com/FuelLabs/fuels-wallet/pull/571) [`ac3e822`](https://github.com/FuelLabs/fuels-wallet/commit/ac3e822ec0900e73602b760656f097cdd46e90df) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Added asset List Screen
-  Added shortcut in Home Balances to add unknows assets
+  Added shortcut in Home Balances to add unknowns assets
   Added DAPP page to "Add Custom Asset"
   Added fuel.assets()
   Added fuel.on('assets')
@@ -430,7 +430,7 @@
 ### Minor Changes
 
 - [#558](https://github.com/FuelLabs/fuels-wallet/pull/558) [`6dc4878`](https://github.com/FuelLabs/fuels-wallet/commit/6dc4878381c8790924c082bccecd3eccf5f2b0fc) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Added asset List Screen
-  Added shortcut in Home Balances to add unknows assets
+  Added shortcut in Home Balances to add unknowns assets
   Added DAPP page to "Add Custom Asset"
   Added fuel.assets()
   Added fuel.on('assets')
