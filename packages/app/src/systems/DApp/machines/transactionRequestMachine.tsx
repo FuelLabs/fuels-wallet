@@ -282,17 +282,51 @@ export const transactionRequestMachine = createMachine(
               actions: [
                 assign({
                   response: (ctx, ev) => {
-                    const data = ev.data as
-                      | TransactionResponse
-                      | { signedTransaction: string };
+                    const data = ev.data as MachineServices['send']['data'];
+
+                    const newResponseProperties: Partial<
+                      MachineContext['response']
+                    > = {};
+
+                    if (
+                      typeof data === 'object' &&
+                      data !== null &&
+                      'signedTransaction' in data &&
+                      typeof data.signedTransaction === 'string'
+                    ) {
+                      newResponseProperties.signedTransaction =
+                        data.signedTransaction;
+                      newResponseProperties.txResponse = undefined;
+                      newResponseProperties.txSummaryExecuted = undefined;
+                    } else if (
+                      typeof data === 'object' &&
+                      data !== null &&
+                      'gqlConnection' in data &&
+                      'id' in data &&
+                      typeof data.id === 'string'
+                    ) {
+                      // This is a TransactionResponse
+                      newResponseProperties.txResponse =
+                        data as TransactionResponse;
+                      newResponseProperties.signedTransaction = undefined;
+                      newResponseProperties.txSummaryExecuted = undefined;
+                    } else if (
+                      typeof data === 'object' &&
+                      data !== null &&
+                      'status' in data &&
+                      'id' in data &&
+                      typeof data.id === 'string'
+                    ) {
+                      // This should be a TransactionSummary
+                      newResponseProperties.txSummaryExecuted =
+                        data as TransactionSummary;
+                      newResponseProperties.txResponse = undefined;
+                      newResponseProperties.signedTransaction = undefined;
+                    }
+
                     return {
-                      ...ctx.response,
-                      txResponse: (data as { signedTransaction: string })
-                        .signedTransaction
-                        ? undefined
-                        : (data as TransactionResponse),
-                      signedTransaction: (data as { signedTransaction: string })
-                        .signedTransaction,
+                      ...(ctx.response || {}),
+                      ...newResponseProperties,
                     };
                   },
                 }),
