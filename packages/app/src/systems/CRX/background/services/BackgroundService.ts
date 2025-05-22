@@ -58,6 +58,7 @@ export class BackgroundService {
     'addNetwork',
     'addAbi',
     'getAbi',
+    'signTransaction',
   ];
 
   constructor(communicationProtocol: CommunicationProtocol) {
@@ -341,6 +342,45 @@ export class BackgroundService {
     });
     popupService.destroy();
     return transactionResponse;
+  }
+
+  async signTransaction(
+    input: Exclude<MessageInputs['signTransaction'], 'origin'>,
+    serverParams: EventOrigin
+  ) {
+    await this.requireAccountConnection(serverParams.connection, input.address);
+    const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
+    const selectedNetwork = await NetworkService.getSelectedNetwork();
+
+    if (!input.provider || !input.provider.url) {
+      input.provider = {
+        url: selectedNetwork?.url || '',
+      };
+    }
+
+    const popupService = await PopUpService.open(
+      origin,
+      Pages.requestTransaction(),
+      this.communicationProtocol
+    );
+
+    const address = Address.fromDynamicInput(input.address).toString();
+
+    const result = await popupService.sendTransaction({
+      address,
+      provider: input.provider,
+      transaction: input.transaction,
+      origin,
+      title,
+      favIconUrl,
+      skipCustomFee: true,
+      noSendReturnPayload: true, // Flag to just sign, not broadcast
+    });
+
+    popupService.destroy();
+    return result;
   }
 
   async currentAccount(_: unknown, serverParams: EventOrigin) {

@@ -23,6 +23,7 @@ export class RequestMethods extends ExtensionPageConnection {
     this.addAssets,
     this.selectNetwork,
     this.addNetwork,
+    this.signTransaction,
   ];
   constructor() {
     super();
@@ -59,6 +60,7 @@ export class RequestMethods extends ExtensionPageConnection {
       transactionState,
       transactionSummary,
       returnTransactionResponse,
+      noSendReturnPayload,
     } = input;
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
 
@@ -73,18 +75,22 @@ export class RequestMethods extends ExtensionPageConnection {
         skipCustomFee,
         transactionState,
         transactionSummary,
+        noSendReturnPayload: input.noSendReturnPayload,
       })
       .waitForState(Services.txRequest, {
         ...WAIT_FOR_CONFIG,
         done: 'txSuccess',
       });
 
+    if (noSendReturnPayload) {
+      return state.context.response?.signedTransaction;
+    }
+
     const txId =
       state.context.response?.txResponse?.id ||
       state.context.response?.txSummaryExecuted?.id;
 
     if (!returnTransactionResponse) {
-      // it will be always txResponse, but just for safety we check both
       return txId;
     }
 
@@ -95,7 +101,10 @@ export class RequestMethods extends ExtensionPageConnection {
         );
         return serializedTxResponse;
       } catch (error) {
-        console.error('Error serializing transaction response:', error);
+        console.error(
+          '[DApp/methods] Error serializing transaction response:',
+          error
+        );
       }
     }
 
@@ -121,6 +130,29 @@ export class RequestMethods extends ExtensionPageConnection {
       .requestSelectNetwork(input)
       .waitForState(Services.selectNetworkRequest, WAIT_FOR_CONFIG);
     return true;
+  }
+
+  async signTransaction(input: MessageInputs['signTransaction']) {
+    const { address, provider, transaction, origin, title, favIconUrl } = input;
+    const transactionRequest = transactionRequestify(JSON.parse(transaction));
+
+    const state = await store
+      .requestTransaction({
+        origin,
+        transactionRequest,
+        address,
+        providerConfig: provider,
+        title,
+        favIconUrl,
+        skipCustomFee: true,
+        noSendReturnPayload: true,
+      })
+      .waitForState(Services.txRequest, {
+        ...WAIT_FOR_CONFIG,
+        done: 'txSuccess',
+      });
+
+    return state.context.response?.signedTransaction;
   }
 }
 

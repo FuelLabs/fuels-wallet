@@ -43,12 +43,14 @@ type MachineContext = {
     tip?: BN;
     gasLimit?: BN;
     skipCustomFee?: boolean;
+    noSendReturnPayload?: boolean;
   };
   response?: {
     txSummarySimulated?: TransactionSummary;
     txSummaryExecuted?: TransactionSummary;
     txResponse?: TransactionResponse;
     proposedTxRequest?: TransactionRequest;
+    signedTransaction?: string;
   };
   fees: {
     baseFee?: BN;
@@ -80,7 +82,10 @@ type SimulateTransactionReturn = {
 
 type MachineServices = {
   send: {
-    data: TransactionSummary | TransactionResponse;
+    data:
+      | TransactionSummary
+      | TransactionResponse
+      | { signedTransaction: string };
   };
   prepareFeeInputs: {
     data: PrepareFeeInputForSimulateTransactionReturn;
@@ -251,19 +256,81 @@ export const transactionRequestMachine = createMachine(
         invoke: {
           src: 'send',
           data: {
-            input: (ctx: MachineContext) => ({
-              ...ctx.input,
-              transactionRequest: ctx.response?.proposedTxRequest,
-            }),
+            input: (ctx: MachineContext) => {
+              return {
+                ...ctx.input,
+                transactionRequest: ctx.response?.proposedTxRequest,
+              };
+            },
           },
           onDone: [
             {
               target: 'failed',
-              actions: ['assignTxApproveError'],
+              actions: [
+                assign((context, event) => {
+                  return {
+                    errors: {
+                      ...(context.errors || {}),
+                      txApproveError: event.data as VMApiError,
+                    },
+                  };
+                }),
+              ],
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['assignApprovedTx'],
+              actions: [
+                assign({
+                  response: (ctx, ev) => {
+                    const data = ev.data as MachineServices['send']['data'];
+
+                    const newResponseProperties: Partial<
+                      MachineContext['response']
+                    > = {};
+
+                    if (
+                      typeof data === 'object' &&
+                      data !== null &&
+                      'signedTransaction' in data &&
+                      typeof data.signedTransaction === 'string'
+                    ) {
+                      newResponseProperties.signedTransaction =
+                        data.signedTransaction;
+                      newResponseProperties.txResponse = undefined;
+                      newResponseProperties.txSummaryExecuted = undefined;
+                    } else if (
+                      typeof data === 'object' &&
+                      data !== null &&
+                      'gqlConnection' in data &&
+                      'id' in data &&
+                      typeof data.id === 'string'
+                    ) {
+                      // This is a TransactionResponse
+                      newResponseProperties.txResponse =
+                        data as TransactionResponse;
+                      newResponseProperties.signedTransaction = undefined;
+                      newResponseProperties.txSummaryExecuted = undefined;
+                    } else if (
+                      typeof data === 'object' &&
+                      data !== null &&
+                      'status' in data &&
+                      'id' in data &&
+                      typeof data.id === 'string'
+                    ) {
+                      // This should be a TransactionSummary
+                      newResponseProperties.txSummaryExecuted =
+                        data as TransactionSummary;
+                      newResponseProperties.txResponse = undefined;
+                      newResponseProperties.signedTransaction = undefined;
+                    }
+
+                    return {
+                      ...(ctx.response || {}),
+                      ...newResponseProperties,
+                    };
+                  },
+                }),
+              ],
               target: 'txSuccess',
             },
           ],
@@ -358,17 +425,6 @@ export const transactionRequestMachine = createMachine(
           };
         },
       }),
-      assignApprovedTx: assign({
-        response: (ctx, ev) => {
-          const isTransactionResponse = 'provider' in ev.data;
-          return {
-            ...ctx.response,
-            ...(isTransactionResponse
-              ? { txResponse: ev.data as TransactionResponse }
-              : { txSummaryExecuted: ev.data as TransactionSummary }),
-          };
-        },
-      }),
       assignSimulateResult: assign({
         response: (ctx, ev) => ({
           ...ctx.response,
@@ -381,24 +437,27 @@ export const transactionRequestMachine = createMachine(
         }),
       }),
       assignSimulateTxErrors: assign((ctx, ev) => {
+        if (ev.data.simulateTxErrors) {
+          return {
+            ...ctx,
+            response: {
+              ...ctx.response,
+              txSummarySimulated: undefined,
+              proposedTxRequest: undefined,
+            },
+            errors: {
+              ...ctx.errors,
+              simulateTxErrors: ev.data.simulateTxErrors,
+            },
+          };
+        }
+
         return {
           ...ctx,
           errors: {
             ...ctx.errors,
             simulateTxErrors: ev.data.simulateTxErrors,
           },
-        };
-      }),
-      assignTxApproveError: assign((ctx, ev) => {
-        return {
-          ...ctx,
-          errors: {
-            ...ctx.errors,
-            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-            txApproveError: (ev.data as any)?.error,
-          },
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          error: (ev.data as any)?.error,
         };
       }),
     },
@@ -463,7 +522,6 @@ export const transactionRequestMachine = createMachine(
         showError: true,
         maxAttempts: 1,
         async fetch(params) {
-          console.log('asd send', params);
           const { input } = params;
           if (
             (!input?.account && !input?.address) ||
@@ -473,6 +531,13 @@ export const transactionRequestMachine = createMachine(
             throw new Error('Invalid approveTx input');
           }
           const txResponse = await TxService.send(input);
+
+          // If this is a signed transaction, return it directly
+          if ('signedTransaction' in txResponse) {
+            return txResponse;
+          }
+
+          // Otherwise it's a regular transaction response
           await txResponse.waitForPreConfirmation();
 
           // if it has origin, its a dapp transaction and we need to return the txResponse to connectors

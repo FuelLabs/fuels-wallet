@@ -75,6 +75,7 @@ export type TxInputs = {
     };
     transactionState?: 'funded' | undefined;
     transactionSummary?: TransactionSummaryJson;
+    noSendReturnPayload?: boolean;
   };
   send: {
     address?: string;
@@ -83,6 +84,7 @@ export type TxInputs = {
     providerUrl?: string;
     providerConfig?: FuelProviderConfig;
     origin?: string;
+    noSendReturnPayload?: boolean;
   };
   simulateTransaction: {
     transactionRequest: TransactionRequest;
@@ -181,6 +183,7 @@ export class TxService {
     transactionRequest,
     providerUrl = '',
     providerConfig,
+    noSendReturnPayload,
   }: TxInputs['send']) {
     const provider = await createProvider(
       providerUrl || providerConfig?.url || ''
@@ -189,6 +192,12 @@ export class TxService {
       (account?.address?.toString() || address) as string,
       provider
     );
+
+    if (noSendReturnPayload) {
+      const signature = await wallet.signTransaction(transactionRequest);
+
+      return { signedTransaction: signature };
+    }
 
     const txSent = await wallet.sendTransaction(transactionRequest);
     return txSent;

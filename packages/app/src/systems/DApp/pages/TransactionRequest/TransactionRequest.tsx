@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button } from '@fuel-ui/react';
+import { Box, Button } from '@fuel-ui/react';
 import { bn } from 'fuels';
 import { useMemo } from 'react';
 import { Layout, coreStyles } from '~/systems/Core';
@@ -35,6 +35,8 @@ export function TransactionRequest() {
     isSimulating,
     input,
   } = txRequest;
+  const isSignOnly = !!input.noSendReturnPayload;
+
   const defaultValues = useMemo<TransactionRequestFormData | undefined>(() => {
     if (!txSummarySimulated || !proposedTxRequest) return undefined;
 
@@ -74,6 +76,12 @@ export function TransactionRequest() {
         <Layout.TopBar hideMenu hideBackArrow />
         {shouldShowReviewAlert && <TxReviewAlert />}
         <Layout.Content css={styles.content} noScroll>
+          {isSignOnly && (
+            <Box css={{ mb: '$4', p: '$3', fontWeight: '$normal' }}>
+              You are signing this transaction without broadcasting it to the
+              network.
+            </Box>
+          )}
           {shouldShowTxSimulated && (
             <TxContent.Info
               showDetails
@@ -123,7 +131,7 @@ export function TransactionRequest() {
               isLoading={isLoading || status('sending') || isSimulating}
               isDisabled={shouldDisableApproveBtn}
             >
-              Submit
+              {isSignOnly ? 'Sign' : 'Submit'}
             </Button>
           </Layout.BottomBar>
         )}
