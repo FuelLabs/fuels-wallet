@@ -43,7 +43,7 @@ type MachineContext = {
     tip?: BN;
     gasLimit?: BN;
     skipCustomFee?: boolean;
-    noSendReturnPayload?: boolean;
+    signOnly?: boolean;
   };
   response?: {
     txSummarySimulated?: TransactionSummary;
@@ -143,6 +143,7 @@ export const transactionRequestMachine = createMachine(
       simulatingTransaction: {
         on: {
           SET_CUSTOM_FEES: {
+            cond: (ctx) => !ctx.input.signOnly,
             actions: ['assignCustomFees'],
             target: 'changingCustomFees',
           },
@@ -165,6 +166,7 @@ export const transactionRequestMachine = createMachine(
       simulatingTransactionLoading: {
         on: {
           SET_CUSTOM_FEES: {
+            cond: (ctx) => !ctx.input.signOnly,
             actions: ['assignCustomFees'],
             target: 'changingCustomFees',
           },
@@ -246,6 +248,7 @@ export const transactionRequestMachine = createMachine(
             target: 'failed',
           },
           SET_CUSTOM_FEES: {
+            cond: (ctx) => !ctx.input.signOnly,
             actions: ['assignCustomFees'],
             target: 'changingCustomFees',
           },
@@ -284,49 +287,21 @@ export const transactionRequestMachine = createMachine(
                   response: (ctx, ev) => {
                     const data = ev.data as MachineServices['send']['data'];
 
-                    const newResponseProperties: Partial<
-                      MachineContext['response']
-                    > = {};
-
-                    if (
-                      typeof data === 'object' &&
-                      data !== null &&
-                      'signedTransaction' in data &&
-                      typeof data.signedTransaction === 'string'
-                    ) {
-                      newResponseProperties.signedTransaction =
-                        data.signedTransaction;
-                      newResponseProperties.txResponse = undefined;
-                      newResponseProperties.txSummaryExecuted = undefined;
-                    } else if (
-                      typeof data === 'object' &&
-                      data !== null &&
-                      'gqlConnection' in data &&
-                      'id' in data &&
-                      typeof data.id === 'string'
-                    ) {
-                      // This is a TransactionResponse
-                      newResponseProperties.txResponse =
-                        data as TransactionResponse;
-                      newResponseProperties.signedTransaction = undefined;
-                      newResponseProperties.txSummaryExecuted = undefined;
-                    } else if (
-                      typeof data === 'object' &&
-                      data !== null &&
-                      'status' in data &&
-                      'id' in data &&
-                      typeof data.id === 'string'
-                    ) {
-                      // This should be a TransactionSummary
-                      newResponseProperties.txSummaryExecuted =
-                        data as TransactionSummary;
-                      newResponseProperties.txResponse = undefined;
-                      newResponseProperties.signedTransaction = undefined;
+                    if ('signedTransaction' in data) {
+                      return {
+                        ...ctx.response,
+                        signedTransaction: data.signedTransaction,
+                      };
                     }
-
+                    if ('gqlConnection' in data) {
+                      return {
+                        ...ctx.response,
+                        txResponse: data as TransactionResponse,
+                      };
+                    }
                     return {
-                      ...(ctx.response || {}),
-                      ...newResponseProperties,
+                      ...ctx.response,
+                      txSummaryExecuted: data as TransactionSummary,
                     };
                   },
                 }),
@@ -352,6 +327,7 @@ export const transactionRequestMachine = createMachine(
             target: 'failed',
           },
           SET_CUSTOM_FEES: {
+            cond: (ctx) => !ctx.input.signOnly,
             actions: ['assignCustomFees'],
             target: 'changingCustomFees',
           },
@@ -516,7 +492,7 @@ export const transactionRequestMachine = createMachine(
         },
       }),
       send: FetchMachine.create<
-        TxInputs['send'],
+        TxInputs['send'] & { signOnly?: boolean },
         MachineServices['send']['data']
       >({
         showError: true,
@@ -530,14 +506,15 @@ export const transactionRequestMachine = createMachine(
           ) {
             throw new Error('Invalid approveTx input');
           }
-          const txResponse = await TxService.send(input);
 
-          // If this is a signed transaction, return it directly
-          if ('signedTransaction' in txResponse) {
-            return txResponse;
+          // If signOnly is true, use the sign method instead
+          if (input.signOnly) {
+            return await TxService.sign(input);
           }
 
-          // Otherwise it's a regular transaction response
+          const txResponse = await TxService.send(input);
+
+          // Wait for pre-confirmation
           await txResponse.waitForPreConfirmation();
 
           // if it has origin, its a dapp transaction and we need to return the txResponse to connectors

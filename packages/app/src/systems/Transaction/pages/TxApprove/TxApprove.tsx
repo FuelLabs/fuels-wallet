@@ -17,7 +17,7 @@ export const TxApprove = () => {
   const shouldShowReviewAlert =
     !ctx.status(TxRequestStatus.success) && !ctx.status(TxRequestStatus.failed);
   const { handlers } = useTransactionRequest();
-  const isSignOnly = !!ctx.input.noSendReturnPayload;
+  const isSignOnly = !!ctx.input.signOnly;
 
   const handleReject = () => {
     handlers.closeDialog();
@@ -45,6 +45,7 @@ export const TxApprove = () => {
             tx={ctx.txSummarySimulated}
             errors={ctx.errors.simulateTxErrors}
             isSimulating={ctx.isSimulating}
+            signOnly={isSignOnly}
             footer={
               ctx.status('failed') && (
                 <Button

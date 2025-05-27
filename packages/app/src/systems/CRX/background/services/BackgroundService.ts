@@ -376,7 +376,7 @@ export class BackgroundService {
       title,
       favIconUrl,
       skipCustomFee: true,
-      noSendReturnPayload: true, // Flag to just sign, not broadcast
+      signOnly: true, // Flag to just sign, not broadcast
     });
 
     popupService.destroy();

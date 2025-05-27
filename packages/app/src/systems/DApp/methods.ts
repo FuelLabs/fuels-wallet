@@ -60,7 +60,7 @@ export class RequestMethods extends ExtensionPageConnection {
       transactionState,
       transactionSummary,
       returnTransactionResponse,
-      noSendReturnPayload,
+      signOnly,
     } = input;
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
 
@@ -75,14 +75,14 @@ export class RequestMethods extends ExtensionPageConnection {
         skipCustomFee,
         transactionState,
         transactionSummary,
-        noSendReturnPayload: input.noSendReturnPayload,
+        signOnly: input.signOnly,
       })
       .waitForState(Services.txRequest, {
         ...WAIT_FOR_CONFIG,
         done: 'txSuccess',
       });
 
-    if (noSendReturnPayload) {
+    if (signOnly) {
       return state.context.response?.signedTransaction;
     }
 
@@ -145,7 +145,7 @@ export class RequestMethods extends ExtensionPageConnection {
         title,
         favIconUrl,
         skipCustomFee: true,
-        noSendReturnPayload: true,
+        signOnly: true,
       })
       .waitForState(Services.txRequest, {
         ...WAIT_FOR_CONFIG,

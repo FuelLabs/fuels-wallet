@@ -33,7 +33,7 @@ export type MessageInputs = {
     transactionState?: 'funded' | undefined;
     transactionSummary?: TransactionSummaryJson;
     returnTransactionResponse?: boolean;
-    noSendReturnPayload?: boolean;
+    signOnly?: boolean;
   };
   addAssets: {
     assets: AssetData[];

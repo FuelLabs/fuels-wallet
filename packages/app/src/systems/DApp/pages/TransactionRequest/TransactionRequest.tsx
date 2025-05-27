@@ -35,7 +35,7 @@ export function TransactionRequest() {
     isSimulating,
     input,
   } = txRequest;
-  const isSignOnly = !!input.noSendReturnPayload;
+  const isSignOnly = !!input.signOnly;
 
   const defaultValues = useMemo<TransactionRequestFormData | undefined>(() => {
     if (!txSummarySimulated || !proposedTxRequest) return undefined;
@@ -93,6 +93,7 @@ export function TransactionRequest() {
               isLoading={isLoading}
               txAccount={input?.address}
               isSimulating={isSimulating}
+              signOnly={isSignOnly}
             />
           )}
           {shouldShowTxExecuted && txSummaryExecuted && (

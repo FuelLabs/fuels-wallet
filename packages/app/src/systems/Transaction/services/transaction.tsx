@@ -75,7 +75,7 @@ export type TxInputs = {
     };
     transactionState?: 'funded' | undefined;
     transactionSummary?: TransactionSummaryJson;
-    noSendReturnPayload?: boolean;
+    signOnly?: boolean;
   };
   send: {
     address?: string;
@@ -84,7 +84,6 @@ export type TxInputs = {
     providerUrl?: string;
     providerConfig?: FuelProviderConfig;
     origin?: string;
-    noSendReturnPayload?: boolean;
   };
   simulateTransaction: {
     transactionRequest: TransactionRequest;
@@ -177,14 +176,13 @@ export class TxService {
     });
   }
 
-  static async send({
+  static async sign({
     account,
     address,
     transactionRequest,
     providerUrl = '',
     providerConfig,
-    noSendReturnPayload,
-  }: TxInputs['send']) {
+  }: Omit<TxInputs['send'], 'signOnly'>) {
     const provider = await createProvider(
       providerUrl || providerConfig?.url || ''
     );
@@ -193,11 +191,24 @@ export class TxService {
       provider
     );
 
-    if (noSendReturnPayload) {
-      const signature = await wallet.signTransaction(transactionRequest);
+    const signature = await wallet.signTransaction(transactionRequest);
+    return { signedTransaction: signature };
+  }
 
-      return { signedTransaction: signature };
-    }
+  static async send({
+    account,
+    address,
+    transactionRequest,
+    providerUrl = '',
+    providerConfig,
+  }: Omit<TxInputs['send'], 'signOnly'>) {
+    const provider = await createProvider(
+      providerUrl || providerConfig?.url || ''
+    );
+    const wallet = new WalletLockedCustom(
+      (account?.address?.toString() || address) as string,
+      provider
+    );
 
     const txSent = await wallet.sendTransaction(transactionRequest);
     return txSent;
