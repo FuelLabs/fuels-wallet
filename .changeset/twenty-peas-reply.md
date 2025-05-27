@@ -2,4 +2,4 @@
 "fuels-wallet": minor
 ---
 
-feat: The Fuel Wallet now support signing transactions without directly broadcasting to the network.
+feat: add support for dapps to sign transactions using Fuel Wallet, without sending them to the network.
