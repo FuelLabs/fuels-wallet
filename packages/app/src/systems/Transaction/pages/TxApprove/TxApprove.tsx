@@ -31,7 +31,7 @@ export const TxApprove = () => {
   return (
     <Box css={styles.wrapper}>
       <Layout.TopBar hideMenu onBack={handleReject} />
-      {shouldShowReviewAlert && <TxReviewAlert />}
+      {shouldShowReviewAlert && <TxReviewAlert signOnly={isSignOnly} />}
       <Dialog.Description as="div" css={styles.description}>
         {isSignOnly && (
           <Box css={{ mb: '$4', fontWeight: '$normal' }}>

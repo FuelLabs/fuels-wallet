@@ -74,14 +74,8 @@ export function TransactionRequest() {
 
       <Layout title={title} isLoading={isLoading}>
         <Layout.TopBar hideMenu hideBackArrow />
-        {shouldShowReviewAlert && <TxReviewAlert />}
+        {shouldShowReviewAlert && <TxReviewAlert signOnly={isSignOnly} />}
         <Layout.Content css={styles.content} noScroll>
-          {isSignOnly && (
-            <Box css={{ mb: '$4', p: '$3', fontWeight: '$normal' }}>
-              You are signing this transaction without broadcasting it to the
-              network.
-            </Box>
-          )}
           {shouldShowTxSimulated && (
             <TxContent.Info
               showDetails
