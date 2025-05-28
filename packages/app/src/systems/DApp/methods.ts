@@ -60,7 +60,6 @@ export class RequestMethods extends ExtensionPageConnection {
       transactionState,
       transactionSummary,
       returnTransactionResponse,
-      signOnly,
     } = input;
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
 
@@ -75,16 +74,11 @@ export class RequestMethods extends ExtensionPageConnection {
         skipCustomFee,
         transactionState,
         transactionSummary,
-        signOnly: input.signOnly,
       })
       .waitForState(Services.txRequest, {
         ...WAIT_FOR_CONFIG,
         done: 'txSuccess',
       });
-
-    if (signOnly) {
-      return state.context.response?.signedTransaction;
-    }
 
     const txId =
       state.context.response?.txResponse?.id ||
@@ -152,7 +146,13 @@ export class RequestMethods extends ExtensionPageConnection {
         done: 'txSuccess',
       });
 
-    return state.context.response?.signedTransaction;
+    const txRequestSigned = state.context.response?.txRequestSigned;
+
+    if (!txRequestSigned) {
+      throw new Error('Transaction request not signed');
+    }
+
+    return JSON.stringify(txRequestSigned.toJSON());
   }
 }
 

@@ -191,8 +191,10 @@ export class TxService {
       provider
     );
 
-    const signature = await wallet.signTransaction(transactionRequest);
-    return { signedTransaction: signature };
+    const txRequest =
+      await wallet.populateTransactionWitnessesSignature(transactionRequest);
+
+    return txRequest;
   }
 
   static async send({

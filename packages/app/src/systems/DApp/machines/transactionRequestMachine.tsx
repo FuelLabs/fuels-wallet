@@ -50,7 +50,7 @@ type MachineContext = {
     txSummaryExecuted?: TransactionSummary;
     txResponse?: TransactionResponse;
     proposedTxRequest?: TransactionRequest;
-    signedTransaction?: string;
+    txRequestSigned?: TransactionRequest;
   };
   fees: {
     baseFee?: BN;
@@ -82,10 +82,7 @@ type SimulateTransactionReturn = {
 
 type MachineServices = {
   send: {
-    data:
-      | TransactionSummary
-      | TransactionResponse
-      | { signedTransaction: string };
+    data: TransactionSummary | TransactionResponse | TransactionRequest;
   };
   prepareFeeInputs: {
     data: PrepareFeeInputForSimulateTransactionReturn;
@@ -143,7 +140,6 @@ export const transactionRequestMachine = createMachine(
       simulatingTransaction: {
         on: {
           SET_CUSTOM_FEES: {
-            cond: (ctx) => !ctx.input.signOnly,
             actions: ['assignCustomFees'],
             target: 'changingCustomFees',
           },
@@ -166,7 +162,6 @@ export const transactionRequestMachine = createMachine(
       simulatingTransactionLoading: {
         on: {
           SET_CUSTOM_FEES: {
-            cond: (ctx) => !ctx.input.signOnly,
             actions: ['assignCustomFees'],
             target: 'changingCustomFees',
           },
@@ -248,7 +243,6 @@ export const transactionRequestMachine = createMachine(
             target: 'failed',
           },
           SET_CUSTOM_FEES: {
-            cond: (ctx) => !ctx.input.signOnly,
             actions: ['assignCustomFees'],
             target: 'changingCustomFees',
           },
@@ -269,43 +263,11 @@ export const transactionRequestMachine = createMachine(
           onDone: [
             {
               target: 'failed',
-              actions: [
-                assign((context, event) => {
-                  return {
-                    errors: {
-                      ...(context.errors || {}),
-                      txApproveError: event.data as VMApiError,
-                    },
-                  };
-                }),
-              ],
+              actions: ['assignTxApproveError'],
               cond: FetchMachine.hasError,
             },
             {
-              actions: [
-                assign({
-                  response: (ctx, ev) => {
-                    const data = ev.data as MachineServices['send']['data'];
-
-                    if ('signedTransaction' in data) {
-                      return {
-                        ...ctx.response,
-                        signedTransaction: data.signedTransaction,
-                      };
-                    }
-                    if ('gqlConnection' in data) {
-                      return {
-                        ...ctx.response,
-                        txResponse: data as TransactionResponse,
-                      };
-                    }
-                    return {
-                      ...ctx.response,
-                      txSummaryExecuted: data as TransactionSummary,
-                    };
-                  },
-                }),
-              ],
+              actions: ['assignApprovedTx'],
               target: 'txSuccess',
             },
           ],
@@ -327,7 +289,6 @@ export const transactionRequestMachine = createMachine(
             target: 'failed',
           },
           SET_CUSTOM_FEES: {
-            cond: (ctx) => !ctx.input.signOnly,
             actions: ['assignCustomFees'],
             target: 'changingCustomFees',
           },
@@ -401,6 +362,21 @@ export const transactionRequestMachine = createMachine(
           };
         },
       }),
+      assignApprovedTx: assign({
+        response: (ctx, ev) => {
+          const isTransactionRequest = 'witnesses' in ev.data;
+          const isTransactionResponse = 'provider' in ev.data;
+
+          return {
+            ...ctx.response,
+            ...(isTransactionRequest
+              ? { txRequestSigned: ev.data as TransactionRequest }
+              : isTransactionResponse
+                ? { txResponse: ev.data as TransactionResponse }
+                : { txSummaryExecuted: ev.data as TransactionSummary }),
+          };
+        },
+      }),
       assignSimulateResult: assign({
         response: (ctx, ev) => ({
           ...ctx.response,
@@ -413,27 +389,24 @@ export const transactionRequestMachine = createMachine(
         }),
       }),
       assignSimulateTxErrors: assign((ctx, ev) => {
-        if (ev.data.simulateTxErrors) {
-          return {
-            ...ctx,
-            response: {
-              ...ctx.response,
-              txSummarySimulated: undefined,
-              proposedTxRequest: undefined,
-            },
-            errors: {
-              ...ctx.errors,
-              simulateTxErrors: ev.data.simulateTxErrors,
-            },
-          };
-        }
-
         return {
           ...ctx,
           errors: {
             ...ctx.errors,
             simulateTxErrors: ev.data.simulateTxErrors,
           },
+        };
+      }),
+      assignTxApproveError: assign((ctx, ev) => {
+        return {
+          ...ctx,
+          errors: {
+            ...ctx.errors,
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+            txApproveError: (ev.data as any)?.error,
+          },
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          error: (ev.data as any)?.error,
         };
       }),
     },
@@ -509,7 +482,8 @@ export const transactionRequestMachine = createMachine(
 
           // If signOnly is true, use the sign method instead
           if (input.signOnly) {
-            return await TxService.sign(input);
+            const txRequestSigned = await TxService.sign(input);
+            return txRequestSigned;
           }
 
           const txResponse = await TxService.send(input);

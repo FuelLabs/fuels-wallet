@@ -368,19 +368,17 @@ export class BackgroundService {
 
     const address = Address.fromDynamicInput(input.address).toString();
 
-    const result = await popupService.sendTransaction({
+    const txRequestSigned = await popupService.signTransaction({
       address,
       provider: input.provider,
       transaction: input.transaction,
       origin,
       title,
       favIconUrl,
-      skipCustomFee: true,
-      signOnly: true, // Flag to just sign, not broadcast
     });
 
     popupService.destroy();
-    return result;
+    return txRequestSigned;
   }
 
   async currentAccount(_: unknown, serverParams: EventOrigin) {
