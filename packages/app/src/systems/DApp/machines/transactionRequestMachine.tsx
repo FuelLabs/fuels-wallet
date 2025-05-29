@@ -389,6 +389,21 @@ export const transactionRequestMachine = createMachine(
         }),
       }),
       assignSimulateTxErrors: assign((ctx, ev) => {
+        if (ev.data.simulateTxErrors) {
+          return {
+            ...ctx,
+            response: {
+              ...ctx.response,
+              txSummarySimulated: undefined,
+              proposedTxRequest: undefined,
+            },
+            errors: {
+              ...ctx.errors,
+              simulateTxErrors: ev.data.simulateTxErrors,
+            },
+          };
+        }
+
         return {
           ...ctx,
           errors: {
