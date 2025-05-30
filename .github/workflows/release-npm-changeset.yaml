@@ -4,6 +4,25 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+      version:
+        description: 'Version to release'
+        required: false
+        type: string
+      dry_run:
+        description: 'Perform dry run'
+        required: false
+        type: boolean
+        default: false
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
