@@ -13,6 +13,7 @@ const {
   REF_NAME,
   LATEST_RELEASE,
   RELEASE_VERSION_HIGHER_THAN_LATEST,
+  INCLUDE_NON_PUBLISHED,
 } = process.env;
 
 function sleep(time: number) {
@@ -99,10 +100,26 @@ async function updatePublishedRelease() {
     pull_number: pull as number,
   });
 
+  let releaseBody = pr.data.body as string;
+
+  if (INCLUDE_NON_PUBLISHED === 'true') {
+    const version = RELEASE_TAG?.replace('v', '') || '';
+    const walletSection = `
+
+## Fuel Wallet Extension 🌟
+
+This release includes updates to the Fuel Wallet browser extension (v${version}), available through the Chrome Web Store.
+
+---
+
+`;
+    releaseBody = walletSection + releaseBody;
+  }
+
   await octokit.rest.repos.updateRelease({
     ...github.context.repo,
     release_id: release.data.id,
-    body: pr.data.body as string,
+    body: releaseBody,
   });
 }
 
