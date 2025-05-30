@@ -1,5 +1,17 @@
 # fuels-wallet
 
+## 0.56.0
+
+### Minor Changes
+
+- [#1927](https://github.com/FuelLabs/fuels-wallet/pull/1927) [`8da89993`](https://github.com/FuelLabs/fuels-wallet/commit/8da89993e4ca64b954df4cf78844a3232862c937) Thanks [@nelitow](https://github.com/nelitow)! - feat: add support for dapps to sign transactions using Fuel Wallet, without sending them to the network.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.56.0
+  - @fuels/playwright-utils@0.56.0
+
 ## 0.55.3
 
 ### Patch Changes
