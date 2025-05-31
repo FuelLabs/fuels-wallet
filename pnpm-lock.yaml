@@ -27,7 +27,7 @@ overrides:
   serve-static@<1.16.0: '>=1.16.0'
   rollup@>=4.0.0 <4.22.4: '>=4.22.4'
   fuels: 0.100.6
-  secp256k1@=5.0.0: '>=5.0.1'
+  secp256k1: '@noble/secp256k1'
   elliptic@<6.6.0: '>=6.6.0'
   vitest@>=2.0.0 <2.1.9: '>2.1.9'
   cross-spawn@<7.0.5: '>=7.0.5'
@@ -10505,9 +10505,6 @@ packages:
   node-addon-api@2.0.2:
     resolution: {integrity: sha512-Ntyt4AIXyaLIuMHF6IOoTakB3K+RWxwtsHNRxllEoA6vPwP9o4866g6YWDLUdnucilZhmkxiHwHr11gAENw+QA==}
 
-  node-addon-api@5.1.0:
-    resolution: {integrity: sha512-eh0GgfEkpnoWDq+VY8OyvYhFEzBk6jIYbRKdIlyTiAXIVJ8PyBaKb0rp7oDtoddbdoHWhq8wwr+XZ81F1rpNdA==}
-
   node-addon-api@6.1.0:
     resolution: {integrity: sha512-+eawOlIgy680F0kBzPUNFhMZGtJ1YmqM6l4+Crf4IkImjYrO/mqPwRMh352g23uIaQKFItcQ64I7KMaJxHgAVA==}
 
@@ -11820,10 +11817,6 @@ packages:
 
   search-insights@2.13.0:
     resolution: {integrity: sha512-Orrsjf9trHHxFRuo9/rzm0KIWmgzE8RMlZMzuhZOJ01Rnz3D0YBAe+V6473t6/H6c7irs6Lt48brULAiRWb3Vw==}
-
-  secp256k1@5.0.1:
-    resolution: {integrity: sha512-lDFs9AAIaWP9UCdtWrotXWWF9t8PWgQDcxqgAnpM9rMqxb3Oaq2J0thzPVSxBwdJgyQtkU/sYtFtbM1RSt/iYA==}
-    engines: {node: '>=18.0.0'}
 
   section-matter@1.0.0:
     resolution: {integrity: sha512-vfD3pmTzGpufjScBh50YHKzEu2lxBWhVEHsNGoEXmCmn2hKGfeNLYMzCJpe8cD7gqX7TJluOVpBkAequ6dgMmA==}
@@ -20979,7 +20972,7 @@ snapshots:
       semver: 7.6.3
       strip-ansi: 5.2.0
       wcwidth: 1.0.1
-      yaml: 2.6.1
+      yaml: 2.7.1
     transitivePeerDependencies:
       - typescript
 
@@ -27312,7 +27305,7 @@ snapshots:
   eciesjs@0.3.21:
     dependencies:
       futoin-hkdf: 1.5.3
-      secp256k1: 5.0.1
+      secp256k1: link:@noble/secp256k1
 
   ee-first@1.1.1: {}
 
@@ -31201,8 +31194,6 @@ snapshots:
 
   node-addon-api@2.0.2: {}
 
-  node-addon-api@5.1.0: {}
-
   node-addon-api@6.1.0: {}
 
   node-addon-api@7.1.1: {}
@@ -32903,12 +32894,6 @@ snapshots:
       ajv-keywords: 5.1.0(ajv@8.12.0)
 
   search-insights@2.13.0: {}
-
-  secp256k1@5.0.1:
-    dependencies:
-      elliptic: 6.6.1
-      node-addon-api: 5.1.0
-      node-gyp-build: 4.8.4
 
   section-matter@1.0.0:
     dependencies:
