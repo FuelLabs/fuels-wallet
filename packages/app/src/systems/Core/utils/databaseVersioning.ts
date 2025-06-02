@@ -217,12 +217,24 @@ export const applyDbVersioning = (db: Dexie) => {
     .upgrade(async (tx) => {
       const accountsTable = tx.table('accounts');
       const accounts = await accountsTable.toArray();
-      const updatedAccounts = accounts.map((account) => ({
-        ...account,
-        address: Address.fromDynamicInput(account.address).toString(),
-      }));
-      await accountsTable.clear();
-      await accountsTable.bulkAdd(updatedAccounts);
+      // check if has bech32 address first
+      const hasBech32Address = accounts.some((account) =>
+        account.address.startsWith('fuel')
+      );
+      if (hasBech32Address) {
+        const updatedAccounts = accounts.map((account) => {
+          if (!account.address.startsWith('fuel')) return account;
+
+          const hexAddress = bech32ToHex(account.address);
+
+          return {
+            ...account,
+            address: hexAddress,
+          };
+        });
+        await accountsTable.clear();
+        await accountsTable.bulkAdd(updatedAccounts);
+      }
     });
 
   // DB VERSION 26
