@@ -75,6 +75,7 @@ export type TxInputs = {
     };
     transactionState?: 'funded' | undefined;
     transactionSummary?: TransactionSummaryJson;
+    signOnly?: boolean;
   };
   send: {
     address?: string;
@@ -175,13 +176,34 @@ export class TxService {
     });
   }
 
+  static async sign({
+    account,
+    address,
+    transactionRequest,
+    providerUrl = '',
+    providerConfig,
+  }: Omit<TxInputs['send'], 'signOnly'>) {
+    const provider = await createProvider(
+      providerUrl || providerConfig?.url || ''
+    );
+    const wallet = new WalletLockedCustom(
+      (account?.address?.toString() || address) as string,
+      provider
+    );
+
+    const txRequest =
+      await wallet.populateTransactionWitnessesSignature(transactionRequest);
+
+    return txRequest;
+  }
+
   static async send({
     account,
     address,
     transactionRequest,
     providerUrl = '',
     providerConfig,
-  }: TxInputs['send']) {
+  }: Omit<TxInputs['send'], 'signOnly'>) {
     const provider = await createProvider(
       providerUrl || providerConfig?.url || ''
     );
