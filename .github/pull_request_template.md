@@ -35,7 +35,7 @@ Remove this section if there are no breaking changes.
 
 # Checklist
 
-- [ ] All **changes** are **covered** by **tests** (or not applicable)
-- [ ] All **changes** are **documented** (or not applicable)
+- [ ] I've added error handling for all actions/requests, and verified how this error will show on UI. (or there was no error handling)
+- [ ] I've reviewed all the copy changed/added in this PR, using AI if needed. (or there was no copy changes)
+- [ ] I checked the resulting UI both in Light and Dark mode (or no UI changes were made)
 - [ ] I **reviewed** the **entire PR** myself (preferably, on GH UI)
-- [ ] I **described** all **Breaking Changes** (or there's none)
