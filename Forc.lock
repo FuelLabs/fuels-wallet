@@ -14,11 +14,11 @@ dependencies = ["std"]
 
 [[package]]
 name = "std"
-source = "git+https://github.com/fuellabs/sway?tag=v0.67.0#d821dcb0c7edb1d6e2a772f5a1ccefe38902eaec"
+source = "git+https://github.com/fuellabs/sway?tag=v0.68.1#7e1bc152face6f1ae20b4274d98446100920e573"
 
 [[package]]
 name = "sway_libs"
-source = "git+https://github.com/FuelLabs/sway-libs?tag=v0.25.0#ca2295ebc2bfe4c26f7455eb0e29c79dba56a5da"
+source = "git+https://github.com/FuelLabs/sway-libs?tag=v0.25.2#f43d8b4aacf60867989408991414958f8eab28c0"
 dependencies = [
     "standards",
     "std",

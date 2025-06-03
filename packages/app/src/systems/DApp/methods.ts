@@ -1,8 +1,7 @@
 import { ExtensionPageConnection } from '@fuel-wallet/connections';
-import { transactionRequestify } from 'fuels';
+import { serializeTransactionResponseJson, transactionRequestify } from 'fuels';
 import { IS_CRX } from '~/config';
 import { Services, store } from '~/store';
-import { AccountService } from '~/systems/Account/services/account';
 import type {
   MessageInputs,
   PopUpServiceInputs,
@@ -24,6 +23,7 @@ export class RequestMethods extends ExtensionPageConnection {
     this.addAssets,
     this.selectNetwork,
     this.addNetwork,
+    this.signTransaction,
   ];
   constructor() {
     super();
@@ -59,6 +59,7 @@ export class RequestMethods extends ExtensionPageConnection {
       skipCustomFee,
       transactionState,
       transactionSummary,
+      returnTransactionResponse,
     } = input;
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
 
@@ -78,7 +79,30 @@ export class RequestMethods extends ExtensionPageConnection {
         ...WAIT_FOR_CONFIG,
         done: 'txSuccess',
       });
-    return state.context.response?.txSummaryExecuted?.id;
+
+    const txId =
+      state.context.response?.txResponse?.id ||
+      state.context.response?.txSummaryExecuted?.id;
+
+    if (!returnTransactionResponse) {
+      return txId;
+    }
+
+    if (state.context.response?.txResponse) {
+      try {
+        const serializedTxResponse = await serializeTransactionResponseJson(
+          state.context.response.txResponse
+        );
+        return serializedTxResponse;
+      } catch (error) {
+        console.error(
+          '[DApp/methods] Error serializing transaction response:',
+          error
+        );
+      }
+    }
+
+    return txId;
   }
 
   async addAssets(input: MessageInputs['addAssets']) {
@@ -100,6 +124,35 @@ export class RequestMethods extends ExtensionPageConnection {
       .requestSelectNetwork(input)
       .waitForState(Services.selectNetworkRequest, WAIT_FOR_CONFIG);
     return true;
+  }
+
+  async signTransaction(input: MessageInputs['signTransaction']) {
+    const { address, provider, transaction, origin, title, favIconUrl } = input;
+    const transactionRequest = transactionRequestify(JSON.parse(transaction));
+
+    const state = await store
+      .requestTransaction({
+        origin,
+        transactionRequest,
+        address,
+        providerConfig: provider,
+        title,
+        favIconUrl,
+        skipCustomFee: true,
+        signOnly: true,
+      })
+      .waitForState(Services.txRequest, {
+        ...WAIT_FOR_CONFIG,
+        done: 'txSuccess',
+      });
+
+    const txRequestSigned = state.context.response?.txRequestSigned;
+
+    if (!txRequestSigned) {
+      throw new Error('Transaction request not signed');
+    }
+
+    return JSON.stringify(txRequestSigned.toJSON());
   }
 }
 

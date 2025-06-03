@@ -1,5 +1,39 @@
 # fuels-wallet
 
+## 0.56.1
+
+### Patch Changes
+
+- [#1928](https://github.com/FuelLabs/fuels-wallet/pull/1928) [`c68c4cea`](https://github.com/FuelLabs/fuels-wallet/commit/c68c4cea9b003a0803c0159b240e0b1b89be2be7) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: create migration to convert old addresses with bech32
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.56.1
+  - @fuels/playwright-utils@0.56.1
+
+## 0.56.0
+
+### Minor Changes
+
+- [#1927](https://github.com/FuelLabs/fuels-wallet/pull/1927) [`8da89993`](https://github.com/FuelLabs/fuels-wallet/commit/8da89993e4ca64b954df4cf78844a3232862c937) Thanks [@nelitow](https://github.com/nelitow)! - feat: add support for dapps to sign transactions using Fuel Wallet, without sending them to the network.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.56.0
+  - @fuels/playwright-utils@0.56.0
+
+## 0.55.3
+
+### Patch Changes
+
+- [#1920](https://github.com/FuelLabs/fuels-wallet/pull/1920) [`f481b115`](https://github.com/FuelLabs/fuels-wallet/commit/f481b1152d58d5eed62e799c1889bc320e62d4f9) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: update to `fuels@0.100.6`
+
+- [#1920](https://github.com/FuelLabs/fuels-wallet/pull/1920) [`f481b115`](https://github.com/FuelLabs/fuels-wallet/commit/f481b1152d58d5eed62e799c1889bc320e62d4f9) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: wait for preconf before returning tx to dapp
+
+- Updated dependencies [[`f481b115`](https://github.com/FuelLabs/fuels-wallet/commit/f481b1152d58d5eed62e799c1889bc320e62d4f9)]:
+  - @fuels/playwright-utils@0.55.3
+  - @fuel-wallet/connections@0.55.3
+
 ## 0.55.2
 
 ### Patch Changes
