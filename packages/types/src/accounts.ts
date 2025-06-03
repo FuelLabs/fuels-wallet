@@ -1,5 +1,4 @@
 import type { BN } from 'fuels';
-
 import type { AssetFuelData } from './asset';
 import type { Coin } from './coin';
 
