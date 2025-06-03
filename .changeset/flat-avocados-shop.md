@@ -3,4 +3,4 @@
 "@fuel-wallet/types": minor
 ---
 
-Redesign wallet connection API for better security
+chore: Testing release of minor changes. PR 1.
