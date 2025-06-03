@@ -4,139 +4,182 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+      version:
+        description: 'Version to release'
+        required: false
+        type: string
+      dry_run:
+        description: 'Perform dry run'
+        required: false
+        type: boolean
+        default: false
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 env:
   BUILD_VERSION: ""
 
 jobs:
-  check-commit:
-    name: Decide if releases or create PR
-    runs-on: buildjet-4vcpu-ubuntu-2204
-    permissions:
-      contents: read
-      pull-requests: read
+  release:
+    name: Release to NPM and GitHub
+    if: |
+      startsWith(github.event.head_commit.message, 'ci(release):') &&
+      github.event.before != '0000000000000000000000000000000000000000'
+    runs-on: ubuntu-latest
+    environment: npm-deploy
     outputs:
-      is_changeset_pr: ${{ steps.check-commit.outputs.is_changeset_pr }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - id: check-commit
-        name: Check if this commit is a regular merge or a changeset PR merge
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          COMMIT_MSG=$(git log -1 --pretty=%B)
-          FIRST_LINE=$(echo "$COMMIT_MSG" | head -n1)
-          if [[ "$FIRST_LINE" == "ci(changesets): versioning packages"* ]]; then
-            PR_NUMBER=$(echo "$FIRST_LINE" | grep -o '#[0-9]\+' | head -n1 | tr -d '#')
-            if [ -n "$PR_NUMBER" ]; then
-              PR_TITLE=$(gh pr view "$PR_NUMBER" --json title -q .title)
-              if [[ "$PR_TITLE" == "ci(changesets): versioning packages" ]]; then
-                echo "is_changeset_pr=true" >> "$GITHUB_OUTPUT"
-                exit 0
-              fi
-            fi
-          fi
-          echo "is_changeset_pr=false" >> "$GITHUB_OUTPUT"
-
-  create-pr:
-    name: Push changes to Changeset PR
-    needs: check-commit
-    if: needs.check-commit.outputs.is_changeset_pr == 'false'
-    runs-on: buildjet-4vcpu-ubuntu-2204
+      has_published_packages: ${{ steps.debug-published.outputs.has_published_packages }}
     permissions:
       contents: write
       pull-requests: write
+      id-token: write
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false
+      
       - name: Extract pnpm version from .tool-versions
         id: get_pnpm
         run: |
           PNPM_VERSION=$(grep '^pnpm' .tool-versions | awk '{print $2}')
           echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
-      - uses: FuelLabs/github-actions/setups/node@master
+      - name: Setup Node and PNPM
+        uses: FuelLabs/github-actions/setups/node@master
         with:
-          node-version: 20.14.0
-          pnpm-version: ${{  env.PNPM_VERSION }}
+          node-version: 20.11.0
+          pnpm-version: ${{ env.PNPM_VERSION }}
+          
+      - name: Install dependencies
+        run: pnpm install
 
-      - name: Setup git user (for changelog step)
-        run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-
-      - name: Create Changeset PR
-        uses: changesets/action@v1
-        with:
-          commit: "ci(changesets): versioning packages"
-          title: "ci(changesets): versioning packages"
-          createGithubReleases: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  publish-npm:
-    name: Release to NPM
-    needs: check-commit
-    if: needs.check-commit.outputs.is_changeset_pr == 'true'
-    runs-on: ubuntu-latest
-    environment: npm-deploy
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - name: Extract pnpm version from .tool-versions
-        id: get_pnpm
-        run: |
-          PNPM_VERSION=$(grep '^pnpm' .tool-versions | awk '{print $2}')
-          echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
-      - uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 20.14.0
-          pnpm-version: ${{  env.PNPM_VERSION }}
       - uses: FuelLabs/github-actions/setups/npm@master
         with:
           npm-token: ${{ secrets.NPM_TOKEN_WALLET }}
 
-      - name: Bump and Collect Version
+      # if there are changesets present, package.json will be bumped
+      - name: Bump and Collect Versions
         run: |
           pnpm changeset version
-          echo "BUILD_VERSION=$(pnpm -s packages:version)" >> $GITHUB_ENV
+          echo "BUILD_VERSION=$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' packages/app/package.json)" >> $GITHUB_ENV
           git reset --hard
+
+      - name: Verify Collected Version
+        id: collect-version
+        run: |
+          echo "::group::Verifying Build Version and Workspace State"
+          echo "Collected version: ${{ env.BUILD_VERSION }}"
+          
+          if [ -z "${{ env.BUILD_VERSION }}" ]; then
+            echo "Error: BUILD_VERSION is not set."
+            exit 1
+          fi
+
+          echo "build_version=${{ env.BUILD_VERSION }}" >> $GITHUB_OUTPUT
+
+          echo "Checking current CHANGELOG.md files (should be already updated by changeset version):"
+          find . -name "CHANGELOG.md" -type f | while read -r file; do
+            echo "CHANGELOG found: $file"
+            head -n 20 "$file"
+            echo "-----------------------"
+          done
+          
+          echo "Verifying .changeset directory state (should be empty of md files after changeset version):"
+          ls -la .changeset/ || echo "No changeset files found (expected)"
+          echo "::endgroup::"
+
+      - name: Ensure NPM access
+        run: npm whoami
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_WALLET }}
 
       - name: Build packages
         run: pnpm build:libs
+
+      - name: Get latest release
+        run: |
+          LATEST_RELEASE=$(pnpm run --silent changeset:get-latest-release)
+          echo "LATEST_RELEASE=$LATEST_RELEASE" >> $GITHUB_ENV
+
+          pnpm add --global semver
+          echo "RELEASE_VERSION_HIGHER_THAN_LATEST=$(semver "v${{ env.BUILD_VERSION }}" "$LATEST_RELEASE" > /dev/null && echo true || echo false)" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to NPM
         id: changesets
         uses: FuelLabs/changesets-action@v2.0.0
         with:
-          publish: pnpm changeset publish --tag next
+          publish: pnpm changeset:publish v${{ env.BUILD_VERSION }} ${{ github.ref_name }}
           createGithubReleases: aggregate
-          version: pnpm changeset version
+          githubReleaseName: v${{ env.BUILD_VERSION }}
+          githubTagName: v${{ env.BUILD_VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN_WALLET }}
 
+      - name: Debug Published Outputs
+        id: debug-published
+        run: |
+          echo "::group::Analyzing publish results"
+          echo "Raw changesets output published: ${{ steps.changesets.outputs.published }}"
+          echo "Run output:"
+          echo "${{ toJSON(steps.changesets.outputs) }}"
+          
+          PUBLISHED_LOGS=$(echo "${{ toJSON(steps.changesets.outputs._processedStdout) }}" | sed 's/\\n/\n/g')
+          PACKAGES_PUBLISHED=false
+          
+          if echo "$PUBLISHED_LOGS" | grep -q "New tag:"; then
+            PACKAGES_PUBLISHED=true
+            echo "Found published packages!"
+            
+            echo "$PUBLISHED_LOGS" | grep -E "Publishing|New tag:" | while read -r line; do
+              if [[ "$line" == *"Publishing"* ]]; then
+                PACKAGE=$(echo "$line" | sed -E 's/.*Publishing ([^ ]+).*/\1/')
+                echo "Detected published package: $PACKAGE"
+              fi
+            done
+          else
+            echo "No packages were published in this run via 'New tag:' log lines."
+            if [ -n "${{ steps.changesets.outputs.publishedPackages }}" ] && [ "${{ steps.changesets.outputs.publishedPackages }}" != "[]" ]; then
+              echo "Found published packages via changesets.outputs.publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}"
+              PACKAGES_PUBLISHED=true
+            fi
+          fi
+          
+          echo "has_published_packages=$PACKAGES_PUBLISHED" >> "$GITHUB_OUTPUT"
+          echo "::endgroup::"
+
+      - name: Enhanced changelog with all packages
+        if: steps.debug-published.outputs.has_published_packages == 'true'
+        run: pnpm changeset:update-changelog
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: v${{ env.BUILD_VERSION }}
+          PUBLISHED: "true"
+          REF_NAME: master
+          LATEST_RELEASE: ${{ env.LATEST_RELEASE }}
+          RELEASE_VERSION_HIGHER_THAN_LATEST: ${{ env.RELEASE_VERSION_HIGHER_THAN_LATEST }}
+          INCLUDE_NON_PUBLISHED: "true"
+
       - name: Build Fuel Wallet
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.debug-published.outputs.has_published_packages == 'true'
         run: pnpm build:crx
         env:
-          ## increase node.js m memory limit for building
-          ## with sourcemaps
           NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Build Fuel Wallet Development
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.debug-published.outputs.has_published_packages == 'true'
         run: pnpm build:crx
         env:
           VITE_CRX_RELEASE: false
@@ -146,7 +189,7 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Upload Production artifacts to Sentry
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.debug-published.outputs.has_published_packages == 'true'
         run: |
           pnpm sentry-cli sourcemaps inject --release ${{ env.BUILD_VERSION }} ./dist-crx
           pnpm sentry-cli sourcemaps upload --release ${{ env.BUILD_VERSION }} ./dist-crx
@@ -157,7 +200,7 @@ jobs:
         working-directory: ./packages/app
 
       - name: Upload Development artifacts to Sentry
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.debug-published.outputs.has_published_packages == 'true'
         run: |
           pnpm sentry-cli sourcemaps inject --release ${{ env.BUILD_VERSION }} ./dist-crx-dev
           pnpm sentry-cli sourcemaps upload --release ${{ env.BUILD_VERSION }} ./dist-crx-dev
@@ -168,10 +211,12 @@ jobs:
         working-directory: ./packages/app
 
       - name: Attach Fuel Wallet to release
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.debug-published.outputs.has_published_packages == 'true'
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: v${{ env.BUILD_VERSION }}
+          name: v${{ env.BUILD_VERSION }}
           files: |
             ./packages/app/dist/*.zip
+            ./packages/app/dist-crx-dev/*.zip
