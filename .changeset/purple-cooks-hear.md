@@ -2,4 +2,4 @@
 "fuels-wallet": patch
 ---
 
-chore: Cleanup JS imports on transaction flow.
+chore: Testing release of patch changes. PR 2.
