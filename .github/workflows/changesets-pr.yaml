@@ -9,70 +9,55 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  create_changeset_pr: # Renamed job for clarity
+  create_changeset_pr: 
     runs-on: ubuntu-latest
-    # environment: fuel-fuels-ts-bot # You might need to set up a similar environment or use default
     permissions:
       contents: write
       pull-requests: write
-    # Condition similar to fuels-ts: run if not a release commit and not just branch creation
     if: |
-      startsWith(github.event.head_commit.message, 'ci(changesets): versioning packages') != true &&
       startsWith(github.event.head_commit.message, 'ci(release):') != true &&
       github.event.before != '0000000000000000000000000000000000000000'
 
     steps:
-      # Checkout
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # persist-credentials: false # Default is true, GITHUB_TOKEN is auto-used by changesets/action
 
-      # Setup (similar to your existing setup)
       - name: Extract pnpm version from .tool-versions
         id: get_pnpm
         run: |
           PNPM_VERSION=$(grep '^pnpm' .tool-versions | awk '{print $2}')
           echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
-      - name: Setup Node and PNPM # Combined setup
-        uses: FuelLabs/github-actions/setups/node@master # Using your existing preferred action
+          
+      - name: Setup Node and PNPM
+        uses: FuelLabs/github-actions/setups/node@master
         with:
-          node-version: 20.11.0 # Or your preferred version
+          node-version: 20.11.0
           pnpm-version: ${{ env.PNPM_VERSION }}
-          # run_install: true # This action might do install by default or you might need pnpm install
 
       - name: Setup git user
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          
-      # Determine Upcoming Version (inspired by fuels-ts, but before changesets/action)
-      # This is tricky because changesets/action@v1 does the versioning itself.
-      # For now, we'll let changesets/action name the PR more generically or use a fixed title.
-      # A more advanced setup could run 'pnpm changeset version', get version, reset, then run action.
+
+      # Determine version for PR title (following fuels-ts pattern)
+      - name: Bump and Collect Versions
+        run: |
+          pnpm changeset version
+          echo "RELEASE_VERSION=v$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' package.json)" >> $GITHUB_ENV
+          git reset --hard
+
+      - name: Set changeset PR title
+        run: |
+          echo "CHANGESET_PR_TITLE=$(echo "ci(release): \`${{ env.RELEASE_VERSION }}\` @ \`${{ github.ref_name }}\`")" >> $GITHUB_ENV
 
       - name: Create Changeset PR
-        id: create_pr_action # Added id to potentially get outputs
+        id: create_pr_action
         uses: changesets/action@v1
         with:
           commit: "ci(release): versioning packages and changesets"
-          title: "ci(release): versioning packages and changesets"
-          createGithubReleases: false # We don't want this action to make GitHub releases
+          title: ${{ env.CHANGESET_PR_TITLE }}
+          createGithubReleases: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Optional: Prettify changelog in the PR branch if needed (fuels-ts does this)
-      # This requires the PR branch to be findable. changesets/action@v1 pushes to a branch like `changeset-release/master`
-      # - name: Prettify changelog in PR branch
-      #   if: steps.create_pr_action.outputs.pull_request_number != '' # Or some other output indicating PR was made
-      #   run: |
-      #     PR_BRANCH_NAME="changeset-release/${{ github.ref_name }}" # Adjust if master is not the only base
-      #     git fetch origin $PR_BRANCH_NAME
-      #     git checkout $PR_BRANCH_NAME
-      #     pnpm changeset:update-changelog # You'll need this script in your package.json
-      #     git push origin $PR_BRANCH_NAME
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Or a specific bot token
-      #     REF_NAME: ${{ github.ref_name }}
-      #     PUBLISHED: "false" 
