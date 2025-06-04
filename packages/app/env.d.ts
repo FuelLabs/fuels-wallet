@@ -10,5 +10,6 @@ declare namespace NodeJS {
     readonly VITE_CRX_VERSION_API: string;
     readonly VITE_CRX_RELEASE: string;
     readonly VITE_AUTO_LOCK_IN_MINUTES: string;
+    readonly VITE_SENTRY_DSN: string;
   }
 }
