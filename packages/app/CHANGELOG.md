@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.57.1
+
+### Patch Changes
+
+- [#1942](https://github.com/FuelLabs/fuels-wallet/pull/1942) [`377b497d`](https://github.com/FuelLabs/fuels-wallet/commit/377b497dc63dd879adc9512ed5522ec74f4cabf5) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: include env type
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.57.1
+  - @fuels/playwright-utils@0.57.1
+
 ## 0.57.0
 
 ### Minor Changes
