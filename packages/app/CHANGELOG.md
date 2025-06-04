@@ -1,5 +1,19 @@
 # fuels-wallet
 
+## 0.57.0
+
+### Minor Changes
+
+- [#1936](https://github.com/FuelLabs/fuels-wallet/pull/1936) [`0275fbdd`](https://github.com/FuelLabs/fuels-wallet/commit/0275fbdd90e73435ebc99387615c4cdf518119c8) Thanks [@nelitow](https://github.com/nelitow)! - chore: Sample release note. Minor. PR 3
+
+### Patch Changes
+
+- [#1935](https://github.com/FuelLabs/fuels-wallet/pull/1935) [`207abdd7`](https://github.com/FuelLabs/fuels-wallet/commit/207abdd714a34c80f453a0a433fe0a504b8b1d3d) Thanks [@nelitow](https://github.com/nelitow)! - chore: Testing release of patch changes. PR 2.
+
+- Updated dependencies [[`dae989cb`](https://github.com/FuelLabs/fuels-wallet/commit/dae989cbda6edd4eeb5d8712a342950d43e2a8db)]:
+  - @fuel-wallet/connections@0.57.0
+  - @fuels/playwright-utils@0.57.0
+
 ## 0.56.1
 
 ### Patch Changes

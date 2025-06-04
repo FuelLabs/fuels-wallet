@@ -1,5 +1,11 @@
 # @fuel-wallet/types
 
+## 0.57.0
+
+### Minor Changes
+
+- [#1934](https://github.com/FuelLabs/fuels-wallet/pull/1934) [`dae989cb`](https://github.com/FuelLabs/fuels-wallet/commit/dae989cbda6edd4eeb5d8712a342950d43e2a8db) Thanks [@nelitow](https://github.com/nelitow)! - chore: Testing release of minor changes. PR 1.
+
 ## 0.56.1
 
 ## 0.56.0
