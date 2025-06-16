@@ -1,4 +1,8 @@
-import type { TransactionRequestLike, TransactionResponse } from 'fuels';
+import type {
+  HashableMessage,
+  TransactionRequestLike,
+  TransactionResponse,
+} from 'fuels';
 import { WalletLocked, hashMessage, transactionRequestify } from 'fuels';
 import { VaultService } from '~/systems/Vault';
 
@@ -9,7 +13,7 @@ export class WalletLockedCustom extends WalletLocked {
    * @param message - Message
    * @returns Promise<string> - Signature a ECDSA 64 bytes
    */
-  async signMessage(message: string): Promise<string> {
+  async signMessage(message: HashableMessage): Promise<string> {
     return VaultService.signMessage({
       message: hashMessage(message),
       address: this.address.toString(),

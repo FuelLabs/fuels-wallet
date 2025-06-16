@@ -1,4 +1,6 @@
 import type { Account } from '@fuel-wallet/types';
+import type { HashableMessage } from 'fuels';
+import { hashMessage } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { AccountService } from '~/systems/Account';
@@ -8,7 +10,7 @@ import { VaultService } from '~/systems/Vault';
 
 type MachineContext = {
   account?: Account;
-  message?: string;
+  message?: HashableMessage;
   address?: string;
   origin?: string;
   title?: string;
@@ -31,7 +33,7 @@ export type SignInputs = {
     origin: string;
     title?: string;
     favIconUrl?: string;
-    message: string;
+    message: HashableMessage;
     address: string;
   };
 };
@@ -138,13 +140,20 @@ export const messageRequestMachine = createMachine(
       }),
     },
     services: {
-      signMessage: FetchMachine.create<VaultInputs['signMessage'], string>({
+      signMessage: FetchMachine.create<
+        { message: HashableMessage; address: string },
+        string
+      >({
         showError: true,
         async fetch({ input }) {
           if (!input?.address || !input?.message) {
             throw new Error('Invalid network input');
           }
-          return VaultService.signMessage(input);
+
+          return VaultService.signMessage({
+            message: hashMessage(input.message),
+            address: input.address,
+          });
         },
       }),
       fetchAccount: FetchMachine.create<{ address: string }, Account>({
