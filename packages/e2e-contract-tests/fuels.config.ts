@@ -18,8 +18,10 @@ export default createConfig({
       );
     }
 
-    contractIds[process.env.CONTRACT_NAME || 'contract'] =
-      contracts?.[0]?.contractId;
+    contractIds = {
+      ...contractIds,
+      [process.env.CONTRACT_NAME || 'contract']: contracts?.[0]?.contractId,
+    };
     writeFileSync(contractIdsPath, JSON.stringify(contractIds, null, 2));
   },
 });

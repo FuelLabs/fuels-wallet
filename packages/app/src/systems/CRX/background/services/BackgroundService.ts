@@ -58,6 +58,7 @@ export class BackgroundService {
     'addNetwork',
     'addAbi',
     'getAbi',
+    'signTransaction',
   ];
 
   constructor(communicationProtocol: CommunicationProtocol) {
@@ -317,6 +318,7 @@ export class BackgroundService {
       skipCustomFee,
       transactionState,
       transactionSummary,
+      returnTransactionResponse,
     } = input;
 
     const popupService = await PopUpService.open(
@@ -326,7 +328,7 @@ export class BackgroundService {
     );
 
     const address = Address.fromDynamicInput(_address).toString();
-    const signedMessage = await popupService.sendTransaction({
+    const transactionResponse = await popupService.sendTransaction({
       address,
       provider,
       transaction,
@@ -336,9 +338,47 @@ export class BackgroundService {
       skipCustomFee,
       transactionState,
       transactionSummary,
+      returnTransactionResponse,
     });
     popupService.destroy();
-    return signedMessage;
+    return transactionResponse;
+  }
+
+  async signTransaction(
+    input: Exclude<MessageInputs['signTransaction'], 'origin'>,
+    serverParams: EventOrigin
+  ) {
+    await this.requireAccountConnection(serverParams.connection, input.address);
+    const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
+    const selectedNetwork = await NetworkService.getSelectedNetwork();
+
+    if (!input.provider || !input.provider.url) {
+      input.provider = {
+        url: selectedNetwork?.url || '',
+      };
+    }
+
+    const popupService = await PopUpService.open(
+      origin,
+      Pages.requestTransaction(),
+      this.communicationProtocol
+    );
+
+    const address = Address.fromDynamicInput(input.address).toString();
+
+    const txRequestSigned = await popupService.signTransaction({
+      address,
+      provider: input.provider,
+      transaction: input.transaction,
+      origin,
+      title,
+      favIconUrl,
+    });
+
+    popupService.destroy();
+    return txRequestSigned;
   }
 
   async currentAccount(_: unknown, serverParams: EventOrigin) {

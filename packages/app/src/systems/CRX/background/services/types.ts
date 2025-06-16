@@ -14,6 +14,14 @@ export type MessageInputs = {
     title?: string;
     favIconUrl?: string;
   };
+  signTransaction: {
+    address: string;
+    origin: string;
+    title?: string;
+    favIconUrl?: string;
+    provider: FuelProviderConfig;
+    transaction: string;
+  };
   sendTransaction: {
     address: string;
     origin: string;
@@ -24,6 +32,8 @@ export type MessageInputs = {
     skipCustomFee?: boolean;
     transactionState?: 'funded' | undefined;
     transactionSummary?: TransactionSummaryJson;
+    returnTransactionResponse?: boolean;
+    signOnly?: boolean;
   };
   addAssets: {
     assets: AssetData[];
