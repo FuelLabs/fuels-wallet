@@ -80,7 +80,7 @@ import { wagmiConfig } from './wagmi-config'; // Your wagmi configuration
 
 // Chain and provider details
 const CHAIN_ID = CHAIN_IDS.fuel.mainnet; // 0 for mainnet
-const PROVIDER_URL = 'https://beta-5.fuel.network/graphql';
+const PROVIDER_URL = 'http://localhost:4000/v1/graphql';
 
 const fuel = new Fuel({
   connectors: defaultConnectors({
@@ -145,7 +145,7 @@ import { FuelProvider } from '@fuels/react';
 import { defaultConnectors } from '@fuels/connectors';
 
 const queryClient = new QueryClient();
-const PROVIDER_URL = 'https://beta-5.fuel.network/graphql';
+const PROVIDER_URL = 'http://localhost:4000/v1/graphql';
 const CHAIN_ID = CHAIN_IDS.fuel.mainnet; // Using mainnet chain ID
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
