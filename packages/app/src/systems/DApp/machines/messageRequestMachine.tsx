@@ -150,26 +150,31 @@ export const messageRequestMachine = createMachine(
             throw new Error('Invalid network input');
           }
 
-          let messageToHash = input.message;
-          if (typeof input.message === 'object' && input.message.personalSign) {
+          let messageString: string;
+          if (typeof input.message === 'string') {
+            messageString = input.message;
+          } else if (
+            typeof input.message === 'object' &&
+            input.message.personalSign
+          ) {
             if (
               typeof input.message.personalSign === 'object' &&
               !Array.isArray(input.message.personalSign)
             ) {
-              messageToHash = {
-                personalSign: new Uint8Array(
-                  Object.values(input.message.personalSign)
-                ),
-              };
+              const uint8Array = new Uint8Array(
+                Object.values(input.message.personalSign)
+              );
+              messageString = hashMessage({ personalSign: uint8Array });
             } else {
-              messageToHash = {
-                personalSign: arrayify(input.message.personalSign),
-              };
+              const uint8Array = arrayify(input.message.personalSign);
+              messageString = hashMessage({ personalSign: uint8Array });
             }
+          } else {
+            messageString = hashMessage(input.message);
           }
 
           return VaultService.signMessage({
-            message: hashMessage(messageToHash),
+            message: messageString,
             address: input.address,
           });
         },
