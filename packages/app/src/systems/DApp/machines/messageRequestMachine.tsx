@@ -1,6 +1,6 @@
 import type { Account } from '@fuel-wallet/types';
 import type { HashableMessage } from 'fuels';
-import { hashMessage } from 'fuels';
+import { arrayify, hashMessage } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { AccountService } from '~/systems/Account';
@@ -150,8 +150,26 @@ export const messageRequestMachine = createMachine(
             throw new Error('Invalid network input');
           }
 
+          let messageToHash = input.message;
+          if (typeof input.message === 'object' && input.message.personalSign) {
+            if (
+              typeof input.message.personalSign === 'object' &&
+              !Array.isArray(input.message.personalSign)
+            ) {
+              messageToHash = {
+                personalSign: new Uint8Array(
+                  Object.values(input.message.personalSign)
+                ),
+              };
+            } else {
+              messageToHash = {
+                personalSign: arrayify(input.message.personalSign),
+              };
+            }
+          }
+
           return VaultService.signMessage({
-            message: hashMessage(input.message),
+            message: hashMessage(messageToHash),
             address: input.address,
           });
         },
