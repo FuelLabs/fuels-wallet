@@ -3,12 +3,12 @@ import type {
   FuelProviderConfig,
   NetworkData,
 } from '@fuel-wallet/types';
-import type { AbiMap } from 'fuels';
+import type { AbiMap, HashableMessage } from 'fuels';
 import type { TransactionSummaryJson } from 'fuels';
 
 export type MessageInputs = {
   signMessage: {
-    message: string;
+    message: HashableMessage;
     address: string;
     origin: string;
     title?: string;
