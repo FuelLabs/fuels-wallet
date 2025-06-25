@@ -1,7 +1,12 @@
 // biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import EventEmitter from 'events';
 import { createProvider } from '@fuel-wallet/connections';
-import { Address, WalletManager, transactionRequestify } from 'fuels';
+import {
+  Address,
+  type HashableMessage,
+  WalletManager,
+  transactionRequestify,
+} from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
 
@@ -28,7 +33,7 @@ export type VaultInputs = {
     providerUrl: string;
   };
   signMessage: {
-    message: string;
+    message: HashableMessage;
     address: string;
   };
   changePassword: {
