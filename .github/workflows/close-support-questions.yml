@@ -10,7 +10,7 @@ jobs:
     steps:
     - name: Comment and Close Issues Tagged with 'forum'
       if: github.event.label.name == 'forum'
-      uses: peter-evans/create-or-update-comment@v3
+      uses: peter-evans/create-or-update-comment@v4
       with:
         issue-number: ${{ github.event.issue.number }}
         body: |
@@ -26,7 +26,7 @@ jobs:
 
     - name: Close Issue
       if: github.event.label.name == 'forum'
-      uses: peter-evans/close-issue@v1
+      uses: peter-evans/close-issue@v3
       with:
         issue-number: ${{ github.event.issue.number }}
       env:
