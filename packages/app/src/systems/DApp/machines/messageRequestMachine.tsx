@@ -1,12 +1,13 @@
 import type { Account } from '@fuel-wallet/types';
 import type { HashableMessage } from 'fuels';
-import { arrayify } from 'fuels';
+import { arrayify, hashMessage } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { AccountService } from '~/systems/Account';
 import { FetchMachine, assignErrorMessage } from '~/systems/Core';
 import type { VaultInputs } from '~/systems/Vault';
 import { VaultService } from '~/systems/Vault';
+import type { Typegen0 } from './messageRequestMachine.typegen';
 
 type MachineContext = {
   account?: Account;
@@ -49,7 +50,6 @@ type MachineEvents =
 export const messageRequestMachine = createMachine(
   {
     predictableActionArguments: true,
-
     tsTypes: {} as import('./messageRequestMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,
@@ -77,6 +77,7 @@ export const messageRequestMachine = createMachine(
           onDone: [
             {
               cond: FetchMachine.hasError,
+              actions: [assignErrorMessage('Missing address')],
               target: 'failed',
             },
             {
@@ -84,6 +85,10 @@ export const messageRequestMachine = createMachine(
               target: 'reviewMessage',
             },
           ],
+          onError: {
+            actions: [assignErrorMessage('Missing address')],
+            target: 'failed',
+          },
         },
       },
       reviewMessage: {
@@ -157,33 +162,38 @@ export const messageRequestMachine = createMachine(
             typeof input.message === 'object' &&
             input.message.personalSign
           ) {
+            const { personalSign } = input.message;
             if (
-              typeof input.message.personalSign === 'object' &&
-              !Array.isArray(input.message.personalSign)
+              typeof personalSign === 'string' &&
+              personalSign.startsWith('0x')
             ) {
-              const uint8Array = new Uint8Array(
-                Object.values(input.message.personalSign)
-              );
+              message = { personalSign: arrayify(personalSign) };
+            } else if (
+              typeof personalSign === 'object' &&
+              !Array.isArray(personalSign)
+            ) {
+              const uint8Array = new Uint8Array(Object.values(personalSign));
               message = { personalSign: uint8Array };
             } else {
-              const uint8Array = arrayify(input.message.personalSign);
-              message = { personalSign: uint8Array };
+              message = { personalSign };
             }
           } else {
             message = input.message;
           }
 
-          return VaultService.signMessage({
+          const result = await VaultService.signMessage({
             message,
             address: input.address,
           });
+
+          return result;
         },
       }),
       fetchAccount: FetchMachine.create<{ address: string }, Account>({
         showError: true,
         async fetch({ input }) {
           if (!input?.address) {
-            throw new Error('Invalid fetchAccount input');
+            throw new Error('Missing address');
           }
           return AccountService.fetchAccount({
             address: input.address,
@@ -195,7 +205,5 @@ export const messageRequestMachine = createMachine(
 );
 
 export type MessageRequestMachine = typeof messageRequestMachine;
-export type MessageRequestService = InterpreterFrom<
-  typeof messageRequestMachine
->;
-export type MessageRequestState = StateFrom<typeof messageRequestMachine>;
+export type MessageRequestService = InterpreterFrom<MessageRequestMachine>;
+export type MessageRequestState = StateFrom<MessageRequestMachine>;

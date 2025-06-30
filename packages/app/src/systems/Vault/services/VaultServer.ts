@@ -4,7 +4,9 @@ import { createProvider } from '@fuel-wallet/connections';
 import {
   Address,
   type HashableMessage,
+  Signer,
   WalletManager,
+  hashMessage,
   transactionRequestify,
 } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
@@ -177,10 +179,12 @@ export class VaultServer extends EventEmitter {
     message,
     address,
   }: VaultInputs['signMessage']): Promise<string> {
-    const wallet = await this.manager.getWallet(
+    const privateKey = this.manager.exportPrivateKey(
       Address.fromDynamicInput(address)
     );
-    const signature = wallet.signMessage(message);
+    const signer = new Signer(privateKey);
+    const hashedMessage = hashMessage(message);
+    const signature = await signer.sign(hashedMessage);
     return signature;
   }
 

@@ -15,7 +15,7 @@ export class WalletLockedCustom extends WalletLocked {
    */
   async signMessage(message: HashableMessage): Promise<string> {
     return VaultService.signMessage({
-      message: hashMessage(message),
+      message,
       address: this.address.toString(),
     });
   }
