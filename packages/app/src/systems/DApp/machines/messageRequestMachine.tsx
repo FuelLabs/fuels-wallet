@@ -1,13 +1,11 @@
 import type { Account } from '@fuel-wallet/types';
 import type { HashableMessage } from 'fuels';
-import { arrayify, hashMessage } from 'fuels';
+import { arrayify } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { AccountService } from '~/systems/Account';
 import { FetchMachine, assignErrorMessage } from '~/systems/Core';
-import type { VaultInputs } from '~/systems/Vault';
 import { VaultService } from '~/systems/Vault';
-import type { Typegen0 } from './messageRequestMachine.typegen';
 
 type MachineContext = {
   account?: Account;
