@@ -6,6 +6,7 @@ import {
   type HashableMessage,
   Signer,
   WalletManager,
+  arrayify,
   hashMessage,
   transactionRequestify,
 } from 'fuels';
@@ -204,6 +205,16 @@ export class VaultServer extends EventEmitter {
       );
 
       signature = await wallet.signMessage({ personalSign: orderedBytes });
+    } else if (
+      typeof message === 'object' &&
+      message.personalSign &&
+      typeof message.personalSign === 'string'
+    ) {
+      // personalSign provided as hex string or plain string
+      const bytes = message.personalSign.startsWith('0x')
+        ? arrayify(message.personalSign)
+        : new TextEncoder().encode(message.personalSign);
+      signature = await wallet.signMessage({ personalSign: bytes });
     }
 
     if (!signature) {
