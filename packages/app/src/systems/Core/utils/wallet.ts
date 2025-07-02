@@ -7,19 +7,6 @@ import { WalletLocked, transactionRequestify } from 'fuels';
 import { VaultService } from '~/systems/Vault';
 
 export class WalletLockedCustom extends WalletLocked {
-  /**
-   * Sign message with wallet instance privateKey
-   *
-   * @param message - Message
-   * @returns Promise<string> - Signature a ECDSA 64 bytes
-   */
-  async signMessage(message: HashableMessage): Promise<string> {
-    return VaultService.signMessage({
-      message,
-      address: this.address.toString(),
-    });
-  }
-
   async signTransaction(
     transactionRequest: TransactionRequestLike
   ): Promise<string> {
