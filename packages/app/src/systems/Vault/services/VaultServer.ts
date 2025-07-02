@@ -193,16 +193,17 @@ export class VaultServer extends EventEmitter {
     ) {
       const keys = Object.keys(message.personalSign);
       const isNumericObject = keys.every((k) => /^\d+$/.test(k));
-      if (isNumericObject) {
-        const rebuiltArray = Uint8Array.from(
-          keys
-            .sort((a, b) => Number.parseInt(a) - Number.parseInt(b)) // ensure ordered indices
-            .map((k) => message.personalSign[k])
-        );
-        signature = await wallet.signMessage({ personalSign: rebuiltArray });
-      } else {
+      if (!isNumericObject) {
         throw new Error('personalSign object does not contain numeric keys');
       }
+
+      const signObj = message.personalSign as unknown as Record<string, number>;
+
+      const orderedBytes = Uint8Array.from(
+        keys.sort((a, b) => Number(a) - Number(b)).map((k) => signObj[k])
+      );
+
+      signature = await wallet.signMessage({ personalSign: orderedBytes });
     }
 
     if (!signature) {
