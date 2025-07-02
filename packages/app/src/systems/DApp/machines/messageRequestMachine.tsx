@@ -153,38 +153,10 @@ export const messageRequestMachine = createMachine(
             throw new Error('Invalid network input');
           }
 
-          let message: HashableMessage;
-          if (typeof input.message === 'string') {
-            message = input.message;
-          } else if (
-            typeof input.message === 'object' &&
-            input.message.personalSign
-          ) {
-            const { personalSign } = input.message;
-            if (
-              typeof personalSign === 'string' &&
-              personalSign.startsWith('0x')
-            ) {
-              message = { personalSign: arrayify(personalSign) };
-            } else if (
-              typeof personalSign === 'object' &&
-              !Array.isArray(personalSign)
-            ) {
-              const uint8Array = new Uint8Array(Object.values(personalSign));
-              message = { personalSign: uint8Array };
-            } else {
-              message = { personalSign };
-            }
-          } else {
-            message = input.message;
-          }
-
-          const result = await VaultService.signMessage({
-            message,
+          return await VaultService.signMessage({
+            message: input.message,
             address: input.address,
           });
-
-          return result;
         },
       }),
       fetchAccount: FetchMachine.create<{ address: string }, Account>({
