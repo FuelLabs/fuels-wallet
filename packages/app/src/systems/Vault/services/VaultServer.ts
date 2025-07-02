@@ -179,12 +179,36 @@ export class VaultServer extends EventEmitter {
     message,
     address,
   }: VaultInputs['signMessage']): Promise<string> {
-    const privateKey = this.manager.exportPrivateKey(
+    const wallet = await this.manager.getWallet(
       Address.fromDynamicInput(address)
     );
-    const signer = new Signer(privateKey);
-    const hashedMessage = hashMessage(message);
-    const signature = await signer.sign(hashedMessage);
+    let signature: string | undefined;
+    if (typeof message === 'string') {
+      signature = await wallet.signMessage(message);
+    }
+    if (
+      typeof message === 'object' &&
+      message.personalSign &&
+      typeof message.personalSign === 'object'
+    ) {
+      const keys = Object.keys(message.personalSign);
+      const isNumericObject = keys.every((k) => /^\d+$/.test(k));
+      if (isNumericObject) {
+        const rebuiltArray = Uint8Array.from(
+          keys
+            .sort((a, b) => Number.parseInt(a) - Number.parseInt(b)) // ensure ordered indices
+            .map((k) => message.personalSign[k])
+        );
+        signature = await wallet.signMessage({ personalSign: rebuiltArray });
+      } else {
+        throw new Error('personalSign object does not contain numeric keys');
+      }
+    }
+
+    if (!signature) {
+      throw new Error('Invalid message');
+    }
+
     return signature;
   }
 
