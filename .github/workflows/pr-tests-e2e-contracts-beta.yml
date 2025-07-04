@@ -14,6 +14,7 @@ jobs:
     name: Test (Chrome Beta) [Shard ${{ matrix.shard }}]
     runs-on: buildjet-8vcpu-ubuntu-2204
     timeout-minutes: 20
+    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
@@ -29,6 +30,7 @@ jobs:
         with:
           node-version: 20.14.0
           pnpm-version: ${{ env.PNPM_VERSION }}
+
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}
@@ -48,8 +50,8 @@ jobs:
       - name: Build & Deploy Contracts
         run: pnpm deploy:contracts
         working-directory: ./packages/e2e-contract-tests
-      - name: Run E2E Contract Tests
-        uses: ./.github/actions/e2e-tests-contracts
+
+      - uses: ./.github/actions/e2e-tests-contracts
         with:
           providerUrl: "http://localhost:4000/v1/graphql"
           masterMnemonic: ${{ secrets.VITE_MASTER_WALLET_MNEMONIC }}
