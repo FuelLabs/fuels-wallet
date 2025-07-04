@@ -37,17 +37,16 @@ export function TransferAssets() {
 
   useEffect(() => {
     let abort = false;
-    (async () => {
-      try {
-        const provider = await Provider.create(FUEL_PROVIDER_URL);
-        if (abort) return;
-        const baseAssetId = await provider.getBaseAssetId();
+    const provider = new Provider(FUEL_PROVIDER_URL);
+    provider
+      .getBaseAssetId()
+      .then((baseAssetId) => {
         if (abort) return;
         setAssetId(baseAssetId);
-      } catch (err) {
+      })
+      .catch((err) => {
         console.error('Failed to connect to Fuel provider', err);
-      }
-    })();
+      });
     return () => {
       abort = true;
     };
@@ -110,9 +109,7 @@ export function TransferAssets() {
               // TODO: https://github.com/FuelLabs/fuel-ui/issues/323
               key={decimals}
               value={amount}
-              onChange={(value) =>
-                setAmount(value as unknown as BN | null)
-              }
+              onChange={(value) => setAmount(value as unknown as BN | null)}
               hiddenBalance
               units={decimals}
             />
