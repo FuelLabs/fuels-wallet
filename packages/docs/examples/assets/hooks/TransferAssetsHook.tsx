@@ -9,6 +9,15 @@ import { ExampleBox } from '../../../src/components/ExampleBox';
 import { useLoading } from '../../../src/hooks/useLoading';
 import { getAssetByChain } from '../../../src/utils/getAssetByChain';
 
+// Resolve Fuel provider URL
+const DEFAULT_PROVIDER_URL = 'https://testnet.fuel.network/v1/graphql';
+const ENV_PROVIDER_URL = process.env.NEXT_PUBLIC_FUEL_PROVIDER_URL;
+export const FUEL_PROVIDER_URL =
+  ENV_PROVIDER_URL ||
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost'
+    ? 'http://localhost:4000/v1/graphql'
+    : DEFAULT_PROVIDER_URL);
+
 export function TransferAssetsHook() {
   const { fuel } = useFuel();
   const { assets } = useAssets();
@@ -28,13 +37,20 @@ export function TransferAssetsHook() {
   /* transferHook:start */
   const { wallet } = useWallet(); // or useAccount(address);
 
+
   useEffect(() => {
     let abort = false;
-    const provider = new Provider('http://localhost:4000/v1/graphql');
-    provider.getBaseAssetId().then((assetId) => {
-      if (abort) return;
-      setAssetId(assetId);
-    });
+    (async () => {
+      try {
+        const provider = await Provider.create(FUEL_PROVIDER_URL);
+        if (abort) return;
+        const baseAssetId = await provider.getBaseAssetId();
+        if (abort) return;
+        setAssetId(baseAssetId);
+      } catch (err) {
+        console.error('Failed to connect to Fuel provider', err);
+      }
+    })();
     return () => {
       abort = true;
     };
@@ -95,7 +111,9 @@ export function TransferAssetsHook() {
               // TODO: https://github.com/FuelLabs/fuel-ui/issues/323
               key={decimals}
               value={amount}
-              onChange={(value) => setAmount(value)}
+              onChange={(value) =>
+                setAmount(value as unknown as BN | null)
+              }
               hiddenBalance
               units={decimals}
             />
@@ -116,7 +134,7 @@ export function TransferAssetsHook() {
           )}
           <Box>
             <Button
-              onPress={() =>
+              onClick={() =>
                 amount &&
                 assetId &&
                 sendTransaction(amount, receiverAddress, assetId)
