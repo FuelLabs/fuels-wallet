@@ -12,7 +12,7 @@ import { getAssetByChain } from '../../../src/utils/getAssetByChain';
 // Resolve Fuel provider URL
 const DEFAULT_PROVIDER_URL = 'https://testnet.fuel.network/v1/graphql';
 const ENV_PROVIDER_URL = process.env.NEXT_PUBLIC_FUEL_PROVIDER_URL;
-export const FUEL_PROVIDER_URL =
+const FUEL_PROVIDER_URL =
   ENV_PROVIDER_URL ||
   (typeof window !== 'undefined' && window.location.hostname === 'localhost'
     ? 'http://localhost:4000/v1/graphql'
