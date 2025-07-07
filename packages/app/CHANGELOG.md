@@ -1,5 +1,119 @@
 # fuels-wallet
 
+## 0.57.1
+
+### Patch Changes
+
+- [#1942](https://github.com/FuelLabs/fuels-wallet/pull/1942) [`377b497d`](https://github.com/FuelLabs/fuels-wallet/commit/377b497dc63dd879adc9512ed5522ec74f4cabf5) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: include env type
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.57.1
+  - @fuels/playwright-utils@0.57.1
+
+## 0.57.0
+
+### Minor Changes
+
+- [#1936](https://github.com/FuelLabs/fuels-wallet/pull/1936) [`0275fbdd`](https://github.com/FuelLabs/fuels-wallet/commit/0275fbdd90e73435ebc99387615c4cdf518119c8) Thanks [@nelitow](https://github.com/nelitow)! - chore: Sample release note. Minor. PR 3
+
+### Patch Changes
+
+- [#1935](https://github.com/FuelLabs/fuels-wallet/pull/1935) [`207abdd7`](https://github.com/FuelLabs/fuels-wallet/commit/207abdd714a34c80f453a0a433fe0a504b8b1d3d) Thanks [@nelitow](https://github.com/nelitow)! - chore: Testing release of patch changes. PR 2.
+
+- Updated dependencies [[`dae989cb`](https://github.com/FuelLabs/fuels-wallet/commit/dae989cbda6edd4eeb5d8712a342950d43e2a8db)]:
+  - @fuel-wallet/connections@0.57.0
+  - @fuels/playwright-utils@0.57.0
+
+## 0.56.1
+
+### Patch Changes
+
+- [#1928](https://github.com/FuelLabs/fuels-wallet/pull/1928) [`c68c4cea`](https://github.com/FuelLabs/fuels-wallet/commit/c68c4cea9b003a0803c0159b240e0b1b89be2be7) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: create migration to convert old addresses with bech32
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.56.1
+  - @fuels/playwright-utils@0.56.1
+
+## 0.56.0
+
+### Minor Changes
+
+- [#1927](https://github.com/FuelLabs/fuels-wallet/pull/1927) [`8da89993`](https://github.com/FuelLabs/fuels-wallet/commit/8da89993e4ca64b954df4cf78844a3232862c937) Thanks [@nelitow](https://github.com/nelitow)! - feat: add support for dapps to sign transactions using Fuel Wallet, without sending them to the network.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.56.0
+  - @fuels/playwright-utils@0.56.0
+
+## 0.55.3
+
+### Patch Changes
+
+- [#1920](https://github.com/FuelLabs/fuels-wallet/pull/1920) [`f481b115`](https://github.com/FuelLabs/fuels-wallet/commit/f481b1152d58d5eed62e799c1889bc320e62d4f9) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: update to `fuels@0.100.6`
+
+- [#1920](https://github.com/FuelLabs/fuels-wallet/pull/1920) [`f481b115`](https://github.com/FuelLabs/fuels-wallet/commit/f481b1152d58d5eed62e799c1889bc320e62d4f9) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: wait for preconf before returning tx to dapp
+
+- Updated dependencies [[`f481b115`](https://github.com/FuelLabs/fuels-wallet/commit/f481b1152d58d5eed62e799c1889bc320e62d4f9)]:
+  - @fuels/playwright-utils@0.55.3
+  - @fuel-wallet/connections@0.55.3
+
+## 0.55.2
+
+### Patch Changes
+
+- [#1916](https://github.com/FuelLabs/fuels-wallet/pull/1916) [`4b38db67`](https://github.com/FuelLabs/fuels-wallet/commit/4b38db67124a627e478ba302998567c609ab0055) Thanks [@nelitow](https://github.com/nelitow)! - fix: include dryRun before showing transaction on approval screen coming from dapp
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.55.2
+  - @fuels/playwright-utils@0.55.2
+
+## 0.55.1
+
+### Patch Changes
+
+- [#1911](https://github.com/FuelLabs/fuels-wallet/pull/1911) [`e29d09a4`](https://github.com/FuelLabs/fuels-wallet/commit/e29d09a4a329add71c8f830595c22772e75da87d) Thanks [@nelitow](https://github.com/nelitow)! - fix: Rely on TS-SDK to define fee of a maximum balance transaction
+
+- [#1914](https://github.com/FuelLabs/fuels-wallet/pull/1914) [`ee88a271`](https://github.com/FuelLabs/fuels-wallet/commit/ee88a27193886818237a90b99db6415986701170) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: support hashable messages that are bytes only
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.55.1
+  - @fuels/playwright-utils@0.55.1
+
+## 0.55.0
+
+### Minor Changes
+
+- [#1904](https://github.com/FuelLabs/fuels-wallet/pull/1904) [`6dea2d0a`](https://github.com/FuelLabs/fuels-wallet/commit/6dea2d0a6f4e58ab848b11756767baa81b7a893e) Thanks [@Vitosoaresp](https://github.com/Vitosoaresp)! - feat: Add integration with BakoID in "Send" and "TransactionView" screens
+
+- [#1894](https://github.com/FuelLabs/fuels-wallet/pull/1894) [`2ed8e18c`](https://github.com/FuelLabs/fuels-wallet/commit/2ed8e18c67f6ef55d63a134e6e14ae4eebcbee93) Thanks [@nelitow](https://github.com/nelitow)! - fix: Blinking error feedback in the send screen.
+
+- [#1897](https://github.com/FuelLabs/fuels-wallet/pull/1897) [`620a358c`](https://github.com/FuelLabs/fuels-wallet/commit/620a358c2e9458a6d4b254b38c3b260901baf969) Thanks [@nelitow](https://github.com/nelitow)! - feat: Added a transaction verification step that makes sure the transaction being viewed is the same as the one being signed.
+
+- [#1899](https://github.com/FuelLabs/fuels-wallet/pull/1899) [`0ca3d69a`](https://github.com/FuelLabs/fuels-wallet/commit/0ca3d69a01209e7a3b7d8d93a14ed82184385925) Thanks [@nelitow](https://github.com/nelitow)! - Enable the signature of HashableMessages
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.55.0
+  - @fuels/playwright-utils@0.55.0
+
+## 0.54.0
+
+### Minor Changes
+
+- [#1901](https://github.com/FuelLabs/fuels-wallet/pull/1901) [`72a8b10f`](https://github.com/FuelLabs/fuels-wallet/commit/72a8b10f7d52c9ea0e0b75b4da469f4820c5cd07) Thanks [@nelitow](https://github.com/nelitow)! - chore: Fixes audit vulnerabilities.
+
+- [#1898](https://github.com/FuelLabs/fuels-wallet/pull/1898) [`9095d38b`](https://github.com/FuelLabs/fuels-wallet/commit/9095d38bab19936323e55dfe5444f6f632e12fc9) Thanks [@nelitow](https://github.com/nelitow)! - feat: Now the wallet navigates back to home when clicking back after sending a transaction.
+
+- [#1900](https://github.com/FuelLabs/fuels-wallet/pull/1900) [`47ca379c`](https://github.com/FuelLabs/fuels-wallet/commit/47ca379c56705bfd802e82aa9e97f4e057b57d63) Thanks [@nelitow](https://github.com/nelitow)! - fix: on transaction screen, very large amounts will not be cut anymore.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.54.0
+  - @fuels/playwright-utils@0.54.0
+
 ## 0.53.0
 
 ### Minor Changes

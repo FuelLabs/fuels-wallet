@@ -5,7 +5,6 @@ import type {
 } from '@fuel-wallet/types';
 import type {
   TransactionRequest,
-  TransactionSummary,
   TransactionSummaryJson,
   WalletLocked,
 } from 'fuels';
@@ -20,14 +19,12 @@ import {
   TransactionResponse,
   TransactionStatus,
   assembleTransactionSummary,
-  assembleTransactionSummaryFromJson,
   bn,
-  deserializeProviderCache,
   getTransactionSummary,
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
 } from 'fuels';
-import { WalletLockedCustom, db, delay } from '~/systems/Core';
+import { WalletLockedCustom, db } from '~/systems/Core';
 
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
@@ -73,6 +70,7 @@ export type TxInputs = {
     };
     transactionState?: 'funded' | undefined;
     transactionSummary?: TransactionSummaryJson;
+    signOnly?: boolean;
   };
   send: {
     address?: string;
@@ -80,6 +78,7 @@ export type TxInputs = {
     transactionRequest: TransactionRequest;
     providerUrl?: string;
     providerConfig?: FuelProviderConfig;
+    origin?: string;
   };
   simulateTransaction: {
     transactionRequest: TransactionRequest;
@@ -172,13 +171,13 @@ export class TxService {
     });
   }
 
-  static async send({
+  static async sign({
     account,
     address,
     transactionRequest,
     providerUrl = '',
     providerConfig,
-  }: TxInputs['send']) {
+  }: Omit<TxInputs['send'], 'signOnly'>) {
     const provider = await createProvider(
       providerUrl || providerConfig?.url || ''
     );
@@ -186,8 +185,29 @@ export class TxService {
       (account?.address?.toString() || address) as string,
       provider
     );
-    const txSent = await wallet.sendTransaction(transactionRequest);
 
+    const txRequest =
+      await wallet.populateTransactionWitnessesSignature(transactionRequest);
+
+    return txRequest;
+  }
+
+  static async send({
+    account,
+    address,
+    transactionRequest,
+    providerUrl = '',
+    providerConfig,
+  }: Omit<TxInputs['send'], 'signOnly'>) {
+    const provider = await createProvider(
+      providerUrl || providerConfig?.url || ''
+    );
+    const wallet = new WalletLockedCustom(
+      (account?.address?.toString() || address) as string,
+      provider
+    );
+
+    const txSent = await wallet.sendTransaction(transactionRequest);
     return txSent;
   }
 
@@ -215,7 +235,6 @@ export class TxService {
     tip: inputCustomTip,
     gasLimit: inputCustomGasLimit,
     transactionState,
-    transactionSummary,
   }: TxInputs['simulateTransaction']) {
     const provider = new Provider(providerConfig?.url || '', {
       cache: providerConfig?.cache,
@@ -282,20 +301,11 @@ export class TxService {
         inputs: transaction.inputs,
       });
 
-      let txSummary: TransactionSummary<void>;
-      if (transactionSummary) {
-        const summary = await assembleTransactionSummaryFromJson({
-          transactionSummary,
-          provider,
-        });
-        txSummary = summary;
-      } else {
-        txSummary = await getTransactionSummaryFromRequest({
-          provider,
-          transactionRequest: proposedTxRequest,
-          abiMap,
-        });
-      }
+      const txSummary = await getTransactionSummaryFromRequest({
+        provider,
+        transactionRequest: proposedTxRequest,
+        abiMap,
+      });
 
       // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
       const feeAdaptedToSdkDiff = txSummary.fee.add(1);
@@ -460,6 +470,10 @@ export class TxService {
 
     if (!to || !assetId || !amount || !tip || !gasLimit) {
       throw new Error('Missing params for transaction request');
+    }
+
+    if (amount.lte(0)) {
+      throw new Error('Amount must be greater than 0');
     }
 
     const [network, account] = await Promise.all([

@@ -92,12 +92,9 @@ const schemaFactory = (provider?: Provider) =>
       asset: yup.string().required('Asset is required'),
       amount: yup
         .mixed<BN>()
-        .test('positive', 'Amount must be greater than 0', (value) => {
-          return value?.gt(0);
-        })
         .test('balance', 'Insufficient funds', async (value, ctx) => {
-          const { asset, fees } = ctx.parent as SendFormValues;
-          const { balances, baseFee } = ctx.options.context as SchemaOptions;
+          const { asset } = ctx.parent as SendFormValues;
+          const { balances } = ctx.options.context as SchemaOptions;
 
           const balanceAssetSelected = balances?.find(
             ({ assetId }) => assetId === asset
@@ -108,20 +105,6 @@ const schemaFactory = (provider?: Provider) =>
 
           if (value.gt(balanceAssetSelected.amount)) {
             return false;
-          }
-
-          const baseAssetId = await provider?.getBaseAssetId();
-
-          const isSendingBaseAssetId =
-            asset && baseAssetId?.toLowerCase() === asset.toLowerCase();
-          if (isSendingBaseAssetId) {
-            // It means "baseFee" is being calculated
-            if (!baseFee) {
-              return true;
-            }
-
-            const totalAmount = value.add(baseFee.add(fees.tip.amount));
-            return totalAmount.lte(bn(balanceAssetSelected.amount));
           }
 
           return true;
@@ -386,6 +369,11 @@ export function useSend() {
   }
 
   function submit() {
+    const values = form.getValues();
+    if (!form.formState.isValid || !values.amount || values.amount.lte(0)) {
+      form.trigger();
+      return;
+    }
     service.send('CONFIRM');
   }
 

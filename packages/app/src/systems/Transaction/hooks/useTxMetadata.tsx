@@ -1,13 +1,16 @@
-import type { Operation, TransactionSummary } from 'fuels';
+import type { Operation } from 'fuels';
 import { Address, OperationName } from 'fuels';
 import { useMemo } from 'react';
 import { useAccounts } from '~/systems/Account';
 
-import { OperationDirection } from '../types';
+import {
+  OperationDirection,
+  type TransactionSummaryWithDomain,
+} from '../types';
 import { formatDate, getOperationDirection } from '../utils';
 
 type UseTxMetadataProps = {
-  transaction: TransactionSummary;
+  transaction: TransactionSummaryWithDomain;
   ownerAddress: string;
 };
 
@@ -46,8 +49,12 @@ export function useTxMetadata({
     'seconds ago'
   );
 
+  const opDirection = useMemo(
+    () => getOperationDirection(mainOperation, ownerAddress),
+    [mainOperation, ownerAddress]
+  );
+
   const toOrFromText = useMemo(() => {
-    const opDirection = getOperationDirection(mainOperation, ownerAddress);
     switch (opDirection) {
       case OperationDirection.to:
         return 'To: ';
@@ -56,16 +63,17 @@ export function useTxMetadata({
       default:
         return '';
     }
-  }, [ownerAddress, mainOperation]);
+  }, [opDirection]);
 
   const toOrFromAddress = useMemo(() => {
-    const opDirection = getOperationDirection(mainOperation, ownerAddress);
     const address =
       opDirection === OperationDirection.to
         ? mainOperation.to?.address
         : mainOperation.from?.address;
     return getAddress(address);
-  }, [ownerAddress, mainOperation]);
+  }, [opDirection, mainOperation]);
+
+  const toDomain = useMemo(() => mainOperation.to?.domain, [mainOperation]);
 
   return {
     toOrFromAddress,
@@ -75,5 +83,6 @@ export function useTxMetadata({
     id,
     operation: mainOperation,
     status,
+    toDomain,
   };
 }

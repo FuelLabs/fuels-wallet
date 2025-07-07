@@ -8,6 +8,45 @@ import {
 } from 'fuels';
 import { DEFAULT_NETWORKS } from '~/networks';
 
+function bech32ToHex(bech32Address: string): string {
+  // Remove the 'fuel' prefix
+  const withoutPrefix = bech32Address.slice(4);
+
+  // Base32 alphabet used by bech32
+  const ALPHABET = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
+
+  // Convert base32 to bytes
+  let value = 0;
+  let bits = 0;
+  const bytes: number[] = [];
+
+  // Skip the first character (it's a separator)
+  for (let i = 1; i < withoutPrefix.length; i++) {
+    const char = withoutPrefix[i];
+    const digit = ALPHABET.indexOf(char.toLowerCase());
+
+    // Shift left by 5 bits and add the new digit
+    value = (value << 5) | digit;
+    bits += 5;
+
+    // Extract complete bytes
+    while (bits >= 8) {
+      bytes.push((value >> (bits - 8)) & 0xff);
+      bits -= 8;
+      value &= (1 << bits) - 1; // Clear the bits we just extracted
+    }
+  }
+
+  // Take only the first 32 bytes (64 hex characters)
+  const hex = bytes
+    .slice(0, 32)
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+
+  // Add 0x prefix
+  return `0x${hex}`;
+}
+
 export const applyDbVersioning = (db: Dexie) => {
   // DB VERSION 19
   db.version(19)
@@ -178,12 +217,24 @@ export const applyDbVersioning = (db: Dexie) => {
     .upgrade(async (tx) => {
       const accountsTable = tx.table('accounts');
       const accounts = await accountsTable.toArray();
-      const updatedAccounts = accounts.map((account) => ({
-        ...account,
-        address: Address.fromDynamicInput(account.address).toString(),
-      }));
-      await accountsTable.clear();
-      await accountsTable.bulkAdd(updatedAccounts);
+      // check if has bech32 address first
+      const hasBech32Address = accounts.some((account) =>
+        account.address.startsWith('fuel')
+      );
+      if (hasBech32Address) {
+        const updatedAccounts = accounts.map((account) => {
+          if (!account.address.startsWith('fuel')) return account;
+
+          const hexAddress = bech32ToHex(account.address);
+
+          return {
+            ...account,
+            address: hexAddress,
+          };
+        });
+        await accountsTable.clear();
+        await accountsTable.bulkAdd(updatedAccounts);
+      }
     });
 
   // DB VERSION 26
@@ -246,4 +297,41 @@ export const applyDbVersioning = (db: Dexie) => {
     abis: '&contractId',
     errors: '&id',
   });
+
+  // DB VERSION 29
+  // Make sure accounts are checksum addresses
+  db.version(29)
+    .stores({
+      vaults: 'key',
+      accounts: '&address, &name',
+      networks: '&id, &url, &name, chainId',
+      connections: 'origin',
+      transactionsCursors: '++id, address, size, providerUrl, endCursor',
+      assets: '&name, &symbol',
+      indexedAssets: 'key, fetchedAt',
+      abis: '&contractId',
+      errors: '&id',
+    })
+    .upgrade(async (tx) => {
+      const accountsTable = tx.table('accounts');
+      const accounts = await accountsTable.toArray();
+      // check if has bech32 address first
+      const hasBech32Address = accounts.some((account) =>
+        account.address.startsWith('fuel')
+      );
+      if (hasBech32Address) {
+        const updatedAccounts = accounts.map((account) => {
+          if (!account.address.startsWith('fuel')) return account;
+
+          const hexAddress = bech32ToHex(account.address);
+
+          return {
+            ...account,
+            address: hexAddress,
+          };
+        });
+        await accountsTable.clear();
+        await accountsTable.bulkAdd(updatedAccounts);
+      }
+    });
 };

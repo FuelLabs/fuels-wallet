@@ -1,7 +1,7 @@
 {
   "name": "fuels-wallet",
   "private": true,
-  "version": "0.53.0",
+  "version": "0.57.1",
   "type": "module",
   "database": "23",
   "scripts": {
@@ -20,6 +20,7 @@
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
+    "@bako-id/sdk": "0.0.18",
     "@fontsource/source-code-pro": "5.0.13",
     "@fuel-ui/css": "0.23.3",
     "@fuel-ui/icons": "0.23.3",
@@ -43,7 +44,7 @@
     "events": "3.3.0",
     "fake-indexeddb": "4.0.2",
     "framer-motion": "10.16.4",
-    "fuels": "0.100.0",
+    "fuels": "0.100.6",
     "json-edit-react": "1.13.3",
     "json-rpc-2.0": "1.7.0",
     "lodash.debounce": "4.0.8",
@@ -102,7 +103,7 @@
     "ts-jest-mock-import-meta": "1.1.0",
     "tsconfig-paths-webpack-plugin": "4.1.0",
     "typescript": "5.2.2",
-    "vite": "6.1.3",
+    "vite": "6.1.5",
     "vite-plugin-clean": "1.0.0",
     "vite-plugin-static-copy": "2.2.0",
     "vite-tsconfig-paths": "5.1.4",

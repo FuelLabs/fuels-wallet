@@ -11,7 +11,11 @@ const IS_CI = process.env.CI;
 export const playwrightConfig: PlaywrightTestConfig = {
   workers: 1,
   retries: IS_CI ? 1 : 0,
-  testMatch: 'playwright/**/*.test.ts',
+  testMatch: [
+    'playwright/e2e/SendTransaction.test.ts',
+    'playwright/crx/crx.test.ts',
+    'playwright/**/*.test.ts',
+  ],
   testDir: 'playwright/',
   outputDir: 'playwright-results/',
   // stop on first failure

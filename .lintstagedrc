@@ -1,6 +1,4 @@
 {
-  "**/*.(js|jsx|ts|tsx|json|mdx|html|css)": [
-    "biome check --apply-unsafe --diagnostic-level=error --max-diagnostics=1000"
-  ],
-  ".{ts,tsx}": ["tsc --noEmit"]
+  "**/*.{js,jsx,ts,tsx,json,mdx,html,css}": "biome check --write --unsafe --diagnostic-level=error --max-diagnostics=1000",
+  ".{ts,tsx}": "tsc --noEmit"
 }
