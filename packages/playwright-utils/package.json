@@ -26,15 +26,15 @@
     "adm-zip": "^0.5.10"
   },
   "devDependencies": {
-    "fuels": "0.100.6",
     "@fuels/ts-config": "^0.26.0",
     "@fuels/tsup-config": "^0.26.0",
     "@playwright/test": "1.46.1",
     "@types/adm-zip": "^0.5.3",
+    "fuels": "0.101.2",
     "tsup": "^7.2.0"
   },
   "peerDependencies": {
-    "fuels": ">=0.100.6",
-    "@playwright/test": ">=1.46.1"
+    "@playwright/test": ">=1.46.1",
+    "fuels": ">=0.100.6"
   }
 }
