@@ -618,38 +618,23 @@ test.describe('FuelWallet Extension', () => {
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         msg: any
       ) {
-        console.log('🔵 Starting approveMessageSignCheckWithMessage');
-        console.log(
-          '🔵 Authorized account:',
-          authorizedAccount.name,
-          authorizedAccount.address
-        );
-        console.log('🔵 Message to sign:', JSON.stringify(msg));
-
         const signedMessagePromise = blankPage.evaluate(
           async ([address, msg]) => {
-            console.log('🟢 Inside evaluate - address:', address);
-            console.log('🟢 Inside evaluate - msg:', JSON.stringify(msg));
             const wallet = await window.fuel.getWallet(address as string);
-            console.log('🟢 Got wallet instance');
             // biome-ignore lint/suspicious/noExplicitAny: <explanation>
             const result = await wallet.signMessage(msg as any);
-            console.log('🟢 Signed message result:', result);
             return result;
           },
           [authorizedAccount.address.toString(), msg]
         );
-        console.log('🔵 Created signedMessagePromise');
 
         const signMessageRequest = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
           timeout: 30_000,
         });
-        console.log('🔵 Got signMessageRequest page');
 
         // Assert message preview when it is renderable as plain text
         if (typeof msg === 'string') {
-          console.log('🔵 Message is string, checking hasText');
           await hasText(signMessageRequest, msg);
         } else if (
           typeof msg === 'object' &&
@@ -657,10 +642,6 @@ test.describe('FuelWallet Extension', () => {
           // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           typeof (msg as any).personalSign === 'string'
         ) {
-          console.log(
-            '🔵 Message is object with personalSign string, checking hasText',
-            msg.personalSign
-          );
           // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           await hasText(signMessageRequest, (msg as any).personalSign);
         } else if (
@@ -669,47 +650,29 @@ test.describe('FuelWallet Extension', () => {
           // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           (msg as any).personalSign instanceof Uint8Array
         ) {
-          console.log(
-            '🔵 Message is object with personalSign Uint8Array, skipping hasText check'
-          );
           // For Uint8Array, we can't easily check the text content, so we skip this assertion
         }
-        console.log('🔵 Finished message preview assertions');
 
         await waitAriaLabel(signMessageRequest, authorizedAccount.name);
-        console.log('🔵 Found account name label');
 
         await getButtonByText(signMessageRequest, /sign/i).click();
-        console.log('🔵 Clicked sign button');
 
         const signed = await signedMessagePromise;
-        console.log('🔵 Got signed result:', signed);
 
         const messageHash = hashMessage(msg);
-        console.log('🔵 Message hash:', messageHash);
-        console.log('🔵 Original message for hashing:', JSON.stringify(msg));
-        console.log('🔵 Message type:', typeof msg);
 
         const addressSigner = Signer.recoverAddress(messageHash, signed);
-        console.log('🔵 Recovered address:', addressSigner.toString());
-        console.log('🔵 Expected address:', authorizedAccount.address);
 
         // Let's also check what the wallet address is to make sure we have the right wallet
-        const walletAddress = await blankPage.evaluate(
+        const _walletAddress = await blankPage.evaluate(
           async ([address]) => {
             const wallet = await window.fuel.getWallet(address as string);
             return wallet.address.toString();
           },
           [authorizedAccount.address.toString()]
         );
-        console.log('🔵 Wallet address from getWallet:', walletAddress);
-        console.log(
-          '🔵 Are wallet addresses matching?',
-          walletAddress === authorizedAccount.address
-        );
 
         expect(addressSigner.toString()).toBe(authorizedAccount.address);
-        console.log('🔵 ✅ Address verification passed');
       }
 
       await test.step('Signed message using authorized Account 1', async () => {
