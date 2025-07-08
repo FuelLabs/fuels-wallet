@@ -83,11 +83,11 @@ export const signUpMachine = createMachine(
           },
           IMPORT: {
             actions: ['assignImport'],
-            target: 'aggrement',
+            target: 'agreement',
           },
         },
       },
-      aggrement: {
+      agreement: {
         on: {
           NEXT: [
             {
