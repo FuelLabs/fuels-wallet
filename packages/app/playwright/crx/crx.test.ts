@@ -580,49 +580,15 @@ test.describe('FuelWallet Extension', () => {
     await test.step('window.fuel.signMessage()', async () => {
       const message = 'Hello World';
 
-      function signMessage(address: string) {
-        return blankPage.evaluate(
-          async ([address, message]) => {
-            return window.fuel.signMessage(address, message);
-          },
-          [address, message]
-        );
-      }
-
-      async function approveMessageSignCheck(authorizedAccount: WalletAccount) {
-        const signedMessagePromise = signMessage(
-          authorizedAccount.address.toString()
-        );
-        const signMessageRequest = await context.waitForEvent('page', {
-          predicate: (page) => page.url().includes(extensionId),
-          timeout: 10_000,
-        });
-        // Confirm signature
-        await hasText(signMessageRequest, message);
-        await waitAriaLabel(signMessageRequest, authorizedAccount.name);
-        await getButtonByText(signMessageRequest, /sign/i).click();
-
-        // Recover signer address
-        const messageSigned = await signedMessagePromise;
-        const addressSigner = Signer.recoverAddress(
-          hashMessage(message),
-          messageSigned
-        );
-
-        // Verify signature is from the account selected
-        expect(addressSigner.toString()).toBe(authorizedAccount.address);
-      }
-
-      async function approveMessageSignCheckWithMessage(
+      async function approveMessageSignCheck(
         authorizedAccount: WalletAccount,
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        msg: any
+        msg: string | { personalSign: string | Uint8Array } = message
       ) {
         const signedMessagePromise = blankPage.evaluate(
           async ([address, msg]) => {
-            return await window.fuel.signMessage(address, msg);
+            return await window.fuel.signMessage(address, msg as any);
           },
-          [authorizedAccount.address.toString(), msg]
+          [authorizedAccount.address.toString(), msg as any]
         );
 
         const signMessageRequest = await context.waitForEvent('page', {
@@ -636,30 +602,25 @@ test.describe('FuelWallet Extension', () => {
         } else if (
           typeof msg === 'object' &&
           msg &&
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          typeof (msg as any).personalSign === 'string'
+          typeof msg.personalSign === 'string'
         ) {
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          await hasText(signMessageRequest, (msg as any).personalSign);
+          await hasText(signMessageRequest, msg.personalSign);
         } else if (
           typeof msg === 'object' &&
           msg &&
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          (msg as any).personalSign instanceof Uint8Array
+          msg.personalSign instanceof Uint8Array
         ) {
           // For Uint8Array, we can't easily check the text content, so we skip this assertion
         }
 
         await waitAriaLabel(signMessageRequest, authorizedAccount.name);
-
         await getButtonByText(signMessageRequest, /sign/i).click();
 
         const signed = await signedMessagePromise;
-
         const messageHash = hashMessage(msg);
-
         const addressSigner = Signer.recoverAddress(messageHash, signed);
 
+        // Verify signature is from the account selected
         expect(addressSigner.toString()).toBe(authorizedAccount.address);
       }
 
@@ -689,7 +650,12 @@ test.describe('FuelWallet Extension', () => {
           popupPage,
           'Account 2'
         );
-        const signedMessagePromise = signMessage(notAuthorizedAccount.address);
+        const signedMessagePromise = blankPage.evaluate(
+          async ([address, message]) => {
+            return window.fuel.signMessage(address, message);
+          },
+          [notAuthorizedAccount.address, message]
+        );
 
         await expect(signedMessagePromise).rejects.toThrowError(
           'address is not authorized for this connection.'
@@ -709,7 +675,7 @@ test.describe('FuelWallet Extension', () => {
           Buffer.from(hexString.slice(2), 'hex')
         );
         const personalStringMessage = { personalSign: hashBytes };
-        await approveMessageSignCheckWithMessage(
+        await approveMessageSignCheck(
           authorizedAccount,
           personalStringMessage
         );
@@ -720,7 +686,7 @@ test.describe('FuelWallet Extension', () => {
         const personalBytesMessage = {
           personalSign: new Uint8Array([1, 2, 3]),
         };
-        await approveMessageSignCheckWithMessage(
+        await approveMessageSignCheck(
           authorizedAccount,
           personalBytesMessage
         );
