@@ -620,10 +620,7 @@ test.describe('FuelWallet Extension', () => {
       ) {
         const signedMessagePromise = blankPage.evaluate(
           async ([address, msg]) => {
-            const wallet = await window.fuel.getWallet(address as string);
-            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-            const result = await wallet.signMessage(msg as any);
-            return result;
+            return await window.fuel.signMessage(address, msg);
           },
           [authorizedAccount.address.toString(), msg]
         );
@@ -662,15 +659,6 @@ test.describe('FuelWallet Extension', () => {
         const messageHash = hashMessage(msg);
 
         const addressSigner = Signer.recoverAddress(messageHash, signed);
-
-        // Let's also check what the wallet address is to make sure we have the right wallet
-        const _walletAddress = await blankPage.evaluate(
-          async ([address]) => {
-            const wallet = await window.fuel.getWallet(address as string);
-            return wallet.address.toString();
-          },
-          [authorizedAccount.address.toString()]
-        );
 
         expect(addressSigner.toString()).toBe(authorizedAccount.address);
       }
