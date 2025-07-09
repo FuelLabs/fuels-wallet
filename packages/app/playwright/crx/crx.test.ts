@@ -593,10 +593,9 @@ test.describe('FuelWallet Extension', () => {
 
         const signMessageRequest = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
-          timeout: 30_000,
+          timeout: 10_000,
         });
 
-        // Assert message preview when it is renderable as plain text
         if (typeof msg === 'string') {
           await hasText(signMessageRequest, msg);
         } else if (
@@ -605,12 +604,6 @@ test.describe('FuelWallet Extension', () => {
           typeof msg.personalSign === 'string'
         ) {
           await hasText(signMessageRequest, msg.personalSign);
-        } else if (
-          typeof msg === 'object' &&
-          msg &&
-          msg.personalSign instanceof Uint8Array
-        ) {
-          // For Uint8Array, we can't easily check the text content, so we skip this assertion
         }
 
         await waitAriaLabel(signMessageRequest, authorizedAccount.name);
@@ -662,10 +655,7 @@ test.describe('FuelWallet Extension', () => {
         );
       });
 
-      // ------------------------------------------------------------------
-      // Additional cases covering all VaultServer.signMessage paths
-      // ------------------------------------------------------------------
-
+    
       await test.step('Signed personalSign string message', async () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
         // Convert hex string to bytes array like the sample dApp does
