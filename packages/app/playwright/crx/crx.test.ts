@@ -580,6 +580,15 @@ test.describe('FuelWallet Extension', () => {
     await test.step('window.fuel.signMessage()', async () => {
       const message = 'Hello World';
 
+      function signMessage(address: string) {
+        return blankPage.evaluate(
+          async ([address, message]) => {
+            return window.fuel.signMessage(address, message);
+          },
+          [address, message]
+        );
+      }
+
       async function approveMessageSignCheck(
         authorizedAccount: WalletAccount,
         msg: string | { personalSign: string | Uint8Array } = message
@@ -643,12 +652,7 @@ test.describe('FuelWallet Extension', () => {
           popupPage,
           'Account 2'
         );
-        const signedMessagePromise = blankPage.evaluate(
-          async ([address, message]) => {
-            return window.fuel.signMessage(address, message);
-          },
-          [notAuthorizedAccount.address, message]
-        );
+        const signedMessagePromise = signMessage(notAuthorizedAccount.address);
 
         await expect(signedMessagePromise).rejects.toThrowError(
           'address is not authorized for this connection.'
