@@ -687,7 +687,7 @@ test.describe('FuelWallet Extension', () => {
       await test.step('Signed personalSign bytes (object) message', async () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
         const personalBytesMessage = {
-          personalSign: new Uint8Array([1, 2, 3]),
+          personalSign: new Uint8Array([3, 1, 2, 3]),
         };
         await approveMessageSignCheck({
           authorizedAccount,
