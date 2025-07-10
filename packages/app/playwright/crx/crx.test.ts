@@ -625,9 +625,12 @@ test.describe('FuelWallet Extension', () => {
         await waitAriaLabel(signMessageRequest, authorizedAccount.name);
         await getButtonByText(signMessageRequest, /sign/i).click();
 
-        const signed = await signedMessagePromise;
-        const messageHash = hashMessage(msg);
-        const addressSigner = Signer.recoverAddress(messageHash, signed);
+        // Recover signer address
+        const messageSigned = await signedMessagePromise;
+        const addressSigner = Signer.recoverAddress(
+          hashMessage(msg),
+          messageSigned
+        );
 
         // Verify signature is from the account selected
         expect(addressSigner.toString()).toBe(authorizedAccount.address);
