@@ -1,4 +1,4 @@
-name: Test (Chrome)
+name: Test (Chromium)
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   tests-e2e:
-    name: Test (Chrome Stable)
+    name: Test (Chromium)
     timeout-minutes: 15
     runs-on: buildjet-8vcpu-ubuntu-2204
     steps:
@@ -47,7 +47,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-app-report-stable
+          name: playwright-app-report-chromium
           path: packages/app/playwright-results
           retention-days: 30
 

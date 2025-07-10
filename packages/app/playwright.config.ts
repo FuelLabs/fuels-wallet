@@ -40,13 +40,6 @@ export const playwrightConfig: PlaywrightTestConfig = {
   },
   projects: [
     {
-      name: 'chrome',
-      use: {
-        channel: 'chrome',
-        ...devices['Desktop Chrome'],
-      },
-    },
-    {
       // For Google Chrome, Microsoft Edge and other Chromium-based browsers, by default,
       // Playwright uses open source Chromium builds.
       // Since the Chromium project is ahead of the branded browsers,

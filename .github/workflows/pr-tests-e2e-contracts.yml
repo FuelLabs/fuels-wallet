@@ -1,4 +1,4 @@
-name: Test (Chrome) [Shard ${{ matrix.shard }}]
+name: Test (Chromium) [Shard ${{ matrix.shard }}]
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   tests-e2e-contracts:
-    name: Test (Chrome Stable) [Shard ${{ matrix.shard }}]
+    name: Test (Chromium) [Shard ${{ matrix.shard }}]
     runs-on: buildjet-8vcpu-ubuntu-2204
     timeout-minutes: 20
     strategy:
