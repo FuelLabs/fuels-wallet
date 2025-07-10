@@ -1,5 +1,6 @@
 import type { NetworkData, Account as WalletAccount } from '@fuel-wallet/types';
 import { type Locator, Page, expect } from '@playwright/test';
+import type { HashableMessage } from 'fuels';
 
 import {
   delay,
@@ -594,12 +595,14 @@ test.describe('FuelWallet Extension', () => {
         msg = message,
       }: {
         authorizedAccount: WalletAccount;
-        msg?: string | { personalSign: string | Uint8Array };
+        msg?: HashableMessage;
       }) {
         const signedMessagePromise = blankPage.evaluate(
           async ([address, msg]) => {
+            // biome-ignore lint/suspicious/noExplicitAny: window.fuel.signMessage accepts HashableMessage but TypeScript definition is incorrect
             return await window.fuel.signMessage(address, msg as any);
           },
+          // biome-ignore lint/suspicious/noExplicitAny: window.fuel.signMessage accepts HashableMessage but TypeScript definition is incorrect
           [authorizedAccount.address.toString(), msg as any]
         );
 
@@ -608,6 +611,7 @@ test.describe('FuelWallet Extension', () => {
           timeout: 10_000,
         });
 
+        // Confirm signature
         if (typeof msg === 'string') {
           await hasText(signMessageRequest, msg);
         } else if (
@@ -662,7 +666,6 @@ test.describe('FuelWallet Extension', () => {
         );
       });
 
-    
       await test.step('Signed personalSign string message', async () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
         // Convert hex string to bytes array like the sample dApp does
