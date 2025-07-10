@@ -82,7 +82,7 @@
     "@changesets/types": "6.1.0",
     "@fuels/ts-config": "0.26.0",
     "@jest/types": "29.6.3",
-    "@playwright/test": "1.46.1",
+    "@playwright/test": "1.54.0",
     "@types/jest": "^29.5.5",
     "@types/node": "20.8.4",
     "@types/react": "^18.3.3",
