@@ -40,7 +40,7 @@ export const playwrightConfig: PlaywrightTestConfig = {
   },
   projects: [
     {
-      name: 'Chrome Prod',
+      name: 'chrome',
       use: {
         channel: 'chrome',
         ...devices['Desktop Chrome'],
@@ -52,7 +52,7 @@ export const playwrightConfig: PlaywrightTestConfig = {
       // Since the Chromium project is ahead of the branded browsers,
       // when the world is on Google Chrome N, Playwright already supports Chromium N+1 t
       // hat will be released in Google Chrome and Microsoft Edge a few weeks later.
-      name: 'Chrome Beta (Chromium)',
+      name: 'chromium',
       use: {
         channel: 'chromium',
         ...devices['Desktop Chrome'],

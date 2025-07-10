@@ -1,4 +1,4 @@
-name: Tests E2E - Contracts
+name: Test (Chrome) [Shard ${{ matrix.shard }}]
 
 on:
   pull_request:

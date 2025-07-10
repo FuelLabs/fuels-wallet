@@ -1,4 +1,4 @@
-name: Tests E2E (Beta)
+name: Test (Chromium)
 
 on:
   pull_request:
@@ -46,7 +46,7 @@ jobs:
 
       - uses: ./.github/actions/setup-playwright
         with:
-          browser: "chrome-beta"
+          browser: "chromium"
 
       - name: Run E2E Tests
         run: xvfb-run --auto-servernum -- pnpm test:e2e:beta

@@ -11,7 +11,7 @@ inputs:
     description: Secret of genesis to fund the master wallet
     required: false
   browser:
-    description: Browser to run tests on (chromium, chrome-beta, or both)
+    description: Browser to run tests on (chromium, chrome, or both)
     required: false
     default: chromium
 
