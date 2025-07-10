@@ -589,10 +589,13 @@ test.describe('FuelWallet Extension', () => {
         );
       }
 
-      async function approveMessageSignCheck(
-        authorizedAccount: WalletAccount,
-        msg: string | { personalSign: string | Uint8Array } = message
-      ) {
+      async function approveMessageSignCheck({
+        authorizedAccount,
+        msg = message,
+      }: {
+        authorizedAccount: WalletAccount;
+        msg?: string | { personalSign: string | Uint8Array };
+      }) {
         const signedMessagePromise = blankPage.evaluate(
           async ([address, msg]) => {
             return await window.fuel.signMessage(address, msg as any);
@@ -628,7 +631,7 @@ test.describe('FuelWallet Extension', () => {
 
       await test.step('Signed message using authorized Account 1', async () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
-        await approveMessageSignCheck(authorizedAccount);
+        await approveMessageSignCheck({ authorizedAccount });
       });
 
       await test.step('Signed message using authorized Account 3', async () => {
@@ -636,7 +639,7 @@ test.describe('FuelWallet Extension', () => {
           popupPage,
           'Account 3'
         );
-        await approveMessageSignCheck(authorizedAccount);
+        await approveMessageSignCheck({ authorizedAccount });
       });
 
       await test.step('Signed message using authorized Account 4 (from Private Key)', async () => {
@@ -644,7 +647,7 @@ test.describe('FuelWallet Extension', () => {
           popupPage,
           'Account 4'
         );
-        await approveMessageSignCheck(authorizedAccount);
+        await approveMessageSignCheck({ authorizedAccount });
       });
 
       await test.step('Throw on not Authorized Account', async () => {
@@ -669,10 +672,10 @@ test.describe('FuelWallet Extension', () => {
           Buffer.from(hexString.slice(2), 'hex')
         );
         const personalStringMessage = { personalSign: hashBytes };
-        await approveMessageSignCheck(
+        await approveMessageSignCheck({
           authorizedAccount,
-          personalStringMessage
-        );
+          msg: personalStringMessage,
+        });
       });
 
       await test.step('Signed personalSign bytes (object) message', async () => {
@@ -680,10 +683,10 @@ test.describe('FuelWallet Extension', () => {
         const personalBytesMessage = {
           personalSign: new Uint8Array([1, 2, 3]),
         };
-        await approveMessageSignCheck(
+        await approveMessageSignCheck({
           authorizedAccount,
-          personalBytesMessage
-        );
+          msg: personalBytesMessage,
+        });
       });
     });
 
