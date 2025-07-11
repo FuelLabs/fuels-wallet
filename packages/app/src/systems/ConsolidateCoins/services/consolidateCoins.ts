@@ -1,38 +1,67 @@
+import type { Account } from '@fuel-wallet/types';
 import {
-  type Account,
-  type BytesLike,
   type Coin,
   type CursorPaginationArgs,
+  Provider,
   RESOURCES_PAGE_SIZE_LIMIT,
+  Wallet,
 } from 'fuels';
+import { WalletLockedCustom } from '~/systems/Core';
 
 export type ConsolidateCoinsInputs = {
-  constructor: {
+  getBaseAssetId: {
+    providerUrl: string;
+  };
+  shouldConsolidate: {
+    providerUrl: string;
+    account: Account;
+    assetId: string;
+  };
+  getAllCoins: {
+    providerUrl: string;
     account: Account;
     assetId: string;
   };
   createBundles: {
+    providerUrl: string;
+    account: Account;
     coins: Coin[];
   };
 };
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class ConsolidateCoinsService {
-  private readonly account: Account;
-  private readonly assetId: BytesLike;
-
-  constructor(input: ConsolidateCoinsInputs['constructor']) {
-    this.account = input.account;
-    this.assetId = input.assetId;
+  static async getBaseAssetId(
+    input: ConsolidateCoinsInputs['getBaseAssetId']
+  ): Promise<string> {
+    const provider = new Provider(input.providerUrl);
+    const baseAssetId = await provider.getBaseAssetId();
+    return baseAssetId;
   }
 
-  async shouldConsolidate() {
-    const { pageInfo } = await this.account.getCoins(this.assetId, {
-      first: RESOURCES_PAGE_SIZE_LIMIT,
+  static async shouldConsolidate(
+    input: ConsolidateCoinsInputs['shouldConsolidate']
+  ): Promise<boolean> {
+    const provider = new Provider(input.providerUrl);
+    const chain = await provider.getChain();
+
+    const wallet = Wallet.fromAddress(input.account.address, provider);
+
+    const maxInputs = chain.consensusParameters.txParameters.maxInputs;
+
+    const { pageInfo } = await wallet.getCoins(input.assetId, {
+      first: maxInputs.toNumber(),
     });
+
     return pageInfo.hasNextPage;
   }
 
-  async getAllCoins() {
+  static async getAllCoins(
+    input: ConsolidateCoinsInputs['getAllCoins']
+  ): Promise<Coin[]> {
+    const provider = new Provider(input.providerUrl);
+    const wallet = Wallet.fromAddress(input.account.address, provider);
+
     const allCoins: Coin[] = [];
     const pagination: CursorPaginationArgs = {
       first: RESOURCES_PAGE_SIZE_LIMIT,
@@ -40,8 +69,8 @@ export class ConsolidateCoinsService {
     let hasMore = true;
 
     while (hasMore) {
-      const { coins, pageInfo } = await this.account.getCoins(
-        this.assetId,
+      const { coins, pageInfo } = await wallet.getCoins(
+        input.assetId,
         pagination
       );
 
@@ -53,8 +82,11 @@ export class ConsolidateCoinsService {
     return allCoins;
   }
 
-  async createBundles(input: ConsolidateCoinsInputs['createBundles']) {
-    const bundles = await this.account.assembleBaseAssetConsolidationTxs({
+  static async createBundles(input: ConsolidateCoinsInputs['createBundles']) {
+    const provider = new Provider(input.providerUrl);
+    const wallet = new WalletLockedCustom(input.account.address, provider);
+
+    const bundles = await wallet.assembleBaseAssetConsolidationTxs({
       coins: input.coins,
       mode: 'sequential',
     });
