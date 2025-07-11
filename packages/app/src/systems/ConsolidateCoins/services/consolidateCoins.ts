@@ -25,6 +25,13 @@ export class ConsolidateCoinsService {
     this.assetId = input.assetId;
   }
 
+  async shouldConsolidate() {
+    const { pageInfo } = await this.account.getCoins(this.assetId, {
+      first: RESOURCES_PAGE_SIZE_LIMIT,
+    });
+    return pageInfo.hasNextPage;
+  }
+
   async getAllCoins() {
     const allCoins: Coin[] = [];
     const pagination: CursorPaginationArgs = {
