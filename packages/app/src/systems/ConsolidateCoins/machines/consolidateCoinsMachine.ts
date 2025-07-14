@@ -1,6 +1,15 @@
 import type { Account } from '@fuel-wallet/types';
-import type { Coin, ScriptTransactionRequest } from 'fuels';
-import { assign, createMachine } from 'xstate';
+import type {
+  Coin,
+  ScriptTransactionRequest,
+  SubmitAllCallbackResponse,
+} from 'fuels';
+import {
+  type InterpreterFrom,
+  type StateFrom,
+  assign,
+  createMachine,
+} from 'xstate';
 import { AccountService } from '~/systems/Account';
 import { NetworkService } from '~/systems/Network';
 import { ConsolidateCoinsService } from '../services/consolidateCoins';
@@ -11,7 +20,10 @@ type MachineContext = {
   shouldConsolidate: boolean;
   account: Account | undefined;
   coins: Coin[];
-  txs: ScriptTransactionRequest[];
+  consolidation: {
+    txs: ScriptTransactionRequest[];
+    submitAll: () => Promise<SubmitAllCallbackResponse>;
+  };
 };
 
 type MachineServices = {
@@ -30,12 +42,18 @@ type MachineServices = {
   getAllCoins: {
     data: Coin[];
   };
-  createBundles: {
-    data: ScriptTransactionRequest[];
+  createConsolidation: {
+    data: {
+      txs: ScriptTransactionRequest[];
+      submitAll: () => Promise<SubmitAllCallbackResponse>;
+    };
+  };
+  submitAll: {
+    data: SubmitAllCallbackResponse;
   };
 };
 
-type MachineEvents = { type: 'START' } | { type: 'CANCEL' };
+type MachineEvents = { type: 'CONSOLIDATE_COINS' };
 
 export const consolidateCoinsMachine = createMachine(
   {
@@ -47,83 +65,102 @@ export const consolidateCoinsMachine = createMachine(
       services: {} as MachineServices,
     },
     id: 'consolidateCoins',
-    initial: 'getProviderUrl',
+    initial: 'initializingProvider',
     context: {
       providerUrl: '',
       assetId: '',
       shouldConsolidate: false,
       account: undefined,
       coins: [],
-      txs: [],
+      consolidation: {
+        txs: [],
+        submitAll: () => Promise.resolve({ txResponses: [], errors: [] }),
+      },
     },
     states: {
-      getProviderUrl: {
+      initializingProvider: {
         tags: ['loading'],
         invoke: {
           src: 'getProviderUrl',
           onDone: {
             actions: ['assignProviderUrl'],
-            target: 'getBaseAssetId',
+            target: 'fetchingBaseAssetId',
           },
         },
       },
-      getBaseAssetId: {
+      fetchingBaseAssetId: {
         tags: ['loading'],
         invoke: {
           src: 'getBaseAssetId',
           onDone: {
             actions: ['assignBaseAssetId'],
-            target: 'getAccount',
+            target: 'loadingAccount',
           },
         },
       },
-      getAccount: {
+      loadingAccount: {
         tags: ['loading'],
         invoke: {
           src: 'getAccount',
           onDone: {
             actions: ['assignAccount'],
-            target: 'checkShouldConsolidate',
+            target: 'evaluatingConsolidationNeed',
           },
         },
       },
-      checkShouldConsolidate: {
+      evaluatingConsolidationNeed: {
         tags: ['loading'],
         invoke: {
           src: 'shouldConsolidate',
           onDone: [
             {
               actions: ['assignShouldConsolidate'],
-              target: 'getAllCoins',
+              target: 'fetchingCoins',
               cond: 'shouldConsolidate',
             },
             {
-              target: 'success',
+              target: 'completed',
             },
           ],
         },
       },
-      getAllCoins: {
+      fetchingCoins: {
         tags: ['loading'],
         invoke: {
           src: 'getAllCoins',
           onDone: {
             actions: ['assignCoins'],
-            target: 'createBundles',
+            target: 'preparingConsolidation',
           },
         },
       },
-      createBundles: {
+      preparingConsolidation: {
         tags: ['loading'],
         invoke: {
-          src: 'createBundles',
+          src: 'createConsolidation',
           onDone: {
-            actions: ['assignBundles'],
-            target: 'success',
+            actions: ['assignConsolidation'],
+            target: 'awaitingUserConfirmation',
           },
         },
       },
-      success: {
+      awaitingUserConfirmation: {
+        on: {
+          CONSOLIDATE_COINS: {
+            target: 'executingConsolidation',
+          },
+        },
+      },
+      executingConsolidation: {
+        tags: ['consolidating'],
+        invoke: {
+          src: 'submitAll',
+          onDone: {
+            target: 'completed',
+          },
+        },
+      },
+      completed: {
         type: 'final',
       },
     },
@@ -148,8 +185,11 @@ export const consolidateCoinsMachine = createMachine(
       assignCoins: assign((_ctx, ev) => ({
         coins: ev.data,
       })),
-      assignBundles: assign((_ctx, ev) => ({
-        txs: ev.data,
+      assignConsolidation: assign((_ctx, ev) => ({
+        consolidation: {
+          txs: ev.data.txs,
+          submitAll: ev.data.submitAll,
+        },
       })),
     },
     services: {
@@ -192,14 +232,25 @@ export const consolidateCoinsMachine = createMachine(
         });
         return coins;
       },
-      createBundles: async (ctx) => {
-        const bundles = await ConsolidateCoinsService.createBundles({
-          providerUrl: ctx.providerUrl,
-          account: ctx.account as Account,
-          coins: ctx.coins,
-        });
-        return bundles.txs;
+      createConsolidation: async (ctx) => {
+        const consolidation = await ConsolidateCoinsService.createConsolidation(
+          {
+            providerUrl: ctx.providerUrl,
+            account: ctx.account as Account,
+            coins: ctx.coins,
+          }
+        );
+        return consolidation;
+      },
+      submitAll: async (ctx) => {
+        const submitAll = await ctx.consolidation.submitAll();
+        return submitAll;
       },
     },
   }
 );
+
+export type ConsolidateCoinsMachine = typeof consolidateCoinsMachine;
+export type ConsolidateCoinsMachineService =
+  InterpreterFrom<ConsolidateCoinsMachine>;
+export type ConsolidateCoinsMachineState = StateFrom<ConsolidateCoinsMachine>;

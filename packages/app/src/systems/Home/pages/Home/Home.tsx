@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Tabs } from '@fuel-ui/react';
+import { Button, Tabs } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { BalanceWidget, useAccounts } from '~/systems/Account';
 import { Layout, Pages, scrollable } from '~/systems/Core';
@@ -24,6 +24,10 @@ export function Home() {
     navigate(Pages.receive());
   };
 
+  const goToConsolidateCoins = () => {
+    navigate(Pages.consolidateCoins());
+  };
+
   return (
     <Layout title="Home" isHome>
       <Layout.TopBar />
@@ -40,6 +44,7 @@ export function Home() {
           sendAction={sendAction}
           isDisabled={isLoading}
         />
+        <Button onPress={goToConsolidateCoins}>Consolidate Coins (DEV)</Button>
         <Tabs defaultValue="assets" variant="link" css={styles.assets}>
           <Tabs.List>
             <Tabs.Trigger value="assets" aria-label="Assets">

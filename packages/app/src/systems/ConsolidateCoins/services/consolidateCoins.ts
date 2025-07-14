@@ -22,7 +22,7 @@ export type ConsolidateCoinsInputs = {
     account: Account;
     assetId: string;
   };
-  createBundles: {
+  createConsolidation: {
     providerUrl: string;
     account: Account;
     coins: Coin[];
@@ -82,15 +82,21 @@ export class ConsolidateCoinsService {
     return allCoins;
   }
 
-  static async createBundles(input: ConsolidateCoinsInputs['createBundles']) {
+  static async createConsolidation(
+    input: ConsolidateCoinsInputs['createConsolidation']
+  ) {
     const provider = new Provider(input.providerUrl);
-    const wallet = new WalletLockedCustom(input.account.address, provider);
+    const feePayerAccount = new WalletLockedCustom(
+      input.account.address,
+      provider
+    );
 
-    const bundles = await wallet.assembleBaseAssetConsolidationTxs({
-      coins: input.coins,
-      mode: 'sequential',
-    });
+    const consolidation =
+      await feePayerAccount.assembleBaseAssetConsolidationTxs({
+        coins: input.coins,
+        mode: 'sequential',
+      });
 
-    return bundles;
+    return consolidation;
   }
 }
