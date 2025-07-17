@@ -6,5 +6,8 @@ export function consolidateCoinsEvents(store: Store) {
     consolidateCoins() {
       store.send(Services.consolidateCoins, { type: 'CONSOLIDATE_COINS' });
     },
+    refreshConsolidateCoins() {
+      store.send(Services.consolidateCoins, { type: 'REFRESH' });
+    },
   };
 }

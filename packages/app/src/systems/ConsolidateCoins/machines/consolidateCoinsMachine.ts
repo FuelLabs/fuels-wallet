@@ -53,7 +53,7 @@ type MachineServices = {
   };
 };
 
-type MachineEvents = { type: 'CONSOLIDATE_COINS' };
+type MachineEvents = { type: 'CONSOLIDATE_COINS' } | { type: 'REFRESH' };
 
 export const consolidateCoinsMachine = createMachine(
   {
@@ -78,6 +78,13 @@ export const consolidateCoinsMachine = createMachine(
       },
     },
     states: {
+      idle: {
+        on: {
+          REFRESH: {
+            target: 'initializingProvider',
+          },
+        },
+      },
       initializingProvider: {
         tags: ['loading'],
         invoke: {
@@ -119,7 +126,7 @@ export const consolidateCoinsMachine = createMachine(
               cond: 'shouldConsolidate',
             },
             {
-              target: 'completed',
+              target: 'idle',
             },
           ],
         },
@@ -156,12 +163,9 @@ export const consolidateCoinsMachine = createMachine(
         invoke: {
           src: 'submitAll',
           onDone: {
-            target: 'completed',
+            target: 'idle',
           },
         },
-      },
-      completed: {
-        type: 'final',
       },
     },
   },
