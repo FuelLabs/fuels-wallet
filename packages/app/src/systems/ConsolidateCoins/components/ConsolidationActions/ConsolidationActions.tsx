@@ -1,6 +1,7 @@
 import { Button } from '@fuel-ui/react';
+import { store } from '~/store';
+import { Services } from '~/store';
 import { Layout } from '~/systems/Core';
-import { useConsolidateCoinsActorRef } from '../../hooks/useConsolidateCoinsActorRef';
 import { useConsolidateCoinsSelector } from '../../hooks/useConsolidateCoinsSelector';
 import type { ConsolidateCoinsMachineState } from '../../machines/consolidateCoinsMachine';
 
@@ -27,10 +28,8 @@ export function ConsolidationActions({ onCancel }: ConsolidationActions) {
   const loading = useConsolidateCoinsSelector(selectors.loading);
   const consolidating = useConsolidateCoinsSelector(selectors.consolidating);
 
-  const service = useConsolidateCoinsActorRef();
-
   const handleSubmit = () => {
-    service.send({ type: 'CONSOLIDATE_COINS' });
+    store.send(Services.consolidateCoins, { type: 'CONSOLIDATE_COINS' });
   };
 
   return (
