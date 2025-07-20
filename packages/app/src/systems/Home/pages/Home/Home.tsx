@@ -1,10 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Tabs } from '@fuel-ui/react';
-import { useEffect } from 'react';
+import { Tabs } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { BalanceWidget, useAccounts } from '~/systems/Account';
-import { useConsolidateCoinsSelector } from '~/systems/ConsolidateCoins/hooks/useConsolidateCoinsSelector';
-import type { ConsolidateCoinsMachineState } from '~/systems/ConsolidateCoins/machines/consolidateCoinsMachine';
+import { QuickConsolidateCoins } from '~/systems/ConsolidateCoins/components/QuickConsolidateCoins';
 import { Layout, Pages, scrollable } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
@@ -14,18 +12,9 @@ import { BALANCE_NFTS_TAB_HEIGHT } from '~/systems/Account/components/BalanceNFT
 import { QuickAccountConnect } from '~/systems/Account/components/QuickAccountConnect/QuickAccountConnect';
 import { HomeActions } from '../../components';
 
-const selectors = {
-  shouldConsolidate(state: ConsolidateCoinsMachineState) {
-    return state.context.shouldConsolidate;
-  },
-};
-
 export function Home() {
   const { visibility, setVisibility } = useBalanceVisibility();
   const { isLoading, account } = useAccounts();
-  const shouldConsolidate = useConsolidateCoinsSelector(
-    selectors.shouldConsolidate
-  );
   const navigate = useNavigate();
 
   function sendAction() {
@@ -36,15 +25,12 @@ export function Home() {
     navigate(Pages.receive());
   };
 
-  const goToConsolidateCoins = () => {
-    navigate(Pages.consolidateCoins());
-  };
-
   return (
     <Layout title="Home" isHome>
       <Layout.TopBar />
       <Layout.Content noBorder noScroll>
         <QuickAccountConnect />
+        <QuickConsolidateCoins />
         <BalanceWidget
           visibility={visibility}
           account={account}
@@ -56,11 +42,6 @@ export function Home() {
           sendAction={sendAction}
           isDisabled={isLoading}
         />
-        {shouldConsolidate && (
-          <Button onPress={goToConsolidateCoins}>
-            Consolidate Coins (DEV)
-          </Button>
-        )}
         <Tabs defaultValue="assets" variant="link" css={styles.assets}>
           <Tabs.List>
             <Tabs.Trigger value="assets" aria-label="Assets">
