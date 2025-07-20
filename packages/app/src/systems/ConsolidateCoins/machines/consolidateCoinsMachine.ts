@@ -127,6 +127,7 @@ export const consolidateCoinsMachine = createMachine(
             },
             {
               target: 'idle',
+              actions: ['assignShouldNotConsolidate'],
             },
           ],
         },
@@ -155,6 +156,9 @@ export const consolidateCoinsMachine = createMachine(
         on: {
           CONSOLIDATE_COINS: {
             target: 'executingConsolidation',
+          },
+          REFRESH: {
+            target: 'initializingProvider',
           },
         },
       },
@@ -186,6 +190,9 @@ export const consolidateCoinsMachine = createMachine(
       assignShouldConsolidate: assign((_ctx, ev) => ({
         shouldConsolidate: ev.data,
       })),
+      assignShouldNotConsolidate: assign(() => ({
+        shouldConsolidate: false,
+      })),
       assignCoins: assign((_ctx, ev) => ({
         coins: ev.data,
       })),
@@ -198,6 +205,7 @@ export const consolidateCoinsMachine = createMachine(
     },
     services: {
       getProviderUrl: async () => {
+        console.log('getProviderUrl');
         const selectedNetwork = await NetworkService.getSelectedNetwork();
         if (!selectedNetwork) {
           throw new Error('No network selected');

@@ -323,6 +323,7 @@ export const networksMachine = createMachine(
       }),
       notifyUpdateAccounts: () => {
         store.refreshAccounts();
+        store.refreshConsolidateCoins();
       },
       assignChainInfo: assign({
         chainInfoToAdd: (_, ev) => {

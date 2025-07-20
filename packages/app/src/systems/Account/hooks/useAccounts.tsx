@@ -46,6 +46,7 @@ const selectors = {
 
 const listenerAccountFetcher = () => {
   store.refreshAccounts({ skipLoading: true });
+  store.refreshConsolidateCoins();
 };
 
 export function useAccounts() {
