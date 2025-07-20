@@ -2,6 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Alert, Box, Icon, IconButton, Text, VStack } from '@fuel-ui/react';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useCurrentAccount } from '~/systems/Account/hooks/useCurrentAccount';
 import { Pages } from '~/systems/Core';
 import { useConsolidateCoinsSelector } from '../../hooks/useConsolidateCoinsSelector';
 import type { ConsolidateCoinsMachineState } from '../../machines/consolidateCoinsMachine';
@@ -17,6 +18,7 @@ const selectors = {
 
 export const QuickConsolidateCoins = () => {
   const navigate = useNavigate();
+  const { account } = useCurrentAccount();
   const shouldConsolidate = useConsolidateCoinsSelector(
     selectors.shouldConsolidate
   );
@@ -43,7 +45,8 @@ export const QuickConsolidateCoins = () => {
 
           <VStack gap="$1">
             <span>
-              Your account has many small coin UTXOs that can be consolidated
+              {account?.name || 'This account'} has many small coin UTXOs that
+              can be consolidated
             </span>
 
             <Text color="accent11" css={styles.cta} onClick={onConsolidate}>
