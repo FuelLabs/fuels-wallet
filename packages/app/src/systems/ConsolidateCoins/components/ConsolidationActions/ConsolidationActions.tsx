@@ -44,7 +44,7 @@ export function ConsolidationActions({ onCancel }: ConsolidationActions) {
         isLoading={consolidating}
         onPress={handleSubmit}
       >
-        Submit
+        Consolidate
       </Button>
     </Layout.BottomBar>
   );
