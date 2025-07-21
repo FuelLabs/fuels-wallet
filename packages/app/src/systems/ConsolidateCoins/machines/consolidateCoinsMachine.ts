@@ -167,7 +167,11 @@ export const consolidateCoinsMachine = createMachine(
         invoke: {
           src: 'submitAll',
           onDone: {
+            actions: ['navigateToHome'],
             target: 'idle',
+          },
+          onError: {
+            target: 'initializingProvider',
           },
         },
       },
@@ -202,6 +206,9 @@ export const consolidateCoinsMachine = createMachine(
           submitAll: ev.data.submitAll,
         },
       })),
+      navigateToHome: () => {
+        // This will be configured in the component
+      },
     },
     services: {
       getProviderUrl: async () => {
