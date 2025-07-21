@@ -1,3 +1,4 @@
+import { toast } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type {
   Coin,
@@ -167,7 +168,7 @@ export const consolidateCoinsMachine = createMachine(
         invoke: {
           src: 'submitAll',
           onDone: {
-            actions: ['navigateToHome'],
+            actions: ['showSuccessToast', 'navigateToHome'],
             target: 'initializingProvider',
           },
           onError: {
@@ -206,6 +207,9 @@ export const consolidateCoinsMachine = createMachine(
           submitAll: ev.data.submitAll,
         },
       })),
+      showSuccessToast: () => {
+        toast.success('Consolidation successful!');
+      },
       navigateToHome: () => {
         // This will be configured in the component
       },
