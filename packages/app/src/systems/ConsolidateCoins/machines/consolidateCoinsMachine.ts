@@ -168,7 +168,7 @@ export const consolidateCoinsMachine = createMachine(
           src: 'submitAll',
           onDone: {
             actions: ['navigateToHome'],
-            target: 'idle',
+            target: 'initializingProvider',
           },
           onError: {
             target: 'initializingProvider',
