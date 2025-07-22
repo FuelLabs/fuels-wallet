@@ -90,7 +90,7 @@ export function ConsolidationDetails() {
           </Text>
           <Text css={{ color: '$gray11' }}>
             {coins.length > 0
-              ? `${coins.length} coins of ${assetSymbol} will be consolidated. This will require ${txs.length} transactions`
+              ? `${coins.length} individual ${assetSymbol} UTXOs will be consolidated. This will require ${txs.length} transactions`
               : 'No coins to consolidate'}
           </Text>
         </Box>
