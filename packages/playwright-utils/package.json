@@ -28,7 +28,7 @@
   "devDependencies": {
     "@fuels/ts-config": "^0.26.0",
     "@fuels/tsup-config": "^0.26.0",
-    "@playwright/test": "1.46.1",
+    "@playwright/test": "1.54.0",
     "@types/adm-zip": "^0.5.3",
     "fuels": "0.101.3",
     "tsup": "^7.2.0"
