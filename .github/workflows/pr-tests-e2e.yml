@@ -1,4 +1,4 @@
-name: Test (Chromium)
+name: Tests E2E
 
 on:
   pull_request:
