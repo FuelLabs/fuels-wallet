@@ -2,6 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Tabs } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { BalanceWidget, useAccounts } from '~/systems/Account';
+import { QuickConsolidateCoins } from '~/systems/ConsolidateCoins/components/QuickConsolidateCoins';
 import { Layout, Pages, scrollable } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
@@ -29,6 +30,7 @@ export function Home() {
       <Layout.TopBar />
       <Layout.Content noBorder noScroll>
         <QuickAccountConnect />
+        <QuickConsolidateCoins />
         <BalanceWidget
           visibility={visibility}
           account={account}

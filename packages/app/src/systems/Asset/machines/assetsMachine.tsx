@@ -180,6 +180,7 @@ export const assetsMachine = createMachine(
       },
       notifyUpdateAccounts: () => {
         store.refreshAccounts({ skipLoading: true });
+        store.refreshConsolidateCoins();
       },
     },
     services: {

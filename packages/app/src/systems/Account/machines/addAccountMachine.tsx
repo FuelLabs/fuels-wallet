@@ -70,6 +70,7 @@ export const addAccountMachine = createMachine(
     actions: {
       notifyUpdateAccounts: () => {
         store.refreshAccounts();
+        store.refreshConsolidateCoins();
       },
       redirectToHome() {
         store.closeOverlay();
