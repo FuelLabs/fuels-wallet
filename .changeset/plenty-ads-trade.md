@@ -3,4 +3,4 @@
 "fuels-wallet": minor
 ---
 
-fix: Update broken E2E settings
+fix: disable chrome-beta tests as they don't support importing chrome extensions anymore
