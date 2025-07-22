@@ -45,8 +45,8 @@ export const QuickConsolidateCoins = () => {
 
           <VStack gap="$1">
             <span>
-              {account?.name || 'This account'} has many small coin UTXOs that
-              can be consolidated
+              {account?.name || 'This account'} has many small UTXOs that can be
+              consolidated
             </span>
 
             <Text color="accent11" css={styles.cta} onClick={onConsolidate}>
