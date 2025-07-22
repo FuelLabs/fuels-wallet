@@ -259,6 +259,7 @@ export const accountsMachine = createMachine(
       },
       notifyUpdateAccounts: () => {
         store.refreshAccounts();
+        store.refreshConsolidateCoins();
       },
       redirectToHome: () => {
         store.closeOverlay();

@@ -229,6 +229,7 @@ export const signUpMachine = createMachine(
       sendAccountCreated: () => {
         Storage.setItem(IS_LOGGED_KEY, true);
         store.refreshAccounts();
+        store.refreshConsolidateCoins();
       },
       redirectToWalletCreated() {},
     },
