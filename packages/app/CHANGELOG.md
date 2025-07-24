@@ -1,5 +1,25 @@
 # fuels-wallet
 
+## 0.58.0
+
+### Minor Changes
+
+- [#1945](https://github.com/FuelLabs/fuels-wallet/pull/1945) [`9df54765`](https://github.com/FuelLabs/fuels-wallet/commit/9df5476507b3b1a53eca5619bbce3b9a62a067a0) Thanks [@nelitow](https://github.com/nelitow)! - fix: make personalSign support signing empty bytes
+
+- [#1954](https://github.com/FuelLabs/fuels-wallet/pull/1954) [`bbe52918`](https://github.com/FuelLabs/fuels-wallet/commit/bbe52918447c86de883b3d8c6cbececa218e58e0) Thanks [@nelitow](https://github.com/nelitow)! - fix: disable chrome-beta tests as they don't support importing chrome extensions anymore
+
+- [#1949](https://github.com/FuelLabs/fuels-wallet/pull/1949) [`04dba51c`](https://github.com/FuelLabs/fuels-wallet/commit/04dba51c45a8fc9e4e1bfc8c470a78ef34cdb330) Thanks [@nelitow](https://github.com/nelitow)! - fix: Wallet signature of Hashable Messages
+
+### Patch Changes
+
+- [#1948](https://github.com/FuelLabs/fuels-wallet/pull/1948) [`b0df7e03`](https://github.com/FuelLabs/fuels-wallet/commit/b0df7e034c52e2d27681ae7c9af2ff83b6fdfbc7) Thanks [@nelitow](https://github.com/nelitow)! - feat: Add warning for exporting seed phrase of imported private keys
+
+- [#1955](https://github.com/FuelLabs/fuels-wallet/pull/1955) [`c4276bcd`](https://github.com/FuelLabs/fuels-wallet/commit/c4276bcd27b3ec20edafc2e836779dbf2d7dc535) Thanks [@helciofranco](https://github.com/helciofranco)! - feat: include consolidate utxo flow
+
+- Updated dependencies [[`bbe52918`](https://github.com/FuelLabs/fuels-wallet/commit/bbe52918447c86de883b3d8c6cbececa218e58e0)]:
+  - @fuels/playwright-utils@0.58.0
+  - @fuel-wallet/connections@0.58.0
+
 ## 0.57.1
 
 ### Patch Changes
