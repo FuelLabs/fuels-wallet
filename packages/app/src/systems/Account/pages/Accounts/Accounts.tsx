@@ -1,21 +1,22 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Dialog, Icon } from '@fuel-ui/react';
 import { coreStyles } from '~/systems/Core/styles';
-import { OverlayDialogTopbar } from '~/systems/Overlay';
+import { OverlayDialogTopbar, useOverlay } from '~/systems/Overlay';
 
 import { AccountList } from '../../components';
 import { useAccounts, useAddAccount } from '../../hooks';
 
 export const Accounts = () => {
+  const overlay = useOverlay();
+
   const { accounts, canHideAccounts, hasHiddenAccounts, isLoading, handlers } =
     useAccounts();
-
   const { handlers: addAccountHandlers, isLoading: isAddingAccount } =
     useAddAccount();
 
   return (
     <>
-      <OverlayDialogTopbar onClose={handlers.closeDialog}>
+      <OverlayDialogTopbar onClose={overlay.close}>
         Accounts
       </OverlayDialogTopbar>
       <Dialog.Description
@@ -53,6 +54,15 @@ export const Accounts = () => {
           isLoading={isAddingAccount}
         >
           Add new account
+        </Button>
+        <Button
+          variant="outlined"
+          aria-label="Add read-only account"
+          onPress={() => overlay.open({ modal: 'accounts.addReadOnly' })}
+          leftIcon={Icon.is('Eye')}
+          iconSize={14}
+        >
+          Add read-only account
         </Button>
       </Dialog.Footer>
     </>
