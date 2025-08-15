@@ -1,5 +1,4 @@
 import type { AppProps } from 'next/app';
-import 'plyr-react/plyr.css';
 import '../styles/docsearch/_variables.css';
 import '../styles/docsearch/button.css';
 import '../styles/docsearch/modal.css';

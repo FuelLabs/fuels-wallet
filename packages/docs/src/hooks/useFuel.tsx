@@ -5,16 +5,25 @@ import {
 import { Fuel } from 'fuels';
 import { useEffect, useState } from 'react';
 
-const fuelSDK = new Fuel({
-  connectors: [new FuelWalletConnector(), new FuelWalletDevelopmentConnector()],
-});
-
 export function useFuel() {
+  const [fuelSDK, setFuelSDK] = useState<Fuel | null>(null);
   const [error, setError] = useState('');
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    fuelSDK
+    // Only create Fuel instance on the client side
+    if (typeof window === 'undefined') return;
+
+    const fuel = new Fuel({
+      connectors: [
+        new FuelWalletConnector(),
+        new FuelWalletDevelopmentConnector(),
+      ],
+    });
+
+    setFuelSDK(fuel);
+
+    fuel
       .hasConnector()
       .then((hasWallet) => {
         setError(hasWallet ? '' : 'fuel not detected on the window!');
@@ -30,9 +39,9 @@ export function useFuel() {
       setError('');
     };
 
-    fuelSDK.on(fuelSDK.events.currentConnector, handleFuelLoad);
+    fuel.on(fuel.events.currentConnector, handleFuelLoad);
     return () => {
-      fuelSDK.on(fuelSDK.events.currentConnector, handleFuelLoad);
+      fuel.on(fuel.events.currentConnector, handleFuelLoad);
     };
   }, []);
 

@@ -24,9 +24,9 @@ export function MobileMenu() {
   }
 
   useEffect(() => {
-    if (showing) {
+    if (showing && typeof document !== 'undefined') {
       document.body.classList.add('no-scroll');
-    } else {
+    } else if (typeof document !== 'undefined') {
       document.body.classList.remove('no-scroll');
     }
   }, [showing]);
@@ -53,7 +53,7 @@ export function MobileMenu() {
       <Box.Flex css={styles.menu}>
         <Box.Flex css={styles.nav}>
           <FuelLogo size={30} />
-          <Link href="/docs/install">Docs</Link>
+          <Link href="cd /docs/install">Docs</Link>
           {IS_PUBLIC_PREVIEW && (
             <>
               <a

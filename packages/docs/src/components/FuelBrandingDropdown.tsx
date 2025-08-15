@@ -1,5 +1,5 @@
 import { Button, Dropdown, Icon, IconButton } from '@fuel-ui/react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useCurrentEnv } from '~/src/hooks/useCurrentEnv';
 import {
   Environment,
@@ -20,17 +20,25 @@ const environments: Array<Environment> = Object.values(Environment);
 export function FuelBrandingDropdown() {
   const currentEnv = useCurrentEnv();
   const currentPath = usePathname();
+  const _router = useRouter();
+
   const onSelect = (e: Environment) => {
+    // Only redirect on the client side
+    if (typeof window === 'undefined') return;
+
+    let targetUrl: string;
     switch (e) {
       case Environment.STAGING:
-        window.location.href = `${WALLET_LINK_STAGING}${currentPath}`;
+        targetUrl = `${WALLET_LINK_STAGING}${currentPath}`;
         break;
       case Environment.NEXT:
-        window.location.href = `${WALLET_LINK_NEXT}${currentPath}`;
+        targetUrl = `${WALLET_LINK_NEXT}${currentPath}`;
         break;
       default:
-        window.location.href = `${WALLET_LINK_PROD}${currentPath}`;
+        targetUrl = `${WALLET_LINK_PROD}${currentPath}`;
     }
+
+    window.location.href = targetUrl;
   };
 
   return (
