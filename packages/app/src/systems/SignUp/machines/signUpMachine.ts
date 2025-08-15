@@ -79,15 +79,15 @@ export const signUpMachine = createMachine(
         on: {
           CREATE: {
             actions: ['assignCreate'],
-            target: 'aggrement',
+            target: 'agreement',
           },
           IMPORT: {
             actions: ['assignImport'],
-            target: 'aggrement',
+            target: 'agreement',
           },
         },
       },
-      aggrement: {
+      agreement: {
         on: {
           NEXT: [
             {
@@ -218,7 +218,7 @@ export const signUpMachine = createMachine(
           mnemonic: getWordsFromValue(ev.data.words),
         }),
       }),
-      // Passowrd
+      // Password
       assignPassword: assign({
         data: (ctx, ev) => ({
           ...ctx.data,
