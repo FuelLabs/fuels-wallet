@@ -39,9 +39,9 @@ export function TransferAssetsHook() {
 
   useEffect(() => {
     let abort = false;
-    const provider = new Provider(FUEL_PROVIDER_URL);
-    provider
-      .getBaseAssetId()
+    
+    Provider.create(FUEL_PROVIDER_URL)
+      .then((provider) => provider.getBaseAssetId())
       .then((baseAssetId) => {
         if (abort) return;
         setAssetId(baseAssetId);
