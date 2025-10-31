@@ -103,7 +103,7 @@
     "ts-jest-mock-import-meta": "1.1.0",
     "tsconfig-paths-webpack-plugin": "4.1.0",
     "typescript": "5.2.2",
-    "vite": "6.1.5",
+    "vite": "6.4.1",
     "vite-plugin-clean": "1.0.0",
     "vite-plugin-static-copy": "2.2.0",
     "vite-tsconfig-paths": "5.1.4",
