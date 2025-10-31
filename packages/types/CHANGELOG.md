@@ -1,5 +1,11 @@
 # @fuel-wallet/types
 
+## 0.58.1
+
+### Patch Changes
+
+- [#1957](https://github.com/FuelLabs/fuels-wallet/pull/1957) [`9fb8fade`](https://github.com/FuelLabs/fuels-wallet/commit/9fb8fadeae6b531e673aa7a3d586f9f623c7a170) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: update fuels to 0.102.0
+
 ## 0.58.0
 
 ## 0.57.1
