@@ -104,10 +104,6 @@ export function TransferAssets() {
           <Text css={styles.label}>Amount:</Text>
           {decimals ? (
             <InputAmount
-              // Force component to re-render when decimals change
-              // Remove this once fuel-ui InputAmount is fixed
-              // TODO: https://github.com/FuelLabs/fuel-ui/issues/323
-              key={decimals}
               value={amount}
               onChange={(value) => setAmount(value as unknown as BN | null)}
               hiddenBalance
