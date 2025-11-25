@@ -41,10 +41,6 @@ export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
 
   const getTransactionHistory = useCallback(
     (input: TxInputs['getTransactionHistory']) => {
-      console.debug(
-        '[useTransactionHistory] Sending GET_TRANSACTION_HISTORY event with address:',
-        input.address
-      );
       send('GET_TRANSACTION_HISTORY', { input });
     },
     [send]
@@ -52,21 +48,11 @@ export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
 
   const addressStr = address?.toString();
   if (addressStr && addressStr !== addressRef.current) {
-    console.debug(
-      '[useTransactionHistory] Address changed from',
-      addressRef.current,
-      'to',
-      addressStr
-    );
     addressRef.current = addressStr;
     fetchInitiatedRef.current = false;
   }
 
   if (addressStr && !fetchInitiatedRef.current) {
-    console.debug(
-      '[useTransactionHistory] Initiating fetch for address:',
-      addressStr
-    );
     fetchInitiatedRef.current = true;
     queueMicrotask(() => {
       getTransactionHistory({ address: addressStr });
