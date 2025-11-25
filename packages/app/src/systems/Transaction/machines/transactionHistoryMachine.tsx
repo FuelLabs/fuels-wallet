@@ -14,6 +14,39 @@ import { getOperationsWithDomain } from '~/systems/NameSystem/utils/getOperation
 import { type TxInputs, TxService } from '../services';
 import type { TransactionCursor, TransactionResultWithDomain } from '../types';
 
+const domainEnrichedCache = new Map<string, TransactionResultWithDomain>();
+const enrichmentCallbacks = new Set<
+  (tx: TransactionResultWithDomain) => void
+>();
+
+export const onTransactionDomainEnriched = (
+  callback: (tx: TransactionResultWithDomain) => void
+) => {
+  enrichmentCallbacks.add(callback);
+  return () => enrichmentCallbacks.delete(callback);
+};
+
+const enrichDomainsInBackground = (transactionHistory: TransactionResult[]) => {
+  Promise.all(
+    transactionHistory.map(async (tx) => {
+      const txId = tx.id;
+      try {
+        const enrichedOperations = await getOperationsWithDomain(tx.operations);
+        const enrichedTx: TransactionResultWithDomain = {
+          ...tx,
+          operations: enrichedOperations,
+        };
+        domainEnrichedCache.set(txId, enrichedTx);
+        for (const callback of enrichmentCallbacks) {
+          callback(enrichedTx);
+        }
+      } catch (error) {
+        console.debug('Failed to enrich transaction with domain info:', error);
+      }
+    })
+  );
+};
+
 const TRANSACTION_HISTORY_ERRORS = {
   INVALID_ADDRESS: 'Invalid address',
   NOT_FOUND: 'Address Transaction history not found',
@@ -53,6 +86,10 @@ type MachineEvents =
   | {
       type: 'FETCH_NEXT_PAGE';
       input?: never;
+    }
+  | {
+      type: 'UPDATE_TRANSACTION_WITH_DOMAIN';
+      enrichedTx: TransactionResultWithDomain;
     };
 
 export const transactionHistoryMachine = createMachine(
@@ -84,6 +121,9 @@ export const transactionHistoryMachine = createMachine(
             cond: 'hasNextPage',
             actions: ['moveCurrentCursorForward'],
             target: 'fetchingNextPage',
+          },
+          UPDATE_TRANSACTION_WITH_DOMAIN: {
+            actions: 'updateTransactionWithDomain',
           },
         },
       },
@@ -297,6 +337,23 @@ export const transactionHistoryMachine = createMachine(
       clearError: assign({
         error: (_) => undefined,
       }),
+      updateTransactionWithDomain: assign({
+        transactionHistory: (ctx, ev: MachineEvents) => {
+          if (
+            !ctx.transactionHistory ||
+            ev.type !== 'UPDATE_TRANSACTION_WITH_DOMAIN'
+          ) {
+            return ctx.transactionHistory;
+          }
+          const event = ev as Extract<
+            MachineEvents,
+            { type: 'UPDATE_TRANSACTION_WITH_DOMAIN' }
+          >;
+          return ctx.transactionHistory.map((tx) =>
+            tx.id === event.enrichedTx.id ? event.enrichedTx : tx
+          );
+        },
+      }),
     },
     services: {
       getTransactionHistory: FetchMachine.create<
@@ -318,14 +375,9 @@ export const transactionHistoryMachine = createMachine(
             pagination,
           });
 
-          const txHistoryWithDomain = await Promise.all(
-            transactionHistory.map(async (tx) => ({
-              ...tx,
-              operations: await getOperationsWithDomain(tx.operations),
-            }))
-          );
+          enrichDomainsInBackground(transactionHistory);
 
-          return { transactionHistory: txHistoryWithDomain };
+          return { transactionHistory };
         },
       }),
       getCachedCursors: FetchMachine.create<

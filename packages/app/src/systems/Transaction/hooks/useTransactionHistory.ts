@@ -3,8 +3,12 @@ import type { Address } from 'fuels';
 import { useCallback, useEffect } from 'react';
 
 import type { TransactionHistoryMachineState } from '../machines';
-import { transactionHistoryMachine } from '../machines';
+import {
+  onTransactionDomainEnriched,
+  transactionHistoryMachine,
+} from '../machines';
 import type { TxInputs } from '../services';
+import type { TransactionResultWithDomain } from '../types';
 
 const selectors = {
   isFetching: (state: TransactionHistoryMachineState) => {
@@ -51,6 +55,19 @@ export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
       getTransactionHistory({ address: address.toString() });
     }
   }, [address, getTransactionHistory]);
+
+  useEffect(() => {
+    const unsubscribe = onTransactionDomainEnriched(
+      (enrichedTx: TransactionResultWithDomain) => {
+        service.send({
+          type: 'UPDATE_TRANSACTION_WITH_DOMAIN',
+          enrichedTx,
+        });
+      }
+    );
+
+    return unsubscribe;
+  }, [service]);
 
   return {
     fetchNextPage,
