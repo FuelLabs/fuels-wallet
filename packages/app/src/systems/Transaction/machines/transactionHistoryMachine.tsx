@@ -5,49 +5,60 @@ import type {
 } from 'fuels';
 import { isB256 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
-import { assign, createMachine, spawn } from 'xstate';
+import { assign, createMachine } from 'xstate';
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
-import NameSystemService from '~/systems/NameSystem/services/nameSystem';
 import { getOperationsWithDomain } from '~/systems/NameSystem/utils/getOperationsWithDomain';
 import { type TxInputs, TxService } from '../services';
 import type { TransactionCursor, TransactionResultWithDomain } from '../types';
 
-const enrichmentCallbacks = new Set<
-  (enrichedTx: TransactionResultWithDomain) => void
->();
-
-export const onTransactionDomainEnriched = (
-  callback: (enrichedTx: TransactionResultWithDomain) => void
-) => {
-  enrichmentCallbacks.add(callback);
-  return () => enrichmentCallbacks.delete(callback);
-};
-
-const enrichDomainsInBackground = (
+const enrichDomainsAsync = async (
   transactionHistory: TransactionResultWithDomain[]
-) => {
+): Promise<TransactionResultWithDomain[]> => {
+  console.debug(
+    '[enrichDomainsAsync] Starting enrichment for',
+    transactionHistory.length,
+    'transactions'
+  );
+
   if (!transactionHistory || transactionHistory.length === 0) {
-    return;
+    console.debug(
+      '[enrichDomainsAsync] No transactions to enrich, returning empty array'
+    );
+    return [];
   }
 
-  Promise.all(
-    transactionHistory.map(async (tx) => {
-      try {
-        const enrichedOperations = await getOperationsWithDomain(tx.operations);
-        const enrichedTx: TransactionResultWithDomain = {
-          ...tx,
-          operations: enrichedOperations,
-        };
-        for (const callback of enrichmentCallbacks) {
-          callback(enrichedTx);
+  try {
+    const enriched = await Promise.all(
+      transactionHistory.map(async (tx) => {
+        try {
+          const enrichedOperations = await getOperationsWithDomain(
+            tx.operations
+          );
+          return {
+            ...tx,
+            operations: enrichedOperations,
+          };
+        } catch (error) {
+          console.debug(
+            'Failed to enrich transaction with domain info:',
+            error
+          );
+          return tx;
         }
-      } catch (error) {
-        console.debug('Failed to enrich transaction with domain info:', error);
-      }
-    })
-  );
+      })
+    );
+    console.debug(
+      '[enrichDomainsAsync] Enrichment completed for',
+      enriched.length,
+      'transactions'
+    );
+    return enriched;
+  } catch (error) {
+    console.debug('[enrichDomainsAsync] Enrichment failed with error:', error);
+    return transactionHistory;
+  }
 };
 
 const TRANSACTION_HISTORY_ERRORS = {
@@ -89,10 +100,6 @@ type MachineEvents =
   | {
       type: 'FETCH_NEXT_PAGE';
       input?: never;
-    }
-  | {
-      type: 'UPDATE_TRANSACTION_WITH_DOMAIN';
-      enrichedTx: TransactionResultWithDomain;
     };
 
 export const transactionHistoryMachine = createMachine(
@@ -109,6 +116,7 @@ export const transactionHistoryMachine = createMachine(
     initial: 'idle',
     states: {
       idle: {
+        entry: () => console.debug('[idle] Entering idle state'),
         on: {
           GET_TRANSACTION_HISTORY: [
             {
@@ -124,9 +132,6 @@ export const transactionHistoryMachine = createMachine(
             cond: 'hasNextPage',
             actions: ['moveCurrentCursorForward'],
             target: 'fetchingNextPage',
-          },
-          UPDATE_TRANSACTION_WITH_DOMAIN: {
-            actions: 'updateTransactionWithDomain',
           },
         },
       },
@@ -204,13 +209,43 @@ export const transactionHistoryMachine = createMachine(
             },
             {
               actions: ['assignTransactionHistory'],
-              target: 'automaticFetchNextPage',
+              target: 'enrichingDomains',
             },
           ],
         },
       },
+      enrichingDomains: {
+        entry: () => console.debug('[enrichingDomains] Entering state'),
+        exit: () => console.debug('[enrichingDomains] Exiting state'),
+        invoke: {
+          src: (ctx) => {
+            console.debug('[enrichingDomains] Starting enrichment invoke');
+            return enrichDomainsAsync(ctx.transactionHistory || []);
+          },
+          onDone: {
+            actions: assign({
+              transactionHistory: (_, ev) => {
+                console.debug(
+                  '[enrichingDomains] onDone action, updating transaction history'
+                );
+                return ev.data as TransactionResultWithDomain[];
+              },
+            }),
+            target: 'automaticFetchNextPage',
+          },
+          onError: {
+            actions: () =>
+              console.debug('[enrichingDomains] onError - enrichment failed'),
+            target: 'automaticFetchNextPage',
+          },
+        },
+      },
       automaticFetchNextPage: {
         tags: ['loading'],
+        entry: () =>
+          console.debug(
+            '[automaticFetchNextPage] Checking if should fetch more automatically'
+          ),
         always: [
           {
             cond: 'shouldFetchMoreAutomatically',
@@ -218,6 +253,10 @@ export const transactionHistoryMachine = createMachine(
             target: 'automaticFetchingNextPage',
           },
           {
+            actions: () =>
+              console.debug(
+                '[automaticFetchNextPage] No more auto-fetch needed, transitioning to idle'
+              ),
             target: 'idle',
           },
         ],
@@ -245,9 +284,41 @@ export const transactionHistoryMachine = createMachine(
             },
             {
               actions: ['appendTransactionHistory'],
-              target: 'idle',
+              target: 'enrichingDomainsAfterAppend',
             },
           ],
+        },
+      },
+      enrichingDomainsAfterAppend: {
+        entry: () =>
+          console.debug('[enrichingDomainsAfterAppend] Entering state'),
+        exit: () =>
+          console.debug('[enrichingDomainsAfterAppend] Exiting state'),
+        invoke: {
+          src: (ctx) => {
+            console.debug(
+              '[enrichingDomainsAfterAppend] Starting enrichment invoke'
+            );
+            return enrichDomainsAsync(ctx.transactionHistory || []);
+          },
+          onDone: {
+            actions: assign({
+              transactionHistory: (_, ev) => {
+                console.debug(
+                  '[enrichingDomainsAfterAppend] onDone action, updating transaction history'
+                );
+                return ev.data as TransactionResultWithDomain[];
+              },
+            }),
+            target: 'idle',
+          },
+          onError: {
+            actions: () =>
+              console.debug(
+                '[enrichingDomainsAfterAppend] onError - enrichment failed'
+              ),
+            target: 'idle',
+          },
         },
       },
       fetchingNextPage: {
@@ -272,7 +343,7 @@ export const transactionHistoryMachine = createMachine(
             },
             {
               actions: ['appendTransactionHistory'],
-              target: 'idle',
+              target: 'enrichingDomainsAfterAppend',
             },
           ],
         },
@@ -344,23 +415,6 @@ export const transactionHistoryMachine = createMachine(
       clearError: assign({
         error: (_) => undefined,
       }),
-      updateTransactionWithDomain: assign({
-        transactionHistory: (ctx, ev: MachineEvents) => {
-          if (
-            !ctx.transactionHistory ||
-            ev.type !== 'UPDATE_TRANSACTION_WITH_DOMAIN'
-          ) {
-            return ctx.transactionHistory;
-          }
-          const event = ev as Extract<
-            MachineEvents,
-            { type: 'UPDATE_TRANSACTION_WITH_DOMAIN' }
-          >;
-          return ctx.transactionHistory.map((tx) =>
-            tx.id === event.enrichedTx.id ? event.enrichedTx : tx
-          );
-        },
-      }),
     },
     services: {
       getTransactionHistory: FetchMachine.create<
@@ -381,8 +435,6 @@ export const transactionHistoryMachine = createMachine(
             providerUrl: selectedNetwork?.url,
             pagination,
           });
-
-          enrichDomainsInBackground(transactionHistory);
 
           return { transactionHistory };
         },

@@ -3,10 +3,7 @@ import type { Address } from 'fuels';
 import { useCallback, useRef } from 'react';
 
 import type { TransactionHistoryMachineState } from '../machines';
-import {
-  onTransactionDomainEnriched,
-  transactionHistoryMachine,
-} from '../machines';
+import { transactionHistoryMachine } from '../machines';
 import type { TxInputs } from '../services';
 
 const selectors = {
@@ -31,7 +28,6 @@ type UseTransactionHistoryProps = {
 };
 
 export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
-  const subscriptionRef = useRef<(() => void) | null>(null);
   const addressRef = useRef<string>();
   const fetchInitiatedRef = useRef(false);
 
@@ -45,27 +41,32 @@ export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
 
   const getTransactionHistory = useCallback(
     (input: TxInputs['getTransactionHistory']) => {
+      console.debug(
+        '[useTransactionHistory] Sending GET_TRANSACTION_HISTORY event with address:',
+        input.address
+      );
       send('GET_TRANSACTION_HISTORY', { input });
     },
     [send]
   );
 
-  if (!subscriptionRef.current) {
-    subscriptionRef.current = onTransactionDomainEnriched((enrichedTx) => {
-      send({
-        type: 'UPDATE_TRANSACTION_WITH_DOMAIN',
-        enrichedTx,
-      });
-    });
-  }
-
   const addressStr = address?.toString();
   if (addressStr && addressStr !== addressRef.current) {
+    console.debug(
+      '[useTransactionHistory] Address changed from',
+      addressRef.current,
+      'to',
+      addressStr
+    );
     addressRef.current = addressStr;
     fetchInitiatedRef.current = false;
   }
 
   if (addressStr && !fetchInitiatedRef.current) {
+    console.debug(
+      '[useTransactionHistory] Initiating fetch for address:',
+      addressStr
+    );
     fetchInitiatedRef.current = true;
     queueMicrotask(() => {
       getTransactionHistory({ address: addressStr });
