@@ -132,9 +132,13 @@ export const transactionHistoryMachine = createMachine(
         entry: 'clearError',
         invoke: {
           src: 'getCachedCursors',
-          data: (_, event: MachineEvents) => ({
-            input: event.input,
-          }),
+          data: (_, event: MachineEvents) => {
+            const ev = event as Extract<
+              MachineEvents,
+              { type: 'GET_TRANSACTION_HISTORY' }
+            >;
+            return { input: ev.input };
+          },
           onDone: [
             {
               actions: ['assignGetTransactionHistoryError'],

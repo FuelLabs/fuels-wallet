@@ -1,6 +1,6 @@
 import { useInterpret, useSelector } from '@xstate/react';
 import type { Address } from 'fuels';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useRef } from 'react';
 
 import type { TransactionHistoryMachineState } from '../machines';
 import {
@@ -8,7 +8,6 @@ import {
   transactionHistoryMachine,
 } from '../machines';
 import type { TxInputs } from '../services';
-import type { TransactionResultWithDomain } from '../types';
 
 const selectors = {
   isFetching: (state: TransactionHistoryMachineState) => {
@@ -32,7 +31,12 @@ type UseTransactionHistoryProps = {
 };
 
 export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
+  const subscriptionRef = useRef<(() => boolean) | null>(null);
+  const addressRef = useRef<string>();
+  const fetchInitiatedRef = useRef(false);
+
   const service = useInterpret(() => transactionHistoryMachine);
+
   const { send } = service;
   const isFetching = useSelector(service, selectors.isFetching);
   const isFetchingNextPage = useSelector(service, selectors.isFetchingNextPage);
@@ -46,28 +50,31 @@ export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
     [send]
   );
 
+  if (!subscriptionRef.current) {
+    subscriptionRef.current = onTransactionDomainEnriched((enrichedTx) => {
+      send({
+        type: 'UPDATE_TRANSACTION_WITH_DOMAIN',
+        enrichedTx,
+      });
+    });
+  }
+
+  const addressStr = address?.toString();
+  if (addressStr && addressStr !== addressRef.current) {
+    addressRef.current = addressStr;
+    fetchInitiatedRef.current = false;
+  }
+
+  if (addressStr && !fetchInitiatedRef.current) {
+    fetchInitiatedRef.current = true;
+    queueMicrotask(() => {
+      getTransactionHistory({ address: addressStr });
+    });
+  }
+
   function fetchNextPage() {
     send('FETCH_NEXT_PAGE');
   }
-
-  useEffect(() => {
-    if (address) {
-      getTransactionHistory({ address: address.toString() });
-    }
-  }, [address, getTransactionHistory]);
-
-  useEffect(() => {
-    const unsubscribe = onTransactionDomainEnriched(
-      (enrichedTx: TransactionResultWithDomain) => {
-        service.send({
-          type: 'UPDATE_TRANSACTION_WITH_DOMAIN',
-          enrichedTx,
-        });
-      }
-    );
-
-    return unsubscribe;
-  }, [service]);
 
   return {
     fetchNextPage,
