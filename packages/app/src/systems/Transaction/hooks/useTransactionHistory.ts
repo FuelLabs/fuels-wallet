@@ -31,7 +31,7 @@ type UseTransactionHistoryProps = {
 };
 
 export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
-  const subscriptionRef = useRef<(() => boolean) | null>(null);
+  const subscriptionRef = useRef<(() => void) | null>(null);
   const addressRef = useRef<string>();
   const fetchInitiatedRef = useRef(false);
 

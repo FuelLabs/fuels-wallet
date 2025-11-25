@@ -5,7 +5,7 @@ import type {
 } from 'fuels';
 import { isB256 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
-import { assign, createMachine } from 'xstate';
+import { assign, createMachine, spawn } from 'xstate';
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
@@ -14,29 +14,32 @@ import { getOperationsWithDomain } from '~/systems/NameSystem/utils/getOperation
 import { type TxInputs, TxService } from '../services';
 import type { TransactionCursor, TransactionResultWithDomain } from '../types';
 
-const domainEnrichedCache = new Map<string, TransactionResultWithDomain>();
 const enrichmentCallbacks = new Set<
-  (tx: TransactionResultWithDomain) => void
+  (enrichedTx: TransactionResultWithDomain) => void
 >();
 
 export const onTransactionDomainEnriched = (
-  callback: (tx: TransactionResultWithDomain) => void
+  callback: (enrichedTx: TransactionResultWithDomain) => void
 ) => {
   enrichmentCallbacks.add(callback);
   return () => enrichmentCallbacks.delete(callback);
 };
 
-const enrichDomainsInBackground = (transactionHistory: TransactionResult[]) => {
+const enrichDomainsInBackground = (
+  transactionHistory: TransactionResultWithDomain[]
+) => {
+  if (!transactionHistory || transactionHistory.length === 0) {
+    return;
+  }
+
   Promise.all(
     transactionHistory.map(async (tx) => {
-      const txId = tx.id;
       try {
         const enrichedOperations = await getOperationsWithDomain(tx.operations);
         const enrichedTx: TransactionResultWithDomain = {
           ...tx,
           operations: enrichedOperations,
         };
-        domainEnrichedCache.set(txId, enrichedTx);
         for (const callback of enrichmentCallbacks) {
           callback(enrichedTx);
         }
