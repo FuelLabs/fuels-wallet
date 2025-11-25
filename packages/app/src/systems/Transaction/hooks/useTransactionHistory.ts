@@ -1,6 +1,6 @@
 import { useInterpret, useSelector } from '@xstate/react';
 import type { Address } from 'fuels';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import type { TransactionHistoryMachineState } from '../machines';
 import { transactionHistoryMachine } from '../machines';
@@ -28,11 +28,7 @@ type UseTransactionHistoryProps = {
 };
 
 export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
-  const addressRef = useRef<string>();
-  const fetchInitiatedRef = useRef(false);
-
   const service = useInterpret(() => transactionHistoryMachine);
-
   const { send } = service;
   const isFetching = useSelector(service, selectors.isFetching);
   const isFetchingNextPage = useSelector(service, selectors.isFetchingNextPage);
@@ -46,22 +42,15 @@ export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
     [send]
   );
 
-  const addressStr = address?.toString();
-  if (addressStr && addressStr !== addressRef.current) {
-    addressRef.current = addressStr;
-    fetchInitiatedRef.current = false;
-  }
-
-  if (addressStr && !fetchInitiatedRef.current) {
-    fetchInitiatedRef.current = true;
-    queueMicrotask(() => {
-      getTransactionHistory({ address: addressStr });
-    });
-  }
-
   function fetchNextPage() {
     send('FETCH_NEXT_PAGE');
   }
+
+  useEffect(() => {
+    if (address) {
+      getTransactionHistory({ address: address.toString() });
+    }
+  }, [address, getTransactionHistory]);
 
   return {
     fetchNextPage,
