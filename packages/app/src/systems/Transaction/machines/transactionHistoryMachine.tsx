@@ -10,9 +10,65 @@ import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
 import NameSystemService from '~/systems/NameSystem/services/nameSystem';
-import { getOperationsWithDomain } from '~/systems/NameSystem/utils/getOperationsWithDomain';
 import { type TxInputs, TxService } from '../services';
 import type { TransactionCursor, TransactionResultWithDomain } from '../types';
+
+const enrichDomainsAsync = async (
+  transactionHistory: TransactionResultWithDomain[]
+): Promise<TransactionResultWithDomain[]> => {
+  if (!transactionHistory || transactionHistory.length === 0) {
+    return [];
+  }
+
+  try {
+    const currentNetwork = await NetworkService.getSelectedNetwork();
+    const chainId = currentNetwork?.chainId;
+
+    if (!chainId && chainId !== 0) {
+      return transactionHistory;
+    }
+
+    const allAddresses = new Set<string>();
+    for (const tx of transactionHistory) {
+      for (const operation of tx.operations) {
+        if (operation.to?.address) {
+          allAddresses.add(operation.to.address);
+        }
+      }
+    }
+
+    const uniqueAddresses = Array.from(allAddresses);
+
+    const { domains } = await NameSystemService.resolverAddresses({
+      addresses: uniqueAddresses,
+      chainId,
+    });
+
+    const addressToDomainMap: Record<string, string> = {};
+    if (domains) {
+      for (const entry of domains) {
+        addressToDomainMap[entry.resolver] = `@${entry.name}`;
+      }
+    }
+
+    const enriched = transactionHistory.map((tx) => ({
+      ...tx,
+      operations: tx.operations.map((operation) => ({
+        ...operation,
+        to: operation.to
+          ? {
+              ...operation.to,
+              domain: addressToDomainMap[operation.to.address] || null,
+            }
+          : undefined,
+      })),
+    }));
+
+    return enriched;
+  } catch {
+    return transactionHistory;
+  }
+};
 
 const TRANSACTION_HISTORY_ERRORS = {
   INVALID_ADDRESS: 'Invalid address',
@@ -92,9 +148,13 @@ export const transactionHistoryMachine = createMachine(
         entry: 'clearError',
         invoke: {
           src: 'getCachedCursors',
-          data: (_, event: MachineEvents) => ({
-            input: event.input,
-          }),
+          data: (_, event: MachineEvents) => {
+            const ev = event as Extract<
+              MachineEvents,
+              { type: 'GET_TRANSACTION_HISTORY' }
+            >;
+            return { input: ev.input };
+          },
           onDone: [
             {
               actions: ['assignGetTransactionHistoryError'],
@@ -157,9 +217,24 @@ export const transactionHistoryMachine = createMachine(
             },
             {
               actions: ['assignTransactionHistory'],
-              target: 'automaticFetchNextPage',
+              target: 'enrichingDomains',
             },
           ],
+        },
+      },
+      enrichingDomains: {
+        invoke: {
+          src: (ctx) => enrichDomainsAsync(ctx.transactionHistory || []),
+          onDone: {
+            actions: assign({
+              transactionHistory: (_, ev) =>
+                ev.data as TransactionResultWithDomain[],
+            }),
+            target: 'automaticFetchNextPage',
+          },
+          onError: {
+            target: 'automaticFetchNextPage',
+          },
         },
       },
       automaticFetchNextPage: {
@@ -198,9 +273,24 @@ export const transactionHistoryMachine = createMachine(
             },
             {
               actions: ['appendTransactionHistory'],
-              target: 'idle',
+              target: 'enrichingDomainsAfterAppend',
             },
           ],
+        },
+      },
+      enrichingDomainsAfterAppend: {
+        invoke: {
+          src: (ctx) => enrichDomainsAsync(ctx.transactionHistory || []),
+          onDone: {
+            actions: assign({
+              transactionHistory: (_, ev) =>
+                ev.data as TransactionResultWithDomain[],
+            }),
+            target: 'idle',
+          },
+          onError: {
+            target: 'idle',
+          },
         },
       },
       fetchingNextPage: {
@@ -225,7 +315,7 @@ export const transactionHistoryMachine = createMachine(
             },
             {
               actions: ['appendTransactionHistory'],
-              target: 'idle',
+              target: 'enrichingDomainsAfterAppend',
             },
           ],
         },
@@ -318,14 +408,7 @@ export const transactionHistoryMachine = createMachine(
             pagination,
           });
 
-          const txHistoryWithDomain = await Promise.all(
-            transactionHistory.map(async (tx) => ({
-              ...tx,
-              operations: await getOperationsWithDomain(tx.operations),
-            }))
-          );
-
-          return { transactionHistory: txHistoryWithDomain };
+          return { transactionHistory };
         },
       }),
       getCachedCursors: FetchMachine.create<
