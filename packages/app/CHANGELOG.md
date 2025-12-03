@@ -1,5 +1,17 @@
 # fuels-wallet
 
+## 0.59.0
+
+### Minor Changes
+
+- [#1961](https://github.com/FuelLabs/fuels-wallet/pull/1961) [`870df416`](https://github.com/FuelLabs/fuels-wallet/commit/870df416a4b20d7f564ac4a1e6c26ae772a8ac1c) Thanks [@nelitow](https://github.com/nelitow)! - fix: Improve loading time in the transactions history by handling Bako ID errors.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.59.0
+  - @fuels/playwright-utils@0.59.0
+
 ## 0.58.1
 
 ### Patch Changes
