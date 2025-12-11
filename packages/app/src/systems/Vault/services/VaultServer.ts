@@ -1,7 +1,15 @@
 // biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import EventEmitter from 'events';
 import { createProvider } from '@fuel-wallet/connections';
-import { Address, WalletManager, transactionRequestify } from 'fuels';
+import {
+  Address,
+  type HashableMessage,
+  Signer,
+  WalletManager,
+  arrayify,
+  hashMessage,
+  transactionRequestify,
+} from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
 
@@ -28,7 +36,7 @@ export type VaultInputs = {
     providerUrl: string;
   };
   signMessage: {
-    message: string;
+    message: HashableMessage;
     address: string;
   };
   changePassword: {
@@ -175,7 +183,36 @@ export class VaultServer extends EventEmitter {
     const wallet = await this.manager.getWallet(
       Address.fromDynamicInput(address)
     );
-    const signature = wallet.signMessage(message);
+    let signature: string | undefined;
+    if (typeof message === 'string') {
+      signature = await wallet.signMessage(message);
+    }
+    if (
+      typeof message === 'object' &&
+      message.personalSign &&
+      typeof message.personalSign === 'object'
+    ) {
+      const keys = Object.keys(message.personalSign);
+      const signObj = message.personalSign as unknown as Record<string, number>;
+      const orderedBytes = Uint8Array.from(
+        keys.sort((a, b) => Number(a) - Number(b)).map((k) => signObj[k])
+      );
+      signature = await wallet.signMessage({ personalSign: orderedBytes });
+    } else if (
+      typeof message === 'object' &&
+      message.personalSign &&
+      typeof message.personalSign === 'string'
+    ) {
+      const bytes = message.personalSign.startsWith('0x')
+        ? arrayify(message.personalSign)
+        : new TextEncoder().encode(message.personalSign);
+      signature = await wallet.signMessage({ personalSign: bytes });
+    }
+
+    if (!signature) {
+      throw new Error('Invalid message');
+    }
+
     return signature;
   }
 

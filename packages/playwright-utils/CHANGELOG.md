@@ -1,5 +1,27 @@
 # @fuels/playwright-utils
 
+## 0.59.0
+
+## 0.58.1
+
+### Patch Changes
+
+- [#1957](https://github.com/FuelLabs/fuels-wallet/pull/1957) [`9fb8fade`](https://github.com/FuelLabs/fuels-wallet/commit/9fb8fadeae6b531e673aa7a3d586f9f623c7a170) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: update fuels to 0.102.0
+
+## 0.58.0
+
+### Minor Changes
+
+- [#1954](https://github.com/FuelLabs/fuels-wallet/pull/1954) [`bbe52918`](https://github.com/FuelLabs/fuels-wallet/commit/bbe52918447c86de883b3d8c6cbececa218e58e0) Thanks [@nelitow](https://github.com/nelitow)! - fix: disable chrome-beta tests as they don't support importing chrome extensions anymore
+
+## 0.57.1
+
+## 0.57.0
+
+## 0.56.1
+
+## 0.56.0
+
 ## 0.55.3
 
 ### Patch Changes

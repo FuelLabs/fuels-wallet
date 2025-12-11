@@ -116,6 +116,7 @@ export const selectNetworkRequestMachine = createMachine(
       },
       notifyUpdateAccounts: () => {
         store.refreshAccounts();
+        store.refreshConsolidateCoins();
       },
     },
     services: {

@@ -4,14 +4,11 @@ import type {
   FuelProviderConfig,
 } from '@fuel-wallet/types';
 import type {
-  Operation,
-  OperationCoin,
   TransactionRequest,
-  TransactionSummary,
   TransactionSummaryJson,
   WalletLocked,
 } from 'fuels';
-import { clone, equals } from 'ramda';
+import { clone } from 'ramda';
 
 import {
   Address,
@@ -22,14 +19,12 @@ import {
   TransactionResponse,
   TransactionStatus,
   assembleTransactionSummary,
-  assembleTransactionSummaryFromJson,
   bn,
   getTransactionSummary,
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
-  transactionRequestify,
 } from 'fuels';
-import { WalletLockedCustom, db, delay } from '~/systems/Core';
+import { WalletLockedCustom, db } from '~/systems/Core';
 
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
@@ -75,6 +70,7 @@ export type TxInputs = {
     };
     transactionState?: 'funded' | undefined;
     transactionSummary?: TransactionSummaryJson;
+    signOnly?: boolean;
   };
   send: {
     address?: string;
@@ -175,13 +171,34 @@ export class TxService {
     });
   }
 
+  static async sign({
+    account,
+    address,
+    transactionRequest,
+    providerUrl = '',
+    providerConfig,
+  }: Omit<TxInputs['send'], 'signOnly'>) {
+    const provider = await createProvider(
+      providerUrl || providerConfig?.url || ''
+    );
+    const wallet = new WalletLockedCustom(
+      (account?.address?.toString() || address) as string,
+      provider
+    );
+
+    const txRequest =
+      await wallet.populateTransactionWitnessesSignature(transactionRequest);
+
+    return txRequest;
+  }
+
   static async send({
     account,
     address,
     transactionRequest,
     providerUrl = '',
     providerConfig,
-  }: TxInputs['send']) {
+  }: Omit<TxInputs['send'], 'signOnly'>) {
     const provider = await createProvider(
       providerUrl || providerConfig?.url || ''
     );

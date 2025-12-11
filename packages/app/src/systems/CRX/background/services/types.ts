@@ -3,16 +3,24 @@ import type {
   FuelProviderConfig,
   NetworkData,
 } from '@fuel-wallet/types';
-import type { AbiMap } from 'fuels';
+import type { AbiMap, HashableMessage } from 'fuels';
 import type { TransactionSummaryJson } from 'fuels';
 
 export type MessageInputs = {
   signMessage: {
-    message: string;
+    message: HashableMessage;
     address: string;
     origin: string;
     title?: string;
     favIconUrl?: string;
+  };
+  signTransaction: {
+    address: string;
+    origin: string;
+    title?: string;
+    favIconUrl?: string;
+    provider: FuelProviderConfig;
+    transaction: string;
   };
   sendTransaction: {
     address: string;
@@ -25,6 +33,7 @@ export type MessageInputs = {
     transactionState?: 'funded' | undefined;
     transactionSummary?: TransactionSummaryJson;
     returnTransactionResponse?: boolean;
+    signOnly?: boolean;
   };
   addAssets: {
     assets: AssetData[];

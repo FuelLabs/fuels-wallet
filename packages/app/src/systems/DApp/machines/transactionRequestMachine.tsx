@@ -43,12 +43,14 @@ type MachineContext = {
     tip?: BN;
     gasLimit?: BN;
     skipCustomFee?: boolean;
+    signOnly?: boolean;
   };
   response?: {
     txSummarySimulated?: TransactionSummary;
     txSummaryExecuted?: TransactionSummary;
     txResponse?: TransactionResponse;
     proposedTxRequest?: TransactionRequest;
+    txRequestSigned?: TransactionRequest;
   };
   fees: {
     baseFee?: BN;
@@ -80,7 +82,7 @@ type SimulateTransactionReturn = {
 
 type MachineServices = {
   send: {
-    data: TransactionSummary | TransactionResponse;
+    data: TransactionSummary | TransactionResponse | TransactionRequest;
   };
   prepareFeeInputs: {
     data: PrepareFeeInputForSimulateTransactionReturn;
@@ -251,10 +253,12 @@ export const transactionRequestMachine = createMachine(
         invoke: {
           src: 'send',
           data: {
-            input: (ctx: MachineContext) => ({
-              ...ctx.input,
-              transactionRequest: ctx.response?.proposedTxRequest,
-            }),
+            input: (ctx: MachineContext) => {
+              return {
+                ...ctx.input,
+                transactionRequest: ctx.response?.proposedTxRequest,
+              };
+            },
           },
           onDone: [
             {
@@ -360,12 +364,16 @@ export const transactionRequestMachine = createMachine(
       }),
       assignApprovedTx: assign({
         response: (ctx, ev) => {
+          const isTransactionRequest = 'witnesses' in ev.data;
           const isTransactionResponse = 'provider' in ev.data;
+
           return {
             ...ctx.response,
-            ...(isTransactionResponse
-              ? { txResponse: ev.data as TransactionResponse }
-              : { txSummaryExecuted: ev.data as TransactionSummary }),
+            ...(isTransactionRequest
+              ? { txRequestSigned: ev.data as TransactionRequest }
+              : isTransactionResponse
+                ? { txResponse: ev.data as TransactionResponse }
+                : { txSummaryExecuted: ev.data as TransactionSummary }),
           };
         },
       }),
@@ -381,6 +389,21 @@ export const transactionRequestMachine = createMachine(
         }),
       }),
       assignSimulateTxErrors: assign((ctx, ev) => {
+        if (ev.data.simulateTxErrors) {
+          return {
+            ...ctx,
+            response: {
+              ...ctx.response,
+              txSummarySimulated: undefined,
+              proposedTxRequest: undefined,
+            },
+            errors: {
+              ...ctx.errors,
+              simulateTxErrors: ev.data.simulateTxErrors,
+            },
+          };
+        }
+
         return {
           ...ctx,
           errors: {
@@ -457,13 +480,12 @@ export const transactionRequestMachine = createMachine(
         },
       }),
       send: FetchMachine.create<
-        TxInputs['send'],
+        TxInputs['send'] & { signOnly?: boolean },
         MachineServices['send']['data']
       >({
         showError: true,
         maxAttempts: 1,
         async fetch(params) {
-          console.log('asd send', params);
           const { input } = params;
           if (
             (!input?.account && !input?.address) ||
@@ -472,7 +494,16 @@ export const transactionRequestMachine = createMachine(
           ) {
             throw new Error('Invalid approveTx input');
           }
+
+          // If signOnly is true, use the sign method instead
+          if (input.signOnly) {
+            const txRequestSigned = await TxService.sign(input);
+            return txRequestSigned;
+          }
+
           const txResponse = await TxService.send(input);
+
+          // Wait for pre-confirmation
           await txResponse.waitForPreConfirmation();
 
           // if it has origin, its a dapp transaction and we need to return the txResponse to connectors

@@ -1,7 +1,7 @@
 {
   "name": "fuels-wallet",
   "private": true,
-  "version": "0.55.3",
+  "version": "0.59.0",
   "type": "module",
   "database": "23",
   "scripts": {
@@ -20,7 +20,7 @@
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
-    "@bako-id/sdk": "0.0.18",
+    "@bako-id/sdk": "0.0.21",
     "@fontsource/source-code-pro": "5.0.13",
     "@fuel-ui/css": "0.23.3",
     "@fuel-ui/icons": "0.23.3",
@@ -44,7 +44,7 @@
     "events": "3.3.0",
     "fake-indexeddb": "4.0.2",
     "framer-motion": "10.16.4",
-    "fuels": "0.100.6",
+    "fuels": "0.102.0",
     "json-edit-react": "1.13.3",
     "json-rpc-2.0": "1.7.0",
     "lodash.debounce": "4.0.8",
@@ -64,8 +64,8 @@
   "devDependencies": {
     "@crxjs/vite-plugin": "2.0.0-beta.31",
     "@fuel-wallet/types": "workspace:*",
-    "@fuels/connectors": "0.39.2",
-    "@playwright/test": "1.46.1",
+    "@playwright/test": "1.54.0",
+    "@fuels/connectors": "0.43.2",
     "@sentry/cli": "2.33.1",
     "@storybook/addon-a11y": "7.4.6",
     "@storybook/addon-actions": "7.4.6",

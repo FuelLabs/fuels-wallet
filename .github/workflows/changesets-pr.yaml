@@ -1,0 +1,72 @@
+name: "Changesets PR"
+
+on:
+  push:
+    branches:
+      - master
+      # - release/* # Uncomment if you use release branches like fuels-ts
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  create_changeset_pr: 
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    if: |
+      startsWith(github.event.head_commit.message, 'ci(release):') != true &&
+      github.event.before != '0000000000000000000000000000000000000000'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract pnpm version from .tool-versions
+        id: get_pnpm
+        run: |
+          PNPM_VERSION=$(grep '^pnpm' .tool-versions | awk '{print $2}')
+          echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
+          
+      - name: Setup Node and PNPM
+        uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 20.11.0
+          pnpm-version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup git user
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      # Determine version for PR title (following fuels-ts pattern)
+      - name: Bump and Collect Versions
+        run: |
+          pnpm changeset version
+          echo "RELEASE_VERSION=v$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' packages/app/package.json)" >> $GITHUB_ENV
+          git reset --hard
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set changeset PR title
+        run: |
+          echo "CHANGESET_PR_TITLE=$(echo "ci(release): \`${{ env.RELEASE_VERSION }}\` @ \`${{ github.ref_name }}\`")" >> $GITHUB_ENV
+
+      - name: Create Changeset PR
+        id: create_pr_action
+        uses: changesets/action@v1
+        with:
+          commit: "ci(release): versioning packages and changesets"
+          title: ${{ env.CHANGESET_PR_TITLE }}
+          createGithubReleases: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prettify changelog
+        run: pnpm changeset:update-changelog
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REF_NAME: ${{ github.ref_name }}
+          PUBLISHED: "false"
