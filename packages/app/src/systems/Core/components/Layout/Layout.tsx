@@ -125,7 +125,7 @@ export const styles = {
     position: 'relative',
     height: '100vh',
     maxHeight: '100vh',
-    ...coreStyles.scrollable(),
+    overflow: 'hidden',
 
     '&:has(.layout__bottom) .layout__content': {
       pb: '$0',
