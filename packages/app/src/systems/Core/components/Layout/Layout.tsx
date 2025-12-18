@@ -150,6 +150,7 @@ export const styles = {
     '&[data-scrollable=true]:not([data-noborder])': {
       padding: '$0 $0 $4 $4',
       ...coreStyles.scrollable(),
+      overflowY: 'scroll !important',
     },
     '&[data-noborder]': {
       padding: '$0',
