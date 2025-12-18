@@ -125,6 +125,7 @@ export const styles = {
     position: 'relative',
     height: '100vh',
     maxHeight: '100vh',
+    ...coreStyles.scrollable(),
 
     '&:has(.layout__bottom) .layout__content': {
       pb: '$0',
@@ -134,8 +135,8 @@ export const styles = {
     zIndex: '$0',
     overflow: 'clip',
     position: 'relative',
-    width: WALLET_WIDTH - 2, // reduce the border to contain width inside the window
-    height: WALLET_HEIGHT - 2, // reduce the border to contain height inside the window
+    width: WALLET_WIDTH,
+    height: WALLET_HEIGHT - 4,
     background: '$bodyColor',
     border: '1px solid $border',
 
