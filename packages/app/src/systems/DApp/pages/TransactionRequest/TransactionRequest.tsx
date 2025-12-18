@@ -147,8 +147,7 @@ const styles = {
     gap: '$2',
     backgroundColor: '$intentsBase3',
     padding: '$2 0 $2 $3',
-    overflowY: 'auto',
-    scrollbarGutter: 'stable',
+    overflowY: 'scroll !important',
     '&::-webkit-scrollbar': {
       width: '$3',
       backgroundColor: 'transparent',
