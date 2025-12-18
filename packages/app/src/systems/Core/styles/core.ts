@@ -6,9 +6,10 @@ export const scrollable = (
   hoverColor = '$intentsBase10'
 ) =>
   cssObj({
-    overflowY: 'overlay',
+    overflowY: 'auto',
     overflowX: 'hidden',
     scrollBehavior: 'smooth',
+    scrollbarGutter: 'stable',
 
     '&::-webkit-scrollbar': {
       width: '$4',

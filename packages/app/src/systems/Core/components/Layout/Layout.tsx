@@ -125,7 +125,6 @@ export const styles = {
     position: 'relative',
     height: '100vh',
     maxHeight: '100vh',
-    ...coreStyles.scrollable(),
 
     '&:has(.layout__bottom) .layout__content': {
       pb: '$0',
@@ -151,7 +150,6 @@ export const styles = {
     '&[data-scrollable=true]:not([data-noborder])': {
       padding: '$0 $0 $4 $4',
       ...coreStyles.scrollable(),
-      overflowY: 'scroll !important',
     },
     '&[data-noborder]': {
       padding: '$0',
