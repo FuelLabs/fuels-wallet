@@ -123,8 +123,8 @@ export const styles = {
   root: cssObj({
     width: IS_CRX_POPUP ? WALLET_WIDTH : '100vw',
     position: 'relative',
-    height: '100vh',
-    maxHeight: '100vh',
+    height: IS_CRX_POPUP ? WALLET_HEIGHT : '100vh',
+    maxHeight: IS_CRX_POPUP ? WALLET_HEIGHT : '100vh',
     ...coreStyles.scrollable(),
 
     '&:has(.layout__bottom) .layout__content': {
@@ -135,8 +135,8 @@ export const styles = {
     zIndex: '$0',
     overflow: 'clip',
     position: 'relative',
-    width: WALLET_WIDTH,
-    height: WALLET_HEIGHT - 4,
+    width: WALLET_WIDTH - 2, // reduce the border to contain width inside the window
+    height: WALLET_HEIGHT - 2, // reduce the border to contain height inside the window
     background: '$bodyColor',
     border: '1px solid $border',
 
