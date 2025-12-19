@@ -123,8 +123,8 @@ export const styles = {
   root: cssObj({
     width: IS_CRX_POPUP ? WALLET_WIDTH : '100vw',
     position: 'relative',
-    height: '100vh',
-    maxHeight: '100vh',
+    height: IS_CRX_POPUP ? WALLET_HEIGHT : '100vh',
+    maxHeight: IS_CRX_POPUP ? WALLET_HEIGHT : '100vh',
     ...coreStyles.scrollable(),
 
     '&:has(.layout__bottom) .layout__content': {
