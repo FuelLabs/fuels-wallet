@@ -1,5 +1,19 @@
 # fuels-wallet
 
+## 0.59.1
+
+### Patch Changes
+
+- [#1966](https://github.com/FuelLabs/fuels-wallet/pull/1966) [`f307f7aa`](https://github.com/FuelLabs/fuels-wallet/commit/f307f7aae09561225b98768b66000eb27202c19b) Thanks [@nelitow](https://github.com/nelitow)! - fix: Update ecosystem image URLs
+
+- [#1970](https://github.com/FuelLabs/fuels-wallet/pull/1970) [`22d8093b`](https://github.com/FuelLabs/fuels-wallet/commit/22d8093bc50ac6e122c45e66d0a68ae8a5afbad8) Thanks [@nelitow](https://github.com/nelitow)! - fix: Scroll in transaction screen
+
+- [#1973](https://github.com/FuelLabs/fuels-wallet/pull/1973) [`de3d469f`](https://github.com/FuelLabs/fuels-wallet/commit/de3d469fd244f2712cc21feae155de90ef43a62b) Thanks [@nelitow](https://github.com/nelitow)! - fix: Asset List UI
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.59.1
+  - @fuels/playwright-utils@0.59.1
+
 ## 0.59.0
 
 ### Minor Changes
