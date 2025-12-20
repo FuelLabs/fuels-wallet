@@ -8,7 +8,7 @@ type AssetListLoadingProps = {
 
 export function AssetListLoading({ items = 5 }: AssetListLoadingProps) {
   return (
-    <CardList>
+    <CardList gap={3}>
       {Array.from({ length: items }).map((_, idx) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
         <AssetItem.Loader key={idx} />
