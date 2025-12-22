@@ -32,6 +32,13 @@ export function AccountList({
     setShowHidden((s) => !s);
   }
 
+  const collator = new Intl.Collator(undefined, {
+    numeric: true,
+    sensitivity: "base"
+  });
+
+  accounts = accounts.sort((a, b) => collator.compare(a.name, b.name));
+
   return (
     <Box.Stack gap="$4">
       {isLoading && (
