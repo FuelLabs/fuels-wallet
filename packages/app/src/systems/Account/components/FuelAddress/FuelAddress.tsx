@@ -2,42 +2,9 @@ import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Box, Copyable, Icon, IconButton, Text } from '@fuel-ui/react';
 import { Address, type B256Address, type ChecksumAddress } from 'fuels';
-import { type ReactNode, useMemo } from 'react';
-import { shortAddress } from '~/systems/Core';
+import { useMemo } from 'react';
+import { highlightText, shortAddress } from '~/systems/Core';
 import { useExplorerLink } from '../../hooks/useExplorerLink';
-
-function escapeRegExp(string: string): string {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function highlightText(text: string, query: string): ReactNode {
-  if (!query) return text;
-
-  const parts = text.split(new RegExp(`(${escapeRegExp(query)})`, 'gi'));
-  return (
-    <>
-      {parts.map((part, index) => {
-        const isMatch = part.toLowerCase() === query.toLowerCase();
-        return isMatch ? (
-          <Text
-            as="span"
-            // biome-ignore lint/suspicious/noArrayIndexKey: Static list based on search query, order won't change
-            key={index}
-            css={{
-              backgroundColor: '$intentsWarning3',
-              color: '$intentsWarning11',
-              fontWeight: '$semibold',
-            }}
-          >
-            {part}
-          </Text>
-        ) : (
-          part
-        );
-      })}
-    </>
-  );
-}
 
 export type AddressProps = {
   address: string;

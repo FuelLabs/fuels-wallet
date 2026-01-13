@@ -1,7 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, CardList, Input, Text } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
-import { type ReactNode, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { highlightText } from '~/systems/Core';
 
 import { AccountItem } from '../AccountItem';
 
@@ -11,39 +12,6 @@ function matchesB256Address(address: string, query: string): boolean {
   const normalizedAddress = address.toLowerCase().replace(/^0x/, '');
   const normalizedQuery = query.toLowerCase().replace(/^0x/, '');
   return normalizedAddress.startsWith(normalizedQuery);
-}
-
-function escapeRegExp(string: string): string {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function highlightText(text: string, query: string): ReactNode {
-  if (!query) return text;
-
-  const parts = text.split(new RegExp(`(${escapeRegExp(query)})`, 'gi'));
-  return (
-    <>
-      {parts.map((part, index) => {
-        const isMatch = part.toLowerCase() === query.toLowerCase();
-        return isMatch ? (
-          <Text
-            as="span"
-            // biome-ignore lint/suspicious/noArrayIndexKey: Static list based on search query, order won't change
-            key={index}
-            css={{
-              backgroundColor: '$intentsWarning3',
-              color: '$intentsWarning11',
-              fontWeight: '$semibold',
-            }}
-          >
-            {part}
-          </Text>
-        ) : (
-          part
-        );
-      })}
-    </>
-  );
 }
 
 export type AccountListProps = {
