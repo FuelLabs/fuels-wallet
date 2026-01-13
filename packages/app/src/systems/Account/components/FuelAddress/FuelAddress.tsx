@@ -43,30 +43,28 @@ export type AddressProps = {
   address: string;
   canOpenExplorer?: boolean;
   css?: ThemeUtilsCSS;
-  isContract?: boolean;
   searchQuery?: string;
 };
 
 export const FuelAddress = ({
   address,
   canOpenExplorer = false,
-  isContract,
   css,
   searchQuery,
 }: AddressProps) => {
   const account = useMemo<string>(() => {
     if (!address) return '';
     const fuelAddress = Address.fromDynamicInput(address);
-    if (isContract) return fuelAddress.toB256();
-    return fuelAddress.toString();
-  }, [isContract, address]);
+    return fuelAddress.toB256();
+  }, [address]);
 
   const { openExplorer, href } = useExplorerLink(account);
 
   const displayAddress = useMemo(() => {
     const short = shortAddress(account);
     if (searchQuery) {
-      return highlightText(short, searchQuery);
+      const normalizedQuery = searchQuery.replace(/^0x/i, '');
+      return highlightText(short, normalizedQuery);
     }
     return short;
   }, [account, searchQuery]);
