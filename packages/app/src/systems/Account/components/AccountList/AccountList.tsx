@@ -5,10 +5,14 @@ import { type ReactNode, useMemo, useState } from 'react';
 
 import { AccountItem } from '../AccountItem';
 
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function highlightText(text: string, query: string): ReactNode {
   if (!query) return text;
 
-  const parts = text.split(new RegExp(`(${query})`, 'gi'));
+  const parts = text.split(new RegExp(`(${escapeRegExp(query)})`, 'gi'));
   return (
     <>
       {parts.map((part, index) => {
