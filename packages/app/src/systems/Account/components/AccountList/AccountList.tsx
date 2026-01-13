@@ -71,7 +71,8 @@ export function AccountList({
       const matchesSearch =
         account.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         account.address.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesSearch;
+      const isVisible = showHidden || !account.isHidden;
+      return matchesSearch && isVisible;
     });
 
     const current = filtered.find((account) => account.isCurrent);
@@ -81,7 +82,7 @@ export function AccountList({
       currentAccount: current,
       otherAccounts: others,
     };
-  }, [accounts, searchQuery]);
+  }, [accounts, searchQuery, showHidden]);
 
   const displayAccounts = currentAccount
     ? [currentAccount, ...otherAccounts]
