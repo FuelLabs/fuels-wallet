@@ -55,7 +55,7 @@ export const FuelAddress = ({
   const account = useMemo<string>(() => {
     if (!address) return '';
     const fuelAddress = Address.fromDynamicInput(address);
-    return fuelAddress.toB256();
+    return fuelAddress.toString();
   }, [address]);
 
   const { openExplorer, href } = useExplorerLink(account);
