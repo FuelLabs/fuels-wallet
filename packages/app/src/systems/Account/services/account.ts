@@ -154,12 +154,13 @@ export class AccountService {
       nextBalancesWithAssets.sort((a, b) => {
         // if asset.symbol is "ETH" then it will be should be first
         if (a.asset?.symbol === 'ETH') return -1;
+        if (b.asset?.symbol === 'ETH') return 1;
 
         const aName = a.asset?.name?.toLowerCase() ?? '';
         const bName = b.asset?.name?.toLowerCase() ?? '';
         // sort ascendant by asset.name
-        if (aName > bName) return -1;
-        if (bName > aName) return 1;
+        if (aName < bName) return -1;
+        if (aName > bName) return 1;
 
         return 0;
       });
