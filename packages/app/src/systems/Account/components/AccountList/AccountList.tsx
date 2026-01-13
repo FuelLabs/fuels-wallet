@@ -67,24 +67,36 @@ export function AccountList({
     setShowHidden((s) => !s);
   }
 
-  const { currentAccount, otherAccounts } = useMemo(() => {
-    const filtered = accounts.filter((account) => {
-      const compactedAddress = shortAddress(account.address);
-      const matchesSearch =
-        account.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        compactedAddress.toLowerCase().includes(searchQuery.toLowerCase());
-      const isVisible = showHidden || !account.isHidden;
-      return matchesSearch && isVisible;
-    });
+  const { currentAccount, otherAccounts, hasMatchingHiddenAccounts } =
+    useMemo(() => {
+      const filtered = accounts.filter((account) => {
+        const compactedAddress = shortAddress(account.address);
+        const matchesSearch =
+          account.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          compactedAddress.toLowerCase().includes(searchQuery.toLowerCase());
+        const isVisible = showHidden || !account.isHidden;
+        return matchesSearch && isVisible;
+      });
 
-    const current = filtered.find((account) => account.isCurrent);
-    const others = filtered.filter((account) => !account.isCurrent);
+      // Check if there are hidden accounts that match the search query
+      const matchingHiddenAccounts = accounts.filter((account) => {
+        if (!account.isHidden) return false;
+        const compactedAddress = shortAddress(account.address);
+        return (
+          account.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          compactedAddress.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      });
 
-    return {
-      currentAccount: current,
-      otherAccounts: others,
-    };
-  }, [accounts, searchQuery, showHidden]);
+      const current = filtered.find((account) => account.isCurrent);
+      const others = filtered.filter((account) => !account.isCurrent);
+
+      return {
+        currentAccount: current,
+        otherAccounts: others,
+        hasMatchingHiddenAccounts: matchingHiddenAccounts.length > 0,
+      };
+    }, [accounts, searchQuery, showHidden]);
 
   const displayAccounts = currentAccount
     ? [currentAccount, ...otherAccounts]
@@ -153,7 +165,7 @@ export function AccountList({
           })}
         </CardList>
       )}
-      {!isLoading && hasHiddenAccounts && (
+      {!isLoading && hasHiddenAccounts && hasMatchingHiddenAccounts && (
         <Button
           size="xs"
           variant="link"
