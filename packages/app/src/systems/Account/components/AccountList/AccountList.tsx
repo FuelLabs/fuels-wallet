@@ -78,7 +78,6 @@ export function AccountList({
         return matchesSearch && isVisible;
       });
 
-      // Check if there are hidden accounts that match the search query
       const matchingHiddenAccounts = accounts.filter((account) => {
         if (!account.isHidden) return false;
         const compactedAddress = shortAddress(account.address);
