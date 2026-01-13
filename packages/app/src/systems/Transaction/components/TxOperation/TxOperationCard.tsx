@@ -5,12 +5,12 @@ import { useMemo } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadata';
 import { isValidEthAddress } from '~/systems/Core';
+import { NameSystemAvatar } from '~/systems/NameSystem/components/NameSystemAvatar/NameSystemAvatar';
 import { useAssetsAmount } from '../../hooks/useAssetsAmount';
 import { getOperationText } from '../../services/transformers/simplifyTransaction';
 import { type SimplifiedOperation, TxCategory } from '../../types';
 import { TxRecipientContractLogo } from '../TxRecipientCard/TxRecipientContractLogo';
 import { TxOperationAssets } from './TxOperationAssets';
-import { NameSystemAvatar } from '~/systems/NameSystem/components/NameSystemAvatar/NameSystemAvatar';
 
 export type TxOperationCardProps = {
   operation: SimplifiedOperation;
@@ -130,11 +130,7 @@ export function TxOperationCard({
               </Text>
             </Box>
           )}
-          <FuelAddress
-            address={fuelFromAddress}
-            isContract={isFromContract}
-            css={styles.address}
-          />
+          <FuelAddress address={fuelFromAddress} css={styles.address} />
         </Box.Flex>
 
         <Box.Flex justify={'center'}>
@@ -206,11 +202,7 @@ export function TxOperationCard({
           {ethToAddress ? (
             <EthAddress address={ethToAddress} css={styles.address} />
           ) : (
-            <FuelAddress
-              address={fuelToAddress}
-              isContract={isToContract}
-              css={styles.address}
-            />
+            <FuelAddress address={fuelToAddress} css={styles.address} />
           )}
         </Box.Flex>
         {hasAssetsComingBack && (
@@ -279,11 +271,7 @@ export function TxOperationCard({
                   </Text>
                 </Box>
               )}
-              <FuelAddress
-                address={fuelFromAddress}
-                isContract={isFromContract}
-                css={styles.address}
-              />
+              <FuelAddress address={fuelFromAddress} css={styles.address} />
             </Box.Flex>
           </>
         )}
