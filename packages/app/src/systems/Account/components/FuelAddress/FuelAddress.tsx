@@ -2,15 +2,49 @@ import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Box, Copyable, Icon, IconButton, Text } from '@fuel-ui/react';
 import { Address, type B256Address, type ChecksumAddress } from 'fuels';
-import { useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { shortAddress } from '~/systems/Core';
 import { useExplorerLink } from '../../hooks/useExplorerLink';
+
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function highlightText(text: string, query: string): ReactNode {
+  if (!query) return text;
+
+  const parts = text.split(new RegExp(`(${escapeRegExp(query)})`, 'gi'));
+  return (
+    <>
+      {parts.map((part, index) => {
+        const isMatch = part.toLowerCase() === query.toLowerCase();
+        return isMatch ? (
+          <Text
+            as="span"
+            // biome-ignore lint/suspicious/noArrayIndexKey: Static list based on search query, order won't change
+            key={index}
+            css={{
+              backgroundColor: '$intentsWarning3',
+              color: '$intentsWarning11',
+              fontWeight: '$semibold',
+            }}
+          >
+            {part}
+          </Text>
+        ) : (
+          part
+        );
+      })}
+    </>
+  );
+}
 
 export type AddressProps = {
   address: string;
   canOpenExplorer?: boolean;
   css?: ThemeUtilsCSS;
   isContract?: boolean;
+  searchQuery?: string;
 };
 
 export const FuelAddress = ({
@@ -18,6 +52,7 @@ export const FuelAddress = ({
   canOpenExplorer = false,
   isContract,
   css,
+  searchQuery,
 }: AddressProps) => {
   const account = useMemo<string>(() => {
     if (!address) return '';
@@ -28,11 +63,19 @@ export const FuelAddress = ({
 
   const { openExplorer, href } = useExplorerLink(account);
 
+  const displayAddress = useMemo(() => {
+    const short = shortAddress(account);
+    if (searchQuery) {
+      return highlightText(short, searchQuery);
+    }
+    return short;
+  }, [account, searchQuery]);
+
   return (
     <Box.Flex align="center" gap="$0" css={styles.root}>
       <Copyable value={account} css={styles.copyable} aria-label={account}>
         <Text className="address" css={css}>
-          {shortAddress(account)}
+          {displayAddress}
         </Text>
       </Copyable>
       {href && canOpenExplorer && (

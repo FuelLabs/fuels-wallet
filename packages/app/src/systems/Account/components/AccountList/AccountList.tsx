@@ -2,6 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Button, CardList, Input, Text } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import { type ReactNode, useMemo, useState } from 'react';
+import { shortAddress } from '~/systems/Core';
 
 import { AccountItem } from '../AccountItem';
 
@@ -68,9 +69,10 @@ export function AccountList({
 
   const { currentAccount, otherAccounts } = useMemo(() => {
     const filtered = accounts.filter((account) => {
+      const compactedAddress = shortAddress(account.address);
       const matchesSearch =
         account.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        account.address.toLowerCase().includes(searchQuery.toLowerCase());
+        compactedAddress.toLowerCase().includes(searchQuery.toLowerCase());
       const isVisible = showHidden || !account.isHidden;
       return matchesSearch && isVisible;
     });
@@ -118,9 +120,10 @@ export function AccountList({
       {!isLoading && displayAccounts.length > 0 && (
         <CardList isClickable>
           {displayAccounts.map((account) => {
+            const compactedAddress = shortAddress(account.address);
             const addressMatches = Boolean(
               searchQuery &&
-                account.address
+                compactedAddress
                   .toLowerCase()
                   .includes(searchQuery.toLowerCase())
             );
@@ -144,7 +147,7 @@ export function AccountList({
                     ? highlightText(account.name, searchQuery)
                     : undefined
                 }
-                shouldHighlightAddress={addressMatches}
+                addressSearchQuery={addressMatches ? searchQuery : undefined}
               />
             );
           })}

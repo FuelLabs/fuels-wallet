@@ -34,7 +34,7 @@ export type AccountItemProps = {
   onToggleHidden?: (address: string, isHidden: boolean) => void;
   onUpdate?: (address: string) => Promise<void> | void;
   highlightedName?: ReactNode;
-  shouldHighlightAddress?: boolean;
+  addressSearchQuery?: string;
 };
 
 type AccountItemComponent = FC<AccountItemProps> & {
@@ -56,7 +56,7 @@ export const AccountItem: AccountItemComponent = ({
   onUpdate,
   css,
   highlightedName,
-  shouldHighlightAddress,
+  addressSearchQuery,
 }: AccountItemProps) => {
   if (isHidden) return null;
 
@@ -155,15 +155,9 @@ export const AccountItem: AccountItemComponent = ({
         </Heading>
         <FuelAddress
           address={account.address}
-          css={{
-            ...styles.address,
-            ...(shouldHighlightAddress && {
-              backgroundColor: '$intentsWarning3',
-              color: '$intentsWarning11',
-              fontWeight: '$semibold',
-            }),
-          }}
+          css={styles.address}
           canOpenExplorer={canOpenExplorer}
+          searchQuery={addressSearchQuery}
         />
       </Box.Flex>
     </CardList.Item>
