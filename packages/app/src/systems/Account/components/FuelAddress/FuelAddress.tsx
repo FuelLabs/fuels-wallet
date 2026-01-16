@@ -3,21 +3,23 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Copyable, Icon, IconButton, Text } from '@fuel-ui/react';
 import { Address, type B256Address, type ChecksumAddress } from 'fuels';
 import { useMemo } from 'react';
-import { shortAddress } from '~/systems/Core';
+import { highlightText, shortAddress } from '~/systems/Core';
 import { useExplorerLink } from '../../hooks/useExplorerLink';
 
 export type AddressProps = {
   address: string;
   canOpenExplorer?: boolean;
   css?: ThemeUtilsCSS;
+  searchQuery?: string;
   isContract?: boolean;
 };
 
 export const FuelAddress = ({
   address,
   canOpenExplorer = false,
-  isContract,
   css,
+  searchQuery,
+  isContract,
 }: AddressProps) => {
   const account = useMemo<string>(() => {
     if (!address) return '';
@@ -28,11 +30,20 @@ export const FuelAddress = ({
 
   const { openExplorer, href } = useExplorerLink(account);
 
+  const displayAddress = useMemo(() => {
+    const short = shortAddress(account);
+    if (searchQuery) {
+      const normalizedQuery = searchQuery.replace(/^0x/i, '');
+      return highlightText(short, normalizedQuery);
+    }
+    return short;
+  }, [account, searchQuery]);
+
   return (
     <Box.Flex align="center" gap="$0" css={styles.root}>
       <Copyable value={account} css={styles.copyable} aria-label={account}>
         <Text className="address" css={css}>
-          {shortAddress(account)}
+          {displayAddress}
         </Text>
       </Copyable>
       {href && canOpenExplorer && (
