@@ -130,7 +130,11 @@ export function TxOperationCard({
               </Text>
             </Box>
           )}
-          <FuelAddress address={fuelFromAddress} css={styles.address} />
+          <FuelAddress
+            address={fuelFromAddress}
+            isContract={isFromContract}
+            css={styles.address}
+          />
         </Box.Flex>
 
         <Box.Flex justify={'center'}>
@@ -202,7 +206,11 @@ export function TxOperationCard({
           {ethToAddress ? (
             <EthAddress address={ethToAddress} css={styles.address} />
           ) : (
-            <FuelAddress address={fuelToAddress} css={styles.address} />
+            <FuelAddress
+              address={fuelToAddress}
+              isContract={isToContract}
+              css={styles.address}
+            />
           )}
         </Box.Flex>
         {hasAssetsComingBack && (
@@ -271,7 +279,11 @@ export function TxOperationCard({
                   </Text>
                 </Box>
               )}
-              <FuelAddress address={fuelFromAddress} css={styles.address} />
+              <FuelAddress
+                address={fuelFromAddress}
+                isContract={isFromContract}
+                css={styles.address}
+              />
             </Box.Flex>
           </>
         )}

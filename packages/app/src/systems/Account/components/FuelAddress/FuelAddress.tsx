@@ -11,6 +11,7 @@ export type AddressProps = {
   canOpenExplorer?: boolean;
   css?: ThemeUtilsCSS;
   searchQuery?: string;
+  isContract?: boolean;
 };
 
 export const FuelAddress = ({
@@ -18,12 +19,14 @@ export const FuelAddress = ({
   canOpenExplorer = false,
   css,
   searchQuery,
+  isContract,
 }: AddressProps) => {
   const account = useMemo<string>(() => {
     if (!address) return '';
     const fuelAddress = Address.fromDynamicInput(address);
+    if (isContract) return fuelAddress.toB256();
     return fuelAddress.toString();
-  }, [address]);
+  }, [isContract, address]);
 
   const { openExplorer, href } = useExplorerLink(account);
 
