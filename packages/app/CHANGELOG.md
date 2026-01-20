@@ -1,5 +1,17 @@
 # fuels-wallet
 
+## 0.60.0
+
+### Minor Changes
+
+- [#1974](https://github.com/FuelLabs/fuels-wallet/pull/1974) [`3fd13d65`](https://github.com/FuelLabs/fuels-wallet/commit/3fd13d658261150af632ff2b852866e545124155) Thanks [@nelitow](https://github.com/nelitow)! - feat: Add account search feature
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.60.0
+  - @fuels/playwright-utils@0.60.0
+
 ## 0.59.1
 
 ### Patch Changes
