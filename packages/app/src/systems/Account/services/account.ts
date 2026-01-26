@@ -361,7 +361,17 @@ export class AccountService {
             for (const account of accounts) {
               // in case of recovery, the first account will be the current
               if (account.address) {
-                await db.accounts.add(account);
+                try {
+                  await db.accounts.put(account);
+                  // biome-ignore lint/suspicious/noExplicitAny: error handling for Dexie constraint
+                } catch (err: any) {
+                  if (err?.name === 'ConstraintError') {
+                    const newName = `${account.name} ${account.address.slice(0, 4)}`;
+                    await db.accounts.put({ ...account, name: newName });
+                  } else {
+                    throw err;
+                  }
+                }
               }
             }
           }
@@ -371,7 +381,7 @@ export class AccountService {
             await db.vaults.clear();
             for (const vault of vaults) {
               if (vault.key) {
-                await db.vaults.add(vault);
+                await db.vaults.put(vault);
               }
             }
           }
@@ -381,7 +391,7 @@ export class AccountService {
             await db.networks.clear();
             for (const network of networks) {
               if (network.url) {
-                await db.networks.add(network);
+                await db.networks.put(network);
               }
             }
           }
