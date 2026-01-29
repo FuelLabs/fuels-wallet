@@ -1,12 +1,21 @@
 import { createProvider, createUUID } from '@fuel-wallet/connections';
 import type { NetworkData } from '@fuel-wallet/types';
 import { compare } from 'compare-versions';
-import { type NodeInfo, Provider, type SelectNetworkArguments } from 'fuels';
+import {
+  DEVNET_NETWORK_URL,
+  type NodeInfo,
+  Provider,
+  type SelectNetworkArguments,
+} from 'fuels';
 import { MIN_NODE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
 import { DEFAULT_NETWORKS } from '~/networks';
 import { db } from '~/systems/Core/utils/database';
 
 import { isValidNetworkUrl } from '../utils';
+
+// Temporary constant for devnet chainId transition period
+// TODO: Remove after 2-4 week transition period once all DApps are updated
+const OLD_DEVNET_CHAIN_ID = 0;
 
 export type NetworkInputs = {
   getNetworkById: {
@@ -232,7 +241,18 @@ export class NetworkService {
         const providerName = (await provider.getChain()).name;
         const providerChainId = await provider.getChainId();
 
-        if (providerChainId !== chainId) {
+        // Special handling for devnet chainId transition
+        // Accept old devnet chainId (0) when connecting to devnet URL
+        let expectedChainId = chainId;
+        if (chainId === OLD_DEVNET_CHAIN_ID && url === DEVNET_NETWORK_URL) {
+          // Old devnet chainId provided, but provider may return new one
+          expectedChainId = providerChainId; // Accept provider's chainId
+          console.warn(
+            `[Wallet] Legacy devnet chainId (${OLD_DEVNET_CHAIN_ID}) detected. The network is now using chainId ${providerChainId}. Please update your DApp to use the new chainId. Support for legacy chainId will be removed in a future release.`
+          );
+        }
+
+        if (providerChainId !== expectedChainId) {
           throw new Error(
             `The URL you have entered returned a different chain ID (${providerChainId}). Please update the Chain ID to match the URL of the network you are trying to add.`
           );

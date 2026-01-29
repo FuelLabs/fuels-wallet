@@ -9,6 +9,7 @@ import { getFuelAssetByAssetId } from '~/systems/Asset/utils';
 import { type FuelCachedAsset, db } from '~/systems/Core/utils/database';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
+const ZERO_RATE_RETRY_COOLDOWN = 30 * 1000;
 export const assetDbKeyFactory = (chainId: number, assetId: string) =>
   `${chainId}/asset/${assetId}`;
 
@@ -121,25 +122,35 @@ export class AssetsCache {
     if (
       cachedEntry?.name !== undefined &&
       cachedEntry.fetchedAt &&
-      now - cachedEntry.fetchedAt < FIVE_MINUTES &&
       !cachedEntry.isCustom &&
       cachedEntry?.name !== ''
     ) {
-      return cachedEntry;
+      const cachedRate = (cachedEntry as { rate?: number }).rate ?? 0;
+      const isZeroRate = cachedRate === 0;
+      const withinTtl = now - cachedEntry.fetchedAt < FIVE_MINUTES;
+      const withinZeroRateCooldown =
+        now - cachedEntry.fetchedAt < ZERO_RATE_RETRY_COOLDOWN;
+
+      if (withinTtl && (!isZeroRate || withinZeroRateCooldown)) {
+        return cachedEntry;
+      }
     }
 
     // get from indexed db if not in memory
     const assetFromDb = await this.storage.getItem(
       assetDbKeyFactory(chainId, assetId)
     );
-    if (
-      assetFromDb?.name &&
-      assetFromDb.fetchedAt &&
-      now - assetFromDb.fetchedAt < FIVE_MINUTES &&
-      !assetFromDb.isCustom
-    ) {
-      this.cache[chainId][assetId] = assetFromDb;
-      return assetFromDb as FuelCachedAsset;
+    if (assetFromDb?.name && assetFromDb.fetchedAt && !assetFromDb.isCustom) {
+      const dbRate = (assetFromDb as { rate?: number }).rate ?? 0;
+      const isZeroRate = dbRate === 0;
+      const withinTtl = now - assetFromDb.fetchedAt < FIVE_MINUTES;
+      const withinZeroRateCooldown =
+        now - assetFromDb.fetchedAt < ZERO_RATE_RETRY_COOLDOWN;
+
+      if (withinTtl && (!isZeroRate || withinZeroRateCooldown)) {
+        this.cache[chainId][assetId] = assetFromDb;
+        return assetFromDb as FuelCachedAsset;
+      }
     }
 
     const dbAsset = await getFuelAssetByAssetId({

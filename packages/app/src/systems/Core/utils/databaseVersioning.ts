@@ -334,4 +334,42 @@ export const applyDbVersioning = (db: Dexie) => {
         await accountsTable.bulkAdd(updatedAccounts);
       }
     });
+
+  // DB VERSION 30
+  // Update devnet chainId from 0 to new value (1119889111)
+  // This migration handles existing wallets that have devnet stored with old chainId
+  db.version(30)
+    .stores({
+      vaults: 'key',
+      accounts: '&address, &name',
+      networks: '&id, &url, &name, chainId',
+      connections: 'origin',
+      transactionsCursors: '++id, address, size, providerUrl, endCursor',
+      assets: '&name, &symbol',
+      indexedAssets: 'key, fetchedAt',
+      abis: '&contractId',
+      errors: '&id',
+    })
+    .upgrade(async (tx) => {
+      console.log('[DB Migration v30] Updating devnet chainId');
+      const networks = tx.table('networks');
+
+      // Find devnet by URL (more reliable than old chainId since chainId is changing)
+      const allNetworks = await networks.toArray();
+      const devnetNetwork = allNetworks.find(
+        (network) => network.url === DEVNET_NETWORK_URL
+      );
+
+      if (devnetNetwork) {
+        // Update the chainId to the new value
+        await networks.update(devnetNetwork.id, {
+          chainId: CHAIN_IDS.fuel.devnet, // New chainId: 1119889111 (or current value from SDK)
+        });
+        console.log(
+          `[DB Migration v30] Updated devnet from chainId ${devnetNetwork.chainId} to ${CHAIN_IDS.fuel.devnet}`
+        );
+      } else {
+        console.log('[DB Migration v30] No devnet network found to migrate');
+      }
+    });
 };
