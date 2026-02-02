@@ -22,7 +22,7 @@
     "ts:check": "tsc --noEmit"
   },
   "peerDependencies": {
-    "fuels": "0.102.0"
+    "fuels": "0.103.0"
   },
   "devDependencies": {
     "dexie": "4.0.9",

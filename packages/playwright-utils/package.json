@@ -35,6 +35,6 @@
   },
   "peerDependencies": {
     "@playwright/test": ">=1.46.1",
-    "fuels": "0.102.0"
+    "fuels": "0.103.0"
   }
 }
