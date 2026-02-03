@@ -96,7 +96,7 @@ jobs:
 
       # Ensure latest NPM is installed to support OIDC publishing
       - name: Update npm
-        run: npm install -g npm@latest
+        run: npm install -g npm@10
 
       - name: Build packages
         run: pnpm build:libs
