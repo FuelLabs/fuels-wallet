@@ -1,5 +1,17 @@
 # fuels-wallet
 
+## 0.62.0
+
+### Minor Changes
+
+- [#1986](https://github.com/FuelLabs/fuels-wallet/pull/1986) [`57218271`](https://github.com/FuelLabs/fuels-wallet/commit/57218271fb36e346a55f9ad52d391ab331cc2e15) Thanks [@nelitow](https://github.com/nelitow)! - feat: Trigger release
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.62.0
+  - @fuels/playwright-utils@0.62.0
+
 ## 0.61.0
 
 ### Minor Changes
