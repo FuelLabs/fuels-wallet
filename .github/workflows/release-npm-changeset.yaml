@@ -57,13 +57,13 @@ jobs:
       - name: Setup Node and PNPM
         uses: FuelLabs/github-actions/setups/node@master
         with:
-          node-version: 20.11.0
+          node-version: 24
           pnpm-version: ${{ env.PNPM_VERSION }}
           
       - name: Configure npm registry for OIDC publishing
         uses: actions/setup-node@v4
         with:
-          node-version: 20.11.0
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
@@ -102,7 +102,7 @@ jobs:
 
       # Ensure latest NPM is installed to support OIDC publishing
       - name: Update npm
-        run: npm install -g npm@10
+        run: npm install -g npm@latest
 
       - name: Build packages
         run: pnpm build:libs

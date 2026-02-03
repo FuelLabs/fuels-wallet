@@ -17,6 +17,10 @@
       }
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FuelLabs/fuels-wallet.git"
+  },
   "files": ["dist"],
   "scripts": {
     "build": "pnpm ts:check && tsup",
