@@ -53,8 +53,37 @@ describe('AccountService Reproduction', () => {
     // After fix, we expect both accounts to be saved (one renamed).
     expect(accounts.length).toBe(2);
     const original = accounts.find((a) => a.name === 'SameName');
-    const renamed = accounts.find((a) => a.name.startsWith('SameName 0x'));
+    const renamed = accounts.find((a) => a.name === 'SameName (2)');
     expect(original).toBeDefined();
     expect(renamed).toBeDefined();
+  });
+
+  it('should handle multiple duplicates with incremented suffixes', async () => {
+    const { chromeStorage } = require('~/systems/Core/services/chromeStorage');
+    const tripleAccounts = [
+      { ...MOCK_ACCOUNTS[0], name: 'SameName' },
+      { ...MOCK_ACCOUNTS[1], name: 'SameName' },
+      {
+        ...MOCK_ACCOUNTS[1],
+        name: 'SameName',
+        address: `${MOCK_ACCOUNTS[1].address.slice(0, -4)}FFFF`,
+        publicKey: `${MOCK_ACCOUNTS[1].publicKey.slice(0, -4)}FFFF`,
+      },
+    ];
+
+    const mockStorageData = tripleAccounts.map((acc) => ({
+      key: acc.address,
+      data: acc,
+    }));
+
+    chromeStorage.accounts.getAll.mockResolvedValue(mockStorageData);
+
+    await AccountService.recoverWallet();
+
+    const accounts = await AccountService.getAccounts();
+    expect(accounts.length).toBe(3);
+    expect(accounts.find((a) => a.name === 'SameName')).toBeDefined();
+    expect(accounts.find((a) => a.name === 'SameName (2)')).toBeDefined();
+    expect(accounts.find((a) => a.name === 'SameName (3)')).toBeDefined();
   });
 });

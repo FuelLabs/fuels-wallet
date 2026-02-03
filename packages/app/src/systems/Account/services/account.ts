@@ -366,8 +366,21 @@ export class AccountService {
                   // biome-ignore lint/suspicious/noExplicitAny: error handling for Dexie constraint
                 } catch (err: any) {
                   if (err?.name === 'ConstraintError') {
-                    const newName = `${account.name} ${account.address.slice(0, 4)}`;
-                    await db.accounts.put({ ...account, name: newName });
+                    let suffix = 2;
+                    let saved = false;
+                    while (!saved) {
+                      try {
+                        const newName = `${account.name} (${suffix})`;
+                        await db.accounts.put({ ...account, name: newName });
+                        saved = true;
+                        // biome-ignore lint/suspicious/noExplicitAny: error handling for Dexie constraint
+                      } catch (retryErr: any) {
+                        if (retryErr?.name !== 'ConstraintError') {
+                          throw retryErr;
+                        }
+                        suffix++;
+                      }
+                    }
                   } else {
                     throw err;
                   }
