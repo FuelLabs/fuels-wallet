@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.62.2
+
+### Patch Changes
+
+- [#1991](https://github.com/FuelLabs/fuels-wallet/pull/1991) [`9b3431c1`](https://github.com/FuelLabs/fuels-wallet/commit/9b3431c189bf069fb879034f565efa2a53f869e9) Thanks [@nelitow](https://github.com/nelitow)! - chore: trigger release to test npm OIDC publishing
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.62.2
+  - @fuels/playwright-utils@0.62.2
+
 ## 0.62.1
 
 ### Patch Changes
