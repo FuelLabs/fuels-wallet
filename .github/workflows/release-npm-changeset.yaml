@@ -63,10 +63,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - uses: FuelLabs/github-actions/setups/npm@master
-        with:
-          npm-token: ${{ secrets.NPM_TOKEN_WALLET }}
-
       # if there are changesets present, package.json will be bumped
       - name: Bump and Collect Versions
         run: |
@@ -98,10 +94,9 @@ jobs:
           ls -la .changeset/ || echo "No changeset files found (expected)"
           echo "::endgroup::"
 
-      - name: Ensure NPM access
-        run: npm whoami
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_WALLET }}
+      # Ensure latest NPM is installed to support OIDC publishing
+      - name: Update npm
+        run: npm install -g npm@latest
 
       - name: Build packages
         run: pnpm build:libs
@@ -126,7 +121,7 @@ jobs:
           githubTagName: v${{ env.BUILD_VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN_WALLET }}
+          NPM_CONFIG_PROVENANCE: "true"
 
       - name: Debug Published Outputs
         id: debug-published
