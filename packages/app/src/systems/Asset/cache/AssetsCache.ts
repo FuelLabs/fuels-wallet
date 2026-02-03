@@ -154,7 +154,7 @@ export class AssetsCache {
       endpoint.url,
       assetId
     ).catch((e) => {
-      console.error('Error fetching asset from indexer', e);
+      console.error('Error fetching assets from indexer', e);
       return undefined;
     });
 
