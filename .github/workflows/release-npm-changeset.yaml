@@ -60,6 +60,12 @@ jobs:
           node-version: 20.11.0
           pnpm-version: ${{ env.PNPM_VERSION }}
           
+      - name: Configure npm registry for OIDC publishing
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.11.0
+          registry-url: "https://registry.npmjs.org"
+
       - name: Install dependencies
         run: pnpm install
 
