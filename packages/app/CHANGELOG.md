@@ -1,5 +1,19 @@
 # fuels-wallet
 
+## 0.61.0
+
+### Minor Changes
+
+- [#1980](https://github.com/FuelLabs/fuels-wallet/pull/1980) [`d08861e1`](https://github.com/FuelLabs/fuels-wallet/commit/d08861e14b2916aba5754b75d2507b599c29e68a) Thanks [@nelitow](https://github.com/nelitow)! - feat: Update Devnet chain id
+
+### Patch Changes
+
+- [#1977](https://github.com/FuelLabs/fuels-wallet/pull/1977) [`242ca15d`](https://github.com/FuelLabs/fuels-wallet/commit/242ca15daeca4d5bb814680f2beb372df6471f9c) Thanks [@nelitow](https://github.com/nelitow)! - fix: Handle duplicate account names during wallet recovery
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.61.0
+  - @fuels/playwright-utils@0.61.0
+
 ## 0.60.0
 
 ### Minor Changes
