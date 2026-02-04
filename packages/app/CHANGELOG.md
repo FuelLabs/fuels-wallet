@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.62.3
+
+### Patch Changes
+
+- [#1994](https://github.com/FuelLabs/fuels-wallet/pull/1994) [`9a4db08c`](https://github.com/FuelLabs/fuels-wallet/commit/9a4db08c986511af1dbc7ab8198bccd4913beeb9) Thanks [@nelitow](https://github.com/nelitow)! - chore: bump version to trigger release with fixed Sentry auth
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.62.3
+  - @fuels/playwright-utils@0.62.3
+
 ## 0.62.2
 
 ### Patch Changes
