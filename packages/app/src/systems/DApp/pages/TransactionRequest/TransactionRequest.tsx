@@ -3,13 +3,10 @@ import { Button } from '@fuel-ui/react';
 import { bn } from 'fuels';
 import { useMemo } from 'react';
 import { Layout, coreStyles } from '~/systems/Core';
-import {
-  TxContent,
-  detectInsufficientMaxFee,
-  getGasLimitFromTxRequest,
-} from '~/systems/Transaction';
+import { TxContent, getGasLimitFromTxRequest } from '~/systems/Transaction';
 import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
 import { TxReviewAlert } from '~/systems/Transaction/components/TxReviewAlert/TxReviewAlert';
+import { useInsufficientFeeError } from '~/systems/Transaction/hooks/useInsufficientFeeError';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 import { TxRequestStatus } from '../../machines/transactionRequestMachine';
 import { AutoSubmit } from './TransactionRequest.AutoSubmit';
@@ -41,33 +38,23 @@ export function TransactionRequest() {
   } = txRequest;
   const isSignOnly = !!input.signOnly;
 
-  // Detect insufficient fee errors from simulation OR send (txApproveError)
-  const sendError = useMemo(
-    () => detectInsufficientMaxFee(errors.txApproveError),
-    [errors.txApproveError]
-  );
-  const simulateError = useMemo(() => {
-    if (
-      typeof errors.simulateTxErrors === 'object' &&
-      errors.simulateTxErrors?.isInsufficientMaxFee
-    ) {
-      return errors.simulateTxErrors;
-    }
-    return null;
-  }, [errors.simulateTxErrors]);
+  const { insufficientFeeError, isInsufficientFeeError, suggestedMinFee } =
+    useInsufficientFeeError(errors);
 
-  const insufficientFeeError = sendError || simulateError;
-  const isInsufficientFeeError = Boolean(insufficientFeeError);
-
-  // Extract suggested minimum fee from error details (with 10% buffer)
-  const suggestedMinFee = useMemo(() => {
-    const details = insufficientFeeError?.details;
-    if (details?.maxFeeFromGasPrice) {
-      // Add 10% buffer to suggested fee
-      return bn(details.maxFeeFromGasPrice).mul(110).div(100);
+  // Determine which errors to display - show insufficient fee error, simulation errors, or send errors
+  const displayErrors = useMemo(() => {
+    if (insufficientFeeError) return insufficientFeeError;
+    if (errors.simulateTxErrors) return errors.simulateTxErrors;
+    if (errors.txApproveError) {
+      const err = errors.txApproveError;
+      if (typeof err === 'string') return err;
+      const msgs = err?.response?.errors
+        ?.map((e: { message: string }) => e.message)
+        .join('; ');
+      return msgs || JSON.stringify(err);
     }
     return undefined;
-  }, [insufficientFeeError]);
+  }, [insufficientFeeError, errors.simulateTxErrors, errors.txApproveError]);
 
   const defaultValues = useMemo<TransactionRequestFormData | undefined>(() => {
     if (!txSummarySimulated || !proposedTxRequest) return undefined;
@@ -120,7 +107,7 @@ export function TransactionRequest() {
               showDetails
               tx={txSummarySimulated}
               txRequest={proposedTxRequest}
-              errors={insufficientFeeError || errors.simulateTxErrors}
+              errors={displayErrors}
               fees={fees}
               isLoadingFees={isLoadingFees}
               isLoading={isLoading}

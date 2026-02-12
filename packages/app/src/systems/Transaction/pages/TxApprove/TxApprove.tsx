@@ -1,6 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Dialog } from '@fuel-ui/react';
-import { bn } from 'fuels';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAssets } from '~/systems/Asset';
@@ -9,7 +8,7 @@ import { coreStyles } from '~/systems/Core/styles';
 import { TxRequestStatus, useTransactionRequest } from '~/systems/DApp';
 import { TxContent } from '../../components/TxContent/TxContent';
 import { TxReviewAlert } from '../../components/TxReviewAlert/TxReviewAlert';
-import { detectInsufficientMaxFee } from '../../utils/error';
+import { useInsufficientFeeError } from '../../hooks/useInsufficientFeeError';
 
 export const TxApprove = () => {
   const ctx = useTransactionRequest();
@@ -22,32 +21,27 @@ export const TxApprove = () => {
   const { handlers } = useTransactionRequest();
   const isSignOnly = !!ctx.input.signOnly;
 
-  // Detect insufficient fee errors from simulation OR send
-  const sendError = useMemo(
-    () => detectInsufficientMaxFee(ctx.errors.txApproveError),
-    [ctx.errors.txApproveError]
-  );
-  const simulateError = useMemo(() => {
-    if (
-      typeof ctx.errors.simulateTxErrors === 'object' &&
-      ctx.errors.simulateTxErrors?.isInsufficientMaxFee
-    ) {
-      return ctx.errors.simulateTxErrors;
-    }
-    return null;
-  }, [ctx.errors.simulateTxErrors]);
+  const { insufficientFeeError, isInsufficientFeeError, suggestedMinFee } =
+    useInsufficientFeeError(ctx.errors);
 
-  const insufficientFeeError = sendError || simulateError;
-  const isInsufficientFeeError = Boolean(insufficientFeeError);
-
-  // Extract suggested minimum fee from error details (with 10% buffer)
-  const suggestedMinFee = useMemo(() => {
-    const details = insufficientFeeError?.details;
-    if (details?.maxFeeFromGasPrice) {
-      return bn(details.maxFeeFromGasPrice).mul(110).div(100);
+  // Determine which errors to display - show insufficient fee error, simulation errors, or send errors
+  const displayErrors = useMemo(() => {
+    if (insufficientFeeError) return insufficientFeeError;
+    if (ctx.errors.simulateTxErrors) return ctx.errors.simulateTxErrors;
+    if (ctx.errors.txApproveError) {
+      const err = ctx.errors.txApproveError;
+      if (typeof err === 'string') return err;
+      const msgs = err?.response?.errors
+        ?.map((e: { message: string }) => e.message)
+        .join('; ');
+      return msgs || JSON.stringify(err);
     }
     return undefined;
-  }, [insufficientFeeError]);
+  }, [
+    insufficientFeeError,
+    ctx.errors.simulateTxErrors,
+    ctx.errors.txApproveError,
+  ]);
 
   const handleReject = () => {
     handlers.closeDialog();
@@ -73,7 +67,7 @@ export const TxApprove = () => {
           <TxContent.Info
             showDetails
             tx={ctx.txSummarySimulated}
-            errors={insufficientFeeError || ctx.errors.simulateTxErrors}
+            errors={displayErrors}
             isSimulating={ctx.isSimulating}
             signOnly={isSignOnly}
             suggestedMinFee={suggestedMinFee}

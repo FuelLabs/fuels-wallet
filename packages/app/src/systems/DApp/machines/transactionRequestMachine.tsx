@@ -285,6 +285,10 @@ export const transactionRequestMachine = createMachine(
           TRY_AGAIN: {
             target: 'waitingApproval',
           },
+          REJECT: {
+            actions: [assignErrorMessage('User rejected the transaction!')],
+            target: 'failed',
+          },
           CLOSE: {
             target: 'failed',
           },

@@ -31,14 +31,14 @@ import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
 import { TxHeader } from '../TxHeader';
 import { TxOperations } from '../TxOperations';
 
-const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
+const ErrorHeader = ({
+  errors,
+  suggestedMinFee,
+}: { errors?: GroupedErrors; suggestedMinFee?: BN }) => {
   // Handle structured error format
   const isStructuredError = typeof errors === 'object' && errors !== null;
   const isInsufficientMaxFee = isStructuredError && errors.isInsufficientMaxFee;
   const errorMessage = isStructuredError ? errors.message : errors;
-  const suggestedMinFee = isStructuredError
-    ? errors.details?.maxFeeFromGasPrice
-    : undefined;
 
   return (
     <Alert
@@ -67,7 +67,7 @@ const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
               try again.
               {suggestedMinFee && (
                 <Text fontSize="sm" css={{ display: 'block', mt: '$2' }}>
-                  Minimum required fee: {bn(suggestedMinFee).format()} ETH
+                  Minimum required fee: {suggestedMinFee.format()} ETH
                 </Text>
               )}
             </>
@@ -193,7 +193,8 @@ function TxContentInfo({
   }, [getValues, fees, txRequestGasLimit]);
 
   function getHeader() {
-    if (hasErrors) return <ErrorHeader errors={errors} />;
+    if (hasErrors)
+      return <ErrorHeader errors={errors} suggestedMinFee={suggestedMinFee} />;
     if (isExecuted)
       return (
         <TxHeader id={tx?.id} type={tx?.type} status={status || undefined} />
