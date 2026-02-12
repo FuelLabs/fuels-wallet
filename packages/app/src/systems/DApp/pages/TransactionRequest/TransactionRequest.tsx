@@ -1,9 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button } from '@fuel-ui/react';
+import { Button } from '@fuel-ui/react';
 import { bn } from 'fuels';
 import { useMemo } from 'react';
 import { Layout, coreStyles } from '~/systems/Core';
-import { TxContent, getGasLimitFromTxRequest } from '~/systems/Transaction';
+import {
+  TxContent,
+  detectInsufficientMaxFee,
+  getGasLimitFromTxRequest,
+} from '~/systems/Transaction';
 import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
 import { TxReviewAlert } from '~/systems/Transaction/components/TxReviewAlert/TxReviewAlert';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
@@ -37,6 +41,34 @@ export function TransactionRequest() {
   } = txRequest;
   const isSignOnly = !!input.signOnly;
 
+  // Detect insufficient fee errors from simulation OR send (txApproveError)
+  const sendError = useMemo(
+    () => detectInsufficientMaxFee(errors.txApproveError),
+    [errors.txApproveError]
+  );
+  const simulateError = useMemo(() => {
+    if (
+      typeof errors.simulateTxErrors === 'object' &&
+      errors.simulateTxErrors?.isInsufficientMaxFee
+    ) {
+      return errors.simulateTxErrors;
+    }
+    return null;
+  }, [errors.simulateTxErrors]);
+
+  const insufficientFeeError = sendError || simulateError;
+  const isInsufficientFeeError = Boolean(insufficientFeeError);
+
+  // Extract suggested minimum fee from error details (with 10% buffer)
+  const suggestedMinFee = useMemo(() => {
+    const details = insufficientFeeError?.details;
+    if (details?.maxFeeFromGasPrice) {
+      // Add 10% buffer to suggested fee
+      return bn(details.maxFeeFromGasPrice).mul(110).div(100);
+    }
+    return undefined;
+  }, [insufficientFeeError]);
+
   const defaultValues = useMemo<TransactionRequestFormData | undefined>(() => {
     if (!txSummarySimulated || !proposedTxRequest) return undefined;
 
@@ -60,6 +92,13 @@ export function TransactionRequest() {
   const shouldShowReviewAlert =
     !status(TxRequestStatus.success) && !status(TxRequestStatus.failed);
 
+  // Show fee options in failed state if it's a recoverable insufficient fee error
+  const shouldShowFeeOptionsInFailed =
+    status(TxRequestStatus.failed) &&
+    isInsufficientFeeError &&
+    txSummarySimulated &&
+    proposedTxRequest;
+
   return (
     <FormProvider
       onSubmit={handlers.approve}
@@ -76,40 +115,45 @@ export function TransactionRequest() {
         <Layout.TopBar hideMenu hideBackArrow />
         {shouldShowReviewAlert && <TxReviewAlert signOnly={isSignOnly} />}
         <Layout.Content css={styles.content} noScroll>
-          {shouldShowTxSimulated && (
+          {(shouldShowTxSimulated || shouldShowFeeOptionsInFailed) && (
             <TxContent.Info
               showDetails
               tx={txSummarySimulated}
               txRequest={proposedTxRequest}
-              errors={errors.simulateTxErrors}
+              errors={insufficientFeeError || errors.simulateTxErrors}
               fees={fees}
               isLoadingFees={isLoadingFees}
               isLoading={isLoading}
               txAccount={input?.address}
               isSimulating={isSimulating}
               signOnly={isSignOnly}
+              suggestedMinFee={suggestedMinFee}
+              autoAdvanced={isInsufficientFeeError}
+              footer={false}
             />
           )}
-          {shouldShowTxExecuted && txSummaryExecuted && (
-            <TxContent.Info
-              showDetails
-              tx={txSummaryExecuted}
-              txStatus={executedStatus()}
-              footer={
-                status('failed') && (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    intent="error"
-                    onPress={txRequest.handlers.tryAgain}
-                  >
-                    Try again
-                  </Button>
-                )
-              }
-              txAccount={input?.address}
-            />
-          )}
+          {shouldShowTxExecuted &&
+            txSummaryExecuted &&
+            !shouldShowFeeOptionsInFailed && (
+              <TxContent.Info
+                showDetails
+                tx={txSummaryExecuted}
+                txStatus={executedStatus()}
+                footer={
+                  status('failed') && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      intent="error"
+                      onPress={txRequest.handlers.tryAgain}
+                    >
+                      Try again
+                    </Button>
+                  )
+                }
+                txAccount={input?.address}
+              />
+            )}
         </Layout.Content>
         {shouldShowActions && (
           <Layout.BottomBar>
@@ -164,13 +208,5 @@ const styles = {
     background: 'transparent',
     borderColor: '$border',
     borderStyle: 'solid',
-  }),
-  alert: cssObj({
-    '& .fuel_Alert-content': {
-      gap: '$1',
-    },
-    ' & .fuel_Heading': {
-      fontSize: '$sm',
-    },
   }),
 };

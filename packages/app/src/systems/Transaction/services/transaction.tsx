@@ -328,6 +328,7 @@ export class TxService {
               (baseAsset as any)?.rate
             ).formatted
           : '$0';
+
       return {
         baseFee,
         txSummary: {

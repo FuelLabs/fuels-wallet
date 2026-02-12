@@ -262,7 +262,7 @@ export const transactionRequestMachine = createMachine(
           },
           onDone: [
             {
-              target: 'failed',
+              target: 'txFailed',
               actions: ['assignTxApproveError'],
               cond: FetchMachine.hasError,
             },
@@ -377,17 +377,23 @@ export const transactionRequestMachine = createMachine(
           };
         },
       }),
-      assignSimulateResult: assign({
-        response: (ctx, ev) => ({
+      assignSimulateResult: assign((ctx, ev) => ({
+        ...ctx,
+        response: {
           ...ctx.response,
           txSummarySimulated: ev.data.txSummary,
           proposedTxRequest: ev.data.proposedTxRequest,
-        }),
-        fees: (ctx, ev) => ({
+        },
+        fees: {
           ...ctx.fees,
           baseFee: ev.data.baseFee ?? ctx.fees.baseFee,
-        }),
-      }),
+        },
+        // Clear send errors on successful re-simulation
+        errors: {
+          ...ctx.errors,
+          txApproveError: undefined,
+        },
+      })),
       assignSimulateTxErrors: assign((ctx, ev) => {
         if (ev.data.simulateTxErrors) {
           return {
@@ -436,7 +442,6 @@ export const transactionRequestMachine = createMachine(
         showError: false,
         maxAttempts: 1,
         async fetch({ input }) {
-          console.log('asd prepareFeeInputs', input);
           const [estimated, acc] = await Promise.all([
             TxService.estimateGasLimitAndDefaultTips(),
             input?.account ||
@@ -459,7 +464,6 @@ export const transactionRequestMachine = createMachine(
       >({
         showError: false,
         async fetch({ input }) {
-          console.log('asd simulateTransaction', input);
           if (!input?.transactionRequest) {
             throw new Error('Invalid simulateTransaction input');
           }
@@ -483,7 +487,7 @@ export const transactionRequestMachine = createMachine(
         TxInputs['send'] & { signOnly?: boolean },
         MachineServices['send']['data']
       >({
-        showError: true,
+        showError: false,
         maxAttempts: 1,
         async fetch(params) {
           const { input } = params;

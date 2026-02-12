@@ -1,5 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Dialog } from '@fuel-ui/react';
+import { bn } from 'fuels';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAssets } from '~/systems/Asset';
 import { Layout, Pages } from '~/systems/Core';
@@ -7,6 +9,7 @@ import { coreStyles } from '~/systems/Core/styles';
 import { TxRequestStatus, useTransactionRequest } from '~/systems/DApp';
 import { TxContent } from '../../components/TxContent/TxContent';
 import { TxReviewAlert } from '../../components/TxReviewAlert/TxReviewAlert';
+import { detectInsufficientMaxFee } from '../../utils/error';
 
 export const TxApprove = () => {
   const ctx = useTransactionRequest();
@@ -18,6 +21,33 @@ export const TxApprove = () => {
     !ctx.status(TxRequestStatus.success) && !ctx.status(TxRequestStatus.failed);
   const { handlers } = useTransactionRequest();
   const isSignOnly = !!ctx.input.signOnly;
+
+  // Detect insufficient fee errors from simulation OR send
+  const sendError = useMemo(
+    () => detectInsufficientMaxFee(ctx.errors.txApproveError),
+    [ctx.errors.txApproveError]
+  );
+  const simulateError = useMemo(() => {
+    if (
+      typeof ctx.errors.simulateTxErrors === 'object' &&
+      ctx.errors.simulateTxErrors?.isInsufficientMaxFee
+    ) {
+      return ctx.errors.simulateTxErrors;
+    }
+    return null;
+  }, [ctx.errors.simulateTxErrors]);
+
+  const insufficientFeeError = sendError || simulateError;
+  const isInsufficientFeeError = Boolean(insufficientFeeError);
+
+  // Extract suggested minimum fee from error details (with 10% buffer)
+  const suggestedMinFee = useMemo(() => {
+    const details = insufficientFeeError?.details;
+    if (details?.maxFeeFromGasPrice) {
+      return bn(details.maxFeeFromGasPrice).mul(110).div(100);
+    }
+    return undefined;
+  }, [insufficientFeeError]);
 
   const handleReject = () => {
     handlers.closeDialog();
@@ -43,9 +73,11 @@ export const TxApprove = () => {
           <TxContent.Info
             showDetails
             tx={ctx.txSummarySimulated}
-            errors={ctx.errors.simulateTxErrors}
+            errors={insufficientFeeError || ctx.errors.simulateTxErrors}
             isSimulating={ctx.isSimulating}
             signOnly={isSignOnly}
+            suggestedMinFee={suggestedMinFee}
+            autoAdvanced={isInsufficientFeeError}
             footer={
               ctx.status('failed') && (
                 <Button

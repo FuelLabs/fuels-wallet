@@ -32,6 +32,8 @@ type TxFeeOptionsProps = {
   regularTip: BN;
   fastTip: BN;
   onRecalculate?: (tip: BN) => void;
+  suggestedMinFee?: BN;
+  autoAdvanced?: boolean;
 };
 
 export const TxFeeOptions = ({
@@ -41,9 +43,11 @@ export const TxFeeOptions = ({
   regularTip,
   fastTip,
   onRecalculate,
+  suggestedMinFee,
+  autoAdvanced = false,
 }: TxFeeOptionsProps) => {
   const { control, setValue, getValues } = useFormContext<SendFormValues>();
-  const [isAdvanced, setIsAdvanced] = useState(initialAdvanced);
+  const [isAdvanced, setIsAdvanced] = useState(initialAdvanced || autoAdvanced);
   const previousGasLimit = useRef<BN>(gasLimitInput);
   const previousDefaultTip = useRef<BN>(regularTip);
 
@@ -74,9 +78,26 @@ export const TxFeeOptions = ({
     ];
   }, [baseFee, regularTip, fastTip]);
 
+  // Check if current fee is below suggested minimum
+  const isFeeInsufficient = useMemo(() => {
+    if (!suggestedMinFee) return false;
+    return advancedFee.lt(suggestedMinFee);
+  }, [advancedFee, suggestedMinFee]);
+
   const toggle = () => {
+    // Don't allow toggling off advanced mode if autoAdvanced is true
+    if (autoAdvanced && isAdvanced) return;
     setIsAdvanced((curr) => !curr);
   };
+
+  /**
+   * Force advanced mode when autoAdvanced is true
+   */
+  useEffect(() => {
+    if (autoAdvanced && !isAdvanced) {
+      setIsAdvanced(true);
+    }
+  }, [autoAdvanced, isAdvanced]);
 
   /**
    * Resetting fees if hiding advanced options (or initializing them)
@@ -172,14 +193,21 @@ export const TxFeeOptions = ({
                   </Form.Control>
                 </VStack>
               </HStack>
-              {(gasLimitState.error || tipState.error) && (
+              {(gasLimitState.error || tipState.error || isFeeInsufficient) && (
                 <MotionFlex {...animations.fadeIn()} key="error" layout>
                   <Form.Control isInvalid>
                     <Form.ErrorMessage
                       aria-label="Error message"
-                      css={{ padding: 0 }}
+                      css={{ padding: 0, fontSize: '$sm', textAlign: 'center' }}
                     >
-                      {gasLimitState.error?.message || tipState.error?.message}
+                      {isFeeInsufficient && suggestedMinFee ? (
+                        <>
+                          Fee is below the minimum required fee of{' '}
+                          {suggestedMinFee.format()} ETH
+                        </>
+                      ) : (
+                        gasLimitState.error?.message || tipState.error?.message
+                      )}
                     </Form.ErrorMessage>
                   </Form.Control>
                 </MotionFlex>
@@ -213,28 +241,30 @@ export const TxFeeOptions = ({
             </RadioGroup>
           </MotionStack>
         )}
-        <MotionFlex
-          {...animations.fadeIn()}
-          key="toggle"
-          align="center"
-          direction="column"
-          layout
-        >
-          <Button
-            size="xs"
-            variant="link"
-            onPress={toggle}
-            css={cssObj({
-              fontSize: '12px',
-              lineHeight: '16px',
-              fontWeight: '$medium',
-              color: '$gray12',
-              textDecoration: 'underline',
-            })}
+        {!autoAdvanced && (
+          <MotionFlex
+            {...animations.fadeIn()}
+            key="toggle"
+            align="center"
+            direction="column"
+            layout
           >
-            Use {isAdvanced ? 'standard options' : 'custom fees'}
-          </Button>
-        </MotionFlex>
+            <Button
+              size="xs"
+              variant="link"
+              onPress={toggle}
+              css={cssObj({
+                fontSize: '12px',
+                lineHeight: '16px',
+                fontWeight: '$medium',
+                color: '$gray12',
+                textDecoration: 'underline',
+              })}
+            >
+              Use {isAdvanced ? 'standard options' : 'custom fees'}
+            </Button>
+          </MotionFlex>
+        )}
       </AnimatePresence>
     </Box.Stack>
   );
