@@ -1,16 +1,9 @@
-import { bn } from 'fuels';
 import { useMemo } from 'react';
-import type {
-  GroupedErrors,
-  StructuredError,
-  VMApiError,
-} from '../utils/error';
+import type { GroupedErrors, VMApiError } from '../utils/error';
 import { detectInsufficientMaxFee } from '../utils/error';
 
 type InsufficientFeeErrorResult = {
-  insufficientFeeError: StructuredError | null;
   isInsufficientFeeError: boolean;
-  suggestedMinFee: ReturnType<typeof bn> | undefined;
   displayErrors: GroupedErrors;
 };
 
@@ -36,14 +29,6 @@ export function useInsufficientFeeError(errors: {
   const insufficientFeeError = sendError || simulateError;
   const isInsufficientFeeError = Boolean(insufficientFeeError);
 
-  const suggestedMinFee = useMemo(() => {
-    const details = insufficientFeeError?.details;
-    if (details?.maxFeeFromGasPrice) {
-      return bn(details.maxFeeFromGasPrice).mul(110).div(100);
-    }
-    return undefined;
-  }, [insufficientFeeError]);
-
   const displayErrors = useMemo<GroupedErrors>(() => {
     if (insufficientFeeError) return insufficientFeeError;
     if (errors.simulateTxErrors) return errors.simulateTxErrors;
@@ -58,9 +43,7 @@ export function useInsufficientFeeError(errors: {
   }, [insufficientFeeError, errors.simulateTxErrors, errors.txApproveError]);
 
   return {
-    insufficientFeeError,
     isInsufficientFeeError,
-    suggestedMinFee,
     displayErrors,
   };
 }
