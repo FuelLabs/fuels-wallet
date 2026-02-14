@@ -109,7 +109,16 @@ export const detectInsufficientMaxFee = (
   if (!error) return null;
 
   // Try to find InsufficientMaxFee in any string property of the error
-  const errorStr = typeof error === 'string' ? error : JSON.stringify(error);
+  let errorStr: string;
+  if (typeof error === 'string') {
+    errorStr = error;
+  } else {
+    try {
+      errorStr = JSON.stringify(error);
+    } catch {
+      return null;
+    }
+  }
 
   if (!errorStr?.includes('InsufficientMaxFee')) return null;
 

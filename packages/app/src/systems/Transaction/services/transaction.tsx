@@ -265,7 +265,8 @@ export class TxService {
         if (
           inputCustomTip ||
           inputCustomGasLimit ||
-          transactionState !== 'funded'
+          transactionState !== 'funded' ||
+          feeBuffer
         ) {
           // if the user has inputted a custom tip, we set it to the proposedTxRequest
           if (inputCustomTip) {

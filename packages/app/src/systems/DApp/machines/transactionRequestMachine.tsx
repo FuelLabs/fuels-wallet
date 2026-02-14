@@ -277,10 +277,16 @@ export const transactionRequestMachine = createMachine(
                 if (ctx.feeBuffer) return false; // already retried with buffer
                 // biome-ignore lint/suspicious/noExplicitAny: error shape varies
                 const error = (ev.data as any)?.error;
-                const errorStr =
-                  typeof error === 'string'
-                    ? error
-                    : error?.message || JSON.stringify(error);
+                let errorStr: string;
+                if (typeof error === 'string') {
+                  errorStr = error;
+                } else {
+                  try {
+                    errorStr = error?.message || JSON.stringify(error);
+                  } catch {
+                    return false;
+                  }
+                }
                 return errorStr?.includes?.('InsufficientMaxFee') ?? false;
               },
             },
@@ -324,7 +330,19 @@ export const transactionRequestMachine = createMachine(
       txFailed: {
         on: {
           TRY_AGAIN: {
-            actions: [assign({ feeBuffer: (_ctx) => true })],
+            actions: [
+              assign({
+                feeBuffer: (ctx) => {
+                  const err = ctx.errors?.txApproveError;
+                  if (!err) return false;
+                  try {
+                    return JSON.stringify(err).includes('InsufficientMaxFee');
+                  } catch {
+                    return false;
+                  }
+                },
+              }),
+            ],
             target: 'simulatingTransactionLoading',
           },
           REJECT: {
