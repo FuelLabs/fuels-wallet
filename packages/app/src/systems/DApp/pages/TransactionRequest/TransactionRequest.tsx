@@ -38,23 +38,8 @@ export function TransactionRequest() {
   } = txRequest;
   const isSignOnly = !!input.signOnly;
 
-  const { insufficientFeeError, isInsufficientFeeError, suggestedMinFee } =
+  const { isInsufficientFeeError, displayErrors } =
     useInsufficientFeeError(errors);
-
-  // Determine which errors to display - show insufficient fee error, simulation errors, or send errors
-  const displayErrors = useMemo(() => {
-    if (insufficientFeeError) return insufficientFeeError;
-    if (errors.simulateTxErrors) return errors.simulateTxErrors;
-    if (errors.txApproveError) {
-      const err = errors.txApproveError;
-      if (typeof err === 'string') return err;
-      const msgs = err?.response?.errors
-        ?.map((e: { message: string }) => e.message)
-        .join('; ');
-      return msgs || JSON.stringify(err);
-    }
-    return undefined;
-  }, [insufficientFeeError, errors.simulateTxErrors, errors.txApproveError]);
 
   const defaultValues = useMemo<TransactionRequestFormData | undefined>(() => {
     if (!txSummarySimulated || !proposedTxRequest) return undefined;
@@ -114,8 +99,8 @@ export function TransactionRequest() {
               txAccount={input?.address}
               isSimulating={isSimulating}
               signOnly={isSignOnly}
-              suggestedMinFee={suggestedMinFee}
               autoAdvanced={isInsufficientFeeError}
+              feeBufferApplied={!!errors.feeBuffer}
               footer={false}
             />
           )}

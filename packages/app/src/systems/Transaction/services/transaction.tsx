@@ -88,6 +88,7 @@ export type TxInputs = {
     gasLimit?: BN;
     transactionState?: 'funded' | undefined;
     transactionSummary?: TransactionSummaryJson;
+    feeBuffer?: boolean;
   };
   setCustomFees: {
     tip?: BN;
@@ -235,6 +236,7 @@ export class TxService {
     tip: inputCustomTip,
     gasLimit: inputCustomGasLimit,
     transactionState,
+    feeBuffer,
   }: TxInputs['simulateTransaction']) {
     const provider = new Provider(providerConfig?.url || '', {
       cache: providerConfig?.cache,
@@ -274,9 +276,14 @@ export class TxService {
             setGasLimitToTxRequest(proposedTxRequest, inputCustomGasLimit);
           }
 
-          const { maxFee } = await provider.estimateTxGasAndFee({
-            transactionRequest: proposedTxRequest,
-          });
+          const { maxFee: estimatedMaxFee } =
+            await provider.estimateTxGasAndFee({
+              transactionRequest: proposedTxRequest,
+            });
+          // Add 10% buffer only when retrying after InsufficientMaxFee
+          const maxFee = feeBuffer
+            ? estimatedMaxFee.mul(110).div(100)
+            : estimatedMaxFee;
           // if the maxFee is greater than the initial maxFee, we set it to the new maxFee, and refund the transaction
           if (maxFee.gt(initialMaxFee)) {
             proposedTxRequest.maxFee = maxFee;

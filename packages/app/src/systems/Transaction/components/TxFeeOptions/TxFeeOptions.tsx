@@ -32,8 +32,8 @@ type TxFeeOptionsProps = {
   regularTip: BN;
   fastTip: BN;
   onRecalculate?: (tip: BN) => void;
-  suggestedMinFee?: BN;
   autoAdvanced?: boolean;
+  feeBufferApplied?: boolean;
 };
 
 export const TxFeeOptions = ({
@@ -43,13 +43,14 @@ export const TxFeeOptions = ({
   regularTip,
   fastTip,
   onRecalculate,
-  suggestedMinFee,
   autoAdvanced = false,
+  feeBufferApplied = false,
 }: TxFeeOptionsProps) => {
   const { control, setValue, getValues } = useFormContext<SendFormValues>();
   const [isAdvanced, setIsAdvanced] = useState(initialAdvanced || autoAdvanced);
   const previousGasLimit = useRef<BN>(gasLimitInput);
   const previousDefaultTip = useRef<BN>(regularTip);
+  const warningRef = useRef<HTMLDivElement>(null);
 
   const { field: tip, fieldState: tipState } = useController({
     control,
@@ -78,12 +79,6 @@ export const TxFeeOptions = ({
     ];
   }, [baseFee, regularTip, fastTip]);
 
-  // Check if current fee is below suggested minimum
-  const isFeeInsufficient = useMemo(() => {
-    if (!suggestedMinFee) return false;
-    return advancedFee.lt(suggestedMinFee);
-  }, [advancedFee, suggestedMinFee]);
-
   const toggle = () => {
     // Don't allow toggling off advanced mode if autoAdvanced is true
     if (autoAdvanced && isAdvanced) return;
@@ -98,6 +93,18 @@ export const TxFeeOptions = ({
       setIsAdvanced(true);
     }
   }, [autoAdvanced, isAdvanced]);
+
+  useEffect(() => {
+    if (feeBufferApplied) {
+      const timer = setTimeout(() => {
+        warningRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+        });
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [feeBufferApplied]);
 
   /**
    * Resetting fees if hiding advanced options (or initializing them)
@@ -193,24 +200,30 @@ export const TxFeeOptions = ({
                   </Form.Control>
                 </VStack>
               </HStack>
-              {(gasLimitState.error || tipState.error || isFeeInsufficient) && (
+              {(gasLimitState.error || tipState.error) && (
                 <MotionFlex {...animations.fadeIn()} key="error" layout>
                   <Form.Control isInvalid>
                     <Form.ErrorMessage
                       aria-label="Error message"
                       css={{ padding: 0, fontSize: '$sm', textAlign: 'center' }}
                     >
-                      {isFeeInsufficient && suggestedMinFee ? (
-                        <>
-                          Fee is below the minimum required fee of{' '}
-                          {suggestedMinFee.format()} ETH
-                        </>
-                      ) : (
-                        gasLimitState.error?.message || tipState.error?.message
-                      )}
+                      {gasLimitState.error?.message || tipState.error?.message}
                     </Form.ErrorMessage>
                   </Form.Control>
                 </MotionFlex>
+              )}
+              {feeBufferApplied && (
+                <Text
+                  ref={warningRef}
+                  fontSize="sm"
+                  css={{
+                    textAlign: 'center',
+                    color: '$amber11',
+                    py: '$2',
+                  }}
+                >
+                  Gas price increased since estimation. Fee was adjusted.
+                </Text>
               )}
             </VStack>
           </MotionStack>

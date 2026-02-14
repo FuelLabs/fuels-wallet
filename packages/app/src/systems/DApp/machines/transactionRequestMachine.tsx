@@ -62,6 +62,7 @@ type MachineContext = {
     txApproveError?: VMApiError;
     simulateTxErrors?: GroupedErrors;
   };
+  feeBuffer?: boolean;
 };
 
 type PrepareFeeInputForSimulateTransactionReturn = {
@@ -171,7 +172,10 @@ export const transactionRequestMachine = createMachine(
         invoke: {
           src: 'simulateTransaction',
           data: {
-            input: (ctx: MachineContext) => ctx.input,
+            input: (ctx: MachineContext) => ({
+              ...ctx.input,
+              feeBuffer: ctx.feeBuffer,
+            }),
           },
           onDone: [
             {
@@ -262,6 +266,25 @@ export const transactionRequestMachine = createMachine(
           },
           onDone: [
             {
+              // Auto-retry with fee buffer on first InsufficientMaxFee
+              target: 'retryingWithFeeBuffer',
+              actions: [
+                'assignTxApproveError',
+                assign({ feeBuffer: (_ctx) => true }),
+              ],
+              cond: (ctx, ev) => {
+                if (!FetchMachine.hasError(ctx, ev)) return false;
+                if (ctx.feeBuffer) return false; // already retried with buffer
+                // biome-ignore lint/suspicious/noExplicitAny: error shape varies
+                const error = (ev.data as any)?.error;
+                const errorStr =
+                  typeof error === 'string'
+                    ? error
+                    : error?.message || JSON.stringify(error);
+                return errorStr?.includes?.('InsufficientMaxFee') ?? false;
+              },
+            },
+            {
               target: 'txFailed',
               actions: ['assignTxApproveError'],
               cond: FetchMachine.hasError,
@@ -280,10 +303,29 @@ export const transactionRequestMachine = createMachine(
           },
         },
       },
+      retryingWithFeeBuffer: {
+        tags: ['loading', 'simulating'],
+        invoke: {
+          src: 'simulateTransaction',
+          data: {
+            input: (ctx: MachineContext) => ({
+              ...ctx.input,
+              feeBuffer: true,
+            }),
+          },
+          onDone: [
+            {
+              target: 'waitingApproval',
+              actions: ['assignSimulateResult', 'assignSimulateTxErrors'],
+            },
+          ],
+        },
+      },
       txFailed: {
         on: {
           TRY_AGAIN: {
-            target: 'waitingApproval',
+            actions: [assign({ feeBuffer: (_ctx) => true })],
+            target: 'simulatingTransactionLoading',
           },
           REJECT: {
             actions: [assignErrorMessage('User rejected the transaction!')],

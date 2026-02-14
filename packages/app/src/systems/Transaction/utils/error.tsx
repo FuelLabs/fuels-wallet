@@ -65,6 +65,8 @@ export const getErrorMessage = (
     const validity = error.message.match(/\((\w+)\)/);
     if (validity) {
       message = camelCaseToHuman(validity[1]);
+    } else {
+      message = error.message;
     }
   } else {
     // FuelCore error with object
@@ -101,15 +103,13 @@ export const getErrorMessage = (
  * Detect InsufficientMaxFee from any error shape (VMApiError, FuelError, string, etc.)
  * Used primarily for send/submission errors (txApproveError) which can be various types.
  */
-// biome-ignore lint/suspicious/noExplicitAny: error can be any shape from FetchMachine
 export const detectInsufficientMaxFee = (
-  error: any
+  error: VMApiError | string | undefined | null
 ): StructuredError | null => {
   if (!error) return null;
 
   // Try to find InsufficientMaxFee in any string property of the error
-  const errorStr =
-    typeof error === 'string' ? error : error?.message || JSON.stringify(error);
+  const errorStr = typeof error === 'string' ? error : JSON.stringify(error);
 
   if (!errorStr?.includes('InsufficientMaxFee')) return null;
 

@@ -6,7 +6,6 @@ import {
   ContentLoader,
   Copyable,
   Icon,
-  Text,
 } from '@fuel-ui/react';
 import type {
   BN,
@@ -31,21 +30,12 @@ import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
 import { TxHeader } from '../TxHeader';
 import { TxOperations } from '../TxOperations';
 
-const ErrorHeader = ({
-  errors,
-  suggestedMinFee,
-}: { errors?: GroupedErrors; suggestedMinFee?: BN }) => {
-  // Handle structured error format
+const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
   const isStructuredError = typeof errors === 'object' && errors !== null;
-  const isInsufficientMaxFee = isStructuredError && errors.isInsufficientMaxFee;
   const errorMessage = isStructuredError ? errors.message : errors;
 
   return (
-    <Alert
-      status={isInsufficientMaxFee ? 'warning' : 'error'}
-      css={styles.alert}
-      aria-label="Transaction Error"
-    >
+    <Alert status="error" css={styles.alert} aria-label="Transaction Error">
       <Copyable
         value={errorMessage ?? ''}
         aria-label={errorMessage}
@@ -61,19 +51,7 @@ const ErrorHeader = ({
             wordBreak: 'break-word',
           }}
         >
-          {isInsufficientMaxFee ? (
-            <>
-              Gas price increased since estimation. Please increase your fee and
-              try again.
-              {suggestedMinFee && (
-                <Text fontSize="sm" css={{ display: 'block', mt: '$2' }}>
-                  Minimum required fee: {suggestedMinFee.format()} ETH
-                </Text>
-              )}
-            </>
-          ) : (
-            errorMessage
-          )}
+          {errorMessage}
         </Alert.Description>
       </Copyable>
     </Alert>
@@ -127,8 +105,8 @@ export type TxContentInfoProps = {
   isSimulating?: boolean;
   isPastTense?: boolean;
   signOnly?: boolean;
-  suggestedMinFee?: BN;
   autoAdvanced?: boolean;
+  feeBufferApplied?: boolean;
 };
 
 function TxContentInfo({
@@ -145,8 +123,8 @@ function TxContentInfo({
   isSimulating,
   isPastTense = false,
   signOnly = false,
-  suggestedMinFee,
   autoAdvanced = false,
+  feeBufferApplied = false,
 }: TxContentInfoProps) {
   const { account: currentAccount } = useAccounts();
   const formContext = useFormContext<SendFormValues>();
@@ -193,8 +171,10 @@ function TxContentInfo({
   }, [getValues, fees, txRequestGasLimit]);
 
   function getHeader() {
-    if (hasErrors)
-      return <ErrorHeader errors={errors} suggestedMinFee={suggestedMinFee} />;
+    // Don't show the top alert for insufficient fee errors - handled in TxFeeOptions
+    const isInsufficientFee =
+      typeof errors === 'object' && errors?.isInsufficientMaxFee;
+    if (hasErrors && !isInsufficientFee) return <ErrorHeader errors={errors} />;
     if (isExecuted)
       return (
         <TxHeader id={tx?.id} type={tx?.type} status={status || undefined} />
@@ -234,8 +214,8 @@ function TxContentInfo({
                     gasLimit={txRequestGasLimit}
                     regularTip={fees.regularTip}
                     fastTip={fees.fastTip}
-                    suggestedMinFee={suggestedMinFee}
                     autoAdvanced={autoAdvanced}
+                    feeBufferApplied={feeBufferApplied}
                   />
                 )}
               {showDetails &&
