@@ -31,12 +31,7 @@ const selectors = {
     const simulateTxErrors = state.context.errors?.simulateTxErrors;
     const hasSimulateTxErrors = Boolean(simulateTxErrors);
     const txApproveError = state.context.errors?.txApproveError;
-    return {
-      txApproveError,
-      simulateTxErrors,
-      hasSimulateTxErrors,
-      feeBuffer: state.context.feeBuffer,
-    };
+    return { txApproveError, simulateTxErrors, hasSimulateTxErrors };
   },
   status() {
     return useCallback((state: TransactionRequestState) => {

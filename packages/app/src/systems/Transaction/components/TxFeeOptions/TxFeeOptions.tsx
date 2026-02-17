@@ -32,8 +32,6 @@ type TxFeeOptionsProps = {
   regularTip: BN;
   fastTip: BN;
   onRecalculate?: (tip: BN) => void;
-  autoAdvanced?: boolean;
-  feeBufferApplied?: boolean;
 };
 
 export const TxFeeOptions = ({
@@ -43,14 +41,11 @@ export const TxFeeOptions = ({
   regularTip,
   fastTip,
   onRecalculate,
-  autoAdvanced = false,
-  feeBufferApplied = false,
 }: TxFeeOptionsProps) => {
   const { control, setValue, getValues } = useFormContext<SendFormValues>();
-  const [isAdvanced, setIsAdvanced] = useState(initialAdvanced || autoAdvanced);
+  const [isAdvanced, setIsAdvanced] = useState(initialAdvanced);
   const previousGasLimit = useRef<BN>(gasLimitInput);
   const previousDefaultTip = useRef<BN>(regularTip);
-  const warningRef = useRef<HTMLDivElement>(null);
 
   const { field: tip, fieldState: tipState } = useController({
     control,
@@ -80,31 +75,8 @@ export const TxFeeOptions = ({
   }, [baseFee, regularTip, fastTip]);
 
   const toggle = () => {
-    // Don't allow toggling off advanced mode if autoAdvanced is true
-    if (autoAdvanced && isAdvanced) return;
     setIsAdvanced((curr) => !curr);
   };
-
-  /**
-   * Force advanced mode when autoAdvanced is true
-   */
-  useEffect(() => {
-    if (autoAdvanced && !isAdvanced) {
-      setIsAdvanced(true);
-    }
-  }, [autoAdvanced, isAdvanced]);
-
-  useEffect(() => {
-    if (feeBufferApplied) {
-      const timer = setTimeout(() => {
-        warningRef.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-        });
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [feeBufferApplied]);
 
   /**
    * Resetting fees if hiding advanced options (or initializing them)
@@ -205,25 +177,12 @@ export const TxFeeOptions = ({
                   <Form.Control isInvalid>
                     <Form.ErrorMessage
                       aria-label="Error message"
-                      css={{ padding: 0, fontSize: '$sm', textAlign: 'center' }}
+                      css={{ padding: 0 }}
                     >
                       {gasLimitState.error?.message || tipState.error?.message}
                     </Form.ErrorMessage>
                   </Form.Control>
                 </MotionFlex>
-              )}
-              {feeBufferApplied && (
-                <Text
-                  ref={warningRef}
-                  fontSize="sm"
-                  css={{
-                    textAlign: 'center',
-                    color: '$amber11',
-                    py: '$2',
-                  }}
-                >
-                  Gas price increased since estimation. Fee was adjusted.
-                </Text>
               )}
             </VStack>
           </MotionStack>
@@ -254,30 +213,28 @@ export const TxFeeOptions = ({
             </RadioGroup>
           </MotionStack>
         )}
-        {!autoAdvanced && (
-          <MotionFlex
-            {...animations.fadeIn()}
-            key="toggle"
-            align="center"
-            direction="column"
-            layout
+        <MotionFlex
+          {...animations.fadeIn()}
+          key="toggle"
+          align="center"
+          direction="column"
+          layout
+        >
+          <Button
+            size="xs"
+            variant="link"
+            onPress={toggle}
+            css={cssObj({
+              fontSize: '12px',
+              lineHeight: '16px',
+              fontWeight: '$medium',
+              color: '$gray12',
+              textDecoration: 'underline',
+            })}
           >
-            <Button
-              size="xs"
-              variant="link"
-              onPress={toggle}
-              css={cssObj({
-                fontSize: '12px',
-                lineHeight: '16px',
-                fontWeight: '$medium',
-                color: '$gray12',
-                textDecoration: 'underline',
-              })}
-            >
-              Use {isAdvanced ? 'standard options' : 'custom fees'}
-            </Button>
-          </MotionFlex>
-        )}
+            Use {isAdvanced ? 'standard options' : 'custom fees'}
+          </Button>
+        </MotionFlex>
       </AnimatePresence>
     </Box.Stack>
   );

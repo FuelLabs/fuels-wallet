@@ -62,7 +62,6 @@ type MachineContext = {
     txApproveError?: VMApiError;
     simulateTxErrors?: GroupedErrors;
   };
-  feeBuffer?: boolean;
 };
 
 type PrepareFeeInputForSimulateTransactionReturn = {
@@ -172,10 +171,7 @@ export const transactionRequestMachine = createMachine(
         invoke: {
           src: 'simulateTransaction',
           data: {
-            input: (ctx: MachineContext) => ({
-              ...ctx.input,
-              feeBuffer: ctx.feeBuffer,
-            }),
+            input: (ctx: MachineContext) => ctx.input,
           },
           onDone: [
             {
@@ -266,32 +262,7 @@ export const transactionRequestMachine = createMachine(
           },
           onDone: [
             {
-              // Auto-retry with fee buffer on first InsufficientMaxFee
-              target: 'retryingWithFeeBuffer',
-              actions: [
-                'assignTxApproveError',
-                assign({ feeBuffer: (_ctx) => true }),
-              ],
-              cond: (ctx, ev) => {
-                if (!FetchMachine.hasError(ctx, ev)) return false;
-                if (ctx.feeBuffer) return false; // already retried with buffer
-                // biome-ignore lint/suspicious/noExplicitAny: error shape varies
-                const error = (ev.data as any)?.error;
-                let errorStr: string;
-                if (typeof error === 'string') {
-                  errorStr = error;
-                } else {
-                  try {
-                    errorStr = error?.message || JSON.stringify(error);
-                  } catch {
-                    return false;
-                  }
-                }
-                return errorStr?.includes?.('InsufficientMaxFee') ?? false;
-              },
-            },
-            {
-              target: 'txFailed',
+              target: 'failed',
               actions: ['assignTxApproveError'],
               cond: FetchMachine.hasError,
             },
@@ -309,45 +280,10 @@ export const transactionRequestMachine = createMachine(
           },
         },
       },
-      retryingWithFeeBuffer: {
-        tags: ['loading', 'simulating'],
-        invoke: {
-          src: 'simulateTransaction',
-          data: {
-            input: (ctx: MachineContext) => ({
-              ...ctx.input,
-              feeBuffer: true,
-            }),
-          },
-          onDone: [
-            {
-              target: 'waitingApproval',
-              actions: ['assignSimulateResult', 'assignSimulateTxErrors'],
-            },
-          ],
-        },
-      },
       txFailed: {
         on: {
           TRY_AGAIN: {
-            actions: [
-              assign({
-                feeBuffer: (ctx) => {
-                  const err = ctx.errors?.txApproveError;
-                  if (!err) return false;
-                  try {
-                    return JSON.stringify(err).includes('InsufficientMaxFee');
-                  } catch {
-                    return false;
-                  }
-                },
-              }),
-            ],
-            target: 'simulatingTransactionLoading',
-          },
-          REJECT: {
-            actions: [assignErrorMessage('User rejected the transaction!')],
-            target: 'failed',
+            target: 'waitingApproval',
           },
           CLOSE: {
             target: 'failed',
@@ -441,23 +377,17 @@ export const transactionRequestMachine = createMachine(
           };
         },
       }),
-      assignSimulateResult: assign((ctx, ev) => ({
-        ...ctx,
-        response: {
+      assignSimulateResult: assign({
+        response: (ctx, ev) => ({
           ...ctx.response,
           txSummarySimulated: ev.data.txSummary,
           proposedTxRequest: ev.data.proposedTxRequest,
-        },
-        fees: {
+        }),
+        fees: (ctx, ev) => ({
           ...ctx.fees,
           baseFee: ev.data.baseFee ?? ctx.fees.baseFee,
-        },
-        // Clear send errors on successful re-simulation
-        errors: {
-          ...ctx.errors,
-          txApproveError: undefined,
-        },
-      })),
+        }),
+      }),
       assignSimulateTxErrors: assign((ctx, ev) => {
         if (ev.data.simulateTxErrors) {
           return {
@@ -506,6 +436,7 @@ export const transactionRequestMachine = createMachine(
         showError: false,
         maxAttempts: 1,
         async fetch({ input }) {
+          console.log('asd prepareFeeInputs', input);
           const [estimated, acc] = await Promise.all([
             TxService.estimateGasLimitAndDefaultTips(),
             input?.account ||
@@ -528,6 +459,7 @@ export const transactionRequestMachine = createMachine(
       >({
         showError: false,
         async fetch({ input }) {
+          console.log('asd simulateTransaction', input);
           if (!input?.transactionRequest) {
             throw new Error('Invalid simulateTransaction input');
           }
@@ -551,7 +483,7 @@ export const transactionRequestMachine = createMachine(
         TxInputs['send'] & { signOnly?: boolean },
         MachineServices['send']['data']
       >({
-        showError: false,
+        showError: true,
         maxAttempts: 1,
         async fetch(params) {
           const { input } = params;

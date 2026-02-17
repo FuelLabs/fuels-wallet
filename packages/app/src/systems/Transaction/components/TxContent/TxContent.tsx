@@ -31,14 +31,11 @@ import { TxHeader } from '../TxHeader';
 import { TxOperations } from '../TxOperations';
 
 const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
-  const isStructuredError = typeof errors === 'object' && errors !== null;
-  const errorMessage = isStructuredError ? errors.message : errors;
-
   return (
     <Alert status="error" css={styles.alert} aria-label="Transaction Error">
       <Copyable
-        value={errorMessage ?? ''}
-        aria-label={errorMessage}
+        value={errors ?? ''}
+        aria-label={errors}
         iconProps={{
           icon: Icon.is('Copy'),
           'aria-label': 'Copy Error',
@@ -51,7 +48,7 @@ const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
             wordBreak: 'break-word',
           }}
         >
-          {errorMessage}
+          {errors}
         </Alert.Description>
       </Copyable>
     </Alert>
@@ -105,8 +102,6 @@ export type TxContentInfoProps = {
   isSimulating?: boolean;
   isPastTense?: boolean;
   signOnly?: boolean;
-  autoAdvanced?: boolean;
-  feeBufferApplied?: boolean;
 };
 
 function TxContentInfo({
@@ -123,20 +118,12 @@ function TxContentInfo({
   isSimulating,
   isPastTense = false,
   signOnly = false,
-  autoAdvanced = false,
-  feeBufferApplied = false,
 }: TxContentInfoProps) {
   const { account: currentAccount } = useAccounts();
   const formContext = useFormContext<SendFormValues>();
   const { getValues } = formContext || {};
   const status = txStatus || tx?.status || txStatus;
-  const hasErrors = Boolean(
-    typeof errors === 'string'
-      ? errors
-      : errors && typeof errors === 'object'
-        ? errors.message
-        : false
-  );
+  const hasErrors = Boolean(Object.keys(errors || {}).length);
   const isExecuted = !!tx?.id && status; // Added status check to ensure the tx is executed, as TX.id is now always present.
   const txRequestGasLimit = getGasLimitFromTxRequest(txRequest);
 
@@ -171,10 +158,7 @@ function TxContentInfo({
   }, [getValues, fees, txRequestGasLimit]);
 
   function getHeader() {
-    // Don't show the top alert for insufficient fee errors - handled in TxFeeOptions
-    const isInsufficientFee =
-      typeof errors === 'object' && errors?.isInsufficientMaxFee;
-    if (hasErrors && !isInsufficientFee) return <ErrorHeader errors={errors} />;
+    if (hasErrors) return <ErrorHeader errors={errors} />;
     if (isExecuted)
       return (
         <TxHeader id={tx?.id} type={tx?.type} status={status || undefined} />
@@ -214,8 +198,6 @@ function TxContentInfo({
                     gasLimit={txRequestGasLimit}
                     regularTip={fees.regularTip}
                     fastTip={fees.fastTip}
-                    autoAdvanced={autoAdvanced}
-                    feeBufferApplied={feeBufferApplied}
                   />
                 )}
               {showDetails &&

@@ -1,12 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button } from '@fuel-ui/react';
+import { Box, Button } from '@fuel-ui/react';
 import { bn } from 'fuels';
 import { useMemo } from 'react';
 import { Layout, coreStyles } from '~/systems/Core';
 import { TxContent, getGasLimitFromTxRequest } from '~/systems/Transaction';
 import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
 import { TxReviewAlert } from '~/systems/Transaction/components/TxReviewAlert/TxReviewAlert';
-import { useInsufficientFeeError } from '~/systems/Transaction/hooks/useInsufficientFeeError';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 import { TxRequestStatus } from '../../machines/transactionRequestMachine';
 import { AutoSubmit } from './TransactionRequest.AutoSubmit';
@@ -38,9 +37,6 @@ export function TransactionRequest() {
   } = txRequest;
   const isSignOnly = !!input.signOnly;
 
-  const { isInsufficientFeeError, displayErrors } =
-    useInsufficientFeeError(errors);
-
   const defaultValues = useMemo<TransactionRequestFormData | undefined>(() => {
     if (!txSummarySimulated || !proposedTxRequest) return undefined;
 
@@ -64,13 +60,6 @@ export function TransactionRequest() {
   const shouldShowReviewAlert =
     !status(TxRequestStatus.success) && !status(TxRequestStatus.failed);
 
-  // Show fee options in failed state if it's a recoverable insufficient fee error
-  const shouldShowFeeOptionsInFailed =
-    status(TxRequestStatus.failed) &&
-    isInsufficientFeeError &&
-    txSummarySimulated &&
-    proposedTxRequest;
-
   return (
     <FormProvider
       onSubmit={handlers.approve}
@@ -87,45 +76,40 @@ export function TransactionRequest() {
         <Layout.TopBar hideMenu hideBackArrow />
         {shouldShowReviewAlert && <TxReviewAlert signOnly={isSignOnly} />}
         <Layout.Content css={styles.content} noScroll>
-          {(shouldShowTxSimulated || shouldShowFeeOptionsInFailed) && (
+          {shouldShowTxSimulated && (
             <TxContent.Info
               showDetails
               tx={txSummarySimulated}
               txRequest={proposedTxRequest}
-              errors={displayErrors}
+              errors={errors.simulateTxErrors}
               fees={fees}
               isLoadingFees={isLoadingFees}
               isLoading={isLoading}
               txAccount={input?.address}
               isSimulating={isSimulating}
               signOnly={isSignOnly}
-              autoAdvanced={isInsufficientFeeError}
-              feeBufferApplied={!!errors.feeBuffer}
-              footer={false}
             />
           )}
-          {shouldShowTxExecuted &&
-            txSummaryExecuted &&
-            !shouldShowFeeOptionsInFailed && (
-              <TxContent.Info
-                showDetails
-                tx={txSummaryExecuted}
-                txStatus={executedStatus()}
-                footer={
-                  status('failed') && (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      intent="error"
-                      onPress={txRequest.handlers.tryAgain}
-                    >
-                      Try again
-                    </Button>
-                  )
-                }
-                txAccount={input?.address}
-              />
-            )}
+          {shouldShowTxExecuted && txSummaryExecuted && (
+            <TxContent.Info
+              showDetails
+              tx={txSummaryExecuted}
+              txStatus={executedStatus()}
+              footer={
+                status('failed') && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    intent="error"
+                    onPress={txRequest.handlers.tryAgain}
+                  >
+                    Try again
+                  </Button>
+                )
+              }
+              txAccount={input?.address}
+            />
+          )}
         </Layout.Content>
         {shouldShowActions && (
           <Layout.BottomBar>
@@ -180,5 +164,13 @@ const styles = {
     background: 'transparent',
     borderColor: '$border',
     borderStyle: 'solid',
+  }),
+  alert: cssObj({
+    '& .fuel_Alert-content': {
+      gap: '$1',
+    },
+    ' & .fuel_Heading': {
+      fontSize: '$sm',
+    },
   }),
 };
