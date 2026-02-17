@@ -67,7 +67,7 @@ export function TransferAssets() {
       // Create a Wallet instance from the current account
       const wallet = await fuel.getWallet(account);
       // Create a Address instance to the receiver address
-      const toAddress = Address.fromString(receiverAddress);
+      const toAddress = Address.fromString(receiverAddress.toLowerCase());
       // Send a transaction to transfer the asset to the receiver address
       const response = await wallet.transfer(toAddress, amount, assetId, {
         gasLimit: 5_000,
