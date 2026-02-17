@@ -6,6 +6,7 @@ import { store } from '~/store';
 import { CoreService, FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
+import { AccountType } from '@fuel-wallet/types';
 import { AccountService } from '../services/account';
 import type { AccountInputs } from '../services/account';
 
@@ -33,6 +34,15 @@ type MachineServices = {
     data: Account;
   };
 };
+
+export const addReadOnlyAccount = (publicAddress: string): Account => ({
+  type: AccountType.READ_ONLY,
+  name: `ReadOnly-${publicAddress.slice(0, 6)}`,
+  address: publicAddress,
+  publicKey: '',
+  isHidden: false,
+  isCurrent: false,
+});
 
 export type AccountsMachineEvents =
   | { type: 'REFRESH_ACCOUNTS'; input?: { skipLoading?: boolean } }
