@@ -274,8 +274,13 @@ export class TxService {
             setGasLimitToTxRequest(proposedTxRequest, inputCustomGasLimit);
           }
 
+          // Use predicted gas price for 10 blocks ahead to prevent
+          // InsufficientMaxFee errors from gas price increases between
+          // simulation and submission. Users get change back if they overpay.
+          const gasPrice = await provider.estimateGasPrice(10);
           const { maxFee } = await provider.estimateTxGasAndFee({
             transactionRequest: proposedTxRequest,
+            gasPrice,
           });
           // if the maxFee is greater than the initial maxFee, we set it to the new maxFee, and refund the transaction
           if (maxFee.gt(initialMaxFee)) {
@@ -328,6 +333,7 @@ export class TxService {
               (baseAsset as any)?.rate
             ).formatted
           : '$0';
+
       return {
         baseFee,
         txSummary: {
