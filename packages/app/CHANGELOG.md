@@ -1,5 +1,17 @@
 # fuels-wallet
 
+## 0.63.0
+
+### Minor Changes
+
+- [#1996](https://github.com/FuelLabs/fuels-wallet/pull/1996) [`6c910cba`](https://github.com/FuelLabs/fuels-wallet/commit/6c910cbae0b75a4d5bacefa635e747b22f1a8ac5) Thanks [@nelitow](https://github.com/nelitow)! - feat: Handle insufficient gas fee errors in the UI
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.63.0
+  - @fuels/playwright-utils@0.63.0
+
 ## 0.62.3
 
 ### Patch Changes
