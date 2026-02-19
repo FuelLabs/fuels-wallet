@@ -6,3 +6,4 @@ export * from './services';
 export * from './events';
 export * from './routes';
 export * from './utils';
+export * from './AssetValueDisplay';
