@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 
 import { expect } from '@fuels/playwright-utils';
+import { Address } from 'fuels';
 import { getByAriaLabel, hasText, visit, waitAriaLabel } from '../../commons';
 import type { MockData } from '../../mocks';
 
@@ -108,22 +109,9 @@ export async function getClipboardText(popupPage: Page): Promise<string> {
 export async function getAddressForAccountNumber(
   popupPage: Page,
   accountName: string,
-  accountNumber: number
+  _accountNumber: number
 ): Promise<string> {
-  await getByAriaLabel(popupPage, 'Accounts').click();
-
-  // Construct the XPath selector dynamically based on the order of the account in the list
-  const xpathSelector = `/html/body/div[2]/div/div/div/div/article[${accountNumber}]/div[1]/div[2]/div/div/button`;
-
-  // Click on the element
-  await popupPage.click(`xpath=${xpathSelector}`);
-
-  await getByAriaLabel(popupPage, accountName).click({
-    position: {
-      x: 10,
-      y: 10,
-    },
-  });
-
-  return getClipboardText(popupPage);
+  const account = await getAccountByName(popupPage, accountName);
+  if (!account?.address) return '';
+  return Address.fromDynamicInput(account.address).toString();
 }
