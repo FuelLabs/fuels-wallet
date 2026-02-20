@@ -151,7 +151,7 @@ export class FuelWalletTestHelper {
     // where the popup opens between the initial check and waitForEvent registration
     const popupPromise = this.context
       .waitForEvent('page', {
-        predicate: (page) => page.url().includes('/popup'),
+        predicate: (page) => page.url().includes('/popup.html?'),
         timeout: 30000,
       })
       .catch(() => undefined);
