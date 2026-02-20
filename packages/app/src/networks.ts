@@ -24,7 +24,7 @@ export const DEFAULT_NETWORKS: Array<
     isSelected: false,
   },
   {
-    name: 'Fuel Sepolia Devnet',
+    name: 'Fuel Ignition Sepolia Devnet',
     url: 'https://devnet.fuel.network/v1/graphql',
     chainId: CHAIN_IDS.fuel.devnet,
     explorerUrl: 'https://app-devnet.fuel.network',
