@@ -38,7 +38,7 @@ test.describe('Mint Assets', () => {
       context,
       page,
       extensionId,
-      amountToFund: bn.parseUnits('0.001'),
+      amountToFund: bn.parseUnits('0.01'),
     }));
   });
 
@@ -63,7 +63,7 @@ test.describe('Mint Assets', () => {
 
     // test asset is correct
     const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
-    await page.waitForTimeout(10000); // Wait for slow VM
+    await page.waitForTimeout(2000); // Brief wait before popup detection
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
