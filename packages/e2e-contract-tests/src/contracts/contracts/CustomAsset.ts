@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 /*
-  Fuels version: 0.100.6
+  Fuels version: 0.103.0
   Forc version: 0.68.1
   Fuel-Core version: 0.43.1
 */
@@ -571,43 +571,12 @@ export class CustomAssetInterface extends Interface {
     super(abi);
   }
 
-  declare functions: {
-    decimals: FunctionFragment;
-    name: FunctionFragment;
-    symbol: FunctionFragment;
-    total_assets: FunctionFragment;
-    total_supply: FunctionFragment;
-    burn: FunctionFragment;
-    mint: FunctionFragment;
-    deposit: FunctionFragment;
-    deposit_half: FunctionFragment;
-    deposit_half_and_mint: FunctionFragment;
-    deposit_half_and_mint_from_external_contract: FunctionFragment;
-    panic_tx: FunctionFragment;
-    revert_tx: FunctionFragment;
-  };
 }
 
 export class CustomAsset extends __Contract {
   static readonly abi = abi;
   static readonly storageSlots = storageSlots;
 
-  declare interface: CustomAssetInterface;
-  declare functions: {
-    decimals: InvokeFunction<[asset: AssetIdInput], Option<number>>;
-    name: InvokeFunction<[asset: AssetIdInput], Option<StdString>>;
-    symbol: InvokeFunction<[asset: AssetIdInput], Option<StdString>>;
-    total_assets: InvokeFunction<[], BN>;
-    total_supply: InvokeFunction<[asset: AssetIdInput], Option<BN>>;
-    burn: InvokeFunction<[sub_id: string, amount: BigNumberish], void>;
-    mint: InvokeFunction<[recipient: IdentityInput, sub_id: Option<string>, amount: BigNumberish], void>;
-    deposit: InvokeFunction<[], BN>;
-    deposit_half: InvokeFunction<[], BN>;
-    deposit_half_and_mint: InvokeFunction<[recipient: IdentityInput, sub_id: string, amount: BigNumberish], BN>;
-    deposit_half_and_mint_from_external_contract: InvokeFunction<[recipient: IdentityInput, sub_id: string, amount: BigNumberish, contract_id: ContractIdInput], BN>;
-    panic_tx: InvokeFunction<[], void>;
-    revert_tx: InvokeFunction<[], void>;
-  };
 
   constructor(
     id: string | Address,

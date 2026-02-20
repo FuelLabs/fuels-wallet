@@ -135,46 +135,42 @@ export class FuelWalletTestHelper {
   }
 
   async getWalletPopupPage(): Promise<Page> {
-    console.log(
-      '🔍 Searching for existing wallet popup page in',
-      this.context.pages().map((page) => page.url())
-    );
-    console.log(`Timestamp: ${Date.now()}`);
-    let walletNotificationPage = this.context.pages().find((page) => {
-      const url = page.url();
-      return url.includes('/popup.html?');
-    });
+    const findPopup = () =>
+      this.context.pages().find((page) => {
+        const url = page.url();
+        return url.includes('/popup.html?');
+      });
+
+    // First check if popup is already open
+    let walletNotificationPage = findPopup();
+    if (walletNotificationPage) {
+      return walletNotificationPage;
+    }
+
+    // Listen for new page events AND poll existing pages to avoid race conditions
+    // where the popup opens between the initial check and waitForEvent registration
+    const popupPromise = this.context
+      .waitForEvent('page', {
+        predicate: (page) => page.url().includes('/popup.html?'),
+        timeout: 30000,
+      })
+      .catch(() => undefined);
+
+    const startTime = Date.now();
+    while (Date.now() - startTime < 30000) {
+      walletNotificationPage = findPopup();
+      if (walletNotificationPage) {
+        return walletNotificationPage;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
+    // Last resort: check if waitForEvent caught it
+    walletNotificationPage = (await popupPromise) || findPopup();
 
     if (!walletNotificationPage) {
-      console.log('⏳ No existing popup found, waiting for popup event...');
-      walletNotificationPage = await this.context.waitForEvent('page', {
-        predicate: (page) => page.url().includes('/popup'),
-        timeout: 30000,
-      });
-      console.log(
-        '🔍 Searching for existing wallet popup page in',
-        this.context.pages().map((page) => page.url())
-      );
-      console.log(`Timestamp: ${Date.now()}`);
-      // If the popup is not found, try to find it in the pages again
-      if (!walletNotificationPage) {
-        walletNotificationPage = this.context.pages().find((page) => {
-          const url = page.url();
-          return url.includes('/popup.html?');
-        });
-      }
-    }
-    if (!walletNotificationPage) {
-      console.log(
-        '🔍 No popup found in',
-        this.context.pages().map((page) => page.url())
-      );
       throw new Error('No popup found');
     }
-    console.log(
-      '🔍 Returning popup page with URL:',
-      walletNotificationPage?.url()
-    );
 
     return walletNotificationPage;
   }
@@ -291,6 +287,10 @@ export class FuelWalletTestHelper {
 
     if (hasNetwork) {
       await networkLocator.click();
+      // Wait for the network switch to complete before returning
+      await networksButton
+        .getByText(chainName)
+        .waitFor({ state: 'visible', timeout: 10000 });
       return;
     }
 
