@@ -38,7 +38,7 @@ test.describe('Mint Assets', () => {
       context,
       page,
       extensionId,
-      amountToFund: bn.parseUnits('0.01'),
+      amountToFund: bn.parseUnits('0.001'),
     }));
   });
 
