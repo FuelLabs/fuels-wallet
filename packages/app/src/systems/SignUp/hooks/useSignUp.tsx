@@ -43,7 +43,7 @@ export function useSignUp() {
           replace: true,
         });
       }
-      if (state.matches('aggrement')) {
+      if (state.matches('agreement')) {
         navigate(Pages.signUpTerms(), {
           replace: true,
         });
