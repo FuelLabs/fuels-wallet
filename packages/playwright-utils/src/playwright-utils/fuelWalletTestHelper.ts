@@ -287,6 +287,10 @@ export class FuelWalletTestHelper {
 
     if (hasNetwork) {
       await networkLocator.click();
+      // Wait for the network switch to complete before returning
+      await networksButton
+        .getByText(chainName)
+        .waitFor({ state: 'visible', timeout: 10000 });
       return;
     }
 
