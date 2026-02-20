@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 /*
-  Fuels version: 0.100.6
+  Fuels version: 0.103.0
   Forc version: 0.68.1
   Fuel-Core version: 0.43.1
 */
@@ -576,6 +576,7 @@ export class CustomAssetInterface extends Interface {
 export class CustomAsset extends __Contract {
   static readonly abi = abi;
   static readonly storageSlots = storageSlots;
+
 
   constructor(
     id: string | Address,
