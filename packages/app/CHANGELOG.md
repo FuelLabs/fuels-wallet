@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.63.1
+
+### Patch Changes
+
+- [#1998](https://github.com/FuelLabs/fuels-wallet/pull/1998) [`7aba974e`](https://github.com/FuelLabs/fuels-wallet/commit/7aba974e785b1809a6d2da3fcdb64a68e3b51815) Thanks [@nelitow](https://github.com/nelitow)! - fix: Workflows
+
+- Updated dependencies [[`7aba974e`](https://github.com/FuelLabs/fuels-wallet/commit/7aba974e785b1809a6d2da3fcdb64a68e3b51815)]:
+  - @fuels/playwright-utils@0.63.1
+  - @fuel-wallet/connections@0.63.1
+
 ## 0.63.0
 
 ### Minor Changes
