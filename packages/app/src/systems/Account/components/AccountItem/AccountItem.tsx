@@ -96,6 +96,10 @@ export const AccountItem: AccountItemComponent = ({
           {`${account.isHidden ? 'Unhide' : 'Hide'} Account`}
         </Dropdown.MenuItem>
       ),
+      <Dropdown.MenuItem key="export" aria-label={`Delete ${account.name}`}>
+        <Icon icon={Icon.is('Trash')} />
+        Delete Account
+      </Dropdown.MenuItem>,
     ].filter(Boolean) as JSX.Element[];
 
     if (menuItems.length) {
