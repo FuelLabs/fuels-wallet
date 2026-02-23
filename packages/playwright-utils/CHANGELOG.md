@@ -1,5 +1,11 @@
 # @fuels/playwright-utils
 
+## 0.63.1
+
+### Patch Changes
+
+- [#1998](https://github.com/FuelLabs/fuels-wallet/pull/1998) [`7aba974e`](https://github.com/FuelLabs/fuels-wallet/commit/7aba974e785b1809a6d2da3fcdb64a68e3b51815) Thanks [@nelitow](https://github.com/nelitow)! - fix: Workflows
+
 ## 0.63.0
 
 ## 0.62.3
