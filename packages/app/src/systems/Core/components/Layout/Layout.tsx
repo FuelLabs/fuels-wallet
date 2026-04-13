@@ -12,6 +12,7 @@ import { Sidebar } from '~/systems/Sidebar';
 import { coreStyles } from '../../styles/core';
 
 import { BottomBar } from './BottomBar';
+import { MaintenanceBanner } from './MaintenanceBanner';
 import { TopBar } from './TopBar';
 
 type Context = {
@@ -97,6 +98,7 @@ export const Layout: LayoutComponent = ({
               className="layout__wrapper"
               data-noborder={noBorder}
             >
+              <MaintenanceBanner />
               <OverlayDialog />
               <Sidebar ref={ref} />
               <Box ref={ref} css={styles.inner} className="layout__inner">
