@@ -24,7 +24,7 @@
   "devDependencies": {
     "@fuel-wallet/types": "workspace:*",
     "@fuels/playwright-utils": "workspace:*",
-    "@playwright/test": "1.54.0",
+    "@playwright/test": "1.55.1",
     "@types/chrome": "^0.0.246",
     "@types/node": "^20.8.4",
     "@types/react": "18.3.3",
