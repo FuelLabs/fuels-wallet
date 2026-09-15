@@ -1,0 +1,10 @@
+node_modules
+**/node_modules
+**/dist
+**/dist-crx*
+**/out
+**/.next
+**/.turbo
+.git
+.vercel
+.env.vercel.*
