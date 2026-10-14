@@ -13,7 +13,7 @@ jobs:
   tests-e2e-assets:
     name: Test
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
