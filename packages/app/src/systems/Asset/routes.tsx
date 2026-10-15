@@ -2,8 +2,12 @@ import { Route } from 'react-router-dom';
 
 import { Pages } from '../Core/types';
 
-import { Assets } from './pages';
-import { UpsertAsset } from './pages/UpsertAsset/UpsertAsset';
+import { lazyPage } from '~/systems/Core/utils/lazyPage';
+
+const Assets = lazyPage(() => import('./pages/Assets').then((m) => m.Assets));
+const UpsertAsset = lazyPage(() =>
+  import('./pages/UpsertAsset/UpsertAsset').then((m) => m.UpsertAsset)
+);
 
 export const assetRoutes = (
   <Route path={Pages.assets()}>

@@ -10,13 +10,17 @@ import {
 } from '@fuel-ui/react';
 import { Icon, IconButton, Tooltip } from '@fuel-ui/react';
 import type { StoredFuelWalletError } from '@fuel-wallet/types';
-import { JsonEditor } from 'json-edit-react';
-import { useEffect, useMemo, useState } from 'react';
+import type { JsonEditorProps } from 'json-edit-react';
+import { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { scrollable } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 import { useReportError } from '../../hooks';
+
+const JsonEditor = lazy(() =>
+  import('json-edit-react').then((m) => ({ default: m.JsonEditor }))
+);
 
 // Level/Name
 const PROTECTED_ERROR_PROPERTIES = {
@@ -68,7 +72,7 @@ export function ReportErrors({
     onRestore();
   }
 
-  const onDelete: Parameters<typeof JsonEditor>[0]['onDelete'] = (newJson) => {
+  const onDelete: JsonEditorProps['onDelete'] = (newJson) => {
     const { path: paths } = newJson;
     let level = 0;
     setCurrentErrors((prev) => {
@@ -181,30 +185,32 @@ export function ReportErrors({
             />
           </HStack>
         </HStack>
-        <JsonEditor
-          data={shownError ?? {}}
-          onDelete={onDelete}
-          restrictEdit
-          restrictAdd
-          restrictDrag
-          restrictDelete={({ key, level }) => {
-            return PROTECTED_ERROR_PROPERTIES[level]?.[key];
-          }}
-          indent={0}
-          data-scrollable
-          theme={[
-            'monoDark',
-            {
-              iconEdit: 'grey',
-              boolean: {
-                color: 'red',
-                fontStyle: 'italic',
-                fontWeight: 'bold',
-                fontSize: '80%',
+        <Suspense fallback={null}>
+          <JsonEditor
+            data={shownError ?? {}}
+            onDelete={onDelete}
+            restrictEdit
+            restrictAdd
+            restrictDrag
+            restrictDelete={({ key, level }) => {
+              return PROTECTED_ERROR_PROPERTIES[level]?.[key];
+            }}
+            indent={0}
+            data-scrollable
+            theme={[
+              'monoDark',
+              {
+                iconEdit: 'grey',
+                boolean: {
+                  color: 'red',
+                  fontStyle: 'italic',
+                  fontWeight: 'bold',
+                  fontSize: '80%',
+                },
               },
-            },
-          ]}
-        />
+            ]}
+          />
+        </Suspense>
       </Box.Stack>
       <Box.Stack direction="row">
         <Tooltip content="Dismiss all errors permanently" side="top">
