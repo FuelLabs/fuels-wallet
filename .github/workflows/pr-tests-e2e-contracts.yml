@@ -1,4 +1,4 @@
-name: Test (Chromium) [Shard ${{ matrix.shard }}]
+name: Tests E2E Contracts
 
 on:
   pull_request:
@@ -12,7 +12,7 @@ concurrency:
 jobs:
   tests-e2e-contracts:
     name: Test (Chromium) [Shard ${{ matrix.shard }}]
-    runs-on: buildjet-8vcpu-ubuntu-2204
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -27,7 +27,7 @@ jobs:
           echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
       - uses: FuelLabs/github-actions/setups/node@master
         with:
-          node-version: 20.14.0
+          node-version: 24
           pnpm-version: ${{ env.PNPM_VERSION }}
       - uses: FuelLabs/github-actions/setups/docker@master
         with:

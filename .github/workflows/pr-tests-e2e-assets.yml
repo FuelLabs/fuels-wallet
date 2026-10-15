@@ -12,8 +12,8 @@ concurrency:
 jobs:
   tests-e2e-assets:
     name: Test
-    runs-on: buildjet-8vcpu-ubuntu-2204
-    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -25,7 +25,7 @@ jobs:
 
       - uses: FuelLabs/github-actions/setups/node@master
         with:
-          node-version: 20.14.0
+          node-version: 24
           pnpm-version: ${{ env.PNPM_VERSION }}
 
       - uses: ./.github/actions/setup-playwright
