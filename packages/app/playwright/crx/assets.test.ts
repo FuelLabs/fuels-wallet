@@ -10,7 +10,7 @@ type IndexedAsset = {
   name?: string;
   contractId?: string;
   collection?: string;
-  isNft?: boolean;
+  isNFT?: boolean;
   suspicious?: boolean;
 };
 
@@ -72,6 +72,17 @@ test.describe('Check assets', () => {
     page = await browser.newPage();
     await loadWallet(page, browser);
     indexedAssets = await getIndexedAssets();
+    console.log(
+      'Test account assets:',
+      JSON.stringify(
+        indexedAssets.map(({ assetId, name, suspicious, isNFT }) => ({
+          assetId,
+          name,
+          suspicious,
+          isNFT,
+        }))
+      )
+    );
   });
 
   test('should show valid asset value 0.002000', async () => {
@@ -93,7 +104,7 @@ test.describe('Check assets', () => {
   // so these tests derive their expectations from live data.
   test('should flag suspicious assets with a warning icon', async () => {
     const suspicious = indexedAssets.filter(
-      (asset) => asset.suspicious && asset.name && !asset.isNft
+      (asset) => asset.suspicious && asset.name && !asset.isNFT
     );
     test.skip(
       !suspicious.length,
@@ -109,7 +120,7 @@ test.describe('Check assets', () => {
   test('should list NFTs by collection in the NFTs tab', async () => {
     const collections = new Set(
       indexedAssets
-        .filter((asset) => asset.isNft && asset.contractId)
+        .filter((asset) => asset.isNFT && asset.contractId)
         .map((asset) => asset.collection || 'Others')
     );
     test.skip(
