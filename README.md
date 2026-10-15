@@ -62,6 +62,10 @@ Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/
   - [x] Transaction History
   - [x] View transaction details
 
+## Website deployment
+
+[wallet.fuel.network](https://wallet.fuel.network/) (docs, the web app at `/app`, and Storybook at `/storybook`) is built from the root `Dockerfile` and served by nginx on Railway. Railway deploys the `release` branch. To ship website changes, merge `master` into `release`.
+
 ## 📜 License
 
 This repo is licensed under the `Apache-2.0` license. See [`LICENSE`](./LICENSE) for more information.
