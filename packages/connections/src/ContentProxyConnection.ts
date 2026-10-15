@@ -7,19 +7,29 @@ import {
   MessageTypes,
 } from '@fuel-wallet/types';
 import type { CommunicationMessage } from '@fuel-wallet/types';
-import { createJSONRPCSuccessResponse } from 'json-rpc-2.0';
 import type { JSONRPCID } from 'json-rpc-2.0';
+// Deep import keeps the rest of json-rpc-2.0 out of the content script bundle
+import { createJSONRPCSuccessResponse } from 'json-rpc-2.0/dist/models';
 
+/**
+ * Runs in the content script of every frame. The port to the background is
+ * opened lazily, on the first message from the page that must reach the
+ * background, so pages without a dApp never wake the service worker.
+ */
 export class ContentProxyConnection {
   connection: chrome.runtime.Port | undefined = undefined;
   readonly connectorName: string;
+  private hasConnected = false;
+
   constructor(connectorName: string) {
     this.connectorName = connectorName;
     this.onMessageFromWindow = this.onMessageFromWindow.bind(this);
     this.onMessageFromExtension = this.onMessageFromExtension.bind(this);
     this.onDisconnect = this.onDisconnect.bind(this);
 
-    this.connectAndAttachListeners();
+    chrome.runtime.onMessage.addListener(this.handlePing);
+    window.addEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
+    this.onStartEvent();
   }
 
   /**
@@ -48,20 +58,22 @@ export class ContentProxyConnection {
       name: BACKGROUND_SCRIPT_NAME,
     });
     connection.onMessage.addListener(this.onMessageFromExtension);
-    chrome.runtime.onMessage.addListener(this.handlePing);
     connection.onDisconnect.addListener(this.onDisconnect);
     this.connection = connection;
-    window.addEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
-    this.onStartEvent();
+    // The page was already notified on load, only notify again on reconnect
+    if (this.hasConnected) {
+      this.onStartEvent();
+    }
+    this.hasConnected = true;
   }
 
   destroy(keepWindowListener = true) {
     this.connection?.onMessage.removeListener(this.onMessageFromExtension);
-    chrome.runtime.onMessage.removeListener(this.handlePing);
     this.connection?.onDisconnect.removeListener(this.onDisconnect);
     this.connection?.disconnect();
     this.connection = undefined;
     if (!keepWindowListener) {
+      chrome.runtime.onMessage.removeListener(this.handlePing);
       window.removeEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
     }
   }
@@ -84,7 +96,7 @@ export class ContentProxyConnection {
   shouldAcceptMessage(event: CommunicationMessage, origin: string) {
     return (
       origin === window.location.origin &&
-      event.target === CONTENT_SCRIPT_NAME &&
+      event?.target === CONTENT_SCRIPT_NAME &&
       event.connectorName === this.connectorName
     );
   }
@@ -99,28 +111,24 @@ export class ContentProxyConnection {
 
   onMessageFromWindow = (message: MessageEvent<CommunicationMessage>) => {
     const { data: event, origin } = Object.freeze(message);
-    if (this.shouldAcceptMessage(event, origin)) {
-      if (!this.connection) {
-        this.connectAndAttachListeners();
-      }
-      if (
-        event.type === MessageTypes.request &&
-        event.request.method === 'connectorName'
-      ) {
-        // If the message is a request for the connector name
-        // we send it back to the sender without send to the background script.
-        this.sendConnectorName(event.request.id!);
-      } else {
-        if (!this.connection) {
-          this.connectAndAttachListeners();
-        }
-        // Otherwise we send the message to the background script
-        this.connection?.postMessage({
-          ...event,
-          target: BACKGROUND_SCRIPT_NAME,
-        });
-      }
+    if (!this.shouldAcceptMessage(event, origin)) return;
+    if (
+      event.type === MessageTypes.request &&
+      event.request.method === 'connectorName'
+    ) {
+      // If the message is a request for the connector name
+      // we send it back to the sender without send to the background script.
+      this.sendConnectorName(event.request.id!);
+      return;
     }
+    if (!this.connection) {
+      this.connectAndAttachListeners();
+    }
+    // Otherwise we send the message to the background script
+    this.connection?.postMessage({
+      ...event,
+      target: BACKGROUND_SCRIPT_NAME,
+    });
   };
 
   handlePing(
