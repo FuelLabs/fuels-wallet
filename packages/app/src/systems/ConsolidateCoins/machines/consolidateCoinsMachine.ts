@@ -212,7 +212,10 @@ export const consolidateCoinsMachine = createMachine(
         balancesKey: ev.input?.balancesKey,
       })),
       rememberCheckedKey: (ctx) => {
-        if (ctx.balancesKey) {
+        // A REFRESH dropped mid-check can leave a key for another account or network
+        const checked = `${ctx.providerUrl}|${ctx.account?.address}`;
+        const key = ctx.balancesKey;
+        if (key && (key === checked || key.startsWith(`${checked}|`))) {
           Storage.setItem(CONSOLIDATION_CHECKED_KEY, ctx.balancesKey);
         }
       },
