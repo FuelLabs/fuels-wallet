@@ -1,8 +1,8 @@
+import { createProvider } from '@fuel-wallet/connections';
 import type { Account } from '@fuel-wallet/types';
 import {
   type Coin,
   type CursorPaginationArgs,
-  Provider,
   RESOURCES_PAGE_SIZE_LIMIT,
   Wallet,
 } from 'fuels';
@@ -34,7 +34,7 @@ export class ConsolidateCoinsService {
   static async getBaseAssetId(
     input: ConsolidateCoinsInputs['getBaseAssetId']
   ): Promise<string> {
-    const provider = new Provider(input.providerUrl);
+    const provider = await createProvider(input.providerUrl);
     const baseAssetId = await provider.getBaseAssetId();
     return baseAssetId;
   }
@@ -42,7 +42,7 @@ export class ConsolidateCoinsService {
   static async shouldConsolidate(
     input: ConsolidateCoinsInputs['shouldConsolidate']
   ): Promise<boolean> {
-    const provider = new Provider(input.providerUrl);
+    const provider = await createProvider(input.providerUrl);
     const chain = await provider.getChain();
 
     const wallet = Wallet.fromAddress(input.account.address, provider);
@@ -59,7 +59,7 @@ export class ConsolidateCoinsService {
   static async getAllCoins(
     input: ConsolidateCoinsInputs['getAllCoins']
   ): Promise<Coin[]> {
-    const provider = new Provider(input.providerUrl);
+    const provider = await createProvider(input.providerUrl);
     const wallet = Wallet.fromAddress(input.account.address, provider);
 
     const allCoins: Coin[] = [];
@@ -85,7 +85,7 @@ export class ConsolidateCoinsService {
   static async createConsolidation(
     input: ConsolidateCoinsInputs['createConsolidation']
   ) {
-    const provider = new Provider(input.providerUrl);
+    const provider = await createProvider(input.providerUrl);
     const feePayerAccount = new WalletLockedCustom(
       input.account.address,
       provider

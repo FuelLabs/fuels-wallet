@@ -1,6 +1,9 @@
 import type { AccountWithBalance } from '@fuel-wallet/types';
 import { interpret } from 'xstate';
+import { CONSOLIDATION_CHECKED_KEY } from '~/config';
+import { store } from '~/store';
 import { MOCK_ACCOUNTS } from '~/systems/Account/__mocks__/accounts';
+import { Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
 import { AccountService } from '../services/account';
@@ -28,6 +31,7 @@ describe('accountsMachine', () => {
   let fetchBalance: jest.SpyInstance;
   let recoverWallet: jest.SpyInstance;
   let fetchRecoveryState: jest.SpyInstance;
+  let refreshConsolidateCoins: jest.SpyInstance;
 
   beforeEach(() => {
     jest.useFakeTimers();
@@ -49,6 +53,9 @@ describe('accountsMachine', () => {
       .spyOn(AccountService, 'fetchBalance')
       .mockResolvedValue(accountWithBalance);
 
+    refreshConsolidateCoins = jest
+      .spyOn(store, 'refreshConsolidateCoins')
+      .mockImplementation(() => {});
     service = interpret(accountsMachine.withContext({})).start();
   });
 
@@ -70,6 +77,24 @@ describe('accountsMachine', () => {
     expect(perMinute).toBeLessThanOrEqual(ONE_MINUTE / 15_000);
   });
 
+  it('asks for a consolidation check only when balances change', async () => {
+    const changed = () => refreshConsolidateCoins.mock.calls.length;
+
+    await jest.advanceTimersByTimeAsync(0);
+    expect(changed()).toBe(1);
+
+    await jest.advanceTimersByTimeAsync(ONE_MINUTE);
+    expect(changed()).toBe(1);
+
+    fetchBalance.mockResolvedValue({
+      ...accountWithBalance,
+      balances: [{ assetId: '0x01', amount: '10' }],
+    });
+    service.send({ type: 'REFRESH_ACCOUNTS', input: { skipLoading: true } });
+    await jest.advanceTimersByTimeAsync(0);
+    expect(changed()).toBe(2);
+  });
+
   it('does not refresh in the background while the document is hidden', async () => {
     await jest.advanceTimersByTimeAsync(0);
     fetchBalance.mockClear();
@@ -81,6 +106,19 @@ describe('accountsMachine', () => {
     setVisibility('visible');
     await jest.advanceTimersByTimeAsync(20_000);
     expect(fetchBalance).toHaveBeenCalledTimes(1);
+  });
+
+  it('skips the consolidation check when a previous popup checked the same balances', async () => {
+    await jest.advanceTimersByTimeAsync(0);
+    const [[input]] = refreshConsolidateCoins.mock.calls;
+    service.stop();
+    refreshConsolidateCoins.mockClear();
+
+    Storage.setItem(CONSOLIDATION_CHECKED_KEY, input.balancesKey);
+    service = interpret(accountsMachine.withContext({})).start();
+    await jest.advanceTimersByTimeAsync(0);
+    expect(refreshConsolidateCoins).not.toHaveBeenCalled();
+    Storage.removeItem(CONSOLIDATION_CHECKED_KEY);
   });
 
   it('refreshes immediately on REFRESH_ACCOUNTS', async () => {

@@ -52,7 +52,6 @@ const listenerAccountFetcher = () => {
   if (now - lastFocusRefresh < FOCUS_REFRESH_DEBOUNCE) return;
   lastFocusRefresh = now;
   store.refreshAccounts({ skipLoading: true });
-  store.refreshConsolidateCoins();
 };
 
 export function useAccounts() {
