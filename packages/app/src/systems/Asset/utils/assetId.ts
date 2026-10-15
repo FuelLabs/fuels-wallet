@@ -36,32 +36,57 @@ export const getAssetFuelCurrentChain = async (input: {
   };
 };
 
+const assetIdIndexes = new WeakMap<Asset[], Map<number, Map<string, Asset>>>();
+
+const getAssetIdIndex = (assets: Asset[], chainId: number) => {
+  let byChain = assetIdIndexes.get(assets);
+  if (!byChain) {
+    byChain = new Map();
+    assetIdIndexes.set(assets, byChain);
+  }
+  let index = byChain.get(chainId);
+  if (!index) {
+    index = new Map();
+    for (const asset of assets) {
+      // Later matches win, as with the previous sequential reduce
+      index.set(getAssetFuel(asset, chainId)?.assetId ?? '', asset);
+    }
+    byChain.set(chainId, index);
+  }
+  return index;
+};
+
+export const findFuelAssetByAssetId = (input: {
+  assets?: Asset[];
+  assetId: string;
+  chainId: number;
+}) => {
+  if (!input.assets?.length) return undefined;
+  return getAssetIdIndex(input.assets, input.chainId).get(input.assetId);
+};
+
 export const getFuelAssetByAssetId = async (input: {
   assets: Asset[];
   assetId: string;
   chainId?: number;
 }) => {
-  // create a reduce that will iterate the assets using promise and return the asset that matches the assetId froming from getAssetFuelCurrentChain
-  const assetToReturn = await input.assets?.reduce(
-    async (acc, asset) => {
-      const assetFuel = await getAssetFuelCurrentChain({
-        asset,
-        chainId: input.chainId,
-      });
-      if (assetFuel.assetId === input.assetId) {
-        return assetFuel;
-      }
-      return acc;
-    },
-    Promise.resolve() as Promise<AssetFuel | undefined>
-  );
+  const chainId =
+    input.chainId || (await NetworkService.getSelectedNetwork())?.chainId;
+  const asset =
+    chainId == null
+      ? undefined
+      : findFuelAssetByAssetId({
+          assets: input.assets,
+          assetId: input.assetId,
+          chainId,
+        });
 
-  if (assetToReturn) return assetToReturn;
+  if (asset) return getAssetFuelCurrentChain({ asset, chainId });
 
   // return a fake assetId if the fuelAsset is not found
   const unknown = await getAssetFuelCurrentChain({
     asset: { name: '', symbol: '', icon: '', networks: [] },
-    chainId: input.chainId,
+    chainId,
   });
 
   return {
