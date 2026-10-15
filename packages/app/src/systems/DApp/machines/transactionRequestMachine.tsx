@@ -10,6 +10,7 @@ import type {
 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
+import { store } from '~/store';
 import { AccountService } from '~/systems/Account';
 import { FetchMachine, assignErrorMessage, delay } from '~/systems/Core';
 import NameSystemService from '~/systems/NameSystem/services/nameSystem';
@@ -274,8 +275,10 @@ export const transactionRequestMachine = createMachine(
         },
       },
       txSuccess: {
+        entry: ['refreshAccounts'],
         on: {
           CLOSE: {
+            actions: ['refreshAccounts'],
             target: 'done',
           },
         },
@@ -311,6 +314,9 @@ export const transactionRequestMachine = createMachine(
   {
     actions: {
       reset: assign(() => ({})),
+      refreshAccounts: () => {
+        store.refreshAccounts({ skipLoading: true });
+      },
       assignFeeInputForSimulate: assign((ctx, ev) => ({
         account: ev.data.account,
         fees: {

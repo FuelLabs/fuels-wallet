@@ -61,7 +61,7 @@ const fetchingAccountsState = {
           {
             target: 'recoveringWallet',
             actions: ['assignAccounts'],
-            cond: 'hasAccountsOrNeedsRecovery',
+            cond: 'needsRecovery',
           },
           {
             target: 'fetchingAccount',
@@ -118,9 +118,15 @@ export const accountsMachine = createMachine(
     states: {
       idle: {
         after: {
-          TIMEOUT: {
-            target: 'checkStartFetching',
-          },
+          REFRESH_INTERVAL: [
+            {
+              cond: 'isDocumentVisible',
+              target: 'checkStartFetching',
+            },
+            {
+              target: 'idle',
+            },
+          ],
         },
       },
       checkStartFetching: {
@@ -239,7 +245,7 @@ export const accountsMachine = createMachine(
   {
     delays: {
       INTERVAL: 2000,
-      TIMEOUT: 2000,
+      REFRESH_INTERVAL: 20000,
       LOOP_TRY_LOGOUT: 100,
     },
     actions: {
@@ -352,14 +358,14 @@ export const accountsMachine = createMachine(
       }),
     },
     guards: {
-      hasAccountsOrNeedsRecovery: (ctx, ev) => {
-        const hasAccounts = Boolean(
-          (ev.data.accounts || ctx?.accounts || []).length
+      needsRecovery: (_, ev) => {
+        return Boolean(ev.data.needsRecovery);
+      },
+      isDocumentVisible: () => {
+        return (
+          typeof document === 'undefined' ||
+          document.visibilityState === 'visible'
         );
-        const needsRecovery = Boolean(
-          ev.data.needsRecovery || ctx?.needsRecovery
-        );
-        return hasAccounts || needsRecovery;
       },
       shouldSkipLoading: (ctx) => {
         return !!ctx.skipLoading;
