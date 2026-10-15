@@ -12,6 +12,7 @@ import {
 } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
+import { REINJECT_AFTER_RELOAD_KEY } from '~/systems/CRX/utils/tabs';
 
 export type VaultAccount = {
   address: string;
@@ -248,6 +249,8 @@ export class VaultServer extends EventEmitter {
   }
 
   async reload() {
+    // Open tabs need the content script again once the worker restarts
+    await chrome.storage.local.set({ [REINJECT_AFTER_RELOAD_KEY]: true });
     chrome.runtime.reload();
   }
 }
