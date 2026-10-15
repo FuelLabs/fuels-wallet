@@ -104,16 +104,25 @@ test.describe('Check assets', () => {
   // so these tests derive their expectations from live data.
   test('should flag suspicious assets with a warning icon', async () => {
     const suspicious = indexedAssets.filter(
-      (asset) => asset.suspicious && asset.name && !asset.isNFT
+      (asset) => asset.suspicious && !asset.isNFT
     );
-    test.skip(
-      !suspicious.length,
-      'The test account holds no asset that the indexer flags as suspicious'
-    );
-    for (const asset of suspicious) {
-      await expect(
-        page.getByText(`${asset.name} Icon AlertTriangle`).first()
-      ).toBeVisible({ timeout: 10000 });
+    expect(
+      suspicious.length,
+      'The test account must hold an asset the indexer flags as suspicious'
+    ).toBeGreaterThan(0);
+    // Assets without a name are listed only after "Show unknown assets"
+    const hasUnknown = suspicious.some((asset) => !asset.name);
+    if (hasUnknown) {
+      await page.getByRole('button', { name: 'Show unknown assets' }).click();
+    }
+    await expect
+      .poll(
+        () => page.getByText('Icon AlertTriangle', { exact: true }).count(),
+        { timeout: 10000 }
+      )
+      .toBeGreaterThanOrEqual(suspicious.length);
+    if (hasUnknown) {
+      await page.getByRole('button', { name: 'Hide unknown assets' }).click();
     }
   });
 
@@ -123,10 +132,10 @@ test.describe('Check assets', () => {
         .filter((asset) => asset.isNFT && asset.contractId)
         .map((asset) => asset.collection || 'Others')
     );
-    test.skip(
-      !collections.size,
-      'The test account holds no asset that the indexer marks as an NFT'
-    );
+    expect(
+      collections.size,
+      'The test account must hold an asset the indexer marks as an NFT'
+    ).toBeGreaterThan(0);
     await page.getByRole('tab', { name: 'NFTs' }).click();
     for (const collection of collections) {
       await expect(page.getByText(collection).first()).toBeVisible({
