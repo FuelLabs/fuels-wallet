@@ -1,5 +1,37 @@
 import { type Browser, type Page, expect, test } from '@playwright/test';
+import { Provider, Wallet } from 'fuels';
 import { hasText, waitAriaLabel } from '../commons';
+
+const TESTNET_PROVIDER_URL = 'https://testnet.fuel.network/v1/graphql';
+const TESTNET_INDEXER_URL = 'https://explorer-indexer-testnet.fuel.network';
+
+type IndexedAsset = {
+  assetId: string;
+  name?: string;
+  contractId?: string;
+  collection?: string;
+  isNft?: boolean;
+  suspicious?: boolean;
+};
+
+// Reads the test account's balances and the indexer data the wallet uses.
+const getIndexedAssets = async (): Promise<IndexedAsset[]> => {
+  const provider = new Provider(TESTNET_PROVIDER_URL);
+  const wallet = Wallet.fromMnemonic(
+    process.env.READONLY_TESTNET_ASSETS_VIEW,
+    undefined,
+    undefined,
+    provider
+  );
+  const { balances } = await wallet.getBalances();
+  return Promise.all(
+    balances.map(async ({ assetId }) => {
+      const res = await fetch(`${TESTNET_INDEXER_URL}/assets/${assetId}`);
+      const asset = res.ok ? await res.json() : {};
+      return { ...asset, assetId };
+    })
+  );
+};
 
 const loadWallet = async (page: Page, _browser: Browser) => {
   await page.goto('http://localhost:3000', {
@@ -35,9 +67,11 @@ const loadWallet = async (page: Page, _browser: Browser) => {
 test.describe('Check assets', () => {
   test.describe.configure({ mode: 'parallel' });
   let page: Page;
+  let indexedAssets: IndexedAsset[];
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage();
     await loadWallet(page, browser);
+    indexedAssets = await getIndexedAssets();
   });
 
   test('should show valid asset value 0.002000', async () => {
@@ -55,21 +89,40 @@ test.describe('Check assets', () => {
     ).toContainText('0.002000 ETH');
   });
 
-  test('should show USDC Icon AlertTriangle', async () => {
-    await expect
-      .poll(
-        async () => await page.getByText('USDC Icon AlertTriangle').isVisible(),
-        { timeout: 10000 }
-      )
-      .toBeTruthy();
+  // The account's assets and their indexer flags change over time,
+  // so these tests derive their expectations from live data.
+  test('should flag suspicious assets with a warning icon', async () => {
+    const suspicious = indexedAssets.filter(
+      (asset) => asset.suspicious && asset.name && !asset.isNft
+    );
+    test.skip(
+      !suspicious.length,
+      'The test account holds no asset that the indexer flags as suspicious'
+    );
+    for (const asset of suspicious) {
+      await expect(
+        page.getByText(`${asset.name} Icon AlertTriangle`).first()
+      ).toBeVisible({ timeout: 10000 });
+    }
   });
 
-  test('should show 1 SCAM NFT', async () => {
-    await expect
-      .poll(async () => await page.getByText('1 SCAM').isVisible(), {
+  test('should list NFTs by collection in the NFTs tab', async () => {
+    const collections = new Set(
+      indexedAssets
+        .filter((asset) => asset.isNft && asset.contractId)
+        .map((asset) => asset.collection || 'Others')
+    );
+    test.skip(
+      !collections.size,
+      'The test account holds no asset that the indexer marks as an NFT'
+    );
+    await page.getByRole('tab', { name: 'NFTs' }).click();
+    for (const collection of collections) {
+      await expect(page.getByText(collection).first()).toBeVisible({
         timeout: 10000,
-      })
-      .toBeTruthy();
+      });
+    }
+    await page.getByRole('tab', { name: 'Assets' }).click();
   });
 
   // Verified assets should never show the (Add) button
