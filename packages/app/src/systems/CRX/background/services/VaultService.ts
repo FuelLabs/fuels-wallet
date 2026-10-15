@@ -5,7 +5,10 @@ import {
 } from '@fuel-wallet/types';
 import type { DatabaseRestartEvent, RequestMessage } from '@fuel-wallet/types';
 import { AUTO_LOCK_IN_MINUTES } from '~/config';
-import { VaultServer } from '~/systems/Vault/services/VaultServer';
+import {
+  type VaultInputs,
+  VaultServer,
+} from '~/systems/Vault/services/VaultServer';
 
 import {
   clearSession,
@@ -18,10 +21,17 @@ import {
 import { db } from '../../../../systems/Core/utils/database';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 
+export const AUTO_LOCK_ALARM = 'autoLock';
+// While the wallet UI is open the deadline keeps moving, as before
+const IN_USE_CHECK_INTERVAL = 1000;
+// setTimeout overflows above 2^31 - 1 ms
+const MAX_TIMEOUT = 2 ** 31 - 1;
+
 export class VaultService extends VaultServer {
   readonly communicationProtocol: CommunicationProtocol;
 
-  private autoLockInterval: NodeJS.Timeout | null = null;
+  private autoLockTimeout: ReturnType<typeof setTimeout> | null = null;
+  private autoUnlockPromise: Promise<void> | null = null;
 
   constructor(communicationProtocol: CommunicationProtocol) {
     super();
@@ -29,11 +39,14 @@ export class VaultService extends VaultServer {
     this.handleRequest = this.handleRequest.bind(this);
     this.handleRestartEvent = this.handleRestartEvent.bind(this);
     this.emitLockEvent = this.emitLockEvent.bind(this);
+    this.checkAutoLock = this.checkAutoLock.bind(this);
+    this.handleAlarm = this.handleAlarm.bind(this);
+    this.handleConnect = this.handleConnect.bind(this);
 
     this.communicationProtocol = communicationProtocol;
 
-    this.autoUnlock();
     this.setupListeners();
+    this.checkAutoLock();
   }
 
   async checkVaultIntegrity() {
@@ -46,50 +59,98 @@ export class VaultService extends VaultServer {
 
   async unlock({ password }: { password: string }): Promise<void> {
     await super.unlock({ password });
-    saveSecret(password, AUTO_LOCK_IN_MINUTES);
-    this.startAutoLockTimer();
+    // Not awaited so the unlock response does not wait for the encryption
+    saveSecret(password, AUTO_LOCK_IN_MINUTES).then(() => {
+      // Locked again while saving, do not leave a usable session behind
+      if (this.manager.isLocked) return clearSession();
+      return this.checkAutoLock();
+    });
+  }
+
+  async changePassword(input: VaultInputs['changePassword']): Promise<void> {
+    await super.changePassword(input);
+    // Keep the session secret in sync, auto unlock would fail with the old one
+    if (!this.manager.isLocked) {
+      await saveSecret(input.password, AUTO_LOCK_IN_MINUTES);
+      this.checkAutoLock();
+    }
   }
 
   async lock(): Promise<void> {
     await super.lock();
     this.stopAutoLockTimer();
+    chrome.alarms.clear(AUTO_LOCK_ALARM);
+    // The worker can now be suspended while locked, so drop the session
+    // secret or the next start would auto unlock a manually locked wallet
+    clearSession();
     this.emitLockEvent();
   }
 
-  private startAutoLockTimer() {
-    this.stopAutoLockTimer(); // Clear any existing interval
+  private isVaultInUse() {
+    // Get all current Wallet PopUp instances that are using VaultService
+    return Array.from(this.communicationProtocol.ports.values()).some(
+      (p) => p.name === VAULT_SCRIPT_NAME
+    );
+  }
 
-    this.autoLockInterval = setInterval(async () => {
-      const timer = await getTimer();
+  /**
+   * Checks the stored auto-lock deadline and schedules the next check.
+   * While the wallet UI is open it resets the deadline every second.
+   * Otherwise it waits once until the deadline. The alarm wakes the
+   * worker at the deadline if it was suspended meanwhile.
+   */
+  private async checkAutoLock() {
+    this.stopAutoLockTimer();
+    const timer = await getTimer();
 
-      if (timer === 0) return;
+    if (timer === 0) return;
 
-      // Get all current Wallet PopUp instances that are using VaultService
-      const origins = Array.from(
-        this.communicationProtocol.ports.values()
-      ).filter((p) => p.name === VAULT_SCRIPT_NAME);
+    // If we're using the wallet, let's reset the auto lock
+    if (this.isVaultInUse()) {
+      await resetTimer();
+      this.scheduleAutoLockCheck(IN_USE_CHECK_INTERVAL);
+      return;
+    }
 
-      // If we're using the wallet, let's reset the auto lock
-      const isVaultInUse = origins.length > 0;
-      if (isVaultInUse) {
-        await resetTimer();
-        return;
-      }
+    // Otherwise, we can check if the autolock time is expired
+    const remaining = timer - Date.now();
+    if (remaining < 0) {
+      // Let an in-flight auto unlock finish so it cannot unlock after this lock
+      await this.autoUnlockPromise;
+      clearSession();
+      this.lock();
+      return;
+    }
 
-      // Otherwise, we can check if the autolock time is expired
-      const isExpired = timer < Date.now();
-      if (isExpired) {
-        clearSession();
-        this.lock();
-      }
-    }, 1000);
+    this.scheduleAutoLockCheck(remaining);
+    chrome.alarms.create(AUTO_LOCK_ALARM, { when: timer });
+  }
+
+  private scheduleAutoLockCheck(delay: number) {
+    this.stopAutoLockTimer();
+    this.autoLockTimeout = setTimeout(
+      this.checkAutoLock,
+      Math.min(delay, MAX_TIMEOUT)
+    );
   }
 
   private stopAutoLockTimer() {
-    if (this.autoLockInterval) {
-      clearInterval(this.autoLockInterval);
-      this.autoLockInterval = null;
+    if (this.autoLockTimeout) {
+      clearTimeout(this.autoLockTimeout);
+      this.autoLockTimeout = null;
     }
+  }
+
+  private handleAlarm(alarm: chrome.alarms.Alarm) {
+    if (alarm.name === AUTO_LOCK_ALARM) {
+      this.checkAutoLock();
+    }
+  }
+
+  private handleConnect(port: chrome.runtime.Port) {
+    if (port.name !== VAULT_SCRIPT_NAME) return;
+    // Wait for the port to be registered in the communication protocol
+    setTimeout(this.checkAutoLock, 0);
   }
 
   async autoUnlock() {
@@ -97,8 +158,18 @@ export class VaultService extends VaultServer {
     if (secret) {
       // Unlock vault directly without saving a new timestamp
       await super.unlock({ password: secret });
-      this.startAutoLockTimer(); // Start the timer after unlocking
     }
+  }
+
+  /**
+   * Restores the session on the first vault request instead of on every
+   * worker start, so wakes that never touch the vault skip the key derivation.
+   */
+  ensureAutoUnlocked() {
+    if (!this.autoUnlockPromise) {
+      this.autoUnlockPromise = this.autoUnlock().catch(() => {});
+    }
+    return this.autoUnlockPromise;
   }
 
   static start(communicationProtocol: CommunicationProtocol) {
@@ -109,6 +180,7 @@ export class VaultService extends VaultServer {
     if (!event.sender?.origin?.includes(chrome.runtime.id)) return;
     if (event.sender?.id !== chrome.runtime.id) return;
     if (event.target !== VAULT_SCRIPT_NAME) return;
+    await this.ensureAutoUnlocked();
     const response = await this.server.receive(event.request);
     if (response) {
       this.communicationProtocol.postMessage({
@@ -144,17 +216,30 @@ export class VaultService extends VaultServer {
 
   private setupListeners() {
     chrome.runtime.onMessage.addListener(this.handleRestartEvent);
+    chrome.runtime.onConnect.addListener(this.handleConnect);
+    chrome.alarms.onAlarm.addListener(this.handleAlarm);
     this.communicationProtocol.on(MessageTypes.request, this.handleRequest);
+    this.communicationProtocol.on(
+      MessageTypes.removeConnection,
+      this.checkAutoLock
+    );
     this.on('lock', this.emitLockEvent);
   }
 
+  // Keeps the auto-lock alarm, so a suspended worker still wakes to lock
   stop() {
     this.stopAutoLockTimer();
     this.communicationProtocol.removeListener(
       MessageTypes.request,
       this.handleRequest
     );
+    this.communicationProtocol.removeListener(
+      MessageTypes.removeConnection,
+      this.checkAutoLock
+    );
     chrome.runtime.onMessage.removeListener(this.handleRestartEvent);
+    chrome.runtime.onConnect.removeListener(this.handleConnect);
+    chrome.alarms.onAlarm.removeListener(this.handleAlarm);
     this.removeListener('lock', this.emitLockEvent);
   }
 
