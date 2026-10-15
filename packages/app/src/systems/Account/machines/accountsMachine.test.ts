@@ -102,4 +102,28 @@ describe('accountsMachine', () => {
     await jest.advanceTimersByTimeAsync(0);
     expect(recoverWallet).toHaveBeenCalledTimes(1);
   });
+
+  it('keeps context references when a refresh returns equal data', async () => {
+    jest
+      .spyOn(AccountService, 'getAccounts')
+      .mockImplementation(async () => [{ ...account }]);
+    fetchBalance.mockImplementation(async () => ({ ...accountWithBalance }));
+    service.send({ type: 'REFRESH_ACCOUNTS', input: { skipLoading: true } });
+    await jest.advanceTimersByTimeAsync(0);
+    const before = service.getSnapshot().context;
+
+    service.send({ type: 'REFRESH_ACCOUNTS', input: { skipLoading: true } });
+    await jest.advanceTimersByTimeAsync(0);
+    const after = service.getSnapshot().context;
+    expect(after.accounts).toBe(before.accounts);
+    expect(after.account).toBe(before.account);
+
+    fetchBalance.mockImplementation(async () => ({
+      ...accountWithBalance,
+      balance: '1',
+    }));
+    service.send({ type: 'REFRESH_ACCOUNTS', input: { skipLoading: true } });
+    await jest.advanceTimersByTimeAsync(0);
+    expect(service.getSnapshot().context.account).not.toBe(before.account);
+  });
 });

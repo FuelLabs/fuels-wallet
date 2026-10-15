@@ -44,6 +44,24 @@ export type AccountsMachineEvents =
       input: AccountInputs['updateAccount'];
     };
 
+function stringifyBigInts(_key: string, value: unknown) {
+  return typeof value === 'bigint' ? value.toString() : value;
+}
+
+// Keeps the previous reference when data is unchanged, so selectors can use identity checks
+function keepIfEqual<T>(prev: T, next: T): T {
+  if (prev === next) return prev;
+  if (
+    prev &&
+    next &&
+    JSON.stringify(prev, stringifyBigInts) ===
+      JSON.stringify(next, stringifyBigInts)
+  ) {
+    return prev;
+  }
+  return next;
+}
+
 const fetchingAccountsState = {
   initial: 'fetchingAccounts',
   entry: 'assignIsFetching',
@@ -250,11 +268,11 @@ export const accountsMachine = createMachine(
     },
     actions: {
       assignAccounts: assign({
-        accounts: (_, ev) => ev.data.accounts,
+        accounts: (ctx, ev) => keepIfEqual(ctx.accounts, ev.data.accounts),
         needsRecovery: (_, ev) => ev.data.needsRecovery,
       }),
       assignAccount: assign({
-        account: (_, ev) => ev.data,
+        account: (ctx, ev) => keepIfEqual(ctx.account, ev.data),
       }),
       assignError: assign({
         error: (_, ev) => ev.data,
