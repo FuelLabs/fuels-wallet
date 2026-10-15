@@ -70,15 +70,19 @@ function htmlScripts(htmlFile) {
   return [...new Set(srcs)];
 }
 
-const manifest = JSON.parse(readFileSync(join(distDir, 'manifest.json'), 'utf8'));
+const manifest = JSON.parse(
+  readFileSync(join(distDir, 'manifest.json'), 'utf8')
+);
 
 function contentScriptFiles() {
   const loaders = manifest.content_scripts.flatMap((cs) => cs.js);
-  const dynamic = loaders.flatMap((loader) => [
-    ...readFileSync(join(distDir, loader), 'utf8').matchAll(
-      /chrome\.runtime\.getURL\(["']([^"']+\.js)["']\)/g
-    ),
-  ]).map((m) => m[1]);
+  const dynamic = loaders
+    .flatMap((loader) => [
+      ...readFileSync(join(distDir, loader), 'utf8').matchAll(
+        /chrome\.runtime\.getURL\(["']([^"']+\.js)["']\)/g
+      ),
+    ])
+    .map((m) => m[1]);
   return [...loaders, ...dynamic];
 }
 

@@ -1,0 +1,35 @@
+name: Bundle Size
+
+on:
+  pull_request:
+    branches: [main, master, sdk-v2]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bundle-size:
+    name: CRX Bundle Size
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract pnpm version from .tool-versions
+        id: get_pnpm
+        run: |
+          PNPM_VERSION=$(grep '^pnpm' .tool-versions | awk '{print $2}')
+          echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
+      - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 24
+          pnpm-version: ${{ env.PNPM_VERSION }}
+
+      - name: Build CRX
+        run: pnpm build:crx
+        env:
+          NODE_ENV: production
+
+      - name: Check bundle budget
+        run: pnpm --filter fuels-wallet bundle:check
