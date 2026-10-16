@@ -12,7 +12,7 @@ concurrency:
 jobs:
   tests-jest:
     name: Jest Tests [Shard ${{ matrix.shard }}]
-    runs-on: buildjet-8vcpu-ubuntu-2204-arm
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:

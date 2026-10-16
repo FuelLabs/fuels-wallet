@@ -12,7 +12,7 @@ concurrency:
 jobs:
   tests-e2e-contracts:
     name: Test (Chromium) [Shard ${{ matrix.shard }}]
-    runs-on: buildjet-8vcpu-ubuntu-2204
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
       fail-fast: false
