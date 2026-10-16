@@ -376,8 +376,28 @@ test.describe('SendTransaction', () => {
   });
 
   test('Send transaction to a @domain', async () => {
-    await visit(page, '/send');
     const domain = '@bakoid';
+    const receiver = Wallet.generate({ provider }).address.toB256();
+
+    // The local node can't resolve Bako ID names, so mock the Bako ID API.
+    await page.route('https://api.bako.id/api/**', async (route) => {
+      const url = new URL(route.request().url());
+      if (decodeURIComponent(url.pathname).endsWith(`/addr/${domain}`)) {
+        return route.fulfill({ json: { address: receiver } });
+      }
+      if (url.pathname.endsWith('/name')) {
+        const names = url.searchParams
+          .getAll('address')
+          .filter((address) => address.toLowerCase() === receiver)
+          .map((resolver) => ({ name: domain.slice(1), resolver }));
+        return route.fulfill({ json: { names } });
+      }
+      return route.fulfill({ json: {} });
+    });
+
+    // "Send max amount transaction" drains the account, so fund it again.
+    await seedWallet(account.address, bn(100_000_000));
+    await visit(page, '/send');
 
     // Select asset
     await getButtonByText(page, 'Select one asset').click();
@@ -385,8 +405,7 @@ test.describe('SendTransaction', () => {
 
     // Fill address with domain and select it
     await getInputByName(page, 'address').fill(domain);
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    await page.getByText(domain).click();
+    await page.locator('.domain', { hasText: domain }).click();
     await page.waitForTimeout(1000);
 
     // Fill amount
