@@ -19,6 +19,15 @@ export type AssetListProps = {
   emptyProps?: AssetListEmptyProps;
 };
 
+function getAssetKey(asset: AssetAmount, index: number) {
+  // biome-ignore lint/suspicious/noExplicitAny: custom assets may carry assetId at the root
+  const rootAssetId = (asset as any).assetId as string | undefined;
+  const fuelNetwork = asset.networks?.find((n) => n.type === 'fuel');
+  const fuelAssetId =
+    fuelNetwork?.type === 'fuel' ? fuelNetwork.assetId : undefined;
+  return rootAssetId || fuelAssetId || asset.name || `asset-${index}`;
+}
+
 type AssetListComponent = FC<AssetListProps> & {
   Empty: typeof AssetListEmpty;
   Loading: typeof AssetListLoading;
@@ -48,9 +57,9 @@ export const AssetList: AssetListComponent = ({
   }
   return (
     <CardList>
-      {assetsToShow.map((asset) => (
+      {assetsToShow.map((asset, index) => (
         <AssetItem
-          key={asset.name}
+          key={getAssetKey(asset, index)}
           asset={asset}
           amount={asset.amount}
           showActions={showActions}

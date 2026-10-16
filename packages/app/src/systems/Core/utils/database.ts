@@ -21,7 +21,7 @@ import { saveToOPFS } from './opfs';
 
 type FailureEvents = Extract<keyof DbEvents, 'close' | 'blocked'>;
 export type FuelCachedAsset = AssetData &
-  AssetFuel & { key: string; fetchedAt?: number };
+  AssetFuel & { key: string; fetchedAt?: number; notFound?: boolean };
 
 export class FuelDB extends Dexie {
   vaults!: Table<Vault, string>;
