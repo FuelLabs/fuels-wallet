@@ -65,7 +65,7 @@ const NETWORK_TESTNET = {
 };
 const NETWORK_DEVNET = {
   id: '3',
-  name: 'Fuel Sepolia Devnet',
+  name: 'Fuel Ignition Sepolia Devnet',
   url: 'https://devnet.fuel.network/v1/graphql',
   chainId: CHAIN_IDS.fuel.devnet,
   explorerUrl: 'https://app-devnet.fuel.network',
@@ -365,7 +365,9 @@ test.describe('FuelWallet Extension', () => {
           timeout: 10_000,
         });
         await hasText(selectNetworkPage, 'Switching To');
-        await hasText(selectNetworkPage, network.name);
+        await expect(
+          selectNetworkPage.getByText(network.name, { exact: true })
+        ).toBeVisible();
 
         await getButtonByText(selectNetworkPage, /switch network/i).click();
         await expect(selectingNetwork).resolves.toBeDefined();
