@@ -160,6 +160,7 @@
           }
         }
       }
-    }
+    },
+    "onlyBuiltDependencies": ["esbuild"]
   }
 }
