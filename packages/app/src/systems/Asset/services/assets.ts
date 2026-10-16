@@ -47,19 +47,21 @@ export class AssetService {
   }
 
   static async setListedAssets() {
-    const verifiedAssets = (await (
-      await fetch('https://verified-assets.fuel.network/assets.json')
-    ).json()) as Array<AssetData>;
-    const assetsPromises = verifiedAssets.map((asset) => {
-      return AssetService.upsertAsset({
-        data: {
-          ...asset,
-          isCustom: false,
-        },
+    try {
+      const verifiedAssets = (await (
+        await fetch('https://verified-assets.fuel.network/assets.json')
+      ).json()) as Array<AssetData>;
+      const assetsPromises = verifiedAssets.map((asset) => {
+        return AssetService.upsertAsset({
+          data: {
+            ...asset,
+            isCustom: false,
+          },
+        });
       });
-    });
 
-    await Promise.all(assetsPromises);
+      await Promise.all(assetsPromises);
+    } catch (_) {}
   }
 
   static async updateAsset(input: AssetInputs['updateAsset']) {

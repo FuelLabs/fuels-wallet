@@ -28,10 +28,16 @@ export const graphqlRequest = async <R, T = Record<string, unknown>>(
   });
 
   if (res.ok) {
-    const response = await res.json();
-    return response.data as R;
+    try {
+      const response = await res.json();
+      return response.data as R;
+    } catch (_) {}
   }
 
-  const error = await res.json();
-  return Promise.reject(error);
+  try {
+    const error = await res.json();
+    return Promise.reject(error);
+  } catch (_) {
+    return Promise.reject(_);
+  }
 };
