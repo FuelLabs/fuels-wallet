@@ -2,9 +2,12 @@
 
 import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
-import Plyr from 'plyr-react';
+import dynamic from 'next/dynamic';
 import type { PlyrProps } from 'plyr-react';
 import { useEffect, useState } from 'react';
+
+// plyr touches `document` at import time, so it can't load during the static export.
+const Plyr = dynamic(() => import('plyr-react'), { ssr: false });
 
 type PlayerProps = PlyrProps & {
   src: string;
