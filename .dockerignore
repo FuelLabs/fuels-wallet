@@ -1,0 +1,13 @@
+node_modules
+**/node_modules
+**/dist
+**/dist-crx*
+**/out
+**/.next
+**/.turbo
+**/storybook-static
+**/playwright-results
+**/playwright-html
+.git
+.vercel
+.env.vercel.*
