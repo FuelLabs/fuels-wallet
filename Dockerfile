@@ -1,4 +1,4 @@
-# Builds the wallet website (docs + /app + /storybook)
+# Builds the wallet website (docs + /app)
 # with `pnpm install` + `pnpm build:website` (output ./dist) and serves it with nginx.
 FROM node:24-bookworm-slim AS build
 
@@ -16,7 +16,7 @@ ENV HUSKY=0 \
 
 COPY . .
 
-# devDependencies hold the build toolchain (turbo, next, vite, storybook), so
+# devDependencies hold the build toolchain (turbo, next, vite), so
 # NODE_ENV=production is only set after the install.
 RUN pnpm install --frozen-lockfile
 
@@ -30,7 +30,6 @@ ARG NEXT_PUBLIC_PREVIEW=false
 ARG NEXT_PUBLIC_URL=https://wallet.fuel.network
 ARG NEXT_PUBLIC_WALLET_DOWNLOAD_URL=/app/fuel-wallet.zip?v=1
 ARG NEXT_PUBLIC_WALLET_INSTALL
-ARG STORYBOOK_BASE_URL=/storybook/
 ARG VITE_CRX_NAME="Fuel Wallet"
 ARG VITE_CRX_RELEASE=false
 ENV NEXT_PUBLIC_ALGOLIA_APP_ID=$NEXT_PUBLIC_ALGOLIA_APP_ID \
@@ -40,7 +39,6 @@ ENV NEXT_PUBLIC_ALGOLIA_APP_ID=$NEXT_PUBLIC_ALGOLIA_APP_ID \
     NEXT_PUBLIC_URL=$NEXT_PUBLIC_URL \
     NEXT_PUBLIC_WALLET_DOWNLOAD_URL=$NEXT_PUBLIC_WALLET_DOWNLOAD_URL \
     NEXT_PUBLIC_WALLET_INSTALL=$NEXT_PUBLIC_WALLET_INSTALL \
-    STORYBOOK_BASE_URL=$STORYBOOK_BASE_URL \
     VITE_CRX_NAME=$VITE_CRX_NAME \
     VITE_CRX_RELEASE=$VITE_CRX_RELEASE
 
