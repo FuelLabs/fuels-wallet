@@ -392,7 +392,7 @@ test.describe('FuelWallet Extension', () => {
         await waitWalletToLoad(popupPage);
       }
 
-      const initialNetworkAmount = 3;
+      const initialNetworkAmount = DEFAULT_NETWORKS.length;
       const networkSelectorBeforeAdd = getByAriaLabel(
         popupPage,
         'Selected Network'
