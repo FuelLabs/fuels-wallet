@@ -53,9 +53,6 @@
     "dev": {
       "cache": false
     },
-    "dev:storybook": {
-      "cache": false
-    },
     "dev:crx": {
       "cache": false
     },
