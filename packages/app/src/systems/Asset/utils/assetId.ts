@@ -48,7 +48,7 @@ const getAssetIdIndex = (assets: Asset[], chainId: number) => {
   if (!index) {
     index = new Map();
     for (const asset of assets) {
-      // Later matches win, as with the previous sequential reduce
+      // Later matches win
       index.set(getAssetFuel(asset, chainId)?.assetId ?? '', asset);
     }
     byChain.set(chainId, index);

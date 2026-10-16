@@ -7,10 +7,9 @@ import { NetworkService } from '~/systems/Network/services/network';
 import type { AssetFormValues } from '../hooks/useAssetForm';
 import { getFuelAssetByAssetId } from '../utils';
 
-export const LISTED_ASSETS_URL =
-  'https://verified-assets.fuel.network/assets.json';
+const LISTED_ASSETS_URL = 'https://verified-assets.fuel.network/assets.json';
 export const LISTED_ASSETS_TTL = 60 * 60 * 1000;
-export const LISTED_ASSETS_META_KEY = 'listedAssetsMeta';
+const LISTED_ASSETS_META_KEY = 'listedAssetsMeta';
 
 type ListedAssetsMeta = {
   fetchedAt: number;
@@ -68,7 +67,6 @@ export class AssetService {
 
     // no-cache lets the browser revalidate with the server ETag
     const response = await fetch(LISTED_ASSETS_URL, { cache: 'no-cache' });
-    // Without this an error body would be saved and kept for the whole TTL
     if (!response.ok) {
       throw new Error(`Failed to fetch listed assets: ${response.status}`);
     }
@@ -92,8 +90,7 @@ export class AssetService {
     });
   }
 
-  // Writes only the listed assets that differ from the stored rows, in one
-  // transaction. Rows whose symbol belongs to another asset are skipped.
+  // Rows whose symbol belongs to another asset are skipped
   static async saveListedAssets(verifiedAssets: AssetData[]) {
     const skipped = await db.transaction('rw', db.assets, async () => {
       const existing = await db.assets.toArray();

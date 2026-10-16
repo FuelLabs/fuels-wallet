@@ -1,4 +1,3 @@
-export * from './AssetAvatar';
 export * from './AssetForm';
 export * from './AssetItem';
 export * from './AssetList';
