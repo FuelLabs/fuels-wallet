@@ -61,6 +61,23 @@ describe('AssetService.setListedAssets', () => {
     expect(stored.every((a) => a.isCustom === false)).toBe(true);
   });
 
+  it('throws on an error reply and does not cache it', async () => {
+    const fetchSpy = jest
+      .spyOn(global, 'fetch')
+      .mockImplementation(
+        async () => new Response(JSON.stringify(LIST), { status: 503 })
+      );
+    const writes = spyWrites();
+
+    await expect(AssetService.setListedAssets()).rejects.toThrow('503');
+    expect(writes.bulkPut).not.toHaveBeenCalled();
+
+    fetchSpy.mockRestore();
+    const retrySpy = mockList(LIST);
+    await AssetService.setListedAssets();
+    expect(retrySpy).toHaveBeenCalledTimes(1);
+  });
+
   it('skips the request and the writes within the TTL', async () => {
     const fetchSpy = mockList(LIST);
     await AssetService.setListedAssets();

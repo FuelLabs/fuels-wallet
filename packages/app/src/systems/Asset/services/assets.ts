@@ -68,6 +68,10 @@ export class AssetService {
 
     // no-cache lets the browser revalidate with the server ETag
     const response = await fetch(LISTED_ASSETS_URL, { cache: 'no-cache' });
+    // Without this an error body would be saved and kept for the whole TTL
+    if (!response.ok) {
+      throw new Error(`Failed to fetch listed assets: ${response.status}`);
+    }
     const etag = response.headers.get('etag') ?? undefined;
     const isSameList =
       !!etag && etag === meta?.etag && (await AssetService.hasListedAssets());
