@@ -14,8 +14,6 @@ if [ -z "$1" ]; then
 	turbo run dev --filter=fuels-wallet
 elif [ "$1" == "--crx" ]; then
 	turbo run dev:crx --parallel
-elif [ "$1" == "--storybook" ]; then
-	turbo run dev:storybook --filter=fuels-wallet
 elif [ "$1" == "--docs" ]; then
 	NODE_ENV=development turbo run dev --filter=docs
 elif [ "$1" == "--e2e-contracts-test" ]; then

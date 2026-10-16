@@ -3,7 +3,9 @@ import { Box, FuelLogo } from '@fuel-ui/react';
 
 export function HeaderFuelBranding({
   title = 'Fuel Wallet',
-}: { title: string }) {
+}: {
+  title: string;
+}) {
   return (
     <Box.Flex css={{ alignItems: 'center' }}>
       <FuelLogo size={40} />

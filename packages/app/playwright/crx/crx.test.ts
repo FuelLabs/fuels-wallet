@@ -63,19 +63,10 @@ const NETWORK_TESTNET = {
   bridgeUrl: 'https://app-testnet.fuel.network/bridge',
   isSelected: false,
 };
-const NETWORK_DEVNET = {
-  id: '3',
-  name: 'Fuel Ignition Sepolia Devnet',
-  url: 'https://devnet.fuel.network/v1/graphql',
-  chainId: CHAIN_IDS.fuel.devnet,
-  explorerUrl: 'https://app-devnet.fuel.network',
-  faucetUrl: 'https://faucet-devnet.fuel.network/',
-  isSelected: false,
-};
 
 const DEFAULT_NETWORKS: Array<
   NetworkData & { faucetUrl?: string; bridgeUrl?: string; hidden?: boolean }
-> = [NETWORK_IGNITION, NETWORK_TESTNET, NETWORK_DEVNET];
+> = [NETWORK_IGNITION, NETWORK_TESTNET];
 
 const WALLET_PASSWORD = 'Qwe123456$';
 
@@ -375,8 +366,6 @@ test.describe('FuelWallet Extension', () => {
 
       await testSelectNetwork(NETWORK_TESTNET);
       await popupPage.waitForTimeout(2000);
-      await testSelectNetwork(NETWORK_DEVNET);
-      await popupPage.waitForTimeout(2000);
       await testSelectNetwork(NETWORK_IGNITION);
       await popupPage.waitForTimeout(2000);
     });
@@ -403,7 +392,7 @@ test.describe('FuelWallet Extension', () => {
         await waitWalletToLoad(popupPage);
       }
 
-      const initialNetworkAmount = 3;
+      const initialNetworkAmount = DEFAULT_NETWORKS.length;
       const networkSelectorBeforeAdd = getByAriaLabel(
         popupPage,
         'Selected Network'
