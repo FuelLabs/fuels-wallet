@@ -21,17 +21,18 @@ jobs:
     name: Assign project changed
     runs-on: ubuntu-latest
     outputs:
-      changed: ${{ steps.packages-changed.outputs.any_changed }}
+      changed: ${{ steps.packages-changed.outputs.packages }}
     steps:
       - uses: actions/checkout@v4
       - name: Check external packages changes
         id: packages-changed
-        uses: tj-actions/changed-files@v22.2
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         with:
-          files: |
-            **/packages/app/**
-            **/packages/types/**
-            **/packages/react/**
+          filters: |
+            packages:
+              - 'packages/app/**'
+              - 'packages/types/**'
+              - 'packages/react/**'
 
   validate-changeset:
     name: Validate PR Changeset
