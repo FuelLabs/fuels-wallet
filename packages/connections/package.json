@@ -40,7 +40,7 @@
     "fuels": "0.103.0",
     "jest-environment-jsdom": "29.6.2",
     "tsup": "^7.2.0",
-    "undici": "^6.4.0",
+    "undici": "^6.23.0",
     "web-streams-polyfill": "^3.3.2",
     "whatwg-fetch": "^3.6.20"
   }
