@@ -6,7 +6,7 @@ import {
   DEVNET_NETWORK_URL,
   TESTNET_NETWORK_URL,
 } from 'fuels';
-import { DEFAULT_NETWORKS } from '~/networks';
+import { DEFAULT_NETWORKS, IGNITION_NETWORK } from '~/networks';
 
 function bech32ToHex(bech32Address: string): string {
   // Remove the 'fuel' prefix
@@ -370,6 +370,41 @@ export const applyDbVersioning = (db: Dexie) => {
         );
       } else {
         console.log('[DB Migration v30] No devnet network found to migrate');
+      }
+    });
+
+  // DB VERSION 31
+  // Remove devnet, which was shut down. If it was selected, select mainnet
+  db.version(31)
+    .stores({
+      vaults: 'key',
+      accounts: '&address, &name',
+      networks: '&id, &url, &name, chainId',
+      connections: 'origin',
+      transactionsCursors: '++id, address, size, providerUrl, endCursor',
+      assets: '&name, &symbol',
+      indexedAssets: 'key, fetchedAt',
+      abis: '&contractId',
+      errors: '&id',
+    })
+    .upgrade(async (tx) => {
+      const networks = tx.table('networks');
+      const allNetworks = await networks.toArray();
+      const devnetNetwork = allNetworks.find(
+        (network) => network.url === DEVNET_NETWORK_URL
+      );
+      if (!devnetNetwork) return;
+
+      await networks.delete(devnetNetwork.id);
+      if (!devnetNetwork.isSelected) return;
+
+      const remaining = allNetworks.filter((n) => n.id !== devnetNetwork.id);
+      const next =
+        remaining.find((n) => n.url === IGNITION_NETWORK.url) ?? remaining[0];
+      if (next) {
+        await networks.update(next.id, { isSelected: true });
+      } else {
+        await networks.add({ ...IGNITION_NETWORK, id: createUUID() });
       }
     });
 };
