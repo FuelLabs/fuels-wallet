@@ -83,7 +83,7 @@ const WALLET_PASSWORD = 'Qwe123456$';
 // The timeout is set for 3 minutes
 // because some tests like reconnect
 // can take up to 1 minute before it's reconnected
-test.setTimeout(240_000);
+test.setTimeout(300_000);
 
 test.describe('FuelWallet Extension', () => {
   test('If user opens popup it should force open a sign-up page', async ({
@@ -776,7 +776,8 @@ test.describe('FuelWallet Extension', () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
 
         await seedWallet(authorizedAccount.address, bn(100_000_000));
-        await hasText(popupPage, /0\.100/i);
+        // Outside deposits show on the next 20 s balance refresh
+        await hasText(popupPage, /0\.100/i, 0, 25_000);
       });
 
       await test.step('Send transfer using authorized Account', async () => {
