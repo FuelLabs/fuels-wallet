@@ -11,11 +11,14 @@ import {
   assign,
   createMachine,
 } from 'xstate';
+import { CONSOLIDATION_CHECKED_KEY } from '~/config';
 import { AccountService } from '~/systems/Account';
+import { Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 import { ConsolidateCoinsService } from '../services/consolidateCoins';
 
 type MachineContext = {
+  balancesKey?: string;
   providerUrl: string;
   assetId: string;
   shouldConsolidate: boolean;
@@ -54,7 +57,9 @@ type MachineServices = {
   };
 };
 
-type MachineEvents = { type: 'CONSOLIDATE_COINS' } | { type: 'REFRESH' };
+type MachineEvents =
+  | { type: 'CONSOLIDATE_COINS' }
+  | { type: 'REFRESH'; input?: { balancesKey?: string } };
 
 export const consolidateCoinsMachine = createMachine(
   {
@@ -66,7 +71,7 @@ export const consolidateCoinsMachine = createMachine(
       services: {} as MachineServices,
     },
     id: 'consolidateCoins',
-    initial: 'initializingProvider',
+    initial: 'idle',
     context: {
       providerUrl: '',
       assetId: '',
@@ -82,6 +87,7 @@ export const consolidateCoinsMachine = createMachine(
       idle: {
         on: {
           REFRESH: {
+            actions: ['assignBalancesKey'],
             target: 'initializingProvider',
           },
         },
@@ -90,6 +96,9 @@ export const consolidateCoinsMachine = createMachine(
         tags: ['loading'],
         invoke: {
           src: 'getProviderUrl',
+          onError: {
+            target: 'idle',
+          },
           onDone: {
             actions: ['assignProviderUrl'],
             target: 'fetchingBaseAssetId',
@@ -100,6 +109,9 @@ export const consolidateCoinsMachine = createMachine(
         tags: ['loading'],
         invoke: {
           src: 'getBaseAssetId',
+          onError: {
+            target: 'idle',
+          },
           onDone: {
             actions: ['assignBaseAssetId'],
             target: 'loadingAccount',
@@ -110,6 +122,9 @@ export const consolidateCoinsMachine = createMachine(
         tags: ['loading'],
         invoke: {
           src: 'getAccount',
+          onError: {
+            target: 'idle',
+          },
           onDone: {
             actions: ['assignAccount'],
             target: 'evaluatingConsolidationNeed',
@@ -120,15 +135,18 @@ export const consolidateCoinsMachine = createMachine(
         tags: ['loading'],
         invoke: {
           src: 'shouldConsolidate',
+          onError: {
+            target: 'idle',
+          },
           onDone: [
             {
-              actions: ['assignShouldConsolidate'],
+              actions: ['assignShouldConsolidate', 'forgetCheckedKey'],
               target: 'fetchingCoins',
               cond: 'shouldConsolidate',
             },
             {
               target: 'idle',
-              actions: ['assignShouldNotConsolidate'],
+              actions: ['assignShouldNotConsolidate', 'rememberCheckedKey'],
             },
           ],
         },
@@ -137,6 +155,9 @@ export const consolidateCoinsMachine = createMachine(
         tags: ['loading'],
         invoke: {
           src: 'getAllCoins',
+          onError: {
+            target: 'idle',
+          },
           onDone: {
             actions: ['assignCoins'],
             target: 'preparingConsolidation',
@@ -147,6 +168,9 @@ export const consolidateCoinsMachine = createMachine(
         tags: ['loading'],
         invoke: {
           src: 'createConsolidation',
+          onError: {
+            target: 'idle',
+          },
           onDone: {
             actions: ['assignConsolidation'],
             target: 'awaitingUserConfirmation',
@@ -159,6 +183,7 @@ export const consolidateCoinsMachine = createMachine(
             target: 'executingConsolidation',
           },
           REFRESH: {
+            actions: ['assignBalancesKey'],
             target: 'initializingProvider',
           },
         },
@@ -183,6 +208,20 @@ export const consolidateCoinsMachine = createMachine(
       shouldConsolidate: (_, ev) => ev.data,
     },
     actions: {
+      assignBalancesKey: assign((_ctx, ev) => ({
+        balancesKey: ev.input?.balancesKey,
+      })),
+      rememberCheckedKey: (ctx) => {
+        // A REFRESH dropped mid-check can leave a key for another account or network
+        const checked = `${ctx.providerUrl}|${ctx.account?.address}`;
+        const key = ctx.balancesKey;
+        if (key && (key === checked || key.startsWith(`${checked}|`))) {
+          Storage.setItem(CONSOLIDATION_CHECKED_KEY, ctx.balancesKey);
+        }
+      },
+      forgetCheckedKey: () => {
+        Storage.removeItem(CONSOLIDATION_CHECKED_KEY);
+      },
       assignProviderUrl: assign((_ctx, ev) => ({
         providerUrl: ev.data,
       })),
@@ -216,7 +255,6 @@ export const consolidateCoinsMachine = createMachine(
     },
     services: {
       getProviderUrl: async () => {
-        console.log('getProviderUrl');
         const selectedNetwork = await NetworkService.getSelectedNetwork();
         if (!selectedNetwork) {
           throw new Error('No network selected');

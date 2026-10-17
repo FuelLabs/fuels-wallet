@@ -8,7 +8,13 @@ import { ContractService } from '../services/contracts';
 
 export type MachineContext = {
   contracts?: Contract[];
+  attempts?: number;
 };
+
+type MachineEvents = { type: 'FETCH' };
+
+const MAX_ATTEMPTS = 3;
+const RETRY_BASE_DELAY = 10_000;
 
 type MachineServices = {
   fetchProjects: {
@@ -24,16 +30,30 @@ export const contractsMachine = createMachine(
     schema: {
       context: {} as MachineContext,
       services: {} as MachineServices,
+      events: {} as MachineEvents,
+    },
+    context: {
+      attempts: 0,
     },
     id: '(machine)',
-    initial: 'fetching',
+    initial: 'idle',
     states: {
+      idle: {
+        on: {
+          FETCH: 'fetching',
+        },
+      },
       fetching: {
+        entry: ['incrementAttempts'],
         invoke: {
           src: 'fetchProjects',
           onDone: [
             {
               target: 'failure',
+              cond: 'canRetry',
+            },
+            {
+              target: 'failed',
               cond: FetchMachine.hasError,
             },
             {
@@ -45,16 +65,27 @@ export const contractsMachine = createMachine(
       },
       failure: {
         after: {
-          10000: 'fetching',
+          RETRY_DELAY: 'fetching',
         },
       },
-      success: {
-        type: 'final',
-      },
+      failed: {},
+      success: {},
     },
   },
   {
+    delays: {
+      RETRY_DELAY: (ctx) =>
+        RETRY_BASE_DELAY * 2 ** Math.max((ctx.attempts ?? 1) - 1, 0),
+    },
+    guards: {
+      canRetry: (ctx, ev) =>
+        Boolean((ev.data as { error?: unknown })?.error) &&
+        (ctx.attempts ?? 0) < MAX_ATTEMPTS,
+    },
     actions: {
+      incrementAttempts: assign({
+        attempts: (ctx) => (ctx.attempts ?? 0) + 1,
+      }),
       assignContracts: assign({
         contracts: (_, ev) => {
           return ContractService.formatContractsFromEcosystem(ev.data);
