@@ -14,6 +14,7 @@
     "test": "jest --verbose",
     "test:ci": "pnpm ts:check && jest --verbose",
     "test:watch": "jest --watch",
+    "bundle:check": "node scripts/check-bundle-size.mjs",
     "ts:check": "pnpm xstate:typegen && tsc --noEmit",
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
