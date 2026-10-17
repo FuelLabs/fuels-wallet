@@ -1,4 +1,4 @@
-import { isNetworkDevnet, isNetworkTestnet, isValidNetworkUrl } from './url';
+import { isNetworkTestnet, isValidNetworkUrl } from './url';
 
 describe('Network URL Utilities', () => {
   describe('isValidNetworkUrl()', () => {
@@ -109,24 +109,6 @@ describe('Network URL Utilities', () => {
     it('should return false for non-testnet URL', () => {
       const url = 'https://mainnet.fuel.network/v1/graphql';
       expect(isNetworkTestnet(url)).toBe(false);
-    });
-  });
-
-  describe('isNetworkDevnet', () => {
-    it('should return true for valid devnet URL without query params', () => {
-      const url = 'https://devnet.fuel.network/v1/graphql';
-      expect(isNetworkDevnet(url)).toBe(true);
-    });
-
-    it('should return true for valid devnet URL with query params', () => {
-      const url =
-        'https://devnet.fuel.network/v1/graphql?filter=active&sort=desc';
-      expect(isNetworkDevnet(url)).toBe(true);
-    });
-
-    it('should return false for non-devnet URL', () => {
-      const url = 'https://mainnet.fuel.network/v1/graphql';
-      expect(isNetworkDevnet(url)).toBe(false);
     });
   });
 });

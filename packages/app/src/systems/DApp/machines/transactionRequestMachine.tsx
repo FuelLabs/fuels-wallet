@@ -228,7 +228,7 @@ export const transactionRequestMachine = createMachine(
           },
         },
         after: {
-          1000: {
+          300: {
             target: 'simulatingTransactionLoading',
           },
         },
