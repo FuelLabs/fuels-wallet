@@ -6,8 +6,8 @@
 
 /*
   Fuels version: 0.103.0
-  Forc version: 0.68.1
-  Fuel-Core version: 0.43.1
+  Forc version: 0.68.6
+  Fuel-Core version: 0.47.1
 */
 
 import { Contract as __Contract, Interface } from "fuels";
@@ -284,13 +284,13 @@ const abi = {
   ],
   "functions": [
     {
+      "name": "decimals",
       "inputs": [
         {
           "name": "asset",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "decimals",
       "output": "2da102c46c7263beeed95818cd7bee801716ba8303dddafdcd0f6c9efda4a0f1",
       "attributes": [
         {
@@ -302,31 +302,13 @@ const abi = {
       ]
     },
     {
-      "inputs": [
-        {
-          "name": "asset",
-          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
-        }
-      ],
       "name": "name",
-      "output": "7c06d929390a9aeeb8ffccf8173ac0d101a9976d99dda01cce74541a81e75ac0",
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read"
-          ]
-        }
-      ]
-    },
-    {
       "inputs": [
         {
           "name": "asset",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "symbol",
       "output": "7c06d929390a9aeeb8ffccf8173ac0d101a9976d99dda01cce74541a81e75ac0",
       "attributes": [
         {
@@ -338,8 +320,26 @@ const abi = {
       ]
     },
     {
-      "inputs": [],
+      "name": "symbol",
+      "inputs": [
+        {
+          "name": "asset",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "output": "7c06d929390a9aeeb8ffccf8173ac0d101a9976d99dda01cce74541a81e75ac0",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
       "name": "total_assets",
+      "inputs": [],
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -351,13 +351,13 @@ const abi = {
       ]
     },
     {
+      "name": "total_supply",
       "inputs": [
         {
           "name": "asset",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "total_supply",
       "output": "d852149004cc9ec0bbe7dc4e37bffea1d41469b759512b6136f2e865a4c06e7d",
       "attributes": [
         {
@@ -369,6 +369,7 @@ const abi = {
       ]
     },
     {
+      "name": "burn",
       "inputs": [
         {
           "name": "sub_id",
@@ -379,7 +380,6 @@ const abi = {
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "name": "burn",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -396,6 +396,7 @@ const abi = {
       ]
     },
     {
+      "name": "mint",
       "inputs": [
         {
           "name": "recipient",
@@ -410,7 +411,6 @@ const abi = {
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "name": "mint",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -423,26 +423,8 @@ const abi = {
       ]
     },
     {
-      "inputs": [],
       "name": "deposit",
-      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
-        },
-        {
-          "name": "payable",
-          "arguments": []
-        }
-      ]
-    },
-    {
       "inputs": [],
-      "name": "deposit_half",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -459,6 +441,25 @@ const abi = {
       ]
     },
     {
+      "name": "deposit_half",
+      "inputs": [],
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        },
+        {
+          "name": "payable",
+          "arguments": []
+        }
+      ]
+    },
+    {
+      "name": "deposit_half_and_mint",
       "inputs": [
         {
           "name": "recipient",
@@ -473,7 +474,6 @@ const abi = {
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "name": "deposit_half_and_mint",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -490,6 +490,7 @@ const abi = {
       ]
     },
     {
+      "name": "deposit_half_and_mint_from_external_contract",
       "inputs": [
         {
           "name": "recipient",
@@ -508,7 +509,6 @@ const abi = {
           "concreteTypeId": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54"
         }
       ],
-      "name": "deposit_half_and_mint_from_external_contract",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -525,14 +525,14 @@ const abi = {
       ]
     },
     {
-      "inputs": [],
       "name": "panic_tx",
+      "inputs": [],
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": null
     },
     {
-      "inputs": [],
       "name": "revert_tx",
+      "inputs": [],
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": null
     }
@@ -556,7 +556,8 @@ const abi = {
     }
   ],
   "messagesTypes": [],
-  "configurables": []
+  "configurables": [],
+  "errorCodes": {}
 };
 
 const storageSlots: StorageSlot[] = [

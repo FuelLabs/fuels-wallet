@@ -1,4 +1,3 @@
-import contractIdsDevnet from './contract-ids.devnet.json';
 import contractIds from './contract-ids.json';
 import contractIdsTestnet from './contract-ids.testnet.json';
 
@@ -8,8 +7,6 @@ let contractsIdsToUse: Record<string, string> | undefined;
 
 if (FUEL_PROVIDER_URL?.indexOf('testnet') !== -1) {
   contractsIdsToUse = contractIdsTestnet;
-} else if (FUEL_PROVIDER_URL?.indexOf('devnet') !== -1) {
-  contractsIdsToUse = contractIdsDevnet;
 } else {
   contractsIdsToUse = contractIds;
 }

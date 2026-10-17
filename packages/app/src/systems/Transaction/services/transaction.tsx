@@ -24,15 +24,13 @@ import {
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
 } from 'fuels';
-import { WalletLockedCustom, db } from '~/systems/Core';
+import { WalletLockedCustom } from '~/systems/Core';
 
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
-import { graphqlRequest } from '~/systems/Core/utils/graphql';
 import { NetworkService } from '~/systems/Network/services/network';
-import type { TransactionCursor } from '../types';
 import {
   type GroupedErrors,
   getAbiMap,
@@ -41,18 +39,8 @@ import {
   setGasLimitToTxRequest,
 } from '../utils';
 import { getCurrentTips } from '../utils/fee';
-import { type GetPageInfoQuery, getPageInfoQuery } from './queries';
 
 export type TxInputs = {
-  getTxCursors: {
-    address: string;
-    providerUrl: string;
-  };
-  addTxCursors: {
-    address: string;
-    providerUrl: string;
-    cursors: string[];
-  };
   request: {
     providerConfig: FuelProviderConfig;
     transactionRequest: TransactionRequest;
@@ -115,13 +103,8 @@ export type TxInputs = {
     address: string;
     providerUrl?: string;
     pagination?: {
-      after: string | null;
+      before?: string | null;
     };
-  };
-  getAllCursors: {
-    address: string;
-    providerUrl?: string;
-    initialEndCursor: string | null;
   };
   fundTransaction: {
     wallet: WalletLocked;
@@ -138,39 +121,6 @@ const TXS_PER_PAGE = 50;
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class TxService {
-  static getTxCursors(input: TxInputs['getTxCursors']) {
-    return db.transaction('r', db.transactionsCursors, async () => {
-      return db.transactionsCursors
-        .where('providerUrl')
-        .equalsIgnoreCase(input.providerUrl)
-        .and((cursor) => {
-          return cursor.address.toLowerCase() === input.address.toLowerCase();
-        })
-        .and((cursor) => {
-          return cursor.size === TXS_PER_PAGE;
-        })
-        .sortBy('id');
-    });
-  }
-
-  static addTxCursors(input: TxInputs['addTxCursors']) {
-    const { address, providerUrl, cursors } = input;
-
-    const transactionsCursors: TransactionCursor[] = cursors.map(
-      (endCursor) => ({
-        address,
-        size: TXS_PER_PAGE,
-        providerUrl,
-        endCursor,
-      })
-    );
-
-    return db.transaction('rw', db.transactionsCursors, async () => {
-      await db.transactionsCursors.bulkAdd(transactionsCursors);
-      return true;
-    });
-  }
-
   static async sign({
     account,
     address,
@@ -403,49 +353,14 @@ export class TxService {
       provider,
       filters: {
         owner: address,
-        first: TXS_PER_PAGE,
-        after: pagination?.after,
+        last: TXS_PER_PAGE,
+        before: pagination?.before ?? undefined,
       },
     });
 
     return {
       transactionHistory: txSummaries.transactions,
       pageInfo: txSummaries.pageInfo,
-    };
-  }
-
-  static async getAllCursors({
-    address,
-    providerUrl = '',
-    initialEndCursor,
-  }: TxInputs['getAllCursors']) {
-    let hasNextPage = true;
-    const cursors: string[] = [];
-    let endCursor: string | null | undefined = initialEndCursor;
-
-    while (hasNextPage) {
-      const result: GetPageInfoQuery = await graphqlRequest(
-        providerUrl,
-        'getTransactionsByOwner',
-        getPageInfoQuery,
-        {
-          owner: address,
-          first: TXS_PER_PAGE,
-          after: endCursor,
-        }
-      );
-      const pageInfo = result.transactionsByOwner.pageInfo;
-
-      hasNextPage = pageInfo.hasNextPage;
-      endCursor = pageInfo.endCursor;
-
-      if (hasNextPage && endCursor) {
-        cursors.push(endCursor);
-      }
-    }
-
-    return {
-      cursors,
     };
   }
 

@@ -17,9 +17,8 @@ const selectors = {
     return state.context.transactionHistory;
   },
   hasNextPage: (state: TransactionHistoryMachineState) => {
-    const hasCurrentCursor = Boolean(state.context.currentCursor);
-    const hasLoadedTxs = Boolean(state.context.transactionHistory?.length);
-    return hasCurrentCursor && hasLoadedTxs;
+    const { hasNextPage, endCursor, transactionHistory } = state.context;
+    return hasNextPage && Boolean(endCursor) && !!transactionHistory?.length;
   },
 };
 
