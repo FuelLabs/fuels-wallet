@@ -1,5 +1,5 @@
 import { bn } from 'fuels';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Services, store } from '~/store';
 import { useOverlay } from '~/systems/Overlay';
 
@@ -11,6 +11,8 @@ enum AccountStatus {
   unlocking = 'unlocking',
   unlockingLoading = 'unlockingLoading',
 }
+
+const isSame = <T,>(a: T, b: T) => a === b;
 
 const selectors = {
   hasBalance(state: AccountsMachineState) {
@@ -24,55 +26,72 @@ const selectors = {
     if (state.hasTag('loading')) return AccountStatus.loading;
     return AccountStatus.idle;
   },
-  context(state: AccountsMachineState) {
-    return state.context;
-  },
   account(state: AccountsMachineState) {
-    return state.context.account;
+    return state.context?.account;
   },
-  shownAccounts(state: AccountsMachineState) {
-    return state.context.accounts?.filter((acc) => !acc.isHidden);
+  needsRecovery(state: AccountsMachineState) {
+    return state.context?.needsRecovery;
   },
-  hiddenAccounts(state: AccountsMachineState) {
-    return state.context.accounts?.filter((acc) => acc.isHidden);
+  error(state: AccountsMachineState) {
+    return state.context?.error;
   },
-  hasHiddenAccounts(state: AccountsMachineState) {
-    return !!selectors.hiddenAccounts(state)?.length;
+  isLoggingOut(state: AccountsMachineState) {
+    return state.context?.isLoggingOut;
   },
-  canHideAccounts(state: AccountsMachineState) {
-    return (selectors.shownAccounts(state)?.length || 0) > 1;
+  skipLoading(state: AccountsMachineState) {
+    return state.context?.skipLoading;
   },
 };
 
+const FOCUS_REFRESH_DEBOUNCE = 1500;
+let focusListeners = 0;
+let lastFocusRefresh = 0;
+
 const listenerAccountFetcher = () => {
+  const now = Date.now();
+  if (now - lastFocusRefresh < FOCUS_REFRESH_DEBOUNCE) return;
+  lastFocusRefresh = now;
   store.refreshAccounts({ skipLoading: true });
-  store.refreshConsolidateCoins();
 };
 
 export function useAccounts() {
-  const shouldListen = useRef(true);
+  const service = store.useService(Services.accounts);
   const hasBalance = store.useSelector(Services.accounts, selectors.hasBalance);
   const accountStatus = store.useSelector(Services.accounts, selectors.status);
-  const ctx = store.useSelector(Services.accounts, selectors.context);
-  const accounts = store.useSelector(Services.accounts, selectors.accounts);
-  const account = store.useSelector(Services.accounts, selectors.account);
+  const accounts = store.useSelector(
+    Services.accounts,
+    selectors.accounts,
+    isSame
+  );
+  const account = store.useSelector(
+    Services.accounts,
+    selectors.account,
+    isSame
+  );
+  const needsRecovery = store.useSelector(
+    Services.accounts,
+    selectors.needsRecovery
+  );
+  const error = store.useSelector(Services.accounts, selectors.error, isSame);
+  const isLoggingOut = store.useSelector(
+    Services.accounts,
+    selectors.isLoggingOut
+  );
+  const skipLoading = store.useSelector(
+    Services.accounts,
+    selectors.skipLoading
+  );
   const overlay = useOverlay();
-  const shownAccounts = store.useSelector(
-    Services.accounts,
-    selectors.shownAccounts
+
+  const { shownAccounts, hiddenAccounts } = useMemo(
+    () => ({
+      shownAccounts: accounts?.filter((acc) => !acc.isHidden),
+      hiddenAccounts: accounts?.filter((acc) => acc.isHidden),
+    }),
+    [accounts]
   );
-  const hiddenAccounts = store.useSelector(
-    Services.accounts,
-    selectors.shownAccounts
-  );
-  const hasHiddenAccounts = store.useSelector(
-    Services.accounts,
-    selectors.hasHiddenAccounts
-  );
-  const canHideAccounts = store.useSelector(
-    Services.accounts,
-    selectors.canHideAccounts
-  );
+  const hasHiddenAccounts = !!hiddenAccounts?.length;
+  const canHideAccounts = (shownAccounts?.length || 0) > 1;
 
   function closeDialog() {
     overlay.close();
@@ -90,18 +109,27 @@ export function useAccounts() {
   }
 
   useEffect(() => {
-    if (shouldListen.current) {
-      shouldListen.current = false;
+    if (focusListeners === 0) {
       window.addEventListener('focus', listenerAccountFetcher);
-      return () => {
-        window.removeEventListener('focus', listenerAccountFetcher);
-      };
     }
-    return () => {};
+    focusListeners += 1;
+    return () => {
+      focusListeners -= 1;
+      if (focusListeners === 0) {
+        window.removeEventListener('focus', listenerAccountFetcher);
+      }
+    };
   }, []);
 
   return {
-    ...ctx,
+    needsRecovery,
+    error,
+    isLoggingOut,
+    skipLoading,
+    // Read on access so fetch start/end does not re-render every consumer
+    get isFetchingAccounts() {
+      return service.getSnapshot()?.context?.isFetchingAccounts;
+    },
     accounts,
     account,
     status,

@@ -9,6 +9,7 @@ import {
   getByAriaLabel,
   getInputByName,
   hasText,
+  reload,
   visit,
 } from '../commons';
 import { seedWallet } from '../commons/seedWallet';
@@ -27,6 +28,7 @@ test.describe('SendTransaction', () => {
     const { accounts } = await mockData(page);
     account = accounts[0];
     await seedWallet(account.address, bn(100_000_000));
+    await reload(page);
     provider = new Provider(process.env.VITE_FUEL_PROVIDER_URL);
   });
 

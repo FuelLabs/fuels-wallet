@@ -98,7 +98,6 @@ export const editAccountMachine = createMachine(
       }),
       notifyUpdateAccounts: () => {
         store.refreshAccounts({ skipLoading: true });
-        store.refreshConsolidateCoins();
       },
       redirectToList() {
         store.openAccountList();
