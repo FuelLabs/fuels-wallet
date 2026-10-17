@@ -26,8 +26,9 @@ export const MNEMONIC_SIZE = 16;
 export const WALLET_WIDTH = 350;
 export const WALLET_HEIGHT = 600;
 export const TAB_BAR_HEIGHT = 30;
+// Webpages can see chrome.runtime too; only extension contexts have an id
 export const IS_CRX =
-  typeof chrome !== 'undefined' && typeof chrome.runtime !== 'undefined';
+  typeof chrome !== 'undefined' && Boolean(chrome.runtime?.id);
 export const IS_LOGGED_KEY = 'isLogged';
 export const HAS_ACCEPTED_TERMS_KEY = 'hasAcceptedTerms';
 export const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
