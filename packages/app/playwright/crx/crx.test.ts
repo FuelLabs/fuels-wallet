@@ -1,5 +1,5 @@
 import type { NetworkData, Account as WalletAccount } from '@fuel-wallet/types';
-import { type Locator, Page, expect } from '@playwright/test';
+import { type Locator, expect } from '@playwright/test';
 import type { HashableMessage } from 'fuels';
 
 import {

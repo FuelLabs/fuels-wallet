@@ -1,4 +1,4 @@
-import { Button, CardList } from '@fuel-ui/react';
+import { CardList } from '@fuel-ui/react';
 import type { AssetAmount } from '@fuel-wallet/types';
 import type { FC } from 'react';
 import { memo, useMemo, useState } from 'react';
@@ -48,7 +48,7 @@ export const AssetList: AssetListComponent = ({
   );
 
   if (isLoading) return <AssetList.Loading items={4} />;
-  const isEmpty = !assets || !assets.length;
+  const isEmpty = !assets?.length;
   if (isEmpty) return <AssetList.Empty {...emptyProps} />;
   const assetsToShow = assets.filter((asset) => showUnknown || asset?.name);
 

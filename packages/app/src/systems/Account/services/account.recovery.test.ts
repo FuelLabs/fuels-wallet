@@ -12,12 +12,15 @@ jest.mock('~/systems/Core/services/chromeStorage', () => ({
   chromeStorage: {
     accounts: {
       getAll: jest.fn(),
+      bulkSet: jest.fn(),
     },
     vaults: {
       getAll: jest.fn().mockResolvedValue([]),
+      bulkSet: jest.fn(),
     },
     networks: {
       getAll: jest.fn().mockResolvedValue([]),
+      bulkSet: jest.fn(),
     },
   },
 }));

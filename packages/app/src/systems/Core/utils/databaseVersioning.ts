@@ -1,11 +1,6 @@
 import { createUUID } from '@fuel-wallet/connections';
 import type Dexie from 'dexie';
-import {
-  Address,
-  CHAIN_IDS,
-  DEVNET_NETWORK_URL,
-  TESTNET_NETWORK_URL,
-} from 'fuels';
+import { CHAIN_IDS, DEVNET_NETWORK_URL, TESTNET_NETWORK_URL } from 'fuels';
 import { DEFAULT_NETWORKS, IGNITION_NETWORK } from '~/networks';
 
 function bech32ToHex(bech32Address: string): string {
