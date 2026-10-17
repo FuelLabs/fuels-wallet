@@ -4,14 +4,13 @@ import { createProvider } from '@fuel-wallet/connections';
 import {
   Address,
   type HashableMessage,
-  Signer,
   WalletManager,
   arrayify,
-  hashMessage,
   transactionRequestify,
 } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
+import { REINJECT_AFTER_RELOAD_KEY } from '~/systems/CRX/utils/tabs';
 
 export type VaultAccount = {
   address: string;
@@ -248,6 +247,7 @@ export class VaultServer extends EventEmitter {
   }
 
   async reload() {
+    await chrome.storage.local.set({ [REINJECT_AFTER_RELOAD_KEY]: true });
     chrome.runtime.reload();
   }
 }
