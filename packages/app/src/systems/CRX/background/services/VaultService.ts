@@ -22,10 +22,8 @@ import { db } from '../../../../systems/Core/utils/database';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 
 export const AUTO_LOCK_ALARM = 'autoLock';
-// While the wallet UI is open the deadline keeps moving, as before
-const IN_USE_CHECK_INTERVAL = 1000;
-// setTimeout overflows above 2^31 - 1 ms
-const MAX_TIMEOUT = 2 ** 31 - 1;
+const IN_USE_TIMER_RESET_INTERVAL = 1000;
+const MAX_SET_TIMEOUT_DELAY = 2 ** 31 - 1;
 
 export class VaultService extends VaultServer {
   readonly communicationProtocol: CommunicationProtocol;
@@ -80,49 +78,39 @@ export class VaultService extends VaultServer {
     await super.lock();
     this.stopAutoLockTimer();
     chrome.alarms.clear(AUTO_LOCK_ALARM);
-    // The worker can now be suspended while locked, so drop the session
-    // secret or the next start would auto unlock a manually locked wallet
+    // Otherwise the next worker start would auto unlock a manually locked wallet
     clearSession();
     this.emitLockEvent();
   }
 
   private isVaultInUse() {
-    // Get all current Wallet PopUp instances that are using VaultService
     return Array.from(this.communicationProtocol.ports.values()).some(
       (p) => p.name === VAULT_SCRIPT_NAME
     );
   }
 
-  /**
-   * Checks the stored auto-lock deadline and schedules the next check.
-   * While the wallet UI is open it resets the deadline every second.
-   * Otherwise it waits once until the deadline. The alarm wakes the
-   * worker at the deadline if it was suspended meanwhile.
-   */
   private async checkAutoLock() {
     this.stopAutoLockTimer();
     const timer = await getTimer();
 
     if (timer === 0) return;
 
-    // If we're using the wallet, let's reset the auto lock
     if (this.isVaultInUse()) {
       await resetTimer();
-      this.scheduleAutoLockCheck(IN_USE_CHECK_INTERVAL);
+      this.scheduleAutoLockCheck(IN_USE_TIMER_RESET_INTERVAL);
       return;
     }
 
-    // Otherwise, we can check if the autolock time is expired
     const remaining = timer - Date.now();
     if (remaining < 0) {
       // Let an in-flight auto unlock finish so it cannot unlock after this lock
       await this.autoUnlockPromise;
-      clearSession();
       this.lock();
       return;
     }
 
     this.scheduleAutoLockCheck(remaining);
+    // Wakes the worker at the deadline if it is suspended before the timeout fires
     chrome.alarms.create(AUTO_LOCK_ALARM, { when: timer });
   }
 
@@ -130,7 +118,7 @@ export class VaultService extends VaultServer {
     this.stopAutoLockTimer();
     this.autoLockTimeout = setTimeout(
       this.checkAutoLock,
-      Math.min(delay, MAX_TIMEOUT)
+      Math.min(delay, MAX_SET_TIMEOUT_DELAY)
     );
   }
 
@@ -161,11 +149,8 @@ export class VaultService extends VaultServer {
     }
   }
 
-  /**
-   * Restores the session on the first vault request instead of on every
-   * worker start, so wakes that never touch the vault skip the key derivation.
-   */
-  ensureAutoUnlocked() {
+  // Worker wakes that never touch the vault skip the key derivation
+  private ensureAutoUnlocked() {
     if (!this.autoUnlockPromise) {
       this.autoUnlockPromise = this.autoUnlock().catch(() => {});
     }

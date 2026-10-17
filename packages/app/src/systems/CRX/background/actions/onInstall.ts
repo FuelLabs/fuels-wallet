@@ -10,8 +10,7 @@ chrome.runtime.onInstalled.addListener(async (object) => {
   }
 });
 
-// A same-version runtime.reload() does not fire onInstalled, but it still
-// disconnects the content scripts in open tabs
+// A same-version runtime.reload() disconnects content scripts without firing onInstalled
 chrome.storage.local.get(REINJECT_AFTER_RELOAD_KEY).then((items) => {
   if (!items?.[REINJECT_AFTER_RELOAD_KEY]) return;
   chrome.storage.local.remove(REINJECT_AFTER_RELOAD_KEY);

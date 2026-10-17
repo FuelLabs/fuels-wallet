@@ -11,11 +11,7 @@ import type { JSONRPCID } from 'json-rpc-2.0';
 // Deep import keeps the rest of json-rpc-2.0 out of the content script bundle
 import { createJSONRPCSuccessResponse } from 'json-rpc-2.0/dist/models';
 
-/**
- * Runs in the content script of every frame. The port to the background is
- * opened lazily, on the first message from the page that must reach the
- * background, so pages without a dApp never wake the service worker.
- */
+// The port opens on the first page message, so pages without a dApp never wake the worker
 export class ContentProxyConnection {
   connection: chrome.runtime.Port | undefined = undefined;
   readonly connectorName: string;
@@ -116,15 +112,12 @@ export class ContentProxyConnection {
       event.type === MessageTypes.request &&
       event.request.method === 'connectorName'
     ) {
-      // If the message is a request for the connector name
-      // we send it back to the sender without send to the background script.
       this.sendConnectorName(event.request.id!);
       return;
     }
     if (!this.connection) {
       this.connectAndAttachListeners();
     }
-    // Otherwise we send the message to the background script
     this.connection?.postMessage({
       ...event,
       target: BACKGROUND_SCRIPT_NAME,

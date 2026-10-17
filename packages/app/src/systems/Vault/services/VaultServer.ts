@@ -4,10 +4,8 @@ import { createProvider } from '@fuel-wallet/connections';
 import {
   Address,
   type HashableMessage,
-  Signer,
   WalletManager,
   arrayify,
-  hashMessage,
   transactionRequestify,
 } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
@@ -249,7 +247,6 @@ export class VaultServer extends EventEmitter {
   }
 
   async reload() {
-    // Open tabs need the content script again once the worker restarts
     await chrome.storage.local.set({ [REINJECT_AFTER_RELOAD_KEY]: true });
     chrome.runtime.reload();
   }
