@@ -15,9 +15,7 @@ type ProviderProps = {
 const queryClient = new QueryClient();
 
 const FUEL_PROVIDER_URL: string = import.meta.env.VITE_FUEL_PROVIDER_URL;
-const CHAIN_ID = FUEL_PROVIDER_URL?.includes('devnet')
-  ? CHAIN_IDS.fuel.devnet
-  : CHAIN_IDS.fuel.testnet;
+const CHAIN_ID = CHAIN_IDS.fuel.testnet;
 
 const NETWORKS: Array<Network> = [
   {

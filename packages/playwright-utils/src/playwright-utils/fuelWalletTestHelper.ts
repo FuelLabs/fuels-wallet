@@ -278,7 +278,11 @@ export class FuelWalletTestHelper {
     chainName,
     providerUrl,
     chainId,
-  }: { chainName: string; providerUrl: string; chainId: number }) {
+  }: {
+    chainName: string;
+    providerUrl: string;
+    chainId: number;
+  }) {
     const networksButton = getByAriaLabel(this.walletPage, 'Selected Network');
     await networksButton.click();
 

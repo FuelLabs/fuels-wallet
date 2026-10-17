@@ -1,4 +1,4 @@
-import { Button, CardList } from '@fuel-ui/react';
+import { CardList } from '@fuel-ui/react';
 import type { AssetAmount } from '@fuel-wallet/types';
 import type { FC } from 'react';
 import { memo, useMemo, useState } from 'react';
@@ -18,6 +18,15 @@ export type AssetListProps = {
   onEdit?: (assetId: string) => void;
   emptyProps?: AssetListEmptyProps;
 };
+
+function getAssetKey(asset: AssetAmount, index: number) {
+  // biome-ignore lint/suspicious/noExplicitAny: custom assets may carry assetId at the root
+  const rootAssetId = (asset as any).assetId as string | undefined;
+  const fuelNetwork = asset.networks?.find((n) => n.type === 'fuel');
+  const fuelAssetId =
+    fuelNetwork?.type === 'fuel' ? fuelNetwork.assetId : undefined;
+  return rootAssetId || fuelAssetId || asset.name || `asset-${index}`;
+}
 
 type AssetListComponent = FC<AssetListProps> & {
   Empty: typeof AssetListEmpty;
@@ -39,7 +48,7 @@ export const AssetList: AssetListComponent = ({
   );
 
   if (isLoading) return <AssetList.Loading items={4} />;
-  const isEmpty = !assets || !assets.length;
+  const isEmpty = !assets?.length;
   if (isEmpty) return <AssetList.Empty {...emptyProps} />;
   const assetsToShow = assets.filter((asset) => showUnknown || asset?.name);
 
@@ -48,9 +57,9 @@ export const AssetList: AssetListComponent = ({
   }
   return (
     <CardList>
-      {assetsToShow.map((asset) => (
+      {assetsToShow.map((asset, index) => (
         <AssetItem
-          key={asset.name}
+          key={getAssetKey(asset, index)}
           asset={asset}
           amount={asset.amount}
           showActions={showActions}

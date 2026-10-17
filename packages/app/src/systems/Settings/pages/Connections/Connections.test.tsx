@@ -8,7 +8,7 @@ import { connectionsLoader } from '../../__mocks__/connection';
 import { testQueries } from '../../__test__';
 
 import { mockServer } from '~/systems/Core/__tests__/utils/msw';
-import { List } from './Connections.stories';
+import { Connections } from './Connections';
 
 const opts = {
   route: '/settings/connections',
@@ -30,7 +30,7 @@ describe('Connections', () => {
   });
 
   it('should do the entire connection management flow', async () => {
-    renderWithRouter(<List />, opts);
+    renderWithRouter(<Connections />, opts);
 
     /** Check if list screen is working */
     await testQueries.waitShowingConnections(conn1, conn2);

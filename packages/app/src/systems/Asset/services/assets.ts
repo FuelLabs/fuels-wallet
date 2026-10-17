@@ -1,10 +1,20 @@
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
 import type { NetworkEthereum, NetworkFuel } from 'fuels';
 import { db } from '~/systems/Core/utils/database';
+import { Storage } from '~/systems/Core/utils/storage';
 import { getUniqueString } from '~/systems/Core/utils/string';
 import { NetworkService } from '~/systems/Network/services/network';
 import type { AssetFormValues } from '../hooks/useAssetForm';
 import { getFuelAssetByAssetId } from '../utils';
+
+const LISTED_ASSETS_URL = 'https://verified-assets.fuel.network/assets.json';
+export const LISTED_ASSETS_TTL = 60 * 60 * 1000;
+const LISTED_ASSETS_META_KEY = 'listedAssetsMeta';
+
+type ListedAssetsMeta = {
+  fetchedAt: number;
+  etag?: string;
+};
 
 export type AssetInputs = {
   upsertAsset: {
@@ -47,19 +57,74 @@ export class AssetService {
   }
 
   static async setListedAssets() {
-    const verifiedAssets = (await (
-      await fetch('https://verified-assets.fuel.network/assets.json')
-    ).json()) as Array<AssetData>;
-    const assetsPromises = verifiedAssets.map((asset) => {
-      return AssetService.upsertAsset({
-        data: {
-          ...asset,
-          isCustom: false,
-        },
-      });
+    const now = Date.now();
+    const meta = Storage.getItem<ListedAssetsMeta>(LISTED_ASSETS_META_KEY);
+    const isFresh =
+      !!meta?.fetchedAt &&
+      now >= meta.fetchedAt &&
+      now - meta.fetchedAt < LISTED_ASSETS_TTL;
+    if (isFresh && (await AssetService.hasListedAssets())) return;
+
+    // no-cache lets the browser revalidate with the server ETag
+    const response = await fetch(LISTED_ASSETS_URL, { cache: 'no-cache' });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch listed assets: ${response.status}`);
+    }
+    const etag = response.headers.get('etag') ?? undefined;
+    const isSameList =
+      !!etag && etag === meta?.etag && (await AssetService.hasListedAssets());
+    if (!isSameList) {
+      const verifiedAssets = (await response.json()) as Array<AssetData>;
+      await AssetService.saveListedAssets(verifiedAssets);
+    }
+    Storage.setItem<ListedAssetsMeta>(LISTED_ASSETS_META_KEY, {
+      fetchedAt: now,
+      etag,
+    });
+  }
+
+  static async hasListedAssets() {
+    return db.transaction('r', db.assets, async () => {
+      const listed = await db.assets.filter((a) => !a.isCustom).count();
+      return listed > 0;
+    });
+  }
+
+  // Rows whose symbol belongs to another asset are skipped
+  static async saveListedAssets(verifiedAssets: AssetData[]) {
+    const skipped = await db.transaction('rw', db.assets, async () => {
+      const existing = await db.assets.toArray();
+      const byName = new Map(existing.map((a) => [a.name, a]));
+      const symbolOwners = new Map(existing.map((a) => [a.symbol, a.name]));
+      const toPut: AssetData[] = [];
+      const skipped: string[] = [];
+
+      for (const asset of verifiedAssets) {
+        const next: AssetData = { ...asset, isCustom: false };
+        const current = byName.get(next.name);
+        if (current && JSON.stringify(current) === JSON.stringify(next)) {
+          continue;
+        }
+        const symbolOwner = symbolOwners.get(next.symbol);
+        if (symbolOwner !== undefined && symbolOwner !== next.name) {
+          skipped.push(next.name);
+          continue;
+        }
+        if (current) symbolOwners.delete(current.symbol);
+        symbolOwners.set(next.symbol, next.name);
+        byName.set(next.name, next);
+        toPut.push(next);
+      }
+
+      if (toPut.length) await db.assets.bulkPut(toPut);
+      return skipped;
     });
 
-    await Promise.all(assetsPromises);
+    if (skipped.length) {
+      throw new Error(
+        `Listed assets not saved, symbol already in use: ${skipped.join(', ')}`
+      );
+    }
   }
 
   static async updateAsset(input: AssetInputs['updateAsset']) {
