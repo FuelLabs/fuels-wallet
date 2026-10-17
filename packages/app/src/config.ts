@@ -30,6 +30,7 @@ export const TAB_BAR_HEIGHT = 30;
 export const IS_CRX =
   typeof chrome !== 'undefined' && Boolean(chrome.runtime?.id);
 export const IS_LOGGED_KEY = 'isLogged';
+export const CONSOLIDATION_CHECKED_KEY = 'consolidationCheckedKey';
 export const HAS_ACCEPTED_TERMS_KEY = 'hasAcceptedTerms';
 export const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 export const IS_TEST = process.env.NODE_ENV === 'test';

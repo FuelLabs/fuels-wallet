@@ -1,6 +1,7 @@
 import { toast } from '@fuel-ui/react';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
+import { store } from '~/store';
 import { CoreService } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core/machines';
 import type { VaultInputs } from '~/systems/Vault';
@@ -121,6 +122,7 @@ export const unlockMachine = createMachine(
           onDone: [
             FetchMachine.errorState('checkingLocked'),
             {
+              actions: ['refreshAccounts'],
               target: 'checkingLocked',
             },
           ],
@@ -143,6 +145,9 @@ export const unlockMachine = createMachine(
       cleanError: assign({
         error: (_) => undefined,
       }),
+      refreshAccounts: () => {
+        store.refreshAccounts({ skipLoading: true });
+      },
     },
     guards: {
       isLocked: (_, ev) => ev.data,
