@@ -20,7 +20,7 @@ interface ChangelogInfo {
 function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
-const prTypes = ['feat', 'fix', 'refactor', 'chore', 'docs'];
+const prTypes = ['feat', 'fix', 'perf', 'refactor', 'chore', 'test', 'ci', 'docs'];
 
 async function getChangelogInfo(
   octokit: Octokit,
@@ -60,9 +60,11 @@ async function getChangelogInfo(
   }
 
   const prType = title.replace(/(\w+).*/, '$1'); // chore!: add something -> chore
-  const isBreaking = title.includes(`${prType}!`);
+  const isBreaking = /^\w+(\([^)]*\))?!:/.test(title);
 
-  const titleDescription = title.replace(/\w+!?:(.*)/, '$1').trim(); // chore!: add something -> add something
+  const titleDescription = title
+    .replace(/^\w+(\([^)]*\))?!?:(.*)/, '$2')
+    .trim(); // chore(scope)!: add something -> add something
 
   const bulletPoint = `- ${formattedPrLink} - ${capitalize(titleDescription)}, by ${user}`;
 
@@ -116,7 +118,13 @@ async function getChangelogs(octokit: Octokit, changesets: NewChangeset[]) {
     )
   );
 
-  return changelogs.filter((c) => c !== undefined).sort(sortChangelogsByPrType);
+  // A PR with several changesets gets one entry
+  const uniqueChangelogs = new Map<string, ChangelogInfo>();
+  for (const changelog of changelogs) {
+    if (changelog) uniqueChangelogs.set(changelog.views.bulletPoint, changelog);
+  }
+
+  return [...uniqueChangelogs.values()].sort(sortChangelogsByPrType);
 }
 
 function mapPrTypeToTitle(prType: string) {
@@ -125,8 +133,12 @@ function mapPrTypeToTitle(prType: string) {
       return 'Features';
     case 'fix':
       return 'Fixes';
+    case 'perf':
+      return 'Performance';
     case 'chore':
       return 'Chores';
+    case 'test':
+      return 'Tests';
     case 'docs':
       return 'Docs';
     case 'ci':
