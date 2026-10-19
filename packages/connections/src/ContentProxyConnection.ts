@@ -128,6 +128,11 @@ export class ContentProxyConnection {
   onMessageFromWindow = (message: MessageEvent<CommunicationMessage>) => {
     const { data: event, origin } = Object.freeze(message);
     if (!this.shouldAcceptMessage(event, origin)) return;
+    // The extension was reloaded or disabled, a new content script takes over
+    if (!chrome.runtime?.id) {
+      window.removeEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
+      return;
+    }
     if (
       event.type === MessageTypes.request &&
       event.request.method === 'connectorName'
