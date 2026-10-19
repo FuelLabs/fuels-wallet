@@ -47,9 +47,22 @@ export async function moveDocs() {
   await execa('mv', ['./packages/docs/out', process.env.DOCS_DIST]);
 }
 
+// The CRX build names the zip after the version, but the docs link to a
+// fixed name so the link does not change on every release
+export function copyLatestZip() {
+  const { version } = JSON.parse(
+    fs.readFileSync(join(ROOT_PATH, './packages/app/package.json'), 'utf8')
+  );
+  fs.copyFileSync(
+    join(process.env.APP_DIST, `fuel-wallet-${version}.zip`),
+    join(process.env.APP_DIST, 'fuel-wallet.zip')
+  );
+}
+
 export async function buildWebsite() {
   fs.rmSync(DIST_FOLDER, { recursive: true, force: true });
   await runPnpmCmd(['build:preview', '--force', '--no-cache']);
   await moveDocs();
   await runPnpmCmd(['build:all', '--force', '--no-cache']);
+  copyLatestZip();
 }
