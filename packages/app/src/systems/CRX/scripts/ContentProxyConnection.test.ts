@@ -175,6 +175,51 @@ describe('ContentProxyConnection', () => {
     expect(sendResponse).toHaveBeenCalledWith({ type: 'pong' });
   });
 
+  describe('events pushed to the tab', () => {
+    const event = {
+      type: 'event',
+      target: 'FuelContentScript',
+      events: [{ event: 'currentAccount', params: ['0x1'] }],
+    };
+    const pushed = (origin = window.location.origin) => ({
+      type: 'event',
+      origin,
+      message: event,
+    });
+    const relayed = {
+      ...event,
+      target: 'FuelConnectorScript',
+      connectorName: NAME,
+    };
+
+    it('relays the event to the page when no port is open', () => {
+      runtimeOnMessage.emit(pushed(), { id: 'ext-id' }, jest.fn());
+      expect(posted).toEqual([startEvent, relayed]);
+      expect(chrome.runtime.connect).not.toHaveBeenCalled();
+    });
+
+    it('drops events for another origin or from another extension', () => {
+      runtimeOnMessage.emit(
+        pushed('https://other.example'),
+        { id: 'ext-id' },
+        jest.fn()
+      );
+      runtimeOnMessage.emit(pushed(), { id: 'other-ext' }, jest.fn());
+      expect(posted).toEqual([startEvent]);
+    });
+
+    it('drops the event while a port is open, so it arrives once', () => {
+      sendFromPage({
+        type: 'request',
+        target: 'FuelContentScript',
+        connectorName: NAME,
+        request: { jsonrpc: '2.0', id: 'a', method: 'ping' },
+      });
+      runtimeOnMessage.emit(pushed(), { id: 'ext-id' }, jest.fn());
+      expect(posted).toEqual([startEvent]);
+    });
+  });
+
   it('removes every listener on full destroy', () => {
     connection.destroy(false);
     expect(runtimeOnMessage.listeners.size).toBe(0);

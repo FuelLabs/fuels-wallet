@@ -24,6 +24,7 @@ export class ContentProxyConnection {
     this.onDisconnect = this.onDisconnect.bind(this);
 
     chrome.runtime.onMessage.addListener(this.handlePing);
+    chrome.runtime.onMessage.addListener(this.onEventFromTabs);
     window.addEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
     this.onStartEvent();
   }
@@ -70,6 +71,7 @@ export class ContentProxyConnection {
     this.connection = undefined;
     if (!keepWindowListener) {
       chrome.runtime.onMessage.removeListener(this.handlePing);
+      chrome.runtime.onMessage.removeListener(this.onEventFromTabs);
       window.removeEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
     }
   }
@@ -87,6 +89,24 @@ export class ContentProxyConnection {
     if (shouldAcceptMessage) {
       this.postMessage(message);
     }
+  };
+
+  // The worker pushes events here when this tab has no open port
+  onEventFromTabs = (
+    message:
+      | { type: string; origin?: string; message?: CommunicationMessage }
+      | undefined,
+    sender: chrome.runtime.MessageSender
+  ) => {
+    if (sender.id !== chrome.runtime.id) return;
+    if (message?.type !== ContentScriptMessageTypes.EVENT || !message.message) {
+      return;
+    }
+    // Frames from other origins must not receive account data
+    if (message.origin !== window.location.origin) return;
+    // An open port already delivered the event
+    if (this.connection) return;
+    this.onMessageFromExtension(message.message);
   };
 
   shouldAcceptMessage(event: CommunicationMessage, origin: string) {

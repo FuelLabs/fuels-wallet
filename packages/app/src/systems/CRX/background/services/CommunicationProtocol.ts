@@ -6,6 +6,8 @@ import type {
 } from '@fuel-wallet/types';
 import {
   BACKGROUND_SCRIPT_NAME,
+  CONTENT_SCRIPT_NAME,
+  ContentScriptMessageTypes,
   MessageTypes,
   VAULT_SCRIPT_NAME,
 } from '@fuel-wallet/types';
@@ -67,13 +69,44 @@ export class CommunicationProtocol extends BaseConnection {
 
   broadcast = (origins: Array<string> | string, message: EventMessage) => {
     const originList = Array.isArray(origins) ? origins : [origins];
+    const tabsWithPort = new Set<number>();
     // biome-ignore lint/complexity/noForEach: <explanation>
     this.ports.forEach((port) => {
       if (originList.includes(port.sender?.origin || '')) {
         port.postMessage(message);
+        if (port.sender?.tab?.id !== undefined) {
+          tabsWithPort.add(port.sender.tab.id);
+        }
       }
     });
+    if (message.target !== CONTENT_SCRIPT_NAME) return;
+    for (const origin of originList) {
+      this.sendToTabs(origin, message, tabsWithPort);
+    }
   };
+
+  // dApp ports close when the worker stops and only reopen on the next page
+  // request, so idle tabs get the event through chrome.tabs instead
+  private async sendToTabs(
+    origin: string,
+    message: EventMessage,
+    skipTabIds: Set<number>
+  ) {
+    try {
+      const tabs = await chrome.tabs.query({ url: `${origin}/*` });
+      for (const tab of tabs) {
+        if (tab.id === undefined || skipTabIds.has(tab.id)) continue;
+        chrome.tabs
+          .sendMessage(
+            tab.id,
+            { type: ContentScriptMessageTypes.EVENT, origin, message },
+            { frameId: 0 }
+          )
+          // Tabs without the content script have no receiving end
+          .catch(() => {});
+      }
+    } catch {}
+  }
 
   getPortId = (port: chrome.runtime.Port) => {
     for (const [key, value] of this.ports.entries()) {
