@@ -1,4 +1,6 @@
 import type { NetworkData, Vault } from '@fuel-wallet/types';
+import { DEVNET_NETWORK_URL } from 'fuels';
+import { IGNITION_NETWORK } from '~/networks';
 import { MOCK_ACCOUNTS } from '~/systems/Account/__mocks__';
 import { AccountService } from '~/systems/Account/services/account';
 import { chromeStorage } from '~/systems/Core/services/chromeStorage';
@@ -65,6 +67,13 @@ const NETWORKS: NetworkData[] = [
     chainId: 0,
   },
 ];
+const DEVNET: NetworkData = {
+  id: 'net-devnet',
+  name: 'Devnet',
+  url: DEVNET_NETWORK_URL,
+  chainId: 0,
+  isSelected: true,
+};
 const STALE_ACCOUNT = {
   ...MOCK_ACCOUNTS[2],
   address: `0x${'9'.repeat(64)}`,
@@ -199,5 +208,51 @@ describe('FuelDB backup sync', () => {
       state.chromeStorageBackupData.networks.map((row) => row.data)
     ).toEqual(clone(networks));
     expect(state.opfsBackupData).toEqual(clone({ accounts, vaults, networks }));
+  });
+
+  it('drops the devnet row that v31 removed from the DB', async () => {
+    chromeStore.networks.push({ key: DEVNET.id, data: DEVNET });
+
+    await db.syncDbToChromeStorage();
+
+    expect(chromeStore.networks.map((row: { key: string }) => row.key)).toEqual(
+      ['net-1', 'net-2']
+    );
+  });
+
+  it('skips devnet and selects another network when recovering', async () => {
+    chromeStore.networks = [
+      { key: DEVNET.id, data: DEVNET },
+      { key: NETWORKS[1].id, data: NETWORKS[1] },
+    ];
+    await db.accounts.clear();
+    await db.vaults.clear();
+    await db.networks.clear();
+    chromeStore.vaults = VAULTS.map((vault) => ({
+      key: vault.key,
+      data: vault,
+    }));
+
+    await AccountService.recoverWallet();
+
+    expect(await db.networks.toArray()).toEqual([
+      { ...NETWORKS[1], isSelected: true },
+    ]);
+  });
+
+  it('adds Ignition when devnet was the only backed-up network', async () => {
+    chromeStore.networks = [{ key: DEVNET.id, data: DEVNET }];
+    await db.accounts.clear();
+    await db.vaults.clear();
+    await db.networks.clear();
+
+    await AccountService.recoverWallet();
+
+    const networks = await db.networks.toArray();
+    expect(networks).toHaveLength(1);
+    expect(networks[0]).toMatchObject({
+      url: IGNITION_NETWORK.url,
+      isSelected: true,
+    });
   });
 });

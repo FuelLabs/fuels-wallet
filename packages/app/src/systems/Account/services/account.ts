@@ -1,12 +1,14 @@
-import { createProvider } from '@fuel-wallet/connections';
+import { createProvider, createUUID } from '@fuel-wallet/connections';
 import type {
   Account,
   AccountBalance,
   AccountWithBalance,
   CoinAsset,
+  NetworkData,
 } from '@fuel-wallet/types';
 import * as Sentry from '@sentry/react';
-import { Address, BN, type Provider, bn } from 'fuels';
+import { Address, BN, DEVNET_NETWORK_URL, type Provider, bn } from 'fuels';
+import { IGNITION_NETWORK } from '~/networks';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { chromeStorage } from '~/systems/Core/services/chromeStorage';
 import type { Maybe } from '~/systems/Core/types';
@@ -399,13 +401,23 @@ export class AccountService {
             }
           }
           // networks recovery
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          async function recoverNetworks(networks: any) {
+          async function recoverNetworks(networks: NetworkData[]) {
             await db.networks.clear();
-            for (const network of networks) {
-              if (network.url) {
-                await db.networks.put(network);
-              }
+            // Backups written before v31 can still hold the shut down devnet
+            const valid = networks.filter(
+              (network) => network.url && network.url !== DEVNET_NETWORK_URL
+            );
+            if (!valid.length && networks.length) {
+              valid.push({ ...IGNITION_NETWORK, id: createUUID() });
+            }
+            if (valid.length && !valid.some((network) => network.isSelected)) {
+              const next =
+                valid.find((network) => network.url === IGNITION_NETWORK.url) ??
+                valid[0];
+              next.isSelected = true;
+            }
+            for (const network of valid) {
+              await db.networks.put(network);
             }
           }
 
