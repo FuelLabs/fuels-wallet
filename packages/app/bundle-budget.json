@@ -1,6 +1,6 @@
 {
   "_note": "Bytes of JS each CRX entry loads (static import closure), production build plus 10%. Checked by scripts/check-bundle-size.mjs.",
-  "popup": { "raw": 2588672, "gzip": 782336 },
-  "background": { "raw": 1257472, "gzip": 364544 },
-  "contentScript": { "raw": 707584, "gzip": 195584 }
+  "popup": { "raw": 2169856, "gzip": 680960 },
+  "background": { "raw": 842752, "gzip": 263168 },
+  "contentScript": { "raw": 6144, "gzip": 3072 }
 }
