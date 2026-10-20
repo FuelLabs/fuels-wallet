@@ -1,4 +1,5 @@
 import type { Contract } from '@fuel-wallet/types';
+import { useEffect } from 'react';
 import { Services, store } from '~/store';
 import type { ContractsMachineState } from '../machines/contractsMachine';
 
@@ -13,6 +14,10 @@ const selectors = {
 };
 
 export const useContractMetadata = (id: string): Contract | undefined => {
+  useEffect(() => {
+    store.send(Services.contracts, { type: 'FETCH' });
+  }, []);
+
   const contract = store.useSelector(
     Services.contracts,
     selectors.contract(id)

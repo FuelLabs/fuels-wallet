@@ -1,7 +1,8 @@
 import type { Account, AccountWithBalance } from '@fuel-wallet/types';
+import { bn } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-import { IS_LOGGED_KEY } from '~/config';
+import { CONSOLIDATION_CHECKED_KEY, IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
 import { CoreService, FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
@@ -13,10 +14,16 @@ type MachineContext = {
   accounts?: Account[];
   needsRecovery?: boolean;
   account?: AccountWithBalance;
+  balancesKey?: string;
   error?: unknown;
   isFetchingAccounts?: boolean;
   isLoggingOut?: boolean;
   skipLoading?: boolean;
+};
+
+type FetchAccountResult = {
+  account: AccountWithBalance;
+  balancesKey: string;
 };
 
 type MachineServices = {
@@ -27,7 +34,7 @@ type MachineServices = {
     };
   };
   fetchAccount: {
-    data: AccountWithBalance;
+    data: FetchAccountResult | undefined;
   };
   setCurrentAccount: {
     data: Account;
@@ -43,6 +50,32 @@ export type AccountsMachineEvents =
       type: 'TOGGLE_HIDE_ACCOUNT';
       input: AccountInputs['updateAccount'];
     };
+
+function stringifyBigInts(_key: string, value: unknown) {
+  return typeof value === 'bigint' ? value.toString() : value;
+}
+
+// Keeps the previous reference when data is unchanged, so selectors can use identity checks
+function keepIfEqual<T>(prev: T, next: T): T {
+  if (prev === next) return prev;
+  if (
+    prev &&
+    next &&
+    JSON.stringify(prev, stringifyBigInts) ===
+      JSON.stringify(next, stringifyBigInts)
+  ) {
+    return prev;
+  }
+  return next;
+}
+
+// Consolidation need only changes with the network, the account or its coins
+function getBalancesKey(providerUrl: string, account: AccountWithBalance) {
+  const balances = (account.balances ?? []).map(
+    (balance) => `${balance.assetId}:${bn(balance.amount).toString()}`
+  );
+  return [providerUrl, account.address, ...balances].join('|');
+}
 
 const fetchingAccountsState = {
   initial: 'fetchingAccounts',
@@ -61,7 +94,7 @@ const fetchingAccountsState = {
           {
             target: 'recoveringWallet',
             actions: ['assignAccounts'],
-            cond: 'hasAccountsOrNeedsRecovery',
+            cond: 'needsRecovery',
           },
           {
             target: 'fetchingAccount',
@@ -96,7 +129,12 @@ const fetchingAccountsState = {
           },
           {
             target: '#(machine).idle',
-            actions: ['assignAccount', 'assignSkipLoadingTrue'],
+            actions: [
+              'assignAccount',
+              'assignSkipLoadingTrue',
+              'notifyBalancesChanged',
+              'assignBalancesKey',
+            ],
           },
         ],
       },
@@ -118,9 +156,15 @@ export const accountsMachine = createMachine(
     states: {
       idle: {
         after: {
-          TIMEOUT: {
-            target: 'checkStartFetching',
-          },
+          REFRESH_INTERVAL: [
+            {
+              cond: 'isDocumentVisible',
+              target: 'checkStartFetching',
+            },
+            {
+              target: 'idle',
+            },
+          ],
         },
       },
       checkStartFetching: {
@@ -239,17 +283,32 @@ export const accountsMachine = createMachine(
   {
     delays: {
       INTERVAL: 2000,
-      TIMEOUT: 2000,
+      REFRESH_INTERVAL: 20000,
       LOOP_TRY_LOGOUT: 100,
     },
     actions: {
       assignAccounts: assign({
-        accounts: (_, ev) => ev.data.accounts,
+        accounts: (ctx, ev) => keepIfEqual(ctx.accounts, ev.data.accounts),
         needsRecovery: (_, ev) => ev.data.needsRecovery,
       }),
       assignAccount: assign({
-        account: (_, ev) => ev.data,
+        account: (ctx, ev) => keepIfEqual(ctx.account, ev.data?.account),
       }),
+      assignBalancesKey: assign({
+        balancesKey: (_, ev) => ev.data?.balancesKey,
+      }),
+      notifyBalancesChanged: (ctx, ev) => {
+        const balancesKey = ev.data?.balancesKey;
+        if (!balancesKey || balancesKey === ctx.balancesKey) return;
+        // A previous popup already found no consolidation need for these balances
+        if (
+          !ctx.balancesKey &&
+          balancesKey === Storage.getItem(CONSOLIDATION_CHECKED_KEY)
+        ) {
+          return;
+        }
+        store.refreshConsolidateCoins({ balancesKey });
+      },
       assignError: assign({
         error: (_, ev) => ev.data,
       }),
@@ -303,7 +362,7 @@ export const accountsMachine = createMachine(
           await AccountService.recoverWallet();
         },
       }),
-      fetchAccount: FetchMachine.create<never, AccountWithBalance | undefined>({
+      fetchAccount: FetchMachine.create<never, FetchAccountResult | undefined>({
         showError: true,
         maxAttempts: 1,
         async fetch() {
@@ -323,7 +382,10 @@ export const accountsMachine = createMachine(
             providerUrl,
           });
 
-          return accountWithBalance;
+          return {
+            account: accountWithBalance,
+            balancesKey: getBalancesKey(providerUrl, accountWithBalance),
+          };
         },
       }),
       setCurrentAccount: FetchMachine.create<
@@ -351,14 +413,14 @@ export const accountsMachine = createMachine(
       }),
     },
     guards: {
-      hasAccountsOrNeedsRecovery: (ctx, ev) => {
-        const hasAccounts = Boolean(
-          (ev.data.accounts || ctx?.accounts || []).length
+      needsRecovery: (_, ev) => {
+        return Boolean(ev.data.needsRecovery);
+      },
+      isDocumentVisible: () => {
+        return (
+          typeof document === 'undefined' ||
+          document.visibilityState === 'visible'
         );
-        const needsRecovery = Boolean(
-          ev.data.needsRecovery || ctx?.needsRecovery
-        );
-        return hasAccounts || needsRecovery;
       },
       shouldSkipLoading: (ctx) => {
         return !!ctx.skipLoading;

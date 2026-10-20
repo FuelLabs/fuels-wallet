@@ -5,10 +5,20 @@ import {
   DEFAULT_ASSET_ENDPOINT,
 } from '~/systems/Asset/constants';
 import { AssetService } from '~/systems/Asset/services';
-import { getFuelAssetByAssetId } from '~/systems/Asset/utils';
+import {
+  findFuelAssetByAssetId,
+  getFuelAssetByAssetId,
+} from '~/systems/Asset/utils';
 import { type FuelCachedAsset, db } from '~/systems/Core/utils/database';
 
 const FIVE_MINUTES = 5 * 60 * 1000;
+export const NOT_FOUND_TTL = 60 * 60 * 1000;
+
+type IndexerLookup = {
+  // biome-ignore lint/suspicious/noExplicitAny: indexer payload is untyped
+  data?: any;
+  notFound: boolean;
+};
 export const assetDbKeyFactory = (chainId: number, assetId: string) =>
   `${chainId}/asset/${assetId}`;
 
@@ -63,7 +73,10 @@ export class AssetsCache {
     return assetData;
   }
 
-  private async fetchAssetFromIndexer(url: string, assetId: string) {
+  private async fetchAssetFromIndexer(
+    url: string,
+    assetId: string
+  ): Promise<IndexerLookup> {
     try {
       const timeout = new Promise<null>((_, reject) =>
         setTimeout(() => reject(new Error('Timeout')), 2000)
@@ -74,10 +87,25 @@ export class AssetsCache {
         timeout,
       ]);
       if (response instanceof Response) {
-        const jsonResponse = await response.json();
-        return jsonResponse;
+        if (response.status === 404) return { notFound: true };
+        if (!response.ok) return { notFound: false };
+        const data = await response.json();
+        return { data, notFound: !data?.name };
       }
     } catch (_e: unknown) {}
+    return { notFound: false };
+  }
+
+  private isFresh(
+    entry: FuelCachedAsset | undefined,
+    now: number,
+    hasDbAsset: () => boolean
+  ) {
+    if (!entry?.fetchedAt || entry.isCustom) return false;
+    const age = now - entry.fetchedAt;
+    if (entry.name) return age < FIVE_MINUTES;
+    // A miss stays valid until the user adds the asset locally
+    return !!entry.notFound && age < NOT_FOUND_TTL && !hasDbAsset();
   }
 
   assetIsValid(asset: FuelCachedAsset) {
@@ -117,14 +145,13 @@ export class AssetsCache {
     if (dbAssets?.length) {
       this.dbAssetsCache[chainId] = dbAssets;
     }
+    const localAssets = dbAssets?.length
+      ? dbAssets
+      : this.dbAssetsCache[chainId];
+    const hasDbAsset = () =>
+      !!findFuelAssetByAssetId({ assets: localAssets, assetId, chainId });
 
-    if (
-      cachedEntry?.name !== undefined &&
-      cachedEntry.fetchedAt &&
-      now - cachedEntry.fetchedAt < FIVE_MINUTES &&
-      !cachedEntry.isCustom &&
-      cachedEntry?.name !== ''
-    ) {
+    if (this.isFresh(cachedEntry, now, hasDbAsset)) {
       return cachedEntry;
     }
 
@@ -132,31 +159,21 @@ export class AssetsCache {
     const assetFromDb = await this.storage.getItem(
       assetDbKeyFactory(chainId, assetId)
     );
-    if (
-      assetFromDb?.name &&
-      assetFromDb.fetchedAt &&
-      now - assetFromDb.fetchedAt < FIVE_MINUTES &&
-      !assetFromDb.isCustom
-    ) {
-      this.cache[chainId][assetId] = assetFromDb;
+    if (this.isFresh(assetFromDb, now, hasDbAsset)) {
+      this.cache[chainId][assetId] = assetFromDb as FuelCachedAsset;
       return assetFromDb as FuelCachedAsset;
     }
 
     const dbAsset = await getFuelAssetByAssetId({
-      assets: dbAssets.length ? dbAssets : this.dbAssetsCache[chainId],
+      assets: localAssets,
       assetId: assetId,
       chainId,
     }).catch((e) => {
       console.error('Error fetching asset from db', e);
       return undefined;
     });
-    const assetFromIndexer = await this.fetchAssetFromIndexer(
-      endpoint.url,
-      assetId
-    ).catch((e) => {
-      console.error('Error fetching asset from indexer', e);
-      return undefined;
-    });
+    const { data: assetFromIndexer, notFound } =
+      await this.fetchAssetFromIndexer(endpoint.url, assetId);
 
     const {
       isNFT,
@@ -180,6 +197,9 @@ export class AssetsCache {
     } else {
       // @TODO: Remove once we have a proper caching pattern/mechanism
       asset.name = '';
+    }
+    if (!asset.name) {
+      asset.notFound = notFound;
     }
 
     if (save) {

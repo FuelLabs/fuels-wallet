@@ -102,3 +102,7 @@ tanstack
 BadgeDeprecated
 tooltip
 useTransactionResult
+WalletConnect
+wagmi
+Solana
+integrations

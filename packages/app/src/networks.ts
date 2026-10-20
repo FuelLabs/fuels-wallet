@@ -23,12 +23,4 @@ export const DEFAULT_NETWORKS: Array<
     bridgeUrl: 'https://app-testnet.fuel.network/bridge',
     isSelected: false,
   },
-  {
-    name: 'Fuel Sepolia Devnet',
-    url: 'https://devnet.fuel.network/v1/graphql',
-    chainId: CHAIN_IDS.fuel.devnet,
-    explorerUrl: 'https://app-devnet.fuel.network',
-    faucetUrl: 'https://faucet-devnet.fuel.network/',
-    isSelected: false,
-  },
 ];

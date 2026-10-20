@@ -1,7 +1,11 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "organizeImports": {
-    "enabled": true
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "off"
+      }
+    }
   },
   "formatter": {
     "enabled": true,
@@ -13,15 +17,31 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "correctness": {
         "noUnusedVariables": "error",
         "useExhaustiveDependencies": {
           "level": "warn"
-        }
+        },
+        "useHookAtTopLevel": "warn",
+        "noUnsafeOptionalChaining": "warn"
       },
       "style": {
         "noNonNullAssertion": "off"
+      },
+      "suspicious": {
+        "noNonNullAssertedOptionalChain": "warn",
+        "noDuplicateProperties": "warn",
+        "useIterableCallbackReturn": "warn",
+        "noArrayIndexKey": "warn",
+        "noExplicitAny": "warn"
+      },
+      "complexity": {
+        "noForEach": "warn"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "warn",
+        "useAriaPropsSupportedByRole": "warn"
       }
     }
   },
@@ -42,19 +62,25 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignore": [
-      ".changeset",
-      ".vscode",
-      "**/scripts",
-      "**/node_modules",
-      "**/.turbo",
-      "**/build",
-      "**/dist",
-      "**/dist-crx",
-      "**/contracts/**",
-      "**/playwright-report",
-      "**/vite-*.d.ts",
-      "pnpm-lock.yaml"
+    "includes": [
+      "**",
+      "!**/.changeset",
+      "!**/.vscode",
+      "!**/scripts",
+      "!**/node_modules",
+      "!**/.turbo",
+      "!**/build",
+      "!**/dist",
+      "!**/dist-crx",
+      "!**/contracts",
+      "!**/playwright-report",
+      "!**/vite-*.d.ts",
+      "!**/pnpm-lock.yaml"
     ]
+  },
+  "css": {
+    "formatter": {
+      "enabled": false
+    }
   }
 }

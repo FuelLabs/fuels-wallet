@@ -34,14 +34,20 @@ export async function showPopUp(params?: ShowPopUp | null) {
 }
 
 export async function createPopUp(url: string) {
-  const { left, top } = await getPopUpPosition();
-  const win = await chrome.windows.create({
+  const options: chrome.windows.CreateData = {
     type: 'popup',
     url,
     width: WALLET_WIDTH,
     height: WALLET_HEIGHT + TAB_BAR_HEIGHT,
-    left,
-    top,
-  });
-  return win?.id;
+  };
+  const { left, top } = await getPopUpPosition();
+  try {
+    const win = await chrome.windows.create({ ...options, left, top });
+    return win?.id;
+  } catch (_) {
+    // Chrome rejects bounds that are less than 50% on screen, for example
+    // after a display is unplugged. Let Chrome place the popup instead.
+    const win = await chrome.windows.create(options);
+    return win?.id;
+  }
 }

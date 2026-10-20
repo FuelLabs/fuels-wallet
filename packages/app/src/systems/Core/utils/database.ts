@@ -10,7 +10,7 @@ import type {
 } from '@fuel-wallet/types';
 import Dexie, { type DbEvents, type PromiseExtended, type Table } from 'dexie';
 import 'dexie-observable';
-import type { AssetFuel } from 'fuels';
+import { type AssetFuel, DEVNET_NETWORK_URL } from 'fuels';
 import { IS_LOGGED_KEY } from '~/config';
 import { createParallelDb } from '~/systems/Core/utils/databaseNoDexie';
 import { Storage } from '~/systems/Core/utils/storage';
@@ -21,7 +21,12 @@ import { saveToOPFS } from './opfs';
 
 type FailureEvents = Extract<keyof DbEvents, 'close' | 'blocked'>;
 export type FuelCachedAsset = AssetData &
-  AssetFuel & { key: string; fetchedAt?: number };
+  AssetFuel & { key: string; fetchedAt?: number; notFound?: boolean };
+type BackupData = {
+  accounts: Account[];
+  vaults: Vault[];
+  networks: NetworkData[];
+};
 
 export class FuelDB extends Dexie {
   vaults!: Table<Vault, string>;
@@ -48,46 +53,51 @@ export class FuelDB extends Dexie {
     this.on('close', () => this.restart('close'));
   }
 
-  async syncDbToOPFS() {
+  async getBackupData() {
     const accounts = await this.accounts.toArray();
     const vaults = await this.vaults.toArray();
     const networks = await this.networks.toArray();
-    const backupData = {
-      accounts,
-      vaults,
-      networks,
-    };
-    await saveToOPFS(backupData);
+    return { accounts, vaults, networks };
   }
 
-  async syncDbToChromeStorage() {
-    const accounts = await this.accounts.toArray();
-    const vaults = await this.vaults.toArray();
-    const networks = await this.networks.toArray();
+  async syncDbToOPFS(backupData?: BackupData) {
+    await saveToOPFS(backupData ?? (await this.getBackupData()));
+  }
+
+  async syncDbToChromeStorage(backupData?: BackupData) {
+    const { accounts, vaults, networks } =
+      backupData ?? (await this.getBackupData());
 
     // @TODO: this is a temporary solution to avoid the storage accounts of being wrong and
     // users losing funds in case of no backup
     // if has account, save to chrome storage
     if (accounts.length && vaults.length && networks.length) {
-      for (const account of accounts) {
-        await chromeStorage.accounts.set({
-          key: account.address,
-          data: account,
-        });
-      }
-      for (const vault of vaults) {
-        await chromeStorage.vaults.set({
-          key: vault.key,
-          data: vault,
-        });
-      }
-      for (const network of networks) {
-        await chromeStorage.networks.set({
-          key: network.id || '',
-          data: network,
-        });
+      await chromeStorage.accounts.bulkSet(
+        accounts.map((account) => ({ key: account.address, data: account }))
+      );
+      await chromeStorage.vaults.bulkSet(
+        vaults.map((vault) => ({ key: vault.key, data: vault }))
+      );
+      await chromeStorage.networks.bulkSet(
+        networks.map((network) => ({ key: network.id || '', data: network }))
+      );
+      // bulkSet only upserts, so the devnet row that v31 deleted stays in the
+      // backup and recovery would restore it
+      if (!networks.some((network) => network.url === DEVNET_NETWORK_URL)) {
+        const rows = await chromeStorage.networks.getAll();
+        const devnet = rows.find((row) => row.data.url === DEVNET_NETWORK_URL);
+        if (devnet) await chromeStorage.networks.remove({ key: devnet.key });
       }
     }
+  }
+
+  // Backups are only written when their content differs from what is stored
+  async syncBackups() {
+    const backupData = await this.getBackupData();
+    await Promise.allSettled([
+      this.syncDbToChromeStorage(backupData),
+      this.syncDbToOPFS(backupData),
+    ]);
   }
 
   open(): PromiseExtended<Dexie> {
@@ -98,13 +108,7 @@ export class FuelDB extends Dexie {
           (() => createParallelDb())();
         } catch (_) {}
 
-        try {
-          (() => this.syncDbToChromeStorage())();
-        } catch (_) {}
-
-        try {
-          (() => this.syncDbToOPFS())();
-        } catch (_) {}
+        this.syncBackups().catch(() => {});
 
         try {
           (async () => {

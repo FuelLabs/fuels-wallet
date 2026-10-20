@@ -5,12 +5,12 @@ import { useMemo } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadata';
 import { isValidEthAddress } from '~/systems/Core';
+import { NameSystemAvatar } from '~/systems/NameSystem/components/NameSystemAvatar/NameSystemAvatar';
 import { useAssetsAmount } from '../../hooks/useAssetsAmount';
 import { getOperationText } from '../../services/transformers/simplifyTransaction';
 import { type SimplifiedOperation, TxCategory } from '../../types';
 import { TxRecipientContractLogo } from '../TxRecipientCard/TxRecipientContractLogo';
 import { TxOperationAssets } from './TxOperationAssets';
-import { NameSystemAvatar } from '~/systems/NameSystem/components/NameSystemAvatar/NameSystemAvatar';
 
 export type TxOperationCardProps = {
   operation: SimplifiedOperation;

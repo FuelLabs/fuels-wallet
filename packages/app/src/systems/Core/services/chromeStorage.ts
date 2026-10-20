@@ -59,6 +59,29 @@ class ChromeStorageTable<T> {
     });
   }
 
+  // Same result as calling set() for each entry in order, but with one read
+  // and at most one write. Skips the write when the table would not change.
+  async bulkSet(entries: ChromeStorageRow<T>[]) {
+    const rows = await this.getAll();
+    const current = JSON.stringify(rows);
+
+    for (const { key, data } of entries) {
+      const index = rows.findIndex((row) => row.key === key);
+      if (index !== -1) {
+        rows[index] = { key, data };
+      } else {
+        rows.push({ key, data });
+      }
+    }
+
+    if (JSON.stringify(rows) === current) return false;
+
+    await chrome?.storage?.local?.set({
+      [this.tableName]: rows,
+    });
+    return true;
+  }
+
   async remove({ key }: { key: string }) {
     const { index, rows } = await this.get({ key });
 
