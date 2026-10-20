@@ -16,10 +16,13 @@ import { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { scrollable } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
+import { loadOrReload } from '~/systems/Core/utils/lazyPage';
 import { useReportError } from '../../hooks';
 
 const JsonEditor = lazy(() =>
-  import('json-edit-react').then((m) => ({ default: m.JsonEditor }))
+  loadOrReload(() => import('json-edit-react')).then((m) => ({
+    default: m.JsonEditor,
+  }))
 );
 
 // Level/Name

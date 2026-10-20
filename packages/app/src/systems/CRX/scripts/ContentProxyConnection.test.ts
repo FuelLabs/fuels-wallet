@@ -220,6 +220,23 @@ describe('ContentProxyConnection', () => {
     });
   });
 
+  it('stops answering the page once the extension context is gone', () => {
+    const request = {
+      type: 'request',
+      target: 'FuelContentScript',
+      connectorName: NAME,
+      request: { jsonrpc: '2.0', id: 1, method: 'connectorName' },
+    };
+    // biome-ignore lint/suspicious/noExplicitAny: test mock
+    (chrome.runtime as any).id = undefined;
+    sendFromPage(request);
+    // biome-ignore lint/suspicious/noExplicitAny: test mock
+    (chrome.runtime as any).id = 'ext-id';
+    sendFromPage(request);
+    expect(posted).toEqual([startEvent]);
+    expect(chrome.runtime.connect).not.toHaveBeenCalled();
+  });
+
   it('removes every listener on full destroy', () => {
     connection.destroy(false);
     expect(runtimeOnMessage.listeners.size).toBe(0);
