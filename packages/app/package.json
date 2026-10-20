@@ -49,7 +49,7 @@
     "react-hook-form": "7.47.0",
     "react-json-view": "1.21.3",
     "react-qr-code": "2.0.12",
-    "react-router-dom": "6.26.2",
+    "react-router-dom": "6.30.6",
     "tai64": "1.0.0",
     "xstate": "4.38.2",
     "yup": "1.4.0"
