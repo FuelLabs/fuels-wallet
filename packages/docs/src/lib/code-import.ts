@@ -5,7 +5,7 @@ import type { Node } from 'acorn';
 import * as acornLoose from 'acorn-loose';
 import * as walk from 'acorn-walk';
 import * as prettier from 'prettier';
-import type { Root } from 'remark-gfm';
+import type { Root } from 'mdast';
 import { visit } from 'unist-util-visit';
 
 const PACKAGE_FOLDER = 'packages';
