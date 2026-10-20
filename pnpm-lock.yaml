@@ -660,8 +660,8 @@ importers:
   packages/playwright-utils:
     dependencies:
       adm-zip:
-        specifier: ^0.5.10
-        version: 0.5.12
+        specifier: ^0.6.1
+        version: 0.6.1
     devDependencies:
       '@fuels/ts-config':
         specifier: ^0.26.0
@@ -672,9 +672,6 @@ importers:
       '@playwright/test':
         specifier: 1.54.0
         version: 1.54.0
-      '@types/adm-zip':
-        specifier: ^0.5.3
-        version: 0.5.5
       fuels:
         specifier: 0.103.0
         version: 0.103.0
@@ -5741,9 +5738,6 @@ packages:
   '@types/acorn@4.0.6':
     resolution: {integrity: sha512-veQTnWP+1D/xbxVrPC3zHnCZRjSrKfhbMUlEA43iMZLu7EsnTtkJklIuwrCPbOi8YkvDQAiW05VQQFvvz9oieQ==}
 
-  '@types/adm-zip@0.5.5':
-    resolution: {integrity: sha512-YCGstVMjc4LTY5uK9/obvxBya93axZOVOyf2GSUulADzmLhYE45u2nAssCs/fWBs1Ifq5Vat75JTPwd5XZoPJw==}
-
   '@types/aria-query@5.0.1':
     resolution: {integrity: sha512-XTIieEY+gvJ39ChLcB4If5zHtPxt3Syj5rgZR+e1ctpmK8NjPf0zFqsz4JpLJT0xla9GFDKjy8Cpu331nrmE1Q==}
 
@@ -6559,9 +6553,9 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  adm-zip@0.5.12:
-    resolution: {integrity: sha512-6TVU49mK6KZb4qG6xWaaM4C7sA/sgUMLy/JYMOzkcp3BvVLpW0fXDFQiIzAuxFCt/2+xD7fNIiPFAoLZPhVNLQ==}
-    engines: {node: '>=6.0'}
+  adm-zip@0.6.1:
+    resolution: {integrity: sha512-Xwrja8nx9e5o2N1my4DsKCeKpdrnACyr1wtbPxBDgGzKzKyE9kRtBFA8mWldI+RVlD7CBZNWY/wQ2+ydwOR6kQ==}
+    engines: {node: '>=14.0'}
 
   agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -21820,10 +21814,6 @@ snapshots:
     dependencies:
       '@types/estree': 1.0.8
 
-  '@types/adm-zip@0.5.5':
-    dependencies:
-      '@types/node': 20.12.11
-
   '@types/aria-query@5.0.1': {}
 
   '@types/babel__core@7.20.5':
@@ -24615,7 +24605,7 @@ snapshots:
 
   acorn@8.19.0: {}
 
-  adm-zip@0.5.12: {}
+  adm-zip@0.6.1: {}
 
   agent-base@6.0.2:
     dependencies:
