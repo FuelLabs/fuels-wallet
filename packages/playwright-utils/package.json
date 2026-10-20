@@ -34,7 +34,7 @@
   "devDependencies": {
     "@fuels/ts-config": "^0.26.0",
     "@fuels/tsup-config": "^0.26.0",
-    "@playwright/test": "1.54.0",
+    "@playwright/test": "1.64.1",
     "fuels": "0.103.0",
     "tsup": "^7.2.0"
   },
