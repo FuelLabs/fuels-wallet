@@ -51,6 +51,21 @@ export type AccountInputs = {
   };
 };
 
+/**
+ * Most recently used first. The current account always leads, so wallets
+ * created before lastUsedAt existed still put it on top. Accounts never used
+ * fall back to name order, with numbers compared as numbers.
+ */
+export function sortByRecentUse<T extends Account>(accounts: T[]): T[] {
+  const rank = (account: T) =>
+    account.isCurrent ? Number.POSITIVE_INFINITY : (account.lastUsedAt ?? 0);
+  return [...accounts].sort(
+    (a, b) =>
+      rank(b) - rank(a) ||
+      a.name.localeCompare(b.name, undefined, { numeric: true })
+  );
+}
+
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class AccountService {
   static async addAccount(input: AccountInputs['addAccount']) {
@@ -70,7 +85,7 @@ export class AccountService {
 
   static async getAccounts() {
     return db.transaction('r', db.accounts, async () => {
-      return db.accounts.toCollection().sortBy('name');
+      return sortByRecentUse(await db.accounts.toArray());
     });
   }
 
@@ -477,6 +492,7 @@ export class AccountService {
         .modify({ isCurrent: false });
       await db.accounts.update(input.address, {
         isCurrent: true,
+        lastUsedAt: Date.now(),
       });
       return db.accounts.get(input.address) as Promise<Account>;
     });
