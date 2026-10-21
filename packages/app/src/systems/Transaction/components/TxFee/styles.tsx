@@ -14,10 +14,9 @@ export const styles = {
       position: 'relative',
       cursor: hasCheckbox ? 'pointer' : 'auto',
       backgroundColor: '$cardBg',
-      borderRadius: '8px',
-      border: '1px solid $inputBaseBorder',
+      border: '1px solid var(--fuel-line)',
       '&:hover': {
-        borderColor: '$inputActiveBorder',
+        borderColor: 'var(--fuel-element-low-em)',
       },
       '&:focus-visible': {
         borderColor: '$intentsBase5',
@@ -30,40 +29,43 @@ export const styles = {
     textWrap: 'nowrap',
   }),
   amount: cssObj({
-    fontSize: '$sm',
-    fontWeight: '$medium',
+    fontFamily: '$mono',
+    fontSize: '12px',
     wordWrap: 'break-word',
     minWidth: 0,
+    color: '$textLow',
   }),
   usd: cssObj({
+    fontFamily: '$mono',
     fontSize: '$sm',
-    fontWeight: '$semibold',
     wordWrap: 'break-word',
-    color: '$textHeading',
+    color: '$textHigh',
     ml: '$3',
   }),
   option: cssObj({
     alignItems: 'center',
     backgroundColor: '$cardBg',
-    border: '1px solid $gray5',
-    borderRadius: '10px',
-    color: '$gray1',
+    border: '1px solid var(--fuel-line)',
+    color: '$textHigh',
     cursor: 'pointer',
     fontSize: '13px',
     gap: '$3',
     justifyContent: 'space-between',
     padding: '$3',
-    transition: 'all 0.2s ease',
+    transition: 'background-color 200ms, border-color 200ms',
 
-    '&:hover': {
-      backgroundColor: '$gray3',
+    '@media (hover: hover)': {
+      '&:hover': { backgroundColor: '$muted' },
+    },
+    '&:has([data-state="checked"])': {
+      borderColor: '$intentsPrimary9',
     },
   }),
   optionContent: cssObj({
-    color: '$gray12',
+    color: '$textHigh',
   }),
   optionLabel: cssObj({
-    color: '$gray12',
+    color: '$textHigh',
     fontSize: '$sm !important',
     fontWeight: '$semibold',
     ml: '4px',
