@@ -160,7 +160,7 @@ export function TxOperationAssets({ amounts }: TxOperationAssetsProps) {
     <MotionBox
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: 'auto' }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       css={cssObj({ marginBottom: '$3', overflow: 'hidden' })}
     >
       <Box.Stack gap="$1">
@@ -190,8 +190,8 @@ export function TxOperationAssets({ amounts }: TxOperationAssetsProps) {
 
 const styles = {
   amountContainer: cssObj({
-    fontWeight: '$semibold',
-    color: '$textHeading',
+    fontFamily: '$mono',
+    color: '$textHigh',
     fontSize: '$sm',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
@@ -215,7 +215,6 @@ const styles = {
     height: '35px',
     display: 'flex',
     overflow: 'hidden',
-    borderRadius: '$md',
     alignItems: 'center',
     boxSizing: 'border-box',
     justifyContent: 'center',
@@ -229,8 +228,7 @@ const styles = {
   emptyNFT: cssObj({
     width: '40px',
     height: '40px',
-    borderRadius: '8px',
-    border: '1px solid $cardBorder',
+    border: '1px solid var(--fuel-line)',
     backgroundColor: '$cardBg',
     display: 'flex',
     justifyContent: 'center',

@@ -46,10 +46,12 @@ export function TxOperationsGroup({
       </Box.Flex>
       <Box>
         <MotionBox
+          initial={false}
           animate={{
             height: isExpanded ? 'auto' : 0,
             opacity: isExpanded ? 1 : 0,
           }}
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
           css={styles.content}
           onClick={(e: MouseEvent) => e.stopPropagation()}
         >
@@ -77,16 +79,11 @@ export function TxOperationsGroup({
 const styles = {
   root: cssObj({
     margin: '0 0 $2',
-    backgroundColor: '$gray5',
-    borderRadius: '10px',
-    minHeight: '56px',
+    backgroundColor: '$cardBg',
+    border: '1px solid var(--fuel-line)',
+    minHeight: '48px',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '2px',
-    'html[class="fuel_dark-theme"] &': {
-      bg: '$gray2',
-      border: '1px solid $gray3',
-    },
   }),
   header: cssObj({
     display: 'flex',
@@ -95,15 +92,30 @@ const styles = {
     border: 'none',
     width: '100%',
     backgroundColor: 'transparent',
-    padding: '17px 16px 12px 18px',
+    minHeight: '48px',
+    px: '$4',
     alignItems: 'center',
+    color: '$textHigh',
+    transition: 'background-color 200ms',
+
+    '@media (hover: hover)': {
+      '&:hover': { backgroundColor: '$muted' },
+    },
+    '&:focus-visible': {
+      outline: '2px solid $focus',
+      outlineOffset: '-2px',
+    },
   }),
   icon: cssObj({
-    color: '#202020',
+    color: '$textLow',
   }),
   title: cssObj({
-    color: '$gray12',
-    fontWeight: '$medium',
+    fontFamily: '$mono',
+    fontSize: '12px',
+    lineHeight: '16px',
+    letterSpacing: '0.6px',
+    textTransform: 'uppercase',
+    color: '$textLow',
     textAlign: 'left',
   }),
   content: cssObj({
@@ -112,18 +124,15 @@ const styles = {
     gap: '2px',
   }),
   chevron: cssObj({
-    transition: 'transform 0.3s ease',
-    'html[class="fuel_dark-theme"] &': {
-      color: '$gray12',
-    },
+    color: '$textLow',
+    transition: 'transform 300ms var(--fuel-ease-out)',
     '&[data-expanded=true]': {
       transform: 'rotate(-180deg)',
     },
   }),
   cardStyle: cssObj({
     width: '100%',
-    borderRadius: '8px',
     overflow: 'hidden',
-    boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
+    border: '1px solid var(--fuel-line)',
   }),
 };

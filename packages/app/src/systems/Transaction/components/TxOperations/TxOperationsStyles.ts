@@ -2,14 +2,10 @@ import { cssObj } from '@fuel-wallet/ui';
 
 export const operationsStyles = {
   drawer: cssObj({
-    bg: '$gray5',
-    borderRadius: '10px',
+    bg: '$cardBg',
+    border: '1px solid var(--fuel-line)',
     marginBottom: '$2',
     overflow: 'hidden',
-    'html[class="fuel_dark-theme"] &': {
-      bg: '$gray2',
-      border: '1px solid $gray3',
-    },
   }),
   header: cssObj({
     display: 'flex',
@@ -22,10 +18,12 @@ export const operationsStyles = {
     minHeight: '36px',
   }),
   title: cssObj({
-    letterSpacing: '-0.01em',
-    color: '#646464',
-    fontWeight: '$medium',
-    fontSize: '13px',
+    fontFamily: '$mono',
+    fontSize: '12px',
+    lineHeight: '16px',
+    letterSpacing: '0.6px',
+    textTransform: 'uppercase',
+    color: '$textLow',
   }),
   container: cssObj({
     padding: '1px',
@@ -33,9 +31,8 @@ export const operationsStyles = {
   }),
   cardStyle: cssObj({
     width: '100%',
-    borderRadius: '8px',
     overflow: 'hidden',
-    boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
+    border: '1px solid var(--fuel-line)',
   }),
   assetRow: cssObj({
     alignItems: 'center',

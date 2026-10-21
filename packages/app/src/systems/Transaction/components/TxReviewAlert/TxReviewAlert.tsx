@@ -7,11 +7,12 @@ export type TxReviewAlertProps = {
 export const TxReviewAlert = ({ signOnly = false }: TxReviewAlertProps) => {
   return (
     <Box
-      css={{ borderBottom: '1px solid $gray6' }}
+      css={{ borderBottom: '1px solid var(--fuel-line)' }}
+      className="fuel-appear"
       aria-label="Confirm Transaction"
     >
       <Box.Flex css={styles.reviewTxBadge}>
-        <Icon icon="InfoCircle" stroke={2} size={16} />
+        <Icon icon="InfoCircle" size={14} />
         {signOnly
           ? 'Double-check transaction details before signing'
           : 'Double-check transaction details before submission'}
@@ -24,14 +25,16 @@ const styles = {
   reviewTxBadge: cssObj({
     display: 'flex',
     alignItems: 'center',
-    gap: '$1',
-    fontSize: 'calc($sm - 1px)',
-    color: '$gray12',
-    fontWeight: '$medium',
-    lineHeight: '$tight',
-    backgroundColor: '$intentsInfo4',
+    gap: '$2',
+    fontFamily: '$mono',
+    fontSize: '11px',
+    letterSpacing: '0.6px',
+    textTransform: 'uppercase',
+    color: '$textLow',
+    lineHeight: '16px',
+    backgroundColor: '$muted',
     width: '100%',
-    minHeight: '40px',
-    pl: '$3',
+    minHeight: '36px',
+    px: '$4',
   }),
 };
