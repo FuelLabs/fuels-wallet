@@ -48,19 +48,37 @@ export function Stepper({
   );
 }
 
+/* Square steps on a hairline track: done steps fill green, the current one is outlined green. */
 const styles = {
   root: cssObj({
+    position: 'relative',
     gap: '$2',
     width: '$full',
   }),
   button: cssObj({
-    width: '$8',
-    height: '$8',
-    borderRadius: '$full',
+    width: '28px',
+    minWidth: '28px',
+    height: '28px',
+    px: '0 !important',
+    borderRadius: 0,
+    fontFamily: '$mono',
+    fontSize: '12px',
     cursor: 'not-allowed',
+    transition: 'background-color 300ms, box-shadow 300ms, color 300ms',
 
+    '&[aria-disabled="true"]': {
+      background: 'transparent',
+      boxShadow: 'inset 0 0 0 1px var(--fuel-line)',
+      color: '$textLow',
+    },
     '&[data-active="true"]': {
-      color: '$text',
+      boxShadow: 'inset 0 0 0 1px var(--fuel-primary)',
+      color: '$textHigh',
+    },
+    '&[data-complete="true"]:not([data-active="true"])': {
+      cursor: 'pointer',
+      clipPath: 'none',
+      '&::after': { display: 'none' },
     },
   }),
 };
