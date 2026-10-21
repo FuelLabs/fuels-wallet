@@ -5,6 +5,7 @@ export * from './components/Box';
 export * from './components/Button';
 export * from './components/Card';
 export * from './components/Display';
+export * from './components/DitherImage';
 export * from './components/Form';
 export * from './components/Icon';
 export * from './components/Layout';

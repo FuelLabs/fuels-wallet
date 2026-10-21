@@ -99,7 +99,7 @@ const styles = {
     '.fuel_Heading:is(h4)': {
       fontSize: '$base',
       lineHeight: '$tight',
-      color: '$muted',
+      color: '$textLow',
     },
   }),
 };

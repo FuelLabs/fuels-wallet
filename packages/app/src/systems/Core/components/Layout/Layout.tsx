@@ -1,4 +1,4 @@
-import { cssObj, Box, type ThemeUtilsCSS } from '@fuel-wallet/ui';
+import { cssObj, Box, DitherImage, type ThemeUtilsCSS } from '@fuel-wallet/ui';
 import type { FC, ReactNode } from 'react';
 import { createContext, forwardRef, useContext, useRef } from 'react';
 import { Helmet } from 'react-helmet';
@@ -85,6 +85,11 @@ export const Layout: LayoutComponent = ({
           data-public
           data-centered={isCentered}
         >
+          <Box as="aside" css={styles.art} className="fuel-dither-accent">
+            <div className="fuel-dither-art">
+              <DitherImage src={ONBOARDING_ART} cell={2} brightness={0.05} />
+            </div>
+          </Box>
           <Box.Centered>{children}</Box.Centered>
         </Box>
       ) : (
@@ -114,6 +119,8 @@ export const Layout: LayoutComponent = ({
 Layout.Content = Content;
 Layout.TopBar = TopBar;
 Layout.BottomBar = BottomBar;
+
+const ONBOARDING_ART = '/signup.webp';
 
 export const styles = {
   root: cssObj({
@@ -178,19 +185,16 @@ export const styles = {
         margin: '0 auto',
       },
     },
-
-    '&::before': {
-      content: '""',
-      display: 'block',
-      position: 'sticky',
-      top: 0,
-      bottom: 0,
-      width: '100%',
-      height: '100vh',
-      background: 'url(/signup.webp)',
-      backgroundPosition: 'left',
-      backgroundSize: 'cover',
-    },
+  }),
+  art: cssObj({
+    position: 'sticky',
+    top: 0,
+    height: '100vh',
+    overflow: 'hidden',
+    background: '$background',
+    boxShadow: 'inset -1px 0 0 0 var(--fuel-line)',
+    '--fuel-dither-opacity': '0.9',
+    '--fuel-dither-opacity-dark': '0.85',
   }),
 };
 

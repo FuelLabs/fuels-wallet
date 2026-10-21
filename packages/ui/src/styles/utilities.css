@@ -150,3 +150,51 @@
     transition: none;
   }
 }
+
+/* Dithered art. Light themes show the image's shadows as dark ink, dark themes
+   its highlights as light ink. A cell sets the opacity it needs. */
+.fuel-dither-art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fuel-dither {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  image-rendering: pixelated;
+  opacity: var(--fuel-dither-opacity, 0.12);
+}
+
+.fuel-dither[data-ink="highlights"],
+.fuel_dark-theme .fuel-dither[data-ink="shadows"] {
+  display: none;
+}
+
+.fuel_dark-theme .fuel-dither[data-ink="highlights"] {
+  display: block;
+  opacity: var(--fuel-dither-opacity-dark, 0.16);
+}
+
+/* A hem of the brand gradient along the bottom of a dithered cell. */
+.fuel-dither-accent::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 30%;
+  background: linear-gradient(
+    to bottom,
+    #88ecd1 0%,
+    #88ecd1 75%,
+    var(--fuel-brand-600) 100%
+  );
+  opacity: 0.45;
+  -webkit-mask-image: linear-gradient(to top, black, transparent);
+  mask-image: linear-gradient(to top, black, transparent);
+  pointer-events: none;
+}
