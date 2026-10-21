@@ -236,7 +236,7 @@ export const InputAmount: InputAmountComponent = ({
         )}
       </Flex>
       {!hiddenBalance && (
-        <VStack gap="0">
+        <VStack gap="0" css={styles.footer}>
           <Box css={styles.dashedHorizontalSeparator} />
 
           <HStack justify="between" css={styles.inputAmountBalances}>
@@ -283,7 +283,8 @@ const styles = {
       is: ['display'],
       width: '100%',
       boxSizing: 'border-box',
-      fontSize: '$md',
+      fontSize: '20px',
+      lineHeight: '28px',
       fontFamily: '$mono',
     },
 
@@ -360,13 +361,19 @@ const styles = {
     fontSize: '$sm',
     fontWeight: '$normal',
   }),
+  footer: cssObj({
+    alignSelf: 'stretch',
+
+    '.fuel_Text': {
+      fontFamily: '$mono',
+      fontSize: '12px',
+      color: '$textLow',
+    },
+  }),
   dashedHorizontalSeparator: cssObj({
     width: '100%',
     height: 0,
-    backgroundColor: '$intentsBase8',
-    // Only one side of the border should be visible, to avoid extra "thickness"
-    borderTop: '1px dashed $intentsBase8',
+    borderTop: '1px solid var(--fuel-line)',
     my: '$2',
-    color: 'textSubtext',
   }),
 };

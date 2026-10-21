@@ -126,7 +126,7 @@ export function SendSelect({
 
   return (
     <MotionContent {...animations.slideInTop()}>
-      <Box.Stack gap="$3">
+      <Box.Stack gap="$5">
         <Box.Flex css={styles.row}>
           <Text as="span" css={styles.title}>
             Asset
@@ -162,7 +162,7 @@ export function SendSelect({
           </Text>
           <AddressField warningMessage={warningMessage} />
         </Box.Flex>
-        <Box.Stack gap="$3">
+        <Box.Stack gap="$2">
           <Text as="span" css={styles.title}>
             Amount
           </Text>
@@ -215,7 +215,7 @@ export function SendSelect({
           baseFee.gt(0) &&
           regularTip &&
           fastTip && (
-            <MotionStack {...animations.slideInTop()} gap="$3">
+            <MotionStack {...animations.slideInTop()} gap="$2">
               <Text as="span" css={styles.titleFee}>
                 Fee (network)
               </Text>
@@ -239,11 +239,16 @@ const styles = {
     flex: 1,
   }),
   row: cssObj({
-    alignItems: 'flex-start',
-    gap: '$4',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    gap: '$2',
 
     '.fuel_form--control': {
       flex: 1,
+    },
+    /* Same height as the asset select above it. */
+    '.fuel_Input': {
+      minHeight: '36px !important',
     },
     '.fuel_Input > input': {
       fontFamily: '$sans',
@@ -251,17 +256,20 @@ const styles = {
     },
   }),
   title: cssObj({
-    pt: '$2',
-    color: '$intentsBase12',
-    fontSize: '$md',
-    fontWeight: '$normal',
-    width: '48px',
+    fontFamily: '$mono',
+    fontSize: '12px',
+    lineHeight: '16px',
+    letterSpacing: '0.6px',
+    textTransform: 'uppercase',
+    color: '$textLow',
   }),
   titleFee: cssObj({
-    pt: '$2',
-    color: '$intentsBase12',
-    fontSize: '$md',
-    fontWeight: '$normal',
+    fontFamily: '$mono',
+    fontSize: '12px',
+    lineHeight: '16px',
+    letterSpacing: '0.6px',
+    textTransform: 'uppercase',
+    color: '$textLow',
   }),
   alert: cssObj({
     fontSize: '$sm',
