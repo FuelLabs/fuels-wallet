@@ -2,8 +2,9 @@ import { isValidDomain } from '@bako-id/sdk';
 import {
   cssObj,
   Box,
-  Dropdown,
   Input,
+  OptionItem,
+  Popover,
   Spinner,
   Text,
   Tooltip,
@@ -11,7 +12,14 @@ import {
 } from '@fuel-wallet/ui';
 import debounce from 'lodash.debounce';
 import type React from 'react';
-import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { shortAddress } from '~/systems/Core';
 import { useNameSystemRequest } from '../../hooks';
 import { useResolver } from '../../hooks/useResolver';
@@ -31,6 +39,7 @@ export const NameSystemInput = forwardRef<
 >(({ onChange, onError, ...props }, ref) => {
   const [inputValue, setInputValue] = useState('');
   const [status, setStatus] = useState<Status>('idle');
+  const optionRef = useRef<HTMLButtonElement>(null);
 
   const { resolver, isLoading } = useResolver();
   const { isOpenDropdown, toggleDropdown, domain, address, reset, setDomain } =
@@ -106,22 +115,32 @@ export const NameSystemInput = forwardRef<
     onChange('');
   }, [onChange]);
 
+  const hasSuggestion = !!address && !!domain && status === 'idle';
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!hasSuggestion) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      toggleDropdown(true);
+      requestAnimationFrame(() => optionRef.current?.focus());
+    }
+    if (e.key === 'Enter' && isOpenDropdown) {
+      e.preventDefault();
+      handleSelect(address);
+    }
+  };
+
   const showHandle = useMemo(
     () => isName && !!address && status === 'selected',
     [isName, address, status]
   );
 
   return (
-    <Dropdown
-      css={styles.root}
-      isOpen={isOpenDropdown}
+    <Popover
+      isOpen={isOpenDropdown && hasSuggestion}
       onOpenChange={toggleDropdown}
-      popoverProps={{
-        arrowClassName: 'arrow',
-        sideOffset: 0,
-      }}
     >
-      <Dropdown.Trigger asChild>
+      <Popover.Anchor>
         <Input size="sm" css={styles.input}>
           {showHandle ? (
             <NameSystemAvatar
@@ -138,8 +157,11 @@ export const NameSystemInput = forwardRef<
           ) : (
             <Input.Field
               onChange={handleChange}
+              onKeyDown={handleKeyDown}
               id="search-address"
               aria-label="Address Input"
+              aria-autocomplete="list"
+              aria-expanded={isOpenDropdown && hasSuggestion}
               placeholder="Enter a Fuel address"
               ref={ref}
               onClick={handleOpenDropdown}
@@ -155,56 +177,50 @@ export const NameSystemInput = forwardRef<
             />
           )}
         </Input>
-      </Dropdown.Trigger>
+      </Popover.Anchor>
 
-      <Dropdown.Menu
-        onAction={(key) => handleSelect(key.toString())}
-        css={styles.dropdownMenu}
+      <Popover.Content
+        onInteractOutside={(e) => {
+          const target = e.target as HTMLElement | null;
+          if (target?.closest('[aria-label="Address Input"]'))
+            e.preventDefault();
+        }}
       >
-        <Dropdown.MenuItem css={styles.dropdownMenuItem} key={address}>
-          <NameSystemAvatar resolver={address!} onSelect={handleSelect}>
-            <Box.Flex direction="column">
+        <OptionItem
+          ref={optionRef}
+          aria-label={`Send to ${domain}`}
+          css={styles.option}
+          onClick={() => handleSelect(address!)}
+        >
+          <NameSystemAvatar resolver={address!}>
+            <Box.Flex direction="column" css={styles.optionText}>
               <Text css={styles.domainText} className="domain" fontSize="sm">
                 {domain}
               </Text>
-              <Text css={styles.domainText}>{shortAddress(address ?? '')}</Text>
+              <Text css={styles.addressText} fontSize="xs">
+                {shortAddress(address ?? '')}
+              </Text>
             </Box.Flex>
           </NameSystemAvatar>
-        </Dropdown.MenuItem>
-      </Dropdown.Menu>
-    </Dropdown>
+        </OptionItem>
+      </Popover.Content>
+    </Popover>
   );
 });
 
 const styles = {
-  root: cssObj({
-    position: 'relative',
-    flex: 1,
-    display: 'flex',
-
-    '.arrow': {
-      display: 'none !important',
-    },
+  option: cssObj({
+    py: '$2',
+    height: 'auto',
   }),
-  dropdownMenu: cssObj({
-    width: 250,
-    padding: '$1 0',
-    '.fuel_MenuListItem': {
-      px: '$3',
-      height: 'auto',
-    },
-  }),
-  dropdownMenuItem: cssObj({
-    py: '$1',
-
-    '.domain': {
-      marginBottom: '2px',
-      color: '$inputBaseColor !important',
-    },
+  optionText: cssObj({
+    minWidth: 0,
+    gap: '2px',
   }),
   input: cssObj({
     display: 'flex',
     position: 'relative',
+    flex: 1,
 
     '.input-name-system': {
       padding: '0 $3 !important',
@@ -225,5 +241,11 @@ const styles = {
   domainText: cssObj({
     fontFamily: '$sans',
     lineHeight: '$tight',
+    color: '$textHigh',
+  }),
+  addressText: cssObj({
+    fontFamily: '$mono',
+    lineHeight: '$tight',
+    color: '$textLow',
   }),
 };
