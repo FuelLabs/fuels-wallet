@@ -1,9 +1,11 @@
 import * as RAlert from '@radix-ui/react-alert-dialog';
 import * as RDialog from '@radix-ui/react-dialog';
 import * as RDropdown from '@radix-ui/react-dropdown-menu';
+import * as RPopover from '@radix-ui/react-popover';
 import { FocusScope } from '@radix-ui/react-focus-scope';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import type {
+  ComponentPropsWithoutRef,
   Key,
   KeyboardEvent,
   MouseEvent,
@@ -28,21 +30,27 @@ import {
   render,
   forwardRef,
 } from './Box';
+import {
+  CLOSED,
+  OPEN,
+  dialogIn,
+  dialogOut,
+  fadeIn,
+  fadeOut,
+  popoverMotion,
+  reduced,
+} from '../motion';
 import { Heading } from './Text';
-
-const fadeIn = keyframes({ from: { opacity: 0 }, to: { opacity: 1 } });
-const rise = keyframes({
-  from: { opacity: 0, transform: 'translateY(4px)' },
-  to: { opacity: 1, transform: 'translateY(0)' },
-});
 
 const scrim = stitches({
   position: 'fixed',
   inset: 0,
   zIndex: 50,
   background: '$scrim',
-  animation: `${fadeIn} 150ms var(--fuel-ease-out)`,
-  '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+  [`&${OPEN}`]: { animation: `${fadeIn} 200ms var(--fuel-ease-out)` },
+  [`&${CLOSED}`]: {
+    animation: `${fadeOut} 180ms var(--fuel-ease-in) forwards`,
+  },
 });
 
 const surface = stitches({
@@ -61,8 +69,16 @@ const surface = stitches({
   boxShadow: 'inset 0 0 0 1px var(--fuel-line)',
   borderRadius: 0,
   outline: 'none',
-  animation: `${fadeIn} 150ms var(--fuel-ease-out)`,
-  '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+  [`&${OPEN}`]: { animation: `${dialogIn} 300ms var(--fuel-ease-out)` },
+  [`&${CLOSED}`]: {
+    animation: `${dialogOut} 180ms var(--fuel-ease-in) forwards`,
+  },
+  [reduced]: {
+    [`&${OPEN}`]: { animation: `${fadeIn} 200ms var(--fuel-ease-out)` },
+    [`&${CLOSED}`]: {
+      animation: `${fadeOut} 150ms var(--fuel-ease-in) forwards`,
+    },
+  },
 });
 
 const headingCss: ThemeUtilsCSS = {
@@ -376,10 +392,15 @@ function DrawerRoot({
   );
 }
 
-const slide = (from: string) =>
+const slideIn = (from: string) =>
   keyframes({
     from: { transform: `translateX(${from})` },
     to: { transform: 'translateX(0)' },
+  });
+const slideOut = (to: string) =>
+  keyframes({
+    from: { transform: 'translateX(0)' },
+    to: { transform: `translateX(${to})` },
   });
 
 const DrawerContent = forwardRef<HTMLDivElement, BaseProps>(
@@ -387,6 +408,7 @@ const DrawerContent = forwardRef<HTMLDivElement, BaseProps>(
     const { side, size, container, shouldCloseOnClickAway } =
       useContext(drawerCtx);
     const position = container ? 'absolute' : 'fixed';
+    const offscreen = side === 'right' ? '100%' : '-100%';
     return (
       <RDialog.Portal container={container}>
         <RDialog.Overlay
@@ -421,8 +443,20 @@ const DrawerContent = forwardRef<HTMLDivElement, BaseProps>(
                   ? 'inset 1px 0 0 0 var(--fuel-line)'
                   : 'inset -1px 0 0 0 var(--fuel-line)',
               outline: 'none',
-              animation: `${slide(side === 'right' ? '100%' : '-100%')} 200ms var(--fuel-ease-out)`,
-              '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+              [`&${OPEN}`]: {
+                animation: `${slideIn(offscreen)} 300ms var(--fuel-ease-out)`,
+              },
+              [`&${CLOSED}`]: {
+                animation: `${slideOut(offscreen)} 200ms var(--fuel-ease-in) forwards`,
+              },
+              [reduced]: {
+                [`&${OPEN}`]: {
+                  animation: `${fadeIn} 200ms var(--fuel-ease-out)`,
+                },
+                [`&${CLOSED}`]: {
+                  animation: `${fadeOut} 150ms var(--fuel-ease-in) forwards`,
+                },
+              },
               ...css,
             })(),
             className
@@ -601,8 +635,7 @@ const DropdownMenu = forwardRef<HTMLDivElement, DropdownMenuProps>(
               py: '$1',
               background: '$card',
               boxShadow: 'inset 0 0 0 1px var(--fuel-line)',
-              animation: `${rise} 150ms var(--fuel-ease-out)`,
-              '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+              ...popoverMotion,
               ...css,
             })(),
             className
@@ -658,6 +691,108 @@ export const Dropdown = Object.assign(DropdownRoot, {
   Menu: DropdownMenu,
   MenuItem: DropdownMenuItem,
 });
+
+/* ----------------------------------------------------------------------------
+ * Popover: floating content pinned to an anchor. Unlike Dropdown it leaves
+ * focus where it is, so it can hang suggestions under an input.
+ * --------------------------------------------------------------------------*/
+
+export type PopoverRootProps = {
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  children?: ReactNode;
+};
+
+function PopoverRoot({ isOpen, onOpenChange, children }: PopoverRootProps) {
+  return (
+    <RPopover.Root open={isOpen} onOpenChange={onOpenChange}>
+      {children}
+    </RPopover.Root>
+  );
+}
+
+export type PopoverContentProps = BaseProps &
+  Pick<
+    RPopover.PopoverContentProps,
+    'side' | 'align' | 'sideOffset' | 'onInteractOutside' | 'onEscapeKeyDown'
+  >;
+
+const PopoverContent = forwardRef<HTMLDivElement, PopoverContentProps>(
+  function PopoverContent(
+    { css, className, sideOffset = 4, children, ...props },
+    ref
+  ) {
+    return (
+      <RPopover.Portal>
+        <RPopover.Content
+          ref={ref}
+          sideOffset={sideOffset}
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          onCloseAutoFocus={(e) => e.preventDefault()}
+          {...props}
+          className={cx(
+            'fuel_Popover',
+            stitches({
+              zIndex: 60,
+              width: 'var(--radix-popover-trigger-width)',
+              boxSizing: 'border-box',
+              py: '$1',
+              background: '$card',
+              boxShadow: 'inset 0 0 0 1px var(--fuel-line)',
+              outline: 'none',
+              ...popoverMotion,
+              ...css,
+            })(),
+            className
+          )}
+        >
+          {children}
+        </RPopover.Content>
+      </RPopover.Portal>
+    );
+  }
+);
+
+function PopoverAnchor({ children }: { children: ReactElement }) {
+  return <RPopover.Anchor asChild>{children}</RPopover.Anchor>;
+}
+
+export const Popover = Object.assign(PopoverRoot, {
+  id: 'Popover',
+  Anchor: PopoverAnchor,
+  Content: PopoverContent,
+});
+
+/** A pressable row with the menu item look, for lists that are not menus. */
+export type OptionItemProps = ComponentPropsWithoutRef<'button'> & {
+  css?: ThemeUtilsCSS;
+};
+
+export const OptionItem = forwardRef<HTMLButtonElement, OptionItemProps>(
+  function OptionItem({ css, className, ...props }, ref) {
+    return (
+      <button
+        ref={ref}
+        type="button"
+        {...props}
+        className={cx(
+          'fuel_OptionItem',
+          menuItemStyle(),
+          stitches({
+            width: '100%',
+            m: 0,
+            border: 0,
+            background: 'transparent',
+            font: 'inherit',
+            textAlign: 'left',
+            ...css,
+          })(),
+          className
+        )}
+      />
+    );
+  }
+);
 
 /* ----------------------------------------------------------------------------
  * Menu: an always visible list of actions with arrow key navigation.

@@ -2,7 +2,8 @@ import * as RAccordion from '@radix-ui/react-accordion';
 import * as RTabs from '@radix-ui/react-tabs';
 import type { ComponentProps } from 'react';
 import { createContext, useContext } from 'react';
-import { type ThemeUtilsCSS, cx, css as stitches } from '../css';
+import { type ThemeUtilsCSS, cx, keyframes, css as stitches } from '../css';
+import { CLOSED, OPEN, fadeIn, reduced } from '../motion';
 import { forwardRef } from './Box';
 import { Card } from './Card';
 import { ContentLoader, type ContentLoaderProps } from './Display';
@@ -118,7 +119,14 @@ const TabsContent = forwardRef<
       {...props}
       className={cx(
         'fuel_TabsContent',
-        stitches({ outline: 'none', ...css })(),
+        stitches({
+          outline: 'none',
+          '&[data-state="active"]': {
+            animation: `${fadeIn} 200ms var(--fuel-ease-out)`,
+          },
+          [reduced]: { '&[data-state="active"]': { animation: 'none' } },
+          ...css,
+        })(),
         className
       )}
     />
@@ -231,6 +239,15 @@ const AccordionTrigger = forwardRef<
   );
 });
 
+const accordionDown = keyframes({
+  from: { height: 0, opacity: 0 },
+  to: { height: 'var(--radix-accordion-content-height)', opacity: 1 },
+});
+const accordionUp = keyframes({
+  from: { height: 'var(--radix-accordion-content-height)', opacity: 1 },
+  to: { height: 0, opacity: 0 },
+});
+
 const AccordionContent = forwardRef<
   HTMLDivElement,
   ComponentProps<typeof RAccordion.Content> & { css?: ThemeUtilsCSS }
@@ -242,6 +259,14 @@ const AccordionContent = forwardRef<
       className={cx(
         'fuel_Accordion-content',
         stitches({
+          overflow: 'hidden',
+          [`&${OPEN}`]: {
+            animation: `${accordionDown} 200ms var(--fuel-ease-out)`,
+          },
+          [`&${CLOSED}`]: {
+            animation: `${accordionUp} 200ms var(--fuel-ease-in)`,
+          },
+          [reduced]: { animation: 'none !important' },
           px: '$3',
           pb: '$3',
           fontSize: '$sm',

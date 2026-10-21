@@ -13,6 +13,7 @@ import {
   render,
   forwardRef,
 } from './Box';
+import { popoverMotion } from '../motion';
 import { Icon } from './Icon';
 import { Text, type TextProps } from './Text';
 import { toast } from './Toast';
@@ -31,7 +32,7 @@ const tooltipContent = stitches({
   fontSize: '12px',
   lineHeight: '16px',
   boxShadow: 'none',
-  animation: `${keyframes({ from: { opacity: 0 }, to: { opacity: 1 } })} 150ms var(--fuel-ease-out)`,
+  ...popoverMotion,
   '& .fuel_TooltipArrow': { fill: '$secondary' },
 });
 
