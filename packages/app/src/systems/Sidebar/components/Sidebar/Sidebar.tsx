@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Drawer, Icon, IconButton, Text } from '@fuel-ui/react';
+import { cssObj, Box, Drawer, Icon, IconButton, Text } from '@fuel-wallet/ui';
 import { forwardRef, useMemo } from 'react';
 import { APP_VERSION } from '~/config';
 import { useOverlay } from '~/systems/Overlay';

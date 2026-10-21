@@ -1,4 +1,4 @@
-import { Box, Text } from '@fuel-ui/react';
+import { Box, Text } from '@fuel-wallet/ui';
 import { Layout } from '~/systems/Core';
 import { useBaseAsset } from '~/systems/Transaction/hooks/useBaseAsset';
 import { useConsolidateCoinsSelector } from '../../hooks/useConsolidateCoinsSelector';

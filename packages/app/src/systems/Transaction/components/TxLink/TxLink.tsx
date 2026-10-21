@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Link } from '@fuel-ui/react';
+import { cssObj, Link } from '@fuel-wallet/ui';
 import { useExplorerLink } from '../../hooks/useExplorerLink';
 
 export type TxLinkProps = {

@@ -1,5 +1,6 @@
-import { cssObj, cx } from '@fuel-ui/css';
 import {
+  cssObj,
+  cx,
   Avatar,
   Badge,
   Box,
@@ -8,7 +9,7 @@ import {
   Icon,
   IconButton,
   Text,
-} from '@fuel-ui/react';
+} from '@fuel-wallet/ui';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { NFTImage } from '~/systems/Account/components/BalanceNFTs/NFTImage';

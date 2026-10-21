@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box } from '@fuel-ui/react';
+import { cssObj, Box } from '@fuel-wallet/ui';
 import { NFTImageLoading } from './NFTImageLoading';
 import { NFTTitleLoading } from './NFTTitleLoading';
 

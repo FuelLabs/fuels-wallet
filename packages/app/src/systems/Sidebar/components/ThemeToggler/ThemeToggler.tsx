@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Icon, useFuelTheme } from '@fuel-ui/react';
+import { cssObj, Box, Icon, useFuelTheme } from '@fuel-wallet/ui';
 import type { ElementRef } from 'react';
 import { useRef } from 'react';
 

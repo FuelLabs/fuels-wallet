@@ -1,4 +1,4 @@
-import { Button } from '@fuel-ui/react';
+import { Button } from '@fuel-wallet/ui';
 import { store } from '~/store';
 import { Services } from '~/store';
 import { Layout } from '~/systems/Core';

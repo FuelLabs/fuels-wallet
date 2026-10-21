@@ -1,4 +1,4 @@
-import { Box, Card, ContentLoader } from '@fuel-ui/react';
+import { Box, Card, ContentLoader } from '@fuel-wallet/ui';
 import { useAccounts } from '~/systems/Account';
 import type { CategorizedOperations } from '../../types';
 import { TxOperationsGroup } from '../TxContent/TxOperationsSimple/TxOperationsGroup';

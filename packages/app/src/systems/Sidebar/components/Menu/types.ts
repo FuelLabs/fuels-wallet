@@ -1,4 +1,4 @@
-import type { Icons } from '@fuel-ui/react';
+import type { Icons } from '@fuel-wallet/ui';
 
 export type MenuItemObj = {
   key: string;

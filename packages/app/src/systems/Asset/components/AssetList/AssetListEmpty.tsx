@@ -1,5 +1,12 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Card, Heading, Icon, Text } from '@fuel-ui/react';
+import {
+  cssObj,
+  Box,
+  Button,
+  Card,
+  Heading,
+  Icon,
+  Text,
+} from '@fuel-wallet/ui';
 import { BALANCE_NFTS_TAB_HEIGHT } from '~/systems/Account/components/BalanceNFTs/constants';
 import { useFundWallet } from '~/systems/FundWallet';
 

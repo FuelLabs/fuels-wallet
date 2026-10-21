@@ -1,5 +1,5 @@
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
   Alert,
   Box,
   Button,
@@ -7,8 +7,10 @@ import {
   HStack,
   Heading,
   Text,
-} from '@fuel-ui/react';
-import { Icon, IconButton, Tooltip } from '@fuel-ui/react';
+  Icon,
+  IconButton,
+  Tooltip,
+} from '@fuel-wallet/ui';
 import type { StoredFuelWalletError } from '@fuel-wallet/types';
 import type { JsonEditorProps } from 'json-edit-react';
 import { Suspense, lazy, useEffect, useMemo, useState } from 'react';

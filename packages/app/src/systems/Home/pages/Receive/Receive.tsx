@@ -1,4 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
+import { cssObj } from '@fuel-wallet/ui';
 import { Address } from 'fuels';
 import { useNavigate } from 'react-router-dom';
 import { useAccounts } from '~/systems/Account';

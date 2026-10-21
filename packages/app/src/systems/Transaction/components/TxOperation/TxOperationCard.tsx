@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Icon, Text } from '@fuel-ui/react';
+import { cssObj, Avatar, Box, Icon, Text } from '@fuel-wallet/ui';
 import { Address, bn, isB256 } from 'fuels';
 import { useMemo } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';

@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, Focus, Icon } from '@fuel-ui/react';
+import { Box, Button, Dialog, Focus, Icon } from '@fuel-wallet/ui';
 import { styles } from '~/systems/Core';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 

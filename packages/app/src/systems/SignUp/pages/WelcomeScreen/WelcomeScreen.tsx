@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Card, FuelLogo, Heading, Icon } from '@fuel-ui/react';
+import { cssObj, Box, Card, FuelLogo, Heading, Icon } from '@fuel-wallet/ui';
 import { Layout, MotionStack, animations } from '~/systems/Core';
 
 import { Header } from '../../components';

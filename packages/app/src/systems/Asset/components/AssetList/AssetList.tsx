@@ -1,4 +1,4 @@
-import { CardList } from '@fuel-ui/react';
+import { CardList } from '@fuel-wallet/ui';
 import type { AssetAmount } from '@fuel-wallet/types';
 import type { FC } from 'react';
 import { memo, useMemo, useState } from 'react';

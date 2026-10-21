@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Button, Card, Dialog, Icon, Text } from '@fuel-ui/react';
+import { cssObj, Button, Card, Dialog, Icon, Text } from '@fuel-wallet/ui';
 import { styles as rootStyles } from '~/systems/Core';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 

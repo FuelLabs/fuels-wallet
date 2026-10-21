@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Input } from '@fuel-ui/react';
+import { cssObj, Box } from '@fuel-wallet/ui';
 import { useFormContext } from 'react-hook-form';
 import { ControlledField } from '~/systems/Core';
 import { NameSystemInput } from '~/systems/NameSystem/components/NameSystemInput';

@@ -1,5 +1,5 @@
-import * as css from '@fuel-ui/css';
-import { Button, CardList, Dialog, Icon } from '@fuel-ui/react';
+import * as css from '@fuel-wallet/ui';
+import { Button, CardList, Dialog, Icon } from '@fuel-wallet/ui';
 import { DEFAULT_NETWORKS } from '~/networks';
 import { coreStyles } from '~/systems/Core/styles';
 import { NetworkItem, useNetworks } from '~/systems/Network';

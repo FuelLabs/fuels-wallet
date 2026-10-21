@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, CardList, Icon, Tooltip } from '@fuel-ui/react';
+import { cssObj, Box, CardList, Icon, Tooltip } from '@fuel-wallet/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   EmptyList,

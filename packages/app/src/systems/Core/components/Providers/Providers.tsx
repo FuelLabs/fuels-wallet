@@ -1,20 +1,15 @@
-import { globalCss } from '@fuel-ui/css';
 import {
   ThemeProvider,
   darkTheme,
+  globalCss,
   lightTheme,
-  loadIcons,
   setFuelThemes,
-} from '@fuel-ui/react';
+} from '@fuel-wallet/ui';
 import type { ReactNode } from 'react';
 import { StoreProvider } from '~/store';
 
-import icons from '/icons/sprite.svg';
-
 import { ErrorBoundary } from '~/systems/Error';
 import '@fuel-wallet/ui/styles.css';
-import '../../theme/legacy.css';
-import { applyLegacyTheme } from '../../theme/legacyTheme';
 
 type ProvidersProps = {
   children: ReactNode;
@@ -24,28 +19,11 @@ const customStyles = {
   body: {
     margin: '0 auto !important',
   },
-  '.fuel_AlertDialog-content': {
-    maxWidth: '300px !important',
-    boxSizing: 'border-box !important',
-    paddingTop: '$6 !important',
-    paddingBottom: '$6 !important',
-  },
-  '.fuel_AlertDialog-description': {
-    margin: 0,
-  },
   '.fuel_AlertDialog-footer > button': {
     flex: 1,
   },
-  '.fuel_Dialog-content': {
-    maxWidth: '350px !important',
-  },
-  ':root': {
-    '--colors-inputBaseBg': 'var(--colors-cardBg)',
-  },
 };
 
-// this is temporary until we find a better solution
-loadIcons(icons);
 setFuelThemes({
   themes: {
     dark: darkTheme,
@@ -55,10 +33,9 @@ setFuelThemes({
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <ThemeProvider withFonts={false}>
+    <ThemeProvider>
       <ErrorBoundary>
         <StoreProvider>
-          {applyLegacyTheme()}
           {globalCss(customStyles)()}
           {children}
         </StoreProvider>

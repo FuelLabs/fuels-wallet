@@ -1,4 +1,4 @@
-import type { InputNumberProps } from '@fuel-ui/react';
+import type { InputNumberProps } from '@fuel-wallet/ui';
 import { type BN, DEFAULT_DECIMAL_UNITS } from 'fuels';
 
 export const DECIMAL_UNITS = DEFAULT_DECIMAL_UNITS;

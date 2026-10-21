@@ -1,4 +1,4 @@
-import { Box, Text } from '@fuel-ui/react';
+import { Box, Text } from '@fuel-wallet/ui';
 import { MotionBox } from '~/systems/Core';
 import type { SimplifiedOperation } from '../../types';
 import { TxOperation } from '../TxOperation';

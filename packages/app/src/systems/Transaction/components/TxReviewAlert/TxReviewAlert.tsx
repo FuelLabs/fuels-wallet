@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Icon } from '@fuel-ui/react';
+import { cssObj, Box, Icon } from '@fuel-wallet/ui';
 
 export type TxReviewAlertProps = {
   signOnly?: boolean;

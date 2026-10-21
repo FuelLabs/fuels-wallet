@@ -4,14 +4,10 @@
  * To avoid overhead of versions we will use the component directly inside the wallet
  **/
 
-import { cssObj } from '@fuel-ui/css';
-import { HStack, VStack } from '@fuel-ui/react';
-import type { BN } from 'fuels';
-import { DEFAULT_DECIMAL_UNITS, bn, format } from 'fuels';
-import { useEffect, useState } from 'react';
-import type { FC } from 'react';
-
 import {
+  cssObj,
+  HStack,
+  VStack,
   Avatar,
   Box,
   Button,
@@ -20,11 +16,16 @@ import {
   Image,
   Input,
   InputAmountLoader,
-  type InputNumberProps,
-  type InputProps,
   Text,
   Tooltip,
-} from '@fuel-ui/react';
+  type InputNumberProps,
+  type InputProps,
+} from '@fuel-wallet/ui';
+import type { BN } from 'fuels';
+import { DEFAULT_DECIMAL_UNITS, bn } from 'fuels';
+import { useEffect, useState } from 'react';
+import type { FC } from 'react';
+
 import { formatAmount } from '../../utils';
 import { isAmountAllowed } from './InputAmount.utils';
 

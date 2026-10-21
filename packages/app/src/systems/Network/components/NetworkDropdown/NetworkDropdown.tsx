@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Button } from '@fuel-ui/react';
+import { cssObj, Box, Button } from '@fuel-wallet/ui';
 import type { NetworkData } from '@fuel-wallet/types';
 import { forwardRef } from 'react';
 

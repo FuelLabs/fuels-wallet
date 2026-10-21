@@ -1,5 +1,12 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Heading, Icon, Text, useFuelTheme } from '@fuel-ui/react';
+import {
+  cssObj,
+  Box,
+  Button,
+  Heading,
+  Icon,
+  Text,
+  useFuelTheme,
+} from '@fuel-wallet/ui';
 import { ImageLoader, relativeUrl } from '~/systems/Core';
 import { useFundWallet } from '~/systems/FundWallet';
 

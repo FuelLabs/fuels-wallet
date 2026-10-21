@@ -1,12 +1,12 @@
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
   Alert,
   Box,
   Card,
   ContentLoader,
   Copyable,
   Icon,
-} from '@fuel-ui/react';
+} from '@fuel-wallet/ui';
 import type {
   BN,
   TransactionRequest,

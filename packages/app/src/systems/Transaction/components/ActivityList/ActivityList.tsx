@@ -1,4 +1,4 @@
-import { Box } from '@fuel-ui/react';
+import { Box } from '@fuel-wallet/ui';
 
 import { ActivityItem } from '../ActivityItem';
 

@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Form, Input, Text } from '@fuel-ui/react';
+import { cssObj, Box, Form, Text } from '@fuel-wallet/ui';
 import { motion } from 'framer-motion';
 import { type BN, bn } from 'fuels';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -144,7 +143,7 @@ export function SendSelect({
                   setWatchMax(false);
                   field.onChange(asset);
                 },
-                [form.setValue, field.onChange]
+                [field.onChange]
               );
 
               return (

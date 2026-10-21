@@ -1,4 +1,4 @@
-import { toast } from '@fuel-ui/react';
+import { toast } from '@fuel-wallet/ui';
 import { interpret } from 'xstate';
 import { expectStateMatch, mockVault } from '~/systems/Core/__tests__/utils';
 

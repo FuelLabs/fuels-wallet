@@ -1,5 +1,4 @@
-import type { ContentLoaderProps } from '@fuel-ui/react';
-import { Card, ContentLoader } from '@fuel-ui/react';
+import { Card, ContentLoader, type ContentLoaderProps } from '@fuel-wallet/ui';
 
 export const TxHeaderLoader = (props: ContentLoaderProps) => (
   <Card css={{ height: 72 }}>

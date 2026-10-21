@@ -1,14 +1,14 @@
 import { isValidDomain } from '@bako-id/sdk';
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
   Box,
   Dropdown,
   Input,
-  type InputElementProps,
   Spinner,
   Text,
   Tooltip,
-} from '@fuel-ui/react';
+  type InputElementProps,
+} from '@fuel-wallet/ui';
 import debounce from 'lodash.debounce';
 import type React from 'react';
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';

@@ -1,5 +1,5 @@
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
   Alert,
   Avatar,
   Box,
@@ -8,7 +8,7 @@ import {
   Text,
   VStack,
   toast,
-} from '@fuel-ui/react';
+} from '@fuel-wallet/ui';
 import { useMemo, useState } from 'react';
 import { useCurrentTab } from '~/systems/CRX/hooks/useCurrentTab';
 import { useConnection } from '~/systems/DApp/hooks/useConnection';

@@ -1,5 +1,12 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, FuelLogo, Icon, IconButton, Spinner, Text } from '@fuel-ui/react';
+import {
+  cssObj,
+  Box,
+  FuelLogo,
+  Icon,
+  IconButton,
+  Spinner,
+  Text,
+} from '@fuel-wallet/ui';
 import { useNavigate } from 'react-router-dom';
 /**
  * Because of some cycle-dependency error here, is not

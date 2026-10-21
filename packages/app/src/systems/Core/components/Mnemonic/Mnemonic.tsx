@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Grid, Icon, toast } from '@fuel-ui/react';
+import { cssObj, Box, Button, Grid, Icon, toast } from '@fuel-wallet/ui';
 import { MNEMONIC_SIZES } from 'fuels';
 import type { ClipboardEvent } from 'react';
 import { useEffect, useState } from 'react';

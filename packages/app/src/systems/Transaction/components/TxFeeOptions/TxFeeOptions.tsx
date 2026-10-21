@@ -1,5 +1,5 @@
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
   Box,
   Button,
   Form,
@@ -8,7 +8,7 @@ import {
   RadioGroup,
   Text,
   VStack,
-} from '@fuel-ui/react';
+} from '@fuel-wallet/ui';
 import { AnimatePresence } from 'framer-motion';
 import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';

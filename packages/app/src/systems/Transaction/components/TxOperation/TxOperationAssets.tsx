@@ -1,5 +1,12 @@
-import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Icon, Image, Text, Tooltip } from '@fuel-ui/react';
+import {
+  cssObj,
+  Avatar,
+  Box,
+  Icon,
+  Image,
+  Text,
+  Tooltip,
+} from '@fuel-wallet/ui';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import { useEffect, useRef, useState } from 'react';

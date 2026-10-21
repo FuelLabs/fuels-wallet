@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Heading, useFuelTheme } from '@fuel-ui/react';
+import { cssObj, Box, Heading, useFuelTheme } from '@fuel-wallet/ui';
 
 import { relativeUrl } from '../../utils';
 import { ImageLoader } from '../ImageLoader';

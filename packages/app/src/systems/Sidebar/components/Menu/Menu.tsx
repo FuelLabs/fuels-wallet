@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Badge, Box, Icon, Menu as RootMenu, Text } from '@fuel-ui/react';
+import { cssObj, Box, Icon, Menu as RootMenu, Text } from '@fuel-wallet/ui';
 import { motion } from 'framer-motion';
 import type { Key } from 'react';
 import { memo, useState } from 'react';

@@ -1,9 +1,6 @@
-import { cssObj } from '@fuel-ui/css';
-import { Accordion, Badge, Box, Copyable } from '@fuel-ui/react';
+import { cssObj, Accordion, Badge, Box, Copyable } from '@fuel-wallet/ui';
 import type { CoinAsset } from '@fuel-wallet/types';
-import { memo, useMemo } from 'react';
-import { NFTImageLoading } from '~/systems/Account/components/BalanceNFTs/NFTImageLoading';
-import { AssetList } from '~/systems/Asset';
+import { useMemo } from 'react';
 import { AssetListEmpty } from '~/systems/Asset/components/AssetList/AssetListEmpty';
 import { shortAddress } from '~/systems/Core';
 import { NFTImage } from './NFTImage';

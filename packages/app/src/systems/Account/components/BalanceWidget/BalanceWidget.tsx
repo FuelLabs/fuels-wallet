@@ -1,5 +1,12 @@
-import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Button, Heading, Icon, Text } from '@fuel-ui/react';
+import {
+  cssObj,
+  Avatar,
+  Box,
+  Button,
+  Heading,
+  Icon,
+  Text,
+} from '@fuel-wallet/ui';
 import type { AccountWithBalance } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 import { FuelAddress } from '~/systems/Account';

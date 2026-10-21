@@ -1,5 +1,4 @@
-import type { ContentLoaderProps } from '@fuel-ui/react';
-import { Card } from '@fuel-ui/react';
+import { Card, type ContentLoaderProps } from '@fuel-wallet/ui';
 
 import { TxFeeAmountLoader } from './TxFeeAmountLoader';
 

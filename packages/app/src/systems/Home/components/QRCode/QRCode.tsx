@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Card } from '@fuel-ui/react';
+import { cssObj, Box, Button, Card } from '@fuel-wallet/ui';
 import { useCallback } from 'react';
 import QRCode from 'react-qr-code';
 

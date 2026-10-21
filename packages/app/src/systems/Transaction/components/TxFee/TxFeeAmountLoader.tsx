@@ -1,5 +1,4 @@
-import type { ContentLoaderProps } from '@fuel-ui/react';
-import { ContentLoader } from '@fuel-ui/react';
+import { ContentLoader, type ContentLoaderProps } from '@fuel-wallet/ui';
 
 export const TxFeeAmountLoader = (props: ContentLoaderProps) => (
   <ContentLoader width={'100%'} height={24} {...props}>

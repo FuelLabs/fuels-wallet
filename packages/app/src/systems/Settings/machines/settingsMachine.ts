@@ -1,4 +1,4 @@
-import { toast } from '@fuel-ui/react';
+import { toast } from '@fuel-wallet/ui';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { FetchMachine } from '~/systems/Core';

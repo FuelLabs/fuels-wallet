@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Dialog } from '@fuel-ui/react';
+import { cssObj, Box, Button, Dialog } from '@fuel-wallet/ui';
 import { useNavigate } from 'react-router-dom';
 import { useAssets } from '~/systems/Asset';
 import { Layout, Pages } from '~/systems/Core';

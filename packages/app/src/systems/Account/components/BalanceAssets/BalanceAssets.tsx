@@ -1,4 +1,4 @@
-import { CardList } from '@fuel-ui/react';
+import { CardList } from '@fuel-wallet/ui';
 import type { CoinAsset } from '@fuel-wallet/types';
 import { useMemo, useState } from 'react';
 import { isUnknownAsset } from '~/systems/Asset';
@@ -40,7 +40,7 @@ export const BalanceAssets = ({
   }, [balances, showUnknown]);
 
   if (isLoading || !balances) return <AssetList.Loading items={3} />;
-  const isEmpty = !balances || !balances.length;
+  const isEmpty = !balances?.length;
   if (isEmpty) return <AssetList.Empty {...emptyProps} />;
 
   function toggle() {

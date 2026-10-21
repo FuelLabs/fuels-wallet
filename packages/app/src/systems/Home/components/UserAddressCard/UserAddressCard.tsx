@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Avatar, Button, Card, Copyable } from '@fuel-ui/react';
+import { cssObj, Avatar, Button, Card, Copyable } from '@fuel-wallet/ui';
 import { useCallback } from 'react';
 
 type Props = {

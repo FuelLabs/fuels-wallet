@@ -1,6 +1,5 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Icon, Text } from '@fuel-ui/react';
-import { useState } from 'react';
+import { cssObj, Box, Icon, Text } from '@fuel-wallet/ui';
+import { type MouseEvent, useState } from 'react';
 import { MotionBox } from '~/systems/Core/components/Motion';
 import type { SimplifiedOperation } from '../../../types';
 import { TxOperation } from '../../TxOperation';
@@ -52,7 +51,7 @@ export function TxOperationsGroup({
             opacity: isExpanded ? 1 : 0,
           }}
           css={styles.content}
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e: MouseEvent) => e.stopPropagation()}
         >
           {operations.map(
             (operation, index) =>

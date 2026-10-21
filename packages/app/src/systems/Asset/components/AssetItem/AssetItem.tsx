@@ -1,5 +1,5 @@
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
   Avatar,
   Badge,
   Box,
@@ -12,7 +12,7 @@ import {
   Text,
   Tooltip,
   VStack,
-} from '@fuel-ui/react';
+} from '@fuel-wallet/ui';
 import { type FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Pages, shortAddress } from '~/systems/Core';

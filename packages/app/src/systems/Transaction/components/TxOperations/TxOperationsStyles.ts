@@ -1,4 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
+import { cssObj } from '@fuel-wallet/ui';
 
 export const operationsStyles = {
   drawer: cssObj({

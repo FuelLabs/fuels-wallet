@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Icon, Text } from '@fuel-ui/react';
+import { cssObj, Box, Icon, Text } from '@fuel-wallet/ui';
 import { useState } from 'react';
 import { MotionBox } from '~/systems/Core';
 import type { SimplifiedOperation } from '../../types';

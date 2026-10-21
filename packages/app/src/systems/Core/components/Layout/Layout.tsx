@@ -1,6 +1,4 @@
-import type { ThemeUtilsCSS } from '@fuel-ui/css';
-import { cssObj } from '@fuel-ui/css';
-import { Box } from '@fuel-ui/react';
+import { cssObj, Box, type ThemeUtilsCSS } from '@fuel-wallet/ui';
 import type { FC, ReactNode } from 'react';
 import { createContext, forwardRef, useContext, useRef } from 'react';
 import { Helmet } from 'react-helmet';
@@ -76,42 +74,40 @@ export const Layout: LayoutComponent = ({
   const isHome = location.pathname === '/wallet';
 
   return (
-    <>
-      <ctx.Provider value={{ isLoading, title, isHome, ref }}>
-        <Helmet>
-          <title>{titleText}</title>
-        </Helmet>
-        {isPublic ? (
+    <ctx.Provider value={{ isLoading, title, isHome, ref }}>
+      <Helmet>
+        <title>{titleText}</title>
+      </Helmet>
+      {isPublic ? (
+        <Box
+          as="main"
+          css={{ ...styles.root, ...styles.public }}
+          data-public
+          data-centered={isCentered}
+        >
+          <Box.Centered>{children}</Box.Centered>
+        </Box>
+      ) : (
+        <Box.Centered as="main" css={styles.root}>
           <Box
-            as="main"
-            css={{ ...styles.root, ...styles.public }}
-            data-public
-            data-centered={isCentered}
+            css={styles.wrapper}
+            className="layout__wrapper"
+            data-noborder={noBorder}
           >
-            <Box.Centered>{children}</Box.Centered>
-          </Box>
-        ) : (
-          <Box.Centered as="main" css={styles.root}>
-            <Box
-              css={styles.wrapper}
-              className="layout__wrapper"
-              data-noborder={noBorder}
-            >
-              <OverlayDialog />
-              <Sidebar ref={ref} />
-              <Box ref={ref} css={styles.inner} className="layout__inner">
-                {children}
-              </Box>
+            <OverlayDialog />
+            <Sidebar ref={ref} />
+            <Box ref={ref} css={styles.inner} className="layout__inner">
+              {children}
             </Box>
-          </Box.Centered>
-        )}
-        {import.meta.env.NODE_ENV === 'test' && (
-          <Box css={{ visibility: 'hidden' }}>
-            {isLoading ? 'is loading' : 'is loaded'}
           </Box>
-        )}
-      </ctx.Provider>
-    </>
+        </Box.Centered>
+      )}
+      {import.meta.env.NODE_ENV === 'test' && (
+        <Box css={{ visibility: 'hidden' }}>
+          {isLoading ? 'is loading' : 'is loaded'}
+        </Box>
+      )}
+    </ctx.Provider>
   );
 };
 

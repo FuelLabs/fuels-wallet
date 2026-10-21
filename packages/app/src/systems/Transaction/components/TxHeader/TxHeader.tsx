@@ -1,5 +1,5 @@
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
   Box,
   Card,
   Copyable,
@@ -7,7 +7,7 @@ import {
   Icon,
   Text,
   Tooltip,
-} from '@fuel-ui/react';
+} from '@fuel-wallet/ui';
 import { TransactionStatus } from 'fuels';
 import type { TransactionTypeName } from 'fuels';
 import type { FC } from 'react';

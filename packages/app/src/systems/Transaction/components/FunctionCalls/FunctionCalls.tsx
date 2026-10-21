@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Accordion, Box, Text, useFuelTheme } from '@fuel-ui/react';
+import { cssObj, Accordion, Box, Text, useFuelTheme } from '@fuel-wallet/ui';
 import type { OperationFunctionCall } from 'fuels';
 import ReactJson from 'react-json-view';
 import { coreStyles } from '~/systems/Core/styles';
