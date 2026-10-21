@@ -1,0 +1,152 @@
+.fuel-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.fuel-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--fuel-element-low-em);
+}
+
+.fuel-caption {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--fuel-element-low-em);
+}
+
+.fuel-stat {
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 34px;
+  letter-spacing: -1.28px;
+  font-variant-numeric: tabular-nums;
+  color: var(--fuel-element-high-em);
+}
+
+.fuel-stat-sm {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: -0.4px;
+  font-variant-numeric: tabular-nums;
+  color: var(--fuel-element-high-em);
+}
+
+/* Grows the tap target to 44px without changing the visual size. The element must be positioned. */
+.fuel-hit::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
+}
+
+/* The 8px status square. data-kind sets the colour. */
+.fuel-square {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  border: 1px solid var(--fuel-square-border);
+  background: var(--fuel-square);
+}
+
+.fuel-square[data-kind="danger"] {
+  border-color: var(--fuel-danger);
+  background: var(--fuel-danger);
+}
+
+.fuel-square[data-kind="warning"] {
+  border-color: var(--fuel-warning);
+  background: var(--fuel-warning);
+}
+
+.fuel-square[data-kind="pending"] {
+  border-color: var(--fuel-element-low-em);
+  background: var(--fuel-element-low-em);
+}
+
+.fuel-square[data-kind="idle"] {
+  border-color: var(--fuel-indicator-border);
+  background: transparent;
+}
+
+.fuel-square:is([data-kind="strong"], [data-kind="active"]) {
+  border-color: var(--fuel-element-high-em);
+  background: var(--fuel-element-high-em);
+}
+
+.fuel-square[data-kind="active"] {
+  animation: fuel-square-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes fuel-square-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fuel-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fuel-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fuel-rise {
+  animation: fuel-rise 400ms var(--fuel-ease-out) backwards;
+  animation-delay: var(--fuel-enter-delay, 0ms);
+}
+
+.fuel-appear {
+  animation: fuel-appear 200ms var(--fuel-ease-out) backwards;
+}
+
+.fuel-hover-fill {
+  transition: background-color 300ms;
+}
+
+@media (hover: hover) {
+  .fuel-hover-fill:hover {
+    background-color: var(--fuel-muted);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fuel-square[data-kind="active"] {
+    animation: none;
+  }
+
+  .fuel-rise {
+    animation: fuel-appear 200ms var(--fuel-ease-out) backwards;
+  }
+
+  .fuel-hover-fill {
+    transition: none;
+  }
+}

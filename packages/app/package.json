@@ -25,6 +25,7 @@
     "@fuel-ui/icons": "0.23.3",
     "@fuel-ui/react": "0.23.3",
     "@fuel-wallet/connections": "workspace:*",
+    "@fuel-wallet/ui": "workspace:*",
     "@fuels/local-storage": "0.26.0",
     "@fuels/react-xstore": "0.20.0",
     "@hookform/resolvers": "3.9.0",

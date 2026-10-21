@@ -12,6 +12,9 @@ import { StoreProvider } from '~/store';
 import icons from '/icons/sprite.svg';
 
 import { ErrorBoundary } from '~/systems/Error';
+import '@fuel-wallet/ui/styles.css';
+import '../../theme/legacy.css';
+import { applyLegacyTheme } from '../../theme/legacyTheme';
 
 type ProvidersProps = {
   children: ReactNode;
@@ -52,9 +55,10 @@ setFuelThemes({
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <ThemeProvider>
+    <ThemeProvider withFonts={false}>
       <ErrorBoundary>
         <StoreProvider>
+          {applyLegacyTheme()}
           {globalCss(customStyles)()}
           {children}
         </StoreProvider>

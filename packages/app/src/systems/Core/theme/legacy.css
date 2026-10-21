@@ -1,0 +1,34 @@
+/*
+ * Fuel design system touches for screens that still render @fuel-ui
+ * components. Delete with legacyTheme.ts once @fuel-ui is gone.
+ */
+.fuel_Button,
+.fuel_Badge,
+.fuel_Tag,
+.fuel_Tabs-trigger {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.fuel_Button {
+  transition: background-color 300ms, color 300ms, box-shadow 300ms;
+}
+
+.fuel_Button:not([aria-disabled="true"]):active {
+  transform: none;
+}
+
+.fuel_Heading {
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.fuel_Card,
+.fuel_Dialog-content,
+.fuel_AlertDialog-content,
+.fuel_Alert,
+.fuel_Input {
+  box-shadow: none;
+}

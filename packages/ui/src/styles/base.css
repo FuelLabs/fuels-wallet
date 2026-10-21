@@ -1,0 +1,25 @@
+html,
+body {
+  background: var(--fuel-background);
+  color: var(--fuel-element-high-em);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tight tracking is tuned for Latin. CJK fallback fonts need none. */
+:lang(ja),
+:lang(ko),
+:lang(zh) {
+  letter-spacing: normal;
+}
+
+::selection {
+  background: var(--fuel-primary);
+  color: var(--fuel-primary-foreground);
+}
+
+:focus-visible {
+  outline: 2px solid var(--fuel-focus);
+  outline-offset: 2px;
+}
