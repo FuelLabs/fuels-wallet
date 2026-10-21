@@ -15,9 +15,12 @@ export const styles = {
       cursor: hasCheckbox ? 'pointer' : 'auto',
       backgroundColor: '$cardBg',
       border: '1px solid var(--fuel-line)',
-      '&:hover': {
-        borderColor: 'var(--fuel-element-low-em)',
-      },
+      /* Only a fee you can pick reacts to the pointer. */
+      ...(hasCheckbox && {
+        '&:hover': {
+          borderColor: 'var(--fuel-element-low-em)',
+        },
+      }),
       '&:focus-visible': {
         borderColor: '$intentsBase5',
         outline: 'none',
