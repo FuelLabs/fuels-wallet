@@ -33,9 +33,7 @@ function SidebarContent() {
       </Box.Flex>
       <Menu items={menuItems} />
       <Box css={styles.version}>
-        <Text fontSize="xs" color="intentsBase8">
-          Version: {APP_VERSION}{' '}
-        </Text>
+        <Text css={styles.versionText}>Version {APP_VERSION}</Text>
       </Box>
     </>
   );
@@ -87,5 +85,12 @@ const styles = {
   version: cssObj({
     padding: '$3 $4',
     textAlign: 'center',
+  }),
+  versionText: cssObj({
+    fontFamily: '$mono',
+    fontSize: '11px',
+    letterSpacing: '0.6px',
+    textTransform: 'uppercase',
+    color: '$textLow',
   }),
 };

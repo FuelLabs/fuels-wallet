@@ -102,6 +102,7 @@ function _Menu({ items }: MenuProps) {
   return (
     <RootMenu
       css={styles.root}
+      className="fuel-stagger"
       onAction={handleAction}
       aria-label="Sidebar Menu"
     >
