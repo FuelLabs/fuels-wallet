@@ -12,25 +12,26 @@ import { forwardRef } from 'react';
 
 import { NetworkRemoveDialog } from '../NetworkRemoveDialog/NetworkRemoveDialog';
 
+/** The design system's 8px status square, filled green on the selected network. */
 export function NetworkStatus({
   network,
-  size = '22px',
 }: {
   network: NetworkData;
   size?: string;
 }) {
   return (
-    <Text
-      as="span"
-      css={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        color: network.isSelected ? '$brand' : '$intentsBase8',
-        fontSize: size,
-      }}
-    >
-      ●
-    </Text>
+    <span
+      className="fuel-square"
+      aria-hidden
+      style={
+        network.isSelected
+          ? {
+              background: 'var(--fuel-primary)',
+              borderColor: 'var(--fuel-primary)',
+            }
+          : undefined
+      }
+    />
   );
 }
 

@@ -77,7 +77,15 @@ export function TopBar({ onBack, hideMenu, hideBackArrow }: TopBarProps) {
         )}
         {!hideMenu && (
           <>
-            {hasErrorsToReport && <Text css={styles.badge}>●</Text>}
+            {hasErrorsToReport && (
+              <Box
+                as="span"
+                className="fuel-square"
+                data-kind="danger"
+                aria-label="Errors to report"
+                css={styles.badge}
+              />
+            )}
             <IconButton
               iconSize={20}
               icon={<Icon icon="Menu2" />}
@@ -116,11 +124,8 @@ const styles = {
   }),
   badge: cssObj({
     position: 'absolute',
-    top: -6,
-    right: -2,
-    fontSize: 8,
-    color: '$intentsError10 !important',
-    transform: 'translate(25%, -25%)',
+    top: -2,
+    right: -6,
   }),
   topbarIcon: cssObj({
     px: '$0 !important',
@@ -137,9 +142,13 @@ const styles = {
     fontWeight: '$semibold',
   }),
   networkText: cssObj({
-    fontSize: '$sm',
+    fontFamily: '$mono',
+    fontSize: '12px',
+    fontWeight: '$medium',
+    letterSpacing: '0.6px',
+    textTransform: 'uppercase',
     color: '$textHeading',
-    ml: '$1',
+    ml: '$2',
     mr: '$3',
   }),
   container: cssObj({

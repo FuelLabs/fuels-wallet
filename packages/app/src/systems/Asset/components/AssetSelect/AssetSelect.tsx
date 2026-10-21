@@ -149,6 +149,13 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
         css={styles.menu}
         onAction={handleSelect}
       >
+        {!items?.length && (
+          <Dropdown.MenuItem key="empty" isDisabled textValue="No assets">
+            <Text as="span" css={styles.empty}>
+              No assets to send
+            </Text>
+          </Dropdown.MenuItem>
+        )}
         {(items || []).map((item) => {
           const assetId = item.assetId?.toString();
           const itemAsset = items?.find((a) => a.assetId === assetId);
@@ -257,6 +264,10 @@ const styles = {
   }),
   placeholder: cssObj({
     color: '$intentsBase9',
+  }),
+  empty: cssObj({
+    fontSize: '$sm',
+    color: '$textLow',
   }),
   menu: cssObj({
     py: '$1',

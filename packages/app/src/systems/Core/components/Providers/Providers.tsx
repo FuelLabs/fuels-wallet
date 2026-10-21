@@ -5,6 +5,7 @@ import {
   lightTheme,
   setFuelThemes,
 } from '@fuel-wallet/ui';
+import { MotionConfig } from 'framer-motion';
 import type { ReactNode } from 'react';
 import { StoreProvider } from '~/store';
 
@@ -34,12 +35,14 @@ setFuelThemes({
 export function Providers({ children }: ProvidersProps) {
   return (
     <ThemeProvider>
-      <ErrorBoundary>
-        <StoreProvider>
-          {globalCss(customStyles)()}
-          {children}
-        </StoreProvider>
-      </ErrorBoundary>
+      <MotionConfig reducedMotion="user">
+        <ErrorBoundary>
+          <StoreProvider>
+            {globalCss(customStyles)()}
+            {children}
+          </StoreProvider>
+        </ErrorBoundary>
+      </MotionConfig>
     </ThemeProvider>
   );
 }

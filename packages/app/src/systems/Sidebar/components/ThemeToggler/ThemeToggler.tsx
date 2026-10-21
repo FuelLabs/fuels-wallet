@@ -1,67 +1,61 @@
 import { cssObj, Box, Icon, useFuelTheme } from '@fuel-wallet/ui';
-import type { ElementRef } from 'react';
-import { useRef } from 'react';
 
 export function ThemeToggler() {
   const { current, setTheme } = useFuelTheme();
-  const ref = useRef<ElementRef<'div'>>(null);
-
-  const handleChange = async () => {
-    const next = current === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-  };
+  const next = current === 'dark' ? 'light' : 'dark';
 
   return (
     <Box
-      ref={ref}
+      as="button"
+      type="button"
       data-theme={current}
+      aria-label={`Switch to ${next} theme`}
       css={styles.root}
-      onClick={handleChange}
+      onClick={() => setTheme(next)}
     >
-      <Icon icon="SunFilled" size={14} />
-      <Icon icon="MoonStars" size={14} />
+      <Icon icon="SunFilled" size={16} />
+      <Icon icon="MoonStars" size={16} />
     </Box>
   );
 }
 
+/* The two icons share one spot. The incoming one turns in while the other turns out. */
 const styles = {
   root: cssObj({
     position: 'relative',
+    display: 'grid',
+    placeItems: 'center',
+    width: '32px',
+    height: '32px',
+    p: 0,
+    border: 'none',
+    background: 'transparent',
+    color: '$textLow',
     cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    px: '$2',
-    width: '24px',
-    height: '24px',
-    borderRadius: '$full',
-    border: '1px solid $border',
+    boxShadow: 'inset 0 0 0 1px var(--fuel-line)',
+    transition: 'background-color 300ms, color 200ms',
 
-    '[aria-label*="Icon"]': {
-      position: 'absolute',
-      transition: 'all 0.2s ease',
+    '@media (hover: hover)': {
+      '&:hover': { background: '$muted', color: '$textHigh' },
     },
-    '[aria-label*="SunFilled"]': {
-      right: 8,
-      color: '$textColor',
-    },
-    '[aria-label*="MoonStars"]': {
-      left: 8,
-      color: '$intentsInfo10',
+    '&:focus-visible': {
+      outline: '2px solid $focus',
+      outlineOffset: '2px',
     },
 
-    '&[data-theme="light"]': {
-      '[aria-label*="MoonStars"]': {
-        transform: 'translateX(100%)',
-        visibility: 'hidden',
-        opacity: 0,
-      },
+    '.fuel_Icon': {
+      gridArea: '1 / 1',
+      transition:
+        'transform 300ms var(--fuel-ease-out), opacity 200ms var(--fuel-ease-out)',
     },
-    '&[data-theme="dark"]': {
-      '[aria-label*="SunFilled"]': {
-        transform: 'translateX(-100%)',
-        visibility: 'hidden',
+    '&[data-theme="light"] [aria-label*="MoonStars"], &[data-theme="dark"] [aria-label*="SunFilled"]':
+      {
         opacity: 0,
+        transform: 'rotate(-90deg) scale(0.6)',
       },
+    '@media (prefers-reduced-motion: reduce)': {
+      '.fuel_Icon': { transition: 'opacity 150ms' },
+      '&[data-theme] .fuel_Icon': { transform: 'none' },
     },
   }),
 };
