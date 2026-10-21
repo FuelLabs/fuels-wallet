@@ -24,7 +24,7 @@ export function AssetListEmpty({
           <Button
             size="sm"
             intent="primary"
-            leftIcon={hasFaucet ? Icon.is('Wand') : Icon.is('Coins')}
+            leftIcon={hasFaucet ? Icon.is('Wand') : Icon.is('BuildingBridge')}
             onPress={open}
           >
             {hasFaucet ? 'Faucet' : 'Bridge to Fuel'}

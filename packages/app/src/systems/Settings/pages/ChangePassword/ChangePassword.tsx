@@ -212,6 +212,7 @@ const styles = {
     display: 'flex',
     gap: '$4',
     flex: 1,
+    pt: '$4',
     alignItems: 'center',
     flexDirection: 'column',
     '& .fuel_FormControl': {

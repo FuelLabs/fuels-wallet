@@ -67,6 +67,11 @@ export function ConnectionList({
               label={
                 status('isEmpty') ? 'No apps connected' : 'No connection found'
               }
+              description={
+                status('isEmpty')
+                  ? 'Apps you connect this wallet to will show up here'
+                  : 'Try searching for a different app'
+              }
             />
           </MotionBox>
         )}
