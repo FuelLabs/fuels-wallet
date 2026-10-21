@@ -56,7 +56,7 @@ export const AssetList: AssetListComponent = ({
     setShowUnknown((s) => !s);
   }
   return (
-    <CardList>
+    <CardList className="fuel-stagger">
       {assetsToShow.map((asset, index) => (
         <AssetItem
           key={getAssetKey(asset, index)}

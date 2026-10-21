@@ -48,7 +48,7 @@ export const BalanceAssets = ({
   }
 
   return (
-    <CardList gap={3}>
+    <CardList gap={3} className="fuel-stagger">
       {balancesToShow.map((balance) => {
         if (!balance.asset) return null;
 

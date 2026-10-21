@@ -25,7 +25,7 @@ export const ActivityList = ({
   if (isEmpty) return <ActivityList.Empty />;
 
   return (
-    <Box.Stack gap="$2">
+    <Box.Stack gap="$2" className="fuel-stagger">
       {txs.map((tx) => (
         <ActivityItem
           ownerAddress={ownerAddress}

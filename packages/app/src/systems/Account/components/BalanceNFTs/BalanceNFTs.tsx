@@ -57,7 +57,11 @@ export const BalanceNFTs = ({
         />
       )}
       {!!collections.length && (
-        <Accordion type="multiple" defaultValue={defaultValue}>
+        <Accordion
+          type="multiple"
+          defaultValue={defaultValue}
+          className="fuel-stagger"
+        >
           {collections.map((collection) => (
             <Accordion.Item key={collection.name} value={collection.name}>
               <Accordion.Trigger>
