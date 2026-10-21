@@ -198,6 +198,10 @@ const styles = {
   trigger: cssObj({
     layer: 'input-base',
     boxSizing: 'border-box',
+    fontFamily: '$sans',
+    fontWeight: '$normal',
+    letterSpacing: 'normal',
+    textTransform: 'none',
     minWidth: '100%',
     px: '$3',
     flexDirection: 'row',

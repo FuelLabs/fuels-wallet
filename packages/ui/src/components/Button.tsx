@@ -80,7 +80,6 @@ export const buttonStyle = stitches({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  flexShrink: 0,
   border: 'none',
   borderRadius: 0,
   appearance: 'none',
@@ -224,7 +223,10 @@ export const buttonStyle = stitches({
     },
     {
       variant: 'link',
-      css: { '&[aria-disabled="true"]': { color: '$textDisabled' } },
+      css: {
+        height: 'auto',
+        '&[aria-disabled="true"]': { color: '$textDisabled' },
+      },
     },
     {
       size: 'xs',

@@ -112,6 +112,7 @@ const styles = {
   menuContainer: cssObj({
     position: 'relative',
     gap: '$0',
+    alignItems: 'center',
   }),
   badge: cssObj({
     position: 'absolute',

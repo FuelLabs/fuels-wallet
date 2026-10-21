@@ -32,6 +32,8 @@ export function forwardRef<T, P>(fn: ForwardRefRenderFunction<T, P>) {
   ) => ReactElement | null) & { displayName?: string };
 }
 
+const inline = toClass();
+
 /** Renders `as` with a class built from `css`, plus the given base classes. */
 export function render(
   as: ElementType,
@@ -40,11 +42,12 @@ export function render(
   ref: unknown
 ) {
   const Comp = as;
+  // Passed as the css prop, stitches injects it after variant rules, so it wins.
   return (
     <Comp
       ref={ref}
       {...props}
-      className={cx(base, css && toClass(css)(), className)}
+      className={cx(base, css && inline({ css }), className)}
     />
   );
 }

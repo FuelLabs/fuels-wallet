@@ -230,7 +230,6 @@ const InputRoot = forwardRef<HTMLElement, InputProps>(function Input(
 export const fieldStyle = stitches({
   flex: 1,
   minWidth: 0,
-  height: '100%',
   alignSelf: 'stretch',
   padding: 0,
   border: 'none',
