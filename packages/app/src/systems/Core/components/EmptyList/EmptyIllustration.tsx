@@ -11,10 +11,10 @@ const ROWS = [
  * Three ghost rows in the design system's hairline style. They rise in one
  * after another, and the middle one carries a pulsing square while it waits.
  */
-export function EmptyIllustration() {
+export function EmptyIllustration({ rows = 3 }: { rows?: number }) {
   return (
     <Box css={styles.root} aria-hidden>
-      {ROWS.map((row, i) => (
+      {ROWS.slice(0, rows).map((row, i) => (
         <Box
           key={row.width}
           className="fuel-rise"

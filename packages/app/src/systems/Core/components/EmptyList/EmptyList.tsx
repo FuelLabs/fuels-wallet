@@ -7,12 +7,19 @@ export type EmptyListProps = {
   label: string;
   description?: ReactNode;
   children?: ReactNode;
+  /** Two ghost rows and tighter spacing, for lists that share the screen. */
+  compact?: boolean;
 };
 
-export function EmptyList({ label, description, children }: EmptyListProps) {
+export function EmptyList({
+  label,
+  description,
+  children,
+  compact,
+}: EmptyListProps) {
   return (
-    <Box.Stack gap="$2" css={styles.root}>
-      <EmptyIllustration />
+    <Box.Stack gap="$2" css={styles.root} data-compact={compact}>
+      <EmptyIllustration rows={compact ? 2 : 3} />
       <Heading as="h3" className="fuel-rise" css={styles.title}>
         {label}
       </Heading>
@@ -39,6 +46,9 @@ const styles = {
 
     '& > .fuel-rise:not(:first-child)': {
       '--fuel-enter-delay': '200ms',
+    },
+    '&[data-compact="true"] h3': {
+      mt: '$3',
     },
   }),
   title: cssObj({

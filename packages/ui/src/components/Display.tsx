@@ -1,7 +1,7 @@
 import * as RAvatar from '@radix-ui/react-avatar';
 import * as RTooltip from '@radix-ui/react-tooltip';
 import type { ComponentProps, ReactElement, ReactNode } from 'react';
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import ReactContentLoader from 'react-content-loader';
 import { type Colors, colors, cx, keyframes, css as stitches } from '../css';
 import type { Icons } from '../icons';
@@ -525,8 +525,16 @@ export function Copyable({
   className,
   ...props
 }: CopyableProps) {
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    if (!copied) return;
+    const timer = setTimeout(() => setCopied(false), 1500);
+    return () => clearTimeout(timer);
+  }, [copied]);
+
   async function handleCopy() {
     await navigator.clipboard.writeText(value);
+    setCopied(true);
     toast.success('Copied to clipboard');
   }
   return (
@@ -559,7 +567,17 @@ export function Copyable({
           )}
           {...iconProps}
         >
-          <Icon icon="Copy" size={16} />
+          {copied ? (
+            <Icon
+              key="check"
+              icon="Check"
+              size={16}
+              className="fuel-appear"
+              css={{ color: '$intentsPrimary9' }}
+            />
+          ) : (
+            <Icon key="copy" icon="Copy" size={16} />
+          )}
         </button>
       </Tooltip>
     </Flex>

@@ -95,10 +95,11 @@ export function BalanceWidget({
           <Text className="label">Total balance</Text>
           <Box.Flex>
             <Text
+              key={String(visibility)}
               aria-hidden={visibility}
               aria-label="Total balance in USD"
               data-account-name={account.name}
-              className="value"
+              className="value fuel-appear"
             >
               {visibility ? totalValue : '$•••••'}
             </Text>
@@ -146,9 +147,12 @@ const styles = {
       lineHeight: 'normal',
     },
     '.label': {
-      lineHeight: '$tight',
-      fontSize: '$sm',
-      fontWeight: '$medium',
+      fontFamily: '$mono',
+      fontSize: '12px',
+      lineHeight: '16px',
+      letterSpacing: '0.6px',
+      textTransform: 'uppercase',
+      color: '$textLow',
     },
     '.value': {
       fontSize: 32,

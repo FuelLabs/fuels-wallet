@@ -1,13 +1,6 @@
-import {
-  cssObj,
-  Box,
-  Button,
-  Card,
-  Heading,
-  Icon,
-  Text,
-} from '@fuel-wallet/ui';
+import { cssObj, Box, Button, Icon } from '@fuel-wallet/ui';
 import { BALANCE_NFTS_TAB_HEIGHT } from '~/systems/Account/components/BalanceNFTs/constants';
+import { EmptyList } from '~/systems/Core/components/EmptyList/EmptyList';
 import { useFundWallet } from '~/systems/FundWallet';
 
 export type AssetListEmptyProps = {
@@ -25,40 +18,26 @@ export function AssetListEmpty({
   const showFund = hasFaucet || hasBridge;
 
   return (
-    <Box css={styles.container}>
-      <Card css={styles.empty}>
-        <Card.Body>
-          {!!text && <Heading as="h5">{text}</Heading>}
-          {!!supportText && <Text fontSize="sm">{supportText}</Text>}
-          {showFund && !hideFaucet && (
-            /**
-             * TODO: need to add right faucet icon on @fuel-ui
-             */
-            <Button
-              size="sm"
-              intent="primary"
-              leftIcon={hasFaucet ? Icon.is('Wand') : Icon.is('Coins')}
-              onPress={open}
-            >
-              {hasFaucet ? 'Faucet' : 'Bridge to Fuel'}
-            </Button>
-          )}
-        </Card.Body>
-      </Card>
-    </Box>
+    <Box.Stack css={styles.container}>
+      <EmptyList compact label={text} description={supportText || undefined}>
+        {showFund && !hideFaucet && (
+          <Button
+            size="sm"
+            intent="primary"
+            leftIcon={hasFaucet ? Icon.is('Wand') : Icon.is('Coins')}
+            onPress={open}
+          >
+            {hasFaucet ? 'Faucet' : 'Bridge to Fuel'}
+          </Button>
+        )}
+      </EmptyList>
+    </Box.Stack>
   );
 }
 
 const styles = {
   container: cssObj({
     minHeight: BALANCE_NFTS_TAB_HEIGHT,
-  }),
-  empty: cssObj({
-    h5: {
-      margin: 0,
-    },
-    button: {
-      mt: '$4',
-    },
+    py: '$4',
   }),
 };
