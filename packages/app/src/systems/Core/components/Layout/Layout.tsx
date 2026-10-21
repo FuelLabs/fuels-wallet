@@ -120,7 +120,8 @@ Layout.Content = Content;
 Layout.TopBar = TopBar;
 Layout.BottomBar = BottomBar;
 
-const ONBOARDING_ART = '/signup.webp';
+// NASA, "Astronaut in spacesuit floating in space", via Unsplash (Unsplash License).
+const ONBOARDING_ART = '/onboarding.jpg';
 
 export const styles = {
   root: cssObj({
