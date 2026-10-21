@@ -62,7 +62,9 @@ const styles = {
   description: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
     overflowY: 'scroll !important',
+    /* The always-on 16px scrollbar gutter is the right inset, matching the left. */
     paddingLeft: '$4',
+    paddingRight: '0 !important',
     flex: 1,
   }),
   footer: cssObj({
