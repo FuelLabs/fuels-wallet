@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 import { Children, createContext, useContext } from 'react';
 import { cx } from '../css';
 import type { Icons } from '../icons';
@@ -131,6 +131,21 @@ export type CardListItemProps = CardProps & {
   rightEl?: ReactNode;
 };
 
+const ACTION = 'button, a, input, label, [role="menuitem"], [role="switch"]';
+
+/**
+ * Controls in the right slot (or their portaled menus) must not also
+ * select the item; plain content there, like an amount, still does.
+ */
+function stopActionClick(e: MouseEvent<HTMLDivElement>) {
+  const target = e.target as Element;
+  const action = target.closest(ACTION);
+  const portaled = !e.currentTarget.contains(target);
+  if (portaled || (action && e.currentTarget.contains(action))) {
+    e.stopPropagation();
+  }
+}
+
 const CardListItem = forwardRef<HTMLElement, CardListItemProps>(
   function CardListItem(
     { isActive, rightEl, children, css, className, ...props },
@@ -169,8 +184,7 @@ const CardListItem = forwardRef<HTMLElement, CardListItemProps>(
           {children}
         </Flex>
         {rightEl && (
-          /* Actions in the right slot must not also select the item. */
-          <Flex align="center" onClick={(e) => e.stopPropagation()}>
+          <Flex align="center" onClick={stopActionClick}>
             {rightEl}
           </Flex>
         )}
