@@ -514,7 +514,7 @@ export const List = Object.assign(ListRoot, { Item: ListItem });
 export type CopyableProps = FlexProps & {
   value: string;
   tooltipMessage?: string;
-  iconProps?: Record<string, unknown>;
+  iconProps?: Record<string, unknown> & { icon?: Icons };
 };
 
 export function Copyable({
@@ -525,6 +525,7 @@ export function Copyable({
   className,
   ...props
 }: CopyableProps) {
+  const { icon = 'Copy', ...buttonProps } = iconProps ?? {};
   const [copied, setCopied] = useState(false);
   useEffect(() => {
     if (!copied) return;
@@ -565,7 +566,7 @@ export function Copyable({
               },
             })()
           )}
-          {...iconProps}
+          {...buttonProps}
         >
           {copied ? (
             <Icon
@@ -576,7 +577,7 @@ export function Copyable({
               css={{ color: '$intentsPrimary9' }}
             />
           ) : (
-            <Icon key="copy" icon="Copy" size={16} />
+            <Icon key="copy" icon={icon} size={16} />
           )}
         </button>
       </Tooltip>
