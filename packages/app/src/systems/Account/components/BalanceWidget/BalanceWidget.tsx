@@ -16,6 +16,7 @@ import { useAccounts } from '../../hooks';
 
 import { INTL_FORMATTER } from '~/systems/Asset/constants';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
+import { useTweenedNumber } from '~/systems/Core/hooks/useTweenedNumber';
 
 type BalanceWidgetWrapperProps = {
   top: ReactNode;
@@ -50,10 +51,15 @@ export function BalanceWidget({
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
   const totalBalanceInUsd = account?.totalBalanceInUsd ?? 0;
+  /* Rolls to the new total, e.g. counting down when you come back from a send. */
+  const shownBalance = useTweenedNumber(
+    totalBalanceInUsd,
+    !isLoading && account?.address ? account.address : ''
+  );
 
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
-  const totalValue = INTL_FORMATTER.format(totalBalanceInUsd);
+  const totalValue = INTL_FORMATTER.format(shownBalance);
 
   return (
     <BalanceWidgetWrapper

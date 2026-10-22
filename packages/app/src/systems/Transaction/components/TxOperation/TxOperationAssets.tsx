@@ -9,15 +9,18 @@ import {
 } from '@fuel-wallet/ui';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { formatAmount, shortAddress } from '~/systems/Core';
 import { MotionBox } from '~/systems/Core/components/Motion';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
+import { courier } from '../../courier';
 import type { AssetAmountWithRate } from '../../types';
 
 type TxOperationAssetsProps = {
   amounts: (AssetFuelAmount | AssetAmountWithRate)[];
   baseAsset?: AssetFuelAmount;
+  /** Mark the row as the courier's landing spot and catch a lifted asset. */
+  courier?: boolean;
 };
 
 function TxNFTImage({ assetId, image }: { assetId: string; image: string }) {
@@ -54,7 +57,15 @@ function TxNFTImage({ assetId, image }: { assetId: string; image: string }) {
   );
 }
 
-export function TxOperationAssets({ amounts }: TxOperationAssetsProps) {
+export function TxOperationAssets({
+  amounts,
+  courier: isCourier = false,
+}: TxOperationAssetsProps) {
+  /* The row can mount after its amounts load, so catch it when it attaches. */
+  const catchCourier = useCallback((row: HTMLDivElement | null) => {
+    if (row && courier.isCarrying) courier.arrive(row);
+  }, []);
+
   const getAssetImage = (asset: AssetFuelAmount) => {
     if (asset.isNft && asset.metadata?.image) {
       return (
@@ -165,7 +176,12 @@ export function TxOperationAssets({ amounts }: TxOperationAssetsProps) {
     >
       <Box.Stack gap="$1">
         {nonEmptyAmounts.map((assetAmount) => (
-          <Box.Flex css={styles.asset} key={assetAmount.assetId}>
+          <Box.Flex
+            css={styles.asset}
+            key={assetAmount.assetId}
+            ref={isCourier ? catchCourier : undefined}
+            data-courier={isCourier ? 'asset' : undefined}
+          >
             {getAssetImage(assetAmount as AssetFuelAmount)}
             <Box css={styles.amountContainer}>
               <Box.Flex direction="column">

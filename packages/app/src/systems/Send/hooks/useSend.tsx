@@ -19,6 +19,7 @@ import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { formatGasLimit } from '~/systems/Transaction';
 import { sendMachine } from '../machines/sendMachine';
 import type { MachineContext, SendMachineState } from '../machines/sendMachine';
+import { courier } from '~/systems/Transaction/courier';
 
 export enum SendStatus {
   loading = 'loading',
@@ -369,6 +370,7 @@ export function useSend() {
   }
 
   function cancel() {
+    courier.cancel();
     service.send('BACK');
   }
 
@@ -378,6 +380,7 @@ export function useSend() {
       form.trigger();
       return;
     }
+    courier.depart(courier.single('source'));
     service.send('CONFIRM');
   }
 

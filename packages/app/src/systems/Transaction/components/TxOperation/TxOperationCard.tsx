@@ -1,6 +1,6 @@
 import { cssObj, Avatar, Box, Icon, Text } from '@fuel-wallet/ui';
 import { Address, bn, isB256 } from 'fuels';
-import { type CSSProperties, useMemo } from 'react';
+import { useMemo } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadata';
 import { isValidEthAddress } from '~/systems/Core';
@@ -60,6 +60,8 @@ export function TxOperationCard({
       : '';
 
   const shouldShowAssetAmount = amounts && amounts.length > 0;
+  /* The courier only carries a single asset on a plain transfer under review. */
+  const isCourier = isTransfer && !isPastTense && amounts?.length === 1;
 
   const isFromContract = operation.from.type === 0;
   const isToContract = operation.to.type === 0;
@@ -72,7 +74,7 @@ export function TxOperationCard({
   const toContractMetadata = useContractMetadata(operation.to.address);
 
   return (
-    <Box css={styles.contentCol} className="fuel-tx-scan">
+    <Box css={styles.contentCol}>
       <Box
         css={cssObj({
           display: 'grid',
@@ -137,15 +139,10 @@ export function TxOperationCard({
         </Box.Flex>
 
         <Box.Flex justify={'center'}>
-          <Box css={styles.spacer} className="fuel-tx-connector" />
+          <Box css={styles.spacer} />
         </Box.Flex>
         <Box />
-        <Box.Flex
-          justify={'center'}
-          align={'center'}
-          css={styles.blue}
-          className="fuel-tx-arrow"
-        >
+        <Box.Flex justify={'center'} align={'center'} css={styles.blue}>
           <Icon icon="CircleArrowDown" size={20} />
         </Box.Flex>
         <Box.Flex justify={'flex-start'} align={'center'} css={styles.blue}>
@@ -159,18 +156,16 @@ export function TxOperationCard({
         </Box.Flex>
 
         <Box.Flex justify={'center'}>
-          <Box
-            css={styles.spacer}
-            className="fuel-tx-connector"
-            style={{ '--fuel-packet-delay': '450ms' } as CSSProperties}
-          />
+          <Box css={styles.spacer} />
         </Box.Flex>
         <Box>
-          {shouldShowAssetAmount && <TxOperationAssets amounts={amounts} />}
+          {shouldShowAssetAmount && (
+            <TxOperationAssets amounts={amounts} courier={isCourier} />
+          )}
         </Box>
 
         <Box.Flex justify={'flex-start'} align={'center'} css={styles.iconCol}>
-          <Box css={styles.icon}>
+          <Box css={styles.icon} data-courier={isCourier ? 'to' : undefined}>
             {isToContract ? (
               <TxRecipientContractLogo
                 name={toContractMetadata?.name}

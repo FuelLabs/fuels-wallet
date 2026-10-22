@@ -1,6 +1,5 @@
 import { cssObj, Box, Button, Dialog } from '@fuel-wallet/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { TransactionStatus } from 'fuels';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAssets } from '~/systems/Asset';
@@ -9,7 +8,7 @@ import { coreStyles } from '~/systems/Core/styles';
 import { TxRequestStatus, useTransactionRequest } from '~/systems/DApp';
 import { TxContent } from '../../components/TxContent/TxContent';
 import { TxReviewAlert } from '../../components/TxReviewAlert/TxReviewAlert';
-import { TxSuccessWave } from '../../components/TxSuccessWave';
+import { courier, useTxCourier } from '../../courier';
 
 const swap = {
   initial: { opacity: 0, y: 8 },
@@ -44,7 +43,15 @@ export const TxApprove = () => {
     if (isSuccess) setCelebrate(true);
   }, [isSending, isSuccess]);
 
+  /* Keep the review card up until the courier hands the asset over. */
+  const { isHolding } = useTxCourier({ isSending, isSuccess });
+  const showSimulated =
+    (ctx.shouldShowTxSimulated || isHolding) && !!ctx.txSummarySimulated;
+  const showExecuted =
+    ctx.shouldShowTxExecuted && !isHolding && !!ctx.txSummaryExecuted;
+
   const handleReject = () => {
+    courier.cancel();
     handlers.closeDialog();
     handlers.reset();
     handlers.reject();
@@ -54,10 +61,7 @@ export const TxApprove = () => {
   };
 
   return (
-    <Box css={styles.wrapper} data-tx-phase={isSending ? 'sending' : undefined}>
-      {celebrate && ctx.executedStatus() === TransactionStatus.success && (
-        <TxSuccessWave />
-      )}
+    <Box css={styles.wrapper}>
       <Layout.TopBar hideMenu onBack={handleReject} />
       {shouldShowReviewAlert && <TxReviewAlert signOnly={isSignOnly} />}
       <Dialog.Description as="div" css={styles.description}>
@@ -68,7 +72,7 @@ export const TxApprove = () => {
           </Box>
         )}
         <AnimatePresence mode="wait" initial={false}>
-          {ctx.shouldShowTxSimulated && ctx.txSummarySimulated && (
+          {showSimulated && (
             <motion.div key="simulated" {...swap} style={STACK}>
               <TxContent.Info
                 showDetails
@@ -91,7 +95,7 @@ export const TxApprove = () => {
               />
             </motion.div>
           )}
-          {ctx.shouldShowTxExecuted && ctx.txSummaryExecuted && (
+          {showExecuted && (
             <motion.div key="executed" {...swap} style={STACK}>
               <TxContent.Info
                 showDetails

@@ -10,7 +10,7 @@ import {
 } from '@fuel-wallet/ui';
 import { TransactionStatus } from 'fuels';
 import type { TransactionTypeName } from 'fuels';
-import type { CSSProperties, FC, ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { useExplorerLink } from '../../hooks/useExplorerLink';
 
@@ -33,16 +33,6 @@ const STATUS_KIND: Partial<Record<TransactionStatus, string>> = {
   [TransactionStatus.failure]: 'danger',
   [TransactionStatus.submitted]: 'active',
 };
-
-/* Twelve shards at 30 degree steps, at three alternating distances. */
-const SHARDS = Array.from({ length: 12 }, (_, i) => {
-  const angle = (i * Math.PI) / 6;
-  const distance = 18 + (i % 3) * 7;
-  return {
-    '--fuel-burst-x': `${Math.round(Math.cos(angle) * distance)}px`,
-    '--fuel-burst-y': `${Math.round(Math.sin(angle) * distance)}px`,
-  } as CSSProperties;
-});
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -111,22 +101,12 @@ export const TxHeader: TxHeaderComponent = ({
         )}
       </Row>
       <Row label="Status">
-        <span style={{ position: 'relative', display: 'flex' }}>
-          <span
-            aria-label="Status Circle"
-            className={cx('fuel-square', celebrate && 'fuel-pop')}
-            data-kind={status ? STATUS_KIND[status] : 'pending'}
-            data-status={status}
-          />
-          {confirmed && (
-            <span className="fuel-burst" aria-hidden>
-              {SHARDS.map((style, i) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: fixed set
-                <span key={i} style={style} />
-              ))}
-            </span>
-          )}
-        </span>
+        <span
+          aria-label="Status Circle"
+          className={cx('fuel-square', celebrate && 'fuel-pop')}
+          data-kind={status ? STATUS_KIND[status] : 'pending'}
+          data-status={status}
+        />
         <Text css={styles.text}>{status}</Text>
       </Row>
       <Row label="Type">

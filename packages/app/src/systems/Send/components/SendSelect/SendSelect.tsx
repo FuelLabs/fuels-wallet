@@ -9,6 +9,7 @@ import {
   MotionFlex,
   MotionStack,
   animations,
+  formatAmount,
 } from '~/systems/Core';
 
 import { useController, useWatch } from 'react-hook-form';
@@ -57,6 +58,16 @@ export function SendSelect({
   );
 
   const decimals = selectedAsset?.asset?.decimals;
+  /* What the courier carries to the review card, formatted the same way. */
+  const courierLabel = useMemo(() => {
+    if (!amount.value || !selectedAsset?.asset) return undefined;
+    const units = decimals || 0;
+    const value = formatAmount({
+      amount: amount.value,
+      options: { units, precision: Math.min(units, 3) },
+    });
+    return `${value} ${selectedAsset.asset.symbol || 'Unknown'}`;
+  }, [amount.value, decimals, selectedAsset]);
   const rate = selectedAsset?.asset?.rate;
   const amountInUsd = useMemo(() => {
     if (amount.value == null || rate == null || decimals == null) return '$0';
@@ -169,6 +180,9 @@ export function SendSelect({
           <Form.Control
             isRequired
             isInvalid={Boolean(errorMessage || amountFieldState.error)}
+            data-courier="source"
+            data-courier-label={courierLabel}
+            data-courier-icon={selectedAsset?.asset?.icon}
           >
             <InputAmount
               name={amount.name}

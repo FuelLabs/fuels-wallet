@@ -5,6 +5,7 @@ import { Layout, coreStyles } from '~/systems/Core';
 import { TxContent, getGasLimitFromTxRequest } from '~/systems/Transaction';
 import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
 import { TxReviewAlert } from '~/systems/Transaction/components/TxReviewAlert/TxReviewAlert';
+import { useTxCourier } from '~/systems/Transaction/courier';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 import { TxRequestStatus } from '../../machines/transactionRequestMachine';
 import { AutoSubmit } from './TransactionRequest.AutoSubmit';
@@ -32,9 +33,16 @@ export function TransactionRequest() {
     proposedTxRequest,
     isLoadingFees,
     isSimulating,
+    isSendingTx,
     input,
   } = txRequest;
   const isSignOnly = !!input.signOnly;
+
+  /* Keep the review card up until the courier hands the asset over. */
+  const { isHolding } = useTxCourier({
+    isSending: isSendingTx,
+    isSuccess: status(TxRequestStatus.success),
+  });
 
   const defaultValues = useMemo<TransactionRequestFormData | undefined>(() => {
     if (!txSummarySimulated || !proposedTxRequest) return undefined;
@@ -75,7 +83,7 @@ export function TransactionRequest() {
         <Layout.TopBar hideMenu hideBackArrow />
         {shouldShowReviewAlert && <TxReviewAlert signOnly={isSignOnly} />}
         <Layout.Content css={styles.content} noScroll>
-          {shouldShowTxSimulated && (
+          {(shouldShowTxSimulated || isHolding) && (
             <TxContent.Info
               showDetails
               tx={txSummarySimulated}
@@ -89,7 +97,7 @@ export function TransactionRequest() {
               signOnly={isSignOnly}
             />
           )}
-          {shouldShowTxExecuted && txSummaryExecuted && (
+          {shouldShowTxExecuted && !isHolding && txSummaryExecuted && (
             <TxContent.Info
               showDetails
               tx={txSummaryExecuted}
