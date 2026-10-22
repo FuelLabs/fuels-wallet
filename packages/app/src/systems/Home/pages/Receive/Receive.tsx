@@ -145,12 +145,14 @@ const styles = {
     textAlign: 'center',
     wordBreak: 'break-all',
   }),
+  /* Stacked: the two mono labels do not fit side by side in the 360px popup. */
   actions: cssObj({
     alignSelf: 'stretch',
+    flexDirection: 'column',
     gap: '$2',
     mt: '$2',
 
-    '& > button': { flex: 1 },
+    '& > button': { width: '100%' },
     '& .fuel_Icon': { transition: 'transform 200ms var(--fuel-ease-out)' },
     '& [data-copied="true"] .fuel_Icon': {
       animation: 'fuel-appear 200ms var(--fuel-ease-out)',
