@@ -30,7 +30,7 @@ export const TxApprove = () => {
   const isSending = ctx.isSendingTx;
   const isSuccess = ctx.status(TxRequestStatus.success);
 
-  /* Celebrate only the send that happened here, not a reopened result. */
+  /* Animate only the send that happened here, not a reopened result. */
   const wasSending = useRef(false);
   const [celebrate, setCelebrate] = useState(false);
   useEffect(() => {
@@ -40,8 +40,8 @@ export const TxApprove = () => {
     }
     if (!wasSending.current) return;
     wasSending.current = false;
-    if (isSuccess) setCelebrate(true);
-  }, [isSending, isSuccess]);
+    setCelebrate(true);
+  }, [isSending]);
 
   /* Keep the review card up until the courier hands the asset over. */
   const { isHolding } = useTxCourier({ isSending, isSuccess });

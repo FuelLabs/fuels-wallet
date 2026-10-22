@@ -251,7 +251,7 @@ const accordionUp = keyframes({
 const AccordionContent = forwardRef<
   HTMLDivElement,
   ComponentProps<typeof RAccordion.Content> & { css?: ThemeUtilsCSS }
->(function AccordionContent({ css, className, ...props }, ref) {
+>(function AccordionContent({ css, className, children, ...props }, ref) {
   return (
     <RAccordion.Content
       ref={ref}
@@ -267,15 +267,26 @@ const AccordionContent = forwardRef<
             animation: `${accordionUp} 200ms var(--fuel-ease-in)`,
           },
           [reduced]: { animation: 'none !important' },
-          px: '$3',
-          pb: '$3',
-          fontSize: '$sm',
-          color: '$textMid',
-          ...css,
         })(),
         className
       )}
-    />
+    >
+      {/* Padding lives inside so the height animation can reach 0. */}
+      <div
+        className={cx(
+          'fuel_Accordion-inner',
+          stitches({
+            px: '$3',
+            pb: '$3',
+            fontSize: '$sm',
+            color: '$textMid',
+            ...css,
+          })()
+        )}
+      >
+        {children}
+      </div>
+    </RAccordion.Content>
   );
 });
 

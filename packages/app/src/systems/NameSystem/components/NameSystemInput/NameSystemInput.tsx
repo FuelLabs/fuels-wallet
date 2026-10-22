@@ -45,6 +45,7 @@ export const NameSystemInput = forwardRef<
   const [showRecents, setShowRecents] = useState(false);
   const optionRef = useRef<HTMLButtonElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const isFocused = useRef(false);
 
   const { resolver, isLoading } = useResolver();
   const { isOpenDropdown, toggleDropdown, domain, address, reset, setDomain } =
@@ -98,7 +99,16 @@ export const NameSystemInput = forwardRef<
     onChange(value);
   };
 
+  /* History can land after the field is focused. */
+  // biome-ignore lint/correctness/useExhaustiveDependencies: only when recents arrive
+  useEffect(() => {
+    if (isFocused.current && !inputValue && recents.length > 0) {
+      setShowRecents(true);
+    }
+  }, [recents.length]);
+
   const handleOpenDropdown = useCallback(() => {
+    isFocused.current = true;
     if (status === 'idle' && address) {
       toggleDropdown(true);
     }
@@ -114,6 +124,7 @@ export const NameSystemInput = forwardRef<
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    isFocused.current = false;
     if (!contentRef.current?.contains(e.relatedTarget as Node | null)) {
       setShowRecents(false);
     }

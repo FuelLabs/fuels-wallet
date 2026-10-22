@@ -23,6 +23,7 @@ export function useRecentRecipients() {
   const { account, accounts } = useAccounts();
   const { transactionHistory } = useTransactionHistory({
     address: account?.address,
+    quiet: true,
   });
 
   return useMemo<RecentRecipient[]>(() => {

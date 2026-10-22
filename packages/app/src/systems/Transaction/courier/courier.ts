@@ -24,6 +24,7 @@ let sourceEl: HTMLElement | null = null;
 let assetEl: HTMLElement | null = null;
 let toEl: HTMLElement | null = null;
 let arriveTimer: ReturnType<typeof setTimeout> | undefined;
+let transitRun: Promise<unknown> | null = null;
 
 function prefersReducedMotion() {
   return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -141,28 +142,31 @@ async function arrive(target: HTMLElement) {
   const start = chipAt;
   target.style.visibility = 'hidden';
 
-  const rect = await settledRect(target);
-  if (!rect || flying !== chip) {
-    reveal(target);
+  /* Whatever happens to the chip, the row must come back. */
+  try {
+    const rect = await settledRect(target);
+    if (!rect || flying !== chip) return;
+    const c = flying.getBoundingClientRect();
+    const end = { x: rect.left, y: rect.top + (rect.height - c.height) / 2 };
+    const peak = {
+      x: (start.x + end.x) / 2,
+      y: Math.min(start.y, end.y) - 48,
+    };
+
+    await flying.animate(
+      [
+        { transform: translate(start, 1.06) },
+        { transform: translate(peak, 1.14), offset: 0.45 },
+        { transform: translate(end, 1) },
+      ],
+      { duration: 640, easing: EASE_IN_OUT, fill: 'forwards' }
+    ).finished;
+  } catch {
     return;
+  } finally {
+    reveal(target);
   }
-  const c = flying.getBoundingClientRect();
-  const end = { x: rect.left, y: rect.top + (rect.height - c.height) / 2 };
-  const peak = {
-    x: (start.x + end.x) / 2,
-    y: Math.min(start.y, end.y) - 48,
-  };
 
-  await flying.animate(
-    [
-      { transform: translate(start, 1.06) },
-      { transform: translate(peak, 1.14), offset: 0.45 },
-      { transform: translate(end, 1) },
-    ],
-    { duration: 640, easing: EASE_IN_OUT, fill: 'forwards' }
-  ).finished;
-
-  reveal(target);
   target.animate([{ transform: 'scale(1.04)' }, { transform: 'scale(1)' }], {
     duration: 260,
     easing: EASE_OUT,
@@ -197,7 +201,7 @@ function transit(asset: HTMLElement | null, to: HTMLElement | null) {
   asset.style.opacity = '0.35';
 
   const flying = packet;
-  flying
+  transitRun = flying
     .animate(
       [
         { transform: translate(packetPoint(route[0]), 0) },
@@ -214,8 +218,15 @@ function transit(asset: HTMLElement | null, to: HTMLElement | null) {
   return true;
 }
 
+/** Lets a fast answer wait for the packet to reach the recipient first. */
+async function landed() {
+  await transitRun;
+  transitRun = null;
+}
+
 /** Hand the packet to the recipient. */
 async function deliver() {
+  await landed();
   const flying = packet;
   const recipient = toEl;
   if (!flying || !recipient) return finish();
@@ -237,6 +248,7 @@ async function deliver() {
 
 /** The network said no: the packet rides back up to the sender. */
 async function bounce() {
+  await landed();
   const flying = packet;
   const asset = assetEl;
   if (!flying || route.length < 3) return finish();
@@ -262,6 +274,7 @@ async function bounce() {
 }
 
 function finish() {
+  transitRun = null;
   removePacket();
   if (assetEl) {
     assetEl.style.opacity = '';

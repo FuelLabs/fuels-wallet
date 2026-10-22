@@ -1,5 +1,5 @@
 import { useReducedMotion } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 
 /* Last value shown per key, so a remounted screen rolls from where it was. */
 const lastShown = new Map<string, number>();
@@ -17,7 +17,8 @@ export function useTweenedNumber(value: number, key: string, duration = 900) {
   const shownRef = useRef(shown);
   const keyRef = useRef(key);
 
-  useEffect(() => {
+  /* Layout effect, so the new value never paints before the roll starts. */
+  useLayoutEffect(() => {
     /* A new key (another account, or done loading) starts from its own past. */
     const from =
       keyRef.current === key ? shownRef.current : (lastShown.get(key) ?? value);
@@ -28,6 +29,7 @@ export function useTweenedNumber(value: number, key: string, duration = 900) {
       setShown(value);
       return;
     }
+    setShown(from);
     let frame = 0;
     const start = performance.now();
     const tick = (now: number) => {

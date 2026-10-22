@@ -267,15 +267,14 @@ export type InputFieldProps = Omit<
 };
 
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
-  function InputField(
-    { htmlSize, className, css, role = 'textbox', ...props },
-    ref
-  ) {
+  function InputField({ htmlSize, className, css, role, ...props }, ref) {
     const field = useFieldProps(props);
     return (
       <input
         ref={ref}
-        role={role}
+        role={
+          role === undefined && props.type !== 'password' ? 'textbox' : role
+        }
         size={htmlSize}
         {...field}
         {...props}

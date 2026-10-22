@@ -168,7 +168,12 @@ const CardListItem = forwardRef<HTMLElement, CardListItemProps>(
         <Flex align="center" gap="$3" css={{ flex: 1, minWidth: 0 }}>
           {children}
         </Flex>
-        {rightEl}
+        {rightEl && (
+          /* Actions in the right slot must not also select the item. */
+          <Flex align="center" onClick={(e) => e.stopPropagation()}>
+            {rightEl}
+          </Flex>
+        )}
       </CardRoot>
     );
   }

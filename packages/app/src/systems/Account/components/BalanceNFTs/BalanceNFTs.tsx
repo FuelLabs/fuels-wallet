@@ -127,6 +127,8 @@ const styles = {
     },
     '.fuel_Accordion-content': {
       border: '0',
+    },
+    '.fuel_Accordion-inner': {
       padding: '$0 5px $2 20px',
     },
     '.fuel_Badge': {
