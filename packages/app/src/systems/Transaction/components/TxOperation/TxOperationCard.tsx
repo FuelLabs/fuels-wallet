@@ -1,6 +1,6 @@
 import { cssObj, Avatar, Box, Icon, Text } from '@fuel-wallet/ui';
 import { Address, bn, isB256 } from 'fuels';
-import { useMemo } from 'react';
+import { type CSSProperties, useMemo } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 import { useContractMetadata } from '~/systems/Contract/hooks/useContractMetadata';
 import { isValidEthAddress } from '~/systems/Core';
@@ -72,7 +72,7 @@ export function TxOperationCard({
   const toContractMetadata = useContractMetadata(operation.to.address);
 
   return (
-    <Box css={styles.contentCol}>
+    <Box css={styles.contentCol} className="fuel-tx-scan">
       <Box
         css={cssObj({
           display: 'grid',
@@ -137,10 +137,15 @@ export function TxOperationCard({
         </Box.Flex>
 
         <Box.Flex justify={'center'}>
-          <Box css={styles.spacer} />
+          <Box css={styles.spacer} className="fuel-tx-connector" />
         </Box.Flex>
         <Box />
-        <Box.Flex justify={'center'} align={'center'} css={styles.blue}>
+        <Box.Flex
+          justify={'center'}
+          align={'center'}
+          css={styles.blue}
+          className="fuel-tx-arrow"
+        >
           <Icon icon="CircleArrowDown" size={20} />
         </Box.Flex>
         <Box.Flex justify={'flex-start'} align={'center'} css={styles.blue}>
@@ -154,7 +159,11 @@ export function TxOperationCard({
         </Box.Flex>
 
         <Box.Flex justify={'center'}>
-          <Box css={styles.spacer} />
+          <Box
+            css={styles.spacer}
+            className="fuel-tx-connector"
+            style={{ '--fuel-packet-delay': '450ms' } as CSSProperties}
+          />
         </Box.Flex>
         <Box>
           {shouldShowAssetAmount && <TxOperationAssets amounts={amounts} />}

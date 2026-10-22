@@ -6,20 +6,23 @@ import {
   IconButton,
   Text,
   Tooltip,
+  cx,
 } from '@fuel-wallet/ui';
 import { TransactionStatus } from 'fuels';
 import type { TransactionTypeName } from 'fuels';
-import type { FC, ReactNode } from 'react';
+import type { CSSProperties, FC, ReactNode } from 'react';
 
 import { useExplorerLink } from '../../hooks/useExplorerLink';
 
-import { shortAddress } from '~/systems/Core';
+import { ScrambleText, shortAddress } from '~/systems/Core';
 import { TxHeaderLoader } from './TxHeaderLoader';
 
 export type TxHeaderProps = {
   status?: TransactionStatus;
   id?: string;
   type?: TransactionTypeName;
+  /** Play the confirmation moment. Only set right after this wallet sent it. */
+  celebrate?: boolean;
 };
 
 type TxHeaderComponent = FC<TxHeaderProps> & {
@@ -31,6 +34,16 @@ const STATUS_KIND: Partial<Record<TransactionStatus, string>> = {
   [TransactionStatus.submitted]: 'active',
 };
 
+/* Twelve shards at 30 degree steps, at three alternating distances. */
+const SHARDS = Array.from({ length: 12 }, (_, i) => {
+  const angle = (i * Math.PI) / 6;
+  const distance = 18 + (i % 3) * 7;
+  return {
+    '--fuel-burst-x': `${Math.round(Math.cos(angle) * distance)}px`,
+    '--fuel-burst-y': `${Math.round(Math.sin(angle) * distance)}px`,
+  } as CSSProperties;
+});
+
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
     <Box.Flex css={styles.row}>
@@ -40,18 +53,39 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-export const TxHeader: TxHeaderComponent = ({ status, id, type }) => {
+export const TxHeader: TxHeaderComponent = ({
+  status,
+  id,
+  type,
+  celebrate,
+}) => {
   const { href, openExplorer } = useExplorerLink(id);
+  const confirmed = celebrate && status === TransactionStatus.success;
+  const reverted = celebrate && status === TransactionStatus.failure;
 
   return (
-    <Box.Stack gap="0" css={styles.root} className="fuel-appear">
+    <Box.Stack
+      gap="0"
+      css={styles.root}
+      className={cx(
+        'fuel-appear',
+        confirmed && 'fuel-ticks',
+        reverted && 'fuel-shake'
+      )}
+    >
       <Row label="ID">
         <Copyable
           value={id || ''}
           iconProps={{ 'aria-label': 'Copy Transaction ID' }}
           tooltipMessage="Copy Transaction ID"
         >
-          <Text css={styles.text}>{shortAddress(id)}</Text>
+          <Text css={styles.text}>
+            {confirmed ? (
+              <ScrambleText text={shortAddress(id)} duration={800} />
+            ) : (
+              shortAddress(id)
+            )}
+          </Text>
         </Copyable>
         {href && (
           <>
@@ -77,12 +111,22 @@ export const TxHeader: TxHeaderComponent = ({ status, id, type }) => {
         )}
       </Row>
       <Row label="Status">
-        <span
-          aria-label="Status Circle"
-          className="fuel-square"
-          data-kind={status ? STATUS_KIND[status] : 'pending'}
-          data-status={status}
-        />
+        <span style={{ position: 'relative', display: 'flex' }}>
+          <span
+            aria-label="Status Circle"
+            className={cx('fuel-square', celebrate && 'fuel-pop')}
+            data-kind={status ? STATUS_KIND[status] : 'pending'}
+            data-status={status}
+          />
+          {confirmed && (
+            <span className="fuel-burst" aria-hidden>
+              {SHARDS.map((style, i) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: fixed set
+                <span key={i} style={style} />
+              ))}
+            </span>
+          )}
+        </span>
         <Text css={styles.text}>{status}</Text>
       </Row>
       <Row label="Type">

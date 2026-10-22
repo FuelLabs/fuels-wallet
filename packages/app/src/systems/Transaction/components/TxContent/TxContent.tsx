@@ -102,6 +102,7 @@ export type TxContentInfoProps = {
   isSimulating?: boolean;
   isPastTense?: boolean;
   signOnly?: boolean;
+  celebrate?: boolean;
 };
 
 function TxContentInfo({
@@ -118,6 +119,7 @@ function TxContentInfo({
   isSimulating,
   isPastTense = false,
   signOnly = false,
+  celebrate = false,
 }: TxContentInfoProps) {
   const { account: currentAccount } = useAccounts();
   const formContext = useFormContext<SendFormValues>();
@@ -161,7 +163,12 @@ function TxContentInfo({
     if (hasErrors) return <ErrorHeader errors={errors} />;
     if (isExecuted)
       return (
-        <TxHeader id={tx?.id} type={tx?.type} status={status || undefined} />
+        <TxHeader
+          id={tx?.id}
+          type={tx?.type}
+          status={status || undefined}
+          celebrate={celebrate}
+        />
       );
 
     return null;
