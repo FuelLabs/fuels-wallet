@@ -28,13 +28,13 @@ export function WelcomeScreen() {
                 Create a fresh wallet and generate a new seed phrase.
               </Heading>
             </Box.Stack>
-            <Box.Centered as="button" type="button" className="icon arrow">
-              <Icon
-                icon="ArrowRight"
-                stroke={1.5}
-                size={24}
-                label="Create new wallet"
-              />
+            <Box.Centered
+              as="button"
+              type="button"
+              className="icon arrow"
+              aria-label="Create new wallet"
+            >
+              <Icon icon="ArrowRight" stroke={1.5} size={24} />
             </Box.Centered>
           </Card>
           <Card
@@ -51,13 +51,13 @@ export function WelcomeScreen() {
                 Restore an existing wallet using your seed phrase.
               </Heading>
             </Box.Stack>
-            <Box.Centered as="button" type="button" className="icon arrow">
-              <Icon
-                icon="ArrowRight"
-                stroke={1.5}
-                size={24}
-                label="Import seed phrase"
-              />
+            <Box.Centered
+              as="button"
+              type="button"
+              className="icon arrow"
+              aria-label="Import seed phrase"
+            >
+              <Icon icon="ArrowRight" stroke={1.5} size={24} />
             </Box.Centered>
           </Card>
         </Box>
