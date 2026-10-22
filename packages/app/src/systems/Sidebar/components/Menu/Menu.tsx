@@ -148,7 +148,7 @@ const styles = {
       color: '$brand',
     },
 
-    '& li[data-key="settings"]': {
+    '& [data-key="settings"]': {
       mt: '$8',
     },
   }),

@@ -778,6 +778,7 @@ export const RadioGroupItem = forwardRef<
           })(),
           className
         )}
+        aria-label={typeof label === 'string' ? label : undefined}
         {...props}
       >
         <RRadio.Indicator />

@@ -536,9 +536,14 @@ function withActions(
   return Children.map(children, (child) => {
     if (!isValidElement(child)) return child;
     const key = child.key ?? '';
-    type ItemProps = { __onAction?: () => void; isDisabled?: boolean };
+    type ItemProps = {
+      __onAction?: () => void;
+      isDisabled?: boolean;
+      'data-key'?: string;
+    };
     return cloneElement(child as ReactElement<ItemProps>, {
       __onAction: () => onAction?.(key),
+      'data-key': String(key),
       ...(disabledKeys?.includes(key) && { isDisabled: true }),
     });
   });
