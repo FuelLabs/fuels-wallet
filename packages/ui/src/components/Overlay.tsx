@@ -894,12 +894,23 @@ export type FocusScopeProps = {
   children?: ReactNode;
 };
 
+const FIELD = 'input:not([disabled]), textarea:not([disabled]), select';
+
 function Scope({ autoFocus, contain, children }: FocusScopeProps) {
+  /* Autofocus lands on the first field, not a help icon in its label. */
+  const onMountAutoFocus = (e: Event) => {
+    if (!autoFocus) return e.preventDefault();
+    const scope = e.currentTarget as HTMLElement | null;
+    const field = scope?.querySelector<HTMLElement>(FIELD);
+    if (!field) return;
+    e.preventDefault();
+    field.focus();
+  };
   return (
     <FocusScope
       trapped={contain}
       loop={contain}
-      onMountAutoFocus={(e) => !autoFocus && e.preventDefault()}
+      onMountAutoFocus={onMountAutoFocus}
       style={{ display: 'contents' }}
     >
       {children}

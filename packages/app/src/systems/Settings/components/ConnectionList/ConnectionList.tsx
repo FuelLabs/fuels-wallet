@@ -69,7 +69,7 @@ export function ConnectionList({
               }
               description={
                 status('isEmpty')
-                  ? 'Apps you connect this wallet to will show up here'
+                  ? 'Apps you connect will show up here'
                   : 'Try searching for a different app'
               }
             />
