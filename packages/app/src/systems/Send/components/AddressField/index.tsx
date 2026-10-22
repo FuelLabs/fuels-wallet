@@ -2,6 +2,7 @@ import { cssObj, Box } from '@fuel-wallet/ui';
 import { useFormContext } from 'react-hook-form';
 import { ControlledField } from '~/systems/Core';
 import { NameSystemInput } from '~/systems/NameSystem/components/NameSystemInput';
+import { useRecentRecipients } from '../../hooks/useRecentRecipients';
 
 interface AddressFieldProps {
   warningMessage?: string;
@@ -9,6 +10,7 @@ interface AddressFieldProps {
 
 export function AddressField({ warningMessage }: AddressFieldProps) {
   const { control, formState, setError, clearErrors } = useFormContext();
+  const recents = useRecentRecipients();
 
   const handleChangeError = (error: string | null) => {
     if (error) {
@@ -31,7 +33,11 @@ export function AddressField({ warningMessage }: AddressFieldProps) {
           Boolean(formState.errors?.address) && !formState.isValidating
         }
         render={({ field }) => (
-          <NameSystemInput {...field} onError={handleChangeError} />
+          <NameSystemInput
+            {...field}
+            recents={recents}
+            onError={handleChangeError}
+          />
         )}
       />
     </Box>
