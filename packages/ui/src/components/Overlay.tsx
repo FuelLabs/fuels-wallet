@@ -899,17 +899,29 @@ export type FocusScopeProps = {
   children?: ReactNode;
 };
 
-const FIELD = 'input:not([disabled]), textarea:not([disabled]), select';
+const FIELD = 'input, textarea, select';
+
+/* Focus a field now, or as soon as it stops being disabled (e.g. loading). */
+function focusWhenEnabled(field: HTMLElement & { disabled?: boolean }) {
+  if (!field.disabled) return field.focus();
+  const observer = new MutationObserver(() => {
+    if (field.disabled) return;
+    observer.disconnect();
+    if (field.isConnected) field.focus();
+  });
+  observer.observe(field, { attributes: true, attributeFilter: ['disabled'] });
+  setTimeout(() => observer.disconnect(), 2000);
+}
 
 function Scope({ autoFocus, contain, children }: FocusScopeProps) {
   /* Autofocus lands on the first field, not a help icon in its label. */
   const onMountAutoFocus = (e: Event) => {
     if (!autoFocus) return e.preventDefault();
     const scope = e.currentTarget as HTMLElement | null;
-    const field = scope?.querySelector<HTMLElement>(FIELD);
+    const field = scope?.querySelector<HTMLInputElement>(FIELD);
     if (!field) return;
     e.preventDefault();
-    field.focus();
+    focusWhenEnabled(field);
   };
   return (
     <FocusScope
