@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { courier } from './courier';
 
+const MAX_HOLD_MS = 2000;
+
 type UseTxCourierInput = {
   isSending: boolean;
   isSuccess: boolean;
@@ -27,7 +29,12 @@ export function useTxCourier({ isSending, isSuccess }: UseTxCourierInput) {
     if (!inFlight.current) return;
     inFlight.current = false;
     const landing = isSuccess ? courier.deliver() : courier.bounce();
-    landing.finally(() => setHolding(false));
+    /* Never let a stalled animation keep the result off screen. */
+    const release = setTimeout(() => setHolding(false), MAX_HOLD_MS);
+    landing.finally(() => {
+      clearTimeout(release);
+      setHolding(false);
+    });
   }, [isSending, isSuccess]);
 
   useEffect(() => () => courier.cancel(), []);
