@@ -19,6 +19,13 @@ import {
   rememberFrame,
 } from './dappFrames';
 
+// A frame can be remembered for an origin it has since navigated away from,
+// so a delivery is per origin: a rejected stale attempt must not block the
+// live one
+function deliveryKey(tabId: number, frameId: number, origin: string) {
+  return `${frameKey(tabId, frameId)}|${origin}`;
+}
+
 export class CommunicationProtocol extends BaseConnection {
   ports: Map<string, chrome.runtime.Port>;
   portsDisconnectionHandlers: Map<string, () => void>;
@@ -90,7 +97,11 @@ export class CommunicationProtocol extends BaseConnection {
         port.postMessage(message);
         if (port.sender?.tab?.id !== undefined) {
           framesWithPort.add(
-            frameKey(port.sender.tab.id, port.sender.frameId ?? 0)
+            deliveryKey(
+              port.sender.tab.id,
+              port.sender.frameId ?? 0,
+              port.sender.origin ?? ''
+            )
           );
         }
       }
@@ -109,7 +120,7 @@ export class CommunicationProtocol extends BaseConnection {
     skip: Set<string>
   ) {
     const send = (tabId: number, frameId: number, origin: string) => {
-      const key = frameKey(tabId, frameId);
+      const key = deliveryKey(tabId, frameId, origin);
       if (skip.has(key)) return;
       skip.add(key);
       chrome.tabs
