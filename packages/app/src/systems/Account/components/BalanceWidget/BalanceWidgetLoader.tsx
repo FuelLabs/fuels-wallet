@@ -1,5 +1,4 @@
-import type { ContentLoaderProps } from '@fuel-ui/react';
-import { ContentLoader } from '@fuel-ui/react';
+import { ContentLoader, type ContentLoaderProps } from '@fuel-wallet/ui';
 
 import { BalanceWidgetWrapper } from './BalanceWidget';
 

@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, CardList, Icon, Tooltip } from '@fuel-ui/react';
+import { cssObj, Box, CardList, Icon, Tooltip } from '@fuel-wallet/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   EmptyList,
@@ -67,6 +66,11 @@ export function ConnectionList({
             <EmptyList
               label={
                 status('isEmpty') ? 'No apps connected' : 'No connection found'
+              }
+              description={
+                status('isEmpty')
+                  ? 'Apps you connect will show up here'
+                  : 'Try searching for a different app'
               }
             />
           </MotionBox>

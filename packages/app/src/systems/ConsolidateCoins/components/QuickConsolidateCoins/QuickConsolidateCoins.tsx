@@ -1,5 +1,12 @@
-import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Icon, IconButton, Text, VStack } from '@fuel-ui/react';
+import {
+  cssObj,
+  Alert,
+  Box,
+  Icon,
+  IconButton,
+  Text,
+  VStack,
+} from '@fuel-wallet/ui';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentAccount } from '~/systems/Account/hooks/useCurrentAccount';

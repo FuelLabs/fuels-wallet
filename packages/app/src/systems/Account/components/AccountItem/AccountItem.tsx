@@ -1,6 +1,5 @@
-import type { ThemeUtilsCSS } from '@fuel-ui/css';
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
   Avatar,
   Box,
   CardList,
@@ -9,7 +8,8 @@ import {
   Icon,
   IconButton,
   Switch,
-} from '@fuel-ui/react';
+  type ThemeUtilsCSS,
+} from '@fuel-wallet/ui';
 import type { Account } from '@fuel-wallet/types';
 import type { FC, ReactNode } from 'react';
 import { FuelAddress } from '~/systems/Account';

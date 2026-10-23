@@ -1,5 +1,4 @@
-import type { ContentLoaderProps } from '@fuel-ui/react';
-import { Card, ContentLoader } from '@fuel-ui/react';
+import { Card, ContentLoader, type ContentLoaderProps } from '@fuel-wallet/ui';
 import { AccountItemLoader } from '~/systems/Account/components/AccountItem/AccountItemLoader';
 
 export const AccountInfoLoader = (props: ContentLoaderProps) => (

@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Button } from '@fuel-ui/react';
+import { cssObj, Button } from '@fuel-wallet/ui';
 import { Address, isB256 } from 'fuels';
 import { useWatch } from 'react-hook-form';
 import { Layout, MotionStack, animations, coreStyles } from '~/systems/Core';

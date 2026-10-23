@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Card, Text } from '@fuel-ui/react';
+import { cssObj, Avatar, Box, Card, Text } from '@fuel-wallet/ui';
 
 import { parseUrl, truncateByWordsNum } from '../../utils';
 

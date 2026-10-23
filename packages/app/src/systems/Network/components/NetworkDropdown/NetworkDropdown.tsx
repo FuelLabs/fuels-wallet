@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Button } from '@fuel-ui/react';
+import { cssObj, Box, Button } from '@fuel-wallet/ui';
 import type { NetworkData } from '@fuel-wallet/types';
 import { forwardRef } from 'react';
 
@@ -51,7 +50,7 @@ const styles = {
 
     '&:not([aria-disabled="true"])': {
       '&:hover': {
-        bg: '$inverseA3',
+        bg: '$muted',
         boxShadow: 'none',
         border: '1px solid $border',
         color: '$intentsBase11',
@@ -62,8 +61,9 @@ const styles = {
       },
     },
 
-    '&:focus': {
-      outlineColor: '$intentsBase2 !important',
+    '&:focus-visible': {
+      outline: '2px solid $focus',
+      outlineOffset: '2px',
     },
 
     '&[aria-disabled="true"]': {

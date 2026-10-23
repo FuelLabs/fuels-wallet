@@ -1,156 +1,157 @@
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
   Box,
-  Card,
   Copyable,
-  HStack,
   Icon,
+  IconButton,
   Text,
   Tooltip,
-} from '@fuel-ui/react';
+  cx,
+} from '@fuel-wallet/ui';
 import { TransactionStatus } from 'fuels';
 import type { TransactionTypeName } from 'fuels';
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { useExplorerLink } from '../../hooks/useExplorerLink';
-import { getTxStatusColor } from '../../utils';
 
-import { shortAddress } from '~/systems/Core';
+import { ScrambleText, shortAddress } from '~/systems/Core';
 import { TxHeaderLoader } from './TxHeaderLoader';
 
 export type TxHeaderProps = {
   status?: TransactionStatus;
   id?: string;
   type?: TransactionTypeName;
+  /** Play the confirmation moment. Only set right after this wallet sent it. */
+  celebrate?: boolean;
 };
 
 type TxHeaderComponent = FC<TxHeaderProps> & {
   Loader: typeof TxHeaderLoader;
 };
 
-export const TxHeader: TxHeaderComponent = ({ status, id, type }) => {
+const STATUS_KIND: Partial<Record<TransactionStatus, string>> = {
+  [TransactionStatus.failure]: 'danger',
+  [TransactionStatus.submitted]: 'active',
+};
+
+function Row({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <Box.Flex css={styles.row}>
+      <Text css={styles.label}>{label}</Text>
+      <Box.Flex css={styles.value}>{children}</Box.Flex>
+    </Box.Flex>
+  );
+}
+
+export const TxHeader: TxHeaderComponent = ({
+  status,
+  id,
+  type,
+  celebrate,
+}) => {
   const { href, openExplorer } = useExplorerLink(id);
+  const confirmed = celebrate && status === TransactionStatus.success;
+  const reverted = celebrate && status === TransactionStatus.failure;
 
   return (
-    <Card css={styles.root}>
-      <Box css={styles.header}>
-        <HStack align="center" justify="between" gap="$2">
-          <Box.Flex grow="1" gap="$2">
-            <Text fontSize="sm" css={styles.headerRowTitle}>
-              ID:
-            </Text>
-            <Text fontSize="sm" css={styles.headerRowValue}>
-              {shortAddress(id)}
-            </Text>
-          </Box.Flex>
-          <HStack align="center">
-            <Copyable
-              value={id || ''}
-              iconProps={{
-                icon: Icon.is('Copy'),
-                'aria-label': 'Copy Transaction ID',
-              }}
-              tooltipMessage="Copy Transaction ID"
-            />
-            {href && (
-              <>
-                <Copyable
-                  value={href}
-                  tooltipMessage="Copy Transaction Link"
-                  iconProps={{
-                    icon: Icon.is('Link'),
-                    'aria-label': 'Copy Transaction Link',
-                  }}
-                />
-                <Tooltip content="View on Explorer">
-                  <Icon
-                    css={styles.icon}
-                    icon={Icon.is('ExternalLink')}
-                    onClick={openExplorer}
-                    aria-label="View on Explorer"
-                  />
-                </Tooltip>
-              </>
+    <Box.Stack
+      gap="0"
+      css={styles.root}
+      className={cx(
+        'fuel-appear',
+        confirmed && 'fuel-ticks',
+        reverted && 'fuel-shake'
+      )}
+    >
+      <Row label="ID">
+        <Copyable
+          value={id || ''}
+          iconProps={{ 'aria-label': 'Copy Transaction ID' }}
+          tooltipMessage="Copy Transaction ID"
+        >
+          <Text css={styles.text}>
+            {confirmed ? (
+              <ScrambleText text={shortAddress(id)} duration={800} />
+            ) : (
+              shortAddress(id)
             )}
-          </HStack>
-        </HStack>
-        <HStack align="center" gap="$2">
-          <Text fontSize="sm" css={styles.headerRowTitle}>
-            Status:{' '}
           </Text>
-          <Text fontSize="sm" css={styles.headerRowValue}>
-            {status}
-          </Text>
-          <Text
-            as="span"
-            aria-label="Status Circle"
-            css={styles.circle}
-            data-status={status}
-          />
-        </HStack>
-        <HStack align="center" gap="$2">
-          <Text fontSize="sm" css={styles.headerRowTitle}>
-            Type:{' '}
-          </Text>
-          <Text fontSize="sm" css={styles.headerRowValue}>
-            {type}
-          </Text>
-        </HStack>
-      </Box>
-    </Card>
+        </Copyable>
+        {href && (
+          <>
+            <Copyable
+              value={href}
+              tooltipMessage="Copy Transaction Link"
+              iconProps={{
+                icon: 'Link',
+                'aria-label': 'Copy Transaction Link',
+              }}
+            />
+            <Tooltip content="View on Explorer">
+              <IconButton
+                size="xs"
+                variant="link"
+                css={styles.explorer}
+                icon={<Icon icon="ExternalLink" size={16} />}
+                aria-label="View on Explorer"
+                onPress={openExplorer}
+              />
+            </Tooltip>
+          </>
+        )}
+      </Row>
+      <Row label="Status">
+        <span
+          aria-label="Status Circle"
+          className={cx('fuel-square', celebrate && 'fuel-pop')}
+          data-kind={status ? STATUS_KIND[status] : 'pending'}
+          data-status={status}
+        />
+        <Text css={styles.text}>{status}</Text>
+      </Row>
+      <Row label="Type">
+        <Text css={styles.text}>{type}</Text>
+      </Row>
+    </Box.Stack>
   );
 };
 
 const styles = {
   root: cssObj({
-    fontWeight: '$normal',
-    borderRadius: '10px',
-    border: 'none',
-    backgroundColor: '$gray5',
-    padding: '2px',
-    '.fuel_copyable-icon': {
-      color: '$brand !important',
-    },
-    'html[class="fuel_dark-theme"] &': {
-      backgroundColor: '$gray2',
-      border: '1px solid $gray3',
-    },
+    background: '$cardBg',
+    boxShadow: 'inset 0 0 0 1px var(--fuel-line)',
   }),
-  header: cssObj({
+  row: cssObj({
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '$3',
+    minHeight: 40,
     px: '$4',
-    py: '$3',
-    backgroundColor: '$cardBg',
-    borderRadius: '8px',
-    'html[class="fuel_light-theme"] &': {
-      boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
-    },
+
+    '& + &': { borderTop: '1px solid var(--fuel-line)' },
   }),
-  headerRowTitle: cssObj({
-    minWidth: '50px',
+  label: cssObj({
+    fontFamily: '$mono',
+    fontSize: '12px',
+    lineHeight: '16px',
+    letterSpacing: '0.6px',
+    textTransform: 'uppercase',
+    color: '$textLow',
   }),
-  headerRowValue: cssObj({
-    color: '$textHeading',
-    fontWeight: '$medium',
+  value: cssObj({
+    alignItems: 'center',
+    gap: '$2',
+    minWidth: 0,
+  }),
+  text: cssObj({
+    fontFamily: '$mono',
+    fontSize: '$sm',
+    color: '$textHigh',
     textTransform: 'capitalize',
   }),
-  circle: cssObj({
-    borderRadius: '100%',
-    width: 8,
-    height: 8,
-    cursor: 'default',
-
-    [`&[data-status="${TransactionStatus.success}"]`]: {
-      backgroundColor: `$${getTxStatusColor(TransactionStatus.success)}`,
-    },
-    [`&[data-status="${TransactionStatus.failure}"]`]: {
-      backgroundColor: `$${getTxStatusColor(TransactionStatus.failure)}`,
-    },
-    [`&[data-status="${TransactionStatus.submitted}"]`]: {
-      backgroundColor: `$${getTxStatusColor(TransactionStatus.submitted)}`,
-    },
-  }),
-  icon: cssObj({
-    cursor: 'pointer',
+  explorer: cssObj({
+    color: '$textLow',
+    '@media (hover: hover)': { '&:hover': { color: '$textHigh' } },
   }),
 };
 

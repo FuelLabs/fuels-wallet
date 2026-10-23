@@ -1,6 +1,4 @@
-import type { ThemeUtilsCSS } from '@fuel-ui/css';
-import { cssObj } from '@fuel-ui/css';
-import { Box } from '@fuel-ui/react';
+import { cssObj, Box, DitherImage, type ThemeUtilsCSS } from '@fuel-wallet/ui';
 import type { FC, ReactNode } from 'react';
 import { createContext, forwardRef, useContext, useRef } from 'react';
 import { Helmet } from 'react-helmet';
@@ -76,48 +74,54 @@ export const Layout: LayoutComponent = ({
   const isHome = location.pathname === '/wallet';
 
   return (
-    <>
-      <ctx.Provider value={{ isLoading, title, isHome, ref }}>
-        <Helmet>
-          <title>{titleText}</title>
-        </Helmet>
-        {isPublic ? (
+    <ctx.Provider value={{ isLoading, title, isHome, ref }}>
+      <Helmet>
+        <title>{titleText}</title>
+      </Helmet>
+      {isPublic ? (
+        <Box
+          as="main"
+          css={{ ...styles.root, ...styles.public }}
+          data-public
+          data-centered={isCentered}
+        >
+          <Box as="aside" css={styles.art} className="fuel-dither-accent">
+            <div className="fuel-dither-art">
+              <DitherImage src={ONBOARDING_ART} cell={2} brightness={0.05} />
+            </div>
+          </Box>
+          <Box.Centered>{children}</Box.Centered>
+        </Box>
+      ) : (
+        <Box.Centered as="main" css={styles.root}>
           <Box
-            as="main"
-            css={{ ...styles.root, ...styles.public }}
-            data-public
-            data-centered={isCentered}
+            css={styles.wrapper}
+            className="layout__wrapper"
+            data-noborder={noBorder}
           >
-            <Box.Centered>{children}</Box.Centered>
-          </Box>
-        ) : (
-          <Box.Centered as="main" css={styles.root}>
-            <Box
-              css={styles.wrapper}
-              className="layout__wrapper"
-              data-noborder={noBorder}
-            >
-              <OverlayDialog />
-              <Sidebar ref={ref} />
-              <Box ref={ref} css={styles.inner} className="layout__inner">
-                {children}
-              </Box>
+            <OverlayDialog />
+            <Sidebar ref={ref} />
+            <Box ref={ref} css={styles.inner} className="layout__inner">
+              {children}
             </Box>
-          </Box.Centered>
-        )}
-        {import.meta.env.NODE_ENV === 'test' && (
-          <Box css={{ visibility: 'hidden' }}>
-            {isLoading ? 'is loading' : 'is loaded'}
           </Box>
-        )}
-      </ctx.Provider>
-    </>
+        </Box.Centered>
+      )}
+      {import.meta.env.NODE_ENV === 'test' && (
+        <Box css={{ visibility: 'hidden' }}>
+          {isLoading ? 'is loading' : 'is loaded'}
+        </Box>
+      )}
+    </ctx.Provider>
   );
 };
 
 Layout.Content = Content;
 Layout.TopBar = TopBar;
 Layout.BottomBar = BottomBar;
+
+// NASA, "Astronaut in spacesuit floating in space", via Unsplash (Unsplash License).
+const ONBOARDING_ART = '/onboarding.jpg';
 
 export const styles = {
   root: cssObj({
@@ -182,19 +186,16 @@ export const styles = {
         margin: '0 auto',
       },
     },
-
-    '&::before': {
-      content: '""',
-      display: 'block',
-      position: 'sticky',
-      top: 0,
-      bottom: 0,
-      width: '100%',
-      height: '100vh',
-      background: 'url(/signup.webp)',
-      backgroundPosition: 'left',
-      backgroundSize: 'cover',
-    },
+  }),
+  art: cssObj({
+    position: 'sticky',
+    top: 0,
+    height: '100vh',
+    overflow: 'hidden',
+    background: '$background',
+    boxShadow: 'inset -1px 0 0 0 var(--fuel-line)',
+    '--fuel-dither-opacity': '0.9',
+    '--fuel-dither-opacity-dark': '0.85',
   }),
 };
 

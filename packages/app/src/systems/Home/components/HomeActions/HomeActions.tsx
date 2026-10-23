@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Icon, Tooltip } from '@fuel-ui/react';
+import { cssObj, Box, Button, Icon, Tooltip } from '@fuel-wallet/ui';
 import { useAccounts } from '~/systems/Account';
 
 export type HomeActionsProps = {

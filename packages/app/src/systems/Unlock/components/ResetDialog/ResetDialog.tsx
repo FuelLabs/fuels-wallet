@@ -1,5 +1,5 @@
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
   Alert,
   Box,
   Button,
@@ -8,7 +8,7 @@ import {
   Form,
   Icon,
   Text,
-} from '@fuel-ui/react';
+} from '@fuel-wallet/ui';
 import { useState } from 'react';
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { OverlayDialogTopbar, useOverlay } from '~/systems/Overlay';

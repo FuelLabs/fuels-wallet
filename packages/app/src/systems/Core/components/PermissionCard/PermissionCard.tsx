@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Card, Icon, List, Text } from '@fuel-ui/react';
+import { cssObj, Box, Card, Icon, List, Text } from '@fuel-wallet/ui';
 
 export type PermissionCardProps = {
   headerText: string;

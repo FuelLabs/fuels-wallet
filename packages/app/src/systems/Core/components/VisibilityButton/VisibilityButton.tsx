@@ -1,5 +1,4 @@
-import type { IconButtonProps } from '@fuel-ui/react';
-import { Icon, IconButton } from '@fuel-ui/react';
+import { Icon, IconButton, type IconButtonProps } from '@fuel-wallet/ui';
 
 export type VisibilityButtonProps = Omit<IconButtonProps, 'icon'> & {
   visibility?: boolean;

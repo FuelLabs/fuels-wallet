@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Icon, Image } from '@fuel-ui/react';
+import { cssObj, Box, Icon, Image } from '@fuel-wallet/ui';
 import { memo, useEffect, useRef, useState } from 'react';
 import { NFTImageLoading } from '~/systems/Account/components/BalanceNFTs/NFTImageLoading';
 import { shortAddress } from '~/systems/Core';
@@ -34,7 +33,7 @@ const _NFTImage = ({ assetId, image }: NFTImageProps) => {
     }
   }, []);
 
-  if (!image || !!fallback) return <Empty />;
+  if (!image || fallback) return <Empty />;
 
   return (
     <Box css={styles.item}>
@@ -45,7 +44,7 @@ const _NFTImage = ({ assetId, image }: NFTImageProps) => {
           src={image}
           alt={shortAddress(assetId)}
           data-loading={isLoading}
-          style={cssObj({ visibility: isLoading ? 'hidden' : 'visible' })}
+          style={{ visibility: isLoading ? 'hidden' : 'visible' }}
           onLoad={() => setLoading(false)}
           onError={() => setFallback(true)}
         />

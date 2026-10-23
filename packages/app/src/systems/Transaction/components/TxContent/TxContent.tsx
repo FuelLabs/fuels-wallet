@@ -1,12 +1,12 @@
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
   Alert,
   Box,
   Card,
   ContentLoader,
   Copyable,
   Icon,
-} from '@fuel-ui/react';
+} from '@fuel-wallet/ui';
 import type {
   BN,
   TransactionRequest,
@@ -56,16 +56,16 @@ const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
 };
 
 const LoaderHeader = () => (
-  <Card css={{ height: 84 }}>
+  <Card css={{ height: 84, border: '1px solid var(--fuel-line)' }}>
     <ContentLoader width={'100%'} height={'100%'} viewBox="0 0 300 84">
-      <rect x="16" y="15" width="15" height="15" rx="4" />
-      <rect x="80" y="15" width="130" height="15" rx="4" />
+      <rect x="16" y="15" width="15" height="12" />
+      <rect x="80" y="15" width="130" height="12" />
 
-      <rect x="16" y="35" width="55" height="15" rx="4" />
-      <rect x="80" y="35" width="90" height="15" rx="4" />
+      <rect x="16" y="35" width="55" height="12" />
+      <rect x="80" y="35" width="90" height="12" />
 
-      <rect x="16" y="55" width="35" height="15" rx="4" />
-      <rect x="80" y="55" width="60" height="15" rx="4" />
+      <rect x="16" y="55" width="35" height="12" />
+      <rect x="80" y="55" width="60" height="12" />
     </ContentLoader>
   </Card>
 );
@@ -102,6 +102,7 @@ export type TxContentInfoProps = {
   isSimulating?: boolean;
   isPastTense?: boolean;
   signOnly?: boolean;
+  celebrate?: boolean;
 };
 
 function TxContentInfo({
@@ -118,6 +119,7 @@ function TxContentInfo({
   isSimulating,
   isPastTense = false,
   signOnly = false,
+  celebrate = false,
 }: TxContentInfoProps) {
   const { account: currentAccount } = useAccounts();
   const formContext = useFormContext<SendFormValues>();
@@ -161,7 +163,12 @@ function TxContentInfo({
     if (hasErrors) return <ErrorHeader errors={errors} />;
     if (isExecuted)
       return (
-        <TxHeader id={tx?.id} type={tx?.type} status={status || undefined} />
+        <TxHeader
+          id={tx?.id}
+          type={tx?.type}
+          status={status || undefined}
+          celebrate={celebrate}
+        />
       );
 
     return null;
@@ -170,7 +177,7 @@ function TxContentInfo({
   return (
     <>
       {getHeader()}
-      <Box css={styles.content}>
+      <Box css={styles.content} className="fuel-stagger">
         {isSimulating && !tx && <TxContent.Loader showHeaderLoader={false} />}
         {!!transaction && (
           <>

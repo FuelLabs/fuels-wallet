@@ -1,5 +1,12 @@
-import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Button, Heading, Icon, Text } from '@fuel-ui/react';
+import {
+  cssObj,
+  Avatar,
+  Box,
+  Button,
+  Heading,
+  Icon,
+  Text,
+} from '@fuel-wallet/ui';
 import type { AccountWithBalance } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 import { FuelAddress } from '~/systems/Account';
@@ -9,6 +16,7 @@ import { useAccounts } from '../../hooks';
 
 import { INTL_FORMATTER } from '~/systems/Asset/constants';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
+import { useTweenedNumber } from '~/systems/Core/hooks/useTweenedNumber';
 
 type BalanceWidgetWrapperProps = {
   top: ReactNode;
@@ -43,10 +51,15 @@ export function BalanceWidget({
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
   const totalBalanceInUsd = account?.totalBalanceInUsd ?? 0;
+  /* Rolls to the new total, e.g. counting down when you come back from a send. */
+  const shownBalance = useTweenedNumber(
+    totalBalanceInUsd,
+    !isLoading && account?.address ? account.address : ''
+  );
 
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
-  const totalValue = INTL_FORMATTER.format(totalBalanceInUsd);
+  const totalValue = INTL_FORMATTER.format(shownBalance);
 
   return (
     <BalanceWidgetWrapper
@@ -88,10 +101,11 @@ export function BalanceWidget({
           <Text className="label">Total balance</Text>
           <Box.Flex>
             <Text
+              key={String(visibility)}
               aria-hidden={visibility}
               aria-label="Total balance in USD"
               data-account-name={account.name}
-              className="value"
+              className="value fuel-appear"
             >
               {visibility ? totalValue : '$•••••'}
             </Text>
@@ -139,9 +153,12 @@ const styles = {
       lineHeight: 'normal',
     },
     '.label': {
-      lineHeight: '$tight',
-      fontSize: '$sm',
-      fontWeight: '$medium',
+      fontFamily: '$mono',
+      fontSize: '12px',
+      lineHeight: '16px',
+      letterSpacing: '0.6px',
+      textTransform: 'uppercase',
+      color: '$textLow',
     },
     '.value': {
       fontSize: 32,

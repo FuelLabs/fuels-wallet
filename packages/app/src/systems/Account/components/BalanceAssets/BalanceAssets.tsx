@@ -1,7 +1,9 @@
-import { CardList } from '@fuel-ui/react';
+import { CardList } from '@fuel-wallet/ui';
 import type { CoinAsset } from '@fuel-wallet/types';
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { isUnknownAsset } from '~/systems/Asset';
+import { Pages } from '~/systems/Core';
 import { AssetItem, AssetList } from '~/systems/Asset/components';
 import type { AssetListEmptyProps } from '~/systems/Asset/components/AssetList/AssetListEmpty';
 import { UnknownAssetsButton } from '~/systems/Asset/components/UnknownAssetsButton/UnknownAssetsButton';
@@ -21,6 +23,7 @@ export const BalanceAssets = ({
   onRemove,
   onEdit,
 }: BalanceAssetListProp) => {
+  const navigate = useNavigate();
   const [showUnknown, setShowUnknown] = useState(false);
 
   const unknownLength = useMemo<number>(() => {
@@ -40,7 +43,7 @@ export const BalanceAssets = ({
   }, [balances, showUnknown]);
 
   if (isLoading || !balances) return <AssetList.Loading items={3} />;
-  const isEmpty = !balances || !balances.length;
+  const isEmpty = !balances?.length;
   if (isEmpty) return <AssetList.Empty {...emptyProps} />;
 
   function toggle() {
@@ -48,7 +51,7 @@ export const BalanceAssets = ({
   }
 
   return (
-    <CardList gap={3}>
+    <CardList gap={3} className="fuel-stagger">
       {balancesToShow.map((balance) => {
         if (!balance.asset) return null;
 
@@ -62,6 +65,9 @@ export const BalanceAssets = ({
             onRemove={onRemove}
             onEdit={onEdit}
             shouldShowAddAssetBtn={shouldShowAddAssetBtn}
+            onPress={() =>
+              navigate(Pages.assetDetail({ assetId: balance.assetId }))
+            }
           />
         );
       })}

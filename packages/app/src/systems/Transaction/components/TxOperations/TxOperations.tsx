@@ -1,4 +1,4 @@
-import { Box, Card, ContentLoader } from '@fuel-ui/react';
+import { Box, Card, ContentLoader } from '@fuel-wallet/ui';
 import { useAccounts } from '~/systems/Account';
 import type { CategorizedOperations } from '../../types';
 import { TxOperationsGroup } from '../TxContent/TxOperationsSimple/TxOperationsGroup';
@@ -44,23 +44,22 @@ TxOperations.Loader = function TxOperationsLoader() {
     <Card
       css={{
         height: 152,
-        padding: '$2',
-        borderRadius: '10px',
-        border: '1px solid $gray3',
+        padding: '$4',
+        border: '1px solid var(--fuel-line)',
       }}
     >
+      {/* Mirrors the operation card: sender, the action between, recipient. */}
       <ContentLoader width={'100%'} height={'100%'}>
-        {/* Account 1 */}
-        <circle cx="30" cy="30" r="20" />
-        <rect x="60" y="20" rx="3" ry="3" width="120" height="20" />
+        <circle cx="18" cy="18" r="18" />
+        <rect x="48" y="12" width="72" height="12" />
+        <rect x="128" y="12" width="88" height="12" />
 
-        {/* Calls contract */}
-        <circle cx="30" cy="80" r="10" />
-        <rect x="60" y="72.5" rx="3" ry="3" width="100" height="15" />
+        <rect x="17" y="40" width="1" height="40" />
+        <rect x="48" y="54" width="96" height="10" />
 
-        {/* Fuel Staking contract */}
-        <circle cx="30" cy="130" r="20" />
-        <rect x="60" y="122.5" rx="3" ry="3" width="120" height="20" />
+        <circle cx="18" cy="102" r="18" />
+        <rect x="48" y="96" width="72" height="12" />
+        <rect x="128" y="96" width="88" height="12" />
       </ContentLoader>
     </Card>
   );

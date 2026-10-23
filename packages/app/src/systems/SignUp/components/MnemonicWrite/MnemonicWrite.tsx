@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Button } from '@fuel-ui/react';
+import { cssObj, Alert, Box, Button } from '@fuel-wallet/ui';
 import { Mnemonic, MotionStack, animations } from '~/systems/Core';
 
 import { useSignUpStepper } from '../../hooks';

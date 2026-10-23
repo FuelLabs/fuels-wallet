@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, ContentLoader } from '@fuel-ui/react';
+import { cssObj, Box, ContentLoader } from '@fuel-wallet/ui';
 
 export function NFTImageLoading({ size = 89 }: { size?: number }) {
   return (

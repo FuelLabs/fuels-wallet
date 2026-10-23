@@ -1,11 +1,11 @@
-import { cssObj } from '@fuel-ui/css';
-import { Badge, Box, Icon, Menu as RootMenu, Text } from '@fuel-ui/react';
+import { cssObj, Box, Icon, Menu as RootMenu } from '@fuel-wallet/ui';
 import { motion } from 'framer-motion';
 import type { Key } from 'react';
 import { memo, useState } from 'react';
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 import { store } from '~/store';
 import { coreStyles } from '~/systems/Core/styles';
+import { animations } from '~/systems/Core/utils/animations';
 import type { MenuItemContentProps, MenuItemObj, MenuProps } from './types';
 
 function commonActions(
@@ -48,7 +48,6 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
 
   return (
     <Box css={styles.routeContent}>
-      {item.badge && <Text css={styles.badge}>●</Text>}
       <Box.Flex
         css={styles.route}
         data-active={Boolean(match && item.path)}
@@ -56,6 +55,14 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
       >
         <Icon icon={item.icon} className="main-icon" aria-label="Menu Icon" />
         <Box css={{ flex: 1 }}>{item.label}</Box>
+        {item.badge && (
+          <Box
+            as="span"
+            className="fuel-square"
+            data-kind="danger"
+            aria-label="Needs attention"
+          />
+        )}
         {item.submenu && <Icon icon="ChevronDown" aria-label="Caret Icon" />}
       </Box.Flex>
       {isOpened && item.submenu && (
@@ -63,9 +70,7 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
           css={styles.submenu}
           onAction={handleAction}
           aria-label="Submenu"
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -30 }}
+          {...animations.slideInTop()}
         >
           {item.submenu.map((subItem) => (
             <RootMenu.Item key={subItem.key} textValue={subItem.label}>
@@ -97,6 +102,7 @@ function _Menu({ items }: MenuProps) {
   return (
     <RootMenu
       css={styles.root}
+      className="fuel-stagger"
       onAction={handleAction}
       aria-label="Sidebar Menu"
     >
@@ -142,7 +148,7 @@ const styles = {
       color: '$brand',
     },
 
-    '& li[data-key="settings"]': {
+    '& [data-key="settings"]': {
       mt: '$8',
     },
   }),
@@ -213,13 +219,5 @@ const styles = {
       background: '$intentsBase6',
       transform: 'translateY(-50%)',
     },
-  }),
-  badge: cssObj({
-    position: 'absolute',
-    top: 2,
-    left: 2,
-    fontSize: 8,
-    color: '$intentsError10 !important',
-    transform: 'translate(25%, -25%)',
   }),
 };

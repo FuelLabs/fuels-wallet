@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Button, Checkbox, Form } from '@fuel-ui/react';
+import { cssObj, Alert, Box, Button, Checkbox, Form } from '@fuel-wallet/ui';
 import { useState } from 'react';
 import { Mnemonic, MotionStack, animations } from '~/systems/Core';
 

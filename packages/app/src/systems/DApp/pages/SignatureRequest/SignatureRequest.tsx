@@ -1,4 +1,4 @@
-import { Box, Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
+import { Box, Button, Card, Flex, HelperIcon, Text } from '@fuel-wallet/ui';
 import type { HashableMessage } from 'fuels';
 import { arrayify, hexlify } from 'fuels';
 import { AccountInfo } from '~/systems/Account';
@@ -64,75 +64,73 @@ export function SignatureRequest() {
   );
 
   return (
-    <>
-      <Layout title={'Signature Request'} isLoading={isLoading} noBorder>
-        <Layout.Content css={styles.content}>
-          <Box.Flex gap="$4" direction="column">
-            <ConnectInfo
-              headerText="Signing a message to:"
-              origin={origin}
-              title={title || ''}
-              favIconUrl={favIconUrl}
-            />
-            {account && (
-              <AccountInfo account={account} headerText="Signer account:" />
-            )}
-            <Card>
-              <Card.Header space="compact">
-                <HelperIcon
-                  message="Make sure you know the message being signed"
-                  iconSize={14}
-                >
-                  Message:
-                </HelperIcon>
-              </Card.Header>
-              <Card.Body>
-                <Flex
-                  css={{
-                    ...coreStyles.scrollable(),
-                    overflowX: 'auto',
-                  }}
-                >
-                  <div>
-                    <Text
-                      css={{
-                        overflowX: 'hidden',
-                        whiteSpace: 'pre-wrap',
-                        wordBreak: 'break-word',
-                        textIndent: '-0.25em',
-                        fontFamily: 'monospace',
-                        color: isValid ? 'inherit' : '$red10',
-                      }}
-                    >
-                      {formattedMessage}
-                    </Text>
-                  </div>
-                </Flex>
-                {!isValid && (
-                  <Text css={{ color: '$red10', marginTop: '$2' }}>
-                    Cannot sign this message due to invalid format
+    <Layout title={'Signature Request'} isLoading={isLoading} noBorder>
+      <Layout.Content css={styles.content}>
+        <Box.Flex gap="$4" direction="column">
+          <ConnectInfo
+            headerText="Signing a message to:"
+            origin={origin}
+            title={title || ''}
+            favIconUrl={favIconUrl}
+          />
+          {account && (
+            <AccountInfo account={account} headerText="Signer account:" />
+          )}
+          <Card>
+            <Card.Header space="compact">
+              <HelperIcon
+                message="Make sure you know the message being signed"
+                iconSize={14}
+              >
+                Message:
+              </HelperIcon>
+            </Card.Header>
+            <Card.Body>
+              <Flex
+                css={{
+                  ...coreStyles.scrollable(),
+                  overflowX: 'auto',
+                }}
+              >
+                <div>
+                  <Text
+                    css={{
+                      overflowX: 'hidden',
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-word',
+                      textIndent: '-0.25em',
+                      fontFamily: 'monospace',
+                      color: isValid ? 'inherit' : '$red10',
+                    }}
+                  >
+                    {formattedMessage}
                   </Text>
-                )}
-              </Card.Body>
-            </Card>
-          </Box.Flex>
-        </Layout.Content>
-        <Layout.BottomBar>
-          <Button aria-label="Cancel" variant="ghost" onPress={handlers.reject}>
-            Cancel
-          </Button>
-          <Button
-            intent="primary"
-            aria-label="Sign"
-            onPress={handlers.sign}
-            isLoading={isLoading}
-            isDisabled={!isValid}
-          >
-            Sign
-          </Button>
-        </Layout.BottomBar>
-      </Layout>
-    </>
+                </div>
+              </Flex>
+              {!isValid && (
+                <Text css={{ color: '$red10', marginTop: '$2' }}>
+                  Cannot sign this message due to invalid format
+                </Text>
+              )}
+            </Card.Body>
+          </Card>
+        </Box.Flex>
+      </Layout.Content>
+      <Layout.BottomBar>
+        <Button aria-label="Cancel" variant="ghost" onPress={handlers.reject}>
+          Cancel
+        </Button>
+        <Button
+          intent="primary"
+          aria-label="Sign"
+          onPress={handlers.sign}
+          isLoading={isLoading}
+          isDisabled={!isValid}
+        >
+          Sign
+        </Button>
+      </Layout.BottomBar>
+    </Layout>
   );
 }
 

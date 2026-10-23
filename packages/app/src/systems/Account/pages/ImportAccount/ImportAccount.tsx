@@ -1,8 +1,7 @@
-import { Alert, Box, Button, Dialog, Icon } from '@fuel-ui/react';
+import { Alert, Box, Button, Dialog, Icon, cssObj } from '@fuel-wallet/ui';
 import { styles } from '~/systems/Core';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 
-import { cssObj } from '@fuel-ui/css';
 import { ImportAccountForm } from '../../components/ImportAccountForm';
 import { useAccounts, useImportAccount } from '../../hooks';
 import { useImportAccountForm } from '../../hooks/useImportAccountForm';

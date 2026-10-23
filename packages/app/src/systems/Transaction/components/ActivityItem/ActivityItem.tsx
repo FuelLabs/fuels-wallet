@@ -1,6 +1,12 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Card, Copyable, Icon, Text, Tooltip } from '@fuel-ui/react';
-import type { TransactionSummary } from 'fuels';
+import {
+  cssObj,
+  Box,
+  Card,
+  Copyable,
+  Icon,
+  Text,
+  Tooltip,
+} from '@fuel-wallet/ui';
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Pages, shortAddress } from '~/systems/Core';
@@ -58,7 +64,7 @@ export const ActivityItem: TxItemComponent = ({
         <Box.Flex css={styles.row}>
           <Box.Flex css={styles.fromToTextWrapper}>
             <Text css={styles.label}>{toOrFromText}</Text>
-            {!!toOrFromAddress && toDomain ? (
+            {toOrFromAddress && toDomain ? (
               <Tooltip content={shortAddress(toOrFromAddress)}>
                 <Text color="accent8">{toDomain}</Text>
               </Tooltip>

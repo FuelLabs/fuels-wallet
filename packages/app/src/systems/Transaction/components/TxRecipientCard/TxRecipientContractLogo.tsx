@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Icon, Image } from '@fuel-ui/react';
+import { cssObj, Box, Icon, Image } from '@fuel-wallet/ui';
 import { useEffect, useRef, useState } from 'react';
 import { getProjectImage } from '~/systems/Ecosystem/utils/getProjectImage';
 

@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Tabs } from '@fuel-ui/react';
+import { cssObj, Tabs } from '@fuel-wallet/ui';
 import { useNavigate } from 'react-router-dom';
 import { BalanceWidget, useAccounts } from '~/systems/Account';
 import { QuickConsolidateCoins } from '~/systems/ConsolidateCoins/components/QuickConsolidateCoins';

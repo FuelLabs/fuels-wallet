@@ -1,5 +1,5 @@
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
   Avatar,
   Badge,
   Box,
@@ -12,8 +12,8 @@ import {
   Text,
   Tooltip,
   VStack,
-} from '@fuel-ui/react';
-import { type FC, useMemo } from 'react';
+} from '@fuel-wallet/ui';
+import { type FC, type KeyboardEvent, type MouseEvent, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Pages, shortAddress } from '~/systems/Core';
 
@@ -36,6 +36,8 @@ export type AssetItemProps = {
   onEdit?: (assetId: string) => void;
   shouldShowAddAssetBtn?: boolean;
   shouldShowCopyAssetAddress?: boolean;
+  /** Makes the whole row open the asset. Inner buttons keep their own action. */
+  onPress?: () => void;
 };
 
 type AssetItemComponent = FC<AssetItemProps> & {
@@ -51,6 +53,7 @@ export const AssetItem: AssetItemComponent = ({
   onEdit,
   shouldShowAddAssetBtn,
   shouldShowCopyAssetAddress,
+  onPress,
 }) => {
   const navigate = useNavigate();
   const fuelAssetFromInputAsset = useFuelAsset({ asset: inputAsset });
@@ -157,7 +160,23 @@ export const AssetItem: AssetItemComponent = ({
       css={{
         alignItems: 'center',
         '& > .fuel_Box-flex:first-child': { minWidth: 140 },
+        ...(onPress && styles.pressable),
       }}
+      {...(onPress && {
+        role: 'button',
+        tabIndex: 0,
+        onClick: (e: MouseEvent<HTMLElement>) => {
+          if ((e.target as HTMLElement).closest('button, a')) return;
+          onPress();
+        },
+        onKeyDown: (e: KeyboardEvent<HTMLElement>) => {
+          if (e.target !== e.currentTarget) return;
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onPress();
+          }
+        },
+      })}
     >
       <Box css={styles.icon}>
         {icon ? (
@@ -223,6 +242,18 @@ export const AssetItem: AssetItemComponent = ({
 AssetItem.Loader = AssetItemLoader;
 
 const styles = {
+  pressable: cssObj({
+    cursor: 'pointer',
+    transition: 'background-color 200ms',
+
+    '@media (hover: hover)': {
+      '&:hover': { background: '$muted' },
+    },
+    '&:focus-visible': {
+      outline: '2px solid $focus',
+      outlineOffset: '-2px',
+    },
+  }),
   icon: cssObj({
     height: 36,
     width: 36,
