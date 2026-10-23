@@ -918,7 +918,10 @@ function Scope({ autoFocus, contain, children }: FocusScopeProps) {
   const onMountAutoFocus = (e: Event) => {
     if (!autoFocus) return e.preventDefault();
     const scope = e.currentTarget as HTMLElement | null;
-    const field = scope?.querySelector<HTMLInputElement>(FIELD);
+    const fields = Array.from(
+      scope?.querySelectorAll<HTMLInputElement>(FIELD) ?? []
+    );
+    const field = fields.find((f) => !f.disabled) ?? fields[0];
     if (!field) return;
     e.preventDefault();
     focusWhenEnabled(field);
