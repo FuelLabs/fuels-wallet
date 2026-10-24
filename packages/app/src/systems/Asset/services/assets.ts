@@ -40,6 +40,25 @@ export type AssetInputs = {
   };
 };
 
+function pickAssetId(assetId: unknown): { assetId?: string } {
+  return typeof assetId === 'string' ? { assetId } : {};
+}
+
+function pickNetworkFields(
+  network: NetworkEthereum | NetworkFuel
+): NetworkEthereum | NetworkFuel {
+  if (network.type === 'fuel') {
+    const { type, chainId, decimals, assetId, contractId } = network;
+    return contractId
+      ? { type, chainId, decimals, assetId, contractId }
+      : { type, chainId, decimals, assetId };
+  }
+  const { type, chainId, decimals, address } = network;
+  return address
+    ? { type, chainId, decimals, address }
+    : { type, chainId, decimals };
+}
+
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class AssetService {
   static async upsertAsset(input: AssetInputs['upsertAsset']) {
@@ -360,12 +379,14 @@ export class AssetService {
       throw new Error('No assets to add');
     }
 
-    // trim asset props as will need to validate comparing strings
+    // Keep only descriptive fields, trust fields like verified or rate belong to the wallet
     const trimmedAssets = assets.map((a) => ({
-      ...a,
+      // biome-ignore lint/suspicious/noExplicitAny: Incoming custom asset ids have assetId at the root
+      ...pickAssetId((a as any)?.assetId),
       name: a.name?.trim(),
       symbol: a.symbol?.trim(),
       icon: a.icon?.trim(),
+      networks: (a.networks || []).map(pickNetworkFields),
     }));
 
     // Check for invalid names
@@ -412,8 +433,7 @@ export class AssetService {
             existingAssetSymbolMap,
           },
           {
-            // biome-ignore lint/suspicious/noExplicitAny: Incoming custom asset ids have assetId at the root
-            assetId: (asset as any)?.assetId as string,
+            assetId: asset.assetId as string,
             name: asset.name,
             symbol: asset.symbol,
           }
@@ -490,6 +510,18 @@ export class AssetService {
           isCustom: true,
         });
       } else {
+        const takenNetwork = asset.networks.find(
+          (network) =>
+            network.type === 'fuel' &&
+            assetIdChainMap.get(network.assetId) === network.chainId
+        );
+        if (takenNetwork) {
+          throw new Error('Asset ID already exists');
+        }
+        for (const network of asset.networks) {
+          if (network.type === 'fuel')
+            assetIdChainMap.set(network.assetId, network.chainId);
+        }
         newAssetsToAdd.push(asset);
       }
     }

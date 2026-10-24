@@ -188,3 +188,62 @@ describe('AssetService.setListedAssets', () => {
     expect(await db.assets.get('Fake Fuel')).toEqual(custom);
   });
 });
+
+describe('AssetService.validateAddAssets', () => {
+  beforeEach(async () => {
+    await db.assets.clear();
+    await db.assets.bulkAdd(
+      LIST.map((asset) => ({ ...asset, isCustom: false }))
+    );
+  });
+
+  it('keeps only descriptive fields from a dApp asset', async () => {
+    const [asset] = await AssetService.validateAddAssets([
+      {
+        ...makeAsset('My Token', 'MTK', '0x09'),
+        verified: true,
+        isCustom: false,
+        rate: 1000,
+        networks: [
+          {
+            type: 'fuel',
+            chainId: 9889,
+            assetId: '0x09',
+            decimals: 9,
+            verified: true,
+            isCustom: false,
+            rate: 1000,
+          },
+        ],
+      } as unknown as AssetData,
+    ]);
+
+    expect(asset).toEqual(makeAsset('My Token', 'MTK', '0x09'));
+  });
+
+  it('rejects a new asset that reuses an asset id on the same chain', async () => {
+    await expect(
+      AssetService.validateAddAssets([makeAsset('Zzz USDC', 'ZUSDC', '0x03')])
+    ).rejects.toThrow('Asset ID already exists');
+  });
+
+  it('rejects two new assets with the same asset id', async () => {
+    await expect(
+      AssetService.validateAddAssets([
+        makeAsset('First Token', 'FIRST', '0x09'),
+        makeAsset('Second Token', 'SECOND', '0x09'),
+      ])
+    ).rejects.toThrow('Asset ID already exists');
+  });
+
+  it('still adds an asset id that is listed on another chain', async () => {
+    const asset = {
+      ...makeAsset('Bridged USDC', 'BUSDC', '0x03'),
+      networks: [{ type: 'fuel', chainId: 0, assetId: '0x03', decimals: 6 }],
+    } as AssetData;
+
+    await expect(AssetService.validateAddAssets([asset])).resolves.toEqual([
+      asset,
+    ]);
+  });
+});
