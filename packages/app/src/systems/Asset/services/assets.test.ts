@@ -236,6 +236,18 @@ describe('AssetService.validateAddAssets', () => {
     ).rejects.toThrow('Asset ID already exists');
   });
 
+  it('rejects an asset id taken on its chain when the same id is also on another chain', async () => {
+    await db.assets.add({
+      ...makeAsset('Wrapped ETH', 'WETH', '0x01'),
+      networks: [{ type: 'fuel', chainId: 0, assetId: '0x01', decimals: 9 }],
+      isCustom: true,
+    } as AssetData);
+
+    await expect(
+      AssetService.validateAddAssets([makeAsset('Zzz ETH', 'ZETH', '0x01')])
+    ).rejects.toThrow('Asset ID already exists');
+  });
+
   it('still adds an asset id that is listed on another chain', async () => {
     const asset = {
       ...makeAsset('Bridged USDC', 'BUSDC', '0x03'),

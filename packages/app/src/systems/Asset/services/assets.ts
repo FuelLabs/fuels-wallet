@@ -409,12 +409,25 @@ export class AssetService {
       symbolSet.add(asset.symbol);
     }
 
+    const existingAssets = await AssetService.getAssets();
     const {
       existingAssetNameMap,
       existingAssetSymbolMap,
       assetIdChainMap,
       networkAddressChainMap,
-    } = await AssetService.mapAssetsByAddressAndAssetId();
+    } = await AssetService.mapAssetsByAddressAndAssetId(existingAssets);
+    // assetIdChainMap keeps one chain per asset id, this keeps every pair
+    const fuelAssetKey = (chainId: number, assetId: string) =>
+      `${chainId}:${assetId}`;
+    const takenFuelAssets = new Set(
+      existingAssets.flatMap((existing) =>
+        existing.networks.flatMap((network) =>
+          network.type === 'fuel'
+            ? [fuelAssetKey(network.chainId, network.assetId)]
+            : []
+        )
+      )
+    );
 
     const newAssetsToAdd: AssetData[] = [];
     // Assets that exist but in different chains
@@ -488,8 +501,12 @@ export class AssetService {
           if (!isDuplicate) {
             nonDuplicateNetworks.push(newNetwork);
             // Include new data in maps to check for duplication
-            if (newNetwork.type === 'fuel')
+            if (newNetwork.type === 'fuel') {
               assetIdChainMap.set(newNetwork.assetId, newNetwork.chainId);
+              takenFuelAssets.add(
+                fuelAssetKey(newNetwork.chainId, newNetwork.assetId)
+              );
+            }
             if (newNetwork.type === 'ethereum' && newNetwork.address)
               networkAddressChainMap.set(
                 newNetwork.address,
@@ -510,18 +527,15 @@ export class AssetService {
           isCustom: true,
         });
       } else {
-        const takenNetwork = asset.networks.find(
-          (network) =>
-            network.type === 'fuel' &&
-            assetIdChainMap.get(network.assetId) === network.chainId
+        const fuelKeys = asset.networks.flatMap((network) =>
+          network.type === 'fuel'
+            ? [fuelAssetKey(network.chainId, network.assetId)]
+            : []
         );
-        if (takenNetwork) {
+        if (fuelKeys.some((key) => takenFuelAssets.has(key))) {
           throw new Error('Asset ID already exists');
         }
-        for (const network of asset.networks) {
-          if (network.type === 'fuel')
-            assetIdChainMap.set(network.assetId, network.chainId);
-        }
+        for (const key of fuelKeys) takenFuelAssets.add(key);
         newAssetsToAdd.push(asset);
       }
     }
