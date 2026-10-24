@@ -136,6 +136,12 @@ export class CommunicationProtocol extends BaseConnection {
     )
       return;
     if (!this.messageTypesMap[message.type]) return;
+    // Content scripts relay what any web page posts, so only wallet pages may answer popups
+    if (
+      message.type !== MessageTypes.request &&
+      !sender.url?.startsWith(chrome.runtime.getURL(''))
+    )
+      return;
 
     const portId = this.getPortId(port);
 
