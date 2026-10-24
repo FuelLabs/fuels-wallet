@@ -466,8 +466,9 @@ export class AssetService {
           const isDuplicate = existingAsset.networks.some((existingNetwork) => {
             if (newNetwork.type !== existingNetwork.type) return false;
             if (newNetwork.type === 'fuel' && existingNetwork.type === 'fuel') {
-              const isAssetIdDuplicate =
-                assetIdChainMap.get(newNetwork.assetId) === newNetwork.chainId;
+              const isAssetIdDuplicate = takenFuelAssets.has(
+                fuelAssetKey(newNetwork.chainId, newNetwork.assetId)
+              );
               if (newNetwork.chainId !== existingNetwork.chainId) {
                 return isAssetIdDuplicate;
               }
@@ -535,7 +536,11 @@ export class AssetService {
         if (fuelKeys.some((key) => takenFuelAssets.has(key))) {
           throw new Error('Asset ID already exists');
         }
-        for (const key of fuelKeys) takenFuelAssets.add(key);
+        for (const network of asset.networks) {
+          if (network.type !== 'fuel') continue;
+          assetIdChainMap.set(network.assetId, network.chainId);
+          takenFuelAssets.add(fuelAssetKey(network.chainId, network.assetId));
+        }
         newAssetsToAdd.push(asset);
       }
     }

@@ -248,6 +248,15 @@ describe('AssetService.validateAddAssets', () => {
     ).rejects.toThrow('Asset ID already exists');
   });
 
+  it('rejects a listed asset network that reuses an id claimed earlier in the request', async () => {
+    await expect(
+      AssetService.validateAddAssets([
+        makeAsset('First Token', 'FIRST', '0x09'),
+        makeAsset('USDC', 'USDC', '0x09'),
+      ])
+    ).rejects.toThrow('already exists in wallet settings');
+  });
+
   it('still adds an asset id that is listed on another chain', async () => {
     const asset = {
       ...makeAsset('Bridged USDC', 'BUSDC', '0x03'),
