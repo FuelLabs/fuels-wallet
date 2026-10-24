@@ -420,13 +420,19 @@ export class AssetService {
     const fuelAssetKey = (chainId: number, assetId: string) =>
       `${chainId}:${assetId}`;
     const takenFuelAssets = new Set(
-      existingAssets.flatMap((existing) =>
-        existing.networks.flatMap((network) =>
-          network.type === 'fuel'
-            ? [fuelAssetKey(network.chainId, network.assetId)]
-            : []
-        )
-      )
+      existingAssets.flatMap((existing) => {
+        // Older custom assets keep their id at the root, mapped to chain 0 like assetIdChainMap does
+        // biome-ignore lint/suspicious/noExplicitAny: Incoming custom asset ids have the assetId at the root
+        const looseAssetId = (existing as any)?.assetId as string | undefined;
+        return [
+          ...(looseAssetId ? [fuelAssetKey(0, looseAssetId)] : []),
+          ...existing.networks.flatMap((network) =>
+            network.type === 'fuel'
+              ? [fuelAssetKey(network.chainId, network.assetId)]
+              : []
+          ),
+        ];
+      })
     );
 
     const newAssetsToAdd: AssetData[] = [];

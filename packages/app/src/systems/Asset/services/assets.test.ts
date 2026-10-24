@@ -257,6 +257,28 @@ describe('AssetService.validateAddAssets', () => {
     ).rejects.toThrow('already exists in wallet settings');
   });
 
+  it('rejects a listed asset network that reuses a root level custom asset id', async () => {
+    await db.assets.add({
+      name: 'Old Custom',
+      symbol: 'OLD',
+      icon: '',
+      assetId: '0x0a',
+      networks: [],
+      isCustom: true,
+    } as unknown as AssetData);
+
+    await expect(
+      AssetService.validateAddAssets([
+        {
+          ...makeAsset('USDC', 'USDC', '0x0a'),
+          networks: [
+            { type: 'fuel', chainId: 0, assetId: '0x0a', decimals: 6 },
+          ],
+        } as AssetData,
+      ])
+    ).rejects.toThrow('already exists in wallet settings');
+  });
+
   it('still adds an asset id that is listed on another chain', async () => {
     const asset = {
       ...makeAsset('Bridged USDC', 'BUSDC', '0x03'),
