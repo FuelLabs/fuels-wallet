@@ -3,7 +3,14 @@
 // dApps live in tabs whose URL belongs to the host page, so a tab query by
 // origin cannot find them.
 
-export type DappFrame = { tabId: number; frameId: number; origin: string };
+// connectionId tells registrations of the same frame apart, so cleanup for
+// a failed delivery can't remove a newer one
+export type DappFrame = {
+  tabId: number;
+  frameId: number;
+  origin: string;
+  connectionId: string;
+};
 
 const KEY = 'dappFrames';
 const MAX_FRAMES = 200;
@@ -43,9 +50,9 @@ export function rememberFrame(frame: DappFrame) {
   });
 }
 
-export function forgetFrame(tabId: number, frameId: number) {
+export function forgetFrame(connectionId: string) {
   return update((frames) =>
-    frames.filter((f) => f.tabId !== tabId || f.frameId !== frameId)
+    frames.filter((f) => f.connectionId !== connectionId)
   );
 }
 

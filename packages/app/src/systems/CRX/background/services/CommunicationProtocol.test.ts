@@ -140,6 +140,39 @@ describe('CommunicationProtocol.broadcast', () => {
     });
   });
 
+  it('keeps a frame that reconnected before a failed delivery settled', async () => {
+    const protocol = new CommunicationProtocol();
+    const old = createPort(DAPP, 3, 5);
+    protocol.addConnection(old);
+    protocol.removePort(protocol.getPortId(old)!);
+    let failDelivery: (error: Error) => void = () => {};
+    sendMessage.mockImplementationOnce(
+      () =>
+        new Promise((_, reject) => {
+          failDelivery = reject;
+        })
+    );
+
+    protocol.broadcast(DAPP, event);
+    await flush();
+    const reloaded = createPort(DAPP, 3, 5);
+    protocol.addConnection(reloaded);
+    protocol.removePort(protocol.getPortId(reloaded)!);
+    failDelivery(new Error('Receiving end does not exist'));
+    await flush();
+    sendMessage.mockClear();
+    sendMessage.mockResolvedValue(undefined);
+
+    protocol.broadcast(DAPP, event);
+    await flush();
+
+    expect(sendMessage).toHaveBeenCalledWith(
+      3,
+      { type: 'event', origin: DAPP, message: event },
+      { frameId: 5 }
+    );
+  });
+
   it('does not let a stale origin block the live one in the same frame', async () => {
     const protocol = new CommunicationProtocol();
     const stale = createPort(OTHER, 3, 0);

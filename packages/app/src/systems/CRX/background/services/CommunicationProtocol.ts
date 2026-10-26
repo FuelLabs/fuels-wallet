@@ -54,7 +54,12 @@ export class CommunicationProtocol extends BaseConnection {
     this.setupListeners(id);
     const { tab, frameId, origin } = port.sender ?? {};
     if (tab?.id !== undefined && origin) {
-      rememberFrame({ tabId: tab.id, frameId: frameId ?? 0, origin });
+      rememberFrame({
+        tabId: tab.id,
+        frameId: frameId ?? 0,
+        origin,
+        connectionId: id,
+      });
     }
   }
 
@@ -119,7 +124,12 @@ export class CommunicationProtocol extends BaseConnection {
     message: EventMessage,
     skip: Set<string>
   ) {
-    const send = (tabId: number, frameId: number, origin: string) => {
+    const send = (
+      tabId: number,
+      frameId: number,
+      origin: string,
+      connectionId?: string
+    ) => {
       const key = deliveryKey(tabId, frameId, origin);
       if (skip.has(key)) return;
       skip.add(key);
@@ -132,14 +142,17 @@ export class CommunicationProtocol extends BaseConnection {
         .catch((error) => {
           // A frame that is gone has no receiving end; other errors, like
           // the content script not answering, still mean it was delivered
-          if (/receiving end|no frame/i.test(String(error?.message))) {
-            forgetFrame(tabId, frameId);
+          if (
+            connectionId &&
+            /receiving end|no frame/i.test(String(error?.message))
+          ) {
+            forgetFrame(connectionId);
           }
         });
     };
     try {
       for (const frame of await framesFor(origins)) {
-        send(frame.tabId, frame.frameId, frame.origin);
+        send(frame.tabId, frame.frameId, frame.origin, frame.connectionId);
       }
       for (const origin of origins) {
         const tabs = await chrome.tabs.query({ url: `${origin}/*` });
