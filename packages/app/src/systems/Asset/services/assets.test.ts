@@ -279,6 +279,54 @@ describe('AssetService.validateAddAssets', () => {
     ).rejects.toThrow('already exists in wallet settings');
   });
 
+  it('drops a used fuel id added to a listed asset with only ethereum networks', async () => {
+    await db.assets.add({
+      name: 'Bridged',
+      symbol: 'BRG',
+      icon: '',
+      networks: [{ type: 'ethereum', chainId: 1, decimals: 18 }],
+      isCustom: false,
+    } as AssetData);
+    const fresh = { type: 'fuel', chainId: 0, assetId: '0x0b', decimals: 9 };
+
+    const [asset] = await AssetService.validateAddAssets([
+      {
+        name: 'Bridged',
+        symbol: 'BRG',
+        icon: '',
+        networks: [
+          { type: 'fuel', chainId: 9889, assetId: '0x02', decimals: 9 },
+          fresh,
+        ],
+      } as AssetData,
+    ]);
+
+    expect(asset.networks).toEqual([fresh]);
+  });
+
+  it('drops a used ethereum address added to a listed asset with only fuel networks', async () => {
+    await db.assets.add({
+      name: 'Token On Ethereum',
+      symbol: 'TOE',
+      icon: '',
+      networks: [
+        { type: 'ethereum', chainId: 1, decimals: 18, address: '0xaa' },
+      ],
+      isCustom: false,
+    } as AssetData);
+
+    await expect(
+      AssetService.validateAddAssets([
+        {
+          ...makeAsset('USDC', 'USDC', '0x03'),
+          networks: [
+            { type: 'ethereum', chainId: 1, decimals: 6, address: '0xaa' },
+          ],
+        } as AssetData,
+      ])
+    ).rejects.toThrow('already exists in wallet settings');
+  });
+
   it('still adds an asset id that is listed on another chain', async () => {
     const asset = {
       ...makeAsset('Bridged USDC', 'BUSDC', '0x03'),

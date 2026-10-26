@@ -410,29 +410,33 @@ export class AssetService {
     }
 
     const existingAssets = await AssetService.getAssets();
-    const {
-      existingAssetNameMap,
-      existingAssetSymbolMap,
-      assetIdChainMap,
-      networkAddressChainMap,
-    } = await AssetService.mapAssetsByAddressAndAssetId(existingAssets);
-    // assetIdChainMap keeps one chain per asset id, this keeps every pair
-    const fuelAssetKey = (chainId: number, assetId: string) =>
-      `${chainId}:${assetId}`;
+    const { existingAssetNameMap, existingAssetSymbolMap, assetIdChainMap } =
+      await AssetService.mapAssetsByAddressAndAssetId(existingAssets);
+    // The id maps keep one chain per asset id or address, these keep every pair
+    const networkKey = (chainId: number, id: string) => `${chainId}:${id}`;
     const takenFuelAssets = new Set(
       existingAssets.flatMap((existing) => {
         // Older custom assets keep their id at the root, mapped to chain 0 like assetIdChainMap does
         // biome-ignore lint/suspicious/noExplicitAny: Incoming custom asset ids have the assetId at the root
         const looseAssetId = (existing as any)?.assetId as string | undefined;
         return [
-          ...(looseAssetId ? [fuelAssetKey(0, looseAssetId)] : []),
+          ...(looseAssetId ? [networkKey(0, looseAssetId)] : []),
           ...existing.networks.flatMap((network) =>
             network.type === 'fuel'
-              ? [fuelAssetKey(network.chainId, network.assetId)]
+              ? [networkKey(network.chainId, network.assetId)]
               : []
           ),
         ];
       })
+    );
+    const takenEthereumAddresses = new Set(
+      existingAssets.flatMap((existing) =>
+        existing.networks.flatMap((network) =>
+          network.type === 'ethereum' && network.address
+            ? [networkKey(network.chainId, network.address)]
+            : []
+        )
+      )
     );
 
     const newAssetsToAdd: AssetData[] = [];
@@ -469,41 +473,23 @@ export class AssetService {
         const nonDuplicateNetworks: Array<NetworkEthereum | NetworkFuel> = [];
 
         for (const newNetwork of asset.networks) {
-          const isDuplicate = existingAsset.networks.some((existingNetwork) => {
-            if (newNetwork.type !== existingNetwork.type) return false;
-            if (newNetwork.type === 'fuel' && existingNetwork.type === 'fuel') {
-              const isAssetIdDuplicate = takenFuelAssets.has(
-                fuelAssetKey(newNetwork.chainId, newNetwork.assetId)
-              );
-              if (newNetwork.chainId !== existingNetwork.chainId) {
-                return isAssetIdDuplicate;
-              }
-              return (
-                isAssetIdDuplicate ||
-                (newNetwork.assetId === existingNetwork.assetId &&
-                  newNetwork.contractId === existingNetwork.contractId)
-              );
-            }
-            if (
-              newNetwork.type === 'ethereum' &&
-              existingNetwork.type === 'ethereum'
-            ) {
-              const isAddressDuplicate =
-                newNetwork.address &&
-                networkAddressChainMap.get(newNetwork.address) ===
-                  newNetwork.chainId;
-
-              if (newNetwork.chainId !== existingNetwork.chainId) {
-                return isAddressDuplicate;
-              }
-              return (
-                isAddressDuplicate ||
-                (newNetwork.address === existingNetwork.address &&
-                  newNetwork.chainId === existingNetwork.chainId)
-              );
-            }
-            return false;
-          });
+          // Checked before looking at the existing networks, which may not
+          // include one of the same type
+          const isDuplicate =
+            newNetwork.type === 'fuel'
+              ? takenFuelAssets.has(
+                  networkKey(newNetwork.chainId, newNetwork.assetId)
+                )
+              : newNetwork.address
+                ? takenEthereumAddresses.has(
+                    networkKey(newNetwork.chainId, newNetwork.address)
+                  )
+                : existingAsset.networks.some(
+                    (existingNetwork) =>
+                      existingNetwork.type === 'ethereum' &&
+                      !existingNetwork.address &&
+                      existingNetwork.chainId === newNetwork.chainId
+                  );
 
           if (!isDuplicate) {
             nonDuplicateNetworks.push(newNetwork);
@@ -511,14 +497,14 @@ export class AssetService {
             if (newNetwork.type === 'fuel') {
               assetIdChainMap.set(newNetwork.assetId, newNetwork.chainId);
               takenFuelAssets.add(
-                fuelAssetKey(newNetwork.chainId, newNetwork.assetId)
+                networkKey(newNetwork.chainId, newNetwork.assetId)
               );
             }
-            if (newNetwork.type === 'ethereum' && newNetwork.address)
-              networkAddressChainMap.set(
-                newNetwork.address,
-                newNetwork.chainId
+            if (newNetwork.type === 'ethereum' && newNetwork.address) {
+              takenEthereumAddresses.add(
+                networkKey(newNetwork.chainId, newNetwork.address)
               );
+            }
           }
         }
 
@@ -536,7 +522,7 @@ export class AssetService {
       } else {
         const fuelKeys = asset.networks.flatMap((network) =>
           network.type === 'fuel'
-            ? [fuelAssetKey(network.chainId, network.assetId)]
+            ? [networkKey(network.chainId, network.assetId)]
             : []
         );
         if (fuelKeys.some((key) => takenFuelAssets.has(key))) {
@@ -545,7 +531,7 @@ export class AssetService {
         for (const network of asset.networks) {
           if (network.type !== 'fuel') continue;
           assetIdChainMap.set(network.assetId, network.chainId);
-          takenFuelAssets.add(fuelAssetKey(network.chainId, network.assetId));
+          takenFuelAssets.add(networkKey(network.chainId, network.assetId));
         }
         newAssetsToAdd.push(asset);
       }
