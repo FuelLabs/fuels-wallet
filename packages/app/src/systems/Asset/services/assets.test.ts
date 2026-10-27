@@ -327,6 +327,40 @@ describe('AssetService.validateAddAssets', () => {
     ).rejects.toThrow('already exists in wallet settings');
   });
 
+  it('rejects a new asset with a known asset id at the root', async () => {
+    await db.assets.add({
+      ...makeAsset('Chain Zero', 'CZ', '0x0c'),
+      networks: [{ type: 'fuel', chainId: 0, assetId: '0x0c', decimals: 9 }],
+      isCustom: true,
+    } as AssetData);
+
+    await expect(
+      AssetService.validateAddAssets([
+        { ...makeAsset('Root Token', 'ROOT', '0x0d'), assetId: '0x0c' },
+      ] as unknown as AssetData[])
+    ).rejects.toThrow('Asset ID already exists');
+  });
+
+  it('rejects two new assets claiming the same id at the root and on a network', async () => {
+    await expect(
+      AssetService.validateAddAssets([
+        {
+          name: 'Root Token',
+          symbol: 'ROOT',
+          icon: '',
+          assetId: '0x0e',
+          networks: [],
+        },
+        {
+          ...makeAsset('Network Token', 'NET', '0x0e'),
+          networks: [
+            { type: 'fuel', chainId: 0, assetId: '0x0e', decimals: 9 },
+          ],
+        },
+      ] as unknown as AssetData[])
+    ).rejects.toThrow('Asset ID already exists');
+  });
+
   it('still adds an asset id that is listed on another chain', async () => {
     const asset = {
       ...makeAsset('Bridged USDC', 'BUSDC', '0x03'),

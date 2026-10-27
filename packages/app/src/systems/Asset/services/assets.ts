@@ -520,18 +520,23 @@ export class AssetService {
           isCustom: true,
         });
       } else {
-        const fuelKeys = asset.networks.flatMap((network) =>
-          network.type === 'fuel'
-            ? [networkKey(network.chainId, network.assetId)]
-            : []
-        );
-        if (fuelKeys.some((key) => takenFuelAssets.has(key))) {
+        // A root id counts as chain 0, like the existing assets above
+        const fuelIds = [
+          ...(asset.assetId ? [{ chainId: 0, assetId: asset.assetId }] : []),
+          ...asset.networks.flatMap((network) =>
+            network.type === 'fuel' ? [network] : []
+          ),
+        ];
+        if (
+          fuelIds.some(({ chainId, assetId }) =>
+            takenFuelAssets.has(networkKey(chainId, assetId))
+          )
+        ) {
           throw new Error('Asset ID already exists');
         }
-        for (const network of asset.networks) {
-          if (network.type !== 'fuel') continue;
-          assetIdChainMap.set(network.assetId, network.chainId);
-          takenFuelAssets.add(networkKey(network.chainId, network.assetId));
+        for (const { chainId, assetId } of fuelIds) {
+          assetIdChainMap.set(assetId, chainId);
+          takenFuelAssets.add(networkKey(chainId, assetId));
         }
         newAssetsToAdd.push(asset);
       }
