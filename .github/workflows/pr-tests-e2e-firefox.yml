@@ -26,6 +26,14 @@ jobs:
           node-version: 24
           pnpm-version: ${{ env.PNPM_VERSION }}
 
+      - uses: FuelLabs/github-actions/setups/docker@master
+        with:
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Start Test Node
+        run: pnpm node:up
+
       - name: Generate .env
         run: cp packages/app/.env.example packages/app/.env
 

@@ -5,12 +5,21 @@ import { writeFileSync } from 'node:fs';
 import { type Server, createServer } from 'node:http';
 import { after, before, test } from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { Signer, hashMessage } from 'fuels';
+import { Provider, Signer, Wallet, bn, hashMessage } from 'fuels';
 import { Firefox, ariaLabel, button, sleep, text, xpath } from './webdriver.ts';
 
 const EXTENSION = fileURLToPath(new URL('../dist-firefox', import.meta.url));
 const WALLET_NAME = process.env.WALLET_NAME || 'Fuel Wallet';
 const PASSWORD = 'Qwe123456$';
+// The wallet's extension object inside Firefox, for scripts run in the browser chrome
+const EXTENSION_PARENT = `ChromeUtils.importESModule('resource://gre/modules/ExtensionParent.sys.mjs')
+  .ExtensionParent.GlobalManager.getExtension('wallet@fuel.network')`;
+// The local node from pnpm node:up, as in packages/app/.env.example
+const NODE_URL =
+  process.env.VITE_FUEL_PROVIDER_URL || 'http://localhost:4000/v1/graphql';
+const GENESIS_SECRET =
+  process.env.GENESIS_SECRET ||
+  '0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298';
 
 // Talks to the wallet's content script the way a dApp connector does
 const DAPP_HTML = `<!doctype html><html><head><title>Firefox e2e dApp</title></head><body>
@@ -199,6 +208,56 @@ test('signs a message the account can be recovered from', async () => {
   });
 });
 
+test('sends a transfer on the local node', async (t) => {
+  const provider = new Provider(NODE_URL);
+  const chainId = await provider.getChainId().catch(() => undefined);
+  if (chainId === undefined) {
+    t.skip(`No node at ${NODE_URL}, run pnpm node:up`);
+    return;
+  }
+  await screenshotOnFailure('send-transaction', async () => {
+    const selected = await requestWithPopup(
+      'selectNetwork',
+      { network: { url: NODE_URL, chainId } },
+      async () => {
+        await firefox.find(text('Review the Network to be added'), 20000);
+        await firefox.click(button('Add Network'));
+      }
+    );
+    assert.equal(selected, true);
+
+    const genesis = Wallet.fromPrivateKey(GENESIS_SECRET, provider);
+    const baseAssetId = await provider.getBaseAssetId();
+    const seed = await genesis.transfer(address, bn(100_000_000), baseAssetId);
+    await seed.waitForResult();
+
+    const receiver = Wallet.generate({ provider });
+    const sender = Wallet.fromAddress(address, provider);
+    const transfer = await sender.createTransfer(
+      receiver.address,
+      100,
+      baseAssetId
+    );
+    await requestWithPopup(
+      'sendTransaction',
+      {
+        address,
+        transaction: JSON.stringify(transfer),
+        provider: { url: NODE_URL },
+      },
+      async () => {
+        await firefox.find(ariaLabel('Confirm Transaction'), 30000);
+        await firefox.click(button('Submit'), 30000);
+      }
+    );
+    await firefox.waitFor(
+      async () => (await receiver.getBalance(baseAssetId)).eq(100),
+      30000,
+      'receiver balance'
+    );
+  });
+});
+
 test('locks and unlocks with the password', async () => {
   await screenshotOnFailure('lock', async () => {
     await firefox.switchToUrl(/popup\.html/);
@@ -207,6 +266,37 @@ test('locks and unlocks with the password', async () => {
     await firefox.find(text('Enter your password to unlock your wallet'));
     await firefox.type(ariaLabel('Your Password'), PASSWORD);
     await firefox.click(button('Unlock'));
+    await firefox.find(text('Account 1'), 30000);
+  });
+});
+
+test('keeps the dApp connected and the wallet unlocked after the background page stops', async () => {
+  await screenshotOnFailure('suspend', async () => {
+    const backgroundState = () =>
+      firefox.executeChrome<string>(
+        `return ${EXTENSION_PARENT}.backgroundState`
+      );
+    const startEvents = () =>
+      firefox.execute<number>(
+        "return window.events.filter((e) => e.event === 'start').length"
+      );
+
+    await firefox.switchTo(dappTab);
+    const startsBefore = await startEvents();
+    // What Firefox does to an idle event page
+    await firefox.executeChrome(
+      `return ${EXTENSION_PARENT}.terminateBackground().then(() => true)`
+    );
+    assert.equal(await backgroundState(), 'stopped');
+
+    // The content script reconnects, which wakes the background
+    assert.equal(await request('isConnected'), true);
+    assert.equal(await request('currentAccount'), address);
+    assert.equal(await startEvents(), startsBefore + 1);
+    assert.equal(await backgroundState(), 'running');
+
+    // The session survives, the wallet opens without asking for the password
+    await firefox.newTab(popupUrl);
     await firefox.find(text('Account 1'), 30000);
   });
 });

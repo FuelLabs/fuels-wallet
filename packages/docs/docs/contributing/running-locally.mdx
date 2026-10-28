@@ -139,3 +139,23 @@ NODE_ENV=test pnpm build:app
 ```sh
 NODE_ENV=test pnpm test:e2e
 ```
+
+### Firefox
+
+Build the Firefox version of the wallet into `packages/app/dist-firefox`:
+
+```sh
+pnpm build:firefox
+```
+
+To try it, open `about:debugging#/runtime/this-firefox`, click `Load Temporary Add-on...` and select `packages/app/dist-firefox/manifest.json`. Firefox removes temporary add-ons when it closes.
+
+The Firefox E2E tests run the build in headless Firefox. They need [geckodriver](https://github.com/mozilla/geckodriver/releases) on your `PATH`, or its path in `GECKODRIVER`. The transaction test needs the local node, and is skipped without it:
+
+```sh
+pnpm node:up
+```
+
+```sh
+pnpm test:e2e:firefox
+```

@@ -94,6 +94,7 @@ export class Firefox {
     const res = await fetch(`${this.base}${path}`, {
       method,
       headers: { 'content-type': 'application/json' },
+      signal: AbortSignal.timeout(60000),
       body: body === undefined ? undefined : JSON.stringify(body),
     }).then((r) => r.json());
     if (res.value?.error) {
@@ -108,6 +109,16 @@ export class Firefox {
       path,
       temporary: true,
     });
+  }
+
+  /** Runs `script` in the browser chrome, with access to Firefox internals */
+  async executeChrome<T = unknown>(script: string, ...args: unknown[]) {
+    await this.call('POST', '/moz/context', { context: 'chrome' });
+    try {
+      return await this.execute<T>(script, ...args);
+    } finally {
+      await this.call('POST', '/moz/context', { context: 'content' });
+    }
   }
 
   url() {
