@@ -13,6 +13,7 @@ import {
 import {
   clearSession,
   getTimer,
+  isExtensionOrigin,
   loadSecret,
   resetTimer,
   saveSecret,
@@ -162,7 +163,7 @@ export class VaultService extends VaultServer {
   }
 
   private async handleRequest(event: RequestMessage) {
-    if (!event.sender?.origin?.includes(chrome.runtime.id)) return;
+    if (!isExtensionOrigin(event.sender?.origin)) return;
     if (event.sender?.id !== chrome.runtime.id) return;
     if (event.target !== VAULT_SCRIPT_NAME) return;
     await this.ensureAutoUnlocked();

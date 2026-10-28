@@ -29,6 +29,8 @@ async function getLatestVersion() {
 }
 
 async function runVersionCheck() {
+  // Firefox has no update check, it updates add-ons from addons.mozilla.org itself
+  if (!chrome.runtime.requestUpdateCheck) return;
   const version = await getLatestVersion();
   // If app version is greater than the one on the release API ignores the check
   if (compareVersions(APP_VERSION, version) > -1) return;

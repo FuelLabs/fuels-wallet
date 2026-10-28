@@ -126,7 +126,8 @@ export class ContentProxyConnection {
   }
 
   onMessageFromWindow = (message: MessageEvent<CommunicationMessage>) => {
-    const { data: event, origin } = Object.freeze(message);
+    // Firefox cannot freeze a page event seen through its Xray wrapper
+    const { data: event, origin } = message;
     if (!this.shouldAcceptMessage(event, origin)) return;
     // The extension was reloaded or disabled, a new content script takes over
     if (!chrome.runtime?.id) {

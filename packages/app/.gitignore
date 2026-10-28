@@ -12,6 +12,8 @@ playwright-html
 node_modules
 dist
 dist-crx*
+dist-firefox
+firefox-e2e-results
 dist-ssr
 *.local
 

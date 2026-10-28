@@ -8,6 +8,8 @@
     "build:all": "run-s build:web build:crx",
     "build:web": "./scripts/build.sh --app=vite",
     "build:crx": "./scripts/build.sh --app=crx",
+    "build:firefox": "CRX_BROWSER=firefox CRX_OUT=dist-firefox ./scripts/build.sh --app=crx",
+    "test:e2e:firefox": "tsx --test firefox-e2e/wallet.e2e.ts",
     "dev": "vite",
     "dev:crx": "vite --config vite.crx.config.ts --mode ${NODE_ENV:-development}",
     "preview": "vite preview",

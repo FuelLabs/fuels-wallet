@@ -15,3 +15,8 @@ export function getTabFromSender(sender: MessageSender) {
 export function getTabFromPort(port: chrome.runtime.Port) {
   return port.sender?.tab;
 }
+
+// Firefox gives each install a random moz-extension:// origin that does not contain the runtime id
+export function isExtensionOrigin(origin?: string) {
+  return !!origin && `${origin}/` === chrome.runtime.getURL('');
+}

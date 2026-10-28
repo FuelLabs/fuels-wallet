@@ -7,6 +7,7 @@ import './load.envs.cts';
 const isReleaseVersion = process.env.VITE_CRX_RELEASE === 'true';
 const imageNameColor = `${isReleaseVersion ? '' : '-black'}`;
 const IS_TEST = process.env.NODE_ENV === 'test';
+const IS_FIREFOX = process.env.CRX_BROWSER === 'firefox';
 
 export default defineManifest({
   manifest_version: 3,
@@ -29,10 +30,20 @@ export default defineManifest({
     default_title: 'Fuel Wallet',
     default_popup: 'popup.html',
   },
-  background: {
-    service_worker: 'src/systems/CRX/background/index.ts',
-    type: 'module',
-  },
+  // Firefox runs the background as an event page, it has no service workers for extensions
+  background: IS_FIREFOX
+    ? { scripts: ['src/systems/CRX/background/index.ts'], type: 'module' }
+    : { service_worker: 'src/systems/CRX/background/index.ts', type: 'module' },
+  ...(IS_FIREFOX && {
+    browser_specific_settings: {
+      gecko: {
+        id: 'wallet@fuel.network',
+        // The ESR, and the first version that reads data_collection_permissions
+        strict_min_version: '140.0',
+        data_collection_permissions: { required: ['none'] },
+      },
+    },
+  }),
   content_scripts: [
     {
       matches: ['<all_urls>'],

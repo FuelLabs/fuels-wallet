@@ -1,0 +1,47 @@
+name: Tests E2E - Firefox
+
+on:
+  pull_request:
+    branches: [main, master, sdk-v2]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests-e2e-firefox:
+    name: Test (Firefox)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract pnpm version from .tool-versions
+        id: get_pnpm
+        run: |
+          PNPM_VERSION=$(grep '^pnpm' .tool-versions | awk '{print $2}')
+          echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
+      - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 24
+          pnpm-version: ${{ env.PNPM_VERSION }}
+
+      - name: Generate .env
+        run: cp packages/app/.env.example packages/app/.env
+
+      # The runner image ships Firefox and geckodriver
+      - name: Run E2E Tests
+        run: |
+          mkdir -p packages/app/firefox-e2e-results
+          firefox --version
+          GECKODRIVER="$GECKOWEBDRIVER/geckodriver" pnpm test:e2e:firefox
+        timeout-minutes: 12
+        env:
+          SCREENSHOTS_DIR: ${{ github.workspace }}/packages/app/firefox-e2e-results
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: firefox-e2e-results
+          path: packages/app/firefox-e2e-results
+          retention-days: 30

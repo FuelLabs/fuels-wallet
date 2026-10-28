@@ -80,11 +80,14 @@ describe('VaultService', () => {
     await flush();
   }
 
-  async function request(method: string) {
+  async function request(
+    method: string,
+    sender = { id: EXT_ID, origin: `chrome-extension://${EXT_ID}` }
+  ) {
     protocolListeners.get(MessageTypes.request)?.({
       id: 'popup-port',
       target: VAULT_SCRIPT_NAME,
-      sender: { id: EXT_ID, origin: `chrome-extension://${EXT_ID}` },
+      sender,
       request: { jsonrpc: '2.0', id: method, method },
     });
     for (let i = 0; i < 100; i++) {
@@ -115,6 +118,7 @@ describe('VaultService', () => {
     (globalThis as any).chrome = {
       runtime: {
         id: EXT_ID,
+        getURL: (path: string) => `chrome-extension://${EXT_ID}/${path}`,
         onMessage: createEvent(),
         onConnect: createEvent(),
         reload: jest.fn(),
@@ -247,4 +251,31 @@ describe('VaultService', () => {
     const response = await request('isLocked');
     expect(response.result).toBe(true);
   }, 30_000);
+
+  it('answers a Firefox wallet page, whose origin does not contain the id', async () => {
+    const FIREFOX_ID = 'wallet@fuel.network';
+    const FIREFOX_ORIGIN =
+      'moz-extension://7d5a3c1e-0000-4000-8000-000000000000';
+    // biome-ignore lint/suspicious/noExplicitAny: test mock
+    const runtime = (globalThis as any).chrome.runtime;
+    runtime.id = FIREFOX_ID;
+    runtime.getURL = (path: string) => `${FIREFOX_ORIGIN}/${path}`;
+    // biome-ignore lint/suspicious/noExplicitAny: test mock
+    service = VaultService.start(protocol as any);
+
+    const response = await request('isLocked', {
+      id: FIREFOX_ID,
+      origin: FIREFOX_ORIGIN,
+    });
+    expect(response.result).toBe(true);
+  });
+
+  it('ignores a request from an origin that only contains the id', async () => {
+    // biome-ignore lint/suspicious/noExplicitAny: test mock
+    service = VaultService.start(protocol as any);
+
+    await expect(
+      request('isLocked', { id: EXT_ID, origin: `https://${EXT_ID}.example` })
+    ).rejects.toThrow('No response');
+  });
 });

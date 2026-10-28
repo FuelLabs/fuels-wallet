@@ -11,6 +11,7 @@ const OUT_DIR = process.env.CRX_OUT || 'dist-crx';
 const APP_VERSION = process.env.VITE_APP_VERSION;
 const APP_VERSION_POSTFIX = process.env.APP_VERSION_POSTFIX || '';
 const IS_TEST = process.env.NODE_ENV === 'test';
+const BROWSER = process.env.CRX_BROWSER === 'firefox' ? 'firefox' : 'chrome';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -31,12 +32,13 @@ export default defineConfig({
     ...(baseConfig.plugins || []),
     crx({
       manifest,
+      browser: BROWSER,
     }) as PluginOption,
     iconSpriteSubsetPlugin({ outDir: OUT_DIR }),
     zipBuildPlugin({
       inDir: OUT_DIR,
       outDir: baseConfig.build?.outDir,
-      outFileName: `fuel-wallet-${APP_VERSION}${APP_VERSION_POSTFIX}.zip`,
+      outFileName: `fuel-wallet-${APP_VERSION}${APP_VERSION_POSTFIX}${BROWSER === 'firefox' ? '-firefox' : ''}.zip`,
       excludeFiles: /(\.map|^mockServiceWorker\.js|^e2e\.html|^\.vite)$/,
     }),
   ],
