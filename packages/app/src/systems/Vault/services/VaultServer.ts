@@ -245,7 +245,7 @@ export class VaultServer extends EventEmitter {
       await this.manager.removeVault(vault.vaultId);
     }
     // A later unlock with empty storage keeps the vaults still in memory
-    await this.manager.lock();
+    await this.lock();
   }
 
   async reload() {
