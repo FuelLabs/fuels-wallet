@@ -295,7 +295,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       (resolvedIntent === 'primary' || resolvedIntent === 'success') &&
       !justIcon;
 
+    /* Like react-aria's usePress, a press never also clicks a parent. */
     const handleClick = (e: MouseEvent<HTMLElement>) => {
+      e.stopPropagation();
       if (disabled) {
         e.preventDefault();
         return;

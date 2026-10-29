@@ -44,4 +44,15 @@ describe('AccountItem', () => {
     const accountItem = await screen.findByLabelText('Account 1');
     await expect(accountItem).toHaveAttribute('data-compact', 'true');
   });
+
+  it('should not select the account when copying its address', async () => {
+    const onPress = jest.fn();
+    const { user } = render(
+      <AccountItem account={ACCOUNT} onPress={onPress} />
+    );
+    await user.click(screen.getByLabelText('Copy to clipboard'));
+    expect(onPress).not.toHaveBeenCalled();
+    await user.click(screen.getByText('Account 1'));
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
 });

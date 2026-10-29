@@ -1,6 +1,11 @@
 import * as RAvatar from '@radix-ui/react-avatar';
 import * as RTooltip from '@radix-ui/react-tooltip';
-import type { ComponentProps, ReactElement, ReactNode } from 'react';
+import type {
+  ComponentProps,
+  MouseEvent,
+  ReactElement,
+  ReactNode,
+} from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';
 import ReactContentLoader from 'react-content-loader';
 import { type Colors, colors, cx, keyframes, css as stitches } from '../css';
@@ -533,7 +538,8 @@ export function Copyable({
     return () => clearTimeout(timer);
   }, [copied]);
 
-  async function handleCopy() {
+  async function handleCopy(e: MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
     await navigator.clipboard.writeText(value);
     setCopied(true);
     toast.success('Copied to clipboard');
