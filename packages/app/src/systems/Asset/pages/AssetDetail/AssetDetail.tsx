@@ -70,10 +70,17 @@ export function AssetDetail() {
   /* Assets the account no longer holds are not in its balances, so look them up. */
   useEffect(() => {
     const chainId = selectedNetwork?.chainId;
+    setFetched(undefined);
     if (balance?.asset || chainId == null || !assetId) return;
+    let cancelled = false;
     AssetsCache.fetchAllAssets(chainId, [assetId])
-      .then((assets) => setFetched(assets.get(assetId) as AssetFuelData))
+      .then((assets) => {
+        if (!cancelled) setFetched(assets.get(assetId) as AssetFuelData);
+      })
       .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
   }, [assetId, balance?.asset, selectedNetwork?.chainId]);
 
   const amount = balance?.amount ?? bn(0);
