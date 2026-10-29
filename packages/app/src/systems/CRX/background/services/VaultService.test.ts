@@ -27,8 +27,8 @@ function createArea(initial: Record<string, unknown> = {}) {
     set: jest.fn(async (items: Record<string, unknown>) => {
       store = { ...store, ...items };
     }),
-    remove: jest.fn(async (key: string) => {
-      delete store[key];
+    remove: jest.fn(async (keys: string | string[]) => {
+      for (const key of [keys].flat()) delete store[key];
     }),
     clear: jest.fn(async () => {
       store = {};
