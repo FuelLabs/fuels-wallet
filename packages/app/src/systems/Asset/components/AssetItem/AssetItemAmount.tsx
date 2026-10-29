@@ -44,7 +44,7 @@ export const AssetItemAmount = ({
               units={decimals}
               visibility={visibility}
             />
-          </Text>
+          </Text>{' '}
           <Text as="span" css={styles.symbol}>
             {symbol}
           </Text>

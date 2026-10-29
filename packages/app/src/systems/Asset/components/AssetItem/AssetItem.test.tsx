@@ -46,4 +46,11 @@ describe('AssetItem', () => {
     await user.click(screen.getByText('(Add)'));
     expect(onPress).not.toHaveBeenCalled();
   });
+
+  it('should read the balance with a space before the symbol', async () => {
+    renderWithProvider(<AssetItem fuelAsset={FUEL_ASSET} amount={1} />);
+    expect(screen.getByLabelText('ETH token balance').textContent).toMatch(
+      / ETH$/
+    );
+  });
 });
