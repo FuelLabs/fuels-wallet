@@ -1,5 +1,11 @@
 # @fuel-wallet/types
 
+## 0.63.1
+
+### Patch Changes
+
+- [#2027](https://github.com/FuelLabs/fuels-wallet/pull/2027) [`44443fb6`](https://github.com/FuelLabs/fuels-wallet/commit/44443fb6b457ccb9310646a471243c5bd13d99c6) Thanks [@nelitow](https://github.com/nelitow)! - fix: Deliver account and network changes to idle dApp tabs after the service worker stops
+
 ## 0.63.0
 
 ## 0.62.3
