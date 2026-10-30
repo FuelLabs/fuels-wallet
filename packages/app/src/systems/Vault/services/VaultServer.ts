@@ -5,11 +5,11 @@ import {
   Address,
   type HashableMessage,
   WalletManager,
-  arrayify,
   transactionRequestify,
 } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
+import { personalSignBytes } from '~/systems/Core/utils/message';
 
 export type VaultAccount = {
   address: string;
@@ -201,10 +201,9 @@ export class VaultServer extends EventEmitter {
       message.personalSign &&
       typeof message.personalSign === 'string'
     ) {
-      const bytes = message.personalSign.startsWith('0x')
-        ? arrayify(message.personalSign)
-        : new TextEncoder().encode(message.personalSign);
-      signature = await wallet.signMessage({ personalSign: bytes });
+      signature = await wallet.signMessage({
+        personalSign: personalSignBytes(message.personalSign),
+      });
     }
 
     if (!signature) {
