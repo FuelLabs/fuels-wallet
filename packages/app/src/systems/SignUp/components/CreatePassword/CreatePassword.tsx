@@ -1,11 +1,9 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Button, InputPassword } from '@fuel-ui/react';
+import { cssObj, Box, Button, InputPassword } from '@fuel-wallet/ui';
 import { yupResolver } from '@hookform/resolvers/yup';
 import debounce from 'lodash.debounce';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { IS_DEVELOPMENT } from '~/config';
 import {
   ControlledField,
   InputSecurePassword,

@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Icon } from '@fuel-ui/react';
+import { cssObj, Box, Icon } from '@fuel-wallet/ui';
 import type { Operation, TransactionStatus } from 'fuels';
 import { useAccounts } from '~/systems/Account';
 

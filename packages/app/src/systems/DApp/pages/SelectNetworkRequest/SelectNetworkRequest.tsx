@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Text, VStack } from '@fuel-ui/react';
+import { cssObj, Box, Button, Text, VStack } from '@fuel-wallet/ui';
 import { useAccounts } from '~/systems/Account';
 import { ConnectInfo, Layout } from '~/systems/Core';
 import { NetworkReviewCard } from '~/systems/Network';

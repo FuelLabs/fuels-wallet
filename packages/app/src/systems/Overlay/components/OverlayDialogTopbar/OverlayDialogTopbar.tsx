@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Dialog, Icon, IconButton } from '@fuel-ui/react';
+import { cssObj, Box, Dialog, Icon, IconButton } from '@fuel-wallet/ui';
 import type { ReactNode } from 'react';
 
 export type OverlayDialogTopbarProps = {

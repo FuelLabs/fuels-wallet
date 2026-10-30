@@ -1,4 +1,4 @@
-import { Button, Input } from '@fuel-ui/react';
+import { Button, Input } from '@fuel-wallet/ui';
 import { fireEvent, render, screen, waitFor } from '@fuel-ui/test-utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';

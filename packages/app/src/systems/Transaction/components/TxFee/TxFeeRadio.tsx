@@ -1,4 +1,4 @@
-import { Box, HStack, RadioGroupItem, Text } from '@fuel-ui/react';
+import { Box, HStack, RadioGroupItem, Text } from '@fuel-wallet/ui';
 import { type BN, DEFAULT_PRECISION } from 'fuels';
 import { type FC, useMemo } from 'react';
 

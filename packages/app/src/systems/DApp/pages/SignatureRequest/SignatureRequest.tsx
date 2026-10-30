@@ -1,4 +1,4 @@
-import { Box, Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
+import { Box, Button, Card, Flex, HelperIcon, Text } from '@fuel-wallet/ui';
 import type { HashableMessage } from 'fuels';
 import { AccountInfo } from '~/systems/Account';
 import { ConnectInfo, Layout, coreStyles } from '~/systems/Core';

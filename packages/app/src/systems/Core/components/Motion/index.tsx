@@ -1,4 +1,4 @@
-import { Box } from '@fuel-ui/react';
+import { Box } from '@fuel-wallet/ui';
 import { motion } from 'framer-motion';
 
 export const MotionStack = motion(Box.Stack);

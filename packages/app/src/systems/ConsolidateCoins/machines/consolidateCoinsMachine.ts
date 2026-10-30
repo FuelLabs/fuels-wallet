@@ -1,4 +1,4 @@
-import { toast } from '@fuel-ui/react';
+import { toast } from '@fuel-wallet/ui';
 import type { Account } from '@fuel-wallet/types';
 import type {
   Coin,

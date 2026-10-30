@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Icon, Text } from '@fuel-ui/react';
+import { cssObj, Avatar, Box, Icon, Text } from '@fuel-wallet/ui';
 import { Address, bn, isB256 } from 'fuels';
 import { useMemo } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
@@ -61,6 +60,8 @@ export function TxOperationCard({
       : '';
 
   const shouldShowAssetAmount = amounts && amounts.length > 0;
+  /* The courier only carries a single asset on a plain transfer under review. */
+  const isCourier = isTransfer && !isPastTense && amounts?.length === 1;
 
   const isFromContract = operation.from.type === 0;
   const isToContract = operation.to.type === 0;
@@ -158,11 +159,13 @@ export function TxOperationCard({
           <Box css={styles.spacer} />
         </Box.Flex>
         <Box>
-          {shouldShowAssetAmount && <TxOperationAssets amounts={amounts} />}
+          {shouldShowAssetAmount && (
+            <TxOperationAssets amounts={amounts} courier={isCourier} />
+          )}
         </Box>
 
         <Box.Flex justify={'flex-start'} align={'center'} css={styles.iconCol}>
-          <Box css={styles.icon}>
+          <Box css={styles.icon} data-courier={isCourier ? 'to' : undefined}>
             {isToContract ? (
               <TxRecipientContractLogo
                 name={toContractMetadata?.name}
@@ -295,54 +298,53 @@ export function TxOperationCard({
 const styles = {
   contentCol: cssObj({
     display: 'flex',
-    backgroundColor: '$bodyBg',
-    'html[class="fuel_dark-theme"] &': {
-      bg: '$gray3',
-    },
+    backgroundColor: '$cardBg',
     flex: 1,
     padding: '$4 $4 $4',
   }),
   spacer: cssObj({
     minHeight: '14px',
-    width: '2px',
+    width: '1px',
     height: '100%',
-    backgroundColor: '$gray6',
-    borderRadius: '$lg',
+    backgroundColor: 'var(--fuel-line)',
   }),
   iconCol: cssObj({
     // padding: '2px 0',
   }),
   badge: cssObj({
-    padding: '2px $1',
-    backgroundColor: '$gray3',
-    borderRadius: '$md',
+    padding: '1px 6px',
+    boxShadow: 'inset 0 0 0 1px var(--fuel-line)',
+
+    '.fuel_Text': {
+      fontFamily: '$mono',
+      fontSize: '11px',
+      letterSpacing: '0.6px',
+      textTransform: 'uppercase',
+      color: '$textLow',
+    },
   }),
   name: cssObj({
-    fontWeight: '$semibold',
-    color: '$textHeading',
+    fontWeight: '$medium',
+    color: '$textHigh',
     mr: '$2',
   }),
   address: cssObj({
-    fontWeight: '$medium',
-    fontSize: '$sm',
-    color: '$textSubText',
+    fontFamily: '$mono',
+    fontSize: '12px',
+    color: '$textLow',
   }),
   blue: cssObj({
-    fontSize: '$sm',
-    fontWeight: '$semibold',
+    fontFamily: '$mono',
+    fontSize: '12px',
+    lineHeight: '16px',
+    letterSpacing: '0.6px',
+    textTransform: 'uppercase',
+    color: '$textLow',
     display: 'flex',
     alignItems: 'center',
     gap: '$1',
-    color: '$indigo10',
-    lineHeight: 'normal',
-
-    'html[class="fuel_dark-theme"] &': {
-      color: '$indigo11',
-    },
   }),
-  avatar: cssObj({
-    opacity: 0.6,
-  }),
+  avatar: cssObj({}),
   icon: cssObj({
     height: 36,
     width: 36,
@@ -360,7 +362,7 @@ const styles = {
     borderRadius: '$full',
     overflow: 'hidden',
     flexShrink: 0,
-    border: '1px solid $gray6',
+    border: '1px solid var(--fuel-line)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

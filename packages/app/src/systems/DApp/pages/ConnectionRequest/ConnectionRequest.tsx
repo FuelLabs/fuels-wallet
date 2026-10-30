@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Card, CardList, Link, Text } from '@fuel-ui/react';
+import { cssObj, Box, Button, Card, CardList, Text } from '@fuel-wallet/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AccountItem } from '~/systems/Account/components/AccountItem';
 import {
@@ -117,27 +116,26 @@ export function ConnectionRequest() {
         <Button variant="ghost" onPress={() => handlers.rejectConnection()}>
           Reject
         </Button>
-        <>
-          {isSelectingAccounts && (
-            <Button
-              type="submit"
-              intent="primary"
-              onPress={() => handlers.next()}
-              isDisabled={!hasCurrentAccounts}
-            >
-              Next
-            </Button>
-          )}
-          {isConnecting && (
-            <Button
-              type="submit"
-              intent="primary"
-              onPress={handlers.authorizeConnection}
-            >
-              Connect
-            </Button>
-          )}
-        </>
+
+        {isSelectingAccounts && (
+          <Button
+            type="submit"
+            intent="primary"
+            onPress={() => handlers.next()}
+            isDisabled={!hasCurrentAccounts}
+          >
+            Next
+          </Button>
+        )}
+        {isConnecting && (
+          <Button
+            type="submit"
+            intent="primary"
+            onPress={handlers.authorizeConnection}
+          >
+            Connect
+          </Button>
+        )}
       </Layout.BottomBar>
     </Layout>
   );

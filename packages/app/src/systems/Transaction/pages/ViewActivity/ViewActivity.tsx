@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Button, Icon, Link, Text } from '@fuel-ui/react';
+import { cssObj, Alert, Box, Button, Icon, Link, Text } from '@fuel-wallet/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Address } from 'fuels';
 import { useNavigate } from 'react-router-dom';

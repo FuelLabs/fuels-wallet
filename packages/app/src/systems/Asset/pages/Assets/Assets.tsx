@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Button, Icon, Tabs } from '@fuel-ui/react';
+import { cssObj, Button, Icon, Tabs } from '@fuel-wallet/ui';
 import { AnimatePresence } from 'framer-motion';
 import { Layout, scrollable } from '~/systems/Core';
 

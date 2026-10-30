@@ -1,5 +1,5 @@
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
   Alert,
   Box,
   Button,
@@ -7,8 +7,11 @@ import {
   HStack,
   Heading,
   Text,
-} from '@fuel-ui/react';
-import { Icon, IconButton, Tooltip } from '@fuel-ui/react';
+  Icon,
+  IconButton,
+  Tooltip,
+  useFuelTheme,
+} from '@fuel-wallet/ui';
 import type { StoredFuelWalletError } from '@fuel-wallet/types';
 import type { JsonEditorProps } from 'json-edit-react';
 import { Suspense, lazy, useEffect, useMemo, useState } from 'react';
@@ -44,6 +47,7 @@ export function ReportErrors({
   errorBoundary?: boolean;
 }) {
   const { handlers, isLoadingSendOnce, errors } = useReportError();
+  const { current: theme } = useFuelTheme();
   const [currentPage, setCurrentPage] = useState(0);
 
   const [currentErrors, setCurrentErrors] =
@@ -204,8 +208,12 @@ export function ReportErrors({
             indent={0}
             data-scrollable
             theme={[
-              'monoDark',
+              theme === 'dark' ? 'monoDark' : 'monoLight',
               {
+                container: {
+                  backgroundColor: 'transparent',
+                  fontFamily: 'var(--font-mono)',
+                },
                 iconEdit: 'grey',
                 boolean: {
                   color: 'red',
@@ -263,13 +271,19 @@ const styles = {
     overflowX: 'hidden',
     '.jer-editor-container': {
       ...scrollable(),
-      fontSize: '$base',
-      overflow: 'overlay',
-      height: 200,
-      maxHeight: 200,
+      boxSizing: 'border-box',
+      flex: 1,
+      minHeight: 160,
+      p: '$3',
+      fontSize: '12px',
+      lineHeight: '18px',
+      borderRadius: 0,
+      boxShadow: 'inset 0 0 0 1px var(--fuel-line)',
     },
-    '.jer-component': {
-      width: 'max-content',
+    /* Long stack traces wrap inside the box instead of scrolling sideways. */
+    '.jer-value-string': {
+      whiteSpace: 'pre-wrap',
+      wordBreak: 'break-word',
     },
   }),
   actionButton: cssObj({
@@ -294,6 +308,7 @@ const styles = {
   }),
   content: cssObj({
     flex: 1,
+    minHeight: 0,
     display: 'flex',
     flexDirection: 'column',
   }),

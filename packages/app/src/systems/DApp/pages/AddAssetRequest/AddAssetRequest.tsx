@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Button, Card } from '@fuel-ui/react';
+import { cssObj, Button, Card } from '@fuel-wallet/ui';
 import { useAccounts } from '~/systems/Account';
 import { AssetItem } from '~/systems/Asset';
 import { ConnectInfo, Layout, shortAddress } from '~/systems/Core';

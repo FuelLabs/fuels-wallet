@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Card, Text } from '@fuel-ui/react';
+import { cssObj, Card, Text } from '@fuel-wallet/ui';
 import { motion } from 'framer-motion';
 import { animations } from '~/systems/Core';
 

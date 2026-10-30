@@ -1,6 +1,10 @@
-import type { ThemeUtilsCSS } from '@fuel-ui/css';
-import { cssObj } from '@fuel-ui/css';
-import { Box, Copyable, Text, Tooltip } from '@fuel-ui/react';
+import {
+  cssObj,
+  Box,
+  Copyable,
+  Text,
+  type ThemeUtilsCSS,
+} from '@fuel-wallet/ui';
 import { bn } from 'fuels';
 import { isValidEthAddress, shortAddress } from '~/systems/Core';
 

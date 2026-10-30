@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Grid } from '@fuel-ui/react';
+import { cssObj, Grid } from '@fuel-wallet/ui';
 import type { ReactNode } from 'react';
 import { Children } from 'react';
 
