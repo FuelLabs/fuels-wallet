@@ -37,6 +37,7 @@ import {
   getErrorMessage,
   getGasLimitFromTxRequest,
   setGasLimitToTxRequest,
+  withAbiFallback,
 } from '../utils';
 import { getCurrentTips } from '../utils/fee';
 
@@ -170,11 +171,9 @@ export class TxService {
     const abiMap = await getAbiMap({
       inputs: txResult.transaction.inputs,
     });
-    const txResultWithCalls = await getTransactionSummary({
-      id: txId,
-      provider,
-      abiMap,
-    });
+    const txResultWithCalls = await withAbiFallback(abiMap, (abiMap) =>
+      getTransactionSummary({ id: txId, provider, abiMap })
+    );
     return { txResult: txResultWithCalls, txResponse };
   }
 
@@ -256,11 +255,13 @@ export class TxService {
         inputs: transaction.inputs,
       });
 
-      const txSummary = await getTransactionSummaryFromRequest({
-        provider,
-        transactionRequest: proposedTxRequest,
-        abiMap,
-      });
+      const txSummary = await withAbiFallback(abiMap, (abiMap) =>
+        getTransactionSummaryFromRequest({
+          provider,
+          transactionRequest: proposedTxRequest,
+          abiMap,
+        })
+      );
 
       // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
       const feeAdaptedToSdkDiff = txSummary.fee.add(1);
