@@ -351,14 +351,13 @@ export function getMainOperations(
     } else {
       const groupedEqualTransfers = transferOperationsNotGrouped.reduce(
         (acc, op) => {
-          return {
-            // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-            ...acc,
-            [`${op.from.address}-${op.to.address}`]: [
-              ...(acc[op.from.address + op.to.address] || []),
-              op,
-            ],
-          };
+          // Withdrawals render as a different card, so they never share a group with plain transfers
+          const isWithdrawal = !!op.receipts?.some(
+            (r) => r.type === ReceiptType.MessageOut
+          );
+          const key = `${op.from.address}-${op.to.address}-${isWithdrawal}`;
+          acc[key] = [...(acc[key] || []), op];
+          return acc;
         },
         {} as Record<string, SimplifiedOperation[]>
       );

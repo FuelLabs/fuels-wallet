@@ -1,5 +1,254 @@
 # fuels-wallet
 
+## 0.63.1
+
+### Patch Changes
+
+- [#2015](https://github.com/FuelLabs/fuels-wallet/pull/2015) [`5f552c27`](https://github.com/FuelLabs/fuels-wallet/commit/5f552c27a21d3135e758f991a36be01c48cb95e7) Thanks [@nelitow](https://github.com/nelitow)! - Apply pending Dependabot security bumps: vite 6.4.1, node-forge and undici.
+
+- [#2009](https://github.com/FuelLabs/fuels-wallet/pull/2009) [`6251c6c7`](https://github.com/FuelLabs/fuels-wallet/commit/6251c6c7553fa399fa29ac9d3be797b66cf71bfc) Thanks [@nelitow](https://github.com/nelitow)! - chore: upgrade build tooling to Turbo 2 and Biome 2
+
+- [#2029](https://github.com/FuelLabs/fuels-wallet/pull/2029) [`5a06cd88`](https://github.com/FuelLabs/fuels-wallet/commit/5a06cd888680c1209fada69d9c286ac0b88f3678) Thanks [@nelitow](https://github.com/nelitow)! - fix: Show the Bridge to Fuel icon on the empty Activity screen
+
+- [#2011](https://github.com/FuelLabs/fuels-wallet/pull/2011) [`f8592031`](https://github.com/FuelLabs/fuels-wallet/commit/f8592031304d9153318c53b1e5aa76ae64e677f2) Thanks [@nelitow](https://github.com/nelitow)! - Cache unknown and spam assets for 1 hour so they no longer hit the indexer on every balance refresh.
+
+- [#2011](https://github.com/FuelLabs/fuels-wallet/pull/2011) [`f8592031`](https://github.com/FuelLabs/fuels-wallet/commit/f8592031304d9153318c53b1e5aa76ae64e677f2) Thanks [@nelitow](https://github.com/nelitow)! - Cache the verified assets list for 1 hour and only write the assets that changed, in a single database transaction.
+
+- [#2018](https://github.com/FuelLabs/fuels-wallet/pull/2018) [`d802931a`](https://github.com/FuelLabs/fuels-wallet/commit/d802931a3cb013488400ef6cf9bea9d7bbb4399e) Thanks [@nelitow](https://github.com/nelitow)! - ci: Report CRX bundle sizes on pull requests and fail when an entry exceeds its budget
+
+- [#2027](https://github.com/FuelLabs/fuels-wallet/pull/2027) [`44443fb6`](https://github.com/FuelLabs/fuels-wallet/commit/44443fb6b457ccb9310646a471243c5bd13d99c6) Thanks [@nelitow](https://github.com/nelitow)! - fix: Remove devnet from the chrome.storage backup and skip it during wallet recovery
+
+- [#2013](https://github.com/FuelLabs/fuels-wallet/pull/2013) [`515b6120`](https://github.com/FuelLabs/fuels-wallet/commit/515b6120406f1d7cadbbb5ba357d5818c4bac198) Thanks [@nelitow](https://github.com/nelitow)! - perf: Check coin consolidation only when balances change, reuse the cached provider, and load ecosystem projects on demand with a capped retry.
+
+- [#2016](https://github.com/FuelLabs/fuels-wallet/pull/2016) [`98bf69be`](https://github.com/FuelLabs/fuels-wallet/commit/98bf69be846aaad608ae96f89f8a06cc18ecc3d4) Thanks [@nelitow](https://github.com/nelitow)! - perf: Wake the background service worker less often by checking updates hourly, scheduling auto-lock at its deadline, and restoring the session only when the wallet is opened
+
+- [#2014](https://github.com/FuelLabs/fuels-wallet/pull/2014) [`e3294786`](https://github.com/FuelLabs/fuels-wallet/commit/e3294786267cdc40c7e7f7bf4aab6e6c4c290336) Thanks [@nelitow](https://github.com/nelitow)! - perf: Write wallet backups to chrome.storage and OPFS only when their content changed, with one chrome.storage write per table.
+
+- [#2038](https://github.com/FuelLabs/fuels-wallet/pull/2038) [`e0b0629d`](https://github.com/FuelLabs/fuels-wallet/commit/e0b0629de8c399707937611b50887ab9938ae511) Thanks [@nelitow](https://github.com/nelitow)! - fix: Deliver account and network events to idle dApps running inside iframes
+
+- [#2027](https://github.com/FuelLabs/fuels-wallet/pull/2027) [`44443fb6`](https://github.com/FuelLabs/fuels-wallet/commit/44443fb6b457ccb9310646a471243c5bd13d99c6) Thanks [@nelitow](https://github.com/nelitow)! - fix: Deliver account and network changes to idle dApp tabs after the service worker stops
+
+- [#2016](https://github.com/FuelLabs/fuels-wallet/pull/2016) [`98bf69be`](https://github.com/FuelLabs/fuels-wallet/commit/98bf69be846aaad608ae96f89f8a06cc18ecc3d4) Thanks [@nelitow](https://github.com/nelitow)! - perf: Shrink the content script from 642 KB to 5 KB and connect to the background only when a dApp talks to the wallet
+
+- [#2018](https://github.com/FuelLabs/fuels-wallet/pull/2018) [`d802931a`](https://github.com/FuelLabs/fuels-wallet/commit/d802931a3cb013488400ef6cf9bea9d7bbb4399e) Thanks [@nelitow](https://github.com/nelitow)! - perf: Lazy-load wallet pages, the error report editor, and the Bako ID SDK so the popup loads less JavaScript at startup
+
+- [#2013](https://github.com/FuelLabs/fuels-wallet/pull/2013) [`515b6120`](https://github.com/FuelLabs/fuels-wallet/commit/515b6120406f1d7cadbbb5ba357d5818c4bac198) Thanks [@nelitow](https://github.com/nelitow)! - perf: Stop re-rendering account views when a balance refresh returns unchanged data, debounce the focus refresh, and fix the hidden accounts list.
+
+- [#2029](https://github.com/FuelLabs/fuels-wallet/pull/2029) [`5a06cd88`](https://github.com/FuelLabs/fuels-wallet/commit/5a06cd888680c1209fada69d9c286ac0b88f3678) Thanks [@nelitow](https://github.com/nelitow)! - fix: Open the wallet popup even when its saved position is off screen
+
+- [#2014](https://github.com/FuelLabs/fuels-wallet/pull/2014) [`e3294786`](https://github.com/FuelLabs/fuels-wallet/commit/e3294786267cdc40c7e7f7bf4aab6e6c4c290336) Thanks [@nelitow](https://github.com/nelitow)! - perf: Load the newest Activity page with a single request instead of walking the whole transaction history, and cache domain-name lookups.
+
+- [#2008](https://github.com/FuelLabs/fuels-wallet/pull/2008) [`4226503d`](https://github.com/FuelLabs/fuels-wallet/commit/4226503da3369906ab772cef2901da25b69ac3ae) Thanks [@nelitow](https://github.com/nelitow)! - chore: move test and tooling packages to devDependencies and patch critical dependency advisories
+
+- [#2030](https://github.com/FuelLabs/fuels-wallet/pull/2030) [`330b719f`](https://github.com/FuelLabs/fuels-wallet/commit/330b719f7e09bd42affe7b09fdf0f8b35e529a68) Thanks [@nelitow](https://github.com/nelitow)! - fix: Update React Router to 6.30.6 to fix the open redirect advisories in 6.26.2
+
+- [#2029](https://github.com/FuelLabs/fuels-wallet/pull/2029) [`5a06cd88`](https://github.com/FuelLabs/fuels-wallet/commit/5a06cd888680c1209fada69d9c286ac0b88f3678) Thanks [@nelitow](https://github.com/nelitow)! - fix: Reconnect open tabs after the extension is disabled and enabled again
+
+- [#2029](https://github.com/FuelLabs/fuels-wallet/pull/2029) [`5a06cd88`](https://github.com/FuelLabs/fuels-wallet/commit/5a06cd888680c1209fada69d9c286ac0b88f3678) Thanks [@nelitow](https://github.com/nelitow)! - fix: Reload once when an open wallet page cannot load a page of an older build
+
+- [#2023](https://github.com/FuelLabs/fuels-wallet/pull/2023) [`a9461dde`](https://github.com/FuelLabs/fuels-wallet/commit/a9461dde289518bbcaa5f8bdd7bfa492e31647f3) Thanks [@nelitow](https://github.com/nelitow)! - chore: Remove the deprecated devnet network; existing wallets drop it and switch to mainnet if it was selected.
+
+- [#2024](https://github.com/FuelLabs/fuels-wallet/pull/2024) [`6d439c93`](https://github.com/FuelLabs/fuels-wallet/commit/6d439c930af3d14a4a8ec22d861dd74227406ea8) Thanks [@nelitow](https://github.com/nelitow)! - chore: Remove Storybook and the MSW browser worker it used, which also drops `mockServiceWorker.js` from the extension.
+
+- [#2017](https://github.com/FuelLabs/fuels-wallet/pull/2017) [`b96520a0`](https://github.com/FuelLabs/fuels-wallet/commit/b96520a015e34873cbbbff6f8f974ee1e6b0e1f7) Thanks [@nelitow](https://github.com/nelitow)! - Show the recipient address error on the Send screen even when the address is entered before the network finishes loading.
+
+- [#2014](https://github.com/FuelLabs/fuels-wallet/pull/2014) [`e3294786`](https://github.com/FuelLabs/fuels-wallet/commit/e3294786267cdc40c7e7f7bf4aab6e6c4c290336) Thanks [@nelitow](https://github.com/nelitow)! - perf: Start the Send and dApp transaction fee estimate 300 ms after the last change instead of 1000 ms.
+
+- [#2018](https://github.com/FuelLabs/fuels-wallet/pull/2018) [`d802931a`](https://github.com/FuelLabs/fuels-wallet/commit/d802931a3cb013488400ef6cf9bea9d7bbb4399e) Thanks [@nelitow](https://github.com/nelitow)! - perf: Remove test files from the extension package, ship only the used icons, and compress the sign-up image
+
+- [#2013](https://github.com/FuelLabs/fuels-wallet/pull/2013) [`515b6120`](https://github.com/FuelLabs/fuels-wallet/commit/515b6120406f1d7cadbbb5ba357d5818c4bac198) Thanks [@nelitow](https://github.com/nelitow)! - perf: Refresh balances every 20 s while the popup is visible, plus on tx success and unlock, instead of polling every 2 s.
+
+- [#2011](https://github.com/FuelLabs/fuels-wallet/pull/2011) [`f8592031`](https://github.com/FuelLabs/fuels-wallet/commit/f8592031304d9153318c53b1e5aa76ae64e677f2) Thanks [@nelitow](https://github.com/nelitow)! - Stop asset icons from flickering when balances refresh.
+
+- [#1998](https://github.com/FuelLabs/fuels-wallet/pull/1998) [`7aba974e`](https://github.com/FuelLabs/fuels-wallet/commit/7aba974e785b1809a6d2da3fcdb64a68e3b51815) Thanks [@nelitow](https://github.com/nelitow)! - fix: Workflows
+
+- [#2025](https://github.com/FuelLabs/fuels-wallet/pull/2025) [`7609c693`](https://github.com/FuelLabs/fuels-wallet/commit/7609c693eeba2865f080bb4b7dcc6bf08b1a4f12) Thanks [@nelitow](https://github.com/nelitow)! - Fix the wallet running in a regular browser tab when another extension exposes chrome.runtime.
+
+- Updated dependencies [[`e95c1d75`](https://github.com/FuelLabs/fuels-wallet/commit/e95c1d75dddc1a2a942ba82a51795abb6a134ca7), [`44443fb6`](https://github.com/FuelLabs/fuels-wallet/commit/44443fb6b457ccb9310646a471243c5bd13d99c6), [`98bf69be`](https://github.com/FuelLabs/fuels-wallet/commit/98bf69be846aaad608ae96f89f8a06cc18ecc3d4), [`5a06cd88`](https://github.com/FuelLabs/fuels-wallet/commit/5a06cd888680c1209fada69d9c286ac0b88f3678)]:
+  - @fuel-wallet/connections@0.63.1
+
+## 0.63.0
+
+### Minor Changes
+
+- [#1996](https://github.com/FuelLabs/fuels-wallet/pull/1996) [`6c910cba`](https://github.com/FuelLabs/fuels-wallet/commit/6c910cbae0b75a4d5bacefa635e747b22f1a8ac5) Thanks [@nelitow](https://github.com/nelitow)! - feat: Handle insufficient gas fee errors in the UI
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.63.0
+  - @fuels/playwright-utils@0.63.0
+
+## 0.62.3
+
+### Patch Changes
+
+- [#1994](https://github.com/FuelLabs/fuels-wallet/pull/1994) [`9a4db08c`](https://github.com/FuelLabs/fuels-wallet/commit/9a4db08c986511af1dbc7ab8198bccd4913beeb9) Thanks [@nelitow](https://github.com/nelitow)! - chore: bump version to trigger release with fixed Sentry auth
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.62.3
+  - @fuels/playwright-utils@0.62.3
+
+## 0.62.2
+
+### Patch Changes
+
+- [#1991](https://github.com/FuelLabs/fuels-wallet/pull/1991) [`9b3431c1`](https://github.com/FuelLabs/fuels-wallet/commit/9b3431c189bf069fb879034f565efa2a53f869e9) Thanks [@nelitow](https://github.com/nelitow)! - chore: trigger release to test npm OIDC publishing
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.62.2
+  - @fuels/playwright-utils@0.62.2
+
+## 0.62.1
+
+### Patch Changes
+
+- [#1989](https://github.com/FuelLabs/fuels-wallet/pull/1989) [`79fce09a`](https://github.com/FuelLabs/fuels-wallet/commit/79fce09aad23bae93746f23480a382ca1c770c74) Thanks [@nelitow](https://github.com/nelitow)! - chore: trigger release to test npm OIDC publishing
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.62.1
+  - @fuels/playwright-utils@0.62.1
+
+## 0.62.0
+
+### Minor Changes
+
+- [#1986](https://github.com/FuelLabs/fuels-wallet/pull/1986) [`57218271`](https://github.com/FuelLabs/fuels-wallet/commit/57218271fb36e346a55f9ad52d391ab331cc2e15) Thanks [@nelitow](https://github.com/nelitow)! - feat: Trigger release
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.62.0
+  - @fuels/playwright-utils@0.62.0
+
+## 0.61.0
+
+### Minor Changes
+
+- [#1980](https://github.com/FuelLabs/fuels-wallet/pull/1980) [`d08861e1`](https://github.com/FuelLabs/fuels-wallet/commit/d08861e14b2916aba5754b75d2507b599c29e68a) Thanks [@nelitow](https://github.com/nelitow)! - feat: Update Devnet chain id
+
+### Patch Changes
+
+- [#1977](https://github.com/FuelLabs/fuels-wallet/pull/1977) [`242ca15d`](https://github.com/FuelLabs/fuels-wallet/commit/242ca15daeca4d5bb814680f2beb372df6471f9c) Thanks [@nelitow](https://github.com/nelitow)! - fix: Handle duplicate account names during wallet recovery
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.61.0
+  - @fuels/playwright-utils@0.61.0
+
+## 0.60.0
+
+### Minor Changes
+
+- [#1974](https://github.com/FuelLabs/fuels-wallet/pull/1974) [`3fd13d65`](https://github.com/FuelLabs/fuels-wallet/commit/3fd13d658261150af632ff2b852866e545124155) Thanks [@nelitow](https://github.com/nelitow)! - feat: Add account search feature
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.60.0
+  - @fuels/playwright-utils@0.60.0
+
+## 0.59.1
+
+### Patch Changes
+
+- [#1966](https://github.com/FuelLabs/fuels-wallet/pull/1966) [`f307f7aa`](https://github.com/FuelLabs/fuels-wallet/commit/f307f7aae09561225b98768b66000eb27202c19b) Thanks [@nelitow](https://github.com/nelitow)! - fix: Update ecosystem image URLs
+
+- [#1970](https://github.com/FuelLabs/fuels-wallet/pull/1970) [`22d8093b`](https://github.com/FuelLabs/fuels-wallet/commit/22d8093bc50ac6e122c45e66d0a68ae8a5afbad8) Thanks [@nelitow](https://github.com/nelitow)! - fix: Scroll in transaction screen
+
+- [#1973](https://github.com/FuelLabs/fuels-wallet/pull/1973) [`de3d469f`](https://github.com/FuelLabs/fuels-wallet/commit/de3d469fd244f2712cc21feae155de90ef43a62b) Thanks [@nelitow](https://github.com/nelitow)! - fix: Asset List UI
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.59.1
+  - @fuels/playwright-utils@0.59.1
+
+## 0.59.0
+
+### Minor Changes
+
+- [#1961](https://github.com/FuelLabs/fuels-wallet/pull/1961) [`870df416`](https://github.com/FuelLabs/fuels-wallet/commit/870df416a4b20d7f564ac4a1e6c26ae772a8ac1c) Thanks [@nelitow](https://github.com/nelitow)! - fix: Improve loading time in the transactions history by handling Bako ID errors.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.59.0
+  - @fuels/playwright-utils@0.59.0
+
+## 0.58.1
+
+### Patch Changes
+
+- [#1957](https://github.com/FuelLabs/fuels-wallet/pull/1957) [`9fb8fade`](https://github.com/FuelLabs/fuels-wallet/commit/9fb8fadeae6b531e673aa7a3d586f9f623c7a170) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: update fuels to 0.102.0
+
+- Updated dependencies [[`9fb8fade`](https://github.com/FuelLabs/fuels-wallet/commit/9fb8fadeae6b531e673aa7a3d586f9f623c7a170)]:
+  - @fuels/playwright-utils@0.58.1
+  - @fuel-wallet/connections@0.58.1
+
+## 0.58.0
+
+### Minor Changes
+
+- [#1945](https://github.com/FuelLabs/fuels-wallet/pull/1945) [`9df54765`](https://github.com/FuelLabs/fuels-wallet/commit/9df5476507b3b1a53eca5619bbce3b9a62a067a0) Thanks [@nelitow](https://github.com/nelitow)! - fix: make personalSign support signing empty bytes
+
+- [#1954](https://github.com/FuelLabs/fuels-wallet/pull/1954) [`bbe52918`](https://github.com/FuelLabs/fuels-wallet/commit/bbe52918447c86de883b3d8c6cbececa218e58e0) Thanks [@nelitow](https://github.com/nelitow)! - fix: disable chrome-beta tests as they don't support importing chrome extensions anymore
+
+- [#1949](https://github.com/FuelLabs/fuels-wallet/pull/1949) [`04dba51c`](https://github.com/FuelLabs/fuels-wallet/commit/04dba51c45a8fc9e4e1bfc8c470a78ef34cdb330) Thanks [@nelitow](https://github.com/nelitow)! - fix: Wallet signature of Hashable Messages
+
+### Patch Changes
+
+- [#1948](https://github.com/FuelLabs/fuels-wallet/pull/1948) [`b0df7e03`](https://github.com/FuelLabs/fuels-wallet/commit/b0df7e034c52e2d27681ae7c9af2ff83b6fdfbc7) Thanks [@nelitow](https://github.com/nelitow)! - feat: Add warning for exporting seed phrase of imported private keys
+
+- [#1955](https://github.com/FuelLabs/fuels-wallet/pull/1955) [`c4276bcd`](https://github.com/FuelLabs/fuels-wallet/commit/c4276bcd27b3ec20edafc2e836779dbf2d7dc535) Thanks [@helciofranco](https://github.com/helciofranco)! - feat: include consolidate utxo flow
+
+- Updated dependencies [[`bbe52918`](https://github.com/FuelLabs/fuels-wallet/commit/bbe52918447c86de883b3d8c6cbececa218e58e0)]:
+  - @fuels/playwright-utils@0.58.0
+  - @fuel-wallet/connections@0.58.0
+
+## 0.57.1
+
+### Patch Changes
+
+- [#1942](https://github.com/FuelLabs/fuels-wallet/pull/1942) [`377b497d`](https://github.com/FuelLabs/fuels-wallet/commit/377b497dc63dd879adc9512ed5522ec74f4cabf5) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: include env type
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.57.1
+  - @fuels/playwright-utils@0.57.1
+
+## 0.57.0
+
+### Minor Changes
+
+- [#1936](https://github.com/FuelLabs/fuels-wallet/pull/1936) [`0275fbdd`](https://github.com/FuelLabs/fuels-wallet/commit/0275fbdd90e73435ebc99387615c4cdf518119c8) Thanks [@nelitow](https://github.com/nelitow)! - chore: Sample release note. Minor. PR 3
+
+### Patch Changes
+
+- [#1935](https://github.com/FuelLabs/fuels-wallet/pull/1935) [`207abdd7`](https://github.com/FuelLabs/fuels-wallet/commit/207abdd714a34c80f453a0a433fe0a504b8b1d3d) Thanks [@nelitow](https://github.com/nelitow)! - chore: Testing release of patch changes. PR 2.
+
+- Updated dependencies [[`dae989cb`](https://github.com/FuelLabs/fuels-wallet/commit/dae989cbda6edd4eeb5d8712a342950d43e2a8db)]:
+  - @fuel-wallet/connections@0.57.0
+  - @fuels/playwright-utils@0.57.0
+
+## 0.56.1
+
+### Patch Changes
+
+- [#1928](https://github.com/FuelLabs/fuels-wallet/pull/1928) [`c68c4cea`](https://github.com/FuelLabs/fuels-wallet/commit/c68c4cea9b003a0803c0159b240e0b1b89be2be7) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: create migration to convert old addresses with bech32
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.56.1
+  - @fuels/playwright-utils@0.56.1
+
+## 0.56.0
+
+### Minor Changes
+
+- [#1927](https://github.com/FuelLabs/fuels-wallet/pull/1927) [`8da89993`](https://github.com/FuelLabs/fuels-wallet/commit/8da89993e4ca64b954df4cf78844a3232862c937) Thanks [@nelitow](https://github.com/nelitow)! - feat: add support for dapps to sign transactions using Fuel Wallet, without sending them to the network.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.56.0
+  - @fuels/playwright-utils@0.56.0
+
 ## 0.55.3
 
 ### Patch Changes

@@ -58,6 +58,7 @@ export class BackgroundService {
     'addNetwork',
     'addAbi',
     'getAbi',
+    'signTransaction',
   ];
 
   constructor(communicationProtocol: CommunicationProtocol) {
@@ -140,6 +141,23 @@ export class BackgroundService {
     if (!hasAccessToAddress) {
       throw new Error('address is not authorized for this connection.');
     }
+  }
+
+  // The wallet simulates and signs on its own selected network, never on a node or cache the dApp supplies
+  async requireSelectedNetwork(providerUrl?: string) {
+    const selectedNetwork = await NetworkService.getSelectedNetwork();
+    const url = providerUrl || selectedNetwork?.url;
+
+    if (!url || selectedNetwork?.url !== url) {
+      throw new Error(
+        [
+          `${url} is different from the user current network!`,
+          'Request the user to add the new network. fuel.addNetwork([...]).',
+        ].join('\n')
+      );
+    }
+
+    return { url };
   }
 
   async requireConnection(connection?: Connection) {
@@ -299,20 +317,10 @@ export class BackgroundService {
     const origin = serverParams.origin;
     const title = serverParams.title;
     const favIconUrl = serverParams.favIconUrl;
-    const selectedNetwork = await NetworkService.getSelectedNetwork();
-
-    if (selectedNetwork?.url !== input.provider.url) {
-      throw new Error(
-        [
-          `${input.provider.url} is different from the user current network!`,
-          'Request the user to add the new network. fuel.addNetwork([...]).',
-        ].join('\n')
-      );
-    }
+    const provider = await this.requireSelectedNetwork(input.provider.url);
 
     const {
       address: _address,
-      provider,
       transaction,
       skipCustomFee,
       transactionState,
@@ -341,6 +349,37 @@ export class BackgroundService {
     });
     popupService.destroy();
     return transactionResponse;
+  }
+
+  async signTransaction(
+    input: Exclude<MessageInputs['signTransaction'], 'origin'>,
+    serverParams: EventOrigin
+  ) {
+    await this.requireAccountConnection(serverParams.connection, input.address);
+    const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
+    const provider = await this.requireSelectedNetwork(input.provider?.url);
+
+    const popupService = await PopUpService.open(
+      origin,
+      Pages.requestTransaction(),
+      this.communicationProtocol
+    );
+
+    const address = Address.fromDynamicInput(input.address).toString();
+
+    const txRequestSigned = await popupService.signTransaction({
+      address,
+      provider,
+      transaction: input.transaction,
+      origin,
+      title,
+      favIconUrl,
+    });
+
+    popupService.destroy();
+    return txRequestSigned;
   }
 
   async currentAccount(_: unknown, serverParams: EventOrigin) {

@@ -1,4 +1,3 @@
-import type { AssetFuelAmount } from '@fuel-wallet/types';
 import type { OperationCoin } from 'fuels';
 import { bn } from 'fuels';
 import { useEffect, useState } from 'react';

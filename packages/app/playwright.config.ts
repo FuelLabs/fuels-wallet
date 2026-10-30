@@ -40,16 +40,18 @@ export const playwrightConfig: PlaywrightTestConfig = {
   },
   projects: [
     {
+      // For Google Chrome, Microsoft Edge and other Chromium-based browsers, by default,
+      // Playwright uses open source Chromium builds.
+      // Since the Chromium project is ahead of the branded browsers,
+      // when the world is on Google Chrome N, Playwright already supports Chromium N+1 t
+      // hat will be released in Google Chrome and Microsoft Edge a few weeks later.
       name: 'chromium',
       use: {
-        ...devices['Desktop Chromium'],
-      },
-    },
-    {
-      name: 'chrome-beta',
-      use: {
-        channel: 'chrome-beta',
+        channel: 'chromium',
         ...devices['Desktop Chrome'],
+        launchOptions: {
+          args: ['--disable-features=ExtensionDisableUnsupportedDeveloper'],
+        },
       },
     },
   ],

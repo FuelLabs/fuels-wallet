@@ -55,6 +55,7 @@ const selectors = {
     return !isWaitingApproval || hasSimulateTxErrors;
   },
   title(state: TransactionRequestState) {
+    if (state.context.input.signOnly) return 'Sign Transaction';
     if (state.matches('txSuccess')) return 'Transaction sent';
     if (state.matches('txFailed')) return 'Transaction failed';
     if (state.matches('sendingTx')) return 'Sending transaction';

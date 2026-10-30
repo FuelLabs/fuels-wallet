@@ -1,4 +1,4 @@
-import { Button, CardList } from '@fuel-ui/react';
+import { CardList } from '@fuel-ui/react';
 import type { CoinAsset } from '@fuel-wallet/types';
 import { useMemo, useState } from 'react';
 import { isUnknownAsset } from '~/systems/Asset';
@@ -39,7 +39,7 @@ export const BalanceAssets = ({
     });
   }, [balances, showUnknown]);
 
-  if (isLoading || !balances) return <AssetList.Loading items={4} />;
+  if (isLoading || !balances) return <AssetList.Loading items={3} />;
   const isEmpty = !balances || !balances.length;
   if (isEmpty) return <AssetList.Empty {...emptyProps} />;
 
@@ -48,7 +48,7 @@ export const BalanceAssets = ({
   }
 
   return (
-    <CardList>
+    <CardList gap={3}>
       {balancesToShow.map((balance) => {
         if (!balance.asset) return null;
 

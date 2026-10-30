@@ -15,9 +15,14 @@ export async function saveToOPFS(data: any) {
 
   const root = await initOPFS();
   if (!root) return;
+  const json = JSON.stringify(data);
   const fileHandle = await root.getFileHandle('backup.json', { create: true });
+  try {
+    const current = await (await fileHandle.getFile()).text();
+    if (current === json) return;
+  } catch (_) {}
   const writable = await fileHandle.createWritable();
-  await writable.write(JSON.stringify(data));
+  await writable.write(json);
   await writable.close();
 }
 

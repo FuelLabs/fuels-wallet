@@ -6,9 +6,25 @@ import type {
 } from '@fuel-wallet/types';
 import {
   BACKGROUND_SCRIPT_NAME,
+  CONTENT_SCRIPT_NAME,
+  ContentScriptMessageTypes,
   MessageTypes,
   VAULT_SCRIPT_NAME,
 } from '@fuel-wallet/types';
+import {
+  forgetFrame,
+  forgetTab,
+  frameKey,
+  framesFor,
+  rememberFrame,
+} from './dappFrames';
+
+// A frame can be remembered for an origin it has since navigated away from,
+// so a delivery is per origin: a rejected stale attempt must not block the
+// live one
+function deliveryKey(tabId: number, frameId: number, origin: string) {
+  return `${frameKey(tabId, frameId)}|${origin}`;
+}
 
 export class CommunicationProtocol extends BaseConnection {
   ports: Map<string, chrome.runtime.Port>;
@@ -27,12 +43,24 @@ export class CommunicationProtocol extends BaseConnection {
     super();
     this.ports = new Map();
     this.portsDisconnectionHandlers = new Map();
+    globalThis.chrome?.tabs?.onRemoved?.addListener((tabId) => {
+      forgetTab(tabId);
+    });
   }
 
   addConnection(port: chrome.runtime.Port) {
     const id = createUUID();
     this.ports.set(id, port);
     this.setupListeners(id);
+    const { tab, frameId, origin } = port.sender ?? {};
+    if (tab?.id !== undefined && origin) {
+      rememberFrame({
+        tabId: tab.id,
+        frameId: frameId ?? 0,
+        origin,
+        connectionId: id,
+      });
+    }
   }
 
   setupListeners(id: string) {
@@ -67,13 +95,73 @@ export class CommunicationProtocol extends BaseConnection {
 
   broadcast = (origins: Array<string> | string, message: EventMessage) => {
     const originList = Array.isArray(origins) ? origins : [origins];
+    const framesWithPort = new Set<string>();
     // biome-ignore lint/complexity/noForEach: <explanation>
     this.ports.forEach((port) => {
       if (originList.includes(port.sender?.origin || '')) {
         port.postMessage(message);
+        if (port.sender?.tab?.id !== undefined) {
+          framesWithPort.add(
+            deliveryKey(
+              port.sender.tab.id,
+              port.sender.frameId ?? 0,
+              port.sender.origin ?? ''
+            )
+          );
+        }
       }
     });
+    if (message.target !== CONTENT_SCRIPT_NAME) return;
+    this.sendToFrames(originList, message, framesWithPort);
   };
+
+  // dApp ports close when the worker stops and only reopen on the next page
+  // request, so idle frames get the event through chrome.tabs instead.
+  // Known frames cover iframed dApps; the tab query covers top frames that
+  // connected before session storage was cleared.
+  private async sendToFrames(
+    origins: string[],
+    message: EventMessage,
+    skip: Set<string>
+  ) {
+    const send = (
+      tabId: number,
+      frameId: number,
+      origin: string,
+      connectionId?: string
+    ) => {
+      const key = deliveryKey(tabId, frameId, origin);
+      if (skip.has(key)) return;
+      skip.add(key);
+      chrome.tabs
+        .sendMessage(
+          tabId,
+          { type: ContentScriptMessageTypes.EVENT, origin, message },
+          { frameId }
+        )
+        .catch((error) => {
+          // A frame that is gone has no receiving end; other errors, like
+          // the content script not answering, still mean it was delivered
+          if (
+            connectionId &&
+            /receiving end|no frame/i.test(String(error?.message))
+          ) {
+            forgetFrame(connectionId);
+          }
+        });
+    };
+    try {
+      for (const frame of await framesFor(origins)) {
+        send(frame.tabId, frame.frameId, frame.origin, frame.connectionId);
+      }
+      for (const origin of origins) {
+        const tabs = await chrome.tabs.query({ url: `${origin}/*` });
+        for (const tab of tabs) {
+          if (tab.id !== undefined) send(tab.id, 0, origin);
+        }
+      }
+    } catch {}
+  }
 
   getPortId = (port: chrome.runtime.Port) => {
     for (const [key, value] of this.ports.entries()) {
@@ -103,6 +191,12 @@ export class CommunicationProtocol extends BaseConnection {
     )
       return;
     if (!this.messageTypesMap[message.type]) return;
+    // Content scripts relay what any web page posts, so only wallet pages may answer popups
+    if (
+      message.type !== MessageTypes.request &&
+      !sender.url?.startsWith(chrome.runtime.getURL(''))
+    )
+      return;
 
     const portId = this.getPortId(port);
 

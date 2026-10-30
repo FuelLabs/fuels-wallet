@@ -77,5 +77,12 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   }
 });
 
-// Register alarms to check for updates and reload the wallet
-chrome.alarms.create('autoUpdate', { periodInMinutes: 1 });
+const AUTO_UPDATE_PERIOD_IN_MINUTES = 60;
+
+// Creating an alarm resets its schedule, so worker restarts must not recreate it
+chrome.alarms.get('autoUpdate', (alarm) => {
+  if (alarm?.periodInMinutes === AUTO_UPDATE_PERIOD_IN_MINUTES) return;
+  chrome.alarms.create('autoUpdate', {
+    periodInMinutes: AUTO_UPDATE_PERIOD_IN_MINUTES,
+  });
+});

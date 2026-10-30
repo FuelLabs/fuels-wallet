@@ -12,7 +12,7 @@ const selectors = {
   error: (state: ExportVaultMachineState) => state.context.error,
 };
 
-export function useExportVault() {
+export function useExportVault(vaultId?: number) {
   const service = useInterpret(() => exportVaultMachine);
   const isLoading = useSelector(service, selectors.isLoading);
   const error = useSelector(service, selectors.error);
@@ -23,16 +23,24 @@ export function useExportVault() {
     if (await VaultService.isLocked()) {
       await VaultService.unlock({ password });
     }
-    const [vault] = await VaultService.getVaults();
 
-    vault &&
+    let targetVaultId = vaultId;
+
+    // If no specific vaultId provided, use the first vault (main wallet behavior)
+    if (targetVaultId === undefined) {
+      const [vault] = await VaultService.getVaults();
+      targetVaultId = vault?.vaultId;
+    }
+
+    if (targetVaultId !== undefined) {
       service.send({
         type: 'EXPORT_VAULT',
         input: {
           password,
-          vaultId: vault.vaultId,
+          vaultId: targetVaultId,
         },
       });
+    }
   }
 
   return {

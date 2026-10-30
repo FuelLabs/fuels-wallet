@@ -1,4 +1,4 @@
-import type { Operation, TransactionSummary } from 'fuels';
+import type { Operation } from 'fuels';
 import { Address, OperationName } from 'fuels';
 import { useMemo } from 'react';
 import { useAccounts } from '~/systems/Account';

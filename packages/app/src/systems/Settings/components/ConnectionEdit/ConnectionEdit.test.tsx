@@ -7,11 +7,11 @@ import { testQueries } from '../../__test__';
 import { useConnections } from '../../hooks';
 
 import { mockServer } from '~/systems/Core/__tests__/utils/msw';
-import { Usage } from './ConnectionEdit.stories';
+import { ConnectionEdit } from './ConnectionEdit';
 
 function Content() {
   const state = useConnections();
-  return <Usage {...state} />;
+  return <ConnectionEdit {...state} />;
 }
 
 const opts = {

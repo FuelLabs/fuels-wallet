@@ -1,5 +1,55 @@
 # @fuel-wallet/connections
 
+## 0.63.1
+
+### Patch Changes
+
+- [#2047](https://github.com/FuelLabs/fuels-wallet/pull/2047) [`e95c1d75`](https://github.com/FuelLabs/fuels-wallet/commit/e95c1d75dddc1a2a942ba82a51795abb6a134ca7) Thanks [@nelitow](https://github.com/nelitow)! - fix: Update uuid to 11.1.1 and pin patched transitive dependencies so the production audit passes
+
+- [#2027](https://github.com/FuelLabs/fuels-wallet/pull/2027) [`44443fb6`](https://github.com/FuelLabs/fuels-wallet/commit/44443fb6b457ccb9310646a471243c5bd13d99c6) Thanks [@nelitow](https://github.com/nelitow)! - fix: Deliver account and network changes to idle dApp tabs after the service worker stops
+
+- [#2016](https://github.com/FuelLabs/fuels-wallet/pull/2016) [`98bf69be`](https://github.com/FuelLabs/fuels-wallet/commit/98bf69be846aaad608ae96f89f8a06cc18ecc3d4) Thanks [@nelitow](https://github.com/nelitow)! - perf: Shrink the content script from 642 KB to 5 KB and connect to the background only when a dApp talks to the wallet
+
+- [#2029](https://github.com/FuelLabs/fuels-wallet/pull/2029) [`5a06cd88`](https://github.com/FuelLabs/fuels-wallet/commit/5a06cd888680c1209fada69d9c286ac0b88f3678) Thanks [@nelitow](https://github.com/nelitow)! - fix: Reconnect open tabs after the extension is disabled and enabled again
+
+## 0.63.0
+
+## 0.62.3
+
+## 0.62.2
+
+## 0.62.1
+
+## 0.62.0
+
+## 0.61.0
+
+## 0.60.0
+
+## 0.59.1
+
+## 0.59.0
+
+## 0.58.1
+
+### Patch Changes
+
+- [#1957](https://github.com/FuelLabs/fuels-wallet/pull/1957) [`9fb8fade`](https://github.com/FuelLabs/fuels-wallet/commit/9fb8fadeae6b531e673aa7a3d586f9f623c7a170) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: update fuels to 0.102.0
+
+## 0.58.0
+
+## 0.57.1
+
+## 0.57.0
+
+### Minor Changes
+
+- [#1934](https://github.com/FuelLabs/fuels-wallet/pull/1934) [`dae989cb`](https://github.com/FuelLabs/fuels-wallet/commit/dae989cbda6edd4eeb5d8712a342950d43e2a8db) Thanks [@nelitow](https://github.com/nelitow)! - chore: Testing release of minor changes. PR 1.
+
+## 0.56.1
+
+## 0.56.0
+
 ## 0.55.3
 
 ### Patch Changes

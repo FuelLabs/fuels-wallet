@@ -11,7 +11,7 @@ import {
   Switch,
 } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import { FuelAddress } from '~/systems/Account';
 
 import { AccountItemLoader } from './AccountItemLoader';
@@ -33,6 +33,8 @@ export type AccountItemProps = {
   ) => Promise<void> | void;
   onToggleHidden?: (address: string, isHidden: boolean) => void;
   onUpdate?: (address: string) => Promise<void> | void;
+  highlightedName?: ReactNode;
+  addressSearchQuery?: string;
 };
 
 type AccountItemComponent = FC<AccountItemProps> & {
@@ -53,6 +55,8 @@ export const AccountItem: AccountItemComponent = ({
   onToggleHidden,
   onUpdate,
   css,
+  highlightedName,
+  addressSearchQuery,
 }: AccountItemProps) => {
   if (isHidden) return null;
 
@@ -147,12 +151,13 @@ export const AccountItem: AccountItemComponent = ({
       <Avatar.Generated size={compact ? 'xsm' : 'md'} hash={account.address} />
       <Box.Flex className="wrapper" css={styles.content}>
         <Heading as="h6" css={styles.name}>
-          {account.name}
+          {highlightedName || account.name}
         </Heading>
         <FuelAddress
           address={account.address}
           css={styles.address}
           canOpenExplorer={canOpenExplorer}
+          searchQuery={addressSearchQuery}
         />
       </Box.Flex>
     </CardList.Item>

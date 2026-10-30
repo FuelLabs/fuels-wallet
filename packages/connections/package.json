@@ -2,7 +2,7 @@
   "name": "@fuel-wallet/connections",
   "private": true,
   "description": "Fuel Wallet Connections for CRX.",
-  "version": "0.55.3",
+  "version": "0.63.1",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
@@ -19,7 +19,9 @@
       }
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "pnpm ts:check && tsup",
     "ts:check": "tsc --noEmit"
@@ -28,19 +30,18 @@
     "@types/chrome": "^0.0.246",
     "events": "^3.3.0",
     "json-rpc-2.0": "1.7.0",
-    "uuid": "^9.0.1"
+    "uuid": "^11.1.1"
   },
   "peerDependencies": {
-    "fuels": "0.100.6"
+    "fuels": "0.103.0"
   },
   "devDependencies": {
     "@fuel-wallet/types": "workspace:*",
-    "@types/uuid": "^9.0.5",
     "blob-polyfill": "^7.0.20220408",
-    "fuels": "0.100.6",
+    "fuels": "0.103.0",
     "jest-environment-jsdom": "29.6.2",
     "tsup": "^7.2.0",
-    "undici": "^6.4.0",
+    "undici": "^7.29.1",
     "web-streams-polyfill": "^3.3.2",
     "whatwg-fetch": "^3.6.20"
   }

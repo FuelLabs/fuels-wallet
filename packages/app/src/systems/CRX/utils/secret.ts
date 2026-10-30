@@ -14,9 +14,13 @@ async function getSalt(): Promise<string> {
   return data.salt;
 }
 
+// Only the secret and its timer: other session state, like the frames of
+// connected dApps, has to survive a lock
+const SECRET_SESSION_KEYS = ['data', 'timer', 'lockTime'];
+
 export async function clearSession() {
-  chrome.storage.local.remove('salt');
-  chrome.storage.session.clear();
+  await chrome.storage.local.remove(SALT_KEY);
+  await chrome.storage.session.remove(SECRET_SESSION_KEYS);
 }
 
 export async function getTimer(): Promise<number> {
@@ -26,7 +30,7 @@ export async function getTimer(): Promise<number> {
 
 export async function resetTimer() {
   const { lockTime } = await chrome.storage.session.get('lockTime');
-  chrome.storage.session.set({
+  await chrome.storage.session.set({
     timer: dayjs().add(lockTime, 'minute').valueOf(),
   });
 }
@@ -35,7 +39,7 @@ export async function saveSecret(secret: string, autoLockInMinutes: number) {
   const salt = await createSalt();
   try {
     const encrypted = await encrypt(salt, secret);
-    chrome.storage.session.set({
+    await chrome.storage.session.set({
       data: encrypted,
       lockTime: autoLockInMinutes,
       timer: dayjs().add(autoLockInMinutes, 'minute').valueOf(),

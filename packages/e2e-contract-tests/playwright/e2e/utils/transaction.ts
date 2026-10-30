@@ -1,5 +1,4 @@
 import { getByAriaLabel, hasText } from '@fuels/playwright-utils';
-import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 import type { BN } from 'fuels';
