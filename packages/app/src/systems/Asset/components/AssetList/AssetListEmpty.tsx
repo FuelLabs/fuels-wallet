@@ -37,7 +37,7 @@ export function AssetListEmpty({
 
 const styles = {
   container: cssObj({
-    minHeight: BALANCE_NFTS_TAB_HEIGHT,
+    minHeight: `var(--assets-height, ${BALANCE_NFTS_TAB_HEIGHT}px)`,
     py: '$4',
   }),
 };
