@@ -143,6 +143,23 @@ export class BackgroundService {
     }
   }
 
+  // The wallet simulates and signs on its own selected network, never on a node or cache the dApp supplies
+  async requireSelectedNetwork(providerUrl?: string) {
+    const selectedNetwork = await NetworkService.getSelectedNetwork();
+    const url = providerUrl || selectedNetwork?.url;
+
+    if (!url || selectedNetwork?.url !== url) {
+      throw new Error(
+        [
+          `${url} is different from the user current network!`,
+          'Request the user to add the new network. fuel.addNetwork([...]).',
+        ].join('\n')
+      );
+    }
+
+    return { url };
+  }
+
   async requireConnection(connection?: Connection) {
     const isConnected = (connection?.accounts || []).length > 0;
     if (!isConnected) {
@@ -300,20 +317,10 @@ export class BackgroundService {
     const origin = serverParams.origin;
     const title = serverParams.title;
     const favIconUrl = serverParams.favIconUrl;
-    const selectedNetwork = await NetworkService.getSelectedNetwork();
-
-    if (selectedNetwork?.url !== input.provider.url) {
-      throw new Error(
-        [
-          `${input.provider.url} is different from the user current network!`,
-          'Request the user to add the new network. fuel.addNetwork([...]).',
-        ].join('\n')
-      );
-    }
+    const provider = await this.requireSelectedNetwork(input.provider.url);
 
     const {
       address: _address,
-      provider,
       transaction,
       skipCustomFee,
       transactionState,
@@ -352,13 +359,7 @@ export class BackgroundService {
     const origin = serverParams.origin;
     const title = serverParams.title;
     const favIconUrl = serverParams.favIconUrl;
-    const selectedNetwork = await NetworkService.getSelectedNetwork();
-
-    if (!input.provider || !input.provider.url) {
-      input.provider = {
-        url: selectedNetwork?.url || '',
-      };
-    }
+    const provider = await this.requireSelectedNetwork(input.provider?.url);
 
     const popupService = await PopUpService.open(
       origin,
@@ -370,7 +371,7 @@ export class BackgroundService {
 
     const txRequestSigned = await popupService.signTransaction({
       address,
-      provider: input.provider,
+      provider,
       transaction: input.transaction,
       origin,
       title,

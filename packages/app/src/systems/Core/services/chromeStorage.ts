@@ -82,6 +82,17 @@ class ChromeStorageTable<T> {
     return true;
   }
 
+  // Replaces the whole table, so rows missing from entries are removed. Skips the write when the table would not change.
+  async replaceAll(entries: ChromeStorageRow<T>[]) {
+    const rows = await this.getAll();
+    if (JSON.stringify(rows) === JSON.stringify(entries)) return false;
+
+    await chrome?.storage?.local?.set({
+      [this.tableName]: entries,
+    });
+    return true;
+  }
+
   async remove({ key }: { key: string }) {
     const { index, rows } = await this.get({ key });
 
