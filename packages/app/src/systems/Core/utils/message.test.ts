@@ -34,14 +34,33 @@ describe('formatMessage', () => {
     );
   });
 
-  it.each([
-    ['invalid UTF-8', new Uint8Array([0x7b, 0xff, 0x7d])],
-    ['a byte order mark', new Uint8Array([0xef, 0xbb, 0xbf, 0x41])],
-    ['a control character', toUtf8Bytes('a\u0000b')],
-    ['a right-to-left override', toUtf8Bytes('pay\u202Eevil')],
-    ['a zero-width space', toUtf8Bytes('a\u200Bb')],
-  ])('shows hex for bytes with %s', (_, bytes) => {
+  it('shows hex for bytes that are not valid UTF-8', () => {
+    const bytes = new Uint8Array([0x7b, 0xff, 0x7d]);
     expect(shown(bytes)).toBe(hexlify(bytes));
+  });
+
+  it.each([
+    ['a byte order mark', '\uFEFFA', '⟨U+FEFF⟩A'],
+    ['a control character', 'a\u0000b\rc', 'a⟨U+0000⟩b⟨U+000D⟩c'],
+    ['a right-to-left override', 'pay\u202Eevil', 'pay⟨U+202E⟩evil'],
+    ['a zero-width space', 'a\u200Bb', 'a⟨U+200B⟩b'],
+    ['a no-break space', 'a\u00A0b', 'a⟨U+00A0⟩b'],
+    ['a line separator', 'a\u2028b', 'a⟨U+2028⟩b'],
+    ['a zero-width joiner between letters', 'a\u200Db', 'a⟨U+200D⟩b'],
+    ['a literal marker bracket', '⟨U+202E⟩', '⟨U+27E8⟩U+202E⟩'],
+  ])('marks %s in text and bytes', (_, text, expected) => {
+    expect(formatMessage(text).formattedMessage).toBe(expected);
+    expect(shown(toUtf8Bytes(text))).toBe(expected);
+  });
+
+  it('keeps spaces, tabs, line breaks and emoji sequences as they are', () => {
+    const text =
+      'Sign in\n\tnow 👨\u200D👩\u200D👧 👩🏽\u200D💻 🏳\uFE0F\u200D🌈 日本';
+    expect(formatMessage(text).formattedMessage).toBe(text);
+  });
+
+  it('shows a lone surrogate as the replacement character that is signed', () => {
+    expect(formatMessage('a\uD800b').formattedMessage).toBe('a\uFFFDb');
   });
 
   it('rejects messages it cannot read', () => {

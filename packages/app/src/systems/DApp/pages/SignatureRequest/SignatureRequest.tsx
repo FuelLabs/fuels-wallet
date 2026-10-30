@@ -2,7 +2,10 @@ import { Box, Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
 import type { HashableMessage } from 'fuels';
 import { AccountInfo } from '~/systems/Account';
 import { ConnectInfo, Layout, coreStyles } from '~/systems/Core';
-import { formatMessage } from '~/systems/Core/utils/message';
+import {
+  HIDDEN_CHARACTER_MARKER,
+  formatMessage,
+} from '~/systems/Core/utils/message';
 
 import { useSignatureRequest } from '../../hooks';
 
@@ -56,7 +59,18 @@ export function SignatureRequest() {
                       color: isValid ? 'inherit' : '$red10',
                     }}
                   >
-                    {formattedMessage}
+                    {formattedMessage
+                      .split(HIDDEN_CHARACTER_MARKER)
+                      .map((part, i) =>
+                        i % 2 ? (
+                          // biome-ignore lint/suspicious/noArrayIndexKey: parts never reorder
+                          <Box as="span" key={i} css={styles.hiddenCharacter}>
+                            {part.slice(1, -1)}
+                          </Box>
+                        ) : (
+                          part
+                        )
+                      )}
                   </Text>
                 </div>
               </Flex>
@@ -90,5 +104,13 @@ export function SignatureRequest() {
 const styles = {
   content: {
     paddingTop: '$4 !important',
+  },
+  hiddenCharacter: {
+    font: 'inherit',
+    backgroundColor: '$intentsWarning3',
+    color: '$intentsWarning11',
+    borderRadius: '$default',
+    padding: '0 2px',
+    margin: '0 1px',
   },
 };
