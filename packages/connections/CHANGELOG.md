@@ -1,5 +1,17 @@
 # @fuel-wallet/connections
 
+## 0.63.1
+
+### Patch Changes
+
+- [#2047](https://github.com/FuelLabs/fuels-wallet/pull/2047) [`e95c1d75`](https://github.com/FuelLabs/fuels-wallet/commit/e95c1d75dddc1a2a942ba82a51795abb6a134ca7) Thanks [@nelitow](https://github.com/nelitow)! - fix: Update uuid to 11.1.1 and pin patched transitive dependencies so the production audit passes
+
+- [#2027](https://github.com/FuelLabs/fuels-wallet/pull/2027) [`44443fb6`](https://github.com/FuelLabs/fuels-wallet/commit/44443fb6b457ccb9310646a471243c5bd13d99c6) Thanks [@nelitow](https://github.com/nelitow)! - fix: Deliver account and network changes to idle dApp tabs after the service worker stops
+
+- [#2016](https://github.com/FuelLabs/fuels-wallet/pull/2016) [`98bf69be`](https://github.com/FuelLabs/fuels-wallet/commit/98bf69be846aaad608ae96f89f8a06cc18ecc3d4) Thanks [@nelitow](https://github.com/nelitow)! - perf: Shrink the content script from 642 KB to 5 KB and connect to the background only when a dApp talks to the wallet
+
+- [#2029](https://github.com/FuelLabs/fuels-wallet/pull/2029) [`5a06cd88`](https://github.com/FuelLabs/fuels-wallet/commit/5a06cd888680c1209fada69d9c286ac0b88f3678) Thanks [@nelitow](https://github.com/nelitow)! - fix: Reconnect open tabs after the extension is disabled and enabled again
+
 ## 0.63.0
 
 ## 0.62.3
