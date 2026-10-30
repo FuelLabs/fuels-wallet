@@ -410,12 +410,17 @@ export class AccountService {
             if (!valid.length && networks.length) {
               valid.push({ ...IGNITION_NETWORK, id: createUUID() });
             }
-            if (valid.length && !valid.some((network) => network.isSelected)) {
-              const next =
-                valid.find((network) => network.url === IGNITION_NETWORK.url) ??
-                valid[0];
-              next.isSelected = true;
+            // Older backups can hold several selected networks, keep exactly one
+            const selected = valid.filter((network) => network.isSelected);
+            const candidates = selected.length ? selected : valid;
+            const next =
+              candidates.find(
+                (network) => network.url === IGNITION_NETWORK.url
+              ) ?? candidates[0];
+            for (const network of selected) {
+              if (network !== next) network.isSelected = false;
             }
+            if (next) next.isSelected = true;
             for (const network of valid) {
               await db.networks.put(network);
             }

@@ -10,7 +10,7 @@ import type {
 } from '@fuel-wallet/types';
 import Dexie, { type DbEvents, type PromiseExtended, type Table } from 'dexie';
 import 'dexie-observable';
-import { type AssetFuel, DEVNET_NETWORK_URL } from 'fuels';
+import type { AssetFuel } from 'fuels';
 import { IS_LOGGED_KEY } from '~/config';
 import { createParallelDb } from '~/systems/Core/utils/databaseNoDexie';
 import { Storage } from '~/systems/Core/utils/storage';
@@ -78,16 +78,10 @@ export class FuelDB extends Dexie {
       await chromeStorage.vaults.bulkSet(
         vaults.map((vault) => ({ key: vault.key, data: vault }))
       );
-      await chromeStorage.networks.bulkSet(
+      // Removed networks must leave the backup too, or recovery would bring them back
+      await chromeStorage.networks.replaceAll(
         networks.map((network) => ({ key: network.id || '', data: network }))
       );
-      // bulkSet only upserts, so the devnet row that v31 deleted stays in the
-      // backup and recovery would restore it
-      if (!networks.some((network) => network.url === DEVNET_NETWORK_URL)) {
-        const rows = await chromeStorage.networks.getAll();
-        const devnet = rows.find((row) => row.data.url === DEVNET_NETWORK_URL);
-        if (devnet) await chromeStorage.networks.remove({ key: devnet.key });
-      }
     }
   }
 

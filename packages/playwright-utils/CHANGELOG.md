@@ -1,5 +1,13 @@
 # @fuels/playwright-utils
 
+## 0.63.1
+
+### Patch Changes
+
+- [#2031](https://github.com/FuelLabs/fuels-wallet/pull/2031) [`c723bd86`](https://github.com/FuelLabs/fuels-wallet/commit/c723bd8604e5ac4984684b153bfb382369ed25c9) Thanks [@nelitow](https://github.com/nelitow)! - fix: Update adm-zip to 0.6.1 to fix the zip extraction advisories in 0.5.12
+
+- [#1998](https://github.com/FuelLabs/fuels-wallet/pull/1998) [`7aba974e`](https://github.com/FuelLabs/fuels-wallet/commit/7aba974e785b1809a6d2da3fcdb64a68e3b51815) Thanks [@nelitow](https://github.com/nelitow)! - fix: Workflows
+
 ## 0.63.0
 
 ## 0.62.3

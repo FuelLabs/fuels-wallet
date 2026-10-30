@@ -240,9 +240,12 @@ export class VaultServer extends EventEmitter {
 
   async clear(): Promise<void> {
     const vaults = await this.manager.getVaults();
-    for (const vault of vaults) {
+    // Removing a vault shifts the ids after it, so remove from the last one
+    for (const vault of [...vaults].reverse()) {
       await this.manager.removeVault(vault.vaultId);
     }
+    // A later unlock with empty storage keeps the vaults still in memory
+    await this.lock();
   }
 
   async reload() {

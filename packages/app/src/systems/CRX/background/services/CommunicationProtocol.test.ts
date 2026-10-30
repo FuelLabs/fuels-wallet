@@ -1,9 +1,11 @@
-import type { EventMessage } from '@fuel-wallet/types';
+import type { CommunicationMessage, EventMessage } from '@fuel-wallet/types';
+import { MessageTypes } from '@fuel-wallet/types';
 import { clearSession } from '../../utils/secret';
 import { CommunicationProtocol } from './CommunicationProtocol';
 
 const DAPP = 'https://dapp.example';
 const OTHER = 'https://other.example';
+const EXTENSION = 'chrome-extension://ext-id';
 
 const event: EventMessage = {
   type: 'event',
@@ -11,13 +13,19 @@ const event: EventMessage = {
   events: [{ event: 'currentAccount', params: ['0x1'] }],
 } as EventMessage;
 
-function createPort(origin: string, tabId?: number, frameId = 0) {
+function createPort(
+  origin: string,
+  tabId?: number,
+  frameId = 0,
+  url = `${origin}/`
+) {
   const listeners = { addListener: jest.fn(), removeListener: jest.fn() };
   return {
     sender: {
       id: 'ext-id',
       origin,
       frameId,
+      url,
       tab: tabId ? { id: tabId } : undefined,
     },
     postMessage: jest.fn(),
@@ -227,5 +235,50 @@ describe('CommunicationProtocol.broadcast', () => {
     protocol.broadcast(DAPP, { ...event, target: 'FuelPopUpScript' });
     await flush();
     expect(query).not.toHaveBeenCalled();
+  });
+});
+
+describe('CommunicationProtocol.onMessage', () => {
+  beforeEach(() => {
+    // biome-ignore lint/suspicious/noExplicitAny: test mock
+    (globalThis as any).chrome = {
+      runtime: {
+        id: 'ext-id',
+        getURL: (path: string) => `${EXTENSION}/${path}`,
+      },
+    };
+  });
+
+  function receive(port: chrome.runtime.Port, type: MessageTypes) {
+    const protocol = new CommunicationProtocol();
+    const listener = jest.fn();
+    protocol.on(type, listener);
+    protocol.addConnection(port);
+    protocol.onMessage(
+      { type, target: 'FuelBackgroundScript' } as CommunicationMessage,
+      port
+    );
+    return listener;
+  }
+
+  it.each([MessageTypes.uiEvent, MessageTypes.response])(
+    'ignores %s messages relayed from a web page',
+    (type) => {
+      expect(receive(createPort(DAPP, 1), type)).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each([MessageTypes.uiEvent, MessageTypes.response])(
+    'accepts %s messages from a wallet page',
+    (type) => {
+      const popup = createPort(EXTENSION, 3, 0, `${EXTENSION}/popup.html`);
+      expect(receive(popup, type)).toHaveBeenCalledTimes(1);
+    }
+  );
+
+  it('accepts requests relayed from a web page', () => {
+    expect(
+      receive(createPort(DAPP, 1), MessageTypes.request)
+    ).toHaveBeenCalledTimes(1);
   });
 });
