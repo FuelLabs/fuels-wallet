@@ -67,4 +67,9 @@ describe('formatMessage', () => {
     expect(formatMessage({ personalSign: '0x123' }).isValid).toBe(false);
     expect(formatMessage('' as never).isValid).toBe(false);
   });
+
+  it('rejects an empty personalSign, which the vault cannot sign', () => {
+    expect(formatMessage({ personalSign: '' }).isValid).toBe(false);
+    expect(formatMessage({ personalSign: '0x' }).isValid).toBe(false);
+  });
 });

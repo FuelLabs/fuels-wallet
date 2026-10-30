@@ -60,12 +60,11 @@ export function formatMessage(message: HashableMessage): {
   }
   if (typeof message?.personalSign === 'string') {
     try {
-      return {
-        formattedMessage: bytesToDisplay(
-          personalSignBytes(message.personalSign)
-        ),
-        isValid: true,
-      };
+      const bytes = personalSignBytes(message.personalSign);
+      if (!bytes.length) {
+        return { formattedMessage: 'No message provided', isValid: false };
+      }
+      return { formattedMessage: bytesToDisplay(bytes), isValid: true };
     } catch {}
   }
   return { formattedMessage: 'Invalid message format', isValid: false };
