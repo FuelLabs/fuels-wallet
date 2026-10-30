@@ -256,3 +256,62 @@ describe('FuelDB backup sync', () => {
     });
   });
 });
+
+describe('FuelDB network backup', () => {
+  const REMOVED: NetworkData = {
+    id: 'net-0-removed',
+    name: 'Removed node',
+    url: 'https://removed.node/v1/graphql',
+    chainId: 0,
+    isSelected: true,
+  };
+
+  beforeAll(() => {
+    // biome-ignore lint/suspicious/noExplicitAny: test global
+    (global as any).chrome = {
+      storage: { local: { get: chromeGet, set: chromeSet } },
+    };
+  });
+
+  beforeEach(async () => {
+    await db.accounts.clear();
+    await db.vaults.clear();
+    await db.networks.clear();
+    await db.accounts.bulkAdd(MOCK_ACCOUNTS.slice(0, 2));
+    await db.vaults.bulkAdd(VAULTS);
+    await db.networks.bulkAdd(NETWORKS);
+    chromeStore = {};
+  });
+
+  it('drops a network from the backup once it is removed', async () => {
+    await db.networks.add({ ...REMOVED, isSelected: false });
+    await db.syncDbToChromeStorage();
+    await db.networks.delete(REMOVED.id as string);
+
+    await db.syncDbToChromeStorage();
+
+    expect(chromeStore.networks.map((row: { key: string }) => row.key)).toEqual(
+      ['net-1', 'net-2']
+    );
+  });
+
+  it('recovers exactly one selected network from an older backup', async () => {
+    chromeStore = {
+      vaults: VAULTS.map((vault) => ({ key: vault.key, data: vault })),
+      networks: [
+        { key: REMOVED.id, data: REMOVED },
+        { key: NETWORKS[0].id, data: NETWORKS[0] },
+      ],
+    };
+    await db.accounts.clear();
+    await db.vaults.clear();
+    await db.networks.clear();
+
+    await AccountService.recoverWallet();
+
+    const selected = (await db.networks.toArray()).filter(
+      (network) => network.isSelected
+    );
+    expect(selected).toHaveLength(1);
+  });
+});
