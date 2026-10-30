@@ -9,12 +9,12 @@ import { useSignUp, useSignUpStepper } from '../../hooks';
 export function TermsOfUse() {
   const [isSavedChecked, setCheckedTerms] = useState(false);
   const { handlers } = useSignUp();
-  const { steps } = useSignUpStepper();
+  const { steps, labels, progressAt } = useSignUpStepper();
 
   return (
-    <Layout title="Terms of Service" isPublic>
+    <Layout title="Terms of Service" isPublic progress={progressAt(1)}>
       <MotionStack gap="$6" align="center" {...animations.slideInRight()}>
-        <Stepper steps={steps} active={1} />
+        <Stepper steps={steps} labels={labels} active={1} />
         <Header
           title="Terms of use Agreement"
           subtitle="Read and check to accept our terms of service"
