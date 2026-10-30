@@ -1,5 +1,28 @@
 # fuels-wallet
 
+## 0.63.2
+
+### Patch Changes
+
+- [#2045](https://github.com/FuelLabs/fuels-wallet/pull/2045) [`6c2a2dfc`](https://github.com/FuelLabs/fuels-wallet/commit/6c2a2dfc8c7895240061500092bc97de1c306624) Thanks [@nelitow](https://github.com/nelitow)! - fix: Assets added by a dApp keep only their name, symbol, icon and network details, and cannot reuse an asset id already in the wallet
+
+- [#2046](https://github.com/FuelLabs/fuels-wallet/pull/2046) [`c8a05704`](https://github.com/FuelLabs/fuels-wallet/commit/c8a05704233847ed0b30158400015b1472724f34) Thanks [@nelitow](https://github.com/nelitow)! - fix: Removed networks leave the chrome.storage backup, and wallet recovery always ends with exactly one selected network
+
+- [#2043](https://github.com/FuelLabs/fuels-wallet/pull/2043) [`b9ff98c3`](https://github.com/FuelLabs/fuels-wallet/commit/b9ff98c393e0d232f18c87ecbc8f6fe0ce28a007) Thanks [@nelitow](https://github.com/nelitow)! - fix: Only wallet pages can answer approval popups, so a web page can no longer break popups opened for other sites
+
+- [#2041](https://github.com/FuelLabs/fuels-wallet/pull/2041) [`d4f06b7b`](https://github.com/FuelLabs/fuels-wallet/commit/d4f06b7bf1f29ef9104adaa227ab033c0a107f7e) Thanks [@nelitow](https://github.com/nelitow)! - fix: Message signing requests show and sign the same bytes: the signature popup shows the exact text, marks hidden characters such as right-to-left overrides, and shows hex for bytes that are not valid UTF-8
+
+- [#2040](https://github.com/FuelLabs/fuels-wallet/pull/2040) [`df9d5e6b`](https://github.com/FuelLabs/fuels-wallet/commit/df9d5e6bfc37886cfef58215a27a65bcf8241e6a) Thanks [@nelitow](https://github.com/nelitow)! - fix: Sign-only transaction requests use the selected network, like send requests already do
+
+- [#2044](https://github.com/FuelLabs/fuels-wallet/pull/2044) [`2decaf55`](https://github.com/FuelLabs/fuels-wallet/commit/2decaf55ace5aea5470ad299d72a478c396410fe) Thanks [@nelitow](https://github.com/nelitow)! - fix: A wrong saved contract ABI no longer blocks approving or viewing a transaction, which is shown without decoded calls instead
+
+- [#2039](https://github.com/FuelLabs/fuels-wallet/pull/2039) [`7bb6f58f`](https://github.com/FuelLabs/fuels-wallet/commit/7bb6f58ffe6600dd17bfae992fb95a099e52f765) Thanks [@nelitow](https://github.com/nelitow)! - fix: Show every transfer on the transaction review when one account sends to the same address more than once
+
+- [#2042](https://github.com/FuelLabs/fuels-wallet/pull/2042) [`c025e287`](https://github.com/FuelLabs/fuels-wallet/commit/c025e28789b53b2b3c14e41cbc6c553936d3de6e) Thanks [@nelitow](https://github.com/nelitow)! - fix: Logging out removes every vault and locks the wallet, so imported keys do not carry over to the next wallet
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.63.2
+
 ## 0.63.1
 
 ### Patch Changes
