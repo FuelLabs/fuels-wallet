@@ -47,6 +47,16 @@ describe('formatMessage', () => {
     ['a no-break space', 'a\u00A0b', 'a⟨U+00A0⟩b'],
     ['a line separator', 'a\u2028b', 'a⟨U+2028⟩b'],
     ['a zero-width joiner between letters', 'a\u200Db', 'a⟨U+200D⟩b'],
+    ['a combining grapheme joiner', 'PAY 1 FUEL\u034F', 'PAY 1 FUEL⟨U+034F⟩'],
+    ['a variation selector after a letter', 'FUEL\uFE0F', 'FUEL⟨U+FE0F⟩'],
+    ['a variation selector after a digit', '1\uFE0F FUEL', '1⟨U+FE0F⟩ FUEL'],
+    [
+      'a variation selector after an emoji',
+      '\u{1F600}\uFE0F',
+      '\u{1F600}⟨U+FE0F⟩',
+    ],
+    ['a Mongolian variation selector', 'a\u180Bb', 'a⟨U+180B⟩b'],
+    ['a Hangul filler', 'a\u3164b', 'a⟨U+3164⟩b'],
     ['a literal marker bracket', '⟨U+202E⟩', '⟨U+27E8⟩U+202E⟩'],
   ])('marks %s in text and bytes', (_, text, expected) => {
     expect(formatMessage(text).formattedMessage).toBe(expected);
@@ -55,7 +65,7 @@ describe('formatMessage', () => {
 
   it('keeps spaces, tabs, line breaks and emoji sequences as they are', () => {
     const text =
-      'Sign in\n\tnow 👨\u200D👩\u200D👧 👩🏽\u200D💻 🏳\uFE0F\u200D🌈 日本';
+      'Sign in\n\tnow 👨\u200D👩\u200D👧 👩🏽\u200D💻 \u2764\uFE0F 1\uFE0F\u20E3 🏳\uFE0F\u200D🌈 日本';
     expect(formatMessage(text).formattedMessage).toBe(text);
   });
 
