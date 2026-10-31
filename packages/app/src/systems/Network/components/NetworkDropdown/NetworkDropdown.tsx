@@ -1,6 +1,7 @@
 import { cssObj, Box, Button } from '@fuel-wallet/ui';
 import type { NetworkData } from '@fuel-wallet/types';
 import { forwardRef } from 'react';
+import { useLanded } from '~/systems/Core/utils/landed';
 
 import { NetworkStatus } from '../NetworkItem';
 
@@ -12,6 +13,9 @@ export type NetworkDropdownProps = {
 
 export const NetworkDropdown = forwardRef<HTMLDivElement, NetworkDropdownProps>(
   ({ selected, isDisabled, ...props }, ref) => {
+    const isLanded = useLanded(
+      selected?.url ? `network:${selected.url}` : undefined
+    );
     return (
       <Button
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -21,6 +25,7 @@ export const NetworkDropdown = forwardRef<HTMLDivElement, NetworkDropdownProps>(
         size="sm"
         css={styles.trigger}
         aria-label="Selected Network"
+        className={isLanded ? 'fuel-courier-hit' : undefined}
         isDisabled={isDisabled}
         rightIcon={isDisabled ? null : 'ChevronDown'}
       >

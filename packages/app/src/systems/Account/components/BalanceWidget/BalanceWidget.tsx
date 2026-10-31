@@ -17,6 +17,7 @@ import { useAccounts } from '../../hooks';
 import { INTL_FORMATTER } from '~/systems/Asset/constants';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 import { useTweenedNumber } from '~/systems/Core/hooks/useTweenedNumber';
+import { useLanded } from '~/systems/Core/utils/landed';
 
 type BalanceWidgetWrapperProps = {
   top: ReactNode;
@@ -62,13 +63,17 @@ export function BalanceWidget({
     !isLoading && account?.address ? account.address : ''
   );
 
+  const isNewAccount = useLanded(
+    account?.address ? `account:${account.address}` : undefined
+  );
+
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
   const totalValue = INTL_FORMATTER.format(shownBalance);
 
   return (
     <BalanceWidgetWrapper
-      className={isFirstFunds ? 'fuel-ticks' : undefined}
+      className={isFirstFunds || isNewAccount ? 'fuel-ticks' : undefined}
       top={
         <>
           <Avatar.Generated
