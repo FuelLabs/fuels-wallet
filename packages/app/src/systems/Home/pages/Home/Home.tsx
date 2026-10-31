@@ -16,12 +16,19 @@ import {
   GetStarted,
 } from '../../components/GetStarted/GetStarted';
 import { useGetStarted } from '../../hooks/useGetStarted';
+import { useNewAssets } from '../../hooks/useNewAssets';
+import { useNetworks } from '~/systems/Network';
 
 export function Home() {
   const { visibility, setVisibility } = useBalanceVisibility();
   const { isLoading, account } = useAccounts();
   const navigate = useNavigate();
   const getStarted = useGetStarted();
+  const { network } = useNetworks();
+  const newAssetIds = useNewAssets(
+    account?.address && network?.url ? `${network.url}|${account.address}` : '',
+    isLoading ? undefined : account?.balances
+  );
   const assetsHeight =
     BALANCE_NFTS_TAB_HEIGHT - (getStarted.isActive ? GET_STARTED_HEIGHT : 0);
 
@@ -73,7 +80,11 @@ export function Home() {
             </Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content value="assets" css={styles.assetsList}>
-            <BalanceAssets balances={account?.balances} isLoading={isLoading} />
+            <BalanceAssets
+              balances={account?.balances}
+              isLoading={isLoading}
+              newAssetIds={newAssetIds}
+            />
           </Tabs.Content>
           <Tabs.Content value="nft" css={styles.assetsList}>
             <BalanceNFTs balances={account?.balances} isLoading={isLoading} />

@@ -14,12 +14,14 @@ export type BalanceAssetListProp = {
   onRemove?: (assetId: string) => void;
   onEdit?: (assetId: string) => void;
   emptyProps?: AssetListEmptyProps;
+  newAssetIds?: string[];
 };
 
 export const BalanceAssets = ({
   balances = [],
   isLoading,
   emptyProps = {},
+  newAssetIds,
   onRemove,
   onEdit,
 }: BalanceAssetListProp) => {
@@ -65,6 +67,7 @@ export const BalanceAssets = ({
             onRemove={onRemove}
             onEdit={onEdit}
             shouldShowAddAssetBtn={shouldShowAddAssetBtn}
+            isNew={newAssetIds?.includes(balance.assetId)}
             onPress={() =>
               navigate(Pages.assetDetail({ assetId: balance.assetId }))
             }
