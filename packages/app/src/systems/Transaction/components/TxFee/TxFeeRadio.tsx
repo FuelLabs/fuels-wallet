@@ -44,6 +44,12 @@ export const TxFeeRadio: TxFeeRadioComponent = ({
           width: '14px',
           height: '14px',
           mt: '2px',
+          '& span': {
+            animation: 'fuel-pop 360ms var(--fuel-ease-out) both',
+          },
+          '@media (prefers-reduced-motion: reduce)': {
+            '& span': { animation: 'none' },
+          },
         }}
       />
 
