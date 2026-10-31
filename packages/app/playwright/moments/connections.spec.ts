@@ -30,6 +30,9 @@ test.describe('Connections moments', () => {
       await expect(
         page.locator('.fuel-ticks').filter({ has: title })
       ).toHaveCount(1);
+      await expect(
+        page.getByText('Connection removed successfully')
+      ).toHaveCount(0);
       await hold(page, 2500);
     });
   });
