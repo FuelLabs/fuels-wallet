@@ -75,10 +75,13 @@ export const QuickConsolidateCoins = () => {
 
 const styles = {
   wrapper: cssObj({
-    position: 'fixed',
+    // Anchored to the wallet frame, so it stays inside it when opened in a tab.
+    position: 'absolute',
     paddingLeft: '$4',
     paddingRight: '15px',
     paddingBottom: '$4',
+    left: 0,
+    right: 0,
     bottom: 0,
     zIndex: '$10',
     opacity: 0,
