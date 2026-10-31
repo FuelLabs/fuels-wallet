@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './human';
 
 import { reload } from '../commons';
 import { createConnections, getAccount, mockData } from '../mocks';

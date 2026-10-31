@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './human';
 
 import { visit } from '../commons';
 import { mockData } from '../mocks';

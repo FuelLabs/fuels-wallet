@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './human';
 
 import { visit } from '../commons';
 import { mockData } from '../mocks';
@@ -33,7 +33,7 @@ test.describe('Connections moments', () => {
       await expect(
         page.getByText('Connection removed successfully')
       ).toHaveCount(0);
-      await hold(page, 2500);
+      await hold(page, 3500);
     });
   });
 });

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './human';
 import { Mnemonic } from 'fuels';
 
 import { visit } from '../commons';
@@ -8,7 +8,7 @@ import { hold, maxInputs, seedManyCoins } from './helpers';
 /* Enough for three consolidation transactions at 255 inputs each. */
 const COINS = 600;
 /* Local fuel-core confirms instantly; slow each submit so the progress is watchable. */
-const SUBMIT_DELAY_MS = 1500;
+const SUBMIT_DELAY_MS = 4000;
 
 test.describe('Coin consolidation moments', () => {
   test('consolidate many small coins with per-transaction progress', async ({
@@ -45,9 +45,9 @@ test.describe('Coin consolidation moments', () => {
       await hold(page);
     });
 
-    await page.route('**/v1/graphql', async (route) => {
+    await page.route('**/v1/graphql*', async (route) => {
       const body = route.request().postData() ?? '';
-      if (/mutation\s+\w*[sS]ubmit/.test(body)) {
+      if (/(mutation|subscription)\s+\w*[sS]ubmit/.test(body)) {
         await new Promise((resolve) => setTimeout(resolve, SUBMIT_DELAY_MS));
       }
       await route.continue();
@@ -65,20 +65,23 @@ test.describe('Coin consolidation moments', () => {
       await expect(
         page.locator('li.fuel-square[data-kind="active"]')
       ).toHaveCount(1);
-      await expect(status).toHaveText(
-        new RegExp(`Transaction \\d of ${expectedTxs}`)
-      );
-      await hold(page);
     });
 
-    await test.step('Last transaction going out', async () => {
-      await expect(status).toHaveText(
-        `Transaction ${expectedTxs} of ${expectedTxs}`,
-        { timeout: 60_000 }
-      );
-      await expect(squares.first()).not.toHaveAttribute('data-kind');
-      await hold(page);
-    });
+    // Each submit is held for SUBMIT_DELAY_MS, which is the watch time here.
+    for (let tx = 1; tx <= expectedTxs; tx++) {
+      await test.step(`Transaction ${tx} of ${expectedTxs}`, async () => {
+        await expect(status).toHaveText(`Transaction ${tx} of ${expectedTxs}`, {
+          timeout: 30_000,
+        });
+        await expect(squares.nth(tx - 1)).toHaveAttribute(
+          'data-kind',
+          'active'
+        );
+        if (tx > 1) {
+          await expect(squares.nth(tx - 2)).not.toHaveAttribute('data-kind');
+        }
+      });
+    }
 
     await test.step('Coins consolidated', async () => {
       await expect(
@@ -91,11 +94,11 @@ test.describe('Coin consolidation moments', () => {
       for (let i = 0; i < expectedTxs; i++) {
         await expect(squares.nth(i)).not.toHaveAttribute('data-kind');
       }
-      await hold(page, 3000);
+      await hold(page, 3500);
     });
 
     await test.step('Done: back to Home', async () => {
-      await page.unroute('**/v1/graphql');
+      await page.unroute('**/v1/graphql*');
       await page.getByRole('button', { name: 'Done' }).click();
       await expect(page.getByRole('tab', { name: 'Assets' })).toBeVisible();
       // The banner fades out with opacity; its wrapper carries the open state.

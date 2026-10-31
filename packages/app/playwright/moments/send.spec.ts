@@ -1,4 +1,5 @@
-import { type Page, expect, test } from '@playwright/test';
+import type { Page } from '@playwright/test';
+import { expect, test } from './human';
 import { Provider, Wallet, bn } from 'fuels';
 
 import { reload, seedWallet, visit } from '../commons';
@@ -72,7 +73,7 @@ test.describe('Send moments', () => {
       await expect(history).toHaveText(/Sent before, 1 time$/i, {
         timeout: 30_000,
       });
-      await hold(page, 2500);
+      await hold(page, 3500);
     });
   });
 

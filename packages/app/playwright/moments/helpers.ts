@@ -3,11 +3,12 @@ import { Address, Provider, Wallet, bn } from 'fuels';
 
 import { visit } from '../commons';
 import { WALLET_PASSWORD } from '../mocks';
+import { glideTo } from './human';
 
 const { GENESIS_SECRET, VITE_FUEL_PROVIDER_URL } = process.env;
 
 /** Long enough to see a moment land in the Playwright UI. */
-export const HOLD_MS = 1500;
+export const HOLD_MS = 2500;
 
 export function hold(page: Page, ms = HOLD_MS) {
   return page.waitForTimeout(ms);
@@ -19,20 +20,19 @@ export function wordInputs(page: Page) {
 
 /** Dispatches a real paste event, the way a user pasting into the first word does. */
 export async function pastePhrase(page: Page, phrase: string) {
-  await page
-    .locator('input[aria-label="Enter word here"]')
-    .first()
-    .evaluate((input, text) => {
-      const data = new DataTransfer();
-      data.setData('text/plain', text);
-      input.dispatchEvent(
-        new ClipboardEvent('paste', {
-          clipboardData: data,
-          bubbles: true,
-          cancelable: true,
-        })
-      );
-    }, phrase);
+  const first = page.locator('input[aria-label="Enter word here"]').first();
+  await glideTo(first);
+  await first.evaluate((input, text) => {
+    const data = new DataTransfer();
+    data.setData('text/plain', text);
+    input.dispatchEvent(
+      new ClipboardEvent('paste', {
+        clipboardData: data,
+        bubbles: true,
+        cancelable: true,
+      })
+    );
+  }, phrase);
 }
 
 export async function acceptTerms(page: Page) {

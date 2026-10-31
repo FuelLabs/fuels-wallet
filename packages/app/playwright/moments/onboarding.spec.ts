@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './human';
 import { Mnemonic } from 'fuels';
 
 import { visit } from '../commons';
@@ -24,7 +24,7 @@ test.describe('Onboarding moments', () => {
         'Account ready',
       ]);
       await expect(page.getByText('Account 1').first()).toBeVisible();
-      await hold(page, 2500);
+      await hold(page, 3500);
     });
 
     await test.step('Go to wallet', async () => {
@@ -73,7 +73,7 @@ test.describe('Onboarding moments', () => {
         'Password set',
         'Account ready',
       ]);
-      await hold(page, 2500);
+      await hold(page, 3500);
       await page.getByRole('button', { name: 'Go to wallet' }).click();
       await expect(page.getByRole('tab', { name: 'Assets' })).toBeVisible();
     });

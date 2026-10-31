@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './human';
 import { bn } from 'fuels';
 
 import { reload, seedWallet, visit } from '../commons';
@@ -37,7 +37,7 @@ test.describe('New asset markers', () => {
     await test.step('Reopen Home: new assets marked', async () => {
       await reload(page);
       await expect(newMarks).toHaveCount(2, { timeout: 20_000 });
-      await hold(page, 2500);
+      await hold(page, 3500);
     });
 
     await test.step('Reopen again: nothing new', async () => {
