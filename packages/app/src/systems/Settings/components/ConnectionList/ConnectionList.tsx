@@ -1,5 +1,6 @@
 import { cssObj, Box, CardList, Icon, Tooltip } from '@fuel-wallet/ui';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import {
   EmptyList,
   Layout,
@@ -22,6 +23,16 @@ export function ConnectionList({
   status,
   ...ctx
 }: ConnectionListProps) {
+  const isEmpty = status('isEmpty');
+  const hasConnections = Boolean(ctx.connections?.length);
+  const [hadConnections, setHadConnections] = useState(false);
+  /* Removing the last app on this screen is a finished review, not a blank list. */
+  const isCleared = isEmpty && hadConnections;
+
+  useEffect(() => {
+    if (hasConnections) setHadConnections(true);
+  }, [hasConnections]);
+
   const tooltipContent = (
     <Box css={styles.tooltipContent}>
       <PermissionCard
@@ -62,15 +73,25 @@ export function ConnectionList({
           </CardList>
         )}
         {(status('noResults') || status('isEmpty')) && (
-          <MotionBox {...animations.slideInTop()} css={styles.empty}>
+          <MotionBox
+            {...animations.slideInTop()}
+            css={styles.empty}
+            className={isCleared ? 'fuel-ticks' : undefined}
+          >
             <EmptyList
               label={
-                status('isEmpty') ? 'No apps connected' : 'No connection found'
+                isCleared
+                  ? 'All apps disconnected'
+                  : isEmpty
+                    ? 'No apps connected'
+                    : 'No connection found'
               }
               description={
-                status('isEmpty')
-                  ? 'Apps you connect will show up here'
-                  : 'Try searching for a different app'
+                isCleared
+                  ? 'No app can see your accounts now'
+                  : isEmpty
+                    ? 'Apps you connect will show up here'
+                    : 'Try searching for a different app'
               }
             />
           </MotionBox>
