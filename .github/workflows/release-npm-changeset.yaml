@@ -100,9 +100,9 @@ jobs:
           ls -la .changeset/ || echo "No changeset files found (expected)"
           echo "::endgroup::"
 
-      # Ensure latest NPM is installed to support OIDC publishing
+      # npm 11.5+ supports OIDC publishing; npm 12 rejects the --no-git-checks flag pnpm 9 passes to npm publish
       - name: Update npm
-        run: npm install -g npm@latest
+        run: npm install -g npm@11
 
       - name: Build packages
         run: pnpm build:libs
