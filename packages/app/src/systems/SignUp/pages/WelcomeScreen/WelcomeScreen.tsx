@@ -3,12 +3,13 @@ import type { CSSProperties } from 'react';
 import { Layout, MotionStack, animations } from '~/systems/Core';
 
 import { Header } from '../../components';
-import { useSignUp } from '../../hooks';
+import { useSignUp, useSignUpStepper } from '../../hooks';
 
 export function WelcomeScreen() {
   const { handlers } = useSignUp();
+  const { welcomeProgress } = useSignUpStepper();
   return (
-    <Layout title="Sign Up" isPublic isCentered>
+    <Layout title="Sign Up" isPublic isCentered progress={welcomeProgress}>
       <MotionStack gap="$6" css={styles.wrapper} {...animations.fadeIn()}>
         <Box css={styles.logo}>
           <FuelLogo size={50} />

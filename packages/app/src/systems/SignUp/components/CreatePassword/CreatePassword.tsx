@@ -48,7 +48,7 @@ export function CreatePassword({
   onCancel,
   onSubmit,
 }: CreatePasswordProps) {
-  const { steps } = useSignUpStepper();
+  const { steps, labels } = useSignUpStepper();
 
   const form = useForm<CreatePasswordValues>({
     resolver: yupResolver(schema),
@@ -78,7 +78,7 @@ export function CreatePassword({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Box.Stack gap="$6" align="center">
-        <Stepper steps={steps} active={step} />
+        <Stepper steps={steps} labels={labels} active={step} />
         <Header
           title="Create password for encryption"
           subtitle="This password will be used to unlock your wallet."

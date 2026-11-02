@@ -349,8 +349,13 @@ export const connectionsMachine = createMachine(
           };
         },
       }),
-      removeSuccess: () => {
-        toast.success('Connection removed successfully');
+      removeSuccess: ({ response }, ev) => {
+        const remaining = ConnectionService.excludeByOrigin(
+          response?.connections || [],
+          ev.data.origin
+        );
+        // The last one ends on the list's own "All apps disconnected" state.
+        if (remaining.length) toast.success('Connection removed successfully');
       },
     },
     services: {

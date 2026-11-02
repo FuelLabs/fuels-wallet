@@ -1,11 +1,16 @@
 import { cssObj, Box, Button, Grid, Icon, toast } from '@fuel-wallet/ui';
-import { MNEMONIC_SIZES } from 'fuels';
-import type { ClipboardEvent } from 'react';
-import { useEffect, useState } from 'react';
+import { MNEMONIC_SIZES, Mnemonic as FuelMnemonic, english } from 'fuels';
+import type { CSSProperties, ClipboardEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { MnemonicInput } from './MnemonicInput';
 
 const WORDS = import.meta.env.VITE_MNEMONIC_WORDS;
+const WORDLIST = new Set(english);
+/* Long enough for the last word of a 24-word paste to land. */
+const SWEEP_MS = 900;
+
+type WordState = 'empty' | 'match' | 'miss';
 
 function fillArray(item: string[], format: number) {
   return Array.from({ length: format }).map((_, idx) => item[idx] || '');
@@ -31,6 +36,8 @@ export type MnemonicProps = {
   onChange?: (val: string[]) => void;
   format?: number;
   enableChangeFormat?: boolean;
+  /** The phrase being confirmed; without it, words are checked against the wordlist. */
+  expected?: string[];
 };
 
 export function Mnemonic({
@@ -40,6 +47,7 @@ export function Mnemonic({
   onChange,
   format: initialFormat,
   enableChangeFormat,
+  expected,
 }: MnemonicProps) {
   const [format, setFormat] = useState(() => {
     if (initialFormat && MNEMONIC_SIZES.includes(initialFormat)) {
@@ -56,6 +64,24 @@ export function Mnemonic({
     fillArray(initialValue, format)
   );
 
+  const [focused, setFocused] = useState(-1);
+  const [pastes, setPastes] = useState(0);
+  const [isSweeping, setIsSweeping] = useState(false);
+  const sweepTimer = useRef<ReturnType<typeof setTimeout>>();
+  useEffect(() => () => clearTimeout(sweepTimer.current), []);
+
+  const states: WordState[] = value.map((word, idx) => {
+    if (!word) return 'empty';
+    const isKnown = expected
+      ? word === expected[idx]
+      : WORDLIST.has(word.toLowerCase());
+    return isKnown ? 'match' : 'miss';
+  });
+  const matched = states.filter((state) => state === 'match').length;
+  const isComplete =
+    matched === format &&
+    (Boolean(expected) || FuelMnemonic.isMnemonicValid(value.join(' ')));
+
   async function handleCopy() {
     const val = type === 'read' ? initialValue : value;
     await navigator.clipboard.writeText(val.join(' '));
@@ -69,6 +95,10 @@ export function Mnemonic({
       MNEMONIC_SIZES[MNEMONIC_SIZES.length - 1];
     setFormat(selectedMnemonicSize);
     setValue(fillArray(words, selectedMnemonicSize));
+    setPastes((count) => count + 1);
+    setIsSweeping(true);
+    clearTimeout(sweepTimer.current);
+    sweepTimer.current = setTimeout(() => setIsSweeping(false), SWEEP_MS);
   }
 
   function handlePasteInput(ev: ClipboardEvent<HTMLInputElement>, idx: number) {
@@ -113,7 +143,11 @@ export function Mnemonic({
   }, [value]);
 
   return (
-    <Box css={styles.root}>
+    <Box
+      css={styles.root}
+      className={isComplete ? 'fuel-ticks' : undefined}
+      data-sweeping={isSweeping}
+    >
       {enableChangeFormat && (
         <Box.Flex css={styles.formatWrapper}>
           <select
@@ -143,16 +177,28 @@ export function Mnemonic({
       ) : (
         <Grid css={styles.words}>
           {value.map((_, idx) => {
+            const state = states[idx];
             return (
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              <Grid key={idx} css={styles.inputWrapper}>
+              <Grid
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                key={idx}
+                css={styles.inputWrapper}
+                data-state={
+                  state === 'miss' && idx === focused ? 'typing' : state
+                }
+                style={{ '--i': idx } as CSSProperties}
+              >
                 <span>{idx + 1}</span>
                 <div>
                   <MnemonicInput
+                    key={pastes}
                     value={value[idx]}
                     index={idx}
+                    isInvalid={state === 'miss' && idx !== focused}
                     onChange={handleChange}
                     onPaste={handlePasteInput}
+                    onFocus={setFocused}
+                    onBlur={() => setFocused(-1)}
                   />
                 </div>
               </Grid>
@@ -172,15 +218,33 @@ export function Mnemonic({
             Copy
           </Button>
         ) : (
-          <Button
-            aria-label="Paste seed phrase"
-            size="sm"
-            variant="solid"
-            leftIcon={<Icon icon="Copy" color="intentsBase8" />}
-            onPress={handlePastePress}
-          >
-            Paste
-          </Button>
+          <>
+            <Box.Flex className="tally">
+              <Box.Flex aria-hidden className="tally-squares">
+                {states.map((state, idx) => (
+                  <span
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                    key={idx}
+                    className="fuel-square"
+                    data-kind={state === 'match' ? undefined : 'idle'}
+                    style={{ '--i': idx } as CSSProperties}
+                  />
+                ))}
+              </Box.Flex>
+              <span>
+                {matched}/{format}
+              </span>
+            </Box.Flex>
+            <Button
+              aria-label="Paste seed phrase"
+              size="sm"
+              variant="solid"
+              leftIcon={<Icon icon="Copy" color="intentsBase8" />}
+              onPress={handlePastePress}
+            >
+              Paste
+            </Button>
+          </>
         )}
       </Box.Flex>
     </Box>
@@ -191,6 +255,25 @@ const styles = {
   root: cssObj({
     layer: 'layer-card',
     borderRadius: '$default',
+
+    '&[data-sweeping="true"]': {
+      '[data-state] input': {
+        animation: 'fuel-appear 240ms var(--fuel-ease-out) backwards',
+      },
+      '[data-state] input, .tally-squares .fuel-square': {
+        animationDelay: 'calc(var(--i) * 30ms)',
+        transitionDelay: 'calc(var(--i) * 30ms)',
+      },
+    },
+
+    '@media (prefers-reduced-motion: reduce)': {
+      '&&': {
+        '[data-state] input, .tally-squares .fuel-square': {
+          animation: 'none',
+          transition: 'none',
+        },
+      },
+    },
   }),
   formatWrapper: cssObj({
     p: '$3',
@@ -255,11 +338,22 @@ const styles = {
       background: 'transparent',
       borderBottom: '1px dashed $border',
       color: '$intentsBase11',
+      transition:
+        'border-color 250ms var(--fuel-ease-out), color 250ms var(--fuel-ease-out)',
 
       '&:focus': {
         outline: 'none',
         borderColor: '$intentsBase8',
       },
+    },
+    '&[data-state="match"] input': {
+      borderBottomStyle: 'solid',
+      borderColor: 'var(--fuel-square)',
+      color: '$textHigh',
+    },
+    '&[data-state="miss"] input': {
+      borderBottomStyle: 'solid',
+      borderColor: 'var(--fuel-danger)',
     },
   }),
   footer: cssObj({
@@ -272,6 +366,23 @@ const styles = {
 
     '.fuel_Button': {
       px: '$8',
+    },
+    '.tally': {
+      flex: 1,
+      alignItems: 'center',
+      gap: '$3',
+      fontFamily: '$mono',
+      fontSize: '12px',
+      color: '$textLow',
+    },
+    '.tally-squares': {
+      flexWrap: 'wrap',
+      gap: '3px',
+      maxWidth: 'calc(12 * 11px)',
+    },
+    '.tally-squares .fuel-square': {
+      transition:
+        'background-color 250ms var(--fuel-ease-out), border-color 250ms var(--fuel-ease-out)',
     },
   }),
 };

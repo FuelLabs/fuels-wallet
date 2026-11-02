@@ -52,6 +52,8 @@ export type LayoutProps = Context & {
   isPublic?: boolean;
   noBorder?: boolean;
   isCentered?: boolean;
+  /** How far onboarding has come, 0 to 1: the art develops as it rises. */
+  progress?: number;
 };
 
 type LayoutComponent = FC<LayoutProps> & {
@@ -67,6 +69,7 @@ export const Layout: LayoutComponent = ({
   children,
   noBorder,
   isCentered,
+  progress = 1,
 }: LayoutProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const titleText = title ? `${title} | Fuel` : 'Fuel';
@@ -87,7 +90,13 @@ export const Layout: LayoutComponent = ({
         >
           <Box as="aside" css={styles.art} className="fuel-dither-accent">
             <div className="fuel-dither-art">
-              <DitherImage src={ONBOARDING_ART} cell={2} brightness={0.05} />
+              <DitherImage
+                src={ONBOARDING_ART}
+                cell={2}
+                brightness={
+                  ART_DARKEST + (ART_BRIGHTEST - ART_DARKEST) * progress
+                }
+              />
             </div>
           </Box>
           <Box.Centered>{children}</Box.Centered>
@@ -122,6 +131,8 @@ Layout.BottomBar = BottomBar;
 
 // NASA, "Astronaut in spacesuit floating in space", via Unsplash (Unsplash License).
 const ONBOARDING_ART = '/onboarding.jpg';
+const ART_DARKEST = -0.3;
+const ART_BRIGHTEST = 0.05;
 
 export const styles = {
   root: cssObj({

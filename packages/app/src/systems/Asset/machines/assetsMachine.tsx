@@ -3,6 +3,7 @@ import type { AssetData } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { FetchMachine } from '~/systems/Core';
+import { markLanded } from '~/systems/Core/utils/landed';
 
 import { store } from '~/store';
 import type { AssetInputs } from '../services';
@@ -17,6 +18,7 @@ export enum AssetsStatus {
 
 export type MachineContext = {
   assets?: AssetData[];
+  addingAssetId?: string;
 };
 
 type MachineServices = {
@@ -88,6 +90,7 @@ export const assetsMachine = createMachine(
       idle: {
         on: {
           ADD_ASSET: {
+            actions: ['assignAddingAssetId'],
             target: 'adding',
           },
           UPDATE_ASSET: {
@@ -175,8 +178,12 @@ export const assetsMachine = createMachine(
       updateSuccess: () => {
         toast.success('Asset updated successfully');
       },
-      addSuccess: () => {
+      assignAddingAssetId: assign({
+        addingAssetId: (_, ev) => ev.input.data.assetId,
+      }),
+      addSuccess: (ctx) => {
         toast.success('Asset added successfully');
+        if (ctx.addingAssetId) markLanded(`asset:${ctx.addingAssetId}`);
       },
       notifyUpdateAccounts: () => {
         store.refreshAccounts({ skipLoading: true });

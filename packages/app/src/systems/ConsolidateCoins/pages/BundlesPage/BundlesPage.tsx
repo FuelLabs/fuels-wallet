@@ -3,15 +3,19 @@ import { Services, store } from '~/store';
 import { Layout, Pages } from '~/systems/Core';
 import { ConsolidationActions } from '../../components/ConsolidationActions/ConsolidationActions';
 import { ConsolidationDetails } from '../../components/ConsolidationDetails/ConsolidationDetails';
+import { ConsolidationProgress } from '../../components/ConsolidationProgress/ConsolidationProgress';
+import { useConsolidateCoinsSelector } from '../../hooks/useConsolidateCoinsSelector';
 
 export function BundlesPage() {
   const navigate = useNavigate();
+  const isRunning = useConsolidateCoinsSelector(
+    (state) => state.hasTag('consolidating') || state.hasTag('consolidated')
+  );
 
   const onCancel = () => {
     navigate(Pages.index());
   };
 
-  // Configure the machine to navigate to Home after successful consolidation
   store.useUpdateMachineConfig(Services.consolidateCoins, {
     actions: {
       navigateToHome() {
@@ -23,7 +27,7 @@ export function BundlesPage() {
   return (
     <Layout title="Coins">
       <Layout.TopBar onBack={onCancel} />
-      <ConsolidationDetails />
+      {isRunning ? <ConsolidationProgress /> : <ConsolidationDetails />}
       <ConsolidationActions onCancel={onCancel} />
     </Layout>
   );

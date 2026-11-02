@@ -30,9 +30,7 @@ export function ConsolidationDetails() {
   const coins = useConsolidateCoinsSelector(selectors.coins);
   const baseAsset = useBaseAsset();
 
-  const txs = useConsolidateCoinsSelector(
-    (state) => state.context.consolidation.txs
-  );
+  const txs = useConsolidateCoinsSelector((state) => state.context.txs);
 
   if (loading) {
     return (

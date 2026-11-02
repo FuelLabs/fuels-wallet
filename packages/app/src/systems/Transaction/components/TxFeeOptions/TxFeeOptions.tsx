@@ -10,7 +10,7 @@ import {
   VStack,
 } from '@fuel-wallet/ui';
 import { AnimatePresence } from 'framer-motion';
-import { type BN, bn } from 'fuels';
+import { type BN, DEFAULT_PRECISION, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { MotionFlex, MotionStack, animations } from '~/systems/Core';
@@ -58,6 +58,9 @@ export const TxFeeOptions = ({
   });
 
   const advancedFee = baseFee.add(tip.value.amount);
+  const priorityTip = fastTip.sub(regularTip);
+  const isFast =
+    !isAdvanced && fastTip.gt(regularTip) && fastTip.eq(tip.value.amount);
 
   const options = useMemo(() => {
     return [
@@ -211,6 +214,15 @@ export const TxFeeOptions = ({
                 />
               ))}
             </RadioGroup>
+            {isFast && (
+              <Text aria-label="Priority tip" css={styles.priority}>
+                <span className="fuel-square" aria-hidden />
+                {`Priority tip: +${priorityTip.format({
+                  minPrecision: DEFAULT_PRECISION,
+                  precision: DEFAULT_PRECISION,
+                })} ETH`}
+              </Text>
+            )}
           </MotionStack>
         )}
         <MotionFlex
@@ -238,4 +250,24 @@ export const TxFeeOptions = ({
       </AnimatePresence>
     </Box.Stack>
   );
+};
+
+const styles = {
+  priority: cssObj({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '$2',
+    mt: '$2',
+    fontFamily: '$mono',
+    fontSize: '11px',
+    lineHeight: '16px',
+    letterSpacing: '0.04em',
+    textTransform: 'uppercase',
+    color: '$textMid',
+    animation: 'fuel-appear 200ms var(--fuel-ease-out) backwards',
+
+    '@media (prefers-reduced-motion: reduce)': {
+      animation: 'none',
+    },
+  }),
 };

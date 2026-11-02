@@ -264,6 +264,7 @@
   height: 10px;
   border: 0 solid var(--fuel-square);
   pointer-events: none;
+  z-index: 1;
   animation: fuel-tick 480ms var(--fuel-ease-out) both;
   animation-delay: 160ms;
 }

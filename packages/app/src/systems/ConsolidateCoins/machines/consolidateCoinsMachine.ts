@@ -1,10 +1,5 @@
-import { toast } from '@fuel-wallet/ui';
 import type { Account } from '@fuel-wallet/types';
-import type {
-  Coin,
-  ScriptTransactionRequest,
-  SubmitAllCallbackResponse,
-} from 'fuels';
+import type { Coin, ScriptTransactionRequest } from 'fuels';
 import {
   type InterpreterFrom,
   type StateFrom,
@@ -15,7 +10,10 @@ import { CONSOLIDATION_CHECKED_KEY } from '~/config';
 import { AccountService } from '~/systems/Account';
 import { Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
-import { ConsolidateCoinsService } from '../services/consolidateCoins';
+import {
+  ConsolidateCoinsService,
+  type ConsolidationStepStatus,
+} from '../services/consolidateCoins';
 
 type MachineContext = {
   balancesKey?: string;
@@ -24,10 +22,8 @@ type MachineContext = {
   shouldConsolidate: boolean;
   account: Account | undefined;
   coins: Coin[];
-  consolidation: {
-    txs: ScriptTransactionRequest[];
-    submitAll: () => Promise<SubmitAllCallbackResponse>;
-  };
+  txs: ScriptTransactionRequest[];
+  steps: ConsolidationStepStatus[];
 };
 
 type MachineServices = {
@@ -49,16 +45,15 @@ type MachineServices = {
   createConsolidation: {
     data: {
       txs: ScriptTransactionRequest[];
-      submitAll: () => Promise<SubmitAllCallbackResponse>;
     };
-  };
-  submitAll: {
-    data: SubmitAllCallbackResponse;
   };
 };
 
 type MachineEvents =
   | { type: 'CONSOLIDATE_COINS' }
+  | { type: 'STEP'; step: number; status: ConsolidationStepStatus }
+  | { type: 'FINISHED' }
+  | { type: 'DONE' }
   | { type: 'REFRESH'; input?: { balancesKey?: string } };
 
 export const consolidateCoinsMachine = createMachine(
@@ -78,10 +73,8 @@ export const consolidateCoinsMachine = createMachine(
       shouldConsolidate: false,
       account: undefined,
       coins: [],
-      consolidation: {
-        txs: [],
-        submitAll: () => Promise.resolve({ txResponses: [], errors: [] }),
-      },
+      txs: [],
+      steps: [],
     },
     states: {
       idle: {
@@ -190,13 +183,28 @@ export const consolidateCoinsMachine = createMachine(
       },
       executingConsolidation: {
         tags: ['consolidating'],
+        entry: ['resetSteps'],
         invoke: {
-          src: 'submitAll',
-          onDone: {
-            actions: ['showSuccessToast', 'navigateToHome'],
+          src: 'submitConsolidation',
+        },
+        on: {
+          STEP: {
+            actions: ['assignStep'],
+          },
+          FINISHED: {
+            target: 'consolidated',
+          },
+        },
+      },
+      consolidated: {
+        tags: ['consolidated'],
+        on: {
+          DONE: {
+            actions: ['navigateToHome'],
             target: 'initializingProvider',
           },
-          onError: {
+          REFRESH: {
+            actions: ['assignBalancesKey'],
             target: 'initializingProvider',
           },
         },
@@ -241,14 +249,16 @@ export const consolidateCoinsMachine = createMachine(
         coins: ev.data,
       })),
       assignConsolidation: assign((_ctx, ev) => ({
-        consolidation: {
-          txs: ev.data.txs,
-          submitAll: ev.data.submitAll,
-        },
+        txs: ev.data.txs,
       })),
-      showSuccessToast: () => {
-        toast.success('Consolidation successful!');
-      },
+      resetSteps: assign((ctx) => ({
+        steps: ctx.txs.map((): ConsolidationStepStatus => 'pending'),
+      })),
+      assignStep: assign((ctx, ev) => ({
+        steps: ctx.steps.map((status, step) =>
+          step === ev.step ? ev.status : status
+        ),
+      })),
       navigateToHome: () => {
         // This will be configured in the component
       },
@@ -303,9 +313,13 @@ export const consolidateCoinsMachine = createMachine(
         );
         return consolidation;
       },
-      submitAll: async (ctx) => {
-        const submitAll = await ctx.consolidation.submitAll();
-        return submitAll;
+      submitConsolidation: (ctx) => (send) => {
+        ConsolidateCoinsService.submitConsolidation({
+          providerUrl: ctx.providerUrl,
+          account: ctx.account as Account,
+          txs: ctx.txs,
+          onStep: (step, status) => send({ type: 'STEP', step, status }),
+        }).finally(() => send({ type: 'FINISHED' }));
       },
     },
   }
