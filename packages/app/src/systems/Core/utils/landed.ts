@@ -40,6 +40,7 @@ export function useLanded(id?: string) {
     return () => {
       listeners.delete(check);
       clearTimeout(timer);
+      setIsLanded(false);
     };
   }, [id]);
 
