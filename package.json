@@ -188,7 +188,9 @@
         "GHSA-wrjc-x8rr-h8h6",
         "GHSA-337j-9hxr-rhxg",
         "GHSA-qr28-fpjm-wq7f",
-        "GHSA-gcqx-w48m-w2h4"
+        "GHSA-gcqx-w48m-w2h4",
+        "GHSA-g3hv-75wg-m249",
+        "GHSA-3g3m-2fjr-6pw4"
       ]
     },
     "packageExtensions": {
