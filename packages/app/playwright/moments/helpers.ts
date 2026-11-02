@@ -3,15 +3,28 @@ import { Address, Provider, Wallet, bn } from 'fuels';
 
 import { visit } from '../commons';
 import { WALLET_PASSWORD } from '../mocks';
-import { glideTo } from './human';
+import { glideTo, settle } from './human';
 
 const { GENESIS_SECRET, VITE_FUEL_PROVIDER_URL } = process.env;
 
 /** Long enough to see a moment land in the Playwright UI. */
 export const HOLD_MS = 2500;
 
-export function hold(page: Page, ms = HOLD_MS) {
-  return page.waitForTimeout(ms);
+/**
+ * Opens a page and waits for it to finish loading. Call it between steps:
+ * time outside a step is left out of the recordings, so the review starts
+ * on a loaded screen instead of a blank one.
+ */
+export async function open(page: Page, pathname?: string) {
+  if (pathname) await visit(page, pathname);
+  else await page.reload();
+  await settle(page);
+}
+
+/** Lets what just happened finish moving, then leaves it on screen. */
+export async function hold(page: Page, ms = HOLD_MS) {
+  await settle(page);
+  await page.waitForTimeout(ms);
 }
 
 export function wordInputs(page: Page) {

@@ -1,4 +1,4 @@
-import { expect, test } from './human';
+import { expect, popupWindow, settle, test } from './human';
 import { Mnemonic } from 'fuels';
 
 import { visit } from '../commons';
@@ -9,6 +9,8 @@ import { hold, maxInputs, seedManyCoins } from './helpers';
 const COINS = 600;
 /* Local fuel-core confirms instantly; slow each submit so the progress is watchable. */
 const SUBMIT_DELAY_MS = 4000;
+
+test.use(popupWindow);
 
 test.describe('Coin consolidation moments', () => {
   test('consolidate many small coins with per-transaction progress', async ({
@@ -29,6 +31,7 @@ test.describe('Coin consolidation moments', () => {
       await mockData(page, 1, DEFAULT_NETWORKS, mnemonic);
       await unlock(page);
       await visit(page, '/wallet');
+      await settle(page);
     });
 
     await test.step('Home offers to consolidate', async () => {

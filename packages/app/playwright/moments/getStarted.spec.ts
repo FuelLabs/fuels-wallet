@@ -1,4 +1,4 @@
-import { expect, test } from './human';
+import { enterPopup, expect, settle, test } from './human';
 
 import { reload } from '../commons';
 import { createConnections, getAccount, mockData } from '../mocks';
@@ -19,6 +19,7 @@ test.describe('Get started moments', () => {
     await test.step('Go to wallet', async () => {
       await page.getByRole('button', { name: 'Go to wallet' }).click();
       await expect(page.getByRole('tab', { name: 'Assets' })).toBeVisible();
+      await enterPopup(page);
     });
 
     await test.step('Switch to the local node', () => selectLocalNetwork(page));
@@ -62,8 +63,12 @@ test.describe('Get started moments', () => {
         },
         createConnections([account.address])
       );
-      await page.reload();
     });
+
+    // Reopening the wallet picks up the connection. Kept out of the steps so
+    // the reload's blank frames stay out of the recording.
+    await page.reload();
+    await settle(page);
 
     await test.step('All set', async () => {
       await expect(strip).toContainText('All set');

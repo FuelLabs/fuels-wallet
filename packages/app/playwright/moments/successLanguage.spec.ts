@@ -1,14 +1,16 @@
-import { expect, test } from './human';
+import { expect, popupWindow, test } from './human';
 
-import { visit } from '../commons';
 import { mockData } from '../mocks';
-import { hold } from './helpers';
+import { hold, open } from './helpers';
+
+test.use(popupWindow);
 
 test.describe('Success language moments', () => {
   test('a new account lands on the balance widget', async ({ page }) => {
+    await mockData(page, 1);
+    await open(page, '/wallet');
+
     await test.step('Open Home', async () => {
-      await mockData(page, 1);
-      await visit(page, '/wallet');
       await expect(page.getByLabel('Account 1 selected')).toBeVisible();
       await hold(page);
     });
@@ -33,9 +35,10 @@ test.describe('Success language moments', () => {
     const url = 'http://127.0.0.1:4000/v1/graphql';
     const selector = page.getByLabel('Selected Network');
 
+    await mockData(page);
+    await open(page, '/wallet');
+
     await test.step('Open Home', async () => {
-      await mockData(page);
-      await visit(page, '/wallet');
       await expect(selector).toBeVisible();
     });
 

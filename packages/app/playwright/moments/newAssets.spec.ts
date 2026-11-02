@@ -1,11 +1,13 @@
-import { expect, test } from './human';
+import { expect, popupWindow, test } from './human';
 import { bn } from 'fuels';
 
-import { reload, seedWallet, visit } from '../commons';
+import { seedWallet } from '../commons';
 import { mockData } from '../mocks';
-import { hold } from './helpers';
+import { hold, open } from './helpers';
 
 type SeenAssets = Record<string, string[]>;
+
+test.use(popupWindow);
 
 test.describe('New asset markers', () => {
   test('assets that arrived since the last look are marked New once', async ({
@@ -16,8 +18,9 @@ test.describe('New asset markers', () => {
     const key = `${process.env.VITE_FUEL_PROVIDER_URL}|${address}`;
     const newMarks = page.getByText('New', { exact: true });
 
+    await open(page, '/wallet');
+
     await test.step('First look at Home', async () => {
-      await visit(page, '/wallet');
       await expect(page.getByRole('tab', { name: 'Assets' })).toBeVisible();
       await expect
         .poll(() =>
@@ -34,14 +37,16 @@ test.describe('New asset markers', () => {
     await test.step('Receive ETH and a second asset', () =>
       seedWallet(address, bn(100_000_000)));
 
+    await open(page);
+
     await test.step('Reopen Home: new assets marked', async () => {
-      await reload(page);
       await expect(newMarks).toHaveCount(2, { timeout: 20_000 });
       await hold(page, 3500);
     });
 
+    await open(page);
+
     await test.step('Reopen again: nothing new', async () => {
-      await reload(page);
       await expect(page.getByText('Ethereum').first()).toBeVisible();
       await expect(newMarks).toHaveCount(0);
       await hold(page);

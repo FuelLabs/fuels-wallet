@@ -1,17 +1,19 @@
-import { expect, test } from './human';
+import { expect, popupWindow, test } from './human';
 
-import { visit } from '../commons';
 import { mockData } from '../mocks';
-import { hold } from './helpers';
+import { hold, open } from './helpers';
+
+test.use(popupWindow);
 
 test.describe('Connections moments', () => {
   test('removing the last connected app ends on a finished state', async ({
     page,
   }) => {
+    // mockData seeds one connection (createConnections).
+    await mockData(page);
+    await open(page, '/settings/connected-apps');
+
     await test.step('Open Connected apps', async () => {
-      // mockData seeds one connection (createConnections).
-      await mockData(page);
-      await visit(page, '/settings/connected-apps');
       await expect(page.getByText('mock connection')).toBeVisible();
       await hold(page);
     });

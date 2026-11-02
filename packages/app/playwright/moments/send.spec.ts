@@ -1,18 +1,17 @@
 import type { Page } from '@playwright/test';
-import { expect, test } from './human';
+import { expect, popupWindow, test } from './human';
 import { Provider, Wallet, bn } from 'fuels';
 
-import { reload, seedWallet, visit } from '../commons';
+import { seedWallet } from '../commons';
 import { mockData } from '../mocks';
-import { hold } from './helpers';
+import { hold, open } from './helpers';
 
 function randomAddress() {
   const provider = new Provider(process.env.VITE_FUEL_PROVIDER_URL as string);
   return Wallet.generate({ provider }).address.toString();
 }
 
-async function openSend(page: Page) {
-  await visit(page, '/send');
+async function pickEthereum(page: Page) {
   await page.getByRole('combobox', { name: 'Select Asset' }).click();
   await page.getByText('Ethereum').first().click();
 }
@@ -31,18 +30,20 @@ async function fillRecipient(page: Page, address: string) {
   await input.pressSequentially(address, { delay: 5 });
 }
 
+test.use(popupWindow);
+
 test.describe('Send moments', () => {
   test('recipient history: own account, first transfer, sent before', async ({
     page,
   }) => {
     const { accounts } = await mockData(page, 2);
     await seedWallet(accounts[0].address, bn(100_000_000));
-    await reload(page);
+    await open(page, '/send');
     const history = page.getByLabel('Recipient history');
     const stranger = randomAddress();
 
     await test.step('Type your own second account', async () => {
-      await openSend(page);
+      await pickEthereum(page);
       await fillRecipient(page, accounts[1].address);
       await expect(history).toHaveText(/Your account: Account 2/i);
       await hold(page);
@@ -67,8 +68,10 @@ test.describe('Send moments', () => {
       });
     });
 
+    await open(page, '/send');
+
     await test.step('Same address: sent before', async () => {
-      await openSend(page);
+      await pickEthereum(page);
       await fillRecipient(page, stranger);
       await expect(history).toHaveText(/Sent before, 1 time$/i, {
         timeout: 30_000,
@@ -82,11 +85,11 @@ test.describe('Send moments', () => {
   }) => {
     const { accounts } = await mockData(page);
     await seedWallet(accounts[0].address, bn(100_000_000));
-    await reload(page);
+    await open(page, '/send');
     const tip = page.getByLabel('Priority tip');
 
     await test.step('Fill recipient and amount', async () => {
-      await openSend(page);
+      await pickEthereum(page);
       await fillRecipient(page, randomAddress());
       await fillAmount(page, '0.001');
       await expect(page.getByRole('radio', { name: 'Fast' })).toBeVisible({

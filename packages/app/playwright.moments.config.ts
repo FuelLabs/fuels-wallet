@@ -3,7 +3,20 @@ import { playwrightConfig } from './playwright.config';
 
 const VIEWPORT = { width: 1280, height: 720 };
 const RECORD = Boolean(process.env.MOMENTS_VIDEO);
+/* Recording runs headless: the window is exactly the viewport, with no
+ * browser chrome or desktop scaling to throw the frame off. The headless
+ * shell only films at 2x when the scale is forced at launch. */
 const recording = {
+  headless: true,
+  channel: 'chromium-headless-shell',
+  launchOptions: {
+    // Headless hides scrollbars, which widens the wallet's scroll areas.
+    ignoreDefaultArgs: ['--hide-scrollbars'],
+    args: [
+      '--disable-features=ExtensionDisableUnsupportedDeveloper',
+      '--force-device-scale-factor=2',
+    ],
+  },
   viewport: VIEWPORT,
   deviceScaleFactor: 2,
   video: {
