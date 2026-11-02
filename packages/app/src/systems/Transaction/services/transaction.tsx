@@ -4,14 +4,11 @@ import type {
   FuelProviderConfig,
 } from '@fuel-wallet/types';
 import type {
-  Operation,
-  OperationCoin,
   TransactionRequest,
-  TransactionSummary,
   TransactionSummaryJson,
   WalletLocked,
 } from 'fuels';
-import { clone, equals } from 'ramda';
+import { clone } from 'ramda';
 
 import {
   Address,
@@ -22,42 +19,29 @@ import {
   TransactionResponse,
   TransactionStatus,
   assembleTransactionSummary,
-  assembleTransactionSummaryFromJson,
   bn,
   getTransactionSummary,
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
-  transactionRequestify,
 } from 'fuels';
-import { WalletLockedCustom, db, delay } from '~/systems/Core';
+import { WalletLockedCustom } from '~/systems/Core';
 
 import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
-import { graphqlRequest } from '~/systems/Core/utils/graphql';
 import { NetworkService } from '~/systems/Network/services/network';
-import type { TransactionCursor } from '../types';
 import {
   type GroupedErrors,
   getAbiMap,
   getErrorMessage,
   getGasLimitFromTxRequest,
   setGasLimitToTxRequest,
+  withAbiFallback,
 } from '../utils';
 import { getCurrentTips } from '../utils/fee';
-import { type GetPageInfoQuery, getPageInfoQuery } from './queries';
 
 export type TxInputs = {
-  getTxCursors: {
-    address: string;
-    providerUrl: string;
-  };
-  addTxCursors: {
-    address: string;
-    providerUrl: string;
-    cursors: string[];
-  };
   request: {
     providerConfig: FuelProviderConfig;
     transactionRequest: TransactionRequest;
@@ -75,6 +59,7 @@ export type TxInputs = {
     };
     transactionState?: 'funded' | undefined;
     transactionSummary?: TransactionSummaryJson;
+    signOnly?: boolean;
   };
   send: {
     address?: string;
@@ -119,13 +104,8 @@ export type TxInputs = {
     address: string;
     providerUrl?: string;
     pagination?: {
-      after: string | null;
+      before?: string | null;
     };
-  };
-  getAllCursors: {
-    address: string;
-    providerUrl?: string;
-    initialEndCursor: string | null;
   };
   fundTransaction: {
     wallet: WalletLocked;
@@ -142,37 +122,25 @@ const TXS_PER_PAGE = 50;
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class TxService {
-  static getTxCursors(input: TxInputs['getTxCursors']) {
-    return db.transaction('r', db.transactionsCursors, async () => {
-      return db.transactionsCursors
-        .where('providerUrl')
-        .equalsIgnoreCase(input.providerUrl)
-        .and((cursor) => {
-          return cursor.address.toLowerCase() === input.address.toLowerCase();
-        })
-        .and((cursor) => {
-          return cursor.size === TXS_PER_PAGE;
-        })
-        .sortBy('id');
-    });
-  }
-
-  static addTxCursors(input: TxInputs['addTxCursors']) {
-    const { address, providerUrl, cursors } = input;
-
-    const transactionsCursors: TransactionCursor[] = cursors.map(
-      (endCursor) => ({
-        address,
-        size: TXS_PER_PAGE,
-        providerUrl,
-        endCursor,
-      })
+  static async sign({
+    account,
+    address,
+    transactionRequest,
+    providerUrl = '',
+    providerConfig,
+  }: Omit<TxInputs['send'], 'signOnly'>) {
+    const provider = await createProvider(
+      providerUrl || providerConfig?.url || ''
+    );
+    const wallet = new WalletLockedCustom(
+      (account?.address?.toString() || address) as string,
+      provider
     );
 
-    return db.transaction('rw', db.transactionsCursors, async () => {
-      await db.transactionsCursors.bulkAdd(transactionsCursors);
-      return true;
-    });
+    const txRequest =
+      await wallet.populateTransactionWitnessesSignature(transactionRequest);
+
+    return txRequest;
   }
 
   static async send({
@@ -181,7 +149,7 @@ export class TxService {
     transactionRequest,
     providerUrl = '',
     providerConfig,
-  }: TxInputs['send']) {
+  }: Omit<TxInputs['send'], 'signOnly'>) {
     const provider = await createProvider(
       providerUrl || providerConfig?.url || ''
     );
@@ -203,11 +171,9 @@ export class TxService {
     const abiMap = await getAbiMap({
       inputs: txResult.transaction.inputs,
     });
-    const txResultWithCalls = await getTransactionSummary({
-      id: txId,
-      provider,
-      abiMap,
-    });
+    const txResultWithCalls = await withAbiFallback(abiMap, (abiMap) =>
+      getTransactionSummary({ id: txId, provider, abiMap })
+    );
     return { txResult: txResultWithCalls, txResponse };
   }
 
@@ -257,8 +223,13 @@ export class TxService {
             setGasLimitToTxRequest(proposedTxRequest, inputCustomGasLimit);
           }
 
+          // Use predicted gas price for 10 blocks ahead to prevent
+          // InsufficientMaxFee errors from gas price increases between
+          // simulation and submission. Users get change back if they overpay.
+          const gasPrice = await provider.estimateGasPrice(10);
           const { maxFee } = await provider.estimateTxGasAndFee({
             transactionRequest: proposedTxRequest,
+            gasPrice,
           });
           // if the maxFee is greater than the initial maxFee, we set it to the new maxFee, and refund the transaction
           if (maxFee.gt(initialMaxFee)) {
@@ -284,11 +255,13 @@ export class TxService {
         inputs: transaction.inputs,
       });
 
-      const txSummary = await getTransactionSummaryFromRequest({
-        provider,
-        transactionRequest: proposedTxRequest,
-        abiMap,
-      });
+      const txSummary = await withAbiFallback(abiMap, (abiMap) =>
+        getTransactionSummaryFromRequest({
+          provider,
+          transactionRequest: proposedTxRequest,
+          abiMap,
+        })
+      );
 
       // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
       const feeAdaptedToSdkDiff = txSummary.fee.add(1);
@@ -311,6 +284,7 @@ export class TxService {
               (baseAsset as any)?.rate
             ).formatted
           : '$0';
+
       return {
         baseFee,
         txSummary: {
@@ -380,49 +354,14 @@ export class TxService {
       provider,
       filters: {
         owner: address,
-        first: TXS_PER_PAGE,
-        after: pagination?.after,
+        last: TXS_PER_PAGE,
+        before: pagination?.before ?? undefined,
       },
     });
 
     return {
       transactionHistory: txSummaries.transactions,
       pageInfo: txSummaries.pageInfo,
-    };
-  }
-
-  static async getAllCursors({
-    address,
-    providerUrl = '',
-    initialEndCursor,
-  }: TxInputs['getAllCursors']) {
-    let hasNextPage = true;
-    const cursors: string[] = [];
-    let endCursor: string | null | undefined = initialEndCursor;
-
-    while (hasNextPage) {
-      const result: GetPageInfoQuery = await graphqlRequest(
-        providerUrl,
-        'getTransactionsByOwner',
-        getPageInfoQuery,
-        {
-          owner: address,
-          first: TXS_PER_PAGE,
-          after: endCursor,
-        }
-      );
-      const pageInfo = result.transactionsByOwner.pageInfo;
-
-      hasNextPage = pageInfo.hasNextPage;
-      endCursor = pageInfo.endCursor;
-
-      if (hasNextPage && endCursor) {
-        cursors.push(endCursor);
-      }
-    }
-
-    return {
-      cursors,
     };
   }
 

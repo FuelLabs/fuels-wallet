@@ -1,12 +1,14 @@
-import { createProvider } from '@fuel-wallet/connections';
+import { createProvider, createUUID } from '@fuel-wallet/connections';
 import type {
   Account,
   AccountBalance,
   AccountWithBalance,
   CoinAsset,
+  NetworkData,
 } from '@fuel-wallet/types';
 import * as Sentry from '@sentry/react';
-import { Address, BN, type Provider, bn } from 'fuels';
+import { Address, BN, DEVNET_NETWORK_URL, type Provider, bn } from 'fuels';
+import { IGNITION_NETWORK } from '~/networks';
 import { AssetsCache } from '~/systems/Asset/cache/AssetsCache';
 import { chromeStorage } from '~/systems/Core/services/chromeStorage';
 import type { Maybe } from '~/systems/Core/types';
@@ -154,12 +156,13 @@ export class AccountService {
       nextBalancesWithAssets.sort((a, b) => {
         // if asset.symbol is "ETH" then it will be should be first
         if (a.asset?.symbol === 'ETH') return -1;
+        if (b.asset?.symbol === 'ETH') return 1;
 
         const aName = a.asset?.name?.toLowerCase() ?? '';
         const bName = b.asset?.name?.toLowerCase() ?? '';
         // sort ascendant by asset.name
-        if (aName > bName) return -1;
-        if (bName > aName) return 1;
+        if (aName < bName) return -1;
+        if (aName > bName) return 1;
 
         return 0;
       });
@@ -360,7 +363,30 @@ export class AccountService {
             for (const account of accounts) {
               // in case of recovery, the first account will be the current
               if (account.address) {
-                await db.accounts.add(account);
+                try {
+                  await db.accounts.put(account);
+                  // biome-ignore lint/suspicious/noExplicitAny: error handling for Dexie constraint
+                } catch (err: any) {
+                  if (err?.name === 'ConstraintError') {
+                    let suffix = 2;
+                    let saved = false;
+                    while (!saved) {
+                      try {
+                        const newName = `${account.name} (${suffix})`;
+                        await db.accounts.put({ ...account, name: newName });
+                        saved = true;
+                        // biome-ignore lint/suspicious/noExplicitAny: error handling for Dexie constraint
+                      } catch (retryErr: any) {
+                        if (retryErr?.name !== 'ConstraintError') {
+                          throw retryErr;
+                        }
+                        suffix++;
+                      }
+                    }
+                  } else {
+                    throw err;
+                  }
+                }
               }
             }
           }
@@ -370,18 +396,33 @@ export class AccountService {
             await db.vaults.clear();
             for (const vault of vaults) {
               if (vault.key) {
-                await db.vaults.add(vault);
+                await db.vaults.put(vault);
               }
             }
           }
           // networks recovery
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          async function recoverNetworks(networks: any) {
+          async function recoverNetworks(networks: NetworkData[]) {
             await db.networks.clear();
-            for (const network of networks) {
-              if (network.url) {
-                await db.networks.add(network);
-              }
+            // Backups written before v31 can still hold the shut down devnet
+            const valid = networks.filter(
+              (network) => network.url && network.url !== DEVNET_NETWORK_URL
+            );
+            if (!valid.length && networks.length) {
+              valid.push({ ...IGNITION_NETWORK, id: createUUID() });
+            }
+            // Older backups can hold several selected networks, keep exactly one
+            const selected = valid.filter((network) => network.isSelected);
+            const candidates = selected.length ? selected : valid;
+            const next =
+              candidates.find(
+                (network) => network.url === IGNITION_NETWORK.url
+              ) ?? candidates[0];
+            for (const network of selected) {
+              if (network !== next) network.isSelected = false;
+            }
+            if (next) next.isSelected = true;
+            for (const network of valid) {
+              await db.networks.put(network);
             }
           }
 

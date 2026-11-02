@@ -6,7 +6,6 @@ import {
   ContentLoader,
   Copyable,
   Icon,
-  Text,
 } from '@fuel-ui/react';
 import type {
   BN,
@@ -14,6 +13,7 @@ import type {
   TransactionStatus,
   TransactionSummary,
 } from 'fuels';
+import { bn } from 'fuels';
 import { type ReactNode, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useAccounts } from '~/systems/Account';
@@ -101,6 +101,7 @@ export type TxContentInfoProps = {
   txAccount?: string;
   isSimulating?: boolean;
   isPastTense?: boolean;
+  signOnly?: boolean;
 };
 
 function TxContentInfo({
@@ -116,6 +117,7 @@ function TxContentInfo({
   txAccount,
   isSimulating,
   isPastTense = false,
+  signOnly = false,
 }: TxContentInfoProps) {
   const { account: currentAccount } = useAccounts();
   const formContext = useFormContext<SendFormValues>();
@@ -188,13 +190,24 @@ function TxContentInfo({
                 fees?.baseFee &&
                 txRequestGasLimit &&
                 fees?.regularTip &&
-                fees?.fastTip && (
+                fees?.fastTip &&
+                !signOnly && (
                   <TxFeeOptions
                     initialAdvanced={initialAdvanced}
                     baseFee={fees.baseFee}
                     gasLimit={txRequestGasLimit}
                     regularTip={fees.regularTip}
                     fastTip={fees.fastTip}
+                  />
+                )}
+              {showDetails &&
+                fees?.baseFee &&
+                txRequestGasLimit &&
+                signOnly && (
+                  <TxFee
+                    fee={fees.baseFee.add(
+                      fees.regularTip || fees.fastTip || bn(0)
+                    )}
                   />
                 )}
             </TxFeeSection>

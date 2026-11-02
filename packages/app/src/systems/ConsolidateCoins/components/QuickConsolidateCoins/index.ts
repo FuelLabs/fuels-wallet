@@ -1,0 +1,1 @@
+export { QuickConsolidateCoins } from './QuickConsolidateCoins';

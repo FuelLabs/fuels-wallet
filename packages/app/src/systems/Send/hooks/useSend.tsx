@@ -425,6 +425,13 @@ export function useSend() {
     service.send,
   ]);
 
+  // The address check is skipped while the provider loads, so run it again once it is ready.
+  useEffect(() => {
+    if (provider && form.getValues('address')) {
+      form.trigger('address');
+    }
+  }, [provider, form.getValues, form.trigger]);
+
   const recalculateFromTip = (tip: BN) => {
     service.send('SET_INPUT', { input: { ...input, tip } });
     form.trigger('amount');

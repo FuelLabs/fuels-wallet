@@ -23,7 +23,10 @@ export type FormatBalanceResult = {
 export function formatAmount({
   amount,
   options,
-}: { amount?: BNInput; options?: FormatConfig }) {
+}: {
+  amount?: BNInput;
+  options?: FormatConfig;
+}) {
   const formatParams = {
     precision: MAX_FRACTION_DIGITS,
     ...(options ?? {}),

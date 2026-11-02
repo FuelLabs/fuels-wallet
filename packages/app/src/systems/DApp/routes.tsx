@@ -2,13 +2,23 @@ import { Route } from 'react-router-dom';
 
 import { Pages } from '../Core/types';
 
-import {
-  AddAssetRequest,
-  ConnectionRequest,
-  SelectNetworkRequest,
-  SignatureRequest,
-  TransactionRequest,
-} from './pages';
+import { lazyPage } from '~/systems/Core/utils/lazyPage';
+
+const AddAssetRequest = lazyPage(() =>
+  import('./pages/AddAssetRequest').then((m) => m.AddAssetRequest)
+);
+const ConnectionRequest = lazyPage(() =>
+  import('./pages/ConnectionRequest').then((m) => m.ConnectionRequest)
+);
+const SelectNetworkRequest = lazyPage(() =>
+  import('./pages/SelectNetworkRequest').then((m) => m.SelectNetworkRequest)
+);
+const SignatureRequest = lazyPage(() =>
+  import('./pages/SignatureRequest').then((m) => m.SignatureRequest)
+);
+const TransactionRequest = lazyPage(() =>
+  import('./pages/TransactionRequest').then((m) => m.TransactionRequest)
+);
 
 export const dappRoutes = (
   <Route path={Pages.request()}>

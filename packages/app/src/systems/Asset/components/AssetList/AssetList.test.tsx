@@ -18,6 +18,25 @@ describe('AssetList', () => {
     expect(screen.getByText('Ethereum')).toBeInTheDocument();
   });
 
+  it('should not repeat keys for unknown assets', async () => {
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const unknown = (assetId: string) => ({
+      name: '',
+      symbol: '',
+      icon: '',
+      networks: [{ type: 'fuel', chainId: 0, assetId, decimals: 0 } as const],
+    });
+    const { user } = renderWithProvider(
+      <AssetList assets={[unknown('0x01'), unknown('0x02')]} />
+    );
+    await user.click(screen.getByLabelText('Show unknown assets'));
+    const keyWarnings = errorSpy.mock.calls.filter((args) =>
+      String(args[0]).includes('same key')
+    );
+    expect(keyWarnings).toHaveLength(0);
+    errorSpy.mockRestore();
+  });
+
   it('should show an empty illustration when no assets', () => {
     renderWithProvider(<AssetList.Empty />);
     expect(screen.getByText("You don't have any assets")).toBeInTheDocument();

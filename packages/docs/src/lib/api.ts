@@ -3,8 +3,8 @@ import { join } from 'node:path';
 import { globby } from 'globby';
 import matter from 'gray-matter';
 import { serialize } from 'next-mdx-remote/serialize';
+import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
-import remarkSlug from 'remark-slug';
 import { DOCS_REPO_LINK, FIELDS } from '~/src/constants';
 import type { DocType, NodeHeading, SidebarLinkItem } from '~/src/types';
 
@@ -57,14 +57,13 @@ export async function getDocBySlug(
   const headings: NodeHeading[] = [];
   const source = await serialize(content, {
     scope: data,
+    // The docs are our own files and pass props as JS expressions,
+    // for example <Demo media={[...]} />
+    blockJS: false,
     mdxOptions: {
       format: 'mdx',
-      remarkPlugins: [
-        remarkSlug,
-        remarkGfm,
-        [codeImport, { filepath: fullpath }],
-      ],
-      rehypePlugins: [[rehypeExtractHeadings, { headings }]],
+      remarkPlugins: [remarkGfm, [codeImport, { filepath: fullpath }]],
+      rehypePlugins: [rehypeSlug, [rehypeExtractHeadings, { headings }]],
     },
   });
 

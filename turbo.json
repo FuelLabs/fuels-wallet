@@ -1,8 +1,9 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": [".env", ".env.production"],
+  "envMode": "loose",
   "globalEnv": ["NODE_ENV", "CRX_OUT", "CRX_NAME"],
-  "pipeline": {
+  "tasks": {
     "ts:check": {
       "inputs": ["src/**/*.ts", "src/**/*.tsx", "*.ts", "package.json"],
       "dependsOn": [],
@@ -51,9 +52,6 @@
       "dependsOn": []
     },
     "dev": {
-      "cache": false
-    },
-    "dev:storybook": {
       "cache": false
     },
     "dev:crx": {

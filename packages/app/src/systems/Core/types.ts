@@ -43,6 +43,7 @@ export const Pages = {
   assets: route('/assets'),
   assetsEdit: route<'name'>('/assets/edit/:name'),
   assetsAdd: route<'assetId'>('/assets/add/:assetId?'),
+  consolidateCoins: route('/coins/consolidate'),
   errors: route('/errors'),
 };
 

@@ -1,5 +1,4 @@
-import { screen, testA11y } from '@fuel-ui/test-utils';
-import { fireEvent } from '@storybook/testing-library';
+import { fireEvent, screen, testA11y } from '@fuel-ui/test-utils';
 
 import { TestWrapper, shortAddress } from '~/systems/Core';
 import { renderWithProvider } from '~/systems/Core/__tests__/utils';

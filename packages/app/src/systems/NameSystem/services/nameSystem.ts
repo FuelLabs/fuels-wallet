@@ -1,4 +1,4 @@
-import { BakoIDClient } from '@bako-id/sdk';
+import type { BakoIDClient } from '@bako-id/sdk';
 
 export type NameSystemInput = {
   resolverDomain: {
@@ -11,13 +11,25 @@ export type NameSystemInput = {
   };
 };
 
-const client = new BakoIDClient();
+let client: Promise<BakoIDClient> | undefined;
+function getClient() {
+  client ??= import('@bako-id/sdk')
+    .then((m) => new m.BakoIDClient())
+    .catch((error) => {
+      client = undefined;
+      throw error;
+    });
+  return client;
+}
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export default class NameSystemService {
   static async resolverDomain(params: NameSystemInput['resolverDomain']) {
     try {
-      const address = await client.resolver(params.domain, params.chainId);
+      const address = await (await getClient()).resolver(
+        params.domain,
+        params.chainId
+      );
       return { address, error: null };
     } catch {
       return {
@@ -29,7 +41,10 @@ export default class NameSystemService {
 
   static async resolverAddresses(params: NameSystemInput['resolverAddreses']) {
     try {
-      const domains = await client.names(params.addresses, params.chainId);
+      const domains = await (await getClient()).names(
+        params.addresses,
+        params.chainId
+      );
 
       return { domains, error: null };
     } catch {

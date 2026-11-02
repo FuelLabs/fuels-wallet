@@ -1,9 +1,6 @@
-import { IGNITION_NETWORK } from '~/networks';
-import { urlJoin } from '~/systems/Core';
-
 export const getProjectImage = (image: string) => {
-  return urlJoin(
-    IGNITION_NETWORK.explorerUrl,
-    `/api/ecosystem/asset/${image}/image`
-  );
+  const hasExtension = /\.(jpeg|jpg|png|svg|webp|gif)$/i.test(image);
+  const imageFileName = hasExtension ? image : `${image}.jpeg`;
+
+  return `https://raw.githubusercontent.com/FuelLabs/fuel-ecosystem/refs/heads/main/assets/${imageFileName}`;
 };

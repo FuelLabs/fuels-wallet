@@ -17,6 +17,7 @@ export const TxApprove = () => {
   const shouldShowReviewAlert =
     !ctx.status(TxRequestStatus.success) && !ctx.status(TxRequestStatus.failed);
   const { handlers } = useTransactionRequest();
+  const isSignOnly = !!ctx.input.signOnly;
 
   const handleReject = () => {
     handlers.closeDialog();
@@ -30,14 +31,21 @@ export const TxApprove = () => {
   return (
     <Box css={styles.wrapper}>
       <Layout.TopBar hideMenu onBack={handleReject} />
-      {shouldShowReviewAlert && <TxReviewAlert />}
+      {shouldShowReviewAlert && <TxReviewAlert signOnly={isSignOnly} />}
       <Dialog.Description as="div" css={styles.description}>
+        {isSignOnly && (
+          <Box css={{ mb: '$4', fontWeight: '$normal' }}>
+            You are signing this transaction without broadcasting it to the
+            network.
+          </Box>
+        )}
         {ctx.shouldShowTxSimulated && ctx.txSummarySimulated && (
           <TxContent.Info
             showDetails
             tx={ctx.txSummarySimulated}
             errors={ctx.errors.simulateTxErrors}
             isSimulating={ctx.isSimulating}
+            signOnly={isSignOnly}
             footer={
               ctx.status('failed') && (
                 <Button
@@ -90,7 +98,7 @@ export const TxApprove = () => {
             onPress={ctx.handlers.approve}
             css={styles.footerButton}
           >
-            Submit
+            {isSignOnly ? 'Sign' : 'Submit'}
           </Button>
         </Dialog.Footer>
       )}

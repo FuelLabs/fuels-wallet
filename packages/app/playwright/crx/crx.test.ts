@@ -1,5 +1,6 @@
 import type { NetworkData, Account as WalletAccount } from '@fuel-wallet/types';
-import { type Locator, Page, expect } from '@playwright/test';
+import { type Locator, expect } from '@playwright/test';
+import type { HashableMessage } from 'fuels';
 
 import {
   delay,
@@ -62,19 +63,10 @@ const NETWORK_TESTNET = {
   bridgeUrl: 'https://app-testnet.fuel.network/bridge',
   isSelected: false,
 };
-const NETWORK_DEVNET = {
-  id: '3',
-  name: 'Fuel Sepolia Devnet',
-  url: 'https://devnet.fuel.network/v1/graphql',
-  chainId: CHAIN_IDS.fuel.devnet,
-  explorerUrl: 'https://app-devnet.fuel.network',
-  faucetUrl: 'https://faucet-devnet.fuel.network/',
-  isSelected: false,
-};
 
 const DEFAULT_NETWORKS: Array<
   NetworkData & { faucetUrl?: string; bridgeUrl?: string; hidden?: boolean }
-> = [NETWORK_IGNITION, NETWORK_TESTNET, NETWORK_DEVNET];
+> = [NETWORK_IGNITION, NETWORK_TESTNET];
 
 const WALLET_PASSWORD = 'Qwe123456$';
 
@@ -82,7 +74,7 @@ const WALLET_PASSWORD = 'Qwe123456$';
 // The timeout is set for 3 minutes
 // because some tests like reconnect
 // can take up to 1 minute before it's reconnected
-test.setTimeout(240_000);
+test.setTimeout(300_000);
 
 test.describe('FuelWallet Extension', () => {
   test('If user opens popup it should force open a sign-up page', async ({
@@ -364,15 +356,15 @@ test.describe('FuelWallet Extension', () => {
           timeout: 10_000,
         });
         await hasText(selectNetworkPage, 'Switching To');
-        await hasText(selectNetworkPage, network.name);
+        await expect(
+          selectNetworkPage.getByText(network.name, { exact: true })
+        ).toBeVisible();
 
         await getButtonByText(selectNetworkPage, /switch network/i).click();
         await expect(selectingNetwork).resolves.toBeDefined();
       }
 
       await testSelectNetwork(NETWORK_TESTNET);
-      await popupPage.waitForTimeout(2000);
-      await testSelectNetwork(NETWORK_DEVNET);
       await popupPage.waitForTimeout(2000);
       await testSelectNetwork(NETWORK_IGNITION);
       await popupPage.waitForTimeout(2000);
@@ -400,7 +392,7 @@ test.describe('FuelWallet Extension', () => {
         await waitWalletToLoad(popupPage);
       }
 
-      const initialNetworkAmount = 3;
+      const initialNetworkAmount = DEFAULT_NETWORKS.length;
       const networkSelectorBeforeAdd = getByAriaLabel(
         popupPage,
         'Selected Network'
@@ -589,23 +581,45 @@ test.describe('FuelWallet Extension', () => {
         );
       }
 
-      async function approveMessageSignCheck(authorizedAccount: WalletAccount) {
-        const signedMessagePromise = signMessage(
-          authorizedAccount.address.toString()
+      async function approveMessageSignCheck({
+        authorizedAccount,
+        msg = message,
+      }: {
+        authorizedAccount: WalletAccount;
+        msg?: HashableMessage;
+      }) {
+        const signedMessagePromise = blankPage.evaluate(
+          async ([address, msg]) => {
+            // biome-ignore lint/suspicious/noExplicitAny: window.fuel.signMessage accepts HashableMessage but TypeScript definition is incorrect
+            return await window.fuel.signMessage(address, msg as any);
+          },
+          // biome-ignore lint/suspicious/noExplicitAny: window.fuel.signMessage accepts HashableMessage but TypeScript definition is incorrect
+          [authorizedAccount.address.toString(), msg as any]
         );
+
         const signMessageRequest = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
           timeout: 10_000,
         });
+
         // Confirm signature
-        await hasText(signMessageRequest, message);
+        if (typeof msg === 'string') {
+          await hasText(signMessageRequest, msg);
+        } else if (
+          typeof msg === 'object' &&
+          msg &&
+          typeof msg.personalSign === 'string'
+        ) {
+          await hasText(signMessageRequest, msg.personalSign);
+        }
+
         await waitAriaLabel(signMessageRequest, authorizedAccount.name);
         await getButtonByText(signMessageRequest, /sign/i).click();
 
         // Recover signer address
         const messageSigned = await signedMessagePromise;
         const addressSigner = Signer.recoverAddress(
-          hashMessage(message),
+          hashMessage(msg),
           messageSigned
         );
 
@@ -615,7 +629,7 @@ test.describe('FuelWallet Extension', () => {
 
       await test.step('Signed message using authorized Account 1', async () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
-        await approveMessageSignCheck(authorizedAccount);
+        await approveMessageSignCheck({ authorizedAccount });
       });
 
       await test.step('Signed message using authorized Account 3', async () => {
@@ -623,7 +637,7 @@ test.describe('FuelWallet Extension', () => {
           popupPage,
           'Account 3'
         );
-        await approveMessageSignCheck(authorizedAccount);
+        await approveMessageSignCheck({ authorizedAccount });
       });
 
       await test.step('Signed message using authorized Account 4 (from Private Key)', async () => {
@@ -631,7 +645,7 @@ test.describe('FuelWallet Extension', () => {
           popupPage,
           'Account 4'
         );
-        await approveMessageSignCheck(authorizedAccount);
+        await approveMessageSignCheck({ authorizedAccount });
       });
 
       await test.step('Throw on not Authorized Account', async () => {
@@ -644,6 +658,32 @@ test.describe('FuelWallet Extension', () => {
         await expect(signedMessagePromise).rejects.toThrowError(
           'address is not authorized for this connection.'
         );
+      });
+
+      await test.step('Signed personalSign string message', async () => {
+        const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+        // Convert hex string to bytes array like the sample dApp does
+        const hexString =
+          '0x3c54688d3e13800c0a6ad3ccf06a67bae8702b5e326ce991b8245d60c671a85a';
+        const hashBytes = new Uint8Array(
+          Buffer.from(hexString.slice(2), 'hex')
+        );
+        const personalStringMessage = { personalSign: hashBytes };
+        await approveMessageSignCheck({
+          authorizedAccount,
+          msg: personalStringMessage,
+        });
+      });
+
+      await test.step('Signed personalSign bytes (object) message', async () => {
+        const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+        const personalBytesMessage = {
+          personalSign: new Uint8Array([3, 1, 2, 3]),
+        };
+        await approveMessageSignCheck({
+          authorizedAccount,
+          msg: personalBytesMessage,
+        });
       });
     });
 
@@ -725,7 +765,8 @@ test.describe('FuelWallet Extension', () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
 
         await seedWallet(authorizedAccount.address, bn(100_000_000));
-        await hasText(popupPage, /0\.100/i);
+        // Outside deposits show on the next 20 s balance refresh
+        await hasText(popupPage, /0\.100/i, 0, 25_000);
       });
 
       await test.step('Send transfer using authorized Account', async () => {

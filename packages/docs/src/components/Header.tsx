@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { FuelBrandingDropdown } from '../components/FuelBrandingDropdown';
-import { IS_PUBLIC_PREVIEW } from '../constants';
 import { MobileMenu } from './MobileMenu';
 import { Search } from './Search';
 
@@ -22,15 +21,6 @@ export function Header() {
           <Link href="/docs/install" className={isDocsActive ? 'active' : ''}>
             Docs
           </Link>
-          {IS_PUBLIC_PREVIEW && (
-            <a
-              href={process.env.NEXT_PUBLIC_STORYBOOK_URL}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Storybook
-            </a>
-          )}
           <a
             href="https://github.com/fuellabs/fuels-wallet"
             target="_blank"

@@ -14,6 +14,7 @@ import { memo, useCallback, useMemo, useState } from 'react';
 import { NFTImage } from '~/systems/Account/components/BalanceNFTs/NFTImage';
 import type { Maybe } from '~/systems/Core';
 import { coreStyles, shortAddress } from '~/systems/Core';
+import { AssetAvatar } from '../AssetAvatar';
 
 export type AssetSelectInput = Partial<AssetFuelAmount>;
 
@@ -108,10 +109,10 @@ function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
                     />
                   </Box>
                 ) : assetAmount.name ? (
-                  <Avatar
+                  <AssetAvatar
                     name={assetAmount?.name}
                     src={assetAmount?.icon}
-                    css={{ height: 18, width: 18 }}
+                    size={18}
                   />
                 ) : (
                   <Avatar.Generated

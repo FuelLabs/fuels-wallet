@@ -2,6 +2,7 @@ import type { StoreClass } from '@fuels/react-xstore';
 
 import type { AccountsMachine } from '../Account';
 import type { AssetsMachine } from '../Asset';
+import type { ConsolidateCoinsMachine } from '../ConsolidateCoins/machines/consolidateCoinsMachine';
 import type { ContractsMachine } from '../Contract/machines/contractsMachine';
 import type {
   AddAssetMachine,
@@ -31,6 +32,7 @@ export enum Services {
   reportError = 'reportError',
   selectNetworkRequest = 'selectNetworkRequest',
   nameSystemRequest = 'nameSystemRequest',
+  consolidateCoins = 'consolidateCoins',
 }
 
 export type StoreMachines = {
@@ -47,6 +49,7 @@ export type StoreMachines = {
   reportError: ReportErrorMachine;
   selectNetworkRequest: SelectNetworkRequestMachine;
   nameSystemRequest: NameSystemRequestMachine;
+  consolidateCoins: ConsolidateCoinsMachine;
 };
 
 export type Store = StoreClass<StoreMachines>;

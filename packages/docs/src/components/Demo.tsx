@@ -1,6 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Image } from '@fuel-ui/react';
-import Plyr from 'plyr-react';
+import dynamic from 'next/dynamic';
+
+// plyr touches `document` at import time, so it can't load during the static export.
+const Plyr = dynamic(() => import('plyr-react'), { ssr: false });
 
 interface Media {
   type: 'img' | 'mp4';

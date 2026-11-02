@@ -1,10 +1,20 @@
 import type { AssetData, AssetFuelData } from '@fuel-wallet/types';
 import type { NetworkEthereum, NetworkFuel } from 'fuels';
 import { db } from '~/systems/Core/utils/database';
+import { Storage } from '~/systems/Core/utils/storage';
 import { getUniqueString } from '~/systems/Core/utils/string';
 import { NetworkService } from '~/systems/Network/services/network';
 import type { AssetFormValues } from '../hooks/useAssetForm';
 import { getFuelAssetByAssetId } from '../utils';
+
+const LISTED_ASSETS_URL = 'https://verified-assets.fuel.network/assets.json';
+export const LISTED_ASSETS_TTL = 60 * 60 * 1000;
+const LISTED_ASSETS_META_KEY = 'listedAssetsMeta';
+
+type ListedAssetsMeta = {
+  fetchedAt: number;
+  etag?: string;
+};
 
 export type AssetInputs = {
   upsertAsset: {
@@ -30,6 +40,25 @@ export type AssetInputs = {
   };
 };
 
+function pickAssetId(assetId: unknown): { assetId?: string } {
+  return typeof assetId === 'string' ? { assetId } : {};
+}
+
+function pickNetworkFields(
+  network: NetworkEthereum | NetworkFuel
+): NetworkEthereum | NetworkFuel {
+  if (network.type === 'fuel') {
+    const { type, chainId, decimals, assetId, contractId } = network;
+    return contractId
+      ? { type, chainId, decimals, assetId, contractId }
+      : { type, chainId, decimals, assetId };
+  }
+  const { type, chainId, decimals, address } = network;
+  return address
+    ? { type, chainId, decimals, address }
+    : { type, chainId, decimals };
+}
+
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class AssetService {
   static async upsertAsset(input: AssetInputs['upsertAsset']) {
@@ -47,19 +76,74 @@ export class AssetService {
   }
 
   static async setListedAssets() {
-    const verifiedAssets = (await (
-      await fetch('https://verified-assets.fuel.network/assets.json')
-    ).json()) as Array<AssetData>;
-    const assetsPromises = verifiedAssets.map((asset) => {
-      return AssetService.upsertAsset({
-        data: {
-          ...asset,
-          isCustom: false,
-        },
-      });
+    const now = Date.now();
+    const meta = Storage.getItem<ListedAssetsMeta>(LISTED_ASSETS_META_KEY);
+    const isFresh =
+      !!meta?.fetchedAt &&
+      now >= meta.fetchedAt &&
+      now - meta.fetchedAt < LISTED_ASSETS_TTL;
+    if (isFresh && (await AssetService.hasListedAssets())) return;
+
+    // no-cache lets the browser revalidate with the server ETag
+    const response = await fetch(LISTED_ASSETS_URL, { cache: 'no-cache' });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch listed assets: ${response.status}`);
+    }
+    const etag = response.headers.get('etag') ?? undefined;
+    const isSameList =
+      !!etag && etag === meta?.etag && (await AssetService.hasListedAssets());
+    if (!isSameList) {
+      const verifiedAssets = (await response.json()) as Array<AssetData>;
+      await AssetService.saveListedAssets(verifiedAssets);
+    }
+    Storage.setItem<ListedAssetsMeta>(LISTED_ASSETS_META_KEY, {
+      fetchedAt: now,
+      etag,
+    });
+  }
+
+  static async hasListedAssets() {
+    return db.transaction('r', db.assets, async () => {
+      const listed = await db.assets.filter((a) => !a.isCustom).count();
+      return listed > 0;
+    });
+  }
+
+  // Rows whose symbol belongs to another asset are skipped
+  static async saveListedAssets(verifiedAssets: AssetData[]) {
+    const skipped = await db.transaction('rw', db.assets, async () => {
+      const existing = await db.assets.toArray();
+      const byName = new Map(existing.map((a) => [a.name, a]));
+      const symbolOwners = new Map(existing.map((a) => [a.symbol, a.name]));
+      const toPut: AssetData[] = [];
+      const skipped: string[] = [];
+
+      for (const asset of verifiedAssets) {
+        const next: AssetData = { ...asset, isCustom: false };
+        const current = byName.get(next.name);
+        if (current && JSON.stringify(current) === JSON.stringify(next)) {
+          continue;
+        }
+        const symbolOwner = symbolOwners.get(next.symbol);
+        if (symbolOwner !== undefined && symbolOwner !== next.name) {
+          skipped.push(next.name);
+          continue;
+        }
+        if (current) symbolOwners.delete(current.symbol);
+        symbolOwners.set(next.symbol, next.name);
+        byName.set(next.name, next);
+        toPut.push(next);
+      }
+
+      if (toPut.length) await db.assets.bulkPut(toPut);
+      return skipped;
     });
 
-    await Promise.all(assetsPromises);
+    if (skipped.length) {
+      throw new Error(
+        `Listed assets not saved, symbol already in use: ${skipped.join(', ')}`
+      );
+    }
   }
 
   static async updateAsset(input: AssetInputs['updateAsset']) {
@@ -295,12 +379,14 @@ export class AssetService {
       throw new Error('No assets to add');
     }
 
-    // trim asset props as will need to validate comparing strings
+    // Keep only descriptive fields, trust fields like verified or rate belong to the wallet
     const trimmedAssets = assets.map((a) => ({
-      ...a,
+      // biome-ignore lint/suspicious/noExplicitAny: Incoming custom asset ids have assetId at the root
+      ...pickAssetId((a as any)?.assetId),
       name: a.name?.trim(),
       symbol: a.symbol?.trim(),
       icon: a.icon?.trim(),
+      networks: (a.networks || []).map(pickNetworkFields),
     }));
 
     // Check for invalid names
@@ -323,12 +409,35 @@ export class AssetService {
       symbolSet.add(asset.symbol);
     }
 
-    const {
-      existingAssetNameMap,
-      existingAssetSymbolMap,
-      assetIdChainMap,
-      networkAddressChainMap,
-    } = await AssetService.mapAssetsByAddressAndAssetId();
+    const existingAssets = await AssetService.getAssets();
+    const { existingAssetNameMap, existingAssetSymbolMap, assetIdChainMap } =
+      await AssetService.mapAssetsByAddressAndAssetId(existingAssets);
+    // The id maps keep one chain per asset id or address, these keep every pair
+    const networkKey = (chainId: number, id: string) => `${chainId}:${id}`;
+    const takenFuelAssets = new Set(
+      existingAssets.flatMap((existing) => {
+        // Older custom assets keep their id at the root, mapped to chain 0 like assetIdChainMap does
+        // biome-ignore lint/suspicious/noExplicitAny: Incoming custom asset ids have the assetId at the root
+        const looseAssetId = (existing as any)?.assetId as string | undefined;
+        return [
+          ...(looseAssetId ? [networkKey(0, looseAssetId)] : []),
+          ...existing.networks.flatMap((network) =>
+            network.type === 'fuel'
+              ? [networkKey(network.chainId, network.assetId)]
+              : []
+          ),
+        ];
+      })
+    );
+    const takenEthereumAddresses = new Set(
+      existingAssets.flatMap((existing) =>
+        existing.networks.flatMap((network) =>
+          network.type === 'ethereum' && network.address
+            ? [networkKey(network.chainId, network.address)]
+            : []
+        )
+      )
+    );
 
     const newAssetsToAdd: AssetData[] = [];
     // Assets that exist but in different chains
@@ -347,8 +456,7 @@ export class AssetService {
             existingAssetSymbolMap,
           },
           {
-            // biome-ignore lint/suspicious/noExplicitAny: Incoming custom asset ids have assetId at the root
-            assetId: (asset as any)?.assetId as string,
+            assetId: asset.assetId as string,
             name: asset.name,
             symbol: asset.symbol,
           }
@@ -365,51 +473,38 @@ export class AssetService {
         const nonDuplicateNetworks: Array<NetworkEthereum | NetworkFuel> = [];
 
         for (const newNetwork of asset.networks) {
-          const isDuplicate = existingAsset.networks.some((existingNetwork) => {
-            if (newNetwork.type !== existingNetwork.type) return false;
-            if (newNetwork.type === 'fuel' && existingNetwork.type === 'fuel') {
-              const isAssetIdDuplicate =
-                assetIdChainMap.get(newNetwork.assetId) === newNetwork.chainId;
-              if (newNetwork.chainId !== existingNetwork.chainId) {
-                return isAssetIdDuplicate;
-              }
-              return (
-                isAssetIdDuplicate ||
-                (newNetwork.assetId === existingNetwork.assetId &&
-                  newNetwork.contractId === existingNetwork.contractId)
-              );
-            }
-            if (
-              newNetwork.type === 'ethereum' &&
-              existingNetwork.type === 'ethereum'
-            ) {
-              const isAddressDuplicate =
-                newNetwork.address &&
-                networkAddressChainMap.get(newNetwork.address) ===
-                  newNetwork.chainId;
-
-              if (newNetwork.chainId !== existingNetwork.chainId) {
-                return isAddressDuplicate;
-              }
-              return (
-                isAddressDuplicate ||
-                (newNetwork.address === existingNetwork.address &&
-                  newNetwork.chainId === existingNetwork.chainId)
-              );
-            }
-            return false;
-          });
+          // Checked before looking at the existing networks, which may not
+          // include one of the same type
+          const isDuplicate =
+            newNetwork.type === 'fuel'
+              ? takenFuelAssets.has(
+                  networkKey(newNetwork.chainId, newNetwork.assetId)
+                )
+              : newNetwork.address
+                ? takenEthereumAddresses.has(
+                    networkKey(newNetwork.chainId, newNetwork.address)
+                  )
+                : existingAsset.networks.some(
+                    (existingNetwork) =>
+                      existingNetwork.type === 'ethereum' &&
+                      !existingNetwork.address &&
+                      existingNetwork.chainId === newNetwork.chainId
+                  );
 
           if (!isDuplicate) {
             nonDuplicateNetworks.push(newNetwork);
             // Include new data in maps to check for duplication
-            if (newNetwork.type === 'fuel')
+            if (newNetwork.type === 'fuel') {
               assetIdChainMap.set(newNetwork.assetId, newNetwork.chainId);
-            if (newNetwork.type === 'ethereum' && newNetwork.address)
-              networkAddressChainMap.set(
-                newNetwork.address,
-                newNetwork.chainId
+              takenFuelAssets.add(
+                networkKey(newNetwork.chainId, newNetwork.assetId)
               );
+            }
+            if (newNetwork.type === 'ethereum' && newNetwork.address) {
+              takenEthereumAddresses.add(
+                networkKey(newNetwork.chainId, newNetwork.address)
+              );
+            }
           }
         }
 
@@ -425,6 +520,24 @@ export class AssetService {
           isCustom: true,
         });
       } else {
+        // A root id counts as chain 0, like the existing assets above
+        const fuelIds = [
+          ...(asset.assetId ? [{ chainId: 0, assetId: asset.assetId }] : []),
+          ...asset.networks.flatMap((network) =>
+            network.type === 'fuel' ? [network] : []
+          ),
+        ];
+        if (
+          fuelIds.some(({ chainId, assetId }) =>
+            takenFuelAssets.has(networkKey(chainId, assetId))
+          )
+        ) {
+          throw new Error('Asset ID already exists');
+        }
+        for (const { chainId, assetId } of fuelIds) {
+          assetIdChainMap.set(assetId, chainId);
+          takenFuelAssets.add(networkKey(chainId, assetId));
+        }
         newAssetsToAdd.push(asset);
       }
     }

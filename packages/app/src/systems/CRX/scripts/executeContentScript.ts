@@ -12,6 +12,9 @@ export async function executeContentScript() {
   chrome.tabs.query({ url: '<all_urls>' }, (tabs) => {
     for (const tab of tabs) {
       if (!tab.id || tab.url?.startsWith('chrome://')) continue;
+      // Loading tabs get the manifest content script, and discarded tabs
+      // reload with it, so injecting there would run two copies
+      if (tab.status !== 'complete' || tab.discarded) continue;
 
       // Send a ping message to check if content script is already injected
       chrome.tabs.sendMessage(

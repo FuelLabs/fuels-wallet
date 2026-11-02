@@ -1,4 +1,4 @@
-import { DEVNET_NETWORK_URL, TESTNET_NETWORK_URL } from 'fuels';
+import { TESTNET_NETWORK_URL } from 'fuels';
 
 const URL_PATTERN = new RegExp(
   '^(?<protocol>https?:\\/\\/)' +
@@ -27,8 +27,4 @@ export function isValidNetworkUrl(url?: string) {
 
 export function isNetworkTestnet(url: string) {
   return url.includes(TESTNET_NETWORK_URL);
-}
-
-export function isNetworkDevnet(url: string) {
-  return url.includes(DEVNET_NETWORK_URL);
 }

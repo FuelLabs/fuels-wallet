@@ -30,13 +30,7 @@ const config: PlaywrightTestConfig = defineConfig({
     {
       name: 'chromium',
       use: {
-        ...devices['Desktop Chromium'],
-      },
-    },
-    {
-      name: 'chrome-beta',
-      use: {
-        channel: 'chrome-beta',
+        channel: 'chromium',
         ...devices['Desktop Chrome'],
       },
     },

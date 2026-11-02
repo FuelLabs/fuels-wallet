@@ -2,18 +2,32 @@ import { Navigate, Route } from 'react-router-dom';
 
 import { Pages } from '../Core/types';
 
+import { lazyPage } from '~/systems/Core/utils/lazyPage';
 import { listenToGlobalErrors } from '~/systems/Core/utils/listenToGlobalErrors';
 import { ReportErrorService } from '~/systems/Error';
 import { SignUpProvider } from './components/SignUpProvider';
-import {
-  BackupWallet,
-  ConfirmWallet,
-  CreatedWallet,
-  EncryptWallet,
-  RecoverWallet,
-  TermsOfUse,
-  WelcomeScreen,
-} from './pages';
+
+const BackupWallet = lazyPage(() =>
+  import('./pages/BackupWallet').then((m) => m.BackupWallet)
+);
+const ConfirmWallet = lazyPage(() =>
+  import('./pages/ConfirmWallet').then((m) => m.ConfirmWallet)
+);
+const CreatedWallet = lazyPage(() =>
+  import('./pages/CreatedWallet').then((m) => m.CreatedWallet)
+);
+const EncryptWallet = lazyPage(() =>
+  import('./pages/EncryptWallet').then((m) => m.EncryptWallet)
+);
+const RecoverWallet = lazyPage(() =>
+  import('./pages/RecoverWallet').then((m) => m.RecoverWallet)
+);
+const TermsOfUse = lazyPage(() =>
+  import('./pages/TermsOfUse').then((m) => m.TermsOfUse)
+);
+const WelcomeScreen = lazyPage(() =>
+  import('./pages/WelcomeScreen').then((m) => m.WelcomeScreen)
+);
 
 listenToGlobalErrors((error) => {
   ReportErrorService.saveError(error);

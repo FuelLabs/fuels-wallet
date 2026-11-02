@@ -3,6 +3,8 @@ import { createStore } from '@fuels/react-xstore';
 import { accountEvents } from '../Account/events';
 import { accountsMachine } from '../Account/machines';
 import { assetEvents, assetsMachine } from '../Asset';
+import { consolidateCoinsEvents } from '../ConsolidateCoins/events';
+import { consolidateCoinsMachine } from '../ConsolidateCoins/machines/consolidateCoinsMachine';
 import {
   addAssetRequestMachine,
   connectRequestMachine,
@@ -44,12 +46,14 @@ export const store = store$
   .addMachine(Services.reportError, () => reportErrorMachine)
   .addMachine(Services.selectNetworkRequest, () => selectNetworkRequestMachine)
   .addMachine(Services.nameSystemRequest, () => nameSystemRequestMachine)
+  .addMachine(Services.consolidateCoins, () => consolidateCoinsMachine)
   .addHandlers(accountEvents)
   .addHandlers(networkEvents)
   .addHandlers(assetEvents)
   .addHandlers(overlayEvents)
   .addHandlers(unlockEvents)
   .addHandlers(requestEvents)
+  .addHandlers(consolidateCoinsEvents)
   .setup();
 
 export const { StoreProvider } = store;

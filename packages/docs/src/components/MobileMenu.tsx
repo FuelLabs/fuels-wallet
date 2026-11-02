@@ -55,16 +55,7 @@ export function MobileMenu() {
           <FuelLogo size={30} />
           <Link href="/docs/install">Docs</Link>
           {IS_PUBLIC_PREVIEW && (
-            <>
-              <a
-                href={process.env.NEXT_PUBLIC_STORYBOOK_URL}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Storybook
-              </a>
-              <a href={process.env.NEXT_PUBLIC_APP_URL}>Open Wallet</a>
-            </>
+            <a href={process.env.NEXT_PUBLIC_APP_URL}>Open Wallet</a>
           )}
           <a
             href="https://github.com/fuellabs/fuels-wallet"

@@ -1,6 +1,5 @@
 import { type MouseEvent, useCallback, useMemo } from 'react';
 import { IS_CRX } from '~/config';
-import { openTab } from '~/systems/CRX/utils';
 import { urlJoin } from '~/systems/Core';
 import { useNetworks } from '~/systems/Network';
 

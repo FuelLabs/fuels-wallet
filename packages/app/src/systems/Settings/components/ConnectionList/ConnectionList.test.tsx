@@ -7,11 +7,11 @@ import { connectionsLoader } from '../../__mocks__/connection';
 import { testQueries } from '../../__test__';
 import { useConnections } from '../../hooks';
 
-import { Usage } from './ConnectionList.stories';
+import { ConnectionList } from './ConnectionList';
 
 function Content() {
   const state = useConnections();
-  return <Usage {...state} />;
+  return <ConnectionList {...state} />;
 }
 
 const opts = {

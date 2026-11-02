@@ -4,6 +4,7 @@ import {
 } from '@fuels/connectors';
 import { FuelProvider, type UIConfig } from '@fuels/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { CHAIN_IDS } from 'fuels';
 import type { FuelConfig, Network } from 'fuels';
 import type { ReactNode } from 'react';
 
@@ -13,11 +14,13 @@ type ProviderProps = {
 
 const queryClient = new QueryClient();
 
-const CHAIN_ID_LOCAL = 0;
+const FUEL_PROVIDER_URL: string = import.meta.env.VITE_FUEL_PROVIDER_URL;
+const CHAIN_ID = CHAIN_IDS.fuel.testnet;
+
 const NETWORKS: Array<Network> = [
   {
-    chainId: CHAIN_ID_LOCAL,
-    url: import.meta.env.VITE_FUEL_PROVIDER_URL,
+    chainId: CHAIN_ID,
+    url: FUEL_PROVIDER_URL,
   },
 ];
 
@@ -39,7 +42,6 @@ export const Providers = ({ children }: ProviderProps) => {
       >
         {children}
       </FuelProvider>
-      ∫
     </QueryClientProvider>
   );
 };

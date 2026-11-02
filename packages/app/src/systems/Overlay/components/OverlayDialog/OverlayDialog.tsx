@@ -7,8 +7,8 @@ import { ExportAccount } from '~/systems/Account/pages/ExportAccount';
 import { ImportAccount } from '~/systems/Account/pages/ImportAccount';
 import { AddNetwork, Networks, UpdateNetwork } from '~/systems/Network/pages';
 import { useOverlay } from '~/systems/Overlay';
-import { ViewSeedPhrase } from '~/systems/Settings/pages';
-import { TxApprove } from '~/systems/Transaction';
+import { ViewSeedPhrase } from '~/systems/Settings/pages/ViewSeedPhrase';
+import { TxApprove } from '~/systems/Transaction/pages/TxApprove';
 import { ResetDialog } from '~/systems/Unlock/components/ResetDialog';
 
 export function OverlayDialog() {

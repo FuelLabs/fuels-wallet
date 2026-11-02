@@ -72,8 +72,6 @@ docker/db
 .turbo
 tsconfig.tsbuildinfo
 
-# storybook
-storybook-static
 
 # general
 .vercel

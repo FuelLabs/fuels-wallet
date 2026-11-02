@@ -1,4 +1,4 @@
-import type { Input, InputContract, JsonAbi } from 'fuels';
+import type { AbiMap, Input, InputContract, JsonAbi } from 'fuels';
 import { InputType, getInputsByType } from 'fuels';
 import { AbiService } from '~/systems/Settings/services';
 
@@ -30,4 +30,17 @@ export async function getAbiMap({
   );
 
   return abiMap;
+}
+
+// Any dApp can save an ABI for any contract, so a wrong one falls back to undecoded calls instead of blocking the transaction
+export async function withAbiFallback<T>(
+  abiMap: AbiMap,
+  getSummary: (abiMap?: AbiMap) => Promise<T>
+) {
+  try {
+    return await getSummary(abiMap);
+  } catch (error) {
+    if (!Object.keys(abiMap).length) throw error;
+    return getSummary();
+  }
 }

@@ -2,7 +2,12 @@ import { Outlet, Route } from 'react-router-dom';
 
 import { Pages } from '../Core/types';
 
-import { Home, Receive } from './pages';
+import { lazyPage } from '~/systems/Core/utils/lazyPage';
+import { Home } from './pages/Home';
+
+const Receive = lazyPage(() =>
+  import('./pages/Receive').then((m) => m.Receive)
+);
 
 export const homeRoutes = (
   <Route path={Pages.wallet()}>

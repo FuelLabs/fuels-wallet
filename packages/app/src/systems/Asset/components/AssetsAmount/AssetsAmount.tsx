@@ -6,11 +6,10 @@ import {
   Grid,
   Text,
   Tooltip,
-  VStack,
 } from '@fuel-ui/react';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
-import { type FC, useEffect, useMemo, useRef, useState } from 'react';
+import { type FC, useMemo } from 'react';
 import { formatAmount, shortAddress } from '~/systems/Core';
 import type { InsufficientInputAmountError } from '~/systems/Transaction';
 
@@ -18,6 +17,7 @@ import { useTruncation } from '~/systems/Core/hooks/useTruncation';
 import { convertToUsd } from '~/systems/Core/utils/convertToUsd';
 import { AssetsAmountLoader } from './AssetsAmountLoader';
 import { styles } from './styles';
+import { AssetAvatar } from '../AssetAvatar';
 
 type GroupedError = {
   errorMessage?: string;
@@ -120,7 +120,7 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
     <Grid key={assetId} css={styles.root}>
       <Box.Flex css={styles.asset}>
         {icon ? (
-          <Avatar name={name} src={icon} />
+          <AssetAvatar name={name} src={icon} />
         ) : (
           <Avatar.Generated hash={assetId} size="xsm" />
         )}

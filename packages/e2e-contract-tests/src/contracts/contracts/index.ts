@@ -5,9 +5,9 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 /*
-  Fuels version: 0.100.6
-  Forc version: 0.68.1
-  Fuel-Core version: 0.43.1
+  Fuels version: 0.103.0
+  Forc version: 0.68.6
+  Fuel-Core version: 0.47.1
 */
 
 export { CustomAsset } from './CustomAsset';

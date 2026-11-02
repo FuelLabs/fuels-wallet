@@ -25,6 +25,7 @@ import { useTruncation } from '~/systems/Core/hooks/useTruncation';
 import useFuelAsset from '../../hooks/useFuelAsset';
 import { AssetItemAmount } from './AssetItemAmount';
 import { AssetItemLoader } from './AssetItemLoader';
+import { AssetAvatar } from '../AssetAvatar';
 
 export type AssetItemProps = {
   asset?: AssetData;
@@ -160,11 +161,7 @@ export const AssetItem: AssetItemComponent = ({
     >
       <Box css={styles.icon}>
         {icon ? (
-          <Avatar
-            name={name || ''}
-            src={icon}
-            css={{ height: 36, width: 36 }}
-          />
+          <AssetAvatar name={name} src={icon} size={36} />
         ) : (
           <Avatar.Generated hash={assetId || ''} size={36} />
         )}

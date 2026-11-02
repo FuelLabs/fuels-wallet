@@ -21,17 +21,18 @@ jobs:
     name: Assign project changed
     runs-on: ubuntu-latest
     outputs:
-      changed: ${{ steps.packages-changed.outputs.any_changed }}
+      changed: ${{ steps.packages-changed.outputs.packages }}
     steps:
       - uses: actions/checkout@v4
       - name: Check external packages changes
         id: packages-changed
-        uses: tj-actions/changed-files@v22.2
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         with:
-          files: |
-            **/packages/app/**
-            **/packages/types/**
-            **/packages/react/**
+          filters: |
+            packages:
+              - 'packages/app/**'
+              - 'packages/types/**'
+              - 'packages/react/**'
 
   validate-changeset:
     name: Validate PR Changeset
@@ -53,7 +54,7 @@ jobs:
       - name: CI Setup
         uses: FuelLabs/github-actions/setups/node@58bcd91d7246e40938e1971be0b0fe35b253dff0
         with:
-          node-version: 20.14.0
+          node-version: 24
           pnpm-version: ${{ env.PNPM_VERSION }}
 
       - name: Validate Changeset
@@ -71,7 +72,7 @@ jobs:
           echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
       - uses: FuelLabs/github-actions/setups/node@master
         with:
-          node-version: 20.14.0
+          node-version: 24
           pnpm-version: ${{ env.PNPM_VERSION }}
       - name: Install jq
         run: sudo apt-get install jq
@@ -102,7 +103,7 @@ jobs:
           echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
       - uses: FuelLabs/github-actions/setups/node@master
         with:
-          node-version: 20.14.0
+          node-version: 24
           pnpm-version: ${{ env.PNPM_VERSION }}
       - run: pnpm audit --prod
 
@@ -126,7 +127,7 @@ jobs:
       - name: Setup Node
         uses: FuelLabs/github-actions/setups/node@master
         with:
-          node-version: 20.14.0
+          node-version: 24
           pnpm-version: ${{ env.PNPM_VERSION }}
 
       - name: Run lint

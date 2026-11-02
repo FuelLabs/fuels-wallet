@@ -206,6 +206,10 @@ export class PopUpService {
     return this.client.request('sendTransaction', input);
   }
 
+  async signTransaction(input: MessageInputs['signTransaction']) {
+    return this.client.request('signTransaction', input);
+  }
+
   async addAssets(input: MessageInputs['addAssets']) {
     return this.client.request('addAssets', input);
   }

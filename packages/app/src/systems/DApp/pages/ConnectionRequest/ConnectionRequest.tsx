@@ -10,15 +10,8 @@ import {
   coreStyles,
 } from '~/systems/Core';
 
+import { NOT_ALLOWED_LIST, PERMISSION_LIST } from '../../constants';
 import { useConnectRequest } from '../../hooks/useConnectRequest';
-
-export const PERMISSION_LIST = [
-  'View your account address',
-  'Request transaction approval',
-  'Request message signature',
-  'Read your transaction history',
-];
-export const NOT_ALLOWED_LIST = ['View your private keys'];
 
 const MotionCardList = motion(CardList);
 const MotionAccountItem = motion(AccountItem);

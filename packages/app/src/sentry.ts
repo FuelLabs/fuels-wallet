@@ -40,7 +40,9 @@ if (IS_CRX_POPUP) {
         })
       );
 
-      filteredIntegrations.push(Sentry.debugIntegration());
+      if (IS_DEVELOPMENT) {
+        filteredIntegrations.push(Sentry.debugIntegration());
+      }
 
       return filteredIntegrations;
     },

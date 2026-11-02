@@ -1,5 +1,51 @@
 # @fuels/playwright-utils
 
+## 0.63.1
+
+### Patch Changes
+
+- [#2031](https://github.com/FuelLabs/fuels-wallet/pull/2031) [`c723bd86`](https://github.com/FuelLabs/fuels-wallet/commit/c723bd8604e5ac4984684b153bfb382369ed25c9) Thanks [@nelitow](https://github.com/nelitow)! - fix: Update adm-zip to 0.6.1 to fix the zip extraction advisories in 0.5.12
+
+- [#1998](https://github.com/FuelLabs/fuels-wallet/pull/1998) [`7aba974e`](https://github.com/FuelLabs/fuels-wallet/commit/7aba974e785b1809a6d2da3fcdb64a68e3b51815) Thanks [@nelitow](https://github.com/nelitow)! - fix: Workflows
+
+## 0.63.0
+
+## 0.62.3
+
+## 0.62.2
+
+## 0.62.1
+
+## 0.62.0
+
+## 0.61.0
+
+## 0.60.0
+
+## 0.59.1
+
+## 0.59.0
+
+## 0.58.1
+
+### Patch Changes
+
+- [#1957](https://github.com/FuelLabs/fuels-wallet/pull/1957) [`9fb8fade`](https://github.com/FuelLabs/fuels-wallet/commit/9fb8fadeae6b531e673aa7a3d586f9f623c7a170) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: update fuels to 0.102.0
+
+## 0.58.0
+
+### Minor Changes
+
+- [#1954](https://github.com/FuelLabs/fuels-wallet/pull/1954) [`bbe52918`](https://github.com/FuelLabs/fuels-wallet/commit/bbe52918447c86de883b3d8c6cbececa218e58e0) Thanks [@nelitow](https://github.com/nelitow)! - fix: disable chrome-beta tests as they don't support importing chrome extensions anymore
+
+## 0.57.1
+
+## 0.57.0
+
+## 0.56.1
+
+## 0.56.0
+
 ## 0.55.3
 
 ### Patch Changes

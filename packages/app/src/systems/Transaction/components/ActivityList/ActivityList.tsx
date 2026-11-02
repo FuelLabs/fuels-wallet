@@ -1,5 +1,4 @@
 import { Box } from '@fuel-ui/react';
-import type { TransactionSummary } from 'fuels';
 
 import { ActivityItem } from '../ActivityItem';
 

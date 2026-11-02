@@ -4,7 +4,7 @@ import {
   MessageTypes,
 } from '@fuel-wallet/types';
 import type { CommunicationEventArg, Connection } from '@fuel-wallet/types';
-import type { Network } from 'fuels';
+import type { HashableMessage, Network } from 'fuels';
 import type {
   JSONRPCParams,
   JSONRPCRequest,
@@ -20,7 +20,7 @@ import { ConnectionService } from '~/systems/DApp/services';
 import { NetworkService } from '~/systems/Network/services';
 import { AbiService } from '~/systems/Settings/services';
 
-import { Address } from 'fuels';
+import { Address, hexlify } from 'fuels';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { PopUpService } from './PopUpService';
 import type { MessageInputs } from './types';
@@ -31,6 +31,41 @@ type EventOrigin = {
   favIconUrl: string;
   connection?: Connection;
 };
+
+// Bytes sent as a plain object arrive in key order, so turn them into one hex string that the popup shows and the vault signs
+function normalizeMessage(message: HashableMessage): HashableMessage {
+  if (
+    typeof message === 'string' ||
+    typeof message?.personalSign === 'string'
+  ) {
+    return message;
+  }
+  if (!message?.personalSign || typeof message.personalSign !== 'object') {
+    throw new Error('Invalid message');
+  }
+
+  const bytes = message.personalSign as unknown as Record<string, unknown>;
+  const keys = Object.keys(bytes);
+  const isByteList = keys.every((key, index) => {
+    const value = bytes[key];
+    return (
+      key === String(index) &&
+      Number.isInteger(value) &&
+      (value as number) >= 0 &&
+      (value as number) <= 255
+    );
+  });
+
+  if (!keys.length || !isByteList) {
+    throw new Error('Invalid message');
+  }
+
+  return {
+    personalSign: hexlify(
+      Uint8Array.from(keys.map((key) => bytes[key] as number))
+    ),
+  };
+}
 
 type Methods<T> = {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -58,6 +93,7 @@ export class BackgroundService {
     'addNetwork',
     'addAbi',
     'getAbi',
+    'signTransaction',
   ];
 
   constructor(communicationProtocol: CommunicationProtocol) {
@@ -140,6 +176,23 @@ export class BackgroundService {
     if (!hasAccessToAddress) {
       throw new Error('address is not authorized for this connection.');
     }
+  }
+
+  // The wallet simulates and signs on its own selected network, never on a node or cache the dApp supplies
+  async requireSelectedNetwork(providerUrl?: string) {
+    const selectedNetwork = await NetworkService.getSelectedNetwork();
+    const url = providerUrl || selectedNetwork?.url;
+
+    if (!url || selectedNetwork?.url !== url) {
+      throw new Error(
+        [
+          `${url} is different from the user current network!`,
+          'Request the user to add the new network. fuel.addNetwork([...]).',
+        ].join('\n')
+      );
+    }
+
+    return { url };
   }
 
   async requireConnection(connection?: Connection) {
@@ -275,6 +328,7 @@ export class BackgroundService {
     const favIconUrl = serverParams.favIconUrl;
 
     await this.requireAccountConnection(serverParams.connection, input.address);
+    const message = normalizeMessage(input.message);
 
     const popupService = await PopUpService.open(
       origin,
@@ -283,6 +337,7 @@ export class BackgroundService {
     );
     const signedMessage = await popupService.signMessage({
       ...input,
+      message,
       origin,
       title,
       favIconUrl,
@@ -299,20 +354,10 @@ export class BackgroundService {
     const origin = serverParams.origin;
     const title = serverParams.title;
     const favIconUrl = serverParams.favIconUrl;
-    const selectedNetwork = await NetworkService.getSelectedNetwork();
-
-    if (selectedNetwork?.url !== input.provider.url) {
-      throw new Error(
-        [
-          `${input.provider.url} is different from the user current network!`,
-          'Request the user to add the new network. fuel.addNetwork([...]).',
-        ].join('\n')
-      );
-    }
+    const provider = await this.requireSelectedNetwork(input.provider.url);
 
     const {
       address: _address,
-      provider,
       transaction,
       skipCustomFee,
       transactionState,
@@ -341,6 +386,37 @@ export class BackgroundService {
     });
     popupService.destroy();
     return transactionResponse;
+  }
+
+  async signTransaction(
+    input: Exclude<MessageInputs['signTransaction'], 'origin'>,
+    serverParams: EventOrigin
+  ) {
+    await this.requireAccountConnection(serverParams.connection, input.address);
+    const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
+    const provider = await this.requireSelectedNetwork(input.provider?.url);
+
+    const popupService = await PopUpService.open(
+      origin,
+      Pages.requestTransaction(),
+      this.communicationProtocol
+    );
+
+    const address = Address.fromDynamicInput(input.address).toString();
+
+    const txRequestSigned = await popupService.signTransaction({
+      address,
+      provider,
+      transaction: input.transaction,
+      origin,
+      title,
+      favIconUrl,
+    });
+
+    popupService.destroy();
+    return txRequestSigned;
   }
 
   async currentAccount(_: unknown, serverParams: EventOrigin) {

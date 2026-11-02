@@ -1,7 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon } from '@fuel-ui/react';
 
-export const TxReviewAlert = () => {
+export type TxReviewAlertProps = {
+  signOnly?: boolean;
+};
+
+export const TxReviewAlert = ({ signOnly = false }: TxReviewAlertProps) => {
   return (
     <Box
       css={{ borderBottom: '1px solid $gray6' }}
@@ -9,7 +13,9 @@ export const TxReviewAlert = () => {
     >
       <Box.Flex css={styles.reviewTxBadge}>
         <Icon icon="InfoCircle" stroke={2} size={16} />
-        Double-check transaction details before submission
+        {signOnly
+          ? 'Double-check transaction details before signing'
+          : 'Double-check transaction details before submission'}
       </Box.Flex>
     </Box>
   );

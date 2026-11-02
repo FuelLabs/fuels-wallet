@@ -12,7 +12,7 @@ concurrency:
 jobs:
   tests-jest:
     name: Jest Tests [Shard ${{ matrix.shard }}]
-    runs-on: buildjet-8vcpu-ubuntu-2204-arm
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -26,7 +26,7 @@ jobs:
           echo "PNPM_VERSION=${PNPM_VERSION}" >> $GITHUB_ENV
       - uses: FuelLabs/github-actions/setups/node@master
         with:
-          node-version: 20.14.0
+          node-version: 24
           pnpm-version: ${{ env.PNPM_VERSION }}
       - uses: FuelLabs/github-actions/setups/docker@master
         with:

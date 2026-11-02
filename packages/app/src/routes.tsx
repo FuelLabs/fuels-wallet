@@ -9,6 +9,7 @@ import { signUpRoutes } from '~/systems/SignUp';
 import { errorRoutes } from '~/systems/Error/routes';
 import { IS_CRX, IS_CRX_POPUP } from './config';
 import { CRXPrivateRoute, CRXPublicRoute } from './systems/CRX/components';
+import { consolidateCoinsRoutes } from './systems/ConsolidateCoins/routes';
 import { dappRoutes } from './systems/DApp/routes';
 import { sendRoutes } from './systems/Send';
 import { settingsRoutes } from './systems/Settings';
@@ -26,6 +27,7 @@ const walletRoutes = (
     {sendRoutes}
     {transactionRoutes}
     {assetRoutes}
+    {consolidateCoinsRoutes}
   </>
 );
 

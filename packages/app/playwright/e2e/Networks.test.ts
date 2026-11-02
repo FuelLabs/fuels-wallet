@@ -45,7 +45,10 @@ test.describe('Networks', () => {
     await expect(network1).toHaveAttribute('data-active', 'true');
     const anotherNetwork = getByAriaLabel(page, 'fuel_network-item-2');
     await anotherNetwork.click();
-    await page.waitForTimeout(1000);
+    // Wait for the selection to be saved before reloading.
+    await expect(getByAriaLabel(page, 'Selected Network')).toHaveText(
+      /Another/i
+    );
     await visit(page, '/wallet');
     const selector = getByAriaLabel(page, 'Selected Network');
     await expect(selector).toHaveText(/Another/i);
