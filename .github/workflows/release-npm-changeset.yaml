@@ -117,11 +117,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # The changesets action opens a version PR instead of publishing while any changeset file exists, even one that bumps no package
+      - name: Remove empty changesets
+        run: |
+          for file in .changeset/*.md; do
+            [ "$(basename "$file")" = "README.md" ] && continue
+            if ! awk '/^---$/ { count++; next } count == 1' "$file" | grep -qE ':[[:space:]]*(patch|minor|major)[[:space:]]*$'; then
+              echo "Removing empty changeset $file"
+              rm "$file"
+            fi
+          done
+
       - name: Publish to NPM
         id: changesets
         uses: FuelLabs/changesets-action@v2.0.0
         with:
           publish: pnpm changeset:publish v${{ env.BUILD_VERSION }} ${{ github.ref_name }}
+          commit: "ci(release): versioning packages and changesets"
+          title: "ci(release): `v${{ env.BUILD_VERSION }}` @ `${{ github.ref_name }}`"
           createGithubReleases: aggregate
           githubReleaseName: v${{ env.BUILD_VERSION }}
           githubTagName: v${{ env.BUILD_VERSION }}
@@ -160,6 +173,12 @@ jobs:
           
           echo "has_published_packages=$PACKAGES_PUBLISHED" >> "$GITHUB_OUTPUT"
           echo "::endgroup::"
+
+      - name: Fail when nothing was published
+        if: steps.debug-published.outputs.has_published_packages != 'true'
+        run: |
+          echo "::error::Release commit ${{ github.sha }} published nothing. When changeset files are still in .changeset the changesets action opens a version PR (#${{ steps.changesets.outputs.pullRequestNumber }}) instead of publishing; merging that PR publishes v${{ env.BUILD_VERSION }}."
+          exit 1
 
       - name: Enhanced changelog with all packages
         if: steps.debug-published.outputs.has_published_packages == 'true'
