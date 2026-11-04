@@ -1,13 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import {
-  Box,
-  Button,
-  Checkbox,
-  Form,
-  HelperIcon,
-  Input,
-  Tooltip,
-} from '@fuel-ui/react';
+import { cssObj, Box, Button, Form, HelperIcon, Input } from '@fuel-wallet/ui';
 import { motion } from 'framer-motion';
 import { ControlledField, animations } from '~/systems/Core';
 import { NetworkReviewCard } from '~/systems/Network';

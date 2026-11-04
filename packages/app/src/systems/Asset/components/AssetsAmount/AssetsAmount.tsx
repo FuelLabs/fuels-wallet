@@ -6,7 +6,7 @@ import {
   Grid,
   Text,
   Tooltip,
-} from '@fuel-ui/react';
+} from '@fuel-wallet/ui';
 import type { AssetFuelAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import { type FC, useMemo } from 'react';

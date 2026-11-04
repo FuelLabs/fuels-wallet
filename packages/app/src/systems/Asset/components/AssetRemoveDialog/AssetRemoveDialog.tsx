@@ -1,6 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { AlertDialog, Button } from '@fuel-ui/react';
-import type { AssetData } from '@fuel-wallet/types';
+import { cssObj, AlertDialog, Button } from '@fuel-wallet/ui';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 

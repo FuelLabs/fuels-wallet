@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Card } from '@fuel-ui/react';
+import { cssObj, Card } from '@fuel-wallet/ui';
 import type { Account } from '@fuel-wallet/types';
 import { AccountItem } from '~/systems/Account';
 

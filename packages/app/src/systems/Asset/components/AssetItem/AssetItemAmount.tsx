@@ -1,7 +1,6 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Text, Tooltip, VStack } from '@fuel-ui/react';
+import { cssObj, Box, Text, Tooltip, VStack } from '@fuel-wallet/ui';
 import { type BNInput, bn } from 'fuels';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo } from 'react';
 import { AmountVisibility, formatBalance } from '~/systems/Core';
 import { useTruncation } from '~/systems/Core/hooks/useTruncation';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
@@ -45,7 +44,7 @@ export const AssetItemAmount = ({
               units={decimals}
               visibility={visibility}
             />
-          </Text>
+          </Text>{' '}
           <Text as="span" css={styles.symbol}>
             {symbol}
           </Text>

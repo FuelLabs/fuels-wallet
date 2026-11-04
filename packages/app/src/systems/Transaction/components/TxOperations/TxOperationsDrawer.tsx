@@ -1,4 +1,4 @@
-import { Box, Text } from '@fuel-ui/react';
+import { Box, Text } from '@fuel-wallet/ui';
 import { MotionBox } from '~/systems/Core';
 import type { SimplifiedOperation } from '../../types';
 import { TxOperation } from '../TxOperation';
@@ -28,9 +28,13 @@ export function TxOperationsDrawer({
       <Box.VStack>
         {operations.map((operation, index) => (
           <MotionBox
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, ease: 'easeIn' }}
+            transition={{
+              duration: 0.4,
+              ease: [0.16, 1, 0.3, 1],
+              delay: index * 0.04,
+            }}
             key={JSON.stringify(operation)}
           >
             <TxOperation

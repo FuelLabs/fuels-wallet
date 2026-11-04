@@ -1,4 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
+import { cssObj } from '@fuel-wallet/ui';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAccounts } from '~/systems/Account';

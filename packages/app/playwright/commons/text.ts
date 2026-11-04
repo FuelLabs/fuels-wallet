@@ -15,6 +15,8 @@ export async function hasText(
   const textFound = page.getByText(text).nth(position);
   await expect(textFound).toHaveText(text, {
     useInnerText: true,
+    /* Buttons and labels render uppercase in the design system. */
+    ignoreCase: true,
     timeout,
   });
   return textFound;

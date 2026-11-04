@@ -2,7 +2,7 @@ import type { Account } from '@fuel-wallet/types';
 import { Mnemonic } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-import { IS_LOGGED_KEY, MNEMONIC_SIZE } from '~/config';
+import { GET_STARTED_KEY, IS_LOGGED_KEY, MNEMONIC_SIZE } from '~/config';
 import { store } from '~/store';
 import {
   Storage,
@@ -228,6 +228,7 @@ export const signUpMachine = createMachine(
       // External actions
       sendAccountCreated: () => {
         Storage.setItem(IS_LOGGED_KEY, true);
+        Storage.setItem(GET_STARTED_KEY, {});
         store.refreshAccounts();
       },
       redirectToWalletCreated() {},

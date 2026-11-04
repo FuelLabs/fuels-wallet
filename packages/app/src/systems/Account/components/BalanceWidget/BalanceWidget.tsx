@@ -1,5 +1,12 @@
-import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Button, Heading, Icon, Text } from '@fuel-ui/react';
+import {
+  cssObj,
+  Avatar,
+  Box,
+  Button,
+  Heading,
+  Icon,
+  Text,
+} from '@fuel-wallet/ui';
 import type { AccountWithBalance } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 import { FuelAddress } from '~/systems/Account';
@@ -9,18 +16,22 @@ import { useAccounts } from '../../hooks';
 
 import { INTL_FORMATTER } from '~/systems/Asset/constants';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
+import { useTweenedNumber } from '~/systems/Core/hooks/useTweenedNumber';
+import { useLanded } from '~/systems/Core/utils/landed';
 
 type BalanceWidgetWrapperProps = {
   top: ReactNode;
   bottom: ReactNode;
+  className?: string;
 };
 
 export function BalanceWidgetWrapper({
   top,
   bottom,
+  className,
 }: BalanceWidgetWrapperProps) {
   return (
-    <Box css={styles.balanceWidgetWrapper}>
+    <Box css={styles.balanceWidgetWrapper} className={className}>
       <Box.Flex css={styles.accountInfo}>{top}</Box.Flex>
       <Box.Stack css={styles.balance}>{bottom}</Box.Stack>
     </Box>
@@ -33,6 +44,8 @@ export type BalanceWidgetProps = {
   visibility?: boolean;
   onPressAccounts?: () => void;
   onChangeVisibility?: (visibility: boolean) => void;
+  /** The first deposit on this wallet just landed. */
+  isFirstFunds?: boolean;
 };
 
 export function BalanceWidget({
@@ -40,16 +53,27 @@ export function BalanceWidget({
   isLoading,
   visibility = true,
   onChangeVisibility,
+  isFirstFunds,
 }: BalanceWidgetProps) {
   const { handlers } = useAccounts();
   const totalBalanceInUsd = account?.totalBalanceInUsd ?? 0;
+  /* Rolls to the new total, e.g. counting down when you come back from a send. */
+  const shownBalance = useTweenedNumber(
+    totalBalanceInUsd,
+    !isLoading && account?.address ? account.address : ''
+  );
+
+  const isNewAccount = useLanded(
+    account?.address ? `account:${account.address}` : undefined
+  );
 
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
-  const totalValue = INTL_FORMATTER.format(totalBalanceInUsd);
+  const totalValue = INTL_FORMATTER.format(shownBalance);
 
   return (
     <BalanceWidgetWrapper
+      className={isFirstFunds || isNewAccount ? 'fuel-ticks' : undefined}
       top={
         <>
           <Avatar.Generated
@@ -88,10 +112,11 @@ export function BalanceWidget({
           <Text className="label">Total balance</Text>
           <Box.Flex>
             <Text
+              key={String(visibility)}
               aria-hidden={visibility}
               aria-label="Total balance in USD"
               data-account-name={account.name}
-              className="value"
+              className="value fuel-appear"
             >
               {visibility ? totalValue : '$•••••'}
             </Text>
@@ -139,9 +164,12 @@ const styles = {
       lineHeight: 'normal',
     },
     '.label': {
-      lineHeight: '$tight',
-      fontSize: '$sm',
-      fontWeight: '$medium',
+      fontFamily: '$mono',
+      fontSize: '12px',
+      lineHeight: '16px',
+      letterSpacing: '0.6px',
+      textTransform: 'uppercase',
+      color: '$textLow',
     },
     '.value': {
       fontSize: 32,

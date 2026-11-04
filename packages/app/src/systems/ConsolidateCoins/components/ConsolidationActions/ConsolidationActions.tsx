@@ -1,4 +1,4 @@
-import { Button } from '@fuel-ui/react';
+import { Button } from '@fuel-wallet/ui';
 import { store } from '~/store';
 import { Services } from '~/store';
 import { Layout } from '~/systems/Core';
@@ -19,6 +19,9 @@ const selectors = {
   consolidating(state: ConsolidateCoinsMachineState) {
     return state.hasTag('consolidating');
   },
+  consolidated(state: ConsolidateCoinsMachineState) {
+    return state.hasTag('consolidated');
+  },
 };
 
 export function ConsolidationActions({ onCancel }: ConsolidationActions) {
@@ -27,10 +30,26 @@ export function ConsolidationActions({ onCancel }: ConsolidationActions) {
   );
   const loading = useConsolidateCoinsSelector(selectors.loading);
   const consolidating = useConsolidateCoinsSelector(selectors.consolidating);
+  const consolidated = useConsolidateCoinsSelector(selectors.consolidated);
 
   const handleSubmit = () => {
     store.send(Services.consolidateCoins, { type: 'CONSOLIDATE_COINS' });
   };
+
+  if (consolidated) {
+    return (
+      <Layout.BottomBar>
+        <Button
+          intent="primary"
+          onPress={() =>
+            store.send(Services.consolidateCoins, { type: 'DONE' })
+          }
+        >
+          Done
+        </Button>
+      </Layout.BottomBar>
+    );
+  }
 
   return (
     <Layout.BottomBar>

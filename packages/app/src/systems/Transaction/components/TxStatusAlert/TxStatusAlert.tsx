@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Alert, Link } from '@fuel-ui/react';
+import { cssObj, Alert, Link } from '@fuel-wallet/ui';
 import { TransactionStatus } from 'fuels';
 import type { FC } from 'react';
 import { useMemo } from 'react';

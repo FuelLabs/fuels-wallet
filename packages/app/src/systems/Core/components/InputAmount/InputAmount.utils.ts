@@ -1,4 +1,4 @@
-import type { InputNumberProps } from '@fuel-ui/react';
+import type { InputNumberProps } from '@fuel-wallet/ui';
 
 export const isAmountAllowed: InputNumberProps['isAllowed'] = ({ value }) => {
   // Allow to clear the input

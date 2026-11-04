@@ -1,4 +1,4 @@
-import { toast } from '@fuel-ui/react';
+import { toast } from '@fuel-wallet/ui';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { store } from '~/store';
@@ -172,7 +172,7 @@ export const unlockMachine = createMachine(
         showError: false,
         maxAttempts: 1,
         async fetch({ input }) {
-          if (!input || !input?.password) {
+          if (!input?.password) {
             throw new Error('Password is required to unlock wallet');
           }
           try {

@@ -41,6 +41,7 @@ export const Pages = {
   accountAdd: route('/accounts/add'),
   logout: route('/accounts/logout'),
   assets: route('/assets'),
+  assetDetail: route<'assetId'>('/assets/view/:assetId'),
   assetsEdit: route<'name'>('/assets/edit/:name'),
   assetsAdd: route<'assetId'>('/assets/add/:assetId?'),
   consolidateCoins: route('/coins/consolidate'),

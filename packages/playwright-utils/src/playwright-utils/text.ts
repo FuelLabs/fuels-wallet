@@ -11,6 +11,8 @@ export async function hasText(
   const textFound = page.getByText(text, { exact }).nth(position);
   await expect(textFound).toHaveText(text, {
     useInnerText: true,
+    /* Buttons and labels render uppercase in the wallet's design system. */
+    ignoreCase: true,
     timeout,
   });
   return textFound;

@@ -3,7 +3,6 @@ import { defineConfig } from 'vite';
 import type { PluginOption } from 'vite';
 
 import manifest from './manifest.config.js';
-import { iconSpriteSubsetPlugin } from './vite-utils/icon-sprite-subset.plugin.js';
 import baseConfig from './vite-utils/vite.base.config.js';
 import { zipBuildPlugin } from './vite-utils/zip-build.plugin.js';
 
@@ -32,7 +31,6 @@ export default defineConfig({
     crx({
       manifest,
     }) as PluginOption,
-    iconSpriteSubsetPlugin({ outDir: OUT_DIR }),
     zipBuildPlugin({
       inDir: OUT_DIR,
       outDir: baseConfig.build?.outDir,

@@ -1,14 +1,14 @@
-import type { ThemeUtilsCSS } from '@fuel-ui/css';
-import { cssObj } from '@fuel-ui/css';
-import type { InputPasswordProps } from '@fuel-ui/react';
 import {
+  cssObj,
   Box,
   Icon,
   InputPassword,
   PasswordStrength,
   usePasswordStrength,
-} from '@fuel-ui/react';
-import unsafeList from '@fuel-ui/react/unsafe-passwords';
+  type ThemeUtilsCSS,
+  type InputPasswordProps,
+} from '@fuel-wallet/ui';
+import unsafeList from '@fuel-wallet/ui/unsafe-passwords';
 import { useEffect, useState } from 'react';
 import type { ControllerRenderProps, FieldValues } from 'react-hook-form';
 

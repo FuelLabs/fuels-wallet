@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Accordion, Box, Text, useFuelTheme } from '@fuel-ui/react';
+import { cssObj, Accordion, Box, Text, useFuelTheme } from '@fuel-wallet/ui';
 import type { OperationFunctionCall } from 'fuels';
 import ReactJson from 'react-json-view';
 import { coreStyles } from '~/systems/Core/styles';
@@ -85,13 +84,15 @@ const styles = {
       border: 'none',
     },
     '.fuel_Accordion-content': {
-      pt: 0,
-      pb: '$2',
       borderTop: '1px dashed $cardBorder',
 
       '&[data-state="open"]': {
         height: 'auto !important',
       },
+    },
+    '.fuel_Accordion-inner': {
+      pt: 0,
+      pb: '$2',
 
       '& > .fuel_box': {
         py: 0,

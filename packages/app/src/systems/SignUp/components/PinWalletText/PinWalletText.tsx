@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Image, Text } from '@fuel-ui/react';
+import { cssObj, Box, Image, Text } from '@fuel-wallet/ui';
 
 export function PinWalletText() {
   return (

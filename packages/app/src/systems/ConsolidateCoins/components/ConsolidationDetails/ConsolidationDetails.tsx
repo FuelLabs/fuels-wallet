@@ -1,4 +1,4 @@
-import { Box, Text } from '@fuel-ui/react';
+import { Box, Text } from '@fuel-wallet/ui';
 import { Layout } from '~/systems/Core';
 import { useBaseAsset } from '~/systems/Transaction/hooks/useBaseAsset';
 import { useConsolidateCoinsSelector } from '../../hooks/useConsolidateCoinsSelector';
@@ -30,9 +30,7 @@ export function ConsolidationDetails() {
   const coins = useConsolidateCoinsSelector(selectors.coins);
   const baseAsset = useBaseAsset();
 
-  const txs = useConsolidateCoinsSelector(
-    (state) => state.context.consolidation.txs
-  );
+  const txs = useConsolidateCoinsSelector((state) => state.context.txs);
 
   if (loading) {
     return (

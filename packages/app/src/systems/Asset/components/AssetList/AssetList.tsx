@@ -1,4 +1,4 @@
-import { CardList } from '@fuel-ui/react';
+import { CardList } from '@fuel-wallet/ui';
 import type { AssetAmount } from '@fuel-wallet/types';
 import type { FC } from 'react';
 import { memo, useMemo, useState } from 'react';
@@ -56,7 +56,7 @@ export const AssetList: AssetListComponent = ({
     setShowUnknown((s) => !s);
   }
   return (
-    <CardList>
+    <CardList className="fuel-stagger">
       {assetsToShow.map((asset, index) => (
         <AssetItem
           key={getAssetKey(asset, index)}

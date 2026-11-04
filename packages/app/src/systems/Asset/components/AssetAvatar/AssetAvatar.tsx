@@ -1,4 +1,4 @@
-import { Avatar } from '@fuel-ui/react';
+import { Avatar } from '@fuel-wallet/ui';
 import { memo } from 'react';
 
 type AssetAvatarProps = {

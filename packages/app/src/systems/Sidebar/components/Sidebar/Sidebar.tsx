@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Drawer, Icon, IconButton, Text } from '@fuel-ui/react';
+import { cssObj, Box, Drawer, Icon, IconButton, Text } from '@fuel-wallet/ui';
 import { forwardRef, useMemo } from 'react';
 import { APP_VERSION } from '~/config';
 import { useOverlay } from '~/systems/Overlay';
@@ -34,9 +33,7 @@ function SidebarContent() {
       </Box.Flex>
       <Menu items={menuItems} />
       <Box css={styles.version}>
-        <Text fontSize="xs" color="intentsBase8">
-          Version: {APP_VERSION}{' '}
-        </Text>
+        <Text css={styles.versionText}>Version {APP_VERSION}</Text>
       </Box>
     </>
   );
@@ -88,5 +85,12 @@ const styles = {
   version: cssObj({
     padding: '$3 $4',
     textAlign: 'center',
+  }),
+  versionText: cssObj({
+    fontFamily: '$mono',
+    fontSize: '11px',
+    letterSpacing: '0.6px',
+    textTransform: 'uppercase',
+    color: '$textLow',
   }),
 };

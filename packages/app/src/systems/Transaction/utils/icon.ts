@@ -1,4 +1,4 @@
-import type { Icons } from '@fuel-ui/react';
+import type { Icons } from '@fuel-wallet/ui';
 import { type Operation, OperationName } from 'fuels';
 
 import { getLabel } from '../hooks/useTxMetadata';

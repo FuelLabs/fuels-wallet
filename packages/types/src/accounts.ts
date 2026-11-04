@@ -18,6 +18,8 @@ export type Account = {
   publicKey: string;
   isHidden?: boolean;
   isCurrent?: boolean;
+  /** When the account was last made current, in ms. Lists order by it. */
+  lastUsedAt?: number;
 };
 
 export type AccountBalance = {

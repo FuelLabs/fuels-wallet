@@ -4,7 +4,7 @@ import type { BN, BNInput } from 'fuels';
 import { Address, type Provider, bn, isB256 } from 'fuels';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import type { AccountsMachineState } from '~/systems/Account';
 import { Pages } from '~/systems/Core';
@@ -19,6 +19,7 @@ import { useProvider } from '~/systems/Network/hooks/useProvider';
 import { formatGasLimit } from '~/systems/Transaction';
 import { sendMachine } from '../machines/sendMachine';
 import type { MachineContext, SendMachineState } from '../machines/sendMachine';
+import { courier } from '~/systems/Transaction/courier';
 
 export enum SendStatus {
   loading = 'loading',
@@ -319,10 +320,14 @@ export function useSend() {
     () => yupResolver(schemaFactory(provider)),
     [provider]
   );
+  const location = useLocation();
   const form = useForm<SendFormValues>({
     resolver,
     mode: 'onSubmit',
-    defaultValues: DEFAULT_VALUES,
+    defaultValues: {
+      ...DEFAULT_VALUES,
+      asset: (location.state as { assetId?: string } | null)?.assetId ?? '',
+    },
     context: {
       balances: account?.balances,
       baseFee,
@@ -365,6 +370,7 @@ export function useSend() {
   }
 
   function cancel() {
+    courier.cancel();
     service.send('BACK');
   }
 
@@ -374,6 +380,7 @@ export function useSend() {
       form.trigger();
       return;
     }
+    courier.depart(courier.single('source'));
     service.send('CONFIRM');
   }
 

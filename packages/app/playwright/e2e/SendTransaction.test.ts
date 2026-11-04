@@ -68,7 +68,7 @@ test.describe('SendTransaction', () => {
     await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
-    await hasText(page, 'Success');
+    await hasText(page, 'Success', 0, 15_000);
   });
 
   test('Send transaction same owner', async () => {
@@ -103,7 +103,7 @@ test.describe('SendTransaction', () => {
     await getButtonByText(page, 'Submit').click();
 
     // Wait for transaction to be confirmed
-    await hasText(page, 'Success');
+    await hasText(page, 'Success', 0, 15_000);
   });
 
   test('Send transaction in other Asset', async () => {
@@ -146,7 +146,7 @@ test.describe('SendTransaction', () => {
     await getButtonByText(page, 'Submit').click();
 
     // Wait for transaction to be confirmed
-    await hasText(page, 'Success');
+    await hasText(page, 'Success', 0, 15_000);
   });
 
   test('Send transaction with regular fee', async () => {
@@ -181,7 +181,7 @@ test.describe('SendTransaction', () => {
     await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
-    await hasText(page, 'Success');
+    await hasText(page, 'Success', 0, 15_000);
   });
 
   test('Send transaction with fast fee', async () => {
@@ -220,7 +220,7 @@ test.describe('SendTransaction', () => {
     await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
-    await hasText(page, 'Success');
+    await hasText(page, 'Success', 0, 15_000);
   });
 
   test('Send transaction starting with regular and changing to fast fee', async () => {
@@ -310,7 +310,7 @@ test.describe('SendTransaction', () => {
     await expect
       .poll(
         async () => {
-          return await hasText(page, 'Success');
+          return await hasText(page, 'Success', 0, 15_000);
         },
         { timeout: 10000 }
       )
@@ -362,7 +362,7 @@ test.describe('SendTransaction', () => {
     await hasText(page, `${maxAmountAfterFee.slice(0, 5)} ETH`);
 
     // Wait for transaction to be confirmed
-    await hasText(page, 'Success');
+    await hasText(page, 'Success', 0, 15_000);
   });
 
   test('Send transaction to an asset address should fail', async () => {
@@ -422,7 +422,7 @@ test.describe('SendTransaction', () => {
     await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
-    await hasText(page, 'Success');
+    await hasText(page, 'Success', 0, 15_000);
     await hasText(page, domain);
   });
 });

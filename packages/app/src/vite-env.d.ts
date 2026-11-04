@@ -34,7 +34,7 @@ declare module '*?script' {
   export default src;
 }
 
-declare module '@fuel-ui/react/unsafe-passwords' {
+declare module '@fuel-wallet/ui/unsafe-passwords' {
   const src: string[];
   export default src;
 }

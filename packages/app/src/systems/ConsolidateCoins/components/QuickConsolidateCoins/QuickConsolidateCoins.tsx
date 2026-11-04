@@ -1,5 +1,12 @@
-import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Icon, IconButton, Text, VStack } from '@fuel-ui/react';
+import {
+  cssObj,
+  Alert,
+  Box,
+  Icon,
+  IconButton,
+  Text,
+  VStack,
+} from '@fuel-wallet/ui';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentAccount } from '~/systems/Account/hooks/useCurrentAccount';
@@ -68,10 +75,13 @@ export const QuickConsolidateCoins = () => {
 
 const styles = {
   wrapper: cssObj({
-    position: 'fixed',
+    // Anchored to the wallet frame, so it stays inside it when opened in a tab.
+    position: 'absolute',
     paddingLeft: '$4',
     paddingRight: '15px',
     paddingBottom: '$4',
+    left: 0,
+    right: 0,
     bottom: 0,
     zIndex: '$10',
     opacity: 0,

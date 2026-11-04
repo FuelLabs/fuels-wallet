@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Heading } from '@fuel-ui/react';
+import { cssObj, Box, Heading } from '@fuel-wallet/ui';
 
 export type HeaderProps = {
   title: string;

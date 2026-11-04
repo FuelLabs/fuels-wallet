@@ -46,6 +46,39 @@ type MachineEvents =
       input?: never;
     };
 
+/** The history fetch; `showError` toasts failures. */
+export function fetchTransactionHistory(showError: boolean) {
+  return FetchMachine.create<
+    TxInputs['getTransactionHistory'],
+    MachineServices['getTransactionHistory']['data']
+  >({
+    showError,
+    async fetch({ input }) {
+      if (!input) {
+        throw new Error('Missing input');
+      }
+
+      const { address, pagination } = input;
+
+      const selectedNetwork = await NetworkService.getSelectedNetwork();
+      const { transactionHistory, pageInfo } =
+        await TxService.getTransactionHistory({
+          address,
+          providerUrl: selectedNetwork?.url,
+          pagination,
+        });
+
+      return {
+        transactionHistory,
+        pageInfo: {
+          hasNextPage: pageInfo.hasNextPage,
+          endCursor: pageInfo.endCursor,
+        },
+      };
+    },
+  });
+}
+
 export const transactionHistoryMachine = createMachine(
   {
     tsTypes: {} as import('./transactionHistoryMachine.typegen').Typegen0,
@@ -188,35 +221,7 @@ export const transactionHistoryMachine = createMachine(
     },
     services: {
       enrichDomains: (ctx) => enrichDomains(ctx.transactionHistory || []),
-      getTransactionHistory: FetchMachine.create<
-        TxInputs['getTransactionHistory'],
-        MachineServices['getTransactionHistory']['data']
-      >({
-        showError: true,
-        async fetch({ input }) {
-          if (!input) {
-            throw new Error('Missing input');
-          }
-
-          const { address, pagination } = input;
-
-          const selectedNetwork = await NetworkService.getSelectedNetwork();
-          const { transactionHistory, pageInfo } =
-            await TxService.getTransactionHistory({
-              address,
-              providerUrl: selectedNetwork?.url,
-              pagination,
-            });
-
-          return {
-            transactionHistory,
-            pageInfo: {
-              hasNextPage: pageInfo.hasNextPage,
-              endCursor: pageInfo.endCursor,
-            },
-          };
-        },
-      }),
+      getTransactionHistory: fetchTransactionHistory(true),
     },
   }
 );

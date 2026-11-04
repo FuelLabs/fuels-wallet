@@ -1,5 +1,12 @@
-import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Card, Copyable, Dialog, Text } from '@fuel-ui/react';
+import {
+  cssObj,
+  Alert,
+  Box,
+  Card,
+  Copyable,
+  Dialog,
+  Text,
+} from '@fuel-wallet/ui';
 import { styles as coreStyles } from '~/systems/Core';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 import { UnlockCard } from '~/systems/Unlock';

@@ -1,4 +1,4 @@
-import { Button } from '@fuel-ui/react';
+import { Button } from '@fuel-wallet/ui';
 
 interface UnknownAssetsButtonProps {
   showUnknown: boolean;

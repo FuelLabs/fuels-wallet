@@ -1,7 +1,11 @@
-import type { ThemeUtilsCSS } from '@fuel-ui/css';
-import { cssObj } from '@fuel-ui/css';
-import type { ImageProps } from '@fuel-ui/react';
-import { Box, ContentLoader, Image } from '@fuel-ui/react';
+import {
+  cssObj,
+  Box,
+  ContentLoader,
+  Image,
+  type ThemeUtilsCSS,
+  type ImageProps,
+} from '@fuel-wallet/ui';
 import { useState } from 'react';
 
 export type ImageLoaderProps = Omit<ImageProps, 'width' | 'height'> & {

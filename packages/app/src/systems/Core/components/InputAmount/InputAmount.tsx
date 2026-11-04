@@ -4,14 +4,10 @@
  * To avoid overhead of versions we will use the component directly inside the wallet
  **/
 
-import { cssObj } from '@fuel-ui/css';
-import { HStack, VStack } from '@fuel-ui/react';
-import type { BN } from 'fuels';
-import { DEFAULT_DECIMAL_UNITS, bn, format } from 'fuels';
-import { useEffect, useState } from 'react';
-import type { FC } from 'react';
-
 import {
+  cssObj,
+  HStack,
+  VStack,
   Avatar,
   Box,
   Button,
@@ -20,11 +16,16 @@ import {
   Image,
   Input,
   InputAmountLoader,
-  type InputNumberProps,
-  type InputProps,
   Text,
   Tooltip,
-} from '@fuel-ui/react';
+  type InputNumberProps,
+  type InputProps,
+} from '@fuel-wallet/ui';
+import type { BN } from 'fuels';
+import { DEFAULT_DECIMAL_UNITS, bn } from 'fuels';
+import { useEffect, useState } from 'react';
+import type { FC } from 'react';
+
 import { formatAmount } from '../../utils';
 import { isAmountAllowed } from './InputAmount.utils';
 
@@ -235,7 +236,7 @@ export const InputAmount: InputAmountComponent = ({
         )}
       </Flex>
       {!hiddenBalance && (
-        <VStack gap="0">
+        <VStack gap="0" css={styles.footer}>
           <Box css={styles.dashedHorizontalSeparator} />
 
           <HStack justify="between" css={styles.inputAmountBalances}>
@@ -282,7 +283,8 @@ const styles = {
       is: ['display'],
       width: '100%',
       boxSizing: 'border-box',
-      fontSize: '$md',
+      fontSize: '20px',
+      lineHeight: '28px',
       fontFamily: '$mono',
     },
 
@@ -359,13 +361,19 @@ const styles = {
     fontSize: '$sm',
     fontWeight: '$normal',
   }),
+  footer: cssObj({
+    alignSelf: 'stretch',
+
+    '.fuel_Text': {
+      fontFamily: '$mono',
+      fontSize: '12px',
+      color: '$textLow',
+    },
+  }),
   dashedHorizontalSeparator: cssObj({
     width: '100%',
     height: 0,
-    backgroundColor: '$intentsBase8',
-    // Only one side of the border should be visible, to avoid extra "thickness"
-    borderTop: '1px dashed $intentsBase8',
+    borderTop: '1px solid var(--fuel-line)',
     my: '$2',
-    color: 'textSubtext',
   }),
 };

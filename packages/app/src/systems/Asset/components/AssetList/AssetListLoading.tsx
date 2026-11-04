@@ -1,4 +1,4 @@
-import { CardList } from '@fuel-ui/react';
+import { CardList } from '@fuel-wallet/ui';
 
 import { AssetItem } from '../AssetItem';
 
