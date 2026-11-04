@@ -119,14 +119,7 @@ jobs:
 
       # The changesets action opens a version PR instead of publishing while any changeset file exists, even one that bumps no package
       - name: Remove empty changesets
-        run: |
-          for file in .changeset/*.md; do
-            [ "$(basename "$file")" = "README.md" ] && continue
-            if ! awk '/^---$/ { count++; next } count == 1' "$file" | grep -qE ':[[:space:]]*(patch|minor|major)[[:space:]]*$'; then
-              echo "Removing empty changeset $file"
-              rm "$file"
-            fi
-          done
+        run: pnpm changeset:remove-empty
 
       - name: Publish to NPM
         id: changesets
@@ -175,7 +168,7 @@ jobs:
           echo "::endgroup::"
 
       - name: Fail when nothing was published
-        if: steps.debug-published.outputs.has_published_packages != 'true'
+        if: success() && steps.debug-published.outputs.has_published_packages != 'true'
         run: |
           echo "::error::Release commit ${{ github.sha }} published nothing. When changeset files are still in .changeset the changesets action opens a version PR (#${{ steps.changesets.outputs.pullRequestNumber }}) instead of publishing; merging that PR publishes v${{ env.BUILD_VERSION }}."
           exit 1
