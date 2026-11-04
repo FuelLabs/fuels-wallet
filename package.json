@@ -38,6 +38,7 @@
     "changeset:publish": "tsx ./scripts/changeset/changeset-publish.ts",
     "changeset:next": "tsx ./scripts/changeset/changeset-next.mts",
     "changeset:check": "changeset status --since=master",
+    "changeset:remove-empty": "tsx ./scripts/changeset/remove-empty-changesets.mts",
     "changeset:update-changelog": "tsx ./scripts/changeset/update-changelog.mts",
     "changeset:get-latest-release": "tsx ./scripts/changeset/get-latest-release.mts",
     "deps:update": "updates -gu && pnpm -r exec updates -gu",
