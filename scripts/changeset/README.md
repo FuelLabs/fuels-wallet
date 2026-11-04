@@ -54,6 +54,12 @@ Prepares packages for pre-release publishing:
 - Generates a universal patch changeset for all packages
 - Useful for creating preview releases
 
+### `changeset:remove-empty`
+```bash
+pnpm changeset:remove-empty
+```
+Deletes changeset files that bump no package. The release workflow runs it before publishing, since the changesets action opens a version PR instead of publishing while any changeset file exists.
+
 ### `get-full-changelog.mts`
 Core module that generates rich changelog content by:
 - Extracting PR information from changeset commits
@@ -71,6 +77,7 @@ These scripts are used in the GitHub Actions workflows:
 
 ### Release Workflow (`.github/workflows/release-npm-changeset.yaml`)
 - Uses `changeset:get-latest-release` for version comparison
+- Uses `changeset:remove-empty` so a no-op changeset cannot stop the publish
 - Uses `changeset:update-changelog` for release description formatting
 - Uses `FuelLabs/changesets-action@v2.0.0` for publishing
 
