@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Icon, IconButton, Input } from '@fuel-ui/react';
+import { cssObj, Icon, IconButton, Input } from '@fuel-wallet/ui';
 
 type HTMLInputProps = React.InputHTMLAttributes<HTMLInputElement>;
 export type InputFieldProps = Omit<HTMLInputProps, 'size'> & {

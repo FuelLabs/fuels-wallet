@@ -1,4 +1,4 @@
-import { Text } from '@fuel-ui/react';
+import { Text } from '@fuel-wallet/ui';
 import type { ReactNode } from 'react';
 
 /**

@@ -1,7 +1,13 @@
-import type { ThemeUtilsCSS } from '@fuel-ui/css';
-import { cssObj } from '@fuel-ui/css';
-import { Box, Copyable, Icon, IconButton, Text } from '@fuel-ui/react';
-import { Address, type B256Address, type ChecksumAddress } from 'fuels';
+import {
+  cssObj,
+  Box,
+  Copyable,
+  Icon,
+  IconButton,
+  Text,
+  type ThemeUtilsCSS,
+} from '@fuel-wallet/ui';
+import { Address } from 'fuels';
 import { useMemo } from 'react';
 import { highlightText, shortAddress } from '~/systems/Core';
 import { useExplorerLink } from '../../hooks/useExplorerLink';

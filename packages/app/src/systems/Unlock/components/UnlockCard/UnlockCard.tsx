@@ -1,5 +1,5 @@
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
   Box,
   Button,
   ButtonLink,
@@ -9,7 +9,7 @@ import {
   Icon,
   IconButton,
   Text,
-} from '@fuel-ui/react';
+} from '@fuel-wallet/ui';
 import { store } from '~/store';
 
 import type { UnlockFormValues } from '../../hooks';

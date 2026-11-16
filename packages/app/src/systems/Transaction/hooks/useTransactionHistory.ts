@@ -3,7 +3,10 @@ import type { Address } from 'fuels';
 import { useCallback, useEffect } from 'react';
 
 import type { TransactionHistoryMachineState } from '../machines';
-import { transactionHistoryMachine } from '../machines';
+import {
+  fetchTransactionHistory,
+  transactionHistoryMachine,
+} from '../machines';
 import type { TxInputs } from '../services';
 
 const selectors = {
@@ -24,10 +27,21 @@ const selectors = {
 
 type UseTransactionHistoryProps = {
   address?: string | Address;
+  /** Fail silently, for screens where history is only a nicety. */
+  quiet?: boolean;
 };
 
-export function useTransactionHistory({ address }: UseTransactionHistoryProps) {
-  const service = useInterpret(() => transactionHistoryMachine);
+export function useTransactionHistory({
+  address,
+  quiet,
+}: UseTransactionHistoryProps) {
+  const service = useInterpret(() =>
+    quiet
+      ? transactionHistoryMachine.withConfig({
+          services: { getTransactionHistory: fetchTransactionHistory(false) },
+        })
+      : transactionHistoryMachine
+  );
   const { send } = service;
   const isFetching = useSelector(service, selectors.isFetching);
   const isFetchingNextPage = useSelector(service, selectors.isFetchingNextPage);

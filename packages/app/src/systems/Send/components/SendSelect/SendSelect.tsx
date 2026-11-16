@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Form, Input, Text } from '@fuel-ui/react';
+import { cssObj, Box, Form, Text } from '@fuel-wallet/ui';
 import { motion } from 'framer-motion';
 import { type BN, bn } from 'fuels';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -10,6 +9,7 @@ import {
   MotionFlex,
   MotionStack,
   animations,
+  formatAmount,
 } from '~/systems/Core';
 
 import { useController, useWatch } from 'react-hook-form';
@@ -58,6 +58,16 @@ export function SendSelect({
   );
 
   const decimals = selectedAsset?.asset?.decimals;
+  /* What the courier carries to the review card, formatted the same way. */
+  const courierLabel = useMemo(() => {
+    if (!amount.value || !selectedAsset?.asset) return undefined;
+    const units = decimals || 0;
+    const value = formatAmount({
+      amount: amount.value,
+      options: { units, precision: Math.min(units, 3) },
+    });
+    return `${value} ${selectedAsset.asset.symbol || 'Unknown'}`;
+  }, [amount.value, decimals, selectedAsset]);
   const rate = selectedAsset?.asset?.rate;
   const amountInUsd = useMemo(() => {
     if (amount.value == null || rate == null || decimals == null) return '$0';
@@ -127,7 +137,7 @@ export function SendSelect({
 
   return (
     <MotionContent {...animations.slideInTop()}>
-      <Box.Stack gap="$3">
+      <Box.Stack gap="$5">
         <Box.Flex css={styles.row}>
           <Text as="span" css={styles.title}>
             Asset
@@ -144,7 +154,7 @@ export function SendSelect({
                   setWatchMax(false);
                   field.onChange(asset);
                 },
-                [form.setValue, field.onChange]
+                [field.onChange]
               );
 
               return (
@@ -163,13 +173,16 @@ export function SendSelect({
           </Text>
           <AddressField warningMessage={warningMessage} />
         </Box.Flex>
-        <Box.Stack gap="$3">
+        <Box.Stack gap="$2">
           <Text as="span" css={styles.title}>
             Amount
           </Text>
           <Form.Control
             isRequired
             isInvalid={Boolean(errorMessage || amountFieldState.error)}
+            data-courier="source"
+            data-courier-label={courierLabel}
+            data-courier-icon={selectedAsset?.asset?.icon}
           >
             <InputAmount
               name={amount.name}
@@ -216,7 +229,7 @@ export function SendSelect({
           baseFee.gt(0) &&
           regularTip &&
           fastTip && (
-            <MotionStack {...animations.slideInTop()} gap="$3">
+            <MotionStack {...animations.slideInTop()} gap="$2">
               <Text as="span" css={styles.titleFee}>
                 Fee (network)
               </Text>
@@ -240,30 +253,37 @@ const styles = {
     flex: 1,
   }),
   row: cssObj({
-    alignItems: 'flex-start',
-    gap: '$4',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    gap: '$2',
 
     '.fuel_form--control': {
       flex: 1,
     },
+    /* Same height as the asset select above it. */
+    '.fuel_Input': {
+      minHeight: '36px !important',
+    },
     '.fuel_Input > input': {
-      px: '$3',
       fontFamily: '$sans',
       fontWeight: '$normal',
     },
   }),
   title: cssObj({
-    pt: '$2',
-    color: '$intentsBase12',
-    fontSize: '$md',
-    fontWeight: '$normal',
-    width: '48px',
+    fontFamily: '$mono',
+    fontSize: '12px',
+    lineHeight: '16px',
+    letterSpacing: '0.6px',
+    textTransform: 'uppercase',
+    color: '$textLow',
   }),
   titleFee: cssObj({
-    pt: '$2',
-    color: '$intentsBase12',
-    fontSize: '$md',
-    fontWeight: '$normal',
+    fontFamily: '$mono',
+    fontSize: '12px',
+    lineHeight: '16px',
+    letterSpacing: '0.6px',
+    textTransform: 'uppercase',
+    color: '$textLow',
   }),
   alert: cssObj({
     fontSize: '$sm',

@@ -1,5 +1,5 @@
-import * as css from '@fuel-ui/css';
-import { Button, CardList, Dialog, Icon } from '@fuel-ui/react';
+import * as css from '@fuel-wallet/ui';
+import { Button, CardList, Dialog, Icon } from '@fuel-wallet/ui';
 import { DEFAULT_NETWORKS } from '~/networks';
 import { coreStyles } from '~/systems/Core/styles';
 import { NetworkItem, useNetworks } from '~/systems/Network';
@@ -49,7 +49,9 @@ const styles = {
   description: css.cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
     overflowY: 'scroll !important',
+    /* The always-on 16px scrollbar gutter is the right inset, matching the left. */
     paddingLeft: '$4',
+    paddingRight: '0 !important',
     flex: 1,
   }),
 };

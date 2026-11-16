@@ -4,7 +4,11 @@ import type { BrowserContext } from '@playwright/test';
 import { test as base, chromium } from '@playwright/test';
 import { delay } from '../../commons';
 const __dirname = new URL('.', import.meta.url).pathname;
-const pathToExtension = path.join(__dirname, '../../../dist-crx');
+const pathToExtension = path.resolve(
+  __dirname,
+  '../../..',
+  process.env.CRX_OUT || 'dist-crx'
+);
 
 export const test = base.extend<{
   extensionId: string;

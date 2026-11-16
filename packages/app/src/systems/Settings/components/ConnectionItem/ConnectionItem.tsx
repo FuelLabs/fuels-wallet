@@ -1,5 +1,12 @@
-import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, CardList, Icon, IconButton, Text } from '@fuel-ui/react';
+import {
+  cssObj,
+  Avatar,
+  Box,
+  CardList,
+  Icon,
+  IconButton,
+  Text,
+} from '@fuel-wallet/ui';
 import type { Connection } from '@fuel-wallet/types';
 import { motion } from 'framer-motion';
 import type { FC } from 'react';

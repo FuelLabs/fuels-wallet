@@ -1,4 +1,4 @@
-import type { Colors } from '@fuel-ui/css';
+import type { Colors } from '@fuel-wallet/ui';
 import { TransactionStatus } from 'fuels';
 
 export const getTxStatusColor = (status?: TransactionStatus): Colors => {

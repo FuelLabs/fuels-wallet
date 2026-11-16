@@ -1,12 +1,12 @@
-import { cssObj } from '@fuel-ui/css';
 import {
-  type AvatarProps,
+  cssObj,
   Box,
-  type FlexProps,
   Icon,
   IconButton,
   useFuelTheme,
-} from '@fuel-ui/react';
+  type AvatarProps,
+  type FlexProps,
+} from '@fuel-wallet/ui';
 import { BakoIdAvatar } from '../BakoIdAvatar';
 
 interface NameSystemAvatarProps

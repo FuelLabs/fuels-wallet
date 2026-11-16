@@ -1,5 +1,8 @@
-import type { ContentLoaderProps } from '@fuel-ui/react';
-import { CardList, ContentLoader } from '@fuel-ui/react';
+import {
+  CardList,
+  ContentLoader,
+  type ContentLoaderProps,
+} from '@fuel-wallet/ui';
 
 export const ConnectionItemLoader = (props: ContentLoaderProps) => (
   <CardList.Item css={{ padding: '$0 !important' }}>

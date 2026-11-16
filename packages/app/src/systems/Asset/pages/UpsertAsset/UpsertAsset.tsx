@@ -1,6 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Focus, Text } from '@fuel-ui/react';
-import { isB256 } from 'fuels';
+import { cssObj, Box, Button, Focus, Text } from '@fuel-wallet/ui';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Layout } from '~/systems/Core';
 

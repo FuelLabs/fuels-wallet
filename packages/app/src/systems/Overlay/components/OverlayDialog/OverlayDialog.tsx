@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Dialog } from '@fuel-ui/react';
+import { cssObj, Dialog } from '@fuel-wallet/ui';
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { EditAccount, Logout } from '~/systems/Account';
 import { Accounts } from '~/systems/Account/pages/Accounts';

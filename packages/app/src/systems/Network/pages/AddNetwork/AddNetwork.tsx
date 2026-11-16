@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, Focus, Icon } from '@fuel-ui/react';
+import { Box, Button, Dialog, Focus, Icon } from '@fuel-wallet/ui';
 import { motion } from 'framer-motion';
 import { useEffect, useMemo } from 'react';
 import { useWatch } from 'react-hook-form';

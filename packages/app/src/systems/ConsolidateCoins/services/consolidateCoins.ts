@@ -4,6 +4,7 @@ import {
   type Coin,
   type CursorPaginationArgs,
   RESOURCES_PAGE_SIZE_LIMIT,
+  type ScriptTransactionRequest,
   Wallet,
 } from 'fuels';
 import { WalletLockedCustom } from '~/systems/Core';
@@ -27,7 +28,15 @@ export type ConsolidateCoinsInputs = {
     account: Account;
     coins: Coin[];
   };
+  submitConsolidation: {
+    providerUrl: string;
+    account: Account;
+    txs: ScriptTransactionRequest[];
+    onStep: (step: number, status: ConsolidationStepStatus) => void;
+  };
 };
+
+export type ConsolidationStepStatus = 'pending' | 'sending' | 'done' | 'failed';
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class ConsolidateCoinsService {
@@ -98,5 +107,24 @@ export class ConsolidateCoinsService {
       });
 
     return consolidation;
+  }
+
+  /** Sends each transaction in turn; a failed one does not stop the rest. */
+  static async submitConsolidation(
+    input: ConsolidateCoinsInputs['submitConsolidation']
+  ) {
+    const provider = await createProvider(input.providerUrl);
+    const wallet = new WalletLockedCustom(input.account.address, provider);
+
+    for (const [step, tx] of input.txs.entries()) {
+      input.onStep(step, 'sending');
+      try {
+        const response = await wallet.sendTransaction(tx);
+        await response.waitForResult();
+        input.onStep(step, 'done');
+      } catch {
+        input.onStep(step, 'failed');
+      }
+    }
   }
 }

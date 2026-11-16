@@ -1,7 +1,10 @@
-import type { ThemeUtilsCSS } from '@fuel-ui/css';
-import { cssObj } from '@fuel-ui/css';
-import type { IconButtonProps } from '@fuel-ui/react';
-import { Icon, IconButton } from '@fuel-ui/react';
+import {
+  cssObj,
+  Icon,
+  IconButton,
+  type ThemeUtilsCSS,
+  type IconButtonProps,
+} from '@fuel-wallet/ui';
 
 type ButtonCloseProps = IconButtonProps & {
   css?: ThemeUtilsCSS;

@@ -1,3 +1,4 @@
+import { markLanded } from '~/systems/Core/utils/landed';
 import type { Account } from '@fuel-wallet/types';
 import { Signer } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
@@ -52,7 +53,11 @@ export const importAccountMachine = createMachine(
               target: 'idle',
             },
             {
-              actions: ['notifyUpdateAccounts', 'redirectToHome'],
+              actions: [
+                'notifyUpdateAccounts',
+                'markAccountLanded',
+                'redirectToHome',
+              ],
               target: 'idle',
             },
           ],
@@ -64,6 +69,9 @@ export const importAccountMachine = createMachine(
     actions: {
       notifyUpdateAccounts: () => {
         store.refreshAccounts();
+      },
+      markAccountLanded: (_, ev) => {
+        markLanded(`account:${ev.data.address}`);
       },
       redirectToHome() {
         store.closeOverlay();

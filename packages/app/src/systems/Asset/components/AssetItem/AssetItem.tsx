@@ -1,5 +1,5 @@
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
   Avatar,
   Badge,
   Box,
@@ -12,10 +12,11 @@ import {
   Text,
   Tooltip,
   VStack,
-} from '@fuel-ui/react';
-import { type FC, useMemo } from 'react';
+} from '@fuel-wallet/ui';
+import { type FC, type KeyboardEvent, type MouseEvent, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Pages, shortAddress } from '~/systems/Core';
+import { useLanded } from '~/systems/Core/utils/landed';
 
 import { AssetRemoveDialog } from '../AssetRemoveDialog';
 
@@ -36,6 +37,10 @@ export type AssetItemProps = {
   onEdit?: (assetId: string) => void;
   shouldShowAddAssetBtn?: boolean;
   shouldShowCopyAssetAddress?: boolean;
+  /** Makes the whole row open the asset. Inner buttons keep their own action. */
+  onPress?: () => void;
+  /** Arrived since this account last looked. */
+  isNew?: boolean;
 };
 
 type AssetItemComponent = FC<AssetItemProps> & {
@@ -51,6 +56,8 @@ export const AssetItem: AssetItemComponent = ({
   onEdit,
   shouldShowAddAssetBtn,
   shouldShowCopyAssetAddress,
+  onPress,
+  isNew,
 }) => {
   const navigate = useNavigate();
   const fuelAssetFromInputAsset = useFuelAsset({ asset: inputAsset });
@@ -69,6 +76,7 @@ export const AssetItem: AssetItemComponent = ({
   }, [inputFuelAsset, inputAsset, fuelAssetFromInputAsset]);
 
   const { assetId, name, symbol, icon, decimals, isCustom } = asset ?? {};
+  const isLanded = useLanded(assetId ? `asset:${assetId}` : undefined);
 
   const { ref, open } = useTruncation<HTMLHeadingElement>();
 
@@ -153,11 +161,28 @@ export const AssetItem: AssetItemComponent = ({
 
   return (
     <CardList.Item
+      className={isLanded ? 'fuel-courier-hit' : undefined}
       rightEl={getRightEl()}
       css={{
         alignItems: 'center',
         '& > .fuel_Box-flex:first-child': { minWidth: 140 },
+        ...(onPress && styles.pressable),
       }}
+      {...(onPress && {
+        role: 'button',
+        tabIndex: 0,
+        onClick: (e: MouseEvent<HTMLElement>) => {
+          if ((e.target as HTMLElement).closest('button, a')) return;
+          onPress();
+        },
+        onKeyDown: (e: KeyboardEvent<HTMLElement>) => {
+          if (e.target !== e.currentTarget) return;
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onPress();
+          }
+        },
+      })}
     >
       <Box css={styles.icon}>
         {icon ? (
@@ -187,6 +212,12 @@ export const AssetItem: AssetItemComponent = ({
                 icon={Icon.is('AlertTriangle')}
               />
             </Tooltip>
+          )}
+          {isNew && (
+            <Text as="span" css={styles.assetNew}>
+              <span className="fuel-square" aria-hidden />
+              New
+            </Text>
           )}
           {asset.isNft && (
             <Badge variant="ghost" intent="primary" css={styles.assetNft}>
@@ -223,6 +254,18 @@ export const AssetItem: AssetItemComponent = ({
 AssetItem.Loader = AssetItemLoader;
 
 const styles = {
+  pressable: cssObj({
+    cursor: 'pointer',
+    transition: 'background-color 200ms',
+
+    '@media (hover: hover)': {
+      '&:hover': { background: '$muted' },
+    },
+    '&:focus-visible': {
+      outline: '2px solid $focus',
+      outlineOffset: '-2px',
+    },
+  }),
   icon: cssObj({
     height: 36,
     width: 36,
@@ -278,6 +321,18 @@ const styles = {
     '.fuel_Button:hover': {
       color: '$intentsBase11 !important',
     },
+  }),
+  assetNew: cssObj({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '$1',
+    ml: '$2',
+    fontFamily: '$mono',
+    fontSize: '11px',
+    letterSpacing: '0.04em',
+    textTransform: 'uppercase',
+    color: '$textMid',
+    flexShrink: 0,
   }),
   assetNft: cssObj({
     ml: '$2',

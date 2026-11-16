@@ -1,4 +1,4 @@
-import { Box, HelperIcon, Input } from '@fuel-ui/react';
+import { Box, HelperIcon, Input } from '@fuel-wallet/ui';
 import { ControlledField } from '~/systems/Core';
 
 import type { UseAccountFormReturn } from '../../hooks/useAccountForm';

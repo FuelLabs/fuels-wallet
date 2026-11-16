@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Dialog, Text } from '@fuel-ui/react';
+import { cssObj, Alert, Box, Dialog, Text } from '@fuel-wallet/ui';
 import { useCurrentAccount } from '~/systems/Account/hooks/useCurrentAccount';
 import { Mnemonic, styles as coreStyles } from '~/systems/Core';
 import { OverlayDialogTopbar, useOverlay } from '~/systems/Overlay';

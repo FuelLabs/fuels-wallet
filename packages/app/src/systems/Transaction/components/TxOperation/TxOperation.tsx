@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Box, Icon, Text } from '@fuel-ui/react';
+import { cssObj, Box, Icon, Text } from '@fuel-wallet/ui';
 import { useState } from 'react';
 import { MotionBox } from '~/systems/Core';
 import type { SimplifiedOperation } from '../../types';
@@ -61,7 +60,7 @@ export function TxOperation({
             }}
             transition={{
               duration: 0.3,
-              ease: 'easeInOut',
+              ease: [0.16, 1, 0.3, 1],
               opacity: { duration: 0.2 },
             }}
             css={styles.expandedOperations}
@@ -109,7 +108,12 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '$2',
-    color: '$gray12',
+    fontFamily: '$mono',
+    fontSize: '12px',
+    lineHeight: '16px',
+    letterSpacing: '0.6px',
+    textTransform: 'uppercase',
+    color: '$textLow',
   }),
   expandedOperations: cssObj({
     display: 'flex',
@@ -119,8 +123,7 @@ const styles = {
   }),
   cardStyle: cssObj({
     width: '100%',
-    borderRadius: '8px',
     overflow: 'hidden',
-    boxShadow: '0px 2px 6px -1px #2020201A, 0px 0px 0px 1px #2020201F',
+    border: '1px solid var(--fuel-line)',
   }),
 };

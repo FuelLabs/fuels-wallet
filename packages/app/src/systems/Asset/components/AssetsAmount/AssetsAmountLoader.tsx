@@ -1,5 +1,4 @@
-import type { ContentLoaderProps } from '@fuel-ui/react';
-import { Box, ContentLoader } from '@fuel-ui/react';
+import { Box, ContentLoader, type ContentLoaderProps } from '@fuel-wallet/ui';
 
 import { styles } from './styles';
 

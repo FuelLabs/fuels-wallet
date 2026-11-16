@@ -1,5 +1,4 @@
-import type { ThemeUtilsCSS } from '@fuel-ui/css';
-import { Form, Tooltip } from '@fuel-ui/react';
+import { Form, Tooltip, type ThemeUtilsCSS } from '@fuel-wallet/ui';
 import { mergeRefs } from '@react-aria/utils';
 import type { ReactElement, ReactNode } from 'react';
 import { forwardRef, useId } from 'react';

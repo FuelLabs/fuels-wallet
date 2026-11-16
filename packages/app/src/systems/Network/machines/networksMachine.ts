@@ -1,3 +1,4 @@
+import { markLanded } from '~/systems/Core/utils/landed';
 import type { NetworkData } from '@fuel-wallet/types';
 import {
   type InterpreterFrom,
@@ -155,6 +156,7 @@ export const networksMachine = createMachine(
             {
               actions: [
                 'addSelectedNetwork',
+                'markNetworkLanded',
                 'reloadAssets',
                 'notifyUpdateAccounts',
                 'redirectToHome',
@@ -288,6 +290,9 @@ export const networksMachine = createMachine(
           }));
         },
       }),
+      markNetworkLanded: (_, ev) => {
+        if (ev.data?.url) markLanded(`network:${ev.data.url}`);
+      },
       addSelectedNetwork: assign({
         network: (ctx, ev) => {
           return ev.data ? { ...ev.data, isSelected: true } : ctx.network;

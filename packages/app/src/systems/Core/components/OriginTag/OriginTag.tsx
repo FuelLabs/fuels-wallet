@@ -1,5 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
-import { Tag, Text, Tooltip } from '@fuel-ui/react';
+import { cssObj, Tag, Text, Tooltip } from '@fuel-wallet/ui';
 
 import { parseUrl } from '../../utils';
 

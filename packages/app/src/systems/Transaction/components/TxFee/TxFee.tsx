@@ -1,4 +1,4 @@
-import { Box, HStack, Text } from '@fuel-ui/react';
+import { Box, HStack, Text } from '@fuel-wallet/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { type BN, DEFAULT_PRECISION } from 'fuels';
 import { type FC, useMemo } from 'react';

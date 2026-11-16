@@ -1,17 +1,26 @@
 import { isValidDomain } from '@bako-id/sdk';
-import { cssObj } from '@fuel-ui/css';
 import {
+  cssObj,
+  Avatar,
   Box,
-  Dropdown,
   Input,
-  type InputElementProps,
+  OptionItem,
+  Popover,
   Spinner,
   Text,
   Tooltip,
-} from '@fuel-ui/react';
+  type InputElementProps,
+} from '@fuel-wallet/ui';
 import debounce from 'lodash.debounce';
 import type React from 'react';
-import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { shortAddress } from '~/systems/Core';
 import { useNameSystemRequest } from '../../hooks';
 import { useResolver } from '../../hooks/useResolver';
@@ -21,6 +30,8 @@ interface NameSystemInputProps extends Omit<InputElementProps, 'onChange'> {
   value: string;
   onChange: (value: string) => void;
   onError: (error: string | null) => void;
+  /** Wallets offered while the field is empty, newest first. */
+  recents?: { address: string; name?: string }[];
 }
 
 type Status = 'idle' | 'selected';
@@ -28,9 +39,13 @@ type Status = 'idle' | 'selected';
 export const NameSystemInput = forwardRef<
   HTMLInputElement,
   NameSystemInputProps
->(({ onChange, onError, ...props }, ref) => {
+>(({ onChange, onError, recents = [], onBlur, ...props }, ref) => {
   const [inputValue, setInputValue] = useState('');
   const [status, setStatus] = useState<Status>('idle');
+  const [showRecents, setShowRecents] = useState(false);
+  const optionRef = useRef<HTMLButtonElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const isFocused = useRef(false);
 
   const { resolver, isLoading } = useResolver();
   const { isOpenDropdown, toggleDropdown, domain, address, reset, setDomain } =
@@ -71,6 +86,7 @@ export const NameSystemInput = forwardRef<
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
+    setShowRecents(!value && recents.length > 0);
 
     const isDomain = value.startsWith('@');
     if (isDomain) {
@@ -83,11 +99,48 @@ export const NameSystemInput = forwardRef<
     onChange(value);
   };
 
+  /* History can land after the field is focused. */
+  // biome-ignore lint/correctness/useExhaustiveDependencies: only when recents arrive
+  useEffect(() => {
+    if (isFocused.current && !inputValue && recents.length > 0) {
+      setShowRecents(true);
+    }
+  }, [recents.length]);
+
   const handleOpenDropdown = useCallback(() => {
+    isFocused.current = true;
     if (status === 'idle' && address) {
       toggleDropdown(true);
     }
-  }, [address, status, toggleDropdown]);
+    if (!inputValue && recents.length > 0) {
+      setShowRecents(true);
+    }
+  }, [address, status, toggleDropdown, inputValue, recents.length]);
+
+  const handleSelectRecent = (recent: string) => {
+    setShowRecents(false);
+    setInputValue(recent);
+    onChange(recent);
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    isFocused.current = false;
+    if (!contentRef.current?.contains(e.relatedTarget as Node | null)) {
+      setShowRecents(false);
+    }
+    onBlur?.(e);
+  };
+
+  const handleOptionKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    e.preventDefault();
+    const options = Array.from(
+      contentRef.current?.querySelectorAll<HTMLButtonElement>('button') ?? []
+    );
+    const index = options.indexOf(document.activeElement as HTMLButtonElement);
+    const next = index + (e.key === 'ArrowDown' ? 1 : -1);
+    options[Math.max(0, Math.min(next, options.length - 1))]?.focus();
+  };
 
   const handleSelect = useCallback(
     (address: string) => {
@@ -106,22 +159,40 @@ export const NameSystemInput = forwardRef<
     onChange('');
   }, [onChange]);
 
+  const hasSuggestion = !!address && !!domain && status === 'idle';
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (showRecents && e.key === 'ArrowDown') {
+      e.preventDefault();
+      contentRef.current?.querySelector<HTMLButtonElement>('button')?.focus();
+      return;
+    }
+    if (!hasSuggestion) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      toggleDropdown(true);
+      requestAnimationFrame(() => optionRef.current?.focus());
+    }
+    if (e.key === 'Enter' && isOpenDropdown) {
+      e.preventDefault();
+      handleSelect(address);
+    }
+  };
+
   const showHandle = useMemo(
     () => isName && !!address && status === 'selected',
     [isName, address, status]
   );
 
   return (
-    <Dropdown
-      css={styles.root}
-      isOpen={isOpenDropdown}
-      onOpenChange={toggleDropdown}
-      popoverProps={{
-        arrowClassName: 'arrow',
-        sideOffset: 0,
+    <Popover
+      isOpen={(isOpenDropdown && hasSuggestion) || (showRecents && !domain)}
+      onOpenChange={(open) => {
+        toggleDropdown(open);
+        if (!open) setShowRecents(false);
       }}
     >
-      <Dropdown.Trigger asChild>
+      <Popover.Anchor>
         <Input size="sm" css={styles.input}>
           {showHandle ? (
             <NameSystemAvatar
@@ -138,12 +209,17 @@ export const NameSystemInput = forwardRef<
           ) : (
             <Input.Field
               onChange={handleChange}
+              onKeyDown={handleKeyDown}
               id="search-address"
               aria-label="Address Input"
+              aria-autocomplete="list"
+              aria-expanded={(isOpenDropdown && hasSuggestion) || showRecents}
               placeholder="Enter a Fuel address"
               ref={ref}
               onClick={handleOpenDropdown}
+              onFocus={handleOpenDropdown}
               {...props}
+              onBlur={handleBlur}
               value={inputValue}
             />
           )}
@@ -155,56 +231,97 @@ export const NameSystemInput = forwardRef<
             />
           )}
         </Input>
-      </Dropdown.Trigger>
+      </Popover.Anchor>
 
-      <Dropdown.Menu
-        onAction={(key) => handleSelect(key.toString())}
-        css={styles.dropdownMenu}
+      <Popover.Content
+        ref={contentRef}
+        onKeyDown={handleOptionKeyDown}
+        onInteractOutside={(e) => {
+          const target = e.target as HTMLElement | null;
+          if (target?.closest('[aria-label="Address Input"]'))
+            e.preventDefault();
+        }}
       >
-        <Dropdown.MenuItem css={styles.dropdownMenuItem} key={address}>
-          <NameSystemAvatar resolver={address!} onSelect={handleSelect}>
-            <Box.Flex direction="column">
-              <Text css={styles.domainText} className="domain" fontSize="sm">
-                {domain}
-              </Text>
-              <Text css={styles.domainText}>{shortAddress(address ?? '')}</Text>
-            </Box.Flex>
-          </NameSystemAvatar>
-        </Dropdown.MenuItem>
-      </Dropdown.Menu>
-    </Dropdown>
+        {showRecents && !domain ? (
+          <>
+            <Text css={styles.eyebrow}>Recent</Text>
+            {recents.map((recent) => (
+              <OptionItem
+                key={recent.address}
+                aria-label={`Send to ${recent.name ?? recent.address}`}
+                css={styles.option}
+                onClick={() => handleSelectRecent(recent.address)}
+              >
+                <Box.Flex css={styles.recentRow}>
+                  <Avatar.Generated hash={recent.address} size={24} />
+                  <Box.Flex direction="column" css={styles.optionText}>
+                    {recent.name && (
+                      <Text css={styles.domainText} fontSize="sm">
+                        {recent.name}
+                      </Text>
+                    )}
+                    <Text css={styles.addressText} fontSize="xs">
+                      {shortAddress(recent.address)}
+                    </Text>
+                  </Box.Flex>
+                </Box.Flex>
+              </OptionItem>
+            ))}
+          </>
+        ) : (
+          <OptionItem
+            ref={optionRef}
+            aria-label={`Send to ${domain}`}
+            css={styles.option}
+            onClick={() => handleSelect(address!)}
+          >
+            <NameSystemAvatar resolver={address!}>
+              <Box.Flex direction="column" css={styles.optionText}>
+                <Text css={styles.domainText} className="domain" fontSize="sm">
+                  {domain}
+                </Text>
+                <Text css={styles.addressText} fontSize="xs">
+                  {shortAddress(address ?? '')}
+                </Text>
+              </Box.Flex>
+            </NameSystemAvatar>
+          </OptionItem>
+        )}
+      </Popover.Content>
+    </Popover>
   );
 });
 
 const styles = {
-  root: cssObj({
-    position: 'relative',
-    flex: 1,
-    display: 'flex',
-
-    '.arrow': {
-      display: 'none !important',
-    },
+  option: cssObj({
+    py: '$2',
+    height: 'auto',
   }),
-  dropdownMenu: cssObj({
-    width: 250,
-    padding: '$1 0',
-    '.fuel_MenuListItem': {
-      px: '$3',
-      height: 'auto',
-    },
+  eyebrow: cssObj({
+    display: 'block',
+    px: '$3',
+    pt: '$2',
+    pb: '$1',
+    fontFamily: '$mono',
+    fontSize: '11px',
+    lineHeight: '16px',
+    letterSpacing: '0.6px',
+    textTransform: 'uppercase',
+    color: '$textLow',
   }),
-  dropdownMenuItem: cssObj({
-    py: '$1',
-
-    '.domain': {
-      marginBottom: '2px',
-      color: '$inputBaseColor !important',
-    },
+  recentRow: cssObj({
+    alignItems: 'center',
+    gap: '$2',
+    minWidth: 0,
+  }),
+  optionText: cssObj({
+    minWidth: 0,
+    gap: '2px',
   }),
   input: cssObj({
     display: 'flex',
     position: 'relative',
+    flex: 1,
 
     '.input-name-system': {
       padding: '0 $3 !important',
@@ -225,5 +342,11 @@ const styles = {
   domainText: cssObj({
     fontFamily: '$sans',
     lineHeight: '$tight',
+    color: '$textHigh',
+  }),
+  addressText: cssObj({
+    fontFamily: '$mono',
+    lineHeight: '$tight',
+    color: '$textLow',
   }),
 };
